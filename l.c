@@ -72,9 +72,10 @@ main (int argc, char *argv[])
 	uint64_t size_free;
 	uint64_t pv_count;
 	lvm_property_value_t v;
-	const char *prop1 = "seg_start_pe";
+	const char *prop1 = "seg_start"; // or seg_start_pe
 	const char *prop2 = "seg_size";
-	//char *prop3 = "seg_pe_ranges";
+	const char *prop3 = "seg_pe_ranges";
+	const char *prop4 = "devices";
 
 	l = lvm_init (NULL);
 	//printf ("l = %p\n", l);
@@ -89,7 +90,7 @@ main (int argc, char *argv[])
 		vgname = strl->str;
 		vg = lvm_vg_open(l, vgname, "r", 0);
 		name = lvm_vg_get_name (vg);
-		if (name[0] != 'v') {
+		if (name[0] == 's') {
 			uuid = lvm_vg_get_uuid (vg);
 			size_total = lvm_vg_get_size (vg);
 			size_free = lvm_vg_get_free_size (vg);
@@ -121,14 +122,21 @@ main (int argc, char *argv[])
 						printf("Invalid property name or unable to query '%s'.\n", prop2);
 						continue;
 					}
-					printf(" (%s)\n", print_size (v.value.integer));
+					printf(" (%s)", print_size (v.value.integer));
 
-//					v = lvm_lvseg_get_property(seg->lvseg, prop3);
-//					if (lvm_errno(l) || !v.is_valid) {
-//						printf("Invalid property name or unable to query '%s'.\n", prop3);
-//						continue;
-//					}
-//					printf(" (%s)\n", v.value.string);
+					v = lvm_lvseg_get_property(seg->lvseg, prop3);
+					if (lvm_errno(l) || !v.is_valid) {
+						printf("Invalid property name or unable to query '%s'.\n", prop3);
+						continue;
+					}
+					printf(" (%s)", v.value.string);
+
+					v = lvm_lvseg_get_property(seg->lvseg, prop4);
+					if (lvm_errno(l) || !v.is_valid) {
+						printf("Invalid property name or unable to query '%s'.\n", prop4);
+						continue;
+					}
+					printf(" (%s)\n", v.value.string);
 				}
 			}
 			pvnames = lvm_vg_list_pvs (vg);
