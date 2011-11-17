@@ -1,7 +1,7 @@
 CC	= g++
 
-SRC	= container.cpp device.cpp filesystem.cpp lvm.cpp main.cpp partition.cpp
-HDR	= container.h device.h filesystem.h lvm.h partition.h
+SRC	= container.cpp device.cpp filesystem.cpp lvm.cpp main.cpp partition.cpp utils.cpp
+HDR	= container.h device.h filesystem.h lvm.h partition.h utils.h
 OBJ	= $(SRC:.cpp=.o)
 
 OUT	= main p l
