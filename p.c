@@ -1,5 +1,3 @@
-// gcc -g -Wall -o p p.c -L/lib64 -lparted
-
 #include <stdio.h>
 #include <parted/parted.h>
 
@@ -26,35 +24,39 @@ int main (int argc, char *argv[])
 	ped_device_probe_all();
 
 	while ((dev = ped_device_get_next (dev))) {
-		printf ("dev = %p\n", dev);
-		/** A block device - for example, /dev/hda, not /dev/hda3 */
-		printf ("\tmodel = %s\n", dev->model);
-		printf ("\tpath = %s\n", dev->path);
-		printf ("\ttype = %d\n", dev->type);
+		//printf ("dev = %p\n", dev);
+		printf ("model = %s\n", dev->model);
+		printf ("path = %s\n", dev->path);
+		printf ("type = %d\n", dev->type);
+		printf ("sector size = %lld\n", dev->sector_size);
+		printf ("physical sector size = %lld\n", dev->phys_sector_size);
+		printf ("length (sectors) = %lld\n", dev->length);
+		if (dev->open_count)    printf  ("open count           = %d\n",  dev->open_count);
+		if (dev->read_only)     printf  ("read-only            = %d\n",  dev->read_only);
+		if (dev->external_mode) printf  ("external mode        = %d\n",  dev->external_mode);
+		if (dev->dirty)         printf  ("dirty                = %d\n",  dev->dirty);
+		if (dev->boot_dirty)    printf  ("boot dirty           = %d\n",  dev->boot_dirty);
+		printf ("hardware: cyl = %d, heads = %d, sectors = %d\n", dev->hw_geom.cylinders, dev->hw_geom.heads, dev->hw_geom.sectors);
+		printf ("bios: cyl = %d, heads = %d, sectors = %d\n", dev->bios_geom.cylinders, dev->bios_geom.heads, dev->bios_geom.sectors);
+		printf ("host = %d\n", dev->host);
+		printf ("did = %d\n", dev->did);
 		type = ped_disk_probe (dev);
 		if (type) {
-			printf ("\t\tname = %s\n", type->name);
-			printf ("\t\tfeatures = %d\n", type->features);
-			printf ("\t\tpartitions:\n");
+			printf ("name = %s\n", type->name);
+			printf ("features = %d\n", type->features);
+			printf ("partitions:\n");
 			disk = ped_disk_new (dev);
 			while ((part = ped_disk_next_partition (disk, part))) {
-				printf ("\t\t\t----------------------\n");
-				printf ("\t\t\tnum = %d\n", part->num);
-				printf ("\t\t\ttype = "); print_partition_type (part->type); printf ("\n");
-				printf ("\t\t\tstart = %lld\n", part->geom.start);
-				printf ("\t\t\tlength = %lld\n", part->geom.length);
-				printf ("\t\t\tend = %lld\n", part->geom.end);
+				printf ("\t----------------------\n");
+				printf ("\tnum = %d\n", part->num);
+				printf ("\ttype = "); print_partition_type (part->type); printf ("\n");
+				printf ("\tstart = %lld\n", part->geom.start);
+				printf ("\tlength = %lld\n", part->geom.length);
+				printf ("\tend = %lld\n", part->geom.end);
 				if (part->fs_type)
-					printf ("\t\t\tfs type = %s\n", part->fs_type->name);
+					printf ("\tfs type = %s\n", part->fs_type->name);
 			}
 		}
-		printf ("\tsector size = %lld\n", dev->sector_size);
-		printf ("\tphysical sector size = %lld\n", dev->phys_sector_size);
-		printf ("\tlength = %lld\n", dev->length);
-		printf ("\thardware: cyl = %d, heads = %d, sectors = %d\n", dev->hw_geom.cylinders, dev->hw_geom.heads, dev->hw_geom.sectors);
-		printf ("\tbios: cyl = %d, heads = %d, sectors = %d\n", dev->bios_geom.cylinders, dev->bios_geom.heads, dev->bios_geom.sectors);
-		printf ("\thost = %d\n", dev->host);
-		printf ("\tdid = %d\n", dev->did);
 		printf ("\n");
 	}
 
