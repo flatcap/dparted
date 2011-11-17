@@ -25,6 +25,7 @@
 
 #include "container.h"
 #include "device.h"
+#include "filesystem.h"
 #include "lvm.h"
 #include "partition.h"
 
