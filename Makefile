@@ -1,14 +1,14 @@
 CC	= g++
 
-SRC	= container.cpp device.cpp filesystem.cpp lvm.cpp main.cpp partition.cpp utils.cpp
-HDR	= container.h device.h filesystem.h lvm.h partition.h utils.h
+SRC	= container.cpp disk.cpp filesystem.cpp lvm.cpp main.cpp partition.cpp utils.cpp
+HDR	= container.h disk.h filesystem.h lvm.h partition.h utils.h
 OBJ	= $(SRC:.cpp=.o)
 
-OUT	= main p l
+OUT	= main
 
 CFLAGS	= -g -Wall
-CFLAGS  += `pkg-config glibmm-2.4 libparted lvm2app devmapper --cflags`
-LDFLAGS += `pkg-config glibmm-2.4 libparted lvm2app devmapper --libs`
+CFLAGS  += `pkg-config glibmm-2.4 lvm2app devmapper libparted --cflags`
+LDFLAGS += `pkg-config glibmm-2.4 lvm2app devmapper libparted --libs`
 
 all:	$(OUT)
 
@@ -22,13 +22,13 @@ main: $(OBJ)
 	$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 l:	l.o
-	$(CC) -o $@ l.o $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 p:	p.o
-	$(CC) -o $@ p.o $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 tags:   force
-	ctags *.[ch]
+	ctags *.cpp *.h /usr/include/parted/*.h
 
 force:
 

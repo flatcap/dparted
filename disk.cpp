@@ -16,13 +16,20 @@
  */
 
 
-#include "device.h"
+#include <iostream>
 
-Device::Device (void)
+#include "disk.h"
+
+Disk::Disk (void)
 {
 }
 
-Device::~Device()
+Disk::~Disk()
 {
+}
+
+void Disk::Dump (void)
+{
+	std::cout << "Disk::Dump\n";
 }
 

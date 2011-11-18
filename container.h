@@ -27,14 +27,19 @@ public:
 	Container (void);
 	virtual ~Container();
 
-protected:
+	virtual void Dump (void);
+
 	long		sector_size;
 	long long	sector_count;
 	long long	sectors_used;
 	long long	sectors_free;
 
-	std::vector<Container> children;
+	std::vector<Container*> children;
+
+protected:
+
 private:
+
 };
 
 #endif // _CONTAINER_H_

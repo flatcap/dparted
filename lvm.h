@@ -23,11 +23,13 @@
 
 #include <glibmm/ustring.h>
 
-class LVM : Container
+class LVM : public Container
 {
 public:
 	LVM (void);
 	virtual ~LVM();
+
+	virtual void Dump (void);
 
 protected:
 

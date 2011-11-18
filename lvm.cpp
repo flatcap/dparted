@@ -16,6 +16,8 @@
  */
 
 
+#include <iostream>
+
 #include "lvm.h"
 
 LVM::LVM (void)
@@ -24,5 +26,10 @@ LVM::LVM (void)
 
 LVM::~LVM()
 {
+}
+
+void LVM::Dump (void)
+{
+	std::cout << "LVM::Dump\n";
 }
 

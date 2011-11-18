@@ -27,6 +27,8 @@ public:
 	Filesystem (void);
 	virtual ~Filesystem();
 
+	virtual void Dump (void);
+
 protected:
 
 private:

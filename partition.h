@@ -19,14 +19,24 @@
 #ifndef _PARTITION_H_
 #define _PARTITION_H_
 
+#include <string>
+
 #include "container.h"
 
-class Partition : Container
+class Partition : public Container
 {
 public:
 	Partition (void);
 	virtual ~Partition();
 
+	virtual void Dump (void);
+
+	std::string type;
+	std::string fs;
+	int num;
+	long long start;
+	long long length;
+	long long end;
 protected:
 
 private:

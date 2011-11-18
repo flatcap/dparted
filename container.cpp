@@ -16,6 +16,8 @@
  */
 
 
+#include <iostream>
+
 #include "container.h"
 
 Container::Container (void)
@@ -24,5 +26,10 @@ Container::Container (void)
 
 Container::~Container()
 {
+}
+
+void Container::Dump (void)
+{
+	std::cout << "Container::Dump\n";
 }
 

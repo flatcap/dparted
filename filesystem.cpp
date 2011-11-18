@@ -16,6 +16,8 @@
  */
 
 
+#include <iostream>
+
 #include "filesystem.h"
 
 Filesystem::Filesystem (void)
@@ -24,5 +26,10 @@ Filesystem::Filesystem (void)
 
 Filesystem::~Filesystem()
 {
+}
+
+void Filesystem::Dump (void)
+{
+	std::cout << "Filesystem::Dump\n";
 }
 

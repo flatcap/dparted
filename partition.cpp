@@ -16,6 +16,8 @@
  */
 
 
+#include <iostream>
+
 #include "partition.h"
 
 Partition::Partition (void)
@@ -24,5 +26,10 @@ Partition::Partition (void)
 
 Partition::~Partition()
 {
+}
+
+void Partition::Dump (void)
+{
+	std::cout << "Partition::Dump\n";
 }
 

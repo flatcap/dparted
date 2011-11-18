@@ -16,16 +16,36 @@
  */
 
 
-#ifndef _DEVICE_H_
-#define _DEVICE_H_
+#ifndef _DISK_H_
+#define _DISK_H_
+
+#include <string>
 
 #include "container.h"
 
-class Device : Container
+class Disk : public Container
 {
 public:
-	Device (void);
-	virtual ~Device();
+	Disk (void);
+	virtual ~Disk();
+
+	virtual void Dump (void);
+
+	std::string	model;
+	std::string	path;
+	int		type;
+	long		sector_size;
+	long		phys_sector_size;
+	long long	length;
+	bool		read_only;
+	int		hw_cylinders;
+	int		hw_heads;
+	int		hw_sectors;
+	int		bios_cylinders;
+	int		bios_heads;
+	int		bios_sectors;
+	int		host;
+	int		did;
 
 protected:
 
@@ -33,5 +53,5 @@ private:
 
 };
 
-#endif // _DEVICE_H_
+#endif // _DISK_H_
 
