@@ -16,7 +16,8 @@
  */
 
 
-#include <iostream>
+#include <stdio.h>
+#include <string>
 
 #include "partition.h"
 
@@ -28,8 +29,23 @@ Partition::~Partition()
 {
 }
 
-void Partition::Dump (void)
+void Partition::Dump (int indent /* = 0 */)
 {
-	std::cout << "Partition::Dump\n";
+	if (num < 0)
+		return;
+
+	std::string space = "                                                                ";
+
+	space = space.substr (0, indent);
+
+	printf ("%s\e[32mPartition\e[0m\n", space.c_str());
+	printf ("%s    Type:       %s\n",   space.c_str(), type.c_str());
+	printf ("%s    Filesystem: %s\n",   space.c_str(), fs.c_str());
+	printf ("%s    Number:     %d\n",   space.c_str(), num);
+	printf ("%s    Start:      %lld\n", space.c_str(), start);
+	printf ("%s    Length:     %lld\n", space.c_str(), length);
+	//printf ("%s    End:        %lld\n", space.c_str(), end);
+
+	Container::Dump (indent);
 }
 

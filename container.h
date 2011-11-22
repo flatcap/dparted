@@ -27,7 +27,7 @@ public:
 	Container (void);
 	virtual ~Container();
 
-	virtual void Dump (void);
+	virtual void Dump (int indent = 0);
 
 	long		sector_size;
 	long long	sector_count;

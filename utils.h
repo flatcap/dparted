@@ -19,9 +19,9 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
-#include <glibmm/ustring.h>
+#include <string>
 
-int execute_command (const Glib::ustring &command, Glib::ustring &output, Glib::ustring &error);
+int execute_command (const std::string &command, std::string &output, std::string &error);
 
 #endif // _UTILS_H_
 

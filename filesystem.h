@@ -19,6 +19,8 @@
 #ifndef _FILESYSTEM_H
 #define _FILESYSTEM_H
 
+#include <string>
+
 #include "container.h"
 
 class Filesystem : Container
@@ -27,7 +29,11 @@ public:
 	Filesystem (void);
 	virtual ~Filesystem();
 
-	virtual void Dump (void);
+	virtual void Dump (int indent = 0);
+
+	std::string	type;
+	long long	size;
+	long long	used;
 
 protected:
 

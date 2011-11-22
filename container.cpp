@@ -26,10 +26,17 @@ Container::Container (void)
 
 Container::~Container()
 {
+	unsigned int i;
+	for (i = 0; i < children.size(); i++) {
+		delete children[i];
+	}
 }
 
-void Container::Dump (void)
+void Container::Dump (int indent /* = 0 */)
 {
-	std::cout << "Container::Dump\n";
+	unsigned int i;
+	for (i = 0; i < children.size(); i++) {
+		children[i]->Dump (indent + 4);
+	}
 }
 

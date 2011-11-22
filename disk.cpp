@@ -16,7 +16,8 @@
  */
 
 
-#include <iostream>
+#include <stdio.h>
+#include <string>
 
 #include "disk.h"
 
@@ -28,8 +29,25 @@ Disk::~Disk()
 {
 }
 
-void Disk::Dump (void)
+void Disk::Dump (int indent /* = 0 */)
 {
-	std::cout << "Disk::Dump\n";
+	std::string space = "                                                                ";
+
+	space = space.substr (0, indent);
+
+	printf ("%s\e[31mDisk\e[0m\n", space.c_str());
+	printf ("%s    Model:                %s\n",         space.c_str(), model.c_str());
+	printf ("%s    Path:                 %s\n",         space.c_str(), path.c_str());
+	printf ("%s    Type:                 %d\n",         space.c_str(), type);
+	printf ("%s    Sector Size:          %ld\n",        space.c_str(), sector_size);
+	printf ("%s    Physical Sector Size: %ld\n",        space.c_str(), phys_sector_size);
+	printf ("%s    Length                %lld\n",       space.c_str(), length);
+	//printf ("%s    Read only:            %d\n",         space.c_str(), read_only);
+	//printf ("%s    Hardware (CHS):       (%d,%d,%d)\n", space.c_str(), hw_cylinders,   hw_heads,   hw_sectors);
+	//printf ("%s    BIOS     (CHS):       (%d,%d,%d)\n", space.c_str(), bios_cylinders, bios_heads, bios_sectors);
+	//printf ("%s    Host:                 %d\n",         space.c_str(), host);
+	//printf ("%s    DID:                  %d\n",         space.c_str(), did);
+
+	Container::Dump (indent);
 }
 

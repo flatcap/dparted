@@ -17,6 +17,7 @@
 
 
 #include <iostream>
+#include <string>
 
 #include "lvm.h"
 
@@ -28,8 +29,13 @@ LVM::~LVM()
 {
 }
 
-void LVM::Dump (void)
+void LVM::Dump (int indent /* = 0 */)
 {
-	std::cout << "LVM::Dump\n";
+	std::string space = "                                                                ";
+
+	space = space.substr (0, indent);
+	std::cout << space << "LVM::Dump\n";
+
+	Container::Dump (indent);
 }
 

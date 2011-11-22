@@ -16,16 +16,16 @@
  */
 
 
-#include <glibmm/ustring.h>
 #include <glibmm/spawn.h>
 #include <vector>
+#include <string>
 
 #include "utils.h"
 
 /**
  * execute_command
  */
-int execute_command (const Glib::ustring &command, Glib::ustring &output, Glib::ustring &error)
+int execute_command (const std::string &command, std::string &output, std::string &error)
 {
 	int exit_status = -1;
 	std::string std_out;

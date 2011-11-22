@@ -19,9 +19,9 @@
 #ifndef _LVM_H_
 #define _LVM_H_
 
-#include "container.h"
+#include <string>
 
-#include <glibmm/ustring.h>
+#include "container.h"
 
 class LVM : public Container
 {
@@ -29,22 +29,24 @@ public:
 	LVM (void);
 	virtual ~LVM();
 
-	virtual void Dump (void);
+	virtual void Dump (int indent = 0);
 
-protected:
-
-private:
-	Glib::ustring	vg_name;
+	std::string	vg_name;
 	int		pv_count;
 	int		lv_count;
 	long		vg_attr;
 	long long	vg_size;
 	long long	vg_free;
-	Glib::ustring	vg_uuid;
+	std::string	vg_uuid;
 	long long	vg_extent_size;
 	long long	vg_extent_count;
 	long long	vg_free_count;
 	long		vg_seqno;
+
+protected:
+
+private:
+
 };
 
 #endif /* _LVM_H_ */

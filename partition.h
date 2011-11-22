@@ -29,7 +29,7 @@ public:
 	Partition (void);
 	virtual ~Partition();
 
-	virtual void Dump (void);
+	virtual void Dump (int indent = 0);
 
 	std::string type;
 	std::string fs;

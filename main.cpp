@@ -19,7 +19,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <glibmm/ustring.h>
 #include <parted/parted.h>
 
 #include "container.h"
@@ -35,10 +34,11 @@
  */
 void run_command (void)
 {
-	Glib::ustring output;
-	Glib::ustring error;
+	std::string output;
+	std::string error;
+	std::string command = "vgs --units=b --nosuffix --noheading -a";
 
-	if (execute_command("vgs --units=b --nosuffix --noheading -a", output, error))
+	if (execute_command (command, output, error))
 		return;
 
 	if (output.size() == 0)
@@ -46,11 +46,11 @@ void run_command (void)
 
 	std::cout << output;
 	/*
-	std::vector<Glib::ustring> temp_arr;
+	std::vector<std::string> temp_arr;
 	Utils::tokenize(output, temp_arr, "\n");
 	for (unsigned int k = 0; k < temp_arr.size(); k++)
 	{
-		Glib::ustring temp = Utils::regexp_label(output, "^[^/]*(/dev/[^\t ]*)");
+		std::string temp = Utils::regexp_label(output, "^[^/]*(/dev/[^\t ]*)");
 		if (temp.size() > 0)
 			swraid_devices.push_back(temp);
 	}

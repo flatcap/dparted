@@ -17,6 +17,7 @@
 
 
 #include <iostream>
+#include <string>
 
 #include "filesystem.h"
 
@@ -28,8 +29,13 @@ Filesystem::~Filesystem()
 {
 }
 
-void Filesystem::Dump (void)
+void Filesystem::Dump (int indent /* = 0 */)
 {
-	std::cout << "Filesystem::Dump\n";
+	std::string space = "                                                                ";
+
+	space = space.substr (0, indent);
+	std::cout << space << "Filesystem::Dump\n";
+
+	Container::Dump (indent);
 }
 
