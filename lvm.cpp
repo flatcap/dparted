@@ -16,7 +16,7 @@
  */
 
 
-#include <iostream>
+#include <stdio.h>
 #include <string>
 
 #include "lvm.h"
@@ -34,7 +34,7 @@ void LVM::Dump (int indent /* = 0 */)
 	std::string space = "                                                                ";
 
 	space = space.substr (0, indent);
-	std::cout << space << "LVM::Dump\n";
+	printf ("%s\e[34mLVM\e[0m\n", space.c_str());
 
 	Container::Dump (indent);
 }

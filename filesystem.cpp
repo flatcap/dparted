@@ -16,13 +16,15 @@
  */
 
 
-#include <iostream>
+#include <stdio.h>
 #include <string>
 
 #include "filesystem.h"
 
 Filesystem::Filesystem (void)
 {
+	size = -1;
+	used = -1;
 }
 
 Filesystem::~Filesystem()
@@ -34,7 +36,11 @@ void Filesystem::Dump (int indent /* = 0 */)
 	std::string space = "                                                                ";
 
 	space = space.substr (0, indent);
-	std::cout << space << "Filesystem::Dump\n";
+
+	printf ("%s\e[33mFilesystem\e[0m\n", space.c_str());
+	printf ("%s    Type:       %s\n",    space.c_str(), type.c_str());
+	printf ("%s    Size:       %lld\n",  space.c_str(), size);
+	printf ("%s    Used:       %lld\n",  space.c_str(), used);
 
 	Container::Dump (indent);
 }
