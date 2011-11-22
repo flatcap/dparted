@@ -23,7 +23,7 @@
 
 #include "container.h"
 
-class Filesystem : Container
+class Filesystem : public Container
 {
 public:
 	Filesystem (void);

@@ -32,7 +32,6 @@ public:
 	virtual void Dump (int indent = 0);
 
 	std::string type;
-	std::string fs;
 	int num;
 	long long start;
 	long long length;

@@ -16,7 +16,7 @@
  */
 
 
-#include <iostream>
+#include <stdio.h>
 #include <vector>
 #include <string>
 #include <parted/parted.h>
@@ -44,7 +44,7 @@ void run_command (void)
 	if (output.size() == 0)
 		return;
 
-	std::cout << output;
+	printf ("%s\n", output.c_str());
 	/*
 	std::vector<std::string> temp_arr;
 	Utils::tokenize(output, temp_arr, "\n");
@@ -128,8 +128,11 @@ int disk_get_list (std::vector<Container*> &disks)
 				p->start = part->geom.start;
 				p->length = part->geom.length;
 				p->end = part->geom.end;
-				if (part->fs_type)
-					p->fs = part->fs_type->name;
+				if (part->fs_type) {
+					Filesystem *f = new Filesystem;
+					f->type = part->fs_type->name;
+					p->children.push_back (f);
+				}
 				d->children.push_back (p);
 			}
 			ped_disk_destroy (disk);

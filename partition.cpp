@@ -40,7 +40,6 @@ void Partition::Dump (int indent /* = 0 */)
 
 	printf ("%s\e[32mPartition\e[0m\n", space.c_str());
 	printf ("%s    Type:       %s\n",   space.c_str(), type.c_str());
-	printf ("%s    Filesystem: %s\n",   space.c_str(), fs.c_str());
 	printf ("%s    Number:     %d\n",   space.c_str(), num);
 	printf ("%s    Start:      %lld\n", space.c_str(), start);
 	printf ("%s    Length:     %lld\n", space.c_str(), length);
