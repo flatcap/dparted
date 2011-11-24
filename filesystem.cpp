@@ -82,34 +82,18 @@ void Filesystem::Dump (int indent /* = 0 */)
 		total			21137846272
 #endif
 	} else if (type == "linux-swap(v1)") {
+		unsigned int index = -1;
+		long long free = -1;
+
 		command = "cat /proc/meminfo";
 		execute_command (command, output, error);
-		unsigned int index = output.find ("SwapTotal:");
-		unsigned int end   = output.find ("\n", index);
-		//printf ("index = %d\n", index);
-		//printf ("end = %d\n", end);
-		std::string line = output.substr (index, end - index);
-		unsigned int off_num = line.find_first_of ("0123456789");
-		//printf ("off_num = %u\n", off_num);
-		//printf ("rest = %s\n", line.substr (off_num).c_str());
-		//iprintf (indent+8, "line = %s\n", line.c_str());
-		line = line.substr (off_num);
-		sscanf (line.c_str(), "%Ld kB", &size);
-		size *= 1024;
 
-		long long free = -1;
+		index = output.find ("SwapTotal:");
+		size = 1024 * extract_number (output, index);
+
 		index = output.find ("SwapFree:");
-		end   = output.find ("\n", index);
-		//printf ("index = %d\n", index);
-		//printf ("end = %d\n", end);
-		line = output.substr (index, end - index);
-		off_num = line.find_first_of ("0123456789");
-		//printf ("off_num = %u\n", off_num);
-		//printf ("rest = %s\n", line.substr (off_num).c_str());
-		//iprintf (indent+8, "line = %s\n", line.c_str());
-		line = line.substr (off_num);
-		sscanf (line.c_str(), "%Ld kB", &free);
-		free *= 1024;
+		free = 1024 * extract_number (output, index);
+
 		used = size - free;
 
 		// WRONG WRONG WRONG - could have multiple swap devices
