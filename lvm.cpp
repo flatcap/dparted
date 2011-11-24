@@ -16,10 +16,10 @@
  */
 
 
-#include <stdio.h>
 #include <string>
 
 #include "lvm.h"
+#include "utils.h"
 
 LVM::LVM (void)
 {
@@ -31,10 +31,7 @@ LVM::~LVM()
 
 void LVM::Dump (int indent /* = 0 */)
 {
-	std::string space = "                                                                ";
-
-	space = space.substr (0, indent);
-	printf ("%s\e[34m%s\e[0m\n", space.c_str(), device.c_str());
+	iprintf (indent, "\e[34m%s\e[0m\n", device.c_str());
 
 	Container::Dump (indent);
 }

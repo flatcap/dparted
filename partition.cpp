@@ -16,7 +16,6 @@
  */
 
 
-#include <stdio.h>
 #include <string>
 
 #include "partition.h"
@@ -35,18 +34,15 @@ void Partition::Dump (int indent /* = 0 */)
 	if (num < 0)
 		return;
 
-	std::string space = "                                                                ";
-
 	std::string size = get_size (length * 512);
 
-	space = space.substr (0, indent);
+	iprintf (indent,   "\e[32m%s%d\e[0m (%s)\n", device.c_str()+5, num, size.c_str());
+	iprintf (indent+8, "Type:   %s\n",   type.c_str());
+	iprintf (indent+8, "Start:  %lld\n", start);
 
-	printf ("%s\e[32m%s%d\e[0m (%s)\n", space.c_str(), device.c_str()+5, num, size.c_str());
-	printf ("%s\tType:   %s\n",   space.c_str(), type.c_str());
-	//printf ("%s\tNumber: %d\n",   space.c_str(), num);
-	printf ("%s\tStart:  %lld\n", space.c_str(), start);
-	//printf ("%s\tLength: %s\n",   space.c_str(), size.c_str());
-	//printf ("%s\tEnd:        %lld\n", space.c_str(), end);
+	//iprintf (indent+8, "Number: %d\n",   num);
+	//iprintf (indent+8, "Length: %s\n",   size.c_str());
+	//iprintf (indent+8, "End:    %lld\n", end);
 
 	Container::Dump (indent);
 }

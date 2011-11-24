@@ -16,7 +16,6 @@
  */
 
 
-#include <stdio.h>
 #include <string>
 
 #include "disk.h"
@@ -32,25 +31,22 @@ Disk::~Disk()
 
 void Disk::Dump (int indent /* = 0 */)
 {
-	std::string space = "                                                                ";
-
-	space = space.substr (0, indent);
-
 	std::string size = get_size (length * sector_size);
 
-	printf ("%s\e[31m%s\e[0m (%s)\n",  space.c_str(), device.c_str(), size.c_str());
-	printf ("%s\tModel:  %s\n",   space.c_str(), model.c_str());
-	//printf ("%s\tPath:   %s\n",   space.c_str(), path.c_str());
-	//printf ("%s\tType:   %d\n",   space.c_str(), type);
-	printf ("%s\tSector: %ld\n",  space.c_str(), sector_size); // sector size
-	//printf ("%s\tLength: %s\n", space.c_str(), size.c_str());
+	iprintf (indent,   "\e[31m%s\e[0m (%s)\n",  device.c_str(), size.c_str());
+	iprintf (indent+8, "Model:  %s\n",  model.c_str());
+	iprintf (indent+8, "Sector: %ld\n", sector_size);
 
-	//printf ("%s\tPhysical Sector Size: %ld\n",        space.c_str(), phys_sector_size);
-	//printf ("%s\tRead only:            %d\n",         space.c_str(), read_only);
-	//printf ("%s\tHardware (CHS):       (%d,%d,%d)\n", space.c_str(), hw_cylinders,   hw_heads,   hw_sectors);
-	//printf ("%s\tBIOS     (CHS):       (%d,%d,%d)\n", space.c_str(), bios_cylinders, bios_heads, bios_sectors);
-	//printf ("%s\tHost:                 %d\n",         space.c_str(), host);
-	//printf ("%s\tDID:                  %d\n",         space.c_str(), did);
+	//iprintf (indent+8, "Path:   %s\n",   path.c_str());
+	//iprintf (indent+8, "Type:   %d\n",   type);
+	//iprintf (indent+8, "Length: %s\n", size.c_str());
+
+	//iprintf (indent+8, "Physical Sector Size: %ld\n",        phys_sector_size);
+	//iprintf (indent+8, "Read only:            %d\n",         read_only);
+	//iprintf (indent+8, "Hardware (CHS):       (%d,%d,%d)\n", hw_cylinders,   hw_heads,   hw_sectors);
+	//iprintf (indent+8, "BIOS     (CHS):       (%d,%d,%d)\n", bios_cylinders, bios_heads, bios_sectors);
+	//iprintf (indent+8, "Host:                 %d\n",         host);
+	//iprintf (indent+8, "DID:                  %d\n",         did);
 
 	Container::Dump (indent);
 }
