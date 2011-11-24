@@ -20,6 +20,7 @@
 #include <string>
 
 #include "partition.h"
+#include "utils.h"
 
 Partition::Partition (void)
 {
@@ -36,13 +37,15 @@ void Partition::Dump (int indent /* = 0 */)
 
 	std::string space = "                                                                ";
 
+	std::string size = get_size (length * 512);
+
 	space = space.substr (0, indent);
 
 	printf ("%s\e[32m%s%d\e[0m\n", space.c_str(), device.c_str()+5, num);
 	printf ("%s\tType:   %s\n",   space.c_str(), type.c_str());
 	//printf ("%s\tNumber: %d\n",   space.c_str(), num);
 	printf ("%s\tStart:  %lld\n", space.c_str(), start);
-	printf ("%s\tLength: %lld\n", space.c_str(), length);
+	printf ("%s\tLength: %s\n",   space.c_str(), size.c_str());
 	//printf ("%s\tEnd:        %lld\n", space.c_str(), end);
 
 	Container::Dump (indent);

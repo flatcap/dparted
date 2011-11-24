@@ -22,6 +22,7 @@
 #include <string>
 
 int execute_command (const std::string &command, std::string &output, std::string &error);
+std::string get_size (long long size);
 
 #endif // _UTILS_H_
 

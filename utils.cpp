@@ -16,7 +16,9 @@
  */
 
 
+#include <stdio.h>
 #include <glibmm/spawn.h>
+#include <math.h>
 #include <vector>
 #include <string>
 
@@ -52,5 +54,38 @@ int execute_command (const std::string &command, std::string &output, std::strin
 	error = std_error;
 
 	return exit_status;
+}
+
+/**
+ * get_size
+ */
+std::string get_size (long long size)
+{
+	char buffer[64];
+	double power = log2 ((double) size);
+	const char *suffix = NULL;
+	double divide = 1;
+
+	if (power < 10) {
+		suffix = "B";
+		divide = 1;
+	} else if (power < 20) {
+		suffix = "KiB";
+		divide = 1024;
+	} else if (power < 30) {
+		suffix = "MiB";
+		divide = 1048576;
+	} else if (power < 40) {
+		suffix = "GiB";
+		divide = 1073741824;
+	} else if (power < 50) {
+		suffix = "TiB";
+		divide = 1099511627776;
+	} else if (power < 60) {
+		suffix = "PiB";
+		divide = 1125899906842624;
+	}
+	sprintf (buffer, "%0.3g %s", (double)size/divide, suffix);
+	return buffer;
 }
 
