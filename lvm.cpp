@@ -34,7 +34,7 @@ void LVM::Dump (int indent /* = 0 */)
 	std::string space = "                                                                ";
 
 	space = space.substr (0, indent);
-	printf ("%s\e[34mLVM\e[0m\n", space.c_str());
+	printf ("%s\e[34m%s\e[0m\n", space.c_str(), device.c_str());
 
 	Container::Dump (indent);
 }

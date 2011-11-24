@@ -37,7 +37,7 @@ void Container::Dump (int indent /* = 0 */)
 {
 	unsigned int i;
 	for (i = 0; i < children.size(); i++) {
-		children[i]->Dump (indent + 4);
+		children[i]->Dump (indent + 8);
 	}
 }
 

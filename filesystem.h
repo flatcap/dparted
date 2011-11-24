@@ -31,9 +31,10 @@ public:
 
 	virtual void Dump (int indent = 0);
 
-	std::string	type;
-	long long	size;
-	long long	used;
+				// container
+	std::string	type;	// name
+	long long	size;	// bytes_size
+	long long	used;	// bytes_used
 
 protected:
 

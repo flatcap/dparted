@@ -37,10 +37,10 @@ void Filesystem::Dump (int indent /* = 0 */)
 
 	space = space.substr (0, indent);
 
-	printf ("%s\e[33mFilesystem\e[0m\n", space.c_str());
-	printf ("%s    Type:       %s\n",    space.c_str(), type.c_str());
-	printf ("%s    Size:       %lld\n",  space.c_str(), size);
-	printf ("%s    Used:       %lld\n",  space.c_str(), used);
+	printf ("%s\e[33m%s\e[0m\n", space.c_str(), type.c_str());
+	//printf ("%s\tType: %s\n",    space.c_str(), type.c_str());
+	printf ("%s\tSize: %lld\n",  space.c_str(), size);
+	printf ("%s\tUsed: %lld\n",  space.c_str(), used);
 
 	Container::Dump (indent);
 }

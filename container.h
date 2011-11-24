@@ -29,10 +29,14 @@ public:
 
 	virtual void Dump (int indent = 0);
 
-	long		sector_size;
-	long long	sector_count;
-	long long	sectors_used;
-	long long	sectors_free;
+	Container	*parent;
+	std::string	 name;
+	std::string	 device;
+	std::string	 uuid;
+
+	long		 block_size;
+	long long	 bytes_size;
+	long long	 bytes_used;
 
 	std::vector<Container*> children;
 

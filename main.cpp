@@ -92,7 +92,7 @@ int disk_get_list (std::vector<Container*> &disks)
 
 		Disk *d = new Disk;
 		d->model = dev->model;
-		d->path  = dev->path;
+		d->device  = dev->path;
 		d->type  = dev->type;
 		d->sector_size = dev->sector_size;
 		d->phys_sector_size = dev->phys_sector_size;
@@ -125,6 +125,7 @@ int disk_get_list (std::vector<Container*> &disks)
 				//std::cout << get_partition_type (part->type) << std::endl;
 				p->type = get_partition_type (part->type);
 				p->num = part->num;
+				p->device = part->geom.dev->path;
 				p->start = part->geom.start;
 				p->length = part->geom.length;
 				p->end = part->geom.end;
