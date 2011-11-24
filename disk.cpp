@@ -38,12 +38,12 @@ void Disk::Dump (int indent /* = 0 */)
 
 	std::string size = get_size (length * sector_size);
 
-	printf ("%s\e[31m%s\e[0m\n",  space.c_str(), device.c_str());
+	printf ("%s\e[31m%s\e[0m (%s)\n",  space.c_str(), device.c_str(), size.c_str());
 	printf ("%s\tModel:  %s\n",   space.c_str(), model.c_str());
 	//printf ("%s\tPath:   %s\n",   space.c_str(), path.c_str());
 	//printf ("%s\tType:   %d\n",   space.c_str(), type);
 	printf ("%s\tSector: %ld\n",  space.c_str(), sector_size); // sector size
-	printf ("%s\tLength: %s\n", space.c_str(), size.c_str());
+	//printf ("%s\tLength: %s\n", space.c_str(), size.c_str());
 
 	//printf ("%s\tPhysical Sector Size: %ld\n",        space.c_str(), phys_sector_size);
 	//printf ("%s\tRead only:            %d\n",         space.c_str(), read_only);
