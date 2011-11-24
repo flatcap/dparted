@@ -38,7 +38,8 @@ int execute_command (const std::string &command, std::string &output, std::strin
 		std::vector<std::string>argv;
 		argv.push_back ("sh");
 		argv.push_back ("-c");
-		argv.push_back ("sudo " + command);
+		argv.push_back (command);
+		//argv.push_back ("sudo " + command);
 
 		//Spawn command inheriting the parent's environment
 		Glib::spawn_sync (".", argv, Glib::SPAWN_SEARCH_PATH, sigc::slot<void>(), &std_out, &std_error, &exit_status);
