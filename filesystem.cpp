@@ -23,16 +23,25 @@
 #include "partition.h"
 #include "utils.h"
 
+/**
+ * Filesystem
+ */
 Filesystem::Filesystem (void)
 {
 	size = -1;
 	used = -1;
 }
 
+/**
+ * ~Filesystem
+ */
 Filesystem::~Filesystem()
 {
 }
 
+/**
+ * Dump
+ */
 void Filesystem::Dump (int indent /* = 0 */)
 {
 	std::string space = "                                                                ";

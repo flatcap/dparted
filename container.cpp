@@ -21,10 +21,16 @@
 
 #include "container.h"
 
+/**
+ * Container
+ */
 Container::Container (void)
 {
 }
 
+/**
+ * ~Container
+ */
 Container::~Container()
 {
 	unsigned int i;
@@ -33,6 +39,9 @@ Container::~Container()
 	}
 }
 
+/**
+ * Dump
+ */
 void Container::Dump (int indent /* = 0 */)
 {
 	unsigned int i;

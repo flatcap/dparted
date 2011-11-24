@@ -21,14 +21,23 @@
 #include "lvm.h"
 #include "utils.h"
 
+/**
+ * LVM
+ */
 LVM::LVM (void)
 {
 }
 
+/**
+ * ~LVM
+ */
 LVM::~LVM()
 {
 }
 
+/**
+ * Dump
+ */
 void LVM::Dump (int indent /* = 0 */)
 {
 	iprintf (indent, "\e[34m%s\e[0m\n", device.c_str());

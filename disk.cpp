@@ -21,14 +21,23 @@
 #include "disk.h"
 #include "utils.h"
 
+/**
+ * Disk
+ */
 Disk::Disk (void)
 {
 }
 
+/**
+ * ~Disk
+ */
 Disk::~Disk()
 {
 }
 
+/**
+ * Dump
+ */
 void Disk::Dump (int indent /* = 0 */)
 {
 	std::string size = get_size (length * sector_size);

@@ -21,14 +21,23 @@
 #include "partition.h"
 #include "utils.h"
 
+/**
+ * Partition
+ */
 Partition::Partition (void)
 {
 }
 
+/**
+ * ~Partition
+ */
 Partition::~Partition()
 {
 }
 
+/**
+ * Dump
+ */
 void Partition::Dump (int indent /* = 0 */)
 {
 	if (num < 0)
