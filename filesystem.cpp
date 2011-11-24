@@ -111,6 +111,8 @@ void Filesystem::Dump (int indent /* = 0 */)
 		sscanf (line.c_str(), "%Ld kB", &free);
 		free *= 1024;
 		used = size - free;
+
+		// WRONG WRONG WRONG - could have multiple swap devices
 #if 0
 		SwapCached:        20472 kB
 		SwapTotal:       7164952 kB
