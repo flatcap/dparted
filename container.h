@@ -29,7 +29,6 @@ public:
 
 	virtual void Dump (int indent = 0);
 
-	Container	*parent;
 	std::string	 name;
 	std::string	 device;
 	std::string	 uuid;
@@ -38,6 +37,7 @@ public:
 	long long	 bytes_size;
 	long long	 bytes_used;
 
+	Container	*parent;
 	std::vector<Container*> children;
 
 protected:

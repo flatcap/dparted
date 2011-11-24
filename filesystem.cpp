@@ -20,6 +20,7 @@
 #include <string>
 
 #include "filesystem.h"
+#include "partition.h"
 #include "utils.h"
 
 Filesystem::Filesystem (void)
@@ -38,9 +39,30 @@ void Filesystem::Dump (int indent /* = 0 */)
 
 	space = space.substr (0, indent);
 
+	std::string command;
+	std::string output;
+	std::string error;
+	//int result = -1;
+
+	if ((type == "ext4") || (type == "ext3") || (type == "ext2")) {
+		command = "dump2efs -h " + part->device;
+		command += '0' + part->num;
+	} else if (type == "linux-swap(v1)") {
+		command = "cat /proc/meminfo";
+	} else if (type == "ntfs") {
+		command = "ntfsresize -P -i -f -v " + part->device;
+		command += '0' + part->num;
+	} else if (type == "fat32") {
+		command = "dosfsck -n -v " + part->device;
+		command += '0' + part->num;
+	}
+
+	//result = execute_command (command, output, error);
+
 	iprintf (indent,   "\e[33m%s\e[0m\n", type.c_str());
 	iprintf (indent+8, "Size: %lld\n",  size);
 	iprintf (indent+8, "Used: %lld\n",  used);
+	iprintf (indent+8, "Command: %s\n", command.c_str());
 
 	//iprintf (indent+8, "Type: %s\n", type.c_str());
 

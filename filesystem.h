@@ -22,6 +22,7 @@
 #include <string>
 
 #include "container.h"
+#include "partition.h"
 
 class Filesystem : public Container
 {
@@ -32,9 +33,11 @@ public:
 	virtual void Dump (int indent = 0);
 
 				// container
-	std::string	type;	// name
-	long long	size;	// bytes_size
-	long long	used;	// bytes_used
+	std::string	 type;	// name
+	long long	 size;	// bytes_size
+	long long	 used;	// bytes_used
+
+	Partition	*part;
 
 protected:
 

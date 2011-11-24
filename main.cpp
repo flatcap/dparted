@@ -132,6 +132,7 @@ int disk_get_list (std::vector<Container*> &disks)
 				if (part->fs_type) {
 					Filesystem *f = new Filesystem;
 					f->type = part->fs_type->name;
+					f->part = p;
 					p->children.push_back (f);
 				}
 				d->children.push_back (p);
