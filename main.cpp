@@ -83,6 +83,7 @@ int disk_get_list (std::vector<Container*> &disks)
 	PedDisk *disk = NULL;
 	PedDiskType *type = NULL;
 	PedPartition *part = NULL;
+	Partition *extended = NULL;
 
 	ped_device_probe_all();
 
@@ -120,9 +121,13 @@ int disk_get_list (std::vector<Container*> &disks)
 			//printf ("name = %s\n", type->name);			// msdos
 			//printf ("features = %d\n", type->features);
 			disk = ped_disk_new (dev);
+			extended = NULL;
 			while ((part = ped_disk_next_partition (disk, part))) {
 				Partition *p = new Partition;
 				//std::cout << get_partition_type (part->type) << std::endl;
+				if (part->type == PED_PARTITION_EXTENDED) {
+					extended = p;
+				}
 				p->type = get_partition_type (part->type);
 				p->num = part->num;
 				p->device = part->geom.dev->path;
@@ -135,7 +140,11 @@ int disk_get_list (std::vector<Container*> &disks)
 					f->part = p;
 					p->children.push_back (f);
 				}
-				d->children.push_back (p);
+				if (part->type == PED_PARTITION_LOGICAL) {
+					extended->children.push_back (p);
+				} else {
+					d->children.push_back (p);
+				}
 			}
 			ped_disk_destroy (disk);
 		}
