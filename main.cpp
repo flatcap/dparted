@@ -77,7 +77,7 @@ std::string get_partition_type (int type)
 /**
  * disk_get_list
  */
-int disk_get_list (std::vector<Container*> &disks)
+int disk_get_list (Container &disks)
 {
 	PedDevice *dev = NULL;
 	PedDisk *disk = NULL;
@@ -92,6 +92,7 @@ int disk_get_list (std::vector<Container*> &disks)
 			continue;
 
 		Disk *d = new Disk;
+		d->parent = &disks;
 		d->model = dev->model;
 		d->device  = dev->path;
 		d->type  = dev->type;
@@ -124,6 +125,7 @@ int disk_get_list (std::vector<Container*> &disks)
 			extended = NULL;
 			while ((part = ped_disk_next_partition (disk, part))) {
 				Partition *p = new Partition;
+				p->parent = d;
 				//std::cout << get_partition_type (part->type) << std::endl;
 				if (part->type == PED_PARTITION_EXTENDED) {
 					extended = p;
@@ -136,6 +138,7 @@ int disk_get_list (std::vector<Container*> &disks)
 				p->end = part->geom.end;
 				if (part->fs_type) {
 					Filesystem *f = new Filesystem;
+					f->parent = p;
 					f->type = part->fs_type->name;
 					f->part = p;
 					p->children.push_back (f);
@@ -149,7 +152,7 @@ int disk_get_list (std::vector<Container*> &disks)
 			ped_disk_destroy (disk);
 		}
 
-		disks.push_back (d);
+		disks.children.push_back (d);
 	}
 
 	ped_device_free_all();
@@ -161,14 +164,10 @@ int disk_get_list (std::vector<Container*> &disks)
  */
 int main (int argc, char *argv[])
 {
-	std::vector<Container*> disks;
-	unsigned int i;
+	Container disks;
 
 	disk_get_list (disks);
-	for (i = 0; i < disks.size(); i++) {
-		disks[i]->Dump();
-		delete disks[i];
-	}
+	disks.Dump(-8);
 
 	return 0;
 }

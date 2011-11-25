@@ -46,7 +46,7 @@ void Partition::Dump (int indent /* = 0 */)
 	std::string size = get_size (length * 512);
 
 	iprintf (indent,   "\e[32m%s%d\e[0m (%s)\n", device.c_str()+5, num, size.c_str());
-	iprintf (indent+8, "Type:   %s\n",   type.c_str());
+	//iprintf (indent+8, "Type:   %s\n",   type.c_str());
 	iprintf (indent+8, "Start:  %lld\n", start);
 
 	//iprintf (indent+8, "Number: %d\n",   num);

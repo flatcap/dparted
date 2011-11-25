@@ -20,6 +20,7 @@
 #include <string>
 
 #include "container.h"
+#include "utils.h"
 
 /**
  * Container
@@ -49,6 +50,8 @@ Container::~Container()
 void Container::Dump (int indent /* = 0 */)
 {
 	unsigned int i;
+
+	//iprintf (indent+8, "Parent = %p\n", parent);
 	for (i = 0; i < children.size(); i++) {
 		children[i]->Dump (indent + 8);
 	}
