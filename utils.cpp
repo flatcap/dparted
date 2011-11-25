@@ -125,30 +125,54 @@ long long extract_number (const std::string &text, unsigned int &index)
 }
 
 /**
- * extract_string
+ * extract_quoted_string
  */
-std::string extract_string (const std::string &text, unsigned int &index)
+std::string extract_quoted_string (const std::string &text, unsigned int &index)
 {
-#if 0
-	unsigned int eol = text.find ('\n');
-	std::string line;
-	line = text.substr (index, eol - index);
-	printf ("line = >>%s<<\n", line.c_str());
-#endif
-
 	unsigned int start  = -1;
 	unsigned int finish = -1;
 
-	//printf ("index = %d\n", index);
 	start  = text.find ('\'', index) + 1;
 	finish = text.find ('\'', start);
 
-	//printf ("start  = %d\n", start);
-	//printf ("finish = %d\n", finish);
+	index = finish;
+
+	return text.substr (start, finish - start);
+}
+
+/**
+ * extract_quoted_long
+ */
+long extract_quoted_long (const std::string &text, unsigned int &index)
+{
+	unsigned int start  = -1;
+	unsigned int finish = -1;
+	std::string tmp;
+
+	start  = text.find ('\'', index) + 1;
+	finish = text.find ('\'', start);
 
 	index = finish;
 
-	//printf (">>%s<<\n", text.substr (start, finish - start).c_str());
-	return text.substr (start, finish - start);
+	tmp = text.substr (start, finish - start);
+	return strtol (tmp.c_str(), NULL, 10);
+}
+
+/**
+ * extract_quoted_long_long
+ */
+long long extract_quoted_long_long (const std::string &text, unsigned int &index)
+{
+	unsigned int start  = -1;
+	unsigned int finish = -1;
+	std::string tmp;
+
+	start  = text.find ('\'', index) + 1;
+	finish = text.find ('\'', start);
+
+	index = finish;
+
+	tmp = text.substr (start, finish - start);
+	return strtoll (tmp.c_str(), NULL, 10);
 }
 

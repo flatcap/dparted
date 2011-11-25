@@ -170,7 +170,6 @@ unsigned int logicals_get_list (Container &logicals)
 	std::string error;
 	LVM *lvm = NULL;
 	unsigned int index = 0;
-	std::string tmp;
 
 	command = "vgs --units=b --nosuffix  --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
 	execute_command (command, output, error);
@@ -179,72 +178,42 @@ unsigned int logicals_get_list (Container &logicals)
 
 	for (int i = 0; i < 4; i++) {
 		lvm = new LVM;
+		lvm->parent = &logicals;
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_VG_NAME: ");
 		index = output.find ("LVM2_VG_NAME", index);
-		lvm->vg_name = extract_string (output, index);
+		lvm->vg_name = extract_quoted_string (output, index);
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_PV_COUNT: ");
 		index = output.find ("LVM2_PV_COUNT", index);
-		tmp = extract_string (output, index);
-		lvm->pv_count = strtol (tmp.c_str(), NULL, 10);
+		lvm->pv_count = extract_quoted_long (output, index);
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_LV_COUNT: ");
 		index = output.find ("LVM2_LV_COUNT", index);
-		tmp = extract_string (output, index);
-		lvm->lv_count = strtol (tmp.c_str(), NULL, 10);
+		lvm->lv_count = extract_quoted_long (output, index);
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_VG_ATTR: ");
 		index = output.find ("LVM2_VG_ATTR", index);
-		lvm->vg_attr = extract_string (output, index);
+		lvm->vg_attr = extract_quoted_string (output, index);
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_VG_SIZE: ");
 		index = output.find ("LVM2_VG_SIZE", index);
-		tmp = extract_string (output, index);
-		lvm->vg_size = strtoll (tmp.c_str(), NULL, 10);
+		lvm->vg_size = extract_quoted_long_long (output, index);
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_VG_FREE: ");
 		index = output.find ("LVM2_VG_FREE", index);
-		tmp = extract_string (output, index);
-		lvm->vg_free = strtoll (tmp.c_str(), NULL, 10);
+		lvm->vg_free = extract_quoted_long_long (output, index);
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_VG_UUID: ");
 		index = output.find ("LVM2_VG_UUID", index);
-		lvm->vg_uuid = extract_string (output, index);
+		lvm->vg_uuid = extract_quoted_string (output, index);
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_VG_EXTENT_SIZE: ");
 		index = output.find ("LVM2_VG_EXTENT_SIZE", index);
-		tmp = extract_string (output, index);
-		lvm->vg_extent_size = strtoll (tmp.c_str(), NULL, 10);
+		lvm->vg_extent_size = extract_quoted_long_long (output, index);
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_VG_EXTENT_COUNT: ");
 		index = output.find ("LVM2_VG_EXTENT_COUNT", index);
-		tmp = extract_string (output, index);
-		lvm->vg_extent_count = strtoll (tmp.c_str(), NULL, 10);
+		lvm->vg_extent_count = extract_quoted_long_long (output, index);
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_VG_FREE_COUNT: ");
 		index = output.find ("LVM2_VG_FREE_COUNT", index);
-		tmp = extract_string (output, index);
-		lvm->vg_free_count = strtoll (tmp.c_str(), NULL, 10);
+		lvm->vg_free_count = extract_quoted_long_long (output, index);
 
-		//printf ("^index = %d\n", index);
-		//printf ("LVM2_VG_SEQNO: ");
 		index = output.find ("LVM2_VG_SEQNO", index);
-		tmp = extract_string (output, index);
-		lvm->vg_seqno = strtol (tmp.c_str(), NULL, 10);
+		lvm->vg_seqno = extract_quoted_long (output, index);
 
 		logicals.children.push_back (lvm);
-		//printf ("\n");
 	}
 #if 0
 	LVM2_VG_NAME='shuffle'
