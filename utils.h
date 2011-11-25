@@ -25,6 +25,7 @@ int execute_command (const std::string &command, std::string &output, std::strin
 std::string get_size (long long size);
 int iprintf (int indent, const char *format, ...) __attribute__((format(printf, 2, 3)));
 long long extract_number (const std::string &text, unsigned int &start);
+std::string extract_string (const std::string &text, unsigned int &index);
 
 #endif // _UTILS_H_
 

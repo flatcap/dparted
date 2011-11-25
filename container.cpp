@@ -38,9 +38,8 @@ Container::Container (void) :
  */
 Container::~Container()
 {
-	unsigned int i;
-	for (i = 0; i < children.size(); i++) {
-		delete children[i];
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		delete *i;
 	}
 }
 

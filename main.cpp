@@ -17,6 +17,7 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <vector>
 #include <string>
 #include <parted/parted.h>
@@ -77,7 +78,7 @@ std::string get_partition_type (int type)
 /**
  * disk_get_list
  */
-int disk_get_list (Container &disks)
+unsigned int disk_get_list (Container &disks)
 {
 	PedDevice *dev = NULL;
 	PedDisk *disk = NULL;
@@ -156,7 +157,118 @@ int disk_get_list (Container &disks)
 	}
 
 	ped_device_free_all();
-	return 0;
+	return disks.children.size();
+}
+
+/**
+ * logicals_get_list
+ */
+unsigned int logicals_get_list (Container &logicals)
+{
+	std::string command;
+	std::string output;
+	std::string error;
+	LVM *lvm = NULL;
+	unsigned int index = 0;
+	std::string tmp;
+
+	command = "vgs --units=b --nosuffix  --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
+	execute_command (command, output, error);
+
+	//printf ("%s\n", output.c_str());
+
+	for (int i = 0; i < 4; i++) {
+		lvm = new LVM;
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_VG_NAME: ");
+		index = output.find ("LVM2_VG_NAME", index);
+		lvm->vg_name = extract_string (output, index);
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_PV_COUNT: ");
+		index = output.find ("LVM2_PV_COUNT", index);
+		tmp = extract_string (output, index);
+		lvm->pv_count = strtol (tmp.c_str(), NULL, 10);
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_LV_COUNT: ");
+		index = output.find ("LVM2_LV_COUNT", index);
+		tmp = extract_string (output, index);
+		lvm->lv_count = strtol (tmp.c_str(), NULL, 10);
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_VG_ATTR: ");
+		index = output.find ("LVM2_VG_ATTR", index);
+		lvm->vg_attr = extract_string (output, index);
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_VG_SIZE: ");
+		index = output.find ("LVM2_VG_SIZE", index);
+		tmp = extract_string (output, index);
+		lvm->vg_size = strtoll (tmp.c_str(), NULL, 10);
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_VG_FREE: ");
+		index = output.find ("LVM2_VG_FREE", index);
+		tmp = extract_string (output, index);
+		lvm->vg_free = strtoll (tmp.c_str(), NULL, 10);
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_VG_UUID: ");
+		index = output.find ("LVM2_VG_UUID", index);
+		lvm->vg_uuid = extract_string (output, index);
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_VG_EXTENT_SIZE: ");
+		index = output.find ("LVM2_VG_EXTENT_SIZE", index);
+		tmp = extract_string (output, index);
+		lvm->vg_extent_size = strtoll (tmp.c_str(), NULL, 10);
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_VG_EXTENT_COUNT: ");
+		index = output.find ("LVM2_VG_EXTENT_COUNT", index);
+		tmp = extract_string (output, index);
+		lvm->vg_extent_count = strtoll (tmp.c_str(), NULL, 10);
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_VG_FREE_COUNT: ");
+		index = output.find ("LVM2_VG_FREE_COUNT", index);
+		tmp = extract_string (output, index);
+		lvm->vg_free_count = strtoll (tmp.c_str(), NULL, 10);
+
+		//printf ("^index = %d\n", index);
+		//printf ("LVM2_VG_SEQNO: ");
+		index = output.find ("LVM2_VG_SEQNO", index);
+		tmp = extract_string (output, index);
+		lvm->vg_seqno = strtol (tmp.c_str(), NULL, 10);
+
+		logicals.children.push_back (lvm);
+		//printf ("\n");
+	}
+#if 0
+	LVM2_VG_NAME='shuffle'
+	LVM2_PV_COUNT='1'
+	LVM2_LV_COUNT='1'
+	LVM2_VG_ATTR='wz--n-'
+	LVM2_VG_SIZE='205520896'
+	LVM2_VG_FREE='0'
+	LVM2_VG_UUID='0eELQs-4f76-whou-iE8J-91bO-PBpp-7vOfIJ'
+	LVM2_VG_EXTENT_SIZE='4194304'
+	LVM2_VG_EXTENT_COUNT='49'
+	LVM2_VG_FREE_COUNT='0'
+	LVM2_VG_SEQNO='11'
+#endif
+
+	return logicals.children.size();
+}
+
+/**
+ * mounts_get_list
+ */
+unsigned int mounts_get_list (Container &mounts)
+{
+	return mounts.children.size();
 }
 
 /**
@@ -164,10 +276,17 @@ int disk_get_list (Container &disks)
  */
 int main (int argc, char *argv[])
 {
-	Container disks;
+	//Container disks;
+	//disk_get_list (disks);
+	//disks.Dump(-8);
 
-	disk_get_list (disks);
-	disks.Dump(-8);
+	Container logicals;
+	logicals_get_list (logicals);
+	logicals.Dump(-8);
+
+	//Container mounts;
+	//mounts_get_list (mounts);
+	//mounts.Dump(-8);
 
 	return 0;
 }

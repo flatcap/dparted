@@ -16,7 +16,7 @@ all:	$(OUT)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OUT) $(OBJ) tags p.o l.o
+	$(RM) $(OUT) $(OBJ) tags p.o l.o p l
 
 main: $(OBJ)
 	$(CC) -o $@ $(OBJ) $(LDFLAGS)

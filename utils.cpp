@@ -124,3 +124,31 @@ long long extract_number (const std::string &text, unsigned int &index)
 	return strtoll (num.c_str(), NULL, 10);
 }
 
+/**
+ * extract_string
+ */
+std::string extract_string (const std::string &text, unsigned int &index)
+{
+#if 0
+	unsigned int eol = text.find ('\n');
+	std::string line;
+	line = text.substr (index, eol - index);
+	printf ("line = >>%s<<\n", line.c_str());
+#endif
+
+	unsigned int start  = -1;
+	unsigned int finish = -1;
+
+	//printf ("index = %d\n", index);
+	start  = text.find ('\'', index) + 1;
+	finish = text.find ('\'', start);
+
+	//printf ("start  = %d\n", start);
+	//printf ("finish = %d\n", finish);
+
+	index = finish;
+
+	//printf (">>%s<<\n", text.substr (start, finish - start).c_str());
+	return text.substr (start, finish - start);
+}
+

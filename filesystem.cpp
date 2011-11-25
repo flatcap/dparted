@@ -162,7 +162,7 @@ void Filesystem::Dump (int indent /* = 0 */)
 	std::string size = get_size (bytes_size);
 	std::string used = get_size (bytes_used);
 
-	iprintf (indent,   "\e[33m%s\e[0m\n", type.c_str());
+	iprintf (indent,   "\e[32m%s\e[0m\n", type.c_str());
 	iprintf (indent+8, "Size: %s\n",  size.c_str());
 	iprintf (indent+8, "Used: %s\n",  used.c_str());
 	//iprintf (indent+8, "Command: %s\n", command.c_str());

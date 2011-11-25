@@ -34,7 +34,7 @@ public:
 	std::string	vg_name;
 	int		pv_count;
 	int		lv_count;
-	long		vg_attr;
+	std::string	vg_attr;
 	long long	vg_size;
 	long long	vg_free;
 	std::string	vg_uuid;
