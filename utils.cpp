@@ -111,18 +111,16 @@ int iprintf(int indent, const char *format, ...)
 /**
  * extract_number
  */
-long long extract_number (const std::string & text, unsigned int start /* = 0 */)
+long long extract_number (const std::string &text, unsigned int &index)
 {
 	const char *digits = "0123456789";
-	unsigned int first = text.find_first_of     (digits, start);
+	unsigned int first = text.find_first_of     (digits, index);
 	unsigned int last  = text.find_first_not_of (digits, first);
 	std::string num;
 
-	//printf ("%s: %s\n", __FUNCTION__, text.c_str());
-	//printf ("first = %d\n", first);
-	//printf ("last  = %d\n", last);
 	num = text.substr (first, last - first);
-	//printf ("%s: %s\n", __FUNCTION__, num.c_str());
+
+	index = last;
 	return strtoll (num.c_str(), NULL, 10);
 }
 

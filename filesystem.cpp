@@ -44,18 +44,29 @@ Filesystem::~Filesystem()
  */
 void Filesystem::Dump (int indent /* = 0 */)
 {
-	std::string space = "                                                                ";
-
-	space = space.substr (0, indent);
-
 	std::string command;
 	std::string output;
 	std::string error;
+	unsigned int index = -1;
 	//int result = -1;
 
 	if ((type == "ext4") || (type == "ext3") || (type == "ext2")) {
-		command = "dump2efs -h " + part->device;
+		long long free = 0;
+
+		command = "dumpe2fs -h " + part->device;
 		command += '0' + part->num;
+		execute_command (command, output, error);
+
+		index = output.find ("Block size:");
+		block_size = extract_number (output, index);
+
+		index = output.find ("Block count:");
+		bytes_size = block_size * extract_number (output, index);
+
+		index = output.find ("Free blocks:");
+		free = block_size * extract_number (output, index);
+		bytes_used = bytes_size - free;
+
 #if 0
 		Filesystem volume name:   fedora-16
 		Last mounted on:          /
@@ -82,33 +93,25 @@ void Filesystem::Dump (int indent /* = 0 */)
 		total			21137846272
 #endif
 	} else if (type == "linux-swap(v1)") {
-		unsigned int index = -1;
-		long long free = -1;
+		// Block size 1024?
 
-		command = "cat /proc/meminfo";
+		command = "cat /proc/swaps";
 		execute_command (command, output, error);
 
-		index = output.find ("SwapTotal:");
-		size = 1024 * extract_number (output, index);
+		index = output.find ("/dev/sdc1") + 10; //strlen ("/dev/sdc1")
+		bytes_size = 1024 * extract_number (output, index);
+		bytes_used = 1024 * extract_number (output, index);
 
-		index = output.find ("SwapFree:");
-		free = 1024 * extract_number (output, index);
-
-		used = size - free;
-
-		// WRONG WRONG WRONG - could have multiple swap devices
-#if 0
-		SwapCached:        20472 kB
-		SwapTotal:       7164952 kB
-		SwapFree:        6972292 kB
-
-
-		Filename  Type      Size    Used Priority
-		/dev/sdc1 partition 7164952 440  -1
-#endif
 	} else if (type == "ntfs") {
-		command = "ntfsresize -P -i -f -v " + part->device;
+		//command = "ntfsresize -P -i -f -v " + part->device;
+		command = "df -B1 " + part->device;
 		command += '0' + part->num;
+		execute_command (command, output, error);
+
+		index = output.find ("/dev/sda7") + 10; //strlen ("/dev/sda7")
+		bytes_size = extract_number (output, index);
+		bytes_used = extract_number (output, index);
+
 #if 0
 		Device name        : /dev/sda7
 		Cluster size       : 4096 bytes
@@ -120,6 +123,17 @@ void Filesystem::Dump (int indent /* = 0 */)
 	} else if (type == "fat32") {
 		command = "dosfsck -n -v " + part->device;
 		command += '0' + part->num;
+		execute_command (command, output, error);
+
+		index = output.find ("bytes per cluster") - 12;
+		block_size = extract_number (output, index);
+
+		index = output.find ("data clusters");
+		bytes_size = extract_number (output, index);
+
+		index = output.find ("files,");
+		bytes_used = block_size * extract_number (output, index);
+
 #if 0
 		512 bytes per logical sector
 		16384 bytes per cluster
@@ -145,10 +159,13 @@ void Filesystem::Dump (int indent /* = 0 */)
 
 	//result = execute_command (command, output, error);
 
+	std::string size = get_size (bytes_size);
+	std::string used = get_size (bytes_used);
+
 	iprintf (indent,   "\e[33m%s\e[0m\n", type.c_str());
-	iprintf (indent+8, "Size: %lld\n",  size);
-	iprintf (indent+8, "Used: %lld\n",  used);
-	iprintf (indent+8, "Command: %s\n", command.c_str());
+	iprintf (indent+8, "Size: %s\n",  size.c_str());
+	iprintf (indent+8, "Used: %s\n",  used.c_str());
+	//iprintf (indent+8, "Command: %s\n", command.c_str());
 
 	//iprintf (indent+8, "Type: %s\n", type.c_str());
 

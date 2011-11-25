@@ -24,7 +24,11 @@
 /**
  * Container
  */
-Container::Container (void)
+Container::Container (void) :
+	block_size (-1),
+	bytes_size (-1),
+	bytes_used (-1),
+	parent (NULL)
 {
 }
 
