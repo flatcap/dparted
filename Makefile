@@ -1,7 +1,7 @@
 CC	= g++
 
-SRC	= container.cpp disk.cpp filesystem.cpp main.cpp partition.cpp utils.cpp volumegroup.cpp
-HDR	= container.h disk.h filesystem.h partition.h utils.h volumegroup.h
+SRC	= container.cpp disk.cpp filesystem.cpp main.cpp partition.cpp utils.cpp volume.cpp volumegroup.cpp
+HDR	= container.h disk.h filesystem.h partition.h utils.h volume.h volumegroup.h
 OBJ	= $(SRC:.cpp=.o)
 
 OUT	= main

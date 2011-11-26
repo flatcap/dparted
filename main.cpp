@@ -20,13 +20,15 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <map>
 #include <parted/parted.h>
 
 #include "container.h"
 #include "disk.h"
 #include "filesystem.h"
-#include "volumegroup.h"
 #include "partition.h"
+#include "volumegroup.h"
+#include "volume.h"
 
 #include "utils.h"
 
@@ -169,14 +171,17 @@ unsigned int logicals_get_list (Container &logicals)
 	std::string output;
 	std::string error;
 	VolumeGroup *vg = NULL;
+	Volume *vol = NULL;
 	unsigned int index = 0;
+	std::map<std::string, VolumeGroup*> vg_lookup;
+	int i;
 
 	command = "vgs --units=b --nosuffix  --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
 	execute_command (command, output, error);
 
 	//printf ("%s\n", output.c_str());
 
-	for (int i = 0; i < 4; i++) {
+	for (i = 0; i < 4; i++) {
 		vg = new VolumeGroup;
 		vg->parent = &logicals;
 
@@ -214,6 +219,54 @@ unsigned int logicals_get_list (Container &logicals)
 		vg->vg_seqno = extract_quoted_long (output, index);
 
 		logicals.children.push_back (vg);
+
+		vg_lookup[vg->vg_uuid] = vg;
+	}
+
+	std::map<std::string,VolumeGroup*>::iterator it;
+
+#if 0
+	printf ("map:\n");
+	for (it = vg_lookup.begin(); it != vg_lookup.end(); it++) {
+		printf ("\t%s => %p\n", (*it).first.c_str(), (*it).second);
+	}
+	printf ("\n");
+#endif
+
+	command = "lvs --all --units=b --nosuffix --noheadings --nameprefixes --options vg_uuid,lv_name,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices";
+	execute_command (command, output, error);
+
+	//printf ("%s\n", output.c_str());
+
+	index = 0;
+	for (i = 0; i < 27; i++) {
+		vol = new Volume;
+
+		index = output.find ("LVM2_VG_UUID", index);
+		std::string vg_uuid = extract_quoted_string (output, index);
+
+		index = output.find ("LVM2_LV_NAME", index);
+		vol->name = extract_quoted_string (output, index);
+
+		index = output.find ("LVM2_LV_ATTR", index);
+		vol->attr = extract_quoted_string (output, index);
+
+		index = output.find ("LVM2_LV_SIZE", index);
+		vol->size = extract_quoted_long_long (output, index);
+
+		index = output.find ("LVM2_LV_PATH", index);
+		vol->path = extract_quoted_string (output, index);
+
+		index = output.find ("LVM2_LV_KERNEL_MAJOR", index);
+		vol->kernel_major = extract_quoted_long (output, index);
+
+		index = output.find ("LVM2_LV_KERNEL_MINOR", index);
+		vol->kernel_minor = extract_quoted_long (output, index);
+
+		//printf ("vg = %s   lv = %s\n", tmp1.c_str(), vol->name.c_str());
+
+		vol->parent = vg_lookup[vg_uuid];
+		vol->parent->children.push_back (vol);
 	}
 
 	return logicals.children.size();
