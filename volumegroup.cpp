@@ -18,27 +18,27 @@
 
 #include <string>
 
-#include "lvm.h"
+#include "volumegroup.h"
 #include "utils.h"
 
 /**
- * LVM
+ * VolumeGroup
  */
-LVM::LVM (void)
+VolumeGroup::VolumeGroup (void)
 {
 }
 
 /**
- * ~LVM
+ * ~VolumeGroup
  */
-LVM::~LVM()
+VolumeGroup::~VolumeGroup()
 {
 }
 
 /**
  * Dump
  */
-void LVM::Dump (int indent /* = 0 */)
+void VolumeGroup::Dump (int indent /* = 0 */)
 {
 	std::string size = get_size (vg_size);
 

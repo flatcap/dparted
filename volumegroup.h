@@ -16,18 +16,18 @@
  */
 
 
-#ifndef _LVM_H_
-#define _LVM_H_
+#ifndef _VOLUMEGROUP_H_
+#define _VOLUMEGROUP_H_
 
 #include <string>
 
 #include "container.h"
 
-class LVM : public Container
+class VolumeGroup : public Container
 {
 public:
-	LVM (void);
-	virtual ~LVM();
+	VolumeGroup (void);
+	virtual ~VolumeGroup();
 
 	virtual void Dump (int indent = 0);
 
@@ -49,5 +49,5 @@ private:
 
 };
 
-#endif /* _LVM_H_ */
+#endif /* _VOLUMEGROUP_H_ */
 

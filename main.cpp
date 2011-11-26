@@ -25,7 +25,7 @@
 #include "container.h"
 #include "disk.h"
 #include "filesystem.h"
-#include "lvm.h"
+#include "volumegroup.h"
 #include "partition.h"
 
 #include "utils.h"
@@ -168,7 +168,7 @@ unsigned int logicals_get_list (Container &logicals)
 	std::string command;
 	std::string output;
 	std::string error;
-	LVM *lvm = NULL;
+	VolumeGroup *vg = NULL;
 	unsigned int index = 0;
 
 	command = "vgs --units=b --nosuffix  --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
@@ -177,57 +177,44 @@ unsigned int logicals_get_list (Container &logicals)
 	//printf ("%s\n", output.c_str());
 
 	for (int i = 0; i < 4; i++) {
-		lvm = new LVM;
-		lvm->parent = &logicals;
+		vg = new VolumeGroup;
+		vg->parent = &logicals;
 
 		index = output.find ("LVM2_VG_NAME", index);
-		lvm->vg_name = extract_quoted_string (output, index);
+		vg->vg_name = extract_quoted_string (output, index);
 
 		index = output.find ("LVM2_PV_COUNT", index);
-		lvm->pv_count = extract_quoted_long (output, index);
+		vg->pv_count = extract_quoted_long (output, index);
 
 		index = output.find ("LVM2_LV_COUNT", index);
-		lvm->lv_count = extract_quoted_long (output, index);
+		vg->lv_count = extract_quoted_long (output, index);
 
 		index = output.find ("LVM2_VG_ATTR", index);
-		lvm->vg_attr = extract_quoted_string (output, index);
+		vg->vg_attr = extract_quoted_string (output, index);
 
 		index = output.find ("LVM2_VG_SIZE", index);
-		lvm->vg_size = extract_quoted_long_long (output, index);
+		vg->vg_size = extract_quoted_long_long (output, index);
 
 		index = output.find ("LVM2_VG_FREE", index);
-		lvm->vg_free = extract_quoted_long_long (output, index);
+		vg->vg_free = extract_quoted_long_long (output, index);
 
 		index = output.find ("LVM2_VG_UUID", index);
-		lvm->vg_uuid = extract_quoted_string (output, index);
+		vg->vg_uuid = extract_quoted_string (output, index);
 
 		index = output.find ("LVM2_VG_EXTENT_SIZE", index);
-		lvm->vg_extent_size = extract_quoted_long_long (output, index);
+		vg->vg_extent_size = extract_quoted_long_long (output, index);
 
 		index = output.find ("LVM2_VG_EXTENT_COUNT", index);
-		lvm->vg_extent_count = extract_quoted_long_long (output, index);
+		vg->vg_extent_count = extract_quoted_long_long (output, index);
 
 		index = output.find ("LVM2_VG_FREE_COUNT", index);
-		lvm->vg_free_count = extract_quoted_long_long (output, index);
+		vg->vg_free_count = extract_quoted_long_long (output, index);
 
 		index = output.find ("LVM2_VG_SEQNO", index);
-		lvm->vg_seqno = extract_quoted_long (output, index);
+		vg->vg_seqno = extract_quoted_long (output, index);
 
-		logicals.children.push_back (lvm);
+		logicals.children.push_back (vg);
 	}
-#if 0
-	LVM2_VG_NAME='shuffle'
-	LVM2_PV_COUNT='1'
-	LVM2_LV_COUNT='1'
-	LVM2_VG_ATTR='wz--n-'
-	LVM2_VG_SIZE='205520896'
-	LVM2_VG_FREE='0'
-	LVM2_VG_UUID='0eELQs-4f76-whou-iE8J-91bO-PBpp-7vOfIJ'
-	LVM2_VG_EXTENT_SIZE='4194304'
-	LVM2_VG_EXTENT_COUNT='49'
-	LVM2_VG_FREE_COUNT='0'
-	LVM2_VG_SEQNO='11'
-#endif
 
 	return logicals.children.size();
 }
