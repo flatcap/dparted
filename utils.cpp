@@ -179,16 +179,24 @@ long long extract_quoted_long_long (const std::string &text, unsigned int &index
 /**
  * extract_dev_range
  */
-int extract_dev_range (const std::string &text, std::string &device, int &start, int &finish)
+int extract_dev_range (const std::string &text, std::string &device, int &start, int &finish, int element /* = 0 */)
 {
-	int colon = text.find (':');
-	int dash  = text.find ('-');
+	int index = 0;
 
-	device = text.substr (0, colon);
+	for (int i = 0; i < element; i++) {
+		index = text.find (' ', index) + 1;
+	}
+
+	int colon = text.find (':', index);
+	int dash  = text.find ('-', index);
+	//printf ("\tindex = %d, colon = %d, dash = %d\n", index, colon, dash);
+
+	device = text.substr (index, colon - index);
 
 	start  = strtol (text.substr (colon + 1, dash - 1).c_str(), NULL, 10);
 	finish = strtol (text.substr (dash + 1).c_str(), NULL, 10);
 
+	//printf ("\tdevice = %s, start = %d, finish = %d\n", device.c_str(), start, finish);
 	return 0;
 }
 

@@ -18,45 +18,28 @@
 
 #include <string>
 
-#include "volume.h"
+#include "mount.h"
 #include "utils.h"
 
 /**
- * Volume
+ * Mount
  */
-Volume::Volume (void)
+Mount::Mount (void)
 {
 }
 
 /**
- * ~Volume
+ * ~Mount
  */
-Volume::~Volume()
+Mount::~Mount()
 {
 }
 
 /**
  * Dump
  */
-void Volume::Dump (int indent /* = 0 */)
+void Mount::Dump (int indent /* = 0 */)
 {
-	std::string size = get_size (lv_size);
-
-	iprintf (indent,   "\e[36m%s\e[0m (%s)\n", lv_name.c_str(), size.c_str());
-	iprintf (indent+8, "path: %s\n", lv_path.c_str());
-
-	//iprintf (indent+8, "major: %d\n", kernel_major);
-	//iprintf (indent+8, "minor: %d\n", kernel_minor);
-	//iprintf (indent+8, "attr: %s\n", lv_attr.c_str());
-
-	for (unsigned int i = 0; i < segments.size(); i++) {
-		iprintf (indent+8,  "Segment %d\n", i);
-		iprintf (indent+16, "vol offset    = %lld\n", segments[i].volume_offset);
-		iprintf (indent+16, "device        = %s\n",   segments[i].device.c_str());
-		iprintf (indent+16, "seg size      = %lld\n", segments[i].segment_size);
-		iprintf (indent+16, "device offset = %lld\n", segments[i].device_offset);
-	}
-
 	Container::Dump (indent);
 }
 

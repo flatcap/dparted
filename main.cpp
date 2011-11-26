@@ -26,6 +26,7 @@
 #include "container.h"
 #include "disk.h"
 #include "filesystem.h"
+#include "mount.h"
 #include "partition.h"
 #include "volumegroup.h"
 #include "volume.h"
@@ -315,7 +316,7 @@ unsigned int logicals_get_list (Container &logicals)
 		//printf ("\tseg type = %s\n", segtype.c_str());
 
 		index = line.find ("LVM2_STRIPES", index);
-		std::string stripes = extract_quoted_string (line, index);
+		long stripes = extract_quoted_long (line, index);
 		//printf ("\tstripes = %s\n", stripes.c_str());
 
 		index = line.find ("LVM2_STRIPE_SIZE", index);
@@ -332,28 +333,37 @@ unsigned int logicals_get_list (Container &logicals)
 
 		index = line.find ("LVM2_SEG_PE_RANGES", index);
 		std::string seg_pe_ranges = extract_quoted_string (line, index);
+		//printf ("\t                0         1         2         3         4         \n");
+		//printf ("\t                01234567890123456789012345678901234567890123456789\n");
 		//printf ("\tseg pe ranges = %s\n", seg_pe_ranges.c_str());
 		std::string pe_device;
 		int pe_start  = -1;
 		int pe_finish = -1;
-		extract_dev_range (seg_pe_ranges, pe_device, pe_start, pe_finish);
-		//printf ("\tseg pe ranges = %s, %d, %d\n", pe_device.c_str(), pe_start, pe_finish);
-		vol_seg.volume_offset = seg_start;
-		vol_seg.device        = pe_device;
-		vol_seg.segment_size  = seg_size;
-		vol_seg.device_offset = pe_start * seg_size;
 
-		bool inserted = false;
-		for (std::vector<VolumeSegment>::iterator it = vol->segments.begin(); it != vol->segments.end(); it++) {
-			if (it->volume_offset > vol_seg.volume_offset) {
-				vol->segments.insert (it, vol_seg);
-				inserted = true;
-				//printf ("inserted\n"); fflush (stdout);
-				break;
-			}
+		for (int s = 0; s < stripes; s++) {
+				extract_dev_range (seg_pe_ranges, pe_device, pe_start, pe_finish, s);
+				//printf ("\tseg pe ranges = %s, %d, %d\n", pe_device.c_str(), pe_start, pe_finish);
+
+				vol_seg.volume_offset = seg_start;
+				vol_seg.device        = pe_device;
+				vol_seg.segment_size  = seg_size;
+				vol_seg.device_offset = pe_start * seg_size;
+
+				bool inserted = false;
+				for (std::vector<VolumeSegment>::iterator it = vol->segments.begin(); it != vol->segments.end(); it++) {
+					if (it->volume_offset > vol_seg.volume_offset) {
+						vol->segments.insert (it, vol_seg);
+						inserted = true;
+						//printf ("inserted\n"); fflush (stdout);
+						break;
+					}
+				}
+
+				if (!inserted) {
+					vol->segments.push_back (vol_seg);
+				}
 		}
-		if (!inserted)
-			vol->segments.push_back (vol_seg);
+
 		//printf ("\n");
 		//printf ("vg = %s   lv = %s\n", tmp1.c_str(), vol->name.c_str());
 	}
@@ -366,6 +376,21 @@ unsigned int logicals_get_list (Container &logicals)
  */
 unsigned int mounts_get_list (Container &mounts)
 {
+	std::string command;
+	std::string output;
+	std::string error;
+	std::vector<std::string> lines;
+	unsigned int i;
+
+	command = "grep '^/dev' /proc/mounts";
+	execute_command (command, output, error);
+	get_lines (output, lines);
+
+	for (i = 0; i < lines.size(); i++) {
+		std::string line = lines[i];
+		printf ("line%d:\n%s\n\n", i, line.c_str());
+	}
+
 	return mounts.children.size();
 }
 
