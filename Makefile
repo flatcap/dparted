@@ -16,7 +16,7 @@ all:	$(OUT)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OUT) $(OBJ) tags l.o m.o p.o l m p
+	$(RM) $(OUT) $(OBJ) tags l.o m.o p.o s.o l m p s
 
 main: $(OBJ)
 	$(CC) -o $@ $(OBJ) $(LDFLAGS)
@@ -30,8 +30,19 @@ m:	m.o
 p:	p.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
+s:	s.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+
 tags:   force
 	ctags *.cpp *.h /usr/include/parted/*.h
 
 force:
 
+container.o:	container.cpp container.h utils.h
+disk.o:		disk.cpp disk.h container.h utils.h
+filesystem.o:	filesystem.cpp filesystem.h container.h partition.h utils.h
+main.o:		main.cpp container.h disk.h filesystem.h partition.h volumegroup.h volume.h utils.h
+partition.o:	partition.cpp partition.h container.h utils.h
+utils.o:	utils.cpp utils.h
+volume.o:	volume.cpp volume.h container.h utils.h
+volumegroup.o:	volumegroup.cpp volumegroup.h container.h utils.h
