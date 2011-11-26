@@ -16,12 +16,15 @@ all:	$(OUT)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OUT) $(OBJ) tags p.o l.o p l
+	$(RM) $(OUT) $(OBJ) tags l.o m.o p.o l m p
 
 main: $(OBJ)
 	$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 l:	l.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+m:	m.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 p:	p.o
