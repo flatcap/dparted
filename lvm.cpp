@@ -40,19 +40,21 @@ LVM::~LVM()
  */
 void LVM::Dump (int indent /* = 0 */)
 {
-	iprintf (indent, "\e[35m%s\e[0m\n", vg_name.c_str());
+	std::string size = get_size (vg_size);
 
-	iprintf (indent+8, "vg_name:         %s\n",   vg_name.c_str());
+	iprintf (indent, "\e[35m%s\e[0m (%s)\n", vg_name.c_str(), size.c_str());
+
+	//iprintf (indent+8, "vg_name:         %s\n",   vg_name.c_str());
 	iprintf (indent+8, "pv_count:        %d\n",   pv_count);
 	iprintf (indent+8, "lv_count:        %d\n",   lv_count);
 	iprintf (indent+8, "vg_attr:         %s\n",   vg_attr.c_str());
-	iprintf (indent+8, "vg_size:         %lld\n", vg_size);
+	//iprintf (indent+8, "vg_size:         %lld\n", vg_size);
 	iprintf (indent+8, "vg_free:         %lld\n", vg_free);
 	iprintf (indent+8, "vg_uuid:         %s\n",   vg_uuid.c_str());
-	iprintf (indent+8, "vg_extent_size:  %lld\n", vg_extent_size);
-	iprintf (indent+8, "vg_extent_count: %lld\n", vg_extent_count);
-	iprintf (indent+8, "vg_free_count:   %lld\n", vg_free_count);
-	iprintf (indent+8, "vg_seqno:        %ld\n",  vg_seqno);
+	//iprintf (indent+8, "vg_extent_size:  %lld\n", vg_extent_size);
+	//iprintf (indent+8, "vg_extent_count: %lld\n", vg_extent_count);
+	//iprintf (indent+8, "vg_free_count:   %lld\n", vg_free_count);
+	//iprintf (indent+8, "vg_seqno:        %ld\n",  vg_seqno);
 
 	Container::Dump (indent);
 }
