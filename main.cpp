@@ -399,9 +399,9 @@ unsigned int mounts_get_list (Container &mounts)
  */
 int main (int argc, char *argv[])
 {
-	//Container disks;
-	//disk_get_list (disks);
-	//disks.Dump(-8);
+	Container disks;
+	disk_get_list (disks);
+	disks.Dump(-8);
 
 	Container logicals;
 	logicals_get_list (logicals);

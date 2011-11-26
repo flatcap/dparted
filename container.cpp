@@ -26,6 +26,7 @@
  * Container
  */
 Container::Container (void) :
+	type (0),
 	block_size (-1),
 	bytes_size (-1),
 	bytes_used (-1),

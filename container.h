@@ -19,6 +19,7 @@
 #ifndef _CONTAINER_H_
 #define _CONTAINER_H_
 
+#include <string>
 #include <vector>
 
 class Container
@@ -29,7 +30,12 @@ public:
 
 	virtual void Dump (int indent = 0);
 
+	//virtual int AddChild (Container *child);
+
+	int		 type;
+
 	std::string	 name;
+	std::string	 label;
 	std::string	 device;
 	std::string	 uuid;
 
@@ -39,6 +45,7 @@ public:
 
 	Container	*parent;
 	std::vector<Container*> children;
+	std::vector<long long>  offsets;
 
 protected:
 
