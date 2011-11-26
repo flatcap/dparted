@@ -176,3 +176,34 @@ long long extract_quoted_long_long (const std::string &text, unsigned int &index
 	return strtoll (tmp.c_str(), NULL, 10);
 }
 
+/**
+ * extract_dev_range
+ */
+int extract_dev_range (const std::string &text, std::string &device, int &start, int &finish)
+{
+	int colon = text.find (':');
+	int dash  = text.find ('-');
+
+	device = text.substr (0, colon);
+
+	start  = strtol (text.substr (colon + 1, dash - 1).c_str(), NULL, 10);
+	finish = strtol (text.substr (dash + 1).c_str(), NULL, 10);
+
+	return 0;
+}
+
+/**
+ * get_lines
+ */
+unsigned int get_lines (const std::string &output, std::vector<std::string> &lines)
+{
+	int start = 0;
+	int end   = -1;
+
+	while ((end = output.find ('\n', start)) > 0) {
+		std::string tmp = output.substr (start, end - start);
+		lines.push_back (tmp);
+		start = end + 1;
+	}
+	return lines.size();
+}

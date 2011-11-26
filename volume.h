@@ -23,6 +23,16 @@
 
 #include "container.h"
 
+typedef struct _VolumeSegment VolumeSegment;
+
+struct _VolumeSegment
+{
+	long long	volume_offset;
+	std::string	device;
+	long long	segment_size;
+	long long	device_offset;
+};
+
 class Volume : public Container
 {
 public:
@@ -37,6 +47,9 @@ public:
 	std::string	lv_path;
 	int		kernel_major;
 	int		kernel_minor;
+
+	int		seg_count;
+	std::vector<VolumeSegment> segments;
 
 protected:
 

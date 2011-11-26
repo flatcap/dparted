@@ -43,6 +43,8 @@ public:
 	long long	vg_free_count;
 	long		vg_seqno;
 
+	std::vector<std::string> devices;
+
 protected:
 
 private:
