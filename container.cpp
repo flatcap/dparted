@@ -50,7 +50,7 @@ void Container::Dump (int indent /* = 0 */)
 {
 	unsigned int i;
 
-	//iprintf (indent+8, "Parent = %p\n", parent);
+	//iprintf (indent+8, "\e[07;31mParent = %p\e[0m\n", parent);
 	for (i = 0; i < children.size(); i++) {
 		children[i]->Dump (indent + 8);
 	}

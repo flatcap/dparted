@@ -246,16 +246,16 @@ unsigned int logicals_get_list (Container &logicals)
 		std::string vg_uuid = extract_quoted_string (output, index);
 
 		index = output.find ("LVM2_LV_NAME", index);
-		vol->name = extract_quoted_string (output, index);
+		vol->lv_name = extract_quoted_string (output, index);
 
 		index = output.find ("LVM2_LV_ATTR", index);
-		vol->attr = extract_quoted_string (output, index);
+		vol->lv_attr = extract_quoted_string (output, index);
 
 		index = output.find ("LVM2_LV_SIZE", index);
-		vol->size = extract_quoted_long_long (output, index);
+		vol->lv_size = extract_quoted_long_long (output, index);
 
 		index = output.find ("LVM2_LV_PATH", index);
-		vol->path = extract_quoted_string (output, index);
+		vol->lv_path = extract_quoted_string (output, index);
 
 		index = output.find ("LVM2_LV_KERNEL_MAJOR", index);
 		vol->kernel_major = extract_quoted_long (output, index);
