@@ -27,6 +27,7 @@
 #include "disk.h"
 #include "filesystem.h"
 #include "mount.h"
+#include "msdos.h"
 #include "partition.h"
 #include "volumegroup.h"
 #include "volume.h"
@@ -125,13 +126,19 @@ unsigned int disk_get_list (Container &disks)
 
 		type = ped_disk_probe (dev);
 		if (type) {
+			Msdos *m = new Msdos;
+			d->children.push_back (m);
+			m->parent = d;
+			m->bytes_size = d->bytes_size;
+			m->bytes_used = d->bytes_size;
+
 			//printf ("name = %s\n", type->name);			// msdos
 			//printf ("features = %d\n", type->features);
 			disk = ped_disk_new (dev);
 			extended = NULL;
 			while ((part = ped_disk_next_partition (disk, part))) {
 				Partition *p = new Partition;
-				p->parent = d;
+				p->parent = m;
 				//std::cout << get_partition_type (part->type) << std::endl;
 				if (part->type == PED_PARTITION_EXTENDED) {
 					extended = p;
@@ -152,7 +159,7 @@ unsigned int disk_get_list (Container &disks)
 				if (part->type == PED_PARTITION_LOGICAL) {
 					extended->children.push_back (p);
 				} else {
-					d->children.push_back (p);
+					m->children.push_back (p);
 				}
 			}
 			ped_disk_destroy (disk);
