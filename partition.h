@@ -32,9 +32,8 @@ public:
 	virtual void Dump (int indent = 0);
 
 				// container
-	std::string type;	// name
 	long long start;	// offset?
-	long long length;	// bytes_size
+	//long long length;	// bytes_size
 	long long end;		// ???
 
 	int num;

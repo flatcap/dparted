@@ -31,12 +31,12 @@ public:
 
 	virtual void Dump (int indent = 0);
 
-	std::string	model;
-	std::string	path;
+	//std::string	model;
+	//std::string	path;
 	int		type;
-	long		sector_size;
-	long		phys_sector_size;
-	long long	length;
+	//long		sector_size;
+	//long		phys_sector_size;
+	//long long	length;
 	bool		read_only;
 	int		hw_cylinders;
 	int		hw_heads;

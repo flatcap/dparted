@@ -97,12 +97,14 @@ unsigned int disk_get_list (Container &disks)
 
 		Disk *d = new Disk;
 		d->parent = &disks;
-		d->model = dev->model;
+		d->name = dev->model;
 		d->device  = dev->path;
 		d->type  = dev->type;
-		d->sector_size = dev->sector_size;
-		d->phys_sector_size = dev->phys_sector_size;
-		d->length = dev->length;
+		//XXX if they differ, take the larger one
+		d->block_size = dev->sector_size;
+		//d->phys_sector_size = dev->phys_sector_size;
+
+		d->bytes_size = dev->length;
 
 		d->hw_cylinders = dev->hw_geom.cylinders;
 		d->hw_heads     = dev->hw_geom.heads;
@@ -134,16 +136,16 @@ unsigned int disk_get_list (Container &disks)
 				if (part->type == PED_PARTITION_EXTENDED) {
 					extended = p;
 				}
-				p->type = get_partition_type (part->type);
+				p->name = get_partition_type (part->type);
 				p->num = part->num;
 				p->device = part->geom.dev->path;
 				p->start = part->geom.start;
-				p->length = part->geom.length;
+				p->bytes_size = part->geom.length * 512; //XXX need to ask the disk for the multiplicand
 				p->end = part->geom.end;
 				if (part->fs_type) {
 					Filesystem *f = new Filesystem;
 					f->parent = p;
-					f->type = part->fs_type->name;
+					f->name = part->fs_type->name;
 					f->part = p;
 					p->children.push_back (f);
 				}
@@ -403,9 +405,9 @@ int main (int argc, char *argv[])
 	disk_get_list (disks);
 	disks.Dump(-8);
 
-	Container logicals;
-	logicals_get_list (logicals);
-	logicals.Dump(-8);
+	//Container logicals;
+	//logicals_get_list (logicals);
+	//logicals.Dump(-8);
 
 	//Container mounts;
 	//mounts_get_list (mounts);

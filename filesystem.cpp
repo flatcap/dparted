@@ -28,8 +28,6 @@
  */
 Filesystem::Filesystem (void)
 {
-	size = -1;
-	used = -1;
 }
 
 /**
@@ -50,7 +48,7 @@ void Filesystem::Dump (int indent /* = 0 */)
 	unsigned int index = -1;
 	//int result = -1;
 
-	if ((type == "ext4") || (type == "ext3") || (type == "ext2")) {
+	if ((name == "ext4") || (name == "ext3") || (name == "ext2")) {
 		long long free = 0;
 
 		command = "dumpe2fs -h " + part->device;
@@ -92,7 +90,7 @@ void Filesystem::Dump (int indent /* = 0 */)
 		free			12670472192
 		total			21137846272
 #endif
-	} else if (type == "linux-swap(v1)") {
+	} else if (name == "linux-swap(v1)") {
 		// Block size 1024?
 
 		command = "cat /proc/swaps";
@@ -102,7 +100,7 @@ void Filesystem::Dump (int indent /* = 0 */)
 		bytes_size = 1024 * extract_number (output, index);
 		bytes_used = 1024 * extract_number (output, index);
 
-	} else if (type == "ntfs") {
+	} else if (name == "ntfs") {
 		//command = "ntfsresize -P -i -f -v " + part->device;
 		command = "df -B1 " + part->device;
 		command += '0' + part->num;
@@ -120,7 +118,7 @@ void Filesystem::Dump (int indent /* = 0 */)
 		Space in use       : 74 MB (0.0%)
 		You might resize at 73482240 bytes or 74 MB (freeing 193578 MB).
 #endif
-	} else if (type == "fat32") {
+	} else if (name == "fat32") {
 		command = "dosfsck -n -v " + part->device;
 		command += '0' + part->num;
 		execute_command (command, output, error);
@@ -162,7 +160,7 @@ void Filesystem::Dump (int indent /* = 0 */)
 	std::string size = get_size (bytes_size);
 	std::string used = get_size (bytes_used);
 
-	iprintf (indent,   "\e[32m%s\e[0m\n", type.c_str());
+	iprintf (indent,   "\e[32m%s\e[0m\n", name.c_str());
 	iprintf (indent+8, "Size: %s\n",  size.c_str());
 	iprintf (indent+8, "Used: %s\n",  used.c_str());
 	//iprintf (indent+8, "Command: %s\n", command.c_str());

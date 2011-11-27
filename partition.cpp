@@ -43,7 +43,7 @@ void Partition::Dump (int indent /* = 0 */)
 	if (num < 0)
 		return;
 
-	std::string size = get_size (length * 512);
+	std::string size = get_size (bytes_size);
 
 	iprintf (indent,   "\e[33m%s%d\e[0m (%s)\n", device.c_str()+5, num, size.c_str());
 	//iprintf (indent+8, "Type:   %s\n",   type.c_str());

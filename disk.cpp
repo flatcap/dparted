@@ -40,11 +40,11 @@ Disk::~Disk()
  */
 void Disk::Dump (int indent /* = 0 */)
 {
-	std::string size = get_size (length * sector_size);
+	std::string size = get_size (bytes_size);
 
 	iprintf (indent,   "\e[31m%s\e[0m (%s)\n",  device.c_str(), size.c_str());
-	iprintf (indent+8, "Model:  %s\n",  model.c_str());
-	iprintf (indent+8, "Sector: %ld\n", sector_size);
+	iprintf (indent+8, "Model:  %s\n",  name.c_str());
+	iprintf (indent+8, "Sector: %ld\n", block_size);
 
 	//iprintf (indent+8, "Path:   %s\n",   path.c_str());
 	//iprintf (indent+8, "Type:   %d\n",   type);
