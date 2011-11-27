@@ -49,23 +49,18 @@ Container::~Container()
  */
 void Container::dump (int indent /* = 0 */)
 {
-	unsigned int i;
-
-	//iprintf (indent+8, "\e[07;31mParent = %p\e[0m\n", parent);
-	for (i = 0; i < children.size(); i++) {
-		children[i]->dump (indent + 8);
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		(*i)->dump (indent + 8);
 	}
 }
 
-/**
+/*
  * dump_csv
  */
 void Container::dump_csv (void)
 {
-	unsigned int i;
-
-	for (i = 0; i < children.size(); i++) {
-		children[i]->dump_csv();
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		(*i)->dump_csv();
 	}
 }
 

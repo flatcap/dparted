@@ -410,7 +410,9 @@ int main (int argc, char *argv[])
 {
 	Container disks;
 	disk_get_list (disks);
-	disks.dump(-8);
+	//disks.dump(-8);
+	printf ("ContainerType,Device,Name,Blocksize,Label,UUID,Total,Used,Free\n");
+	disks.dump_csv();
 
 	//Container logicals;
 	//logicals_get_list (logicals);

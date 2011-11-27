@@ -16,6 +16,7 @@
  */
 
 
+#include <stdio.h>
 #include <string>
 
 #include "msdos.h"
@@ -51,6 +52,16 @@ void Msdos::dump (int indent /* = 0 */)
  */
 void Msdos::dump_csv (void)
 {
+	printf ("%s,%s,%s,%ld,%s,%s,%lld,%lld,%lld\n",
+		"MSDOS",
+		"<none>",
+		name.c_str(),
+		block_size,
+		label.c_str(),
+		uuid.c_str(),
+		bytes_size,
+		bytes_used,
+		bytes_size - bytes_used);
 	Container::dump_csv();
 }
 
