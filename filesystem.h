@@ -31,6 +31,7 @@ public:
 	virtual ~Filesystem();
 
 	virtual void dump (int indent = 0);
+	virtual void dump_csv (void);
 
 	Partition	*part;
 

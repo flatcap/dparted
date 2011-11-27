@@ -30,6 +30,7 @@ public:
 	virtual ~VolumeGroup();
 
 	virtual void dump (int indent = 0);
+	virtual void dump_csv (void);
 
 	std::string	vg_name;
 	int		pv_count;

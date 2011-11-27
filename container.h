@@ -29,6 +29,8 @@ public:
 	virtual ~Container();
 
 	virtual void dump (int indent = 0);
+	virtual void dump_csv (void);
+
 
 	//virtual int AddChild (Container *child);
 

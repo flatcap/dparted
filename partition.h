@@ -30,6 +30,7 @@ public:
 	virtual ~Partition();
 
 	virtual void dump (int indent = 0);
+	virtual void dump_csv (void);
 
 				// container
 	long long start;	// offset?

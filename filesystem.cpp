@@ -170,3 +170,11 @@ void Filesystem::dump (int indent /* = 0 */)
 	Container::dump (indent);
 }
 
+/**
+ * dump_csv
+ */
+void Filesystem::dump_csv (void)
+{
+	Container::dump_csv();
+}
+

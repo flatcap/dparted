@@ -57,3 +57,15 @@ void Container::dump (int indent /* = 0 */)
 	}
 }
 
+/**
+ * dump_csv
+ */
+void Container::dump_csv (void)
+{
+	unsigned int i;
+
+	for (i = 0; i < children.size(); i++) {
+		children[i]->dump_csv();
+	}
+}
+

@@ -40,6 +40,7 @@ public:
 	virtual ~Volume();
 
 	virtual void dump (int indent = 0);
+	virtual void dump_csv (void);
 
 	std::string	lv_name;
 	std::string	lv_attr;

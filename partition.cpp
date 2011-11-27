@@ -56,3 +56,11 @@ void Partition::dump (int indent /* = 0 */)
 	Container::dump (indent);
 }
 
+/**
+ * dump_csv
+ */
+void Partition::dump_csv (void)
+{
+	Container::dump_csv();
+}
+
