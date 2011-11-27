@@ -36,13 +36,13 @@ Msdos::~Msdos()
 }
 
 /**
- * Dump
+ * dump
  */
-void Msdos::Dump (int indent /* = 0 */)
+void Msdos::dump (int indent /* = 0 */)
 {
 	std::string size = get_size (bytes_size);
 
 	iprintf (indent, "\e[01;34mmsdos\e[0m (%s)\n", size.c_str());
-	Container::Dump (indent);
+	Container::dump (indent);
 }
 

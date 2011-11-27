@@ -36,9 +36,9 @@ VolumeGroup::~VolumeGroup()
 }
 
 /**
- * Dump
+ * dump
  */
-void VolumeGroup::Dump (int indent /* = 0 */)
+void VolumeGroup::dump (int indent /* = 0 */)
 {
 	std::string size = get_size (vg_size);
 	std::string free = get_size (vg_free);
@@ -59,6 +59,6 @@ void VolumeGroup::Dump (int indent /* = 0 */)
 	//iprintf (indent+8, "vg_free_count:   %lld\n", vg_free_count);
 	//iprintf (indent+8, "vg_seqno:        %ld\n",  vg_seqno);
 
-	Container::Dump (indent);
+	Container::dump (indent);
 }
 

@@ -28,7 +28,7 @@ public:
 	Container (void);
 	virtual ~Container();
 
-	virtual void Dump (int indent = 0);
+	virtual void dump (int indent = 0);
 
 	//virtual int AddChild (Container *child);
 

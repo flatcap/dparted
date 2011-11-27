@@ -38,9 +38,9 @@ Filesystem::~Filesystem()
 }
 
 /**
- * Dump
+ * dump
  */
-void Filesystem::Dump (int indent /* = 0 */)
+void Filesystem::dump (int indent /* = 0 */)
 {
 	std::string command;
 	std::string output;
@@ -167,6 +167,6 @@ void Filesystem::Dump (int indent /* = 0 */)
 
 	//iprintf (indent+8, "Type: %s\n", type.c_str());
 
-	Container::Dump (indent);
+	Container::dump (indent);
 }
 

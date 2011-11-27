@@ -36,9 +36,9 @@ Volume::~Volume()
 }
 
 /**
- * Dump
+ * dump
  */
-void Volume::Dump (int indent /* = 0 */)
+void Volume::dump (int indent /* = 0 */)
 {
 	std::string size = get_size (lv_size);
 
@@ -63,6 +63,6 @@ void Volume::Dump (int indent /* = 0 */)
 		//iprintf (indent+16, "device offset = %lld\n", segments[i].device_offset);
 	}
 
-	Container::Dump (indent);
+	Container::dump (indent);
 }
 

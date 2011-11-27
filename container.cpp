@@ -45,15 +45,15 @@ Container::~Container()
 }
 
 /**
- * Dump
+ * dump
  */
-void Container::Dump (int indent /* = 0 */)
+void Container::dump (int indent /* = 0 */)
 {
 	unsigned int i;
 
 	//iprintf (indent+8, "\e[07;31mParent = %p\e[0m\n", parent);
 	for (i = 0; i < children.size(); i++) {
-		children[i]->Dump (indent + 8);
+		children[i]->dump (indent + 8);
 	}
 }
 

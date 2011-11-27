@@ -36,9 +36,9 @@ Disk::~Disk()
 }
 
 /**
- * Dump
+ * dump
  */
-void Disk::Dump (int indent /* = 0 */)
+void Disk::dump (int indent /* = 0 */)
 {
 	std::string size = get_size (bytes_size);
 
@@ -57,6 +57,6 @@ void Disk::Dump (int indent /* = 0 */)
 	//iprintf (indent+8, "Host:                 %d\n",         host);
 	//iprintf (indent+8, "DID:                  %d\n",         did);
 
-	Container::Dump (indent);
+	Container::dump (indent);
 }
 

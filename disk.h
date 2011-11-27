@@ -29,7 +29,7 @@ public:
 	Disk (void);
 	virtual ~Disk();
 
-	virtual void Dump (int indent = 0);
+	virtual void dump (int indent = 0);
 
 	//std::string	model;
 	//std::string	path;

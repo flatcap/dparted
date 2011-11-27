@@ -39,7 +39,7 @@ public:
 	Volume (void);
 	virtual ~Volume();
 
-	virtual void Dump (int indent = 0);
+	virtual void dump (int indent = 0);
 
 	std::string	lv_name;
 	std::string	lv_attr;

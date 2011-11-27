@@ -29,7 +29,7 @@ public:
 	Mount (void);
 	virtual ~Mount();
 
-	virtual void Dump (int indent = 0);
+	virtual void dump (int indent = 0);
 
 protected:
 

@@ -29,7 +29,7 @@ public:
 	Partition (void);
 	virtual ~Partition();
 
-	virtual void Dump (int indent = 0);
+	virtual void dump (int indent = 0);
 
 				// container
 	long long start;	// offset?

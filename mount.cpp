@@ -36,10 +36,10 @@ Mount::~Mount()
 }
 
 /**
- * Dump
+ * dump
  */
-void Mount::Dump (int indent /* = 0 */)
+void Mount::dump (int indent /* = 0 */)
 {
-	Container::Dump (indent);
+	Container::dump (indent);
 }
 

@@ -239,7 +239,7 @@ unsigned int logicals_get_list (Container &logicals)
 		vg_lookup[vg->vg_uuid] = vg;
 	}
 
-	//logicals.Dump (-8);
+	//logicals.dump (-8);
 
 #if 0
 	std::map<std::string,VolumeGroup*>::iterator it;
@@ -410,15 +410,15 @@ int main (int argc, char *argv[])
 {
 	Container disks;
 	disk_get_list (disks);
-	disks.Dump(-8);
+	disks.dump(-8);
 
 	//Container logicals;
 	//logicals_get_list (logicals);
-	//logicals.Dump(-8);
+	//logicals.dump(-8);
 
 	//Container mounts;
 	//mounts_get_list (mounts);
-	//mounts.Dump(-8);
+	//mounts.dump(-8);
 
 	return 0;
 }

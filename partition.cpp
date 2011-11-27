@@ -36,9 +36,9 @@ Partition::~Partition()
 }
 
 /**
- * Dump
+ * dump
  */
-void Partition::Dump (int indent /* = 0 */)
+void Partition::dump (int indent /* = 0 */)
 {
 	if (num < 0)
 		return;
@@ -53,6 +53,6 @@ void Partition::Dump (int indent /* = 0 */)
 	//iprintf (indent+8, "Length: %s\n",   size.c_str());
 	//iprintf (indent+8, "End:    %lld\n", end);
 
-	Container::Dump (indent);
+	Container::dump (indent);
 }
 
