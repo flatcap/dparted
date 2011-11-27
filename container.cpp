@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <typeinfo>
 
 #include "container.h"
 #include "utils.h"
@@ -30,7 +31,9 @@ Container::Container (void) :
 	block_size (-1),
 	bytes_size (-1),
 	bytes_used (-1),
-	parent (NULL)
+	parent (NULL),
+	prev (NULL),
+	next (NULL)
 {
 }
 
@@ -54,7 +57,7 @@ void Container::dump (int indent /* = 0 */)
 	}
 }
 
-/*
+/**
  * dump_csv
  */
 void Container::dump_csv (void)
@@ -62,5 +65,20 @@ void Container::dump_csv (void)
 	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
 		(*i)->dump_csv();
 	}
+}
+
+/**
+ * add_child
+ */
+void Container::add_child (Container *child)
+{
+	if (children.size() > 0) {
+		Container *last = children.back();
+
+		last->next = child;
+		child->prev = last;
+	}
+
+	children.push_back (child);
 }
 

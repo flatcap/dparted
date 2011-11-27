@@ -31,8 +31,7 @@ public:
 	virtual void dump (int indent = 0);
 	virtual void dump_csv (void);
 
-
-	//virtual int AddChild (Container *child);
+	virtual void add_child (Container *child);
 
 	int		 type;
 
@@ -48,6 +47,9 @@ public:
 	Container	*parent;
 	std::vector<Container*> children;
 	std::vector<long long>  offsets;
+
+	Container	*prev;	// Siblings
+	Container	*next;
 
 protected:
 

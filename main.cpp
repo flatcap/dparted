@@ -101,11 +101,14 @@ unsigned int disk_get_list (Container &disks)
 		d->name = dev->model;
 		d->device  = dev->path;
 		d->type  = dev->type;
-		//XXX if they differ, take the larger one
+		//RAR if they differ, take the larger one
 		d->block_size = dev->sector_size;
 		//d->phys_sector_size = dev->phys_sector_size;
 
 		d->bytes_size = dev->length;
+		d->bytes_used = 0;
+		//RAR define size of disk
+		//RAR then add children's size to bytes_used
 
 		d->hw_cylinders = dev->hw_geom.cylinders;
 		d->hw_heads     = dev->hw_geom.heads;
@@ -127,7 +130,9 @@ unsigned int disk_get_list (Container &disks)
 		type = ped_disk_probe (dev);
 		if (type) {
 			Msdos *m = new Msdos;
-			d->children.push_back (m);
+
+			d->add_child (m);
+
 			m->parent = d;
 			m->bytes_size = d->bytes_size;
 			m->bytes_used = d->bytes_size;
@@ -147,25 +152,25 @@ unsigned int disk_get_list (Container &disks)
 				p->num = part->num;
 				p->device = part->geom.dev->path;
 				p->start = part->geom.start;
-				p->bytes_size = part->geom.length * 512; //XXX need to ask the disk for the multiplicand
+				p->bytes_size = part->geom.length * 512; //RAR need to ask the disk for the multiplicand
 				p->end = part->geom.end;
 				if (part->fs_type) {
 					Filesystem *f = new Filesystem;
 					f->parent = p;
 					f->name = part->fs_type->name;
 					f->part = p;
-					p->children.push_back (f);
+					p->add_child (f);
 				}
 				if (part->type == PED_PARTITION_LOGICAL) {
-					extended->children.push_back (p);
+					extended->add_child (p);
 				} else {
-					m->children.push_back (p);
+					m->add_child (p);
 				}
 			}
 			ped_disk_destroy (disk);
 		}
 
-		disks.children.push_back (d);
+		disks.add_child (d);
 	}
 
 	ped_device_free_all();
@@ -234,7 +239,7 @@ unsigned int logicals_get_list (Container &logicals)
 		index = line.find ("LVM2_VG_SEQNO", index);
 		vg->vg_seqno = extract_quoted_long (line, index);
 
-		logicals.children.push_back (vg);
+		logicals.add_child (vg);
 
 		vg_lookup[vg->vg_uuid] = vg;
 	}
@@ -291,7 +296,7 @@ unsigned int logicals_get_list (Container &logicals)
 		if (!vol) {
 			//printf ("\tNEW VOLUME %s\n", lv_name.c_str());
 			vol = new Volume;
-			vg->children.push_back (vol);
+			vg->add_child (vol);
 		}
 
 		vol->lv_name = lv_name;
@@ -370,6 +375,7 @@ unsigned int logicals_get_list (Container &logicals)
 
 				if (!inserted) {
 					vol->segments.push_back (vol_seg);
+					//RAR link these siblings?
 				}
 		}
 
