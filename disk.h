@@ -32,6 +32,11 @@ public:
 	virtual void dump (int indent = 0);
 	virtual void dump_csv (void);
 
+	virtual long          get_block_size (void);
+	virtual std::string   get_device_name (void);
+	virtual long long     get_device_offset (void);
+	virtual unsigned int  get_device_space (std::map<long long, long long> &spaces);
+
 	//std::string	model;
 	//std::string	path;
 	int		type;
