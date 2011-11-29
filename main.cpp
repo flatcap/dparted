@@ -131,7 +131,7 @@ unsigned int disk_get_list (Container &disks)
 		if (type) {
 			Msdos *m = new Msdos;
 
-			d->add_child (m);
+			d->add_child (m); //RAR add used space here?
 
 			m->parent = d;
 			m->bytes_size = d->bytes_size;

@@ -47,6 +47,7 @@ Container::~Container()
 	}
 }
 
+
 /**
  * dump
  */
@@ -67,11 +68,18 @@ void Container::dump_csv (void)
 	}
 }
 
+
 /**
  * add_child
  */
 void Container::add_child (Container *child)
 {
+	/* Check:
+	 *	available space
+	 *	alignment type
+	 *	size (restrictions)
+	 *	valid type within this parent
+	 */
 	if (children.size() > 0) {
 		Container *last = children.back();
 
@@ -80,5 +88,78 @@ void Container::add_child (Container *child)
 	}
 
 	children.push_back (child);
+}
+
+/**
+ * delete_child
+ */
+void Container::delete_child (Container *child)
+{
+}
+
+/**
+ * move_child
+ */
+void Container::move_child (Container *child, long long offset, long long size)
+{
+}
+
+
+/**
+ * get_block_size
+ */
+long Container::get_block_size (void)
+{
+	if (block_size > 0)
+		return block_size;
+
+	if (parent)
+		return parent->get_block_size();
+
+	return -1;
+}
+
+/**
+ * get_device
+ */
+void Container::get_device (std::string &device, long long offset)
+{
+	device = this->device;
+	offset = 0;
+}
+
+/**
+ * get_device_space
+ */
+unsigned int Container::get_device_space (std::map<long long, long long> &spaces)
+{
+	spaces[0] = 123;
+
+	return spaces.size();;
+}
+
+
+/**
+ * get_size_total
+ */
+long long Container::get_size_total (void)
+{
+	return bytes_size;
+}
+
+/**
+ * get_size_used
+ */
+long long Container::get_size_used (void)
+{
+	return bytes_used;
+}
+
+/**
+ * get_size_free
+ */
+long long Container::get_size_free (void)
+{
+	return bytes_size - bytes_used;
 }
 

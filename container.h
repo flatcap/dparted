@@ -21,6 +21,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 class Container
 {
@@ -31,7 +32,17 @@ public:
 	virtual void dump (int indent = 0);
 	virtual void dump_csv (void);
 
-	virtual void add_child (Container *child);
+	virtual void add_child    (Container *child);
+	virtual void delete_child (Container *child);
+	virtual void move_child   (Container *child, long long offset, long long size);
+
+	virtual long          get_block_size (void);
+	virtual void          get_device (std::string &device, long long offset);
+	virtual unsigned int  get_device_space (std::map<long long, long long> &spaces);
+
+	virtual long long get_size_total (void);
+	virtual long long get_size_used (void);
+	virtual long long get_size_free (void);
 
 	int		 type;
 
