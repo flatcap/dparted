@@ -36,6 +36,7 @@ Disk::~Disk()
 {
 }
 
+
 /**
  * dump
  */
@@ -78,4 +79,38 @@ void Disk::dump_csv (void)
 		bytes_size - bytes_used);
 	Container::dump_csv();
 }
+
+
+/**
+ * get_block_size
+ */
+long Disk::get_block_size (void)
+{
+	return 0;
+}
+
+/**
+ * get_device_name
+ */
+std::string Disk::get_device_name (void)
+{
+	return "";
+}
+
+/**
+ * get_device_offset
+ */
+long long Disk::get_device_offset (void)
+{
+	return 0;
+}
+
+/**
+ * get_device_space
+ */
+unsigned int Disk::get_device_space (std::map<long long, long long> &spaces)
+{
+	return 0;
+}
+
 

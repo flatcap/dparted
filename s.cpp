@@ -34,6 +34,9 @@ int execute_command (const std::string &command, std::string &output, std::strin
 	return exit_status;
 }
 
+/**
+ * main
+ */
 int main (int argc, char *argv[])
 {
 	if (argc != 2) {
