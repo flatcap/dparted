@@ -133,7 +133,10 @@ void Container::get_device (std::string &device, long long offset)
  */
 unsigned int Container::get_device_space (std::map<long long, long long> &spaces)
 {
-	spaces[0] = 123;
+	spaces.clear();
+
+	//spaces[offset] = size
+	//spaces[0] = 123;
 
 	return spaces.size();;
 }

@@ -48,8 +48,10 @@ public:
 
 	std::string	 name;
 	std::string	 label;
-	std::string	 device;
 	std::string	 uuid;
+
+	std::string	 device;
+	long long	 device_offset;
 
 	long		 block_size;
 	long long	 bytes_size;
