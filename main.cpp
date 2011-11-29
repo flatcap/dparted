@@ -417,8 +417,15 @@ int main (int argc, char *argv[])
 	Container disks;
 	disk_get_list (disks);
 	//disks.dump(-8);
-	printf ("ContainerType,Device,Name,Blocksize,Label,UUID,Total,Used,Free\n");
-	disks.dump_csv();
+	//printf ("ContainerType,Device,Name,Blocksize,Label,UUID,Total,Used,Free\n");
+	//disks.dump_csv();
+
+	printf ("Name                       Size     Used\n");
+	for (unsigned int i = 0; i < disks.children.size(); i++) {
+		std::string s = get_size (disks.children[i]->bytes_size);
+		std::string u = get_size (disks.children[i]->bytes_used);
+		printf ("%-22s %8s %8s\n", disks.children[i]->name.c_str(), s.c_str(), u.c_str());
+	}
 
 	//Container logicals;
 	//logicals_get_list (logicals);
