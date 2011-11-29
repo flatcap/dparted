@@ -120,12 +120,19 @@ long Container::get_block_size (void)
 }
 
 /**
- * get_device
+ * get_device_name
  */
-void Container::get_device (std::string &device, long long offset)
+std::string Container::get_device_name (void)
 {
-	device = this->device;
-	offset = 0;
+	return device;
+}
+
+/**
+ * get_device_offset
+ */
+long long Container::get_device_offset (void)
+{
+	return device_offset;
 }
 
 /**
@@ -164,5 +171,22 @@ long long Container::get_size_used (void)
 long long Container::get_size_free (void)
 {
 	return bytes_size - bytes_used;
+}
+
+
+/**
+ * find_device
+ */
+Container * Container::find_device (const std::string &dev)
+{
+	return NULL;
+}
+
+/**
+ * find_uuid
+ */
+Container * Container::find_uuid (const std::string &uuid)
+{
+	return NULL;
 }
 

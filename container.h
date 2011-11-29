@@ -37,12 +37,16 @@ public:
 	virtual void move_child   (Container *child, long long offset, long long size);
 
 	virtual long          get_block_size (void);
-	virtual void          get_device (std::string &device, long long offset);
+	virtual std::string   get_device_name (void);
+	virtual long long     get_device_offset (void);
 	virtual unsigned int  get_device_space (std::map<long long, long long> &spaces);
 
 	virtual long long get_size_total (void);
 	virtual long long get_size_used (void);
 	virtual long long get_size_free (void);
+
+	virtual Container * find_device (const std::string &dev);
+	virtual Container * find_uuid   (const std::string &uuid);
 
 	int		 type;
 
