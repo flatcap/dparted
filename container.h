@@ -65,8 +65,8 @@ public:
 	std::vector<Container*> children;
 	std::vector<long long>  offsets;
 
-	Container	*prev;	// Siblings
-	Container	*next;
+	//Container	*prev;	// Siblings
+	//Container	*next;
 
 protected:
 

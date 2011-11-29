@@ -31,9 +31,9 @@ Container::Container (void) :
 	block_size (-1),
 	bytes_size (-1),
 	bytes_used (-1),
-	parent (NULL),
-	prev (NULL),
-	next (NULL)
+	parent (NULL)
+	//prev (NULL),
+	//next (NULL)
 {
 }
 
@@ -80,13 +80,14 @@ void Container::add_child (Container *child)
 	 *	size (restrictions)
 	 *	valid type within this parent
 	 */
+#if 0
 	if (children.size() > 0) {
 		Container *last = children.back();
 
 		last->next = child;
 		child->prev = last;
 	}
-
+#endif
 	children.push_back (child);
 }
 
