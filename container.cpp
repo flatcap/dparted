@@ -73,11 +73,32 @@ void Container::dump2 (void)
 		u = get_size ((*i)->bytes_used);
 		f = get_size ((*i)->bytes_size - (*i)->bytes_used);
 		o = get_size ((*i)->device_offset);
-		printf ("%-12s %-20s %8s  %-22s %8s %8s %8s\n",
+		const char *indent = "";
+		const char *undent = "                ";
+		if (parent == NULL) {
+			indent = "";
+			undent = "                ";
+		} else if (parent->parent == NULL) {
+			indent = "    ";
+			undent = "            ";
+		} else if (parent->parent->parent == NULL) {
+			indent = "        ";
+			undent = "        ";
+		} else if (parent->parent->parent->parent == NULL) {
+			indent = "            ";
+			undent = "    ";
+		} else if (parent->parent->parent->parent->parent == NULL) {
+			indent = "                ";
+			undent = "";
+		}
+		printf ("%-10s %s%-20s%s  %-22s %13lld %13lld  %8s %8s %8s\n",
 			(*i)->device.c_str(),
+			indent,
 			(*i)->type.c_str(),
-			o.c_str(),
+			undent,
 			(*i)->name.c_str(),
+			(*i)->device_offset,
+			(*i)->bytes_size,
 			s.c_str(),
 			u.c_str(),
 			f.c_str());
@@ -117,7 +138,21 @@ void Container::add_child (Container *child)
 #endif
 	bytes_used += child->bytes_size;
 
-	children.push_back (child);
+	bool inserted = false;
+
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		if ((*i)->device_offset > child->device_offset) {
+			children.insert (i, child);
+			inserted = true;
+			break;
+		}
+	}
+
+	if (!inserted) {
+		children.push_back (child);
+	}
+
+	child->parent = this;
 }
 
 /**

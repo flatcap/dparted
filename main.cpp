@@ -91,6 +91,7 @@ unsigned int disk_get_list (Container &disks)
 	PedDiskType *type = NULL;
 	PedPartition *part = NULL;
 	Partition *extended = NULL;
+	int reserved = 1;
 
 	ped_device_probe_all();
 
@@ -99,7 +100,7 @@ unsigned int disk_get_list (Container &disks)
 			continue;
 
 		Disk *d = new Disk;
-		d->parent = &disks;
+		//d->parent = &disks;
 		d->name = dev->model;
 		d->device  = dev->path;
 		//d->type  = dev->type;
@@ -133,9 +134,11 @@ unsigned int disk_get_list (Container &disks)
 		if (type) {
 			Msdos *m = new Msdos;
 
-			m->parent = d;
+			//m->parent = d;
 			m->bytes_size = d->bytes_size;
 			//m->bytes_used = d->bytes_size;
+			m->device = d->device;
+			m->device_offset = 0;
 			m->name = "msdos";
 
 			d->add_child (m);
@@ -146,7 +149,7 @@ unsigned int disk_get_list (Container &disks)
 			extended = NULL;
 			while ((part = ped_disk_next_partition (disk, part))) {
 				Partition *p = new Partition;
-				p->parent = m;
+				//p->parent = m;
 				//std::cout << get_partition_type (part->type) << std::endl;
 				if (part->type == PED_PARTITION_EXTENDED) {
 					extended = p;
@@ -167,25 +170,33 @@ unsigned int disk_get_list (Container &disks)
 				} else {
 					if (p->name == "<empty>") {
 						p->type = "\e[37m<empty>\e[0m";
-						p->name = "<empty>";
-						m->bytes_used -= p->bytes_size;
+						if (part->type & PED_PARTITION_LOGICAL) {
+							extended->bytes_used -= p->bytes_size;
+						} else {
+							m->bytes_used -= p->bytes_size;
+						}
 					} else {
 						p->type = "\e[37m<metadata>\e[0m";
-						p->name = "<reserved>";
+						p->name = "<reserved";
+						p->name += ('0' + reserved);
+						p->name += ">";
+						p->bytes_used = p->bytes_size;
+						reserved++;
 					}
-					p->device = "";
-					p->bytes_used = p->bytes_size;
+					//p->device = "";
 				}
 				if (part->fs_type) {
 					Filesystem *f = new Filesystem;
-					f->parent = p;
+					//f->parent = p;
 					f->name = part->fs_type->name;
 					f->part = p;
 					f->bytes_size = p->bytes_size;
 					f->bytes_used = p->bytes_size;
+					f->device = p->device;
+					f->device_offset = 0;
 					p->add_child (f);
 				}
-				if (part->type == PED_PARTITION_LOGICAL) {
+				if (part->type & PED_PARTITION_LOGICAL) {
 					extended->add_child (p);
 				} else {
 					m->add_child (p);
@@ -442,7 +453,8 @@ int main (int argc, char *argv[])
 {
 	Container disks;
 	disk_get_list (disks);
-	printf ("\e[36mDevice       Type          Offset  Name                       Size     Used     Free\e[0m\n");
+	printf ("\n\n\n\n\n\n");
+	printf ("\e[36mDevice     Type                         Name                          Offset         Bytes      Size     Used     Free\e[0m\n");
 	disks.dump2();
 	//printf ("ContainerType,Device,Name,Blocksize,Label,UUID,Total,Used,Free\n");
 	//disks.dump_csv();
@@ -457,3 +469,4 @@ int main (int argc, char *argv[])
 
 	return 0;
 }
+
