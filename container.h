@@ -30,6 +30,7 @@ public:
 	virtual ~Container();
 
 	virtual void dump (int indent = 0);
+	virtual void dump2 (void);
 	virtual void dump_csv (void);
 
 	virtual void add_child    (Container *child);
@@ -48,7 +49,7 @@ public:
 	virtual Container * find_device (const std::string &dev);
 	virtual Container * find_uuid   (const std::string &uuid);
 
-	int		 type;
+	std::string	 type;
 
 	std::string	 name;
 	std::string	 label;

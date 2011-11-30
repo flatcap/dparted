@@ -70,10 +70,12 @@ std::string get_partition_type (int type)
 	std::string s;
 
 	if (type == PED_PARTITION_NORMAL)    s += "Normal";
-	if (type &  PED_PARTITION_LOGICAL)   s += "Logical ";
+	//if (type &  PED_PARTITION_LOGICAL)   s += "Logical ";
 	if (type &  PED_PARTITION_EXTENDED)  s += "Extended ";
-	if (type &  PED_PARTITION_FREESPACE) s += "Freespace ";
-	if (type &  PED_PARTITION_METADATA)  s += "Metadata ";
+	//if (type &  PED_PARTITION_FREESPACE) s += "Freespace ";
+	if (type &  PED_PARTITION_FREESPACE) s += "<empty>";
+	//if (type &  PED_PARTITION_METADATA)  s += "Metadata ";
+	if (type &  PED_PARTITION_METADATA)  s += "<reserved>";
 	if (type &  PED_PARTITION_PROTECTED) s += "Protected ";
 
 	return s;
@@ -100,12 +102,12 @@ unsigned int disk_get_list (Container &disks)
 		d->parent = &disks;
 		d->name = dev->model;
 		d->device  = dev->path;
-		d->type  = dev->type;
+		//d->type  = dev->type;
 		//RAR if they differ, take the larger one
 		d->block_size = dev->sector_size;
 		//d->phys_sector_size = dev->phys_sector_size;
 
-		d->bytes_size = dev->length;
+		d->bytes_size = dev->length * dev->sector_size;
 		d->bytes_used = 0;
 		//RAR define size of disk
 		//RAR then add children's size to bytes_used
@@ -131,11 +133,12 @@ unsigned int disk_get_list (Container &disks)
 		if (type) {
 			Msdos *m = new Msdos;
 
-			d->add_child (m); //RAR add used space here?
-
 			m->parent = d;
 			m->bytes_size = d->bytes_size;
-			m->bytes_used = d->bytes_size;
+			//m->bytes_used = d->bytes_size;
+			m->name = "msdos";
+
+			d->add_child (m);
 
 			//printf ("name = %s\n", type->name);			// msdos
 			//printf ("features = %d\n", type->features);
@@ -150,15 +153,36 @@ unsigned int disk_get_list (Container &disks)
 				}
 				p->name = get_partition_type (part->type);
 				p->num = part->num;
+				//printf ("Num = %d\n", part->num);
 				p->device = part->geom.dev->path;
-				p->start = part->geom.start;
+
 				p->bytes_size = part->geom.length * 512; //RAR need to ask the disk for the multiplicand
 				p->end = part->geom.end;
+				p->start = part->geom.start;
+				p->device_offset = p->start * 512; // RAR
+
+				if (part->num > 0) {
+					p->device += ('0' + part->num);
+					p->name = p->device.substr (5);
+				} else {
+					if (p->name == "<empty>") {
+						p->type = "\e[37m<empty>\e[0m";
+						p->name = "<empty>";
+						m->bytes_used -= p->bytes_size;
+					} else {
+						p->type = "\e[37m<metadata>\e[0m";
+						p->name = "<reserved>";
+					}
+					p->device = "";
+					p->bytes_used = p->bytes_size;
+				}
 				if (part->fs_type) {
 					Filesystem *f = new Filesystem;
 					f->parent = p;
 					f->name = part->fs_type->name;
 					f->part = p;
+					f->bytes_size = p->bytes_size;
+					f->bytes_used = p->bytes_size;
 					p->add_child (f);
 				}
 				if (part->type == PED_PARTITION_LOGICAL) {
@@ -171,6 +195,8 @@ unsigned int disk_get_list (Container &disks)
 		}
 
 		disks.add_child (d);
+
+		break;//RAR
 	}
 
 	ped_device_free_all();
@@ -416,16 +442,10 @@ int main (int argc, char *argv[])
 {
 	Container disks;
 	disk_get_list (disks);
-	//disks.dump(-8);
+	printf ("\e[36mDevice       Type          Offset  Name                       Size     Used     Free\e[0m\n");
+	disks.dump2();
 	//printf ("ContainerType,Device,Name,Blocksize,Label,UUID,Total,Used,Free\n");
 	//disks.dump_csv();
-
-	printf ("Name                       Size     Used\n");
-	for (unsigned int i = 0; i < disks.children.size(); i++) {
-		std::string s = get_size (disks.children[i]->bytes_size);
-		std::string u = get_size (disks.children[i]->bytes_used);
-		printf ("%-22s %8s %8s\n", disks.children[i]->name.c_str(), s.c_str(), u.c_str());
-	}
 
 	//Container logicals;
 	//logicals_get_list (logicals);

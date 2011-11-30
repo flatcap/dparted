@@ -39,7 +39,7 @@ public:
 
 	//std::string	model;
 	//std::string	path;
-	int		type;
+	//int		type;
 	//long		sector_size;
 	//long		phys_sector_size;
 	//long long	length;

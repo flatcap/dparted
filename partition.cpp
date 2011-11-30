@@ -27,6 +27,7 @@
  */
 Partition::Partition (void)
 {
+	type = "\e[33mpartition\e[0m";
 }
 
 /**

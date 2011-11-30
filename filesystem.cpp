@@ -28,6 +28,7 @@
  */
 Filesystem::Filesystem (void)
 {
+	type = "\e[32mfilesystem\e[0m";
 }
 
 /**

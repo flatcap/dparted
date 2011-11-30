@@ -27,10 +27,10 @@
  * Container
  */
 Container::Container (void) :
-	type (0),
-	block_size (-1),
-	bytes_size (-1),
-	bytes_used (-1),
+	device_offset (0),
+	block_size (0),
+	bytes_size (0),
+	bytes_used (0),
 	parent (NULL)
 	//prev (NULL),
 	//next (NULL)
@@ -55,6 +55,33 @@ void Container::dump (int indent /* = 0 */)
 {
 	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
 		(*i)->dump (indent + 8);
+	}
+}
+
+/**
+ * dump2
+ */
+void Container::dump2 (void)
+{
+	std::string f;
+	std::string o;
+	std::string s;
+	std::string u;
+
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		s = get_size ((*i)->bytes_size);
+		u = get_size ((*i)->bytes_used);
+		f = get_size ((*i)->bytes_size - (*i)->bytes_used);
+		o = get_size ((*i)->device_offset);
+		printf ("%-12s %-20s %8s  %-22s %8s %8s %8s\n",
+			(*i)->device.c_str(),
+			(*i)->type.c_str(),
+			o.c_str(),
+			(*i)->name.c_str(),
+			s.c_str(),
+			u.c_str(),
+			f.c_str());
+		(*i)->dump2();
 	}
 }
 
@@ -88,6 +115,8 @@ void Container::add_child (Container *child)
 		child->prev = last;
 	}
 #endif
+	bytes_used += child->bytes_size;
+
 	children.push_back (child);
 }
 

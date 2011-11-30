@@ -27,6 +27,7 @@
  */
 Msdos::Msdos (void)
 {
+	type = "\e[34mpart.table\e[0m";
 }
 
 /**

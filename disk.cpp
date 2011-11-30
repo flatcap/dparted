@@ -27,6 +27,7 @@
  */
 Disk::Disk (void)
 {
+	type = "\e[31mdisk\e[0m";
 }
 
 /**
