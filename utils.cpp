@@ -64,30 +64,30 @@ int execute_command (const std::string &command, std::string &output, std::strin
 std::string get_size (long long size)
 {
 	char buffer[64];
-	double power = log2 ((double) size);
-	const char *suffix = NULL;
+	double power = log2 ((double) llabs (size)) + 0.5;
+	const char *suffix = "";
 	double divide = 1;
 
 	if (power < 10) {
-		suffix = "B";
+		suffix = " B";
 		divide = 1;
 	} else if (power < 20) {
-		suffix = "KiB";
+		suffix = " KiB";
 		divide = 1024;
 	} else if (power < 30) {
-		suffix = "MiB";
+		suffix = " MiB";
 		divide = 1048576;
 	} else if (power < 40) {
-		suffix = "GiB";
+		suffix = " GiB";
 		divide = 1073741824;
 	} else if (power < 50) {
-		suffix = "TiB";
+		suffix = " TiB";
 		divide = 1099511627776;
 	} else if (power < 60) {
-		suffix = "PiB";
+		suffix = " PiB";
 		divide = 1125899906842624;
 	}
-	sprintf (buffer, "%0.3g %s", (double)size/divide, suffix);
+	sprintf (buffer, "%0.3g%s", (double)size/divide, suffix);
 	return buffer;
 }
 
