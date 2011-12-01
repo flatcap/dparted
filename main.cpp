@@ -147,7 +147,28 @@ unsigned int disk_get_list (Container &disks)
 			//printf ("features = %d\n", type->features);
 			disk = ped_disk_new (dev);
 			extended = NULL;
+			bool prev_metadata = false;
 			while ((part = ped_disk_next_partition (disk, part))) {
+				if (part->type & PED_PARTITION_METADATA) {
+					if (prev_metadata) {
+						// merge with previous metadata declaration
+						Container *parent = NULL;
+						if (part->type & PED_PARTITION_LOGICAL) {
+							parent = extended;
+						} else {
+							parent = d;
+						}
+						Container *meta = parent->children.back();
+						meta->bytes_size += part->geom.length * 512;
+						prev_metadata = false;
+						continue;
+					} else {
+						prev_metadata = true;
+					}
+				} else {
+					prev_metadata = false;
+				}
+
 				Partition *p = new Partition;
 				//p->parent = m;
 				//std::cout << get_partition_type (part->type) << std::endl;
