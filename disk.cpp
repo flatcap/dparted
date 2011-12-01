@@ -90,12 +90,13 @@ long Disk::get_block_size (void)
 	return 0;
 }
 
+#if 0
 /**
  * get_device_name
  */
 std::string Disk::get_device_name (void)
 {
-	return "";
+	return device;
 }
 
 /**
@@ -106,6 +107,7 @@ long long Disk::get_device_offset (void)
 	return 0;
 }
 
+#endif
 /**
  * get_device_space
  */
@@ -114,4 +116,21 @@ unsigned int Disk::get_device_space (std::map<long long, long long> &spaces)
 	return 0;
 }
 
+
+/**
+ * find_device
+ */
+Container * Disk::find_device (const std::string &dev)
+{
+	// does it sound like one of my children?  /dev/sdaX, /dev/sdaXX
+	unsigned int dev_len = device.length();
+
+	// iterate through my children
+	if (device.compare (0, dev_len, dev, 0, dev_len) == 0) {
+		printf ("similar\n");
+		return Container::find_device (dev);
+	}
+
+	return NULL;
+}
 

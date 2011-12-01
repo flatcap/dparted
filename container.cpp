@@ -63,6 +63,7 @@ void Container::dump (int indent /* = 0 */)
  */
 void Container::dump2 (void)
 {
+	std::string d;
 	std::string f;
 	std::string o;
 	std::string s;
@@ -73,6 +74,7 @@ void Container::dump2 (void)
 		u = get_size ((*i)->bytes_used);
 		f = get_size ((*i)->bytes_size - (*i)->bytes_used);
 		o = get_size ((*i)->device_offset);
+		d = (*i)->get_device_name();
 		const char *indent = "";
 		const char *undent = "                ";
 		if (parent == NULL) {
@@ -92,7 +94,7 @@ void Container::dump2 (void)
 			undent = "";
 		}
 		printf ("%-10s %s%-20s%s  %-22s %13lld %13lld  %8s %8s %8s\n",
-			(*i)->device.c_str(),
+			d.c_str(),
 			indent,
 			(*i)->type.c_str(),
 			undent,
@@ -189,7 +191,13 @@ long Container::get_block_size (void)
  */
 std::string Container::get_device_name (void)
 {
-	return device;
+	//printf ("i am %s\n", typeid(*this).name());
+	if (device.length() > 0)
+		return device;
+	else if (parent)
+		return parent->get_device_name();
+	else
+		return "UNKNOWN";
 }
 
 /**
@@ -244,7 +252,23 @@ long long Container::get_size_free (void)
  */
 Container * Container::find_device (const std::string &dev)
 {
-	return NULL;
+	Container *match = NULL;
+
+	// am *I* the device?
+	//printf ("Me? %s %s\n", device.c_str(), dev.c_str());
+	if (dev == device)
+		return this;
+
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		//printf ("child %p (%s)\n", (*i), (*i)->device.c_str());
+		match = (*i)->find_device (dev);
+		if (match) {
+			//printf ("MATCHES! %s (%s)\n", match->type.c_str(), match->name.c_str());
+			break;
+		}
+	}
+
+	return match;
 }
 
 /**

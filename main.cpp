@@ -102,7 +102,8 @@ unsigned int disk_get_list (Container &disks)
 		Disk *d = new Disk;
 		//d->parent = &disks;
 		d->name = dev->model;
-		d->device  = dev->path;
+		//printf ("dev->path = %s\n", dev->path);
+		d->device = dev->path;
 		//d->type  = dev->type;
 		//RAR if they differ, take the larger one
 		d->block_size = dev->sector_size;
@@ -137,7 +138,7 @@ unsigned int disk_get_list (Container &disks)
 			//m->parent = d;
 			m->bytes_size = d->bytes_size;
 			//m->bytes_used = d->bytes_size;
-			m->device = d->device;
+			//m->device = d->device;
 			m->device_offset = 0;
 			m->name = "msdos";
 
@@ -174,11 +175,11 @@ unsigned int disk_get_list (Container &disks)
 				//std::cout << get_partition_type (part->type) << std::endl;
 				if (part->type == PED_PARTITION_EXTENDED) {
 					extended = p;
+					extended->type = "\e[36mextended\e[0m";
 				}
 				p->name = get_partition_type (part->type);
 				p->num = part->num;
 				//printf ("Num = %d\n", part->num);
-				p->device = part->geom.dev->path;
 
 				p->bytes_size = part->geom.length * 512; //RAR need to ask the disk for the multiplicand
 				p->end = part->geom.end;
@@ -186,6 +187,7 @@ unsigned int disk_get_list (Container &disks)
 				p->device_offset = p->start * 512; // RAR
 
 				if (part->num > 0) {
+					p->device = part->geom.dev->path;
 					p->device += ('0' + part->num);
 					p->name = p->device.substr (5);
 				} else {
@@ -222,7 +224,10 @@ unsigned int disk_get_list (Container &disks)
 				}
 				if (part->type & PED_PARTITION_LOGICAL) {
 					extended->add_child (p);
-					p->device_offset -= extended->device_offset;
+					//p->device_offset -= extended->device_offset;
+					if (part->num < 0) {
+						p->device = d->device;
+					}
 				} else {
 					m->add_child (p);
 				}
@@ -478,11 +483,19 @@ int main (int argc, char *argv[])
 {
 	Container disks;
 	disk_get_list (disks);
-	printf ("\n\n\n\n\n\n");
+	printf ("\n\n\n\n");
 	printf ("\e[36mDevice     Type                         Name                  Offset(Parent)         Bytes      Size     Used     Free\e[0m\n");
 	disks.dump2();
 	//printf ("ContainerType,Device,Name,Blocksize,Label,UUID,Total,Used,Free\n");
 	//disks.dump_csv();
+
+#if 0
+	Container *lvm = disks.find_device ("/dev/sda8");
+
+	printf ("\nlvm = %p\n", lvm);
+	fflush (stdout);
+	printf ("name = %s\n", lvm->name.c_str());
+#endif
 
 	//Container logicals;
 	//logicals_get_list (logicals);
