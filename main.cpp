@@ -182,6 +182,9 @@ unsigned int disk_get_list (Container &disks)
 						p->name += ">";
 						p->bytes_used = p->bytes_size;
 						reserved++;
+						if (part->type & PED_PARTITION_LOGICAL) {
+							p->device = extended->device;
+						}
 					}
 					//p->device = "";
 				}
