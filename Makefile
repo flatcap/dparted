@@ -16,22 +16,10 @@ all:	$(OUT)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OUT) $(OBJ) tags l.o m.o p.o s.o l m p s
+	$(RM) $(OUT) $(OBJ) tags
 
 main: $(OBJ)
 	$(CC) -o $@ $(OBJ) $(LDFLAGS)
-
-l:	l.o
-	$(CC) -o $@ $^ $(LDFLAGS)
-
-m:	m.o
-	$(CC) -o $@ $^ $(LDFLAGS)
-
-p:	p.o
-	$(CC) -o $@ $^ $(LDFLAGS)
-
-s:	s.o
-	$(CC) -o $@ $^ $(LDFLAGS)
 
 tags:   force
 	ctags *.cpp *.h /usr/include/parted/*.h
