@@ -69,7 +69,7 @@ std::string get_size (long long size)
 	double divide = 1;
 
 	if (power < 10) {
-		suffix = " B";
+		suffix = "   B";
 		divide = 1;
 	} else if (power < 20) {
 		suffix = " KiB";

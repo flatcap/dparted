@@ -64,7 +64,7 @@ public:
 
 	Container	*parent;
 	std::vector<Container*> children;
-	std::vector<long long>  offsets;
+	//std::vector<long long>  offsets;
 
 	//Container	*prev;	// Siblings
 	//Container	*next;

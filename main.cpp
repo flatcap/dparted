@@ -198,6 +198,7 @@ unsigned int disk_get_list (Container &disks)
 				}
 				if (part->type & PED_PARTITION_LOGICAL) {
 					extended->add_child (p);
+					p->device_offset -= extended->device_offset;
 				} else {
 					m->add_child (p);
 				}
@@ -454,7 +455,7 @@ int main (int argc, char *argv[])
 	Container disks;
 	disk_get_list (disks);
 	printf ("\n\n\n\n\n\n");
-	printf ("\e[36mDevice     Type                         Name                          Offset         Bytes      Size     Used     Free\e[0m\n");
+	printf ("\e[36mDevice     Type                         Name                  Offset(Parent)         Bytes      Size     Used     Free\e[0m\n");
 	disks.dump2();
 	//printf ("ContainerType,Device,Name,Blocksize,Label,UUID,Total,Used,Free\n");
 	//disks.dump_csv();
