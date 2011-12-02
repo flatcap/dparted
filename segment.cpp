@@ -16,27 +16,40 @@
  */
 
 
-#ifndef _SEGMENTED_H_
-#define _SEGMENTED_H_
-
+#include <stdio.h>
 #include <string>
 
+#include "segment.h"
 #include "container.h"
 
-class Segmented : public Container
+/**
+ * Segment
+ */
+Segment::Segment (void)
 {
-public:
-	Segmented (void);
-	virtual ~Segmented();
+}
 
-	virtual void dump (int indent = 0);
-	virtual void dump_csv (void);
+/**
+ * ~Segment
+ */
+Segment::~Segment()
+{
+}
 
-protected:
 
-private:
+/**
+ * dump
+ */
+void Segment::dump (int indent /* = 0 */)
+{
+	Container::dump (indent);
+}
 
-};
-
-#endif /* _SEGMENTED_H_ */
+/**
+ * dump_csv
+ */
+void Segment::dump_csv (void)
+{
+	Container::dump_csv();
+}
 
