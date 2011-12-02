@@ -16,31 +16,23 @@
  */
 
 
-#ifndef _SEGMENT_H_
-#define _SEGMENT_H_
-
+#include <stdio.h>
 #include <string>
 
+#include "whole.h"
 #include "container.h"
 
-class Whole;
-
-class Segment : public Container
+/**
+ * Whole
+ */
+Whole::Whole (void)
 {
-public:
-	Segment (void);
-	virtual ~Segment();
+}
 
-	virtual void dump (int indent = 0);
-	virtual void dump_csv (void);
-
-	Whole *whole;
-
-protected:
-
-private:
-
-};
-
-#endif /* _SEGMENT_H_ */
+/**
+ * ~Whole
+ */
+Whole::~Whole()
+{
+}
 

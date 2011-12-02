@@ -16,25 +16,22 @@
  */
 
 
-#ifndef _SEGMENT_H_
-#define _SEGMENT_H_
+#ifndef _WHOLE_H_
+#define _WHOLE_H_
 
 #include <string>
 
 #include "container.h"
 
-class Whole;
+class Segment;
 
-class Segment : public Container
+class Whole : public Container
 {
 public:
-	Segment (void);
-	virtual ~Segment();
+	Whole (void);
+	virtual ~Whole();
 
-	virtual void dump (int indent = 0);
-	virtual void dump_csv (void);
-
-	Whole *whole;
+	std::vector<Segment*> segments;
 
 protected:
 
@@ -42,5 +39,5 @@ private:
 
 };
 
-#endif /* _SEGMENT_H_ */
+#endif /* _WHOLE_H_ */
 
