@@ -1,0 +1,21 @@
+#!/bin/bash
+
+TYPES="ext2 ext3 ext4 btrfs ntfs reiserfs vfat xfs"
+
+for i in $TYPES; do
+	rm -f disk.$i
+done
+
+for i in $TYPES; do
+	truncate -s 1G disk.$i
+done
+
+mkfs.btrfs        btrfs
+mkfs.ext2     -F  ext2
+mkfs.ext3     -F  ext3
+mkfs.ext4     -F  ext4
+mkfs.ntfs     -fF ntfs
+mkfs.reiserfs -f  reiserfs
+mkfs.vfat         vfat
+mkfs.xfs          xfs
+
