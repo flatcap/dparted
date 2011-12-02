@@ -4,18 +4,15 @@ TYPES="ext2 ext3 ext4 btrfs ntfs reiserfs vfat xfs"
 
 for i in $TYPES; do
 	rm -f disk.$i
-done
-
-for i in $TYPES; do
 	truncate -s 1G disk.$i
 done
 
-mkfs.btrfs        btrfs
-mkfs.ext2     -F  ext2
-mkfs.ext3     -F  ext3
-mkfs.ext4     -F  ext4
-mkfs.ntfs     -fF ntfs
-mkfs.reiserfs -f  reiserfs
-mkfs.vfat         vfat
-mkfs.xfs          xfs
+mkfs.btrfs        disk.btrfs
+mkfs.ext2     -F  disk.ext2
+mkfs.ext3     -F  disk.ext3
+mkfs.ext4     -F  disk.ext4
+mkfs.ntfs     -fF disk.ntfs
+mkfs.reiserfs -ff disk.reiserfs
+mkfs.vfat         disk.vfat
+mkfs.xfs          disk.xfs
 

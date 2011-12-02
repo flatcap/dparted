@@ -1,3 +1,5 @@
+// g++ -o compare{,.cpp} -Wall -g
+
 #include <stdio.h>
 #include <string>
 
@@ -10,7 +12,7 @@ int main (int argc, char *argv[])
 	std::string banana = argv[2];
 
 	unsigned int a_len = apple.length();
-	unsigned int b_len = banana.length();
+	//unsigned int b_len = banana.length();
 
 	printf ("comparing: '%s' and '%s'\n", apple.c_str(), banana.c_str());
 

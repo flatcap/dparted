@@ -1,3 +1,5 @@
+// gcc -o parted{,.c} -Wall -g $(pkg-config --cflags --libs libparted) -lm
+
 #include <stdio.h>
 #include <parted/parted.h>
 

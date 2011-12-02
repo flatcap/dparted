@@ -1,3 +1,5 @@
+// g++ -o spawn{,.cpp} -Wall -g $(pkg-config --cflags --libs glibmm-2.4)
+
 #include <stdio.h>
 #include <glibmm/spawn.h>
 #include <math.h>

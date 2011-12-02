@@ -1,3 +1,5 @@
+// g++ -o map{,.cpp} -Wall -g
+
 #include <stdio.h>
 #include <map>
 #include <string>

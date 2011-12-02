@@ -1,3 +1,5 @@
+// gcc -o lvm{,.c} -Wall -g $(pkg-config --cflags --libs lvm2app devmapper) -lm
+
 #include <stdio.h>
 #include <lvm2app.h>
 #include <math.h>
