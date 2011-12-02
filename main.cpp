@@ -295,7 +295,8 @@ unsigned int logicals_get_list (Container &logicals)
 		vg->vg_uuid = extract_quoted_string (line, index);
 
 		index = line.find ("LVM2_VG_EXTENT_SIZE", index);
-		vg->vg_extent_size = extract_quoted_long_long (line, index);
+		//vg->vg_extent_size = extract_quoted_long_long (line, index);
+		vg->block_size = extract_quoted_long_long (line, index);
 
 		index = line.find ("LVM2_VG_EXTENT_COUNT", index);
 		vg->vg_extent_count = extract_quoted_long_long (line, index);
@@ -323,7 +324,7 @@ unsigned int logicals_get_list (Container &logicals)
 	printf ("\n");
 #endif
 
-	command = "lvs --all --units=b --nosuffix --noheadings --nameprefixes --options vg_uuid,lv_name,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
+	command = "lvs --all --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,lv_name,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
 	execute_command (command, output, error);
 
 	lines.clear();
@@ -428,7 +429,8 @@ unsigned int logicals_get_list (Container &logicals)
 				vol_seg.volume_offset = seg_start;
 				vol_seg.device        = pe_device;
 				vol_seg.segment_size  = seg_size;
-				vol_seg.device_offset = pe_start * seg_size;
+				vol_seg.device_offset = pe_start * vg->block_size;
+				//printf ("volume offset = %lld, device = %s, seg size = %lld, device offset = %lld\n", vol_seg.volume_offset, vol_seg.device.c_str(), vol_seg.segment_size, vol_seg.device_offset);
 
 				bool inserted = false;
 				for (std::vector<VolumeSegment>::iterator it = vol->segments.begin(); it != vol->segments.end(); it++) {
@@ -481,11 +483,15 @@ unsigned int mounts_get_list (Container &mounts)
  */
 int main (int argc, char *argv[])
 {
-	Container disks;
-	disk_get_list (disks);
 	printf ("\n\n\n\n");
+
+	Container disks;
+	//disk_get_list (disks);
+
+#if 0
 	printf ("\e[36mDevice     Type                         Name                  Offset(Parent)         Bytes      Size     Used     Free\e[0m\n");
 	disks.dump2();
+#endif
 	//printf ("ContainerType,Device,Name,Blocksize,Label,UUID,Total,Used,Free\n");
 	//disks.dump_csv();
 
@@ -497,9 +503,10 @@ int main (int argc, char *argv[])
 	printf ("name = %s\n", lvm->name.c_str());
 #endif
 
-	//Container logicals;
-	//logicals_get_list (logicals);
-	//logicals.dump(-8);
+#if 1
+	logicals_get_list (disks);
+	disks.dump(-8);
+#endif
 
 	//Container mounts;
 	//mounts_get_list (mounts);
