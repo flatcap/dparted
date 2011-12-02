@@ -22,7 +22,8 @@
 #include <string>
 
 #include "container.h"
-#include "partition.h"
+
+class Partition;
 
 class Filesystem : public Container
 {
