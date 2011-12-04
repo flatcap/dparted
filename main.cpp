@@ -162,6 +162,8 @@ unsigned int disk_get_list (Container &disks)
 						}
 						Container *meta = parent->children.back();
 						meta->bytes_size += part->geom.length * 512;
+						meta->bytes_used += part->geom.length * 512;
+						parent->bytes_used += part->geom.length * 512;
 						prev_metadata = false;
 						continue;
 					} else {
