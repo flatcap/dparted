@@ -75,22 +75,30 @@ void Container::dump2 (void)
 		f = get_size ((*i)->bytes_size - (*i)->bytes_used);
 		o = get_size ((*i)->device_offset);
 		d = (*i)->get_device_name();
+		if (d == "UNKNOWN")
+			continue;
 		const char *indent = "";
-		const char *undent = "                ";
+		const char *undent = "                        ";
 		if (parent == NULL) {
 			indent = "";
-			undent = "                ";
+			undent = "                        ";
 		} else if (parent->parent == NULL) {
 			indent = "    ";
-			undent = "            ";
+			undent = "                    ";
 		} else if (parent->parent->parent == NULL) {
 			indent = "        ";
-			undent = "        ";
+			undent = "                ";
 		} else if (parent->parent->parent->parent == NULL) {
 			indent = "            ";
-			undent = "    ";
+			undent = "            ";
 		} else if (parent->parent->parent->parent->parent == NULL) {
 			indent = "                ";
+			undent = "        ";
+		} else if (parent->parent->parent->parent->parent->parent == NULL) {
+			indent = "                    ";
+			undent = "    ";
+		} else if (parent->parent->parent->parent->parent->parent->parent == NULL) {
+			indent = "                        ";
 			undent = "";
 		}
 		printf ("%-10s %s%-20s%s  %-22s %13lld %13lld  %8s %8s %8s\n",

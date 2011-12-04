@@ -21,8 +21,9 @@
 
 #include <string>
 
-#include "container.h"
+#include "whole.h"
 
+#if 0
 typedef struct _VolumeSegment VolumeSegment;
 
 struct _VolumeSegment
@@ -32,8 +33,9 @@ struct _VolumeSegment
 	long long	segment_size;
 	long long	device_offset;
 };
+#endif
 
-class Volume : public Container
+class Volume : public Whole
 {
 public:
 	Volume (void);
@@ -49,8 +51,10 @@ public:
 	int		kernel_major;
 	int		kernel_minor;
 
+#if 0
 	int		seg_count;
 	std::vector<VolumeSegment> segments;
+#endif
 
 protected:
 

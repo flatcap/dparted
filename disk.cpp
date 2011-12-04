@@ -127,7 +127,7 @@ Container * Disk::find_device (const std::string &dev)
 
 	// iterate through my children
 	if (device.compare (0, dev_len, dev, 0, dev_len) == 0) {
-		printf ("similar\n");
+		//printf ("similar\n");
 		return Container::find_device (dev);
 	}
 

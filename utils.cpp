@@ -208,6 +208,7 @@ unsigned int get_lines (const std::string &output, std::vector<std::string> &lin
 	int start = 0;
 	int end   = -1;
 
+	lines.clear();
 	while ((end = output.find ('\n', start)) > 0) {
 		std::string tmp = output.substr (start, end - start);
 		lines.push_back (tmp);

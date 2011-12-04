@@ -21,9 +21,9 @@
 
 #include <string>
 
-#include "container.h"
+#include "whole.h"
 
-class VolumeGroup : public Container
+class VolumeGroup : public Whole
 {
 public:
 	VolumeGroup (void);
@@ -44,7 +44,7 @@ public:
 	long long	vg_free_count;
 	long		vg_seqno;
 
-	std::vector<std::string> devices;
+	//std::vector<std::string> devices;
 
 protected:
 

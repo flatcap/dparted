@@ -29,6 +29,7 @@
 #include "mount.h"
 #include "msdos.h"
 #include "partition.h"
+#include "segment.h"
 #include "volumegroup.h"
 #include "volume.h"
 
@@ -247,7 +248,7 @@ unsigned int disk_get_list (Container &disks)
 /**
  * logicals_get_list
  */
-unsigned int logicals_get_list (Container &logicals)
+unsigned int logicals_get_list (Container &disks)
 {
 	std::string command;
 	std::string output;
@@ -256,12 +257,18 @@ unsigned int logicals_get_list (Container &logicals)
 	Volume *vol = NULL;
 	unsigned int index;
 	std::map<std::string, VolumeGroup*> vg_lookup;
+	std::map<std::string, Segment*> seg_lookup;
 	unsigned int i;
 	unsigned int j;
-	VolumeSegment vol_seg;
+	//VolumeSegment vol_seg;
 	std::vector<std::string> lines;
 
-	command = "vgs --units=b --nosuffix  --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
+#if 0
+	VG   #PV #LV Attr   VSize        VFree VG UUID         Ext     #Ext  Free Seq
+	test   1   5 wz--n- 108036882432     0 Vpyrjc-8L7x-... 4194304 25758    0   6
+#endif
+
+	command = "sudo vgs --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
 	execute_command (command, output, error);
 	get_lines (output, lines);
 
@@ -271,7 +278,7 @@ unsigned int logicals_get_list (Container &logicals)
 		//printf ("line%d:\n%s\n\n", i, line.c_str()); fflush (stdout);
 
 		vg = new VolumeGroup;
-		vg->parent = &logicals;
+		vg->parent = &disks;
 
 		index = line.find ("LVM2_VG_NAME", index);
 		vg->vg_name = extract_quoted_string (line, index);
@@ -307,12 +314,12 @@ unsigned int logicals_get_list (Container &logicals)
 		index = line.find ("LVM2_VG_SEQNO", index);
 		vg->vg_seqno = extract_quoted_long (line, index);
 
-		logicals.add_child (vg);
+		disks.add_child (vg);
 
 		vg_lookup[vg->vg_uuid] = vg;
 	}
 
-	//logicals.dump (-8);
+	//disks.dump (-8);
 
 #if 0
 	std::map<std::string,VolumeGroup*>::iterator it;
@@ -324,7 +331,125 @@ unsigned int logicals_get_list (Container &logicals)
 	printf ("\n");
 #endif
 
-	command = "lvs --all --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,lv_name,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
+#if 0
+	PV         VG UUID         Attr PSize        PFree PV UUID         DevSize      1st PE  Used         PE    Alloc Start SSize
+	/dev/sda8  Vpyrjc-8L7x-... a--  108036882432     0 yKIRUo-suHb-... 108041076736 1048576 108036882432 25758 25758     0  5120
+	/dev/sda8  Vpyrjc-8L7x-... a--  108036882432     0 yKIRUo-suHb-... 108041076736 1048576 108036882432 25758 25758  5120  5120
+	/dev/sda8  Vpyrjc-8L7x-... a--  108036882432     0 yKIRUo-suHb-... 108041076736 1048576 108036882432 25758 25758 10240  5120
+	/dev/sda8  Vpyrjc-8L7x-... a--  108036882432     0 yKIRUo-suHb-... 108041076736 1048576 108036882432 25758 25758 15360  5120
+	/dev/sda8  Vpyrjc-8L7x-... a--  108036882432     0 yKIRUo-suHb-... 108041076736 1048576 108036882432 25758 25758 20480  5278
+#endif
+
+	command = "sudo pvs --units=b --nosuffix --nameprefixes --noheadings --options pv_name,vg_uuid,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count,pvseg_start,pvseg_size";
+	execute_command (command, output, error);
+	get_lines (output, lines);
+	//printf ("%s\n", output.c_str());
+
+	for (i = 0; i < lines.size(); i++) {
+		index = 0;
+		std::string line = lines[i];
+		//printf ("line%d:\n%s\n\n", i, line.c_str()); fflush (stdout);
+		std::string x;
+		//Container *segment = NULL;
+
+		/* is /dev/sda8 in seg_lookup
+		 * no
+		 *	find /dev/sda8
+		 *	create a vg segment child linked to test
+		 *	add segment to seg_lookup: /dev/sda8 -> test
+		 * yes
+		 *	add new volume segment linked to alpha,beta,etc
+		 */
+
+		index = line.find ("LVM2_PV_NAME", index);
+		std::string dev = extract_quoted_string (line, index); //printf ("dev = %s\n", dev.c_str());
+
+		index = line.find ("LVM2_VG_UUID", index);
+		std::string vg_uuid = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+
+		Segment *vg_seg = seg_lookup[dev];
+		if (vg_seg == NULL) {
+			Container *cont = disks.find_device (dev);
+			//printf ("cont for %s = %p\n", dev.c_str(), cont);
+			vg_seg = new Segment;
+			vg_seg->bytes_size = cont->bytes_size;
+			vg_seg->name = "lvm vg";
+
+			cont->add_child (vg_seg);
+
+			vg_seg->whole = vg_lookup[vg_uuid];
+
+			//printf ("whole = %p\n", vg_seg->whole);
+
+			seg_lookup[dev] = vg_seg;
+
+			Segment *reserved1 = new Segment;
+			// get size from LVM2_PE_START
+			reserved1->bytes_size = 1048576;
+			reserved1->bytes_used = 1048576;
+			reserved1->device_offset = 0;
+			reserved1->type = "\e[37m<metadata>\e[0m";
+			vg_seg->add_child (reserved1);
+
+			Segment *reserved2 = new Segment;
+			// get size from LVM2_PV_PE_ALLOC_COUNT and LVM2_PE_START
+			reserved2->bytes_size = 3145728;
+			reserved2->bytes_used = 3145728;
+			reserved2->device_offset = 108037931008;
+			reserved2->type = "\e[37m<reserved>\e[0m";
+			vg_seg->add_child (reserved2);
+		} else {
+			//printf ("already got one\n");
+		}
+
+		Segment *vol_seg = new Segment;
+		vol_seg->name = "lvm volume";
+
+		//printf ("extent size = %g MiB\n", (double) vg_seg->whole->block_size / 1024.0 / 1024.0);
+
+#if 0
+		// ignored for now
+		index = line.find ("LVM2_PV_ATTR", index);
+		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+		index = line.find ("LVM2_PV_SIZE", index);
+		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+		index = line.find ("LVM2_PV_FREE", index);
+		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+		index = line.find ("LVM2_PV_UUID", index);
+		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+		index = line.find ("LVM2_DEV_SIZE", index);
+		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+		index = line.find ("LVM2_PE_START", index);
+		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+		index = line.find ("LVM2_PV_USED", index);
+		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+		index = line.find ("LVM2_PV_PE_COUNT", index);
+		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+		index = line.find ("LVM2_PV_PE_ALLOC_COUNT", index);
+		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+#endif
+
+		index = line.find ("LVM2_PVSEG_START", index);
+		long long pvseg_start = extract_quoted_long_long (line, index); //printf ("x = %s\n", x.c_str());
+		index = line.find ("LVM2_PVSEG_SIZE", index);
+		long long pvseg_size = extract_quoted_long_long (line, index); //printf ("x = %s\n", x.c_str());
+
+		vol_seg->bytes_size    = pvseg_size  * vg_seg->whole->block_size;
+		vol_seg->bytes_used    = pvseg_size  * vg_seg->whole->block_size;
+		vol_seg->device_offset = pvseg_start * vg_seg->whole->block_size;
+
+		vg_seg->add_child (vol_seg);
+	}
+
+#if 0
+	VG UUID                                LV      Attr   LSize       Path              KMaj KMin #Seg Type   #Str Stripe Start SSize       PE Ranges
+	Vpyrjc-8L7x-GpB6-t1e0-Tkgf-3YfU-kDlBZ9 alpha   -wi-a- 21474836480 /dev/test/alpha   253  0       1 linear    1      0     0 21474836480 /dev/sda8:0-5119
+	Vpyrjc-8L7x-GpB6-t1e0-Tkgf-3YfU-kDlBZ9 beta    -wi-a- 21474836480 /dev/test/beta    253  1       1 linear    1      0     0 21474836480 /dev/sda8:5120-10239
+	Vpyrjc-8L7x-GpB6-t1e0-Tkgf-3YfU-kDlBZ9 gamma   -wi-a- 21474836480 /dev/test/gamma   253  2       1 linear    1      0     0 21474836480 /dev/sda8:10240-15359
+	Vpyrjc-8L7x-GpB6-t1e0-Tkgf-3YfU-kDlBZ9 delta   -wi-a- 21474836480 /dev/test/delta   253  3       1 linear    1      0     0 21474836480 /dev/sda8:15360-20479
+	Vpyrjc-8L7x-GpB6-t1e0-Tkgf-3YfU-kDlBZ9 epsilon -wi-a- 22137536512 /dev/test/epsilon 253  4       1 linear    1      0     0 22137536512 /dev/sda8:20480-25757
+#endif
+	command = "sudo lvs --all --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,lv_name,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
 	execute_command (command, output, error);
 
 	lines.clear();
@@ -398,7 +523,7 @@ unsigned int logicals_get_list (Container &logicals)
 		//printf ("\tseg type = %s\n", segtype.c_str());
 
 		index = line.find ("LVM2_STRIPES", index);
-		long stripes = extract_quoted_long (line, index);
+		//long stripes = extract_quoted_long (line, index);
 		//printf ("\tstripes = %s\n", stripes.c_str());
 
 		index = line.find ("LVM2_STRIPE_SIZE", index);
@@ -406,11 +531,11 @@ unsigned int logicals_get_list (Container &logicals)
 		//printf ("\tstripe size = %s\n", stripe_size.c_str());
 
 		index = line.find ("LVM2_SEG_START", index);
-		long long seg_start = extract_quoted_long_long (line, index);
+		//long long seg_start = extract_quoted_long_long (line, index);
 		//printf ("\tseg start = %s\n", seg_start.c_str());
 
 		index = line.find ("LVM2_SEG_SIZE", index);
-		long long seg_size = extract_quoted_long_long (line, index);
+		//long long seg_size = extract_quoted_long_long (line, index);
 		//printf ("\tseg size = %s\n", seg_size.c_str());
 
 		index = line.find ("LVM2_SEG_PE_RANGES", index);
@@ -419,9 +544,10 @@ unsigned int logicals_get_list (Container &logicals)
 		//printf ("\t                01234567890123456789012345678901234567890123456789\n");
 		//printf ("\tseg pe ranges = %s\n", seg_pe_ranges.c_str());
 		std::string pe_device;
-		int pe_start  = -1;
-		int pe_finish = -1;
+		//int pe_start  = -1;
+		//int pe_finish = -1;
 
+#if 0
 		for (int s = 0; s < stripes; s++) {
 				extract_dev_range (seg_pe_ranges, pe_device, pe_start, pe_finish, s);
 				//printf ("\tseg pe ranges = %s, %d, %d\n", pe_device.c_str(), pe_start, pe_finish);
@@ -447,12 +573,13 @@ unsigned int logicals_get_list (Container &logicals)
 					//RAR link these siblings?
 				}
 		}
+#endif
 
 		//printf ("\n");
 		//printf ("vg = %s   lv = %s\n", tmp1.c_str(), vol->name.c_str());
 	}
 
-	return logicals.children.size();
+	return disks.children.size();
 }
 
 /**
@@ -486,7 +613,9 @@ int main (int argc, char *argv[])
 	printf ("\n\n\n\n");
 
 	Container disks;
-	//disk_get_list (disks);
+	disk_get_list (disks);
+	//disks.children[0]->dump2();
+	//printf ("\n");
 
 #if 0
 	printf ("\e[36mDevice     Type                         Name                  Offset(Parent)         Bytes      Size     Used     Free\e[0m\n");
@@ -505,7 +634,8 @@ int main (int argc, char *argv[])
 
 #if 1
 	logicals_get_list (disks);
-	disks.dump(-8);
+	//disks.children[1]->dump();
+	disks.dump2();
 #endif
 
 	//Container mounts;

@@ -27,6 +27,7 @@
  */
 Segment::Segment (void)
 {
+	type = "\e[31msegment\e[0m";
 }
 
 /**

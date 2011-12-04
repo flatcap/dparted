@@ -51,6 +51,7 @@ void Volume::dump (int indent /* = 0 */)
 	//iprintf (indent+8, "minor: %d\n", kernel_minor);
 	//iprintf (indent+8, "attr: %s\n", lv_attr.c_str());
 
+#if 0
 	for (unsigned int i = 0; i < segments.size(); i++) {
 		std::string vo = get_size (segments[i].volume_offset);
 		std::string ss = get_size (segments[i].segment_size);
@@ -64,6 +65,7 @@ void Volume::dump (int indent /* = 0 */)
 		//iprintf (indent+16, "vol offset    = %lld\n", segments[i].volume_offset);
 		//iprintf (indent+16, "device offset = %lld\n", segments[i].device_offset);
 	}
+#endif
 
 	Container::dump (indent);
 }
