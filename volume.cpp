@@ -27,6 +27,7 @@
  */
 Volume::Volume (void)
 {
+	type = "\e[36mvolume\e[0m";
 }
 
 /**

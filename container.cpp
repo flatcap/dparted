@@ -67,6 +67,7 @@ void Container::dump2 (void)
 	std::string f;
 	std::string o;
 	std::string s;
+	std::string t;
 	std::string u;
 
 	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
@@ -75,8 +76,15 @@ void Container::dump2 (void)
 		f = get_size ((*i)->bytes_size - (*i)->bytes_used);
 		o = get_size ((*i)->device_offset);
 		d = (*i)->get_device_name();
-		if (d == "UNKNOWN")
+		t = (*i)->type;
+		if (t.empty()) {
+			t = "\e[37m\e[0m";
+		}
+#if 0
+		if (d == "UNKNOWN") {
 			continue;
+		}
+#endif
 		const char *indent = "";
 		const char *undent = "                        ";
 		if (parent == NULL) {
@@ -104,7 +112,7 @@ void Container::dump2 (void)
 		printf ("%-10s %s%-20s%s  %-22s %13lld %13lld  %8s %8s %8s\n",
 			d.c_str(),
 			indent,
-			(*i)->type.c_str(),
+			t.c_str(),
 			undent,
 			(*i)->name.c_str(),
 			(*i)->device_offset,

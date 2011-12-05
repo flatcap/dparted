@@ -27,6 +27,7 @@
  */
 VolumeGroup::VolumeGroup (void)
 {
+	type = "\e[35mvolumegroup\e[0m";
 }
 
 /**
