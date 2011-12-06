@@ -32,6 +32,7 @@ public:
 	virtual void dump (int indent = 0);
 	virtual void dump2 (void);
 	virtual void dump_csv (void);
+	virtual void dump_dot (void);
 
 	virtual void add_child    (Container *child);
 	virtual void delete_child (Container *child);

@@ -81,6 +81,13 @@ void Disk::dump_csv (void)
 	Container::dump_csv();
 }
 
+/**
+ * dump_dot
+ */
+void Disk::dump_dot (void)
+{
+}
+
 
 /**
  * get_block_size
