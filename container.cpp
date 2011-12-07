@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <string>
 #include <typeinfo>
+#include <sstream>
 
 #include "container.h"
 #include "utils.h"
@@ -134,14 +135,49 @@ void Container::dump_csv (void)
 	}
 }
 
+#if 0
 /**
  * dump_dot
  */
-void Container::dump_dot (void)
+std::string Container::dump_dot (void)
 {
+	std::ostringstream output;
 
+	output << "|container|{{";
+	output << "name\\l";
+	output << "device\\l";
+	output << "}|{";
+	output << name << "\\l";
+	output << device << "\\l";
+	output << "}}";
+
+	return output.str();
 }
 
+#else
+/**
+ * dump_dot
+ */
+std::string Container::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Container</b></font></td></tr>\n";
+	output << "<tr>\n";
+	output << "<td align=\"left\">name</td>\n";
+	output << "<td>=</td>\n";
+	output << "<td align=\"left\">" << name << "</td>\n";
+	output << "</tr>\n";
+	output << "<tr>\n";
+	output << "<td align=\"left\">device</td>\n";
+	output << "<td>=</td>\n";
+	output << "<td align=\"left\">" << device << "</td>\n";
+	output << "</tr>\n";
+
+	return output.str();
+}
+
+#endif
 
 /**
  * add_child

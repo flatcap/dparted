@@ -619,7 +619,17 @@ int main (int argc, char *argv[])
 	Container disks;
 	disk_get_list (disks);
 	//disks.children[0]->dump2();
+
+	std::string dot;
+	dot += "digraph disks {\n";
+	dot += "graph [ rankdir = \"LR\", bgcolor = white ];\n";
+	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
+	dot += disks.children[0]->dump_dot();
+	dot += "\n};";
+
+	printf ("%s\n", dot.c_str());
 	//printf ("\n");
+	return 0;
 
 #if 0
 	printf ("\e[36mDevice     Type                         Name                  Offset(Parent)         Bytes      Size     Used     Free\e[0m\n");

@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <sstream>
 
 #include "disk.h"
 #include "utils.h"
@@ -81,13 +82,70 @@ void Disk::dump_csv (void)
 	Container::dump_csv();
 }
 
+#if 0
 /**
  * dump_dot
  */
-void Disk::dump_dot (void)
+std::string Disk::dump_dot (void)
 {
+	std::ostringstream output;
+
+	//rpm_arch [ label = "rpm_arch|{{aid\lcid\laname\l}|{unique id\lcategory id\larch name\l}}" ];
+
+	output << "disk_" << this;
+	output << " [ label = \"";
+	output << "disk|{{";
+	output << "cylinders\\l";
+	output << "heads\\l";
+	output << "sectors\\l";
+	output << "}|{";
+	output << hw_cylinders << "\\l";
+	output << hw_heads << "\\l";
+	output << hw_sectors << "\\l";
+	output << "}}";
+
+	output << Container::dump_dot();
+
+	output << "\" ];";
+
+	return output.str();
 }
 
+#else
+/**
+ * dump_dot
+ */
+std::string Disk::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << "obj_" << this <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
+
+	output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Disk</b></font></td></tr>\n";
+	output << "<tr>\n";
+	output << "<td align=\"left\">cylinders</td>\n";
+	output << "<td>=</td>\n";
+	output << "<td align=\"left\">" << hw_cylinders << "</td>\n";
+	output << "</tr>\n";
+	output << "<tr>\n";
+	output << "<td align=\"left\">heads</td>\n";
+	output << "<td>=</td>\n";
+	output << "<td align=\"left\">" << hw_heads << "</td>\n";
+	output << "</tr>\n";
+	output << "<tr>\n";
+	output << "<td align=\"left\">sectors</td>\n";
+	output << "<td>=</td>\n";
+	output << "<td align=\"left\">" << hw_sectors << "</td>\n";
+	output << "</tr>\n";
+
+	output << Container::dump_dot();
+
+	output << "</table>>];\n";
+
+	return output.str();
+}
+
+#endif
 
 /**
  * get_block_size
