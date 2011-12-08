@@ -622,7 +622,7 @@ int main (int argc, char *argv[])
 
 	std::string dot;
 	dot += "digraph disks {\n";
-	dot += "graph [ rankdir = \"LR\", bgcolor = white ];\n";
+	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
 	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
 	dot += disks.children[0]->dump_dot();
 	dot += "\n};";

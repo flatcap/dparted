@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <sstream>
 
 #include "msdos.h"
 #include "utils.h"
@@ -67,3 +68,40 @@ void Msdos::dump_csv (void)
 	Container::dump_csv();
 }
 
+/**
+ * dump_dot
+ */
+std::string Msdos::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << "obj_" << this <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
+
+	output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Msdos</b></font></td></tr>\n";
+
+	// no specfics for now
+
+	output << Container::dump_dot();
+
+	output << "</table>>];\n";
+
+	// now iterate through all the children
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		output << "\n";
+		output << (*i)->dump_dot();
+		output << "obj_" << this << " -> " << "obj_" << (*i) << ";\n";
+		output << "\n";
+	}
+
+#if 0
+	// now iterate through all the children
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		output << "\n";
+		output << (*i)->dump_dot();
+		output << "obj_" << this << " -> " << "obj_" << (*i) << ";\n";
+		output << "\n";
+	}
+#endif
+
+	return output.str();
+}

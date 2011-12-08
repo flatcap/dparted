@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <sstream>
 
 #include "partition.h"
 #include "utils.h"
@@ -77,3 +78,40 @@ void Partition::dump_csv (void)
 	Container::dump_csv();
 }
 
+/**
+ * dump_dot
+ */
+std::string Partition::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << "obj_" << this <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
+
+	output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Partition</b></font></td></tr>\n";
+	output << "<tr>\n";
+	output << "<td align=\"left\">start</td>\n";
+	output << "<td>=</td>\n";
+	output << "<td align=\"left\">" << start << "</td>\n";
+	output << "</tr>\n";
+	output << "<tr>\n";
+	output << "<td align=\"left\">end</td>\n";
+	output << "<td>=</td>\n";
+	output << "<td align=\"left\">" << end << "</td>\n";
+	output << "</tr>\n";
+
+	output << Container::dump_dot();
+
+	output << "</table>>];\n";
+
+#if 0
+	// now iterate through all the children
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		output << "\n";
+		output << (*i)->dump_dot();
+		output << "obj_" << this << " -> " << "obj_" << (*i) << ";\n";
+		output << "\n";
+	}
+#endif
+
+	return output.str();
+}
