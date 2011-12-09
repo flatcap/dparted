@@ -82,36 +82,6 @@ void Disk::dump_csv (void)
 	Container::dump_csv();
 }
 
-#if 0
-/**
- * dump_dot
- */
-std::string Disk::dump_dot (void)
-{
-	std::ostringstream output;
-
-	//rpm_arch [ label = "rpm_arch|{{aid\lcid\laname\l}|{unique id\lcategory id\larch name\l}}" ];
-
-	output << "disk_" << this;
-	output << " [ label = \"";
-	output << "disk|{{";
-	output << "cylinders\\l";
-	output << "heads\\l";
-	output << "sectors\\l";
-	output << "}|{";
-	output << hw_cylinders << "\\l";
-	output << hw_heads << "\\l";
-	output << hw_sectors << "\\l";
-	output << "}}";
-
-	output << Container::dump_dot();
-
-	output << "\" ];";
-
-	return output.str();
-}
-
-#else
 /**
  * dump_dot
  */
@@ -146,7 +116,6 @@ std::string Disk::dump_dot (void)
 	return output.str();
 }
 
-#endif
 
 /**
  * get_block_size

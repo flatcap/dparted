@@ -133,26 +133,6 @@ void Container::dump_csv (void)
 	}
 }
 
-#if 0
-/**
- * dump_dot
- */
-std::string Container::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << "|container|{{";
-	output << "name\\l";
-	output << "device\\l";
-	output << "}|{";
-	output << name << "\\l";
-	output << device << "\\l";
-	output << "}}";
-
-	return output.str();
-}
-
-#else
 /**
  * dump_dot
  */
@@ -178,7 +158,7 @@ std::string Container::dump_dot (void)
 	return output.str();
 }
 
-#endif
+
 /**
  * dump_row
  */
