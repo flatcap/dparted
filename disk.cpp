@@ -119,28 +119,21 @@ std::string Disk::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << "obj_" << this <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
-
-	output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Disk</b></font></td></tr>\n";
-	output << "<tr>\n";
-	output << "<td align=\"left\">cylinders</td>\n";
-	output << "<td>=</td>\n";
-	output << "<td align=\"left\">" << hw_cylinders << "</td>\n";
-	output << "</tr>\n";
-	output << "<tr>\n";
-	output << "<td align=\"left\">heads</td>\n";
-	output << "<td>=</td>\n";
-	output << "<td align=\"left\">" << hw_heads << "</td>\n";
-	output << "</tr>\n";
-	output << "<tr>\n";
-	output << "<td align=\"left\">sectors</td>\n";
-	output << "<td>=</td>\n";
-	output << "<td align=\"left\">" << hw_sectors << "</td>\n";
-	output << "</tr>\n";
+	output << dump_table_header ("Disk", "red");
 
 	output << Container::dump_dot();
 
-	output << "</table>>];\n";
+	output << dump_row ("hw_cylinders",   hw_cylinders);
+	output << dump_row ("hw_heads",       hw_heads);
+	output << dump_row ("hw_sectors",     hw_sectors);
+	output << dump_row ("read_only",      read_only);
+	output << dump_row ("bios_cylinders", bios_cylinders);
+	output << dump_row ("bios_heads",     bios_heads);
+	output << dump_row ("bios_sectors",   bios_sectors);
+	output << dump_row ("host",           host);
+	output << dump_row ("did",            did);
+
+	output << dump_table_footer();
 
 	// now iterate through all the children
 	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {

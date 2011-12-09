@@ -31,6 +31,8 @@ public:
 	Whole (void);
 	virtual ~Whole();
 
+	virtual std::string dump_dot (void);
+
 	std::vector<Segment*> segments;
 
 protected:

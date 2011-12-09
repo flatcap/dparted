@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <sstream>
 
 #include "volume.h"
 #include "utils.h"
@@ -77,5 +78,36 @@ void Volume::dump (int indent /* = 0 */)
 void Volume::dump_csv (void)
 {
 	Container::dump_csv();
+}
+
+/**
+ * dump_dot
+ */
+std::string Volume::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << dump_table_header ("Volume", "purple");
+
+	output << Container::dump_dot();
+
+	output << dump_row ("lv_name",      lv_name);
+	output << dump_row ("lv_attr",      lv_attr);
+	output << dump_row ("lv_size",      lv_size);
+	output << dump_row ("lv_path",      lv_path);
+	output << dump_row ("kernel_major", kernel_major);
+	output << dump_row ("kernel_minor", kernel_minor);
+
+	output << dump_table_footer();
+
+	// now iterate through all the children
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		output << "\n";
+		output << (*i)->dump_dot();
+		output << "obj_" << this << " -> " << "obj_" << (*i) << ";\n";
+		output << "\n";
+	}
+
+	return output.str();
 }
 

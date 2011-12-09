@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <sstream>
 
 #include "filesystem.h"
 #include "partition.h"
@@ -190,3 +191,18 @@ void Filesystem::dump_csv (void)
 	Container::dump_csv();
 }
 
+/**
+ * dump_dot
+ */
+std::string Filesystem::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << dump_table_header ("Filesystem", "cyan");
+
+	output << Container::dump_dot();
+
+	output << dump_table_footer();
+
+	return output.str();
+}

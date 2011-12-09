@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <sstream>
 #include <map>
 #include <parted/parted.h>
 
@@ -74,9 +75,9 @@ std::string get_partition_type (int type)
 	//if (type &  PED_PARTITION_LOGICAL)   s += "Logical ";
 	if (type &  PED_PARTITION_EXTENDED)  s += "Extended ";
 	//if (type &  PED_PARTITION_FREESPACE) s += "Freespace ";
-	if (type &  PED_PARTITION_FREESPACE) s += "<empty>";
+	if (type &  PED_PARTITION_FREESPACE) s += "empty";
 	//if (type &  PED_PARTITION_METADATA)  s += "Metadata ";
-	if (type &  PED_PARTITION_METADATA)  s += "<reserved>";
+	if (type &  PED_PARTITION_METADATA)  s += "reserved";
 	if (type &  PED_PARTITION_PROTECTED) s += "Protected ";
 
 	return s;
@@ -194,18 +195,17 @@ unsigned int disk_get_list (Container &disks)
 					p->device += ('0' + part->num);
 					p->name = p->device.substr (5);
 				} else {
-					if (p->name == "<empty>") {
-						p->type = "\e[37m<empty>\e[0m";
+					if (p->name == "empty") {
+						p->type = "\e[37mempty\e[0m";
 						if (part->type & PED_PARTITION_LOGICAL) {
 							extended->bytes_used -= p->bytes_size;
 						} else {
 							m->bytes_used -= p->bytes_size;
 						}
 					} else {
-						p->type = "\e[37m<metadata>\e[0m";
-						p->name = "<reserved";
+						p->type = "\e[37mmetadata\e[0m";
+						p->name = "reserved";
 						p->name += ('0' + reserved);
-						p->name += ">";
 						p->bytes_used = p->bytes_size;
 						reserved++;
 						if (part->type & PED_PARTITION_LOGICAL) {
@@ -620,17 +620,6 @@ int main (int argc, char *argv[])
 	disk_get_list (disks);
 	//disks.children[0]->dump2();
 
-	std::string dot;
-	dot += "digraph disks {\n";
-	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
-	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
-	dot += disks.children[0]->dump_dot();
-	dot += "\n};";
-
-	printf ("%s\n", dot.c_str());
-	//printf ("\n");
-	return 0;
-
 #if 0
 	printf ("\e[36mDevice     Type                         Name                  Offset(Parent)         Bytes      Size     Used     Free\e[0m\n");
 	disks.dump2();
@@ -646,15 +635,36 @@ int main (int argc, char *argv[])
 	printf ("name = %s\n", lvm->name.c_str());
 #endif
 
-#if 1
+#if 0
 	logicals_get_list (disks);
 	//disks.children[1]->dump();
-	disks.dump2();
+	//disks.dump2();
 #endif
 
 	//Container mounts;
 	//mounts_get_list (mounts);
 	//mounts.dump(-8);
+
+	std::string dot;
+	dot += "digraph disks {\n";
+	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
+	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
+	dot += disks.children[0]->dump_dot();
+	if (0)
+	{
+		std::ostringstream output;
+
+		Container *d = disks.children[0];
+		Container *m = d->children[0];
+
+		output << "{ rank=same obj_" << d << " obj_" << m << " }\n";
+
+		dot += output.str();
+	}
+	dot += "\n};";
+
+	printf ("%s\n", dot.c_str());
+	//printf ("\n");
 
 	return 0;
 }

@@ -67,10 +67,17 @@ public:
 	std::vector<Container*> children;
 	//std::vector<long long>  offsets;
 
-	//Container	*prev;	// Siblings
-	//Container	*next;
-
 protected:
+	std::string dump_row (const char *name, long long value);
+	std::string dump_row (const char *name, long value);
+	std::string dump_row (const char *name, int value);
+	std::string dump_row (const char *name, unsigned int value);
+	std::string dump_row (const char *name, bool value);
+	std::string dump_row (const char *name, std::string &value);
+	std::string dump_row (const char *name, void *value);
+
+	std::string dump_table_header (const char *name, const char *colour);
+	std::string dump_table_footer (void);
 
 private:
 

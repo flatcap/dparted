@@ -75,15 +75,13 @@ std::string Msdos::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << "obj_" << this <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
-
-	output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Msdos</b></font></td></tr>\n";
+	output << dump_table_header ("Msdos", "yellow");
 
 	// no specfics for now
 
 	output << Container::dump_dot();
 
-	output << "</table>>];\n";
+	output << dump_table_footer();
 
 	// now iterate through all the children
 	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {

@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <sstream>
 
 #include "segment.h"
 #include "container.h"
@@ -52,5 +53,19 @@ void Segment::dump (int indent /* = 0 */)
 void Segment::dump_csv (void)
 {
 	Container::dump_csv();
+}
+
+/**
+ * dump_dot
+ */
+std::string Segment::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << Container::dump_dot();
+
+	output << dump_row ("whole", whole);
+
+	return output.str();
 }
 

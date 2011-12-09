@@ -85,25 +85,16 @@ std::string Partition::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << "obj_" << this <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
-
-	output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Partition</b></font></td></tr>\n";
-	output << "<tr>\n";
-	output << "<td align=\"left\">start</td>\n";
-	output << "<td>=</td>\n";
-	output << "<td align=\"left\">" << start << "</td>\n";
-	output << "</tr>\n";
-	output << "<tr>\n";
-	output << "<td align=\"left\">end</td>\n";
-	output << "<td>=</td>\n";
-	output << "<td align=\"left\">" << end << "</td>\n";
-	output << "</tr>\n";
+	output << dump_table_header ("Partition", "green");
 
 	output << Container::dump_dot();
 
-	output << "</table>>];\n";
+	output << dump_row ("start", start);
+	output << dump_row ("end",   end);
 
-#if 0
+	output << dump_table_footer();
+
+#if 1
 	// now iterate through all the children
 	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
 		output << "\n";

@@ -33,8 +33,6 @@ Container::Container (void) :
 	bytes_size (0),
 	bytes_used (0),
 	parent (NULL)
-	//prev (NULL),
-	//next (NULL)
 {
 }
 
@@ -161,23 +159,164 @@ std::string Container::dump_dot (void)
 std::string Container::dump_dot (void)
 {
 	std::ostringstream output;
+	unsigned int count = children.size();
 
-	output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Container</b></font></td></tr>\n";
-	output << "<tr>\n";
-	output << "<td align=\"left\">name</td>\n";
-	output << "<td>=</td>\n";
-	output << "<td align=\"left\">" << name << "</td>\n";
-	output << "</tr>\n";
-	output << "<tr>\n";
-	output << "<td align=\"left\">device</td>\n";
-	output << "<td>=</td>\n";
-	output << "<td align=\"left\">" << device << "</td>\n";
-	output << "</tr>\n";
+	//output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Container</b></font></td></tr>\n";
+
+	//output << dump_row ("type",          type);
+	output << dump_row ("name",          name);
+	output << dump_row ("label",         label);
+	output << dump_row ("uuid",          uuid);
+	output << dump_row ("device",        device);
+	output << dump_row ("device_offset", device_offset);
+	output << dump_row ("block_size",    block_size);
+	output << dump_row ("bytes_size",    bytes_size);
+	output << dump_row ("bytes_used",    bytes_used);
+	output << dump_row ("parent",        parent);
+	output << dump_row ("children",      count);	// vector
 
 	return output.str();
 }
 
 #endif
+/**
+ * dump_row
+ */
+std::string Container::dump_row (const char *name, long long value)
+{
+	std::ostringstream s;
+
+	s << "<tr>\n";
+	s << "<td align=\"left\">" << name << "</td>\n";
+	s << "<td>=</td>\n";
+	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+/**
+ * dump_row
+ */
+std::string Container::dump_row (const char *name, long value)
+{
+	std::ostringstream s;
+
+	s << "<tr>\n";
+	s << "<td align=\"left\">" << name << "</td>\n";
+	s << "<td>=</td>\n";
+	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+/**
+ * dump_row
+ */
+std::string Container::dump_row (const char *name, int value)
+{
+	std::ostringstream s;
+
+	s << "<tr>\n";
+	s << "<td align=\"left\">" << name << "</td>\n";
+	s << "<td>=</td>\n";
+	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+/**
+ * dump_row
+ */
+std::string Container::dump_row (const char *name, unsigned int value)
+{
+	std::ostringstream s;
+
+	s << "<tr>\n";
+	s << "<td align=\"left\">" << name << "</td>\n";
+	s << "<td>=</td>\n";
+	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+/**
+ * dump_row
+ */
+std::string Container::dump_row (const char *name, bool value)
+{
+	std::ostringstream s;
+
+	s << "<tr>\n";
+	s << "<td align=\"left\">" << name << "</td>\n";
+	s << "<td>=</td>\n";
+	s << "<td align=\"left\">" << (value ? "true" : "false") << "</td>\n";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+/**
+ * dump_row
+ */
+std::string Container::dump_row (const char *name, std::string &value)
+{
+	std::ostringstream s;
+
+	s << "<tr>\n";
+	s << "<td align=\"left\">" << name << "</td>\n";
+	s << "<td>=</td>\n";
+	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+/**
+ * dump_row
+ */
+std::string Container::dump_row (const char *name, void *value)
+{
+	std::ostringstream s;
+
+	s << "<tr>\n";
+	s << "<td align=\"left\">" << name << "</td>\n";
+	s << "<td>=</td>\n";
+	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+
+/**
+ * dump_table_header
+ */
+std::string Container::dump_table_header (const char *name, const char *colour)
+{
+	std::ostringstream output;
+
+	output << "obj_" << this <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
+	output << "<tr><td align=\"left\" bgcolor=\"" << colour << "\" colspan=\"3\"><font color=\"#000000\"><b>" << name << "</b></font> (" << this << ")</td></tr>\n";
+
+	return output.str();
+}
+
+/**
+ * dump_table_footer
+ */
+std::string Container::dump_table_footer (void)
+{
+	std::ostringstream output;
+
+	output << "</table>>];\n";
+
+	return output.str();
+}
+
 
 /**
  * add_child

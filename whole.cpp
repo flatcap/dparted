@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <sstream>
 
 #include "whole.h"
 #include "container.h"
@@ -34,5 +35,20 @@ Whole::Whole (void)
  */
 Whole::~Whole()
 {
+}
+
+/**
+ * dump_dot
+ */
+std::string Whole::dump_dot (void)
+{
+	std::ostringstream output;
+	unsigned int count = segments.size();
+
+	output << Container::dump_dot();
+
+	output << dump_row ("segments", count);	// vector
+
+	return output.str();
 }
 

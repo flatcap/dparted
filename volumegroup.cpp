@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <sstream>
 
 #include "volumegroup.h"
 #include "utils.h"
@@ -71,5 +72,41 @@ void VolumeGroup::dump (int indent /* = 0 */)
 void VolumeGroup::dump_csv (void)
 {
 	Container::dump_csv();
+}
+
+/**
+ * dump_dot
+ */
+std::string VolumeGroup::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << dump_table_header ("VolumeGroup", "cyan");
+
+	output << Container::dump_dot();
+
+	output << dump_row ("vg_name",         vg_name);
+	output << dump_row ("pv_count",        pv_count);
+	output << dump_row ("lv_count",        lv_count);
+	output << dump_row ("vg_attr",         vg_attr);
+	output << dump_row ("vg_size",         vg_size);
+	output << dump_row ("vg_free",         vg_free);
+	output << dump_row ("vg_uuid",         vg_uuid);
+	output << dump_row ("vg_extent_size",  vg_extent_size);
+	output << dump_row ("vg_extent_count", vg_extent_count);
+	output << dump_row ("vg_free_count",   vg_free_count);
+	output << dump_row ("vg_seqno",        vg_seqno);
+
+	output << dump_table_footer();
+
+	// now iterate through all the children
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		output << "\n";
+		output << (*i)->dump_dot();
+		output << "obj_" << this << " -> " << "obj_" << (*i) << ";\n";
+		output << "\n";
+	}
+
+	return output.str();
 }
 

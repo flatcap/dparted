@@ -43,6 +43,7 @@ public:
 
 	virtual void dump (int indent = 0);
 	virtual void dump_csv (void);
+	virtual std::string dump_dot (void);
 
 	std::string	lv_name;
 	std::string	lv_attr;
