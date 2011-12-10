@@ -1,7 +1,7 @@
 GPP	= g++
 GCC	= gcc
 
-OUT	= compare fs lvm map parted spawn
+OUT	= compare fs lvm map parted spawn format
 
 CFLAGS	= -g -Wall
 
@@ -12,6 +12,9 @@ all:	$(OUT)
 
 clean:
 	$(RM) $(OUT)
+
+format:	format.cpp
+	$(GPP) $(CFLAGS) -o $@ format.cpp
 
 fs:	fs.c
 	$(GCC) $(CFLAGS) -o $@ fs.c $(shell pkg-config --cflags --libs libparted)
