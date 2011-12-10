@@ -69,7 +69,7 @@ void Volume::dump (int indent /* = 0 */)
 	}
 #endif
 
-	Container::dump (indent);
+	Whole::dump (indent);
 }
 
 /**
@@ -77,7 +77,7 @@ void Volume::dump (int indent /* = 0 */)
  */
 void Volume::dump_csv (void)
 {
-	Container::dump_csv();
+	Whole::dump_csv();
 }
 
 /**
@@ -89,7 +89,7 @@ std::string Volume::dump_dot (void)
 
 	output << dump_table_header ("Volume", "purple");
 
-	output << Container::dump_dot();
+	output << Whole::dump_dot();
 
 	output << dump_row ("lv_attr",      lv_attr);
 	output << dump_row ("kernel_major", kernel_major);

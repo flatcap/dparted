@@ -63,7 +63,7 @@ void VolumeGroup::dump (int indent /* = 0 */)
 	//iprintf (indent+8, "vg_free_count:   %lld\n", vg_free_count);
 	//iprintf (indent+8, "vg_seqno:        %ld\n",  vg_seqno);
 
-	Container::dump (indent);
+	Whole::dump (indent);
 }
 
 /**
@@ -71,7 +71,7 @@ void VolumeGroup::dump (int indent /* = 0 */)
  */
 void VolumeGroup::dump_csv (void)
 {
-	Container::dump_csv();
+	Whole::dump_csv();
 }
 
 /**
@@ -83,7 +83,7 @@ std::string VolumeGroup::dump_dot (void)
 
 	output << dump_table_header ("VolumeGroup", "cyan");
 
-	output << Container::dump_dot();
+	output << Whole::dump_dot();
 
 	output << dump_row ("pv_count",        pv_count);
 	output << dump_row ("lv_count",        lv_count);
