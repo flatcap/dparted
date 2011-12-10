@@ -142,6 +142,22 @@ std::string extract_quoted_string (const std::string &text, unsigned int &index)
 }
 
 /**
+ * extract_bare_string
+ */
+std::string extract_bare_string (const std::string &text, unsigned int &index)
+{
+	unsigned int start  = -1;
+	unsigned int finish = -1;
+
+	start  = text.find_first_not_of (' ', index);
+	finish = text.find_first_of ("\r\n", start);
+
+	index = finish;
+
+	return text.substr (start, finish - start);
+}
+
+/**
  * extract_quoted_long
  */
 long extract_quoted_long (const std::string &text, unsigned int &index)

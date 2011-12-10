@@ -523,8 +523,11 @@ unsigned int logicals_get_list (Container &disks)
 		//fprintf (stderr, "fs_type = %s\n", fs_type.c_str());
 		if (!fs_type.empty()) {
 			Filesystem *fs = new Filesystem;
-			fs->bytes_size = vol->bytes_size;	//RAR for now
+			//fs->bytes_size = vol->bytes_size;	//RAR for now
 			fs->name = fs_type;
+			fs->parent = vol; //RAR tmp
+			fs->device = vol->device; //RAR tmp
+			fs->dump();
 			vol->add_child (fs);
 		}
 

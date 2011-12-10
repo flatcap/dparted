@@ -51,12 +51,21 @@ void Filesystem::dump (int indent /* = 0 */)
 	unsigned int index = -1;
 	//int result = -1;
 
+	//fprintf (stderr, "%s: %s\n", __PRETTY_FUNCTION__, name.c_str());
 	if ((name == "ext4") || (name == "ext3") || (name == "ext2")) {
 		long long free = 0;
 
 		command = "dumpe2fs -h " + parent->device;
-		//RAR command += '0' + parent->num;
+		//command += '0' + part->num;
+		//fprintf (stderr, "device = %s, command = %s\n", parent->device.c_str(), command.c_str());
 		execute_command (command, output, error);
+
+		//fprintf (stderr, "command = %s\n", command.c_str());
+		//fprintf (stderr, "%s\n", output.c_str());
+
+		index = output.find ("Filesystem UUID:") + 16;
+		uuid = extract_bare_string (output, index);
+		//fprintf (stderr, "uuid = %s\n", uuid.c_str());
 
 		index = output.find ("Block size:");
 		block_size = extract_number (output, index);
@@ -160,6 +169,7 @@ void Filesystem::dump (int indent /* = 0 */)
 
 	//result = execute_command (command, output, error);
 
+#if 0
 	std::string size = get_size (bytes_size);
 	std::string used = get_size (bytes_used);
 
@@ -169,6 +179,7 @@ void Filesystem::dump (int indent /* = 0 */)
 	//iprintf (indent+8, "Command: %s\n", command.c_str());
 
 	//iprintf (indent+8, "Type: %s\n", type.c_str());
+#endif
 
 	Container::dump (indent);
 }
