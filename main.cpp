@@ -628,17 +628,14 @@ int main (int argc, char *argv[])
 
 #if 0
 	Container *lvm = disks.find_device ("/dev/sda8");
-
 	printf ("\nlvm = %p\n", lvm);
 	fflush (stdout);
 	printf ("name = %s\n", lvm->name.c_str());
 #endif
 
-#if 1
 	logicals_get_list (disks);
 	//disks.children[1]->dump();
 	//disks.dump2();
-#endif
 
 	//Container mounts;
 	//mounts_get_list (mounts);
@@ -648,7 +645,7 @@ int main (int argc, char *argv[])
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
 	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
-	dot += disks.children[1]->dump_dot();
+	dot += disks.children[0]->dump_dot();
 	if (0)
 	{
 		std::ostringstream output;

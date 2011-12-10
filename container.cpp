@@ -139,8 +139,12 @@ void Container::dump_csv (void)
 std::string Container::dump_dot (void)
 {
 	std::ostringstream output;
-	std::string uuid_short = uuid.substr (0, 6) + "...";
+	std::string uuid_short = uuid;
 	unsigned int count = children.size();
+
+	if (!uuid_short.empty()) {
+		uuid_short = uuid.substr (0, 6) + "...";
+	}
 
 	//output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Container</b></font></td></tr>\n";
 
