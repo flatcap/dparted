@@ -87,7 +87,7 @@ std::string VolumeGroup::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("VolumeGroup", "cyan");
+	output << dump_table_header ("VolumeGroup", "#008080");
 
 	output << Whole::dump_dot();
 

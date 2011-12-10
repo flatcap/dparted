@@ -513,10 +513,20 @@ unsigned int logicals_get_list (Container &disks)
 
 		index = line.find ("LVM2_LV_SIZE", index);
 		vol->bytes_size = extract_quoted_long_long (line, index);
-		vol->bytes_used = vol->bytes_size; //RAR temporary, until we read the filesystem info
+		//vol->bytes_used = vol->bytes_size; //RAR temporary, until we read the filesystem info
 
 		index = line.find ("LVM2_LV_PATH", index);
 		vol->device = extract_quoted_string (line, index);
+
+		std::string fs_type;
+		fs_type = get_fs (vol->device, 0);
+		//fprintf (stderr, "fs_type = %s\n", fs_type.c_str());
+		if (!fs_type.empty()) {
+			Filesystem *fs = new Filesystem;
+			fs->bytes_size = vol->bytes_size;	//RAR for now
+			fs->name = fs_type;
+			vol->add_child (fs);
+		}
 
 		index = line.find ("LVM2_LV_KERNEL_MAJOR", index);
 		vol->kernel_major = extract_quoted_long (line, index);

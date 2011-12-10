@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <parted/parted.h>
 
 #include "utils.h"
 
@@ -216,3 +217,26 @@ unsigned int get_lines (const std::string &output, std::vector<std::string> &lin
 	}
 	return lines.size();
 }
+
+/**
+ * get_fs
+ */
+std::string get_fs (const std::string &device, long long offset)
+{
+	PedGeometry geom;
+	PedFileSystemType *fs = NULL;
+	std::string result;
+
+	geom.dev = ped_device_get (device.c_str());
+	geom.start = offset;
+	geom.length = 2097152;	// XXX tmp
+	geom.end = 2097152;	// XXX tmp
+
+	fs = ped_file_system_probe (&geom);
+	if (fs) {
+		result = fs->name;
+	}
+
+	return result;
+}
+

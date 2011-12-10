@@ -31,6 +31,7 @@ long extract_quoted_long (const std::string &text, unsigned int &index);
 long long extract_quoted_long_long (const std::string &text, unsigned int &index);
 int extract_dev_range (const std::string &text, std::string &device, int &start, int &finish, int element = 0);
 unsigned int get_lines (const std::string &output, std::vector<std::string> &lines);
+std::string get_fs (const std::string &device, long long offset);
 
 #endif // _UTILS_H_
 
