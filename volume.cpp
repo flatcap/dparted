@@ -26,7 +26,9 @@
 /**
  * Volume
  */
-Volume::Volume (void)
+Volume::Volume (void) :
+	kernel_major (0),
+	kernel_minor (0)
 {
 	type = "\e[36mvolume\e[0m";
 }

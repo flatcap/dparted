@@ -26,7 +26,13 @@
 /**
  * VolumeGroup
  */
-VolumeGroup::VolumeGroup (void)
+VolumeGroup::VolumeGroup (void) :
+	pv_count (0),
+	lv_count (0),
+	vg_extent_size (0),
+	vg_extent_count (0),
+	vg_free_count (0),
+	vg_seqno (0)
 {
 	type = "\e[35mvolumegroup\e[0m";
 }

@@ -218,7 +218,6 @@ unsigned int disk_get_list (Container &disks)
 					Filesystem *f = new Filesystem;
 					//f->parent = p;
 					f->name = part->fs_type->name;
-					f->part = p;
 					f->bytes_size = p->bytes_size;
 					f->bytes_used = p->bytes_size;
 					f->device = p->device;
@@ -574,6 +573,8 @@ unsigned int logicals_get_list (Container &disks)
 				//printf ("volume offset = %lld, device = %s, seg size = %lld, device offset = %lld\n", vol_seg.volume_offset, vol_seg.device.c_str(), vol_seg.segment_size, vol_seg.device_offset);
 
 				vol_seg->name = lv_name;
+				vol_seg->uuid = vol->uuid;
+				vol_seg->whole = vol;
 
 				vg_seg->add_child (vol_seg);
 		}
@@ -613,8 +614,6 @@ unsigned int mounts_get_list (Container &mounts)
  */
 int main (int argc, char *argv[])
 {
-	//printf ("\n\n\n\n");
-
 	Container disks;
 	disk_get_list (disks);
 	//disks.children[0]->dump2();
@@ -646,6 +645,7 @@ int main (int argc, char *argv[])
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
 	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
 	dot += disks.children[0]->dump_dot();
+	dot += disks.children[1]->dump_dot();
 	if (0)
 	{
 		std::ostringstream output;

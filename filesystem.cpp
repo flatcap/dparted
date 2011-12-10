@@ -54,8 +54,8 @@ void Filesystem::dump (int indent /* = 0 */)
 	if ((name == "ext4") || (name == "ext3") || (name == "ext2")) {
 		long long free = 0;
 
-		command = "dumpe2fs -h " + part->device;
-		command += '0' + part->num;
+		command = "dumpe2fs -h " + parent->device;
+		//RAR command += '0' + parent->num;
 		execute_command (command, output, error);
 
 		index = output.find ("Block size:");
@@ -105,8 +105,8 @@ void Filesystem::dump (int indent /* = 0 */)
 
 	} else if (name == "ntfs") {
 		//command = "ntfsresize -P -i -f -v " + part->device;
-		command = "df -B1 " + part->device;
-		command += '0' + part->num;
+		command = "df -B1 " + parent->device;
+		//RAR command += '0' + parent->num;
 		execute_command (command, output, error);
 
 		index = output.find ("/dev/sda7") + 10; //strlen ("/dev/sda7")
@@ -122,8 +122,8 @@ void Filesystem::dump (int indent /* = 0 */)
 		You might resize at 73482240 bytes or 74 MB (freeing 193578 MB).
 #endif
 	} else if (name == "fat32") {
-		command = "dosfsck -n -v " + part->device;
-		command += '0' + part->num;
+		command = "dosfsck -n -v " + parent->device;
+		//RAR command += '0' + parent->num;
 		execute_command (command, output, error);
 
 		index = output.find ("bytes per cluster") - 12;

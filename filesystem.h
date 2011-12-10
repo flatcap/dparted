@@ -35,8 +35,7 @@ public:
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
-	Partition	*part;
-	std::string	 label;
+	std::string	label;
 
 protected:
 

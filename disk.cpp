@@ -26,7 +26,16 @@
 /**
  * Disk
  */
-Disk::Disk (void)
+Disk::Disk (void) :
+	read_only (false),
+	hw_cylinders (0),
+	hw_heads (0),
+	hw_sectors (0),
+	bios_cylinders (0),
+	bios_heads (0),
+	bios_sectors (0),
+	host (0),
+	did (0)
 {
 	type = "\e[31mdisk\e[0m";
 }
