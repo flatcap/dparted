@@ -657,8 +657,10 @@ int main (int argc, char *argv[])
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
 	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
-	dot += disks.children[0]->dump_dot();
-	dot += disks.children[1]->dump_dot();
+	if (disks.children.size() > 0)
+		dot += disks.children[0]->dump_dot();
+	if (disks.children.size() > 1)
+		dot += disks.children[1]->dump_dot();
 	if (0)
 	{
 		std::ostringstream output;
