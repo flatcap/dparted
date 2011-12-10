@@ -33,19 +33,13 @@ public:
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
-	std::string	vg_name;
 	int		pv_count;
 	int		lv_count;
 	std::string	vg_attr;
-	long long	vg_size;
-	long long	vg_free;
-	std::string	vg_uuid;
 	long long	vg_extent_size;
 	long long	vg_extent_count;
 	long long	vg_free_count;
 	long		vg_seqno;
-
-	//std::vector<std::string> devices;
 
 protected:
 

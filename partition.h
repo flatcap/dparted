@@ -35,7 +35,6 @@ public:
 
 				// container
 	long long start;	// offset?
-	//long long length;	// bytes_size
 	long long end;		// ???
 
 	int num;

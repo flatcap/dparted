@@ -44,10 +44,10 @@ Volume::~Volume()
  */
 void Volume::dump (int indent /* = 0 */)
 {
-	std::string size = get_size (lv_size);
+	std::string size = get_size (bytes_size);
 
-	iprintf (indent,   "\e[36m%s\e[0m (%s)\n", lv_name.c_str(), size.c_str());
-	iprintf (indent+8, "path: %s\n", lv_path.c_str());
+	iprintf (indent,   "\e[36m%s\e[0m (%s)\n", name.c_str(), size.c_str());
+	iprintf (indent+8, "path: %s\n", device.c_str());
 
 	//iprintf (indent+8, "major: %d\n", kernel_major);
 	//iprintf (indent+8, "minor: %d\n", kernel_minor);
@@ -91,10 +91,7 @@ std::string Volume::dump_dot (void)
 
 	output << Container::dump_dot();
 
-	output << dump_row ("lv_name",      lv_name);
 	output << dump_row ("lv_attr",      lv_attr);
-	output << dump_row ("lv_size",      lv_size);
-	output << dump_row ("lv_path",      lv_path);
 	output << dump_row ("kernel_major", kernel_major);
 	output << dump_row ("kernel_minor", kernel_minor);
 

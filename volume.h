@@ -23,18 +23,6 @@
 
 #include "whole.h"
 
-#if 0
-typedef struct _VolumeSegment VolumeSegment;
-
-struct _VolumeSegment
-{
-	long long	volume_offset;
-	std::string	device;
-	long long	segment_size;
-	long long	device_offset;
-};
-#endif
-
 class Volume : public Whole
 {
 public:
@@ -45,17 +33,9 @@ public:
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
-	std::string	lv_name;
 	std::string	lv_attr;
-	long long	lv_size;
-	std::string	lv_path;
 	int		kernel_major;
 	int		kernel_minor;
-
-#if 0
-	int		seg_count;
-	std::vector<VolumeSegment> segments;
-#endif
 
 protected:
 

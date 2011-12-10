@@ -44,15 +44,15 @@ VolumeGroup::~VolumeGroup()
  */
 void VolumeGroup::dump (int indent /* = 0 */)
 {
-	std::string size = get_size (vg_size);
-	std::string free = get_size (vg_free);
+	std::string size = get_size (bytes_size);
+	std::string free = get_size (bytes_size - bytes_used);
 	std::string extent = get_size (vg_extent_size);
 
-	iprintf (indent, "\e[35m%s\e[0m (%s)\n", vg_name.c_str(), size.c_str());
+	iprintf (indent, "\e[35m%s\e[0m (%s)\n", name.c_str(), size.c_str());
 
 	iprintf (indent+8, "pv_count:        %d\n", pv_count);
 	iprintf (indent+8, "vg_free:         %s\n", free.c_str());
-	iprintf (indent+8, "vg_uuid:         %s\n", vg_uuid.c_str());
+	iprintf (indent+8, "vg_uuid:         %s\n", uuid.c_str());
 	iprintf (indent+8, "vg_extent_size:  %s\n", extent.c_str());
 
 	//iprintf (indent+8, "vg_attr:         %s\n",   vg_attr.c_str());
@@ -85,13 +85,9 @@ std::string VolumeGroup::dump_dot (void)
 
 	output << Container::dump_dot();
 
-	output << dump_row ("vg_name",         vg_name);
 	output << dump_row ("pv_count",        pv_count);
 	output << dump_row ("lv_count",        lv_count);
 	output << dump_row ("vg_attr",         vg_attr);
-	output << dump_row ("vg_size",         vg_size);
-	output << dump_row ("vg_free",         vg_free);
-	output << dump_row ("vg_uuid",         vg_uuid);
 	output << dump_row ("vg_extent_size",  vg_extent_size);
 	output << dump_row ("vg_extent_count", vg_extent_count);
 	output << dump_row ("vg_free_count",   vg_free_count);

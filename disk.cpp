@@ -69,12 +69,11 @@ void Disk::dump (int indent /* = 0 */)
  */
 void Disk::dump_csv (void)
 {
-	printf ("%s,%s,%s,%ld,%s,%s,%lld,%lld,%lld\n",
+	printf ("%s,%s,%s,%ld,%s,%lld,%lld,%lld\n",
 		"Disk",
 		device.c_str(),
 		name.c_str(),
 		block_size,
-		label.c_str(),
 		uuid.c_str(),
 		bytes_size,
 		bytes_used,

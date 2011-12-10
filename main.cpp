@@ -284,8 +284,7 @@ unsigned int logicals_get_list (Container &disks)
 		vg->device = "/dev/dm-0";
 
 		index = line.find ("LVM2_VG_NAME", index);
-		vg->vg_name = extract_quoted_string (line, index);
-		vg->name = vg->vg_name;
+		vg->name = extract_quoted_string (line, index);
 
 		index = line.find ("LVM2_PV_COUNT", index);
 		vg->pv_count = extract_quoted_long (line, index);
@@ -297,14 +296,13 @@ unsigned int logicals_get_list (Container &disks)
 		vg->vg_attr = extract_quoted_string (line, index);
 
 		index = line.find ("LVM2_VG_SIZE", index);
-		vg->vg_size = extract_quoted_long_long (line, index);
-		vg->bytes_size = vg->vg_size;
+		vg->bytes_size = extract_quoted_long_long (line, index);
 
 		index = line.find ("LVM2_VG_FREE", index);
-		vg->vg_free = extract_quoted_long_long (line, index);
+		//vg->vg_free = extract_quoted_long_long (line, index); //XXX keep this for sanity checking?
 
 		index = line.find ("LVM2_VG_UUID", index);
-		vg->vg_uuid = extract_quoted_string (line, index);
+		vg->uuid = extract_quoted_string (line, index);
 
 		index = line.find ("LVM2_VG_EXTENT_SIZE", index);
 		//vg->vg_extent_size = extract_quoted_long_long (line, index);
@@ -321,7 +319,7 @@ unsigned int logicals_get_list (Container &disks)
 
 		disks.add_child (vg);
 
-		vg_lookup[vg->vg_uuid] = vg;
+		vg_lookup[vg->uuid] = vg;
 	}
 
 	//disks.dump (-8);
@@ -458,7 +456,7 @@ unsigned int logicals_get_list (Container &disks)
 	Vpyrjc-8L7x-... delta   -wi-a- 21474836480 /dev/test/delta   253  3       1 linear    1      0     0 21474836480 /dev/sda8:15360-20479
 	Vpyrjc-8L7x-... epsilon -wi-a- 22137536512 /dev/test/epsilon 253  4       1 linear    1      0     0 22137536512 /dev/sda8:20480-25757
 #endif
-	command = "lvs --all --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,lv_name,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
+	command = "lvs --all --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,lv_name,lv_uuid,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
 	execute_command (command, output, error);
 
 	lines.clear();
@@ -489,7 +487,7 @@ unsigned int logicals_get_list (Container &disks)
 		for (j = 0; j < vg->children.size(); j++) {
 			Volume *tmp = (Volume *) vg->children[j];
 			//printf ("\t\tCompare %s to %s\n", tmp->lv_name.c_str(), lv_name.c_str());
-			if (tmp->lv_name == lv_name) {
+			if (tmp->name == lv_name) {
 				vol = tmp;
 				break;
 			}
@@ -501,7 +499,6 @@ unsigned int logicals_get_list (Container &disks)
 			vg->add_child (vol);
 		}
 
-		vol->lv_name = lv_name;
 		vol->name = lv_name;
 
 		//printf ("\tvol = %p\n", vol);
@@ -509,16 +506,18 @@ unsigned int logicals_get_list (Container &disks)
 		//printf ("\n");
 		//continue;
 
+		index = line.find ("LVM2_LV_UUID", index);
+		vol->uuid = extract_quoted_string (line, index);
+
 		index = line.find ("LVM2_LV_ATTR", index);
 		vol->lv_attr = extract_quoted_string (line, index);
 
 		index = line.find ("LVM2_LV_SIZE", index);
-		vol->lv_size = extract_quoted_long_long (line, index);
-		vol->bytes_size = vol->lv_size;
-		vol->bytes_used = vol->lv_size; //RAR temporary, until we read the filesystem info
+		vol->bytes_size = extract_quoted_long_long (line, index);
+		vol->bytes_used = vol->bytes_size; //RAR temporary, until we read the filesystem info
 
 		index = line.find ("LVM2_LV_PATH", index);
-		vol->lv_path = extract_quoted_string (line, index);
+		vol->device = extract_quoted_string (line, index);
 
 		index = line.find ("LVM2_LV_KERNEL_MAJOR", index);
 		vol->kernel_major = extract_quoted_long (line, index);
@@ -635,7 +634,7 @@ int main (int argc, char *argv[])
 	printf ("name = %s\n", lvm->name.c_str());
 #endif
 
-#if 0
+#if 1
 	logicals_get_list (disks);
 	//disks.children[1]->dump();
 	//disks.dump2();
@@ -649,7 +648,7 @@ int main (int argc, char *argv[])
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
 	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
-	dot += disks.children[0]->dump_dot();
+	dot += disks.children[1]->dump_dot();
 	if (0)
 	{
 		std::ostringstream output;

@@ -53,7 +53,6 @@ public:
 	std::string	 type;
 
 	std::string	 name;
-	std::string	 label;
 	std::string	 uuid;
 
 	std::string	 device;
@@ -65,7 +64,6 @@ public:
 
 	Container	*parent;
 	std::vector<Container*> children;
-	//std::vector<long long>  offsets;
 
 protected:
 	std::string dump_row (const char *name, long long value);

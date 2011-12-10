@@ -139,14 +139,14 @@ void Container::dump_csv (void)
 std::string Container::dump_dot (void)
 {
 	std::ostringstream output;
+	std::string uuid_short = uuid.substr (0, 6) + "...";
 	unsigned int count = children.size();
 
 	//output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Container</b></font></td></tr>\n";
 
 	//output << dump_row ("type",          type);
 	output << dump_row ("name",          name);
-	output << dump_row ("label",         label);
-	output << dump_row ("uuid",          uuid);
+	output << dump_row ("uuid",          uuid_short); //RAR temp
 	output << dump_row ("device",        device);
 	output << dump_row ("device_offset", device_offset);
 	output << dump_row ("block_size",    block_size);

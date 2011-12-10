@@ -36,6 +36,7 @@ public:
 	virtual std::string dump_dot (void);
 
 	Partition	*part;
+	std::string	 label;
 
 protected:
 

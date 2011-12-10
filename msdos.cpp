@@ -55,12 +55,11 @@ void Msdos::dump (int indent /* = 0 */)
  */
 void Msdos::dump_csv (void)
 {
-	printf ("%s,%s,%s,%ld,%s,%s,%lld,%lld,%lld\n",
+	printf ("%s,%s,%s,%ld,%s,%lld,%lld,%lld\n",
 		"MSDOS",
 		"<none>",
 		name.c_str(),
 		block_size,
-		label.c_str(),
 		uuid.c_str(),
 		bytes_size,
 		bytes_used,
