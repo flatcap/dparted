@@ -1,7 +1,7 @@
 GPP	= g++
 GCC	= gcc
 
-OUT	= compare fs lvm map parted spawn format
+OUT	= compare fs loop lvm map parted spawn format
 
 CFLAGS	= -g -Wall
 
@@ -18,6 +18,9 @@ format:	format.cpp
 
 fs:	fs.c
 	$(GCC) $(CFLAGS) -o $@ fs.c $(shell pkg-config --cflags --libs libparted)
+
+loop:	loop.c
+	$(GCC) $(CFLAGS) -o $@ loop.c $(shell pkg-config --cflags --libs libparted devmapper) -lm
 
 lvm:	lvm.c
 	$(GCC) $(CFLAGS) -o $@ lvm.c $(shell pkg-config --cflags --libs lvm2app devmapper) -lm
