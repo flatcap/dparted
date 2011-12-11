@@ -34,6 +34,7 @@ Container::Container (void) :
 	bytes_used (0),
 	parent (NULL)
 {
+	type = "container";
 }
 
 /**
@@ -76,14 +77,6 @@ void Container::dump2 (void)
 		o = get_size ((*i)->device_offset);
 		d = (*i)->get_device_name();
 		t = (*i)->type;
-		if (t.empty()) {
-			t = "\e[37m\e[0m";
-		}
-#if 0
-		if (d == "UNKNOWN") {
-			continue;
-		}
-#endif
 		const char *indent = "";
 		const char *undent = "                        ";
 		if (parent == NULL) {

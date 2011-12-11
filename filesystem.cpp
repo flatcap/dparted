@@ -29,7 +29,7 @@
  */
 Filesystem::Filesystem (void)
 {
-	type = "\e[32mfilesystem\e[0m";
+	type = "filesystem";
 }
 
 /**
@@ -173,7 +173,7 @@ void Filesystem::dump (int indent /* = 0 */)
 	std::string size = get_size (bytes_size);
 	std::string used = get_size (bytes_used);
 
-	iprintf (indent,   "\e[32m%s\e[0m\n", name.c_str());
+	iprintf (indent,   "%s\n", name.c_str());
 	iprintf (indent+8, "Size: %s\n",  size.c_str());
 	iprintf (indent+8, "Used: %s\n",  used.c_str());
 	//iprintf (indent+8, "Command: %s\n", command.c_str());

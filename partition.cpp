@@ -31,7 +31,7 @@ Partition::Partition (void) :
 	end (0),
 	num (0)
 {
-	type = "\e[33mpartition\e[0m";
+	type = "partition";
 }
 
 /**
@@ -52,7 +52,7 @@ void Partition::dump (int indent /* = 0 */)
 
 	std::string size = get_size (bytes_size);
 
-	iprintf (indent,   "\e[33m%s%d\e[0m (%s)\n", device.c_str()+5, num, size.c_str());
+	iprintf (indent,   "%s%d (%s)\n", device.c_str()+5, num, size.c_str());
 	//iprintf (indent+8, "Type:   %s\n",   type.c_str());
 	iprintf (indent+8, "Start:  %lld\n", start);
 

@@ -28,6 +28,7 @@
  */
 Whole::Whole (void)
 {
+	type = "whole";
 }
 
 /**

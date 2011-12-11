@@ -30,7 +30,7 @@ Volume::Volume (void) :
 	kernel_major (0),
 	kernel_minor (0)
 {
-	type = "\e[36mvolume\e[0m";
+	type = "volume";
 }
 
 /**
@@ -48,7 +48,7 @@ void Volume::dump (int indent /* = 0 */)
 {
 	std::string size = get_size (bytes_size);
 
-	iprintf (indent,   "\e[36m%s\e[0m (%s)\n", name.c_str(), size.c_str());
+	iprintf (indent,   "%s (%s)\n", name.c_str(), size.c_str());
 	iprintf (indent+8, "path: %s\n", device.c_str());
 
 	//iprintf (indent+8, "major: %d\n", kernel_major);

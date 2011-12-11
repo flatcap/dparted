@@ -98,23 +98,22 @@ unsigned int disk_get_list (Container &disks)
 	ped_device_probe_all();
 
 	while ((dev = ped_device_get_next (dev))) {
+		//fprintf (stderr, "dev->path = %s\n", dev->path);
 		if (dev->type == PED_DEVICE_DM)
 			continue;
 
 		Disk *d = new Disk;
 		//d->parent = &disks;
 		d->name = dev->model;
-		//printf ("dev->path = %s\n", dev->path);
 		d->device = dev->path;
 		//d->type  = dev->type;
 		//RAR if they differ, take the larger one
 		d->block_size = dev->sector_size;
 		//d->phys_sector_size = dev->phys_sector_size;
 
+		//define size of disk, then add children's size to bytes_used
 		d->bytes_size = dev->length * dev->sector_size;
 		d->bytes_used = 0;
-		//RAR define size of disk
-		//RAR then add children's size to bytes_used
 
 		d->hw_cylinders = dev->hw_geom.cylinders;
 		d->hw_heads     = dev->hw_geom.heads;
@@ -179,7 +178,7 @@ unsigned int disk_get_list (Container &disks)
 				//std::cout << get_partition_type (part->type) << std::endl;
 				if (part->type == PED_PARTITION_EXTENDED) {
 					extended = p;
-					extended->type = "\e[36mextended\e[0m";
+					extended->type = "extended";
 				}
 				p->name = get_partition_type (part->type);
 				p->num = part->num;
@@ -196,14 +195,14 @@ unsigned int disk_get_list (Container &disks)
 					p->name = p->device.substr (5);
 				} else {
 					if (p->name == "empty") {
-						p->type = "\e[37mempty\e[0m";
+						p->type = "empty";
 						if (part->type & PED_PARTITION_LOGICAL) {
 							extended->bytes_used -= p->bytes_size;
 						} else {
 							m->bytes_used -= p->bytes_size;
 						}
 					} else {
-						p->type = "\e[37mmetadata\e[0m";
+						p->type = "metadata";
 						p->name = "reserved";
 						p->name += ('0' + reserved);
 						p->bytes_used = p->bytes_size;
@@ -238,8 +237,6 @@ unsigned int disk_get_list (Container &disks)
 		}
 
 		disks.add_child (d);
-
-		break;//RAR
 	}
 
 	ped_device_free_all();
@@ -375,7 +372,7 @@ unsigned int logicals_get_list (Container &disks)
 			vg_seg = new Segment;
 			vg_seg->bytes_size = cont->bytes_size;
 			vg_seg->name = vg_name;
-			vg_seg->type = "\e[35mvolumegroup\e[0m";
+			vg_seg->type = "volumegroup";
 
 			cont->add_child (vg_seg);
 
@@ -390,7 +387,7 @@ unsigned int logicals_get_list (Container &disks)
 			reserved1->bytes_size = 1048576;
 			reserved1->bytes_used = 1048576;
 			reserved1->device_offset = 0;
-			reserved1->type = "\e[37m<metadata>\e[0m";
+			reserved1->type = "metadata";
 			vg_seg->add_child (reserved1);
 
 			Segment *reserved2 = new Segment;
@@ -398,7 +395,7 @@ unsigned int logicals_get_list (Container &disks)
 			reserved2->bytes_size = 3145728;
 			reserved2->bytes_used = 3145728;
 			reserved2->device_offset = 108037931008;
-			reserved2->type = "\e[37m<reserved>\e[0m";
+			reserved2->type = "reserved";
 			vg_seg->add_child (reserved2);
 		} else {
 			//printf ("already got one\n");
@@ -577,7 +574,7 @@ unsigned int logicals_get_list (Container &disks)
 				Segment *vg_seg = seg_lookup[pe_device];
 				//printf ("vg_seg = %p\n", vg_seg);
 				Segment *vol_seg = new Segment;
-				vol_seg->type = "\e[36mvolume\e[0m";
+				vol_seg->type = "volume";
 
 				//vol_seg->volume_offset = seg_start;
 				vol_seg->device        = pe_device;
@@ -627,6 +624,7 @@ unsigned int mounts_get_list (Container &mounts)
  */
 int main (int argc, char *argv[])
 {
+	unsigned int i;
 	Container disks;
 	disk_get_list (disks);
 	//disks.children[0]->dump2();
@@ -657,10 +655,10 @@ int main (int argc, char *argv[])
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
 	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
-	if (disks.children.size() > 0)
-		dot += disks.children[0]->dump_dot();
-	if (disks.children.size() > 1)
-		dot += disks.children[1]->dump_dot();
+
+	for (i = 0; i < disks.children.size(); i++) {
+		dot += disks.children[i]->dump_dot();
+	}
 	if (0)
 	{
 		std::ostringstream output;

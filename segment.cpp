@@ -29,7 +29,7 @@
 Segment::Segment (void) :
 	whole (NULL)
 {
-	type = "\e[31msegment\e[0m";
+	type = "segment";
 }
 
 /**

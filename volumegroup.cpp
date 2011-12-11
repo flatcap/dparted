@@ -34,7 +34,7 @@ VolumeGroup::VolumeGroup (void) :
 	vg_free_count (0),
 	vg_seqno (0)
 {
-	type = "\e[35mvolumegroup\e[0m";
+	type = "volumegroup";
 }
 
 /**
@@ -54,7 +54,7 @@ void VolumeGroup::dump (int indent /* = 0 */)
 	std::string free = get_size (bytes_size - bytes_used);
 	std::string extent = get_size (vg_extent_size);
 
-	iprintf (indent, "\e[35m%s\e[0m (%s)\n", name.c_str(), size.c_str());
+	iprintf (indent, "%s (%s)\n", name.c_str(), size.c_str());
 
 	iprintf (indent+8, "pv_count:        %d\n", pv_count);
 	iprintf (indent+8, "vg_free:         %s\n", free.c_str());
