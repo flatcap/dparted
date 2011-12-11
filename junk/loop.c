@@ -28,10 +28,12 @@ int main (int argc, char *argv[])
 	printf ("dev = %p\n", dev);
 	printf ("next = %p\n", dev->next);
 
+#if 0
 	dev = ped_device_get ("../../disk4");
 	printf ("disk4\n");
 	printf ("dev = %p\n", dev);
 	printf ("next = %p\n", dev->next);
+#endif
 
 #if 1
 	{
