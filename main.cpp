@@ -291,6 +291,7 @@ unsigned int logicals_get_list (Container &disks)
 
 	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
 	execute_command (command, output, error);
+	//printf ("%s\n", output.c_str());
 	explode ("\n", output, lines);
 
 	for (i = 0; i < lines.size(); i++) {
@@ -301,24 +302,24 @@ unsigned int logicals_get_list (Container &disks)
 		vg->parent = &disks;
 		vg->device = "/dev/dm-0";
 
-		vg->name = tags["LVM2_VG_NAME"];		//printf ("name = %s\n", vg->name.c_str());
-		vg->pv_count = get_l (tags["LVM2_PV_COUNT"]);
-		vg->lv_count = get_l (tags["LVM2_LV_COUNT"]);
-		vg->vg_attr = tags["LVM2_VG_ATTR"];
-		vg->bytes_size = get_ll (tags["LVM2_VG_SIZE"]);
-		//vg->vg_free = get_ll (tags["LVM2_VG_FREE"]);
-		vg->uuid = tags["LVM2_VG_UUID"];
-		vg->block_size = get_ll (tags["LVM2_VG_EXTENT_SIZE"]);
-		vg->vg_extent_count = get_l (tags["LVM2_VG_EXTENT_COUNT"]);
-		vg->vg_free_count = get_ll (tags["LVM2_VG_FREE_COUNT"]);
-		vg->vg_seqno = get_l (tags["LVM2_VG_SEQNO"]);
+		vg->name		=         tags["LVM2_VG_NAME"];		//printf ("name = %s\n", vg->name.c_str());
+		vg->pv_count		= get_l  (tags["LVM2_PV_COUNT"]);
+		vg->lv_count		= get_l  (tags["LVM2_LV_COUNT"]);
+		vg->vg_attr		=         tags["LVM2_VG_ATTR"];
+		vg->bytes_size		= get_ll (tags["LVM2_VG_SIZE"]);
+		//vg->vg_free		= get_ll (tags["LVM2_VG_FREE"]);
+		vg->uuid		=         tags["LVM2_VG_UUID"];
+		vg->block_size		= get_ll (tags["LVM2_VG_EXTENT_SIZE"]);
+		vg->vg_extent_count	= get_l  (tags["LVM2_VG_EXTENT_COUNT"]);
+		vg->vg_free_count	= get_ll (tags["LVM2_VG_FREE_COUNT"]);
+		vg->vg_seqno		= get_l  (tags["LVM2_VG_SEQNO"]);
 
 		disks.add_child (vg);
 
 		vg_lookup[vg->uuid] = vg;
 	}
 
-#if 1
+#if 0
 	std::map<std::string,VolumeGroup*>::iterator it;
 	printf ("map:\n");
 	for (it = vg_lookup.begin(); it != vg_lookup.end(); it++) {
@@ -327,12 +328,11 @@ unsigned int logicals_get_list (Container &disks)
 	}
 	printf ("\n");
 #endif
-	return 0;
 
 	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,vg_uuid,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count";
 	execute_command (command, output, error);
-	explode ("\n", output, lines);
 	//printf ("%s\n", output.c_str());
+	explode ("\n", output, lines);
 
 	for (i = 0; i < lines.size(); i++) {
 		tags.clear();
@@ -362,6 +362,7 @@ unsigned int logicals_get_list (Container &disks)
 
 			cont->add_child (vg_seg);
 
+			//printf ("lookup uuid %s\n", vg_uuid.c_str());
 			vg_seg->whole = vg_lookup[vg_uuid];
 
 			//printf ("whole = %p\n", vg_seg->whole);
@@ -410,7 +411,7 @@ unsigned int logicals_get_list (Container &disks)
 
 #if 0
 		long long pvseg_start = get_ll (tags["LVM2_PVSEG_START"]);	//printf ("x = %s\n", x.c_str());
-		long long pvseg_size = get_ll (tags["LVM2_PVSEG_SIZE"]);	//printf ("x = %s\n", x.c_str());
+		long long pvseg_size  = get_ll (tags["LVM2_PVSEG_SIZE"]);	//printf ("x = %s\n", x.c_str());
 
 		vol_seg->bytes_size    = pvseg_size  * vg_seg->whole->block_size;
 		vol_seg->bytes_used    = pvseg_size  * vg_seg->whole->block_size;
@@ -421,8 +422,8 @@ unsigned int logicals_get_list (Container &disks)
 	}
 
 	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
-	execute_command (command, output, error);
 	//printf ("%s\n", output.c_str());
+	execute_command (command, output, error);
 
 	lines.clear();
 	explode ("\n", output, lines);
@@ -433,14 +434,13 @@ unsigned int logicals_get_list (Container &disks)
 
 		//printf ("Volume Part\n");
 
-		std::string vg_uuid = tags["LVM2_VG_UUID"];
-		printf ("\tuuid = %s\n", vg_uuid.c_str());
+		std::string vg_uuid = tags["LVM2_VG_UUID"];	//printf ("uuid = %s\n", vg_uuid.c_str());
 
 		vg = vg_lookup[vg_uuid];
 		//printf ("\tlookup %s  vg = %s\n", vg_uuid.c_str(), vg->vg_name.c_str());
 
 		std::string lv_name = tags["LVM2_LV_NAME"];
-		printf ("\tlv name = %s\n", lv_name.c_str());
+		//printf ("lv name = %s\n", lv_name.c_str());
 
 		vol = NULL;
 		//printf ("\t%s has %lu children to check\n", vg->vg_name.c_str(), vg->children.size());
@@ -461,25 +461,22 @@ unsigned int logicals_get_list (Container &disks)
 
 		vol->name = lv_name;
 
-		//printf ("\tvol = %p\n", vol);
-		//printf ("lv_name = %s\n", vol->lv_name.c_str());
-		//printf ("\n");
-		//continue;
+		//printf ("vol = %p\n", vol);
 
 		vol->lv_attr = tags["LVM2_LV_ATTR"];
-		printf ("lv_attr = %s\n", vol->lv_attr.c_str());
+		//printf ("lv_attr = %s\n", vol->lv_attr.c_str());
 
 		std::string log = tags["LVM2_MIRROR_LOG"];
 		if (!log.empty()) {
-			printf ("log = %s\n", log.c_str());
+			//printf ("log = %s\n", log.c_str());
 		}
 
-		std::string uuid = tags["LVM2_LV_UUID"];
+		std::string lv_uuid = tags["LVM2_LV_UUID"];
 
 		if ((vol->lv_attr[0] == 'i') ||		// mirror (i)mage
 		    (vol->lv_attr[0] == 'l')) {		// mirror (l)og
 			// this is a segment
-			printf ("SEGMENT\n");
+			//printf ("SEGMENT\n");
 
 			Segment *vol_seg = new Segment;
 			if (vol->lv_attr[0] == 'i')
@@ -489,15 +486,15 @@ unsigned int logicals_get_list (Container &disks)
 
 			lv_name = lv_name.substr (1, lv_name.size()-2);
 			vol_seg->name = lv_name;
-			printf ("seg name = %s\n", vol_seg->name.c_str());
-			vol_seg->uuid = uuid;
+			//printf ("seg name = %s\n", vol_seg->name.c_str());
+			vol_seg->uuid = lv_uuid;
 
 			//vg_seg->add_child (vol_seg);
 			seg_lookup[lv_name] = vol_seg;
 			continue;
 		}
 
-		vol->uuid = uuid;
+		vol->uuid = lv_uuid;
 
 		vol->bytes_size = get_ll (tags["LVM2_LV_SIZE"]);
 		//vol->bytes_used = vol->bytes_size; //RAR temporary, until we read the filesystem info
@@ -534,19 +531,19 @@ unsigned int logicals_get_list (Container &disks)
 		//printf ("\tseg size = %s\n", seg_size.c_str());
 
 		std::string seg_pe_ranges = tags["LVM2_SEG_PE_RANGES"];
-		//printf ("\t                0         1         2         3         4         \n");
-		//printf ("\t                01234567890123456789012345678901234567890123456789\n");
-		//printf ("\tseg pe ranges = %s\n", seg_pe_ranges.c_str());
+		//printf ("                0         1         2         3         4         \n");
+		//printf ("                01234567890123456789012345678901234567890123456789\n");
+		//printf ("seg pe ranges = %s\n", seg_pe_ranges.c_str());
 		std::string pe_device;
 		int pe_start  = -1;
 		int pe_finish = -1;
 
 		for (int s = 0; s < stripes; s++) {
 				extract_dev_range (seg_pe_ranges, pe_device, pe_start, pe_finish, s);
-				printf ("\tseg pe ranges = %s, %d, %d\n", pe_device.c_str(), pe_start, pe_finish);
+				//printf ("seg pe ranges = %s, %d, %d\n", pe_device.c_str(), pe_start, pe_finish);
 
 				Segment *vg_seg = seg_lookup[pe_device];
-				printf ("vg_seg = %p\n", vg_seg);
+				//printf ("vg_seg = %p\n", vg_seg);
 				Segment *vol_seg = new Segment;
 				vol_seg->type = "volume";
 
@@ -624,8 +621,6 @@ int main (int argc, char *argv[])
 	//Container mounts;
 	//mounts_get_list (mounts);
 	//mounts.dump(-8);
-
-	return 0;
 
 	std::string dot;
 	dot += "digraph disks {\n";
