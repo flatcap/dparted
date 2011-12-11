@@ -37,6 +37,23 @@
 #include "utils.h"
 
 /**
+ * get_ll
+ */
+long long get_ll (const std::string &number)
+{
+	return strtoll (number.c_str(), NULL, 10);
+}
+
+/**
+ * get_l
+ */
+long get_l (const std::string &number)
+{
+	return strtol (number.c_str(), NULL, 10);
+}
+
+
+/**
  * run_command
  */
 void run_command (void)
@@ -264,73 +281,47 @@ unsigned int logicals_get_list (Container &disks)
 	std::string error;
 	VolumeGroup *vg = NULL;
 	Volume *vol = NULL;
-	unsigned int index;
 	std::map<std::string, VolumeGroup*> vg_lookup;
 	std::map<std::string, Segment*> seg_lookup;
 	unsigned int i;
 	unsigned int j;
 	//VolumeSegment vol_seg;
 	std::vector<std::string> lines;
+	std::map<std::string,std::string> tags;
 
 #if 0
 	VG   #PV #LV Attr   VSize        VFree VG UUID         Ext     #Ext  Free Seq
 	test   1   5 wz--n- 108036882432     0 Vpyrjc-8L7x-... 4194304 25758    0   6
 #endif
 
-	command = "vgs --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
+	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
 	execute_command (command, output, error);
 	get_lines (output, lines);
 
 	for (i = 0; i < lines.size(); i++) {
-		index = 0;
-		std::string line = lines[i];
-		//printf ("line%d:\n%s\n\n", i, line.c_str()); fflush (stdout);
+		tags.clear();
+		parse_tagged_line ((lines[i]), tags);
 
 		vg = new VolumeGroup;
 		vg->parent = &disks;
 		vg->device = "/dev/dm-0";
 
-		index = line.find ("LVM2_VG_NAME", index);
-		vg->name = extract_quoted_string (line, index);
-		//printf ("name = %s\n", vg->name.c_str());
-
-		index = line.find ("LVM2_PV_COUNT", index);
-		vg->pv_count = extract_quoted_long (line, index);
-
-		index = line.find ("LVM2_LV_COUNT", index);
-		vg->lv_count = extract_quoted_long (line, index);
-
-		index = line.find ("LVM2_VG_ATTR", index);
-		vg->vg_attr = extract_quoted_string (line, index);
-
-		index = line.find ("LVM2_VG_SIZE", index);
-		vg->bytes_size = extract_quoted_long_long (line, index);
-
-		index = line.find ("LVM2_VG_FREE", index);
-		//vg->vg_free = extract_quoted_long_long (line, index); //XXX keep this for sanity checking?
-
-		index = line.find ("LVM2_VG_UUID", index);
-		vg->uuid = extract_quoted_string (line, index);
-
-		index = line.find ("LVM2_VG_EXTENT_SIZE", index);
-		//vg->vg_extent_size = extract_quoted_long_long (line, index);
-		vg->block_size = extract_quoted_long_long (line, index);
-
-		index = line.find ("LVM2_VG_EXTENT_COUNT", index);
-		vg->vg_extent_count = extract_quoted_long_long (line, index);
-
-		index = line.find ("LVM2_VG_FREE_COUNT", index);
-		vg->vg_free_count = extract_quoted_long_long (line, index);
-
-		index = line.find ("LVM2_VG_SEQNO", index);
-		vg->vg_seqno = extract_quoted_long (line, index);
+		vg->name = tags["LVM2_VG_NAME"];		//printf ("name = %s\n", vg->name.c_str());
+		vg->pv_count = get_l (tags["LVM2_PV_COUNT"]);
+		vg->lv_count = get_l (tags["LVM2_LV_COUNT"]);
+		vg->vg_attr = tags["LVM2_VG_ATTR"];
+		vg->bytes_size = get_ll (tags["LVM2_VG_SIZE"]);
+		//vg->vg_free = get_ll (tags["LVM2_VG_FREE"]);
+		vg->uuid = tags["LVM2_VG_UUID"];
+		vg->block_size = get_ll (tags["LVM2_VG_EXTENT_SIZE"]);
+		vg->vg_extent_count = get_l (tags["LVM2_VG_EXTENT_COUNT"]);
+		vg->vg_free_count = get_ll (tags["LVM2_VG_FREE_COUNT"]);
+		vg->vg_seqno = get_l (tags["LVM2_VG_SEQNO"]);
 
 		disks.add_child (vg);
 
 		vg_lookup[vg->uuid] = vg;
 	}
-
-	//disks.dump (-8);
 
 #if 0
 	std::map<std::string,VolumeGroup*>::iterator it;
@@ -347,17 +338,14 @@ unsigned int logicals_get_list (Container &disks)
 	/dev/sda8  Vpyrjc-8L7x-... a--  108036882432     0 yKIRUo-suHb-... 108041076736 1048576 108036882432 25758 25758
 #endif
 
-	command = "pvs --units=b --nosuffix --nameprefixes --noheadings --options pv_name,vg_uuid,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count";
+	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,vg_uuid,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count";
 	execute_command (command, output, error);
 	get_lines (output, lines);
 	//printf ("%s\n", output.c_str());
 
 	for (i = 0; i < lines.size(); i++) {
-		index = 0;
-		std::string line = lines[i];
-		//printf ("line%d:\n%s\n\n", i, line.c_str()); fflush (stdout);
-		std::string x;
-		//Container *segment = NULL;
+		tags.clear();
+		parse_tagged_line ((lines[i]), tags);
 
 		/* is /dev/sda8 in seg_lookup
 		 * no
@@ -368,14 +356,9 @@ unsigned int logicals_get_list (Container &disks)
 		 *	add new volume segment linked to alpha,beta,etc
 		 */
 
-		index = line.find ("LVM2_PV_NAME", index);
-		std::string dev = extract_quoted_string (line, index); //printf ("dev = %s\n", dev.c_str());
-
-		index = line.find ("LVM2_VG_UUID", index);
-		std::string vg_uuid = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
-
-		index = line.find ("LVM2_VG_NAME", index);
-		std::string vg_name = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+		std::string dev = tags["LVM2_PV_NAME"];
+		std::string vg_uuid = tags["LVM2_VG_UUID"];
+		std::string vg_name = tags["LVM2_VG_NAME"];
 
 		Segment *vg_seg = seg_lookup[dev];
 		if (vg_seg == NULL) {
@@ -422,31 +405,21 @@ unsigned int logicals_get_list (Container &disks)
 
 #if 0
 		// ignored for now
-		index = line.find ("LVM2_PV_ATTR", index);
-		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
-		index = line.find ("LVM2_PV_SIZE", index);
-		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
-		index = line.find ("LVM2_PV_FREE", index);
-		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
-		index = line.find ("LVM2_PV_UUID", index);
-		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
-		index = line.find ("LVM2_DEV_SIZE", index);
-		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
-		index = line.find ("LVM2_PE_START", index);
-		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
-		index = line.find ("LVM2_PV_USED", index);
-		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
-		index = line.find ("LVM2_PV_PE_COUNT", index);
-		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
-		index = line.find ("LVM2_PV_PE_ALLOC_COUNT", index);
-		x = extract_quoted_string (line, index); //printf ("x = %s\n", x.c_str());
+		std::string x;
+		x = tags["LVM2_PV_ATTR"];		//printf ("x = %s\n", x.c_str());
+		x = tags["LVM2_PV_SIZE"];		//printf ("x = %s\n", x.c_str());
+		x = tags["LVM2_PV_FREE"];		//printf ("x = %s\n", x.c_str());
+		x = tags["LVM2_PV_UUID"];		//printf ("x = %s\n", x.c_str());
+		x = tags["LVM2_DEV_SIZE"];		//printf ("x = %s\n", x.c_str());
+		x = tags["LVM2_PE_START"];		//printf ("x = %s\n", x.c_str());
+		x = tags["LVM2_PV_USED"];		//printf ("x = %s\n", x.c_str());
+		x = tags["LVM2_PV_PE_COUNT"];		//printf ("x = %s\n", x.c_str());
+		x = tags["LVM2_PV_PE_ALLOC_COUNT"];	//printf ("x = %s\n", x.c_str());
 #endif
 
 #if 0
-		index = line.find ("LVM2_PVSEG_START", index);
-		long long pvseg_start = extract_quoted_long_long (line, index); //printf ("x = %s\n", x.c_str());
-		index = line.find ("LVM2_PVSEG_SIZE", index);
-		long long pvseg_size = extract_quoted_long_long (line, index); //printf ("x = %s\n", x.c_str());
+		long long pvseg_start = get_ll (tags["LVM2_PVSEG_START"]);	//printf ("x = %s\n", x.c_str());
+		long long pvseg_size = get_ll (tags["LVM2_PVSEG_SIZE"]);	//printf ("x = %s\n", x.c_str());
 
 		vol_seg->bytes_size    = pvseg_size  * vg_seg->whole->block_size;
 		vol_seg->bytes_used    = pvseg_size  * vg_seg->whole->block_size;
@@ -471,41 +444,20 @@ unsigned int logicals_get_list (Container &disks)
 	lines.clear();
 	get_lines (output, lines);
 
-	//printf ("%lu lines of output\n", lines.size());
-
-#if 0
 	for (i = 0; i < lines.size(); i++) {
-		std::map<std::string,std::string> tags;
+		tags.clear();
 		parse_tagged_line ((lines[i]), tags);
-		//printf ("%s\n", lines[i].c_str());
-		std::map<std::string,std::string>::iterator it;
-		for (it = tags.begin(); it != tags.end(); it++) {
-			printf ("\t%-20s %s\n", (*it).first.c_str(), (*it).second.c_str());
-		}
-		printf ("\n");
-	}
-#endif
-
-	for (i = 0; i < lines.size(); i++) {
-		//std::map<std::string,std::string> tags;
-		//parse_tagged_line ((lines[i]), tags);
-
-		index = 0;
-		std::string line = lines[i];
-		//printf ("line%d:\n%s\n\n", i, line.c_str()); fflush (stdout);
 
 		//printf ("Volume Part\n");
 
-		index = line.find ("LVM2_VG_UUID", index);
-		std::string vg_uuid = extract_quoted_string (line, index);
-		//printf ("\tuuid = %s\n", vg_uuid.c_str());
+		std::string vg_uuid = tags["LVM2_VG_UUID"];
+		printf ("\tuuid = %s\n", vg_uuid.c_str());
 
 		vg = vg_lookup[vg_uuid];
 		//printf ("\tlookup %s  vg = %s\n", vg_uuid.c_str(), vg->vg_name.c_str());
 
-		index = line.find ("LVM2_LV_NAME", index);
-		std::string lv_name = extract_quoted_string (line, index);
-		//printf ("\tlv name = %s\n", lv_name.c_str());
+		std::string lv_name = tags["LVM2_LV_NAME"];
+		printf ("\tlv name = %s\n", lv_name.c_str());
 
 		vol = NULL;
 		//printf ("\t%s has %lu children to check\n", vg->vg_name.c_str(), vg->children.size());
@@ -531,18 +483,15 @@ unsigned int logicals_get_list (Container &disks)
 		//printf ("\n");
 		//continue;
 
-		index = line.find ("LVM2_LV_ATTR", index);
-		vol->lv_attr = extract_quoted_string (line, index);
+		vol->lv_attr = tags["LVM2_LV_ATTR"];
 		printf ("lv_attr = %s\n", vol->lv_attr.c_str());
 
-		index = line.find ("LVM2_MIRROR_LOG", index);
-		std::string log = extract_quoted_string (line, index);
+		std::string log = tags["LVM2_MIRROR_LOG"];
 		if (!log.empty()) {
 			printf ("log = %s\n", log.c_str());
 		}
 
-		index = line.find ("LVM2_LV_UUID", index);
-		std::string uuid = extract_quoted_string (line, index);
+		std::string uuid = tags["LVM2_LV_UUID"];
 
 		if ((vol->lv_attr[0] == 'i') ||		// mirror (i)mage
 		    (vol->lv_attr[0] == 'l')) {		// mirror (l)og
@@ -567,12 +516,10 @@ unsigned int logicals_get_list (Container &disks)
 
 		vol->uuid = uuid;
 
-		index = line.find ("LVM2_LV_SIZE", index);
-		vol->bytes_size = extract_quoted_long_long (line, index);
+		vol->bytes_size = get_ll (tags["LVM2_LV_SIZE"]);
 		//vol->bytes_used = vol->bytes_size; //RAR temporary, until we read the filesystem info
 
-		index = line.find ("LVM2_LV_PATH", index);
-		vol->device = extract_quoted_string (line, index);
+		vol->device = tags["LVM2_LV_PATH"];
 
 		std::string fs_type;
 		//RAR fs_type = get_fs (vol->device, 0);
@@ -587,38 +534,23 @@ unsigned int logicals_get_list (Container &disks)
 			vol->add_child (fs);
 		}
 
-		index = line.find ("LVM2_LV_KERNEL_MAJOR", index);
-		vol->kernel_major = extract_quoted_long (line, index);
+		vol->kernel_major = get_l (tags["LVM2_LV_KERNEL_MAJOR"]);
+		vol->kernel_minor = get_l (tags["LVM2_LV_KERNEL_MINOR"]);
 
-		index = line.find ("LVM2_LV_KERNEL_MINOR", index);
-		vol->kernel_minor = extract_quoted_long (line, index);
+		std::string seg_count = tags["LVM2_SEG_COUNT"];		//printf ("\tseg count = %s\n", seg_count.c_str());
+		std::string segtype   = tags["LVM2_SEGTYPE"];		//printf ("\tseg type = %s\n", segtype.c_str());
 
-		index = line.find ("LVM2_SEG_COUNT", index);
-		std::string seg_count = extract_quoted_string (line, index);
-		//printf ("\tseg count = %s\n", seg_count.c_str());
+		long stripes = get_l (tags["LVM2_STRIPES"]);		//printf ("\tstripes = %ld\n", stripes);
 
-		index = line.find ("LVM2_SEGTYPE", index);
-		std::string segtype = extract_quoted_string (line, index);
-		//printf ("\tseg type = %s\n", segtype.c_str());
+		std::string stripe_size = tags["LVM2_STRIPE_SIZE"];	//printf ("\tstripe size = %s\n", stripe_size.c_str());
 
-		index = line.find ("LVM2_STRIPES", index);
-		long stripes = extract_quoted_long (line, index);
-		//printf ("\tstripes = %s\n", stripes.c_str());
-
-		index = line.find ("LVM2_STRIPE_SIZE", index);
-		std::string stripe_size = extract_quoted_string (line, index);
-		//printf ("\tstripe size = %s\n", stripe_size.c_str());
-
-		index = line.find ("LVM2_SEG_START", index);
-		//long long seg_start = extract_quoted_long_long (line, index);
+		//long long seg_start = tags ["LVM2_SEG_START"]
 		//printf ("\tseg start = %s\n", seg_start.c_str());
 
-		index = line.find ("LVM2_SEG_SIZE", index);
-		//long long seg_size = extract_quoted_long_long (line, index);
+		//long long seg_size = tags["LVM2_SEG_SIZE"];
 		//printf ("\tseg size = %s\n", seg_size.c_str());
 
-		index = line.find ("LVM2_SEG_PE_RANGES", index);
-		std::string seg_pe_ranges = extract_quoted_string (line, index);
+		std::string seg_pe_ranges = tags["LVM2_SEG_PE_RANGES"];
 		//printf ("\t                0         1         2         3         4         \n");
 		//printf ("\t                01234567890123456789012345678901234567890123456789\n");
 		//printf ("\tseg pe ranges = %s\n", seg_pe_ranges.c_str());
