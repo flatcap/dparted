@@ -318,15 +318,16 @@ unsigned int logicals_get_list (Container &disks)
 		vg_lookup[vg->uuid] = vg;
 	}
 
-#if 0
+#if 1
 	std::map<std::string,VolumeGroup*>::iterator it;
 	printf ("map:\n");
 	for (it = vg_lookup.begin(); it != vg_lookup.end(); it++) {
 		VolumeGroup *vg1 = (*it).second;
-		printf ("\t%s => %s\n", (*it).first.c_str(), vg1->vg_name.c_str());
+		printf ("\t%s => %s\n", (*it).first.c_str(), vg1->name.c_str());
 	}
 	printf ("\n");
 #endif
+	return 0;
 
 	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,vg_uuid,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count";
 	execute_command (command, output, error);

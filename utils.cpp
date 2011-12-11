@@ -273,7 +273,7 @@ unsigned int parse_tagged_line (const std::string &line, std::map<std::string,st
 
 	explode ("\t", line, list);
 
-	std::map<std::string,VolumeGroup*>::iterator it;
+	std::vector<std::string>::iterator it;
 	for (it = list.begin(); it != list.end(); it++) {
 		middle = (*it).find ('=');				// XXX check it succeeds
 
