@@ -289,11 +289,6 @@ unsigned int logicals_get_list (Container &disks)
 	std::vector<std::string> lines;
 	std::map<std::string,std::string> tags;
 
-#if 0
-	VG   #PV #LV Attr   VSize        VFree VG UUID         Ext     #Ext  Free Seq
-	test   1   5 wz--n- 108036882432     0 Vpyrjc-8L7x-... 4194304 25758    0   6
-#endif
-
 	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
 	execute_command (command, output, error);
 	get_lines (output, lines);
@@ -331,11 +326,6 @@ unsigned int logicals_get_list (Container &disks)
 		printf ("\t%s => %s\n", (*it).first.c_str(), vg1->vg_name.c_str());
 	}
 	printf ("\n");
-#endif
-
-#if 0
-	PV         VG UUID         Attr PSize        PFree PV UUID         DevSize      1st PE  Used         PE    Alloc
-	/dev/sda8  Vpyrjc-8L7x-... a--  108036882432     0 yKIRUo-suHb-... 108041076736 1048576 108036882432 25758 25758
 #endif
 
 	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,vg_uuid,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count";
@@ -429,14 +419,6 @@ unsigned int logicals_get_list (Container &disks)
 #endif
 	}
 
-#if 0
-	VG UUID         LV      Attr   LSize       Path              KMaj KMin #Seg Type   #Str Stripe Start SSize       PE Ranges
-	Vpyrjc-8L7x-... alpha   -wi-a- 21474836480 /dev/test/alpha   253  0       1 linear    1      0     0 21474836480 /dev/sda8:0-5119
-	Vpyrjc-8L7x-... beta    -wi-a- 21474836480 /dev/test/beta    253  1       1 linear    1      0     0 21474836480 /dev/sda8:5120-10239
-	Vpyrjc-8L7x-... gamma   -wi-a- 21474836480 /dev/test/gamma   253  2       1 linear    1      0     0 21474836480 /dev/sda8:10240-15359
-	Vpyrjc-8L7x-... delta   -wi-a- 21474836480 /dev/test/delta   253  3       1 linear    1      0     0 21474836480 /dev/sda8:15360-20479
-	Vpyrjc-8L7x-... epsilon -wi-a- 22137536512 /dev/test/epsilon 253  4       1 linear    1      0     0 22137536512 /dev/sda8:20480-25757
-#endif
 	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
 	execute_command (command, output, error);
 	//printf ("%s\n", output.c_str());
