@@ -18,7 +18,7 @@ all:	$(OUT)
 clean:
 	$(RM) $(OUT) $(OBJ) tags
 
-main: $(OBJ)
+main: $(OBJ) tags
 	$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 tags:   force

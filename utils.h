@@ -21,6 +21,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 int execute_command (const std::string &command, std::string &output, std::string &error);
 std::string get_size (long long size);
@@ -33,6 +34,7 @@ long long extract_quoted_long_long (const std::string &text, unsigned int &index
 int extract_dev_range (const std::string &text, std::string &device, int &start, int &finish, int element = 0);
 unsigned int get_lines (const std::string &output, std::vector<std::string> &lines);
 std::string get_fs (const std::string &device, long long offset);
+unsigned int parse_tagged_line (const std::string &line, std::map<std::string,std::string> &tags);
 
 #endif // _UTILS_H_
 

@@ -57,7 +57,7 @@ void run_command (void)
 	Utils::tokenize(output, temp_arr, "\n");
 	for (unsigned int k = 0; k < temp_arr.size(); k++)
 	{
-		std::string temp = Utils::regexp_label(output, "^[^/]*(/dev/[^\t ]*)");
+td::string temp = Utils::regexp_label(output, "^[^/]*(/dev/[^\t ]*)");
 		if (temp.size() > 0)
 			swraid_devices.push_back(temp);
 	}
@@ -88,17 +88,28 @@ std::string get_partition_type (int type)
  */
 unsigned int disk_get_list (Container &disks)
 {
+	const char *disk_list[] = {
+		"/dev/sda", "/dev/sdb", "/dev/sdc", "/dev/sdd",
+		"/dev/loop0", "/dev/loop1", "/dev/loop2", "/dev/loop3", "/dev/loop4", // "/dev/loop5", "/dev/loop6", "/dev/loop7",
+		NULL
+	};
 	PedDevice *dev = NULL;
 	PedDisk *disk = NULL;
 	PedDiskType *type = NULL;
 	PedPartition *part = NULL;
 	Partition *extended = NULL;
 	int reserved = 1;
+	int i;
 
-	ped_device_probe_all();
+	//ped_device_probe_all();
 
-	while ((dev = ped_device_get_next (dev))) {
-		//fprintf (stderr, "dev->path = %s\n", dev->path);
+	//while ((dev = ped_device_get_next (dev))) {
+	for (i = 0; disk_list[i]; i++) {
+		dev = ped_device_get (disk_list[i]);
+		if (!dev)
+			continue;
+
+		//printf ("dev->path = %s\n", dev->path);
 		if (dev->type == PED_DEVICE_DM)
 			continue;
 
@@ -281,6 +292,7 @@ unsigned int logicals_get_list (Container &disks)
 
 		index = line.find ("LVM2_VG_NAME", index);
 		vg->name = extract_quoted_string (line, index);
+		//printf ("name = %s\n", vg->name.c_str());
 
 		index = line.find ("LVM2_PV_COUNT", index);
 		vg->pv_count = extract_quoted_long (line, index);
@@ -452,15 +464,32 @@ unsigned int logicals_get_list (Container &disks)
 	Vpyrjc-8L7x-... delta   -wi-a- 21474836480 /dev/test/delta   253  3       1 linear    1      0     0 21474836480 /dev/sda8:15360-20479
 	Vpyrjc-8L7x-... epsilon -wi-a- 22137536512 /dev/test/epsilon 253  4       1 linear    1      0     0 22137536512 /dev/sda8:20480-25757
 #endif
-	command = "lvs --all --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,lv_name,lv_uuid,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
+	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
 	execute_command (command, output, error);
+	//printf ("%s\n", output.c_str());
 
 	lines.clear();
 	get_lines (output, lines);
 
-	//printf ("%s\n", output.c_str());
+	//printf ("%lu lines of output\n", lines.size());
+
+#if 0
+	for (i = 0; i < lines.size(); i++) {
+		std::map<std::string,std::string> tags;
+		parse_tagged_line ((lines[i]), tags);
+		//printf ("%s\n", lines[i].c_str());
+		std::map<std::string,std::string>::iterator it;
+		for (it = tags.begin(); it != tags.end(); it++) {
+			printf ("\t%-20s %s\n", (*it).first.c_str(), (*it).second.c_str());
+		}
+		printf ("\n");
+	}
+#endif
 
 	for (i = 0; i < lines.size(); i++) {
+		//std::map<std::string,std::string> tags;
+		//parse_tagged_line ((lines[i]), tags);
+
 		index = 0;
 		std::string line = lines[i];
 		//printf ("line%d:\n%s\n\n", i, line.c_str()); fflush (stdout);
@@ -502,11 +531,41 @@ unsigned int logicals_get_list (Container &disks)
 		//printf ("\n");
 		//continue;
 
-		index = line.find ("LVM2_LV_UUID", index);
-		vol->uuid = extract_quoted_string (line, index);
-
 		index = line.find ("LVM2_LV_ATTR", index);
 		vol->lv_attr = extract_quoted_string (line, index);
+		printf ("lv_attr = %s\n", vol->lv_attr.c_str());
+
+		index = line.find ("LVM2_MIRROR_LOG", index);
+		std::string log = extract_quoted_string (line, index);
+		if (!log.empty()) {
+			printf ("log = %s\n", log.c_str());
+		}
+
+		index = line.find ("LVM2_LV_UUID", index);
+		std::string uuid = extract_quoted_string (line, index);
+
+		if ((vol->lv_attr[0] == 'i') ||		// mirror (i)mage
+		    (vol->lv_attr[0] == 'l')) {		// mirror (l)og
+			// this is a segment
+			printf ("SEGMENT\n");
+
+			Segment *vol_seg = new Segment;
+			if (vol->lv_attr[0] == 'i')
+				vol_seg->type = "mirror_image";
+			else
+				vol_seg->type = "mirror_log";
+
+			lv_name = lv_name.substr (1, lv_name.size()-2);
+			vol_seg->name = lv_name;
+			printf ("seg name = %s\n", vol_seg->name.c_str());
+			vol_seg->uuid = uuid;
+
+			//vg_seg->add_child (vol_seg);
+			seg_lookup[lv_name] = vol_seg;
+			continue;
+		}
+
+		vol->uuid = uuid;
 
 		index = line.find ("LVM2_LV_SIZE", index);
 		vol->bytes_size = extract_quoted_long_long (line, index);
@@ -516,8 +575,8 @@ unsigned int logicals_get_list (Container &disks)
 		vol->device = extract_quoted_string (line, index);
 
 		std::string fs_type;
-		fs_type = get_fs (vol->device, 0);
-		//fprintf (stderr, "fs_type = %s\n", fs_type.c_str());
+		//RAR fs_type = get_fs (vol->device, 0);
+		//printf ("fs_type = %s\n", fs_type.c_str());
 		if (!fs_type.empty()) {
 			Filesystem *fs = new Filesystem;
 			//fs->bytes_size = vol->bytes_size;	//RAR for now
@@ -569,10 +628,10 @@ unsigned int logicals_get_list (Container &disks)
 
 		for (int s = 0; s < stripes; s++) {
 				extract_dev_range (seg_pe_ranges, pe_device, pe_start, pe_finish, s);
-				//printf ("\tseg pe ranges = %s, %d, %d\n", pe_device.c_str(), pe_start, pe_finish);
+				printf ("\tseg pe ranges = %s, %d, %d\n", pe_device.c_str(), pe_start, pe_finish);
 
 				Segment *vg_seg = seg_lookup[pe_device];
-				//printf ("vg_seg = %p\n", vg_seg);
+				printf ("vg_seg = %p\n", vg_seg);
 				Segment *vol_seg = new Segment;
 				vol_seg->type = "volume";
 
@@ -650,6 +709,8 @@ int main (int argc, char *argv[])
 	//Container mounts;
 	//mounts_get_list (mounts);
 	//mounts.dump(-8);
+
+	return 0;
 
 	std::string dot;
 	dot += "digraph disks {\n";

@@ -136,6 +136,9 @@ std::string extract_quoted_string (const std::string &text, unsigned int &index)
 	start  = text.find ('\'', index) + 1;
 	finish = text.find ('\'', start);
 
+	//printf ("text = >>%s<<\n", text.c_str());
+	//printf ("index = %d, start = %d, finish = %d\n", index, start, finish);
+
 	index = finish;
 
 	return text.substr (start, finish - start);
@@ -227,6 +230,7 @@ unsigned int get_lines (const std::string &output, std::vector<std::string> &lin
 
 	lines.clear();
 	while ((end = output.find ('\n', start)) > 0) {
+		start = output.find_first_not_of (" \t", start);
 		std::string tmp = output.substr (start, end - start);
 		lines.push_back (tmp);
 		start = end + 1;
@@ -254,5 +258,39 @@ std::string get_fs (const std::string &device, long long offset)
 	}
 
 	return result;
+}
+
+/**
+ * parse_tagged_output
+ */
+unsigned int parse_tagged_line (const std::string &line, std::map<std::string,std::string> &tags)
+{
+	int start  = 0;
+	int middle = 0;
+	int end    = -1;
+
+	//printf ("line = %s\n\n", line.c_str());
+
+	middle = line.find ('=', start);
+	end    = line.find ('\t', middle + 1);
+
+	while (middle > 0) {
+
+		//printf ("start = %d, middle = %d, end = %d\n", start, middle, end);
+
+		std::string name  = line.substr (start,      middle - start);
+		std::string value = line.substr (middle + 1, end    - middle - 1);
+
+		tags[name] = value;
+
+		if (end < 0)
+			break;
+
+		start  = end + 1;
+		middle = line.find ('=', start);
+		end    = line.find ('\t', middle + 1);
+	}
+
+	return tags.size();
 }
 
