@@ -254,11 +254,30 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 		return 0;
 
 	parts.clear();
-	while ((end = input.find (separators, start)) > 0) {
+
+	end = input.find (separators, start);
+	while (end > 0) {
 		start = input.find_first_not_of (" \t", start);		// trim leading whitespace
 		parts.push_back (input.substr (start, end - start));
 		start = end + 1;
+		end = input.find (separators, start);
+		if (end < 0) {
+			parts.push_back (input.substr (start));
+			break;
+		}
 	}
+
+#if 0
+	printf ("vector:\n");
+	std::vector<std::string>::iterator it2;
+	for (it2 = parts.begin(); it2 != parts.end(); it2++) {
+
+		std::string value = (*it2);
+
+		printf ("\t%s\n", value.c_str());
+	}
+	printf ("\n");
+#endif
 
 	return parts.size();
 }
@@ -282,6 +301,19 @@ unsigned int parse_tagged_line (const std::string &line, std::map<std::string,st
 
 		tags[name] = value;
 	}
+
+#if 0
+	printf ("map:\n");
+	std::map<std::string,std::string>::iterator it2;
+	for (it2 = tags.begin(); it2 != tags.end(); it2++) {
+
+		std::string name  = (*it2).first;
+		std::string value = (*it2).second;
+
+		printf ("\t%s -> %s\n", name.c_str(), value.c_str());
+	}
+	printf ("\n");
+#endif
 
 	return tags.size();
 }
