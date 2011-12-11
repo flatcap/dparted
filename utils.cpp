@@ -247,8 +247,8 @@ std::string get_fs (const std::string &device, long long offset)
  */
 unsigned int explode (const char *separators, const std::string &input, std::vector<std::string> &parts)
 {
-	int start = 0;
-	int end   = -1;
+	size_t start = 0;
+	size_t end   = 0;
 
 	if (!separators)
 		return 0;
@@ -256,15 +256,15 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 	parts.clear();
 
 	end = input.find (separators, start);
-	while (end > 0) {
+	while (end != std::string::npos) {
 		start = input.find_first_not_of (" \t", start);		// trim leading whitespace
 		parts.push_back (input.substr (start, end - start));
 		start = end + 1;
 		end = input.find (separators, start);
-		if (end < 0) {
-			parts.push_back (input.substr (start));
-			break;
-		}
+	}
+
+	if (start != input.size()) {
+		parts.push_back (input.substr (start));
 	}
 
 #if 0
@@ -274,7 +274,7 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 
 		std::string value = (*it2);
 
-		printf ("\t%s\n", value.c_str());
+		printf ("\t>>%s<<\n", value.c_str());
 	}
 	printf ("\n");
 #endif
