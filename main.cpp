@@ -54,34 +54,6 @@ long get_l (const std::string &number)
 
 
 /**
- * run_command
- */
-void run_command (void)
-{
-	std::string output;
-	std::string error;
-	std::string command = "vgs --units=b --nosuffix --noheading -a";
-
-	if (execute_command (command, output, error))
-		return;
-
-	if (output.size() == 0)
-		return;
-
-	printf ("%s\n", output.c_str());
-	/*
-	std::vector<std::string> temp_arr;
-	Utils::tokenize(output, temp_arr, "\n");
-	for (unsigned int k = 0; k < temp_arr.size(); k++)
-	{
-td::string temp = Utils::regexp_label(output, "^[^/]*(/dev/[^\t ]*)");
-		if (temp.size() > 0)
-			swraid_devices.push_back(temp);
-	}
-	*/
-}
-
-/**
  * get_partition_type
  */
 std::string get_partition_type (int type)
