@@ -32,9 +32,9 @@ std::string extract_bare_string (const std::string &text, unsigned int &index);
 long extract_quoted_long (const std::string &text, unsigned int &index);
 long long extract_quoted_long_long (const std::string &text, unsigned int &index);
 int extract_dev_range (const std::string &text, std::string &device, int &start, int &finish, int element = 0);
-unsigned int get_lines (const std::string &output, std::vector<std::string> &lines);
 std::string get_fs (const std::string &device, long long offset);
 unsigned int parse_tagged_line (const std::string &line, std::map<std::string,std::string> &tags);
+unsigned int explode (const char *separators, const std::string &input, std::vector<std::string> &parts);
 
 #endif // _UTILS_H_
 

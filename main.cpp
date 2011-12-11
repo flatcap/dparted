@@ -291,7 +291,7 @@ unsigned int logicals_get_list (Container &disks)
 
 	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
 	execute_command (command, output, error);
-	get_lines (output, lines);
+	explode ("\n", output, lines);
 
 	for (i = 0; i < lines.size(); i++) {
 		tags.clear();
@@ -330,7 +330,7 @@ unsigned int logicals_get_list (Container &disks)
 
 	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,vg_uuid,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count";
 	execute_command (command, output, error);
-	get_lines (output, lines);
+	explode ("\n", output, lines);
 	//printf ("%s\n", output.c_str());
 
 	for (i = 0; i < lines.size(); i++) {
@@ -424,7 +424,7 @@ unsigned int logicals_get_list (Container &disks)
 	//printf ("%s\n", output.c_str());
 
 	lines.clear();
-	get_lines (output, lines);
+	explode ("\n", output, lines);
 
 	for (i = 0; i < lines.size(); i++) {
 		tags.clear();
@@ -582,7 +582,7 @@ unsigned int mounts_get_list (Container &mounts)
 
 	command = "grep '^/dev' /proc/mounts";
 	execute_command (command, output, error);
-	get_lines (output, lines);
+	explode ("\n", output, lines);
 
 	for (i = 0; i < lines.size(); i++) {
 		std::string line = lines[i];
