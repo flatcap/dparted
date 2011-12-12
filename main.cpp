@@ -27,6 +27,7 @@
 #include "container.h"
 #include "disk.h"
 #include "filesystem.h"
+#include "metadata.h"
 #include "mount.h"
 #include "msdos.h"
 #include "partition.h"
@@ -347,7 +348,7 @@ unsigned int logicals_get_list (Container &disks)
 			//printf ("dev = %s\n", dev.c_str());
 			seg_lookup[dev] = vg_seg;
 
-			Segment *reserved1 = new Segment;
+			Metadata *reserved1 = new Metadata;
 			// get size from LVM2_PE_START
 			reserved1->bytes_size = 1048576;
 			reserved1->bytes_used = 1048576;
@@ -355,7 +356,7 @@ unsigned int logicals_get_list (Container &disks)
 			reserved1->type = "metadata";
 			vg_seg->add_child (reserved1);
 
-			Segment *reserved2 = new Segment;
+			Metadata *reserved2 = new Metadata;
 			// get size from LVM2_PV_PE_ALLOC_COUNT and LVM2_PE_START
 			reserved2->bytes_size = 3145728;
 			reserved2->bytes_used = 3145728;
