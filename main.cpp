@@ -36,23 +36,7 @@
 #include "volume.h"
 
 #include "utils.h"
-
-/**
- * get_ll
- */
-long long get_ll (const std::string &number)
-{
-	return strtoll (number.c_str(), NULL, 10);
-}
-
-/**
- * get_l
- */
-long get_l (const std::string &number)
-{
-	return strtol (number.c_str(), NULL, 10);
-}
-
+#include "stringnum.h"
 
 /**
  * get_partition_type
@@ -266,7 +250,7 @@ unsigned int logicals_get_list (Container &disks)
 	unsigned int i;
 	//VolumeSegment vol_seg;
 	std::vector<std::string> lines;
-	std::map<std::string,std::string> tags;
+	std::map<std::string,StringNum> tags;
 
 	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
 	execute_command (command, output, error);
@@ -284,17 +268,17 @@ unsigned int logicals_get_list (Container &disks)
 		vg->parent = &disks;
 		vg->device = "/dev/dm-0";
 
-		vg->name		=         tags["LVM2_VG_NAME"];		//printf ("name = %s\n", vg->name.c_str());
-		vg->pv_count		= get_l  (tags["LVM2_PV_COUNT"]);
-		vg->lv_count		= get_l  (tags["LVM2_LV_COUNT"]);
-		vg->vg_attr		=         tags["LVM2_VG_ATTR"];
-		vg->bytes_size		= get_ll (tags["LVM2_VG_SIZE"]);
-		//vg->vg_free		= get_ll (tags["LVM2_VG_FREE"]);
-		vg->uuid		=         tags["LVM2_VG_UUID"];
-		vg->block_size		= get_ll (tags["LVM2_VG_EXTENT_SIZE"]);
-		vg->vg_extent_count	= get_l  (tags["LVM2_VG_EXTENT_COUNT"]);
-		vg->vg_free_count	= get_ll (tags["LVM2_VG_FREE_COUNT"]);
-		vg->vg_seqno		= get_l  (tags["LVM2_VG_SEQNO"]);
+		vg->name		= tags["LVM2_VG_NAME"];		//printf ("name = %s\n", vg->name.c_str(;
+		vg->pv_count		= tags["LVM2_PV_COUNT"];
+		vg->lv_count		= tags["LVM2_LV_COUNT"];
+		vg->vg_attr		= tags["LVM2_VG_ATTR"];
+		vg->bytes_size		= tags["LVM2_VG_SIZE"];
+		//vg->vg_free		= tags["LVM2_VG_FREE"];
+		vg->uuid		= tags["LVM2_VG_UUID"];
+		vg->block_size		= tags["LVM2_VG_EXTENT_SIZE"];
+		vg->vg_extent_count	= tags["LVM2_VG_EXTENT_COUNT"];
+		vg->vg_free_count	= tags["LVM2_VG_FREE_COUNT"];
+		vg->vg_seqno		= tags["LVM2_VG_SEQNO"];
 
 		disks.add_child (vg);
 
@@ -394,8 +378,8 @@ unsigned int logicals_get_list (Container &disks)
 #endif
 
 #if 0
-		long long pvseg_start = get_ll (tags["LVM2_PVSEG_START"]);	//printf ("x = %s\n", x.c_str());
-		long long pvseg_size  = get_ll (tags["LVM2_PVSEG_SIZE"]);	//printf ("x = %s\n", x.c_str());
+		long long pvseg_start = tags["LVM2_PVSEG_START"];	//printf ("x = %s\n", x.c_str());
+		long long pvseg_size  = tags["LVM2_PVSEG_SIZE"];	//printf ("x = %s\n", x.c_str());
 
 		vol_seg->bytes_size    = pvseg_size  * vg_seg->whole->block_size;
 		vol_seg->bytes_used    = pvseg_size  * vg_seg->whole->block_size;
@@ -450,10 +434,10 @@ unsigned int logicals_get_list (Container &disks)
 
 		std::string mlog = tags["LVM2_MIRROR_LOG"];
 
-		vol->device       =         tags["LVM2_LV_PATH"];
-		vol->bytes_size   = get_ll (tags["LVM2_LV_SIZE"]);
-		vol->kernel_major = get_l  (tags["LVM2_LV_KERNEL_MAJOR"]);
-		vol->kernel_minor = get_l  (tags["LVM2_LV_KERNEL_MINOR"]);
+		vol->device       = tags["LVM2_LV_PATH"];
+		vol->bytes_size   = tags["LVM2_LV_SIZE"];
+		vol->kernel_major = tags["LVM2_LV_KERNEL_MAJOR"];
+		vol->kernel_minor = tags["LVM2_LV_KERNEL_MINOR"];
 
 		std::string fs_type;
 		//RAR fs_type = get_fs (vol->device, 0);
@@ -468,11 +452,11 @@ unsigned int logicals_get_list (Container &disks)
 			vol->add_child (fs);
 		}
 
-		std::string seg_count     =        tags["LVM2_SEG_COUNT"];	//printf ("\tseg count = %s\n", seg_count.c_str());
-		std::string segtype       =        tags["LVM2_SEGTYPE"];	//printf ("\tseg type = %s\n", segtype.c_str());
-		long        stripes       = get_l (tags["LVM2_STRIPES"]);	//printf ("\tstripes = %ld\n", stripes);
-		std::string stripe_size   =        tags["LVM2_STRIPE_SIZE"];	//printf ("\tstripe size = %s\n", stripe_size.c_str());
-		std::string seg_pe_ranges =        tags["LVM2_SEG_PE_RANGES"];
+		std::string seg_count     = tags["LVM2_SEG_COUNT"];	//printf ("\tseg count = %s\n", seg_count.c_str());
+		std::string segtype       = tags["LVM2_SEGTYPE"];	//printf ("\tseg type = %s\n", segtype.c_str());
+		long        stripes       = tags["LVM2_STRIPES"];	//printf ("\tstripes = %ld\n", stripes);
+		std::string stripe_size   = tags["LVM2_STRIPE_SIZE"];	//printf ("\tstripe size = %s\n", stripe_size.c_str());
+		std::string seg_pe_ranges = tags["LVM2_SEG_PE_RANGES"];
 
 		//long long seg_start = tags ["LVM2_SEG_START"]
 		//printf ("\tseg start = %s\n", seg_start.c_str());

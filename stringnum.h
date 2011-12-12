@@ -16,32 +16,40 @@
  */
 
 
-#ifndef _VOLUME_H_
-#define _VOLUME_H_
+#ifndef _STRINGNUM_H
+#define _STRINGNUM_H
 
 #include <string>
+#include <stdlib.h>
 
-#include "whole.h"
+#include "container.h"
 
-class Volume : public Whole
+class StringNum : public std::string
 {
 public:
-	Volume (void);
-	virtual ~Volume();
+	StringNum()
+	{
+	}
 
-	virtual void dump (int indent = 0);
-	virtual void dump_csv (void);
-	virtual std::string dump_dot (void);
+	StringNum (const char *str) : std::string (str)
+	{
+	}
 
-	std::string	lv_attr;
-	long		kernel_major;
-	long		kernel_minor;
+	const std::string operator = (const std::string &value)
+	{
+		return std::string::operator= (value);
+	}
 
-protected:
+	operator long()
+	{
+		return strtol (c_str(), NULL, 10);
+	}
 
-private:
-
+	operator long long()
+	{
+		return strtoll (c_str(), NULL, 10);
+	}
 };
 
-#endif /* _VOLUME_H_ */
+#endif /* _STRINGNUM_H */
 

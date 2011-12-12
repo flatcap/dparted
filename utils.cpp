@@ -25,6 +25,7 @@
 #include <parted/parted.h>
 
 #include "utils.h"
+#include "stringnum.h"
 
 /**
  * execute_command
@@ -285,7 +286,7 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 /**
  * parse_tagged_output
  */
-unsigned int parse_tagged_line (const std::string &line, std::map<std::string,std::string> &tags)
+unsigned int parse_tagged_line (const std::string &line, std::map<std::string,StringNum> &tags)
 {
 	int middle;
 	std::vector<std::string> list;

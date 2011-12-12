@@ -33,8 +33,8 @@ public:
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
-	int		pv_count;
-	int		lv_count;
+	long		pv_count;
+	long		lv_count;
 	std::string	vg_attr;
 	long long	vg_extent_size;
 	long long	vg_extent_count;

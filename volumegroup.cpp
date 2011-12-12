@@ -56,7 +56,7 @@ void VolumeGroup::dump (int indent /* = 0 */)
 
 	iprintf (indent, "%s (%s)\n", name.c_str(), size.c_str());
 
-	iprintf (indent+8, "pv_count:        %d\n", pv_count);
+	iprintf (indent+8, "pv_count:        %ld\n", pv_count);
 	iprintf (indent+8, "vg_free:         %s\n", free.c_str());
 	iprintf (indent+8, "vg_uuid:         %s\n", uuid.c_str());
 	iprintf (indent+8, "vg_extent_size:  %s\n", extent.c_str());
