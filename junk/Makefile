@@ -1,7 +1,7 @@
 GPP	= g++
 GCC	= gcc
 
-OUT	= compare fs loop lvm map parted spawn format
+OUT	= cast compare format fs loop lvm map parted spawn
 
 CFLAGS	= -g -Wall
 
@@ -12,6 +12,12 @@ all:	$(OUT)
 
 clean:
 	$(RM) $(OUT)
+
+cast:	cast.cpp
+	$(GPP) $(CFLAGS) -o $@ cast.cpp
+
+compare:	compare.cpp
+	$(GPP) $(CFLAGS) -o $@ compare.cpp
 
 format:	format.cpp
 	$(GPP) $(CFLAGS) -o $@ format.cpp
@@ -25,14 +31,11 @@ loop:	loop.c
 lvm:	lvm.c
 	$(GCC) $(CFLAGS) -o $@ lvm.c $(shell pkg-config --cflags --libs lvm2app devmapper) -lm
 
-parted:	parted.c
-	$(GCC) $(CFLAGS) -o $@ parted.c $(shell pkg-config --cflags --libs libparted) -lm
-
-compare:	compare.cpp
-	$(GPP) $(CFLAGS) -o $@ compare.cpp
-
 map:	map.cpp
 	$(GPP) $(CFLAGS) -o $@ map.cpp
+
+parted:	parted.c
+	$(GCC) $(CFLAGS) -o $@ parted.c $(shell pkg-config --cflags --libs libparted) -lm
 
 spawn:	spawn.cpp
 	$(GPP) $(CFLAGS) -o $@ spawn.cpp $(shell pkg-config --cflags --libs glibmm-2.4)
