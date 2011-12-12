@@ -1,7 +1,7 @@
 GPP	= g++
 GCC	= gcc
 
-OUT	= cast compare format fs loop lvm map parted spawn
+OUT	= cast compare format fs inherit loop lvm map parted spawn
 
 CFLAGS	= -g -Wall
 
@@ -24,6 +24,9 @@ format:	format.cpp
 
 fs:	fs.c
 	$(GCC) $(CFLAGS) -o $@ fs.c $(shell pkg-config --cflags --libs libparted)
+
+inherit:	inherit.cpp
+	$(GPP) $(CFLAGS) -o $@ inherit.cpp
 
 loop:	loop.c
 	$(GCC) $(CFLAGS) -o $@ loop.c $(shell pkg-config --cflags --libs libparted devmapper) -lm
