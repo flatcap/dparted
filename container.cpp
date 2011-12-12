@@ -452,6 +452,30 @@ Container * Container::find_device (const std::string &dev)
  */
 Container * Container::find_uuid (const std::string &uuid)
 {
+	std::vector<Container*>::iterator i;
+
+	for (i = children.begin(); i != children.end(); i++) {
+		if ((*i)->uuid == uuid) {
+			return (*i);
+		}
+	}
+
+	return NULL;
+}
+
+/**
+ * find_name
+ */
+Container * Container::find_name (const std::string &name)
+{
+	std::vector<Container*>::iterator i;
+
+	for (i = children.begin(); i != children.end(); i++) {
+		if ((*i)->name == name) {
+			return (*i);
+		}
+	}
+
 	return NULL;
 }
 

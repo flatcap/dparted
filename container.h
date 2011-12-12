@@ -49,6 +49,7 @@ public:
 
 	virtual Container * find_device (const std::string &dev);
 	virtual Container * find_uuid   (const std::string &uuid);
+	virtual Container * find_name   (const std::string &name);
 
 	std::string	 type;
 
