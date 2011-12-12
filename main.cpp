@@ -476,6 +476,10 @@ unsigned int logicals_get_list (Container &disks)
 		int pe_start  = -1;
 		int pe_finish = -1;
 
+		if (lv_attr[0] == 'm') {		// (m)irror
+			stripes = 0;			//XXX don't create another segment
+		}
+
 		for (int s = 0; s < stripes; s++) {
 			extract_dev_range (seg_pe_ranges, pe_device, pe_start, pe_finish, s);
 			//printf ("seg pe ranges = %s, %d, %d\n", pe_device.c_str(), pe_start, pe_finish);
