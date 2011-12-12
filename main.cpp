@@ -344,7 +344,7 @@ unsigned int logicals_get_list (Container &disks)
 
 			//printf ("whole = %p\n", vg_seg->whole);
 
-			printf ("dev = %s\n", dev.c_str());
+			//printf ("dev = %s\n", dev.c_str());
 			seg_lookup[dev] = vg_seg;
 
 			Segment *reserved1 = new Segment;
@@ -478,10 +478,18 @@ unsigned int logicals_get_list (Container &disks)
 
 		for (int s = 0; s < stripes; s++) {
 			extract_dev_range (seg_pe_ranges, pe_device, pe_start, pe_finish, s);
-			printf ("seg pe ranges = %s, %d, %d\n", pe_device.c_str(), pe_start, pe_finish);
+			//printf ("seg pe ranges = %s, %d, %d\n", pe_device.c_str(), pe_start, pe_finish);
 
 			Segment *vg_seg = seg_lookup[pe_device];
 			//printf ("vg_seg = %p\n", vg_seg);
+
+			if ((lv_attr[0] == 'i') || (lv_attr[0] == 'l')) { // mirror (i)mage or (l)og
+				// Store a reference for later
+				std::string mirr_name = tags["LVM2_LV_NAME"];
+				mirr_name = mirr_name.substr (1, mirr_name.size() - 2);
+				//printf ("storing mirror name: %s\n", mirr_name.c_str());
+				seg_lookup[mirr_name] = vg_seg;
+			}
 
 			Segment *vol_seg = new Segment;
 			vol_seg->type = "volume";
@@ -560,7 +568,7 @@ int main (int argc, char *argv[])
 	//mounts_get_list (mounts);
 	//mounts.dump(-8);
 
-#if 0
+#if 1
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
