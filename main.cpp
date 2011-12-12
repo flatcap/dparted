@@ -174,21 +174,28 @@ unsigned int disk_get_list (Container &disks)
 					prev_metadata = false;
 				}
 
-				Partition *p = new Partition;
+				Container *p = NULL;
+				if ((part->type == PED_PARTITION_FREESPACE) ||
+				    (part->type == PED_PARTITION_METADATA)) {
+					p = new Metadata;
+				} else {
+					p = new Partition;
+				}
+
 				//p->parent = m;
 				//std::cout << get_partition_type (part->type) << std::endl;
 				if (part->type == PED_PARTITION_EXTENDED) {
-					extended = p;
+					extended = static_cast<Partition*>(p);
 					extended->type = "extended";
 				}
 				p->name = get_partition_type (part->type);
-				p->num = part->num;
+				//RAR nec? p->num = part->num;
 				//printf ("Num = %d\n", part->num);
 
 				p->bytes_size = part->geom.length * 512; //RAR need to ask the disk for the multiplicand
-				p->end = part->geom.end;
-				p->start = part->geom.start;
-				p->device_offset = p->start * 512; // RAR
+				//RAR nec? p->end = part->geom.end;
+				//RAR nec? p->start = part->geom.start;
+				p->device_offset = part->geom.start * 512; // RAR
 
 				if (part->num > 0) {
 					p->device = part->geom.dev->path;
