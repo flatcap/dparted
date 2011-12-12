@@ -33,6 +33,8 @@ public:
 
 	virtual std::string dump_dot (void);
 
+	virtual void add_segment (Segment *seg);
+
 	std::vector<Segment*> segments;
 
 protected:

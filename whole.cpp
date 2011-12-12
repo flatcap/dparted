@@ -21,7 +21,7 @@
 #include <sstream>
 
 #include "whole.h"
-#include "container.h"
+#include "segment.h"
 
 /**
  * Whole
@@ -50,6 +50,32 @@ std::string Whole::dump_dot (void)
 
 	output << dump_row ("segments", count);	// vector
 
+	for (std::vector<Segment*>::iterator i = segments.begin(); i != segments.end(); i++) {
+		output << dump_row ("", (*i));
+	}
+
 	return output.str();
+}
+
+/**
+ * add_segment
+ */
+void Whole::add_segment (Segment *seg)
+{
+	bool inserted = false;
+
+	for (std::vector<Segment*>::iterator i = segments.begin(); i != segments.end(); i++) {
+		if ((*i)->device_offset > seg->device_offset) {
+			segments.insert (i, seg);
+			inserted = true;
+			break;
+		}
+	}
+
+	if (!inserted) {
+		segments.push_back (seg);
+	}
+
+	seg->whole = this;
 }
 

@@ -332,14 +332,15 @@ unsigned int logicals_get_list (Container &disks)
 			cont->add_child (vg_seg);
 
 			//printf ("lookup uuid %s\n", vg_uuid.c_str());
-			vg_seg->whole = vg_lookup[vg_uuid];
+			VolumeGroup *vg = vg_lookup[vg_uuid];
+			vg->add_segment (vg_seg);
 
 			//printf ("whole = %p\n", vg_seg->whole);
 
 			//printf ("dev = %s\n", dev.c_str());
 			seg_lookup[dev] = vg_seg;
 
-			Metadata *reserved1 = new Metadata;
+			Metadata *reserved1 = new Metadata;	// RAR these need to be Segments, too
 			// get size from LVM2_PE_START
 			reserved1->bytes_size = 1048576;
 			reserved1->bytes_used = 1048576;
@@ -501,6 +502,7 @@ unsigned int logicals_get_list (Container &disks)
 			vol_seg->whole = vol;
 
 			vg_seg->add_child (vol_seg);
+			vol->add_segment (vol_seg);
 		}
 
 		//printf ("\n");
