@@ -213,6 +213,8 @@ std::string Filesystem::dump_dot (void)
 
 	output << Container::dump_dot();
 
+	output << dump_row ("label", label);
+
 	output << dump_table_footer();
 
 	return output.str();
