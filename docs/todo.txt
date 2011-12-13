@@ -1,0 +1,353 @@
+fix gparted so it only needs (disk group rw privs)
+why does it need anything else?
+ioctls - which ones?  necessary?
+
+disk display:
+	linear
+	logorithmic
+
+text labels
+	separate text for:
+		disk
+		partition
+		container
+	magic:
+		%device		/dev/sda2
+		%dev		sda2
+		%mounts		/home, /mnt/home
+		%filesystem	ext4
+		%label		home dirs
+		%size		120 GiB
+		%used		56 GiB
+		%flags		boot
+		%partial	stripe, mirror, raid, etc
+	escape seq:
+		\n		newline
+		\r		right align
+		\l		left align
+		\b		big text
+		\s		small text
+		\o		ordinary text
+
+able to work on vm image files
+choose custom colours
+resize "working" dialog
+	shouldn't be modal
+	should be on/off-able
+
+combo_devices_changed
+
+install all the gtk3 devel libs
+
+configurable sizes:
+	bytes/sectors/kilobytes/megabytes/gigabytes/terabytes (and SI versions)
+	also percentage
+	option for "classic" look of mixed units
+
+device selection
+	"all devices" (default) -- run in new mode with all devices visible
+	/dev/sda, etc -- run in classic mode examining one device
+
+right click on ONE part of a lvm/raid/etc setup and get menus:
+	delete WHOLE lvm/raid/etc
+	delete THIS part only (breaking raid, mirror, stripe, etc)
+	select entire contents (all parts of volume)
+
+save / restore partition metadata
+
+hide protective partitions?
+just flag them?
+	lvm, gpt, ldm, md
+
+monitor the vg seq num to avoid unnecessary updates
+
+block size = sector size = extent size = stripe size
+	one name for all
+
+icons for
+	partial, mirror, stripe, raid
+
+tooltips, context menus
+
+ability to convert between different partition systems?
+
+asynchronously queue up all the actions needed to populate the screen
+leave ??? for the as-yet unread stuff
+or little clock icons?
+wait cursors embedded in the table?
+
+display a measure of fragmentation
+
+support for loop mounted partitions / devices (especially for VMs)
+
+used space is coloured yellow
+system space is coloured green? (system/reserved)
+
+put "locked" (mounted) symbol on graphical display, too
+
+option to choose data columns to display
+
+accessor functions for members
+get_bytes_size/set_bytes_size
+get_size (int block_size /* = 1 (bytes) */
+set_size (int block_size /* = 1 (bytes) */
+set_used (int block_size /* = 1 (bytes) */
+	this updates the free space?
+set_free ...
+	this updates the used space?
+enum UNITS_BYTES, UNITS_SECTORS (dep on hardware), UNITS_BLOCKS, UNITS_CYLINDERS, UNITS_MEBIBYTES instead of a byte count?
+
+after each operation try to minimised the refresh
+(i.e. don't re-scan the whole system)
+
+filemanager view which highlights partitions on selection
+
+file open menu to add extra devices, e.g.
+	/dev/loop0
+	fedora_vm.img
+
+Are you sure?
+This operation will destroy:
+	2 filesystems
+	120 GiB of data
+YES NO
+
+code only deals in bytes, display can scale to human where necessary
+
+class Jim -> class CJim?
+
+Are you sure?
+Only enable "yes" button after an n-second delay
+options to disable all warning messages
+[X]	Warning1
+[X]	Warning2
+[X]	Disable safety delay on Yes button
+[X]	Disable "are you sure?" (contingent on above)
+
+incorporate partimage (norton ghost) into gparted
+
+partition wizard features
+	Bootable CD 				
+	MBR-Style Disk 				
+	GPT-Style Disk 				
+	Resize Partition 				
+	Merge Partition 				
+	Hot Extend Partition 				
+	Move Partition 				
+	Delete Partition 				
+	Format Partition 				
+	Rebuild MBR 				
+	Partition Recovery 				
+	Partition Copy 				
+	Disk Copy 				
+	Wipe Partition 				
+	Wipe Disk 				
+	Set Primary Partition 				
+	Set Logical Partition 				
+	FAT 				
+	NTFS 				
+	Ext2/3/4 				
+	Disk Surface Test 				
+	Partition Surface Test 				
+	Change Partition Serial Number 				
+	Change Partition Type ID 				
+	Change cluster size without data loss 				
+	Convert Dynamic Disk to Basic Disk 				
+	Dynamic Disk
+	Data Protecting 				
+
+declare functions 'const' if nec
+
+need classes for loop and extended
+they need to lie about devices and offsets
+
+actions
+	check
+	info
+	mount
+	unmount
+	format
+	wipe
+	label
+	set uuid
+	set flags
+
+useful tools
+	blkid
+	lsblk
+	fintmnt
+
+need metadata / reserved classes
+
+unique things? map<>
+	disk
+	uuid
+	mount point
+	volume group
+	partition
+
+device and offset needed
+esp. for loop and segments
+
+do (fs|disk|part|etc) specific things
+
+disk -> SMART
+
+lvm -> add mirror, stripe, break mirror
+
+fs convert
+part scheme convert
+lvm convert
+encrypt / decrypt
+rescue
+
+select
+	this segment
+	all segments
+
+get_actions -> vector<desc, object, params>
+do_action
+help_action
+
+multi_select
+	fs * n
+	partitions * n
+	-> delete, check, info
+
+container.find (device) - recurses through children
+can give answers
+	YES -> pointer
+	NO -> does not exist
+	DONT_KNOW -> ask someone else
+
+container.find (uuid)
+recurse through children
+stop on match? unique? dupes?
+
+container.find (mount point)
+recurse
+
+/dev/dm-[n]
+
+option show:
+	partition size
+OR	filesystem size
+
+
+Display Menu
+	Graphical
+	Disks
+	Partitions
+	Logical Volumes
+	Mounts
+
+in the top-right corner of each display section, show a |X| to UN-display that element
+
+Blank disk
+	Options
+		new partition table -> msdos, gpt, etc
+		new partition - whole disk
+		new lvm? - protective partition?	} What proportion of the disk?
+		new ldm? - protective partition?	}
+
+Mounts
+	/		/dev/sda1
+	/home		/dev/sda2
+	/mnt/backup	/sdb1
+
+cvs columns
+	container type		disk, partition, filesystem
+	name			sda, msdos, ext4
+	block size		4096
+	label			[filesystem only]
+	siblings / part of?	necessary?
+	device			/dev/sda1
+	device offset		1MiB
+	size total		total size	}
+	size used		in use		} size in bytes, sectors, MiB, GiB, cylinders, %age
+	size free		empty space	}
+	mounts			/home
+	devices			/dev/disk/by-id by-uuid etc
+	flags			object specific flags, read-only, broken?
+	raid type		mirror, stripe, raid, etc
+	children		implied?
+	siblings		prev / next?
+	parts			list of lvm segments
+
+global maps
+	x -> container
+	uuid
+	device
+	name - multimap?
+	mount point / mounted *below*
+	fs type - multimap
+
+gfx device
+signals
+	clicked		}		{ disk		}
+	double-clicked	} - need to ask { partition	} for options
+	right-clicked	}		{ filesystem	}
+
+shadow objects
+	gfx_fs
+	gfx_part
+	etc
+derived from non-graphical objects?
+
+don't need to rebuild entire gfx objects unless refreshed (or at end of jobs)
+UNLESS: you want a live view of progress
+
+progress dialog is non-modal
+
+highlight working partition
+
+create list of all actions
+decide what underlying commands will be executed
+decide how that will affect the object hierarchy
+decide the minimum number of objects to refresh
+
+what happens to my objects if a simple lvm volume is extended, mirrored, striped, etc?
+
+move members before functions in classes
+
+#ifdef debug around dump_*()
+
+Automatic dump functions
+	container ctor
+		handle = create_section ("Container");
+		add_member (handle, "name", value_reference);
+	disk ctor
+		handle = create_section ("Disk");
+		add_member (handle, "name", value_reference);o
+Sections: map<name, members>
+members: vector<M>
+M struct <name, type, pointer>
+
+disk container understands disks
+e.g. /dev/hda, sda, etc
+logical container understands lvm
+e.g. /etc/mapper/myvol-X, /dev/myvol/X
+derived from container
+
+lvm partial volume
+	icon
+	greyed out
+	hashed out
+
+Click behaviour
+Graphical display
+	[DISK] [LVM] [sda1: linear(1/3)] [sda2: linear(2/3)] [sda3: linear(3/3)]
+Logical Volumes
+	My Vol
+		linear
+Partitions
+	sda
+		sda1
+		sda2
+		sda3
+CLICK ON		HIGHLIGHT		HIGHLIGHT		HIGHLIGHT
+gfx: linear(2/3)	gfx:linear(2/3)		logical vol: linear	partitions:sda2
+gfx: lvm tag		gfx:linear(all3)	logical vol: linear	partitions:sda[123]
+lvm: linear		gfx:linear(all3)	logical vol: linear	partitions:sda[123]
+part: sda3		gfx:linear(3/3)		logical vol: linear	partitions:sda3
+

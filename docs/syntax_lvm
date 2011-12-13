@@ -1,0 +1,3 @@
+syn match uuid "\i\{6\}-\(\i\{4\}-\)\{5\}\i\{6\}"
+syn match string "\".*\""
+hi uuid ctermfg=green

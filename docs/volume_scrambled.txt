@@ -1,0 +1,30 @@
+EXAMPLE: scrambled volume on one device
+
+uuid = 0eELQs-4f76-whou-iE8J-91bO-PBpp-7vOfIJ
+lv_name = data
+seg count = 4
+seg type = linear
+stripes = 1
+stripe size = 0
+
+Parts
+	start = 0		volume offset
+	size = 54525952		size of segment
+	/dev/loop3		device
+		pe 0 - 12	range of physical extents on the device
+
+	start = 54525952	volume offset
+	size = 54525952		size of segment
+	/dev/loop3		device
+		pe 26 - 38	range of physical extents on the device
+
+	start = 109051904	volume offset
+	size = 54525952		size of segment
+	/dev/loop3		device
+		pe 13 - 25	range of physical extents on the device
+
+	start = 163577856	volume offset
+	size = 41943040		size of segment
+	/dev/loop3		device
+		pe 39 - 48	range of physical extents on the device
+
