@@ -21,9 +21,9 @@
 
 #include <string>
 
-#include "container.h"
+#include "partition.h"
 
-class Extended : public Container
+class Extended : public Partition
 {
 public:
 	Extended (void);
