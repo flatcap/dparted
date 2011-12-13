@@ -200,8 +200,8 @@ unsigned int disk_get_list (Container &disks)
 						}
 					} else {
 						p->type = "metadata";
-						p->name = "reserved";
-						p->name += ('0' + reserved);
+						p->name = "reserved_";
+						p->name += ('a' + reserved);
 						p->bytes_used = p->bytes_size;
 						reserved++;
 						if (part->type & PED_PARTITION_LOGICAL) {
