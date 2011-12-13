@@ -162,8 +162,8 @@ unsigned int disk_get_list (Container &disks)
 				}
 
 				Container *p = NULL;
-				if ((part->type == PED_PARTITION_FREESPACE) ||
-				    (part->type == PED_PARTITION_METADATA)) {
+				if ((part->type & PED_PARTITION_FREESPACE) ||
+				    (part->type & PED_PARTITION_METADATA)) {
 					p = new Metadata;
 				} else if (part->type & PED_PARTITION_EXTENDED) {
 					p = new Extended;
