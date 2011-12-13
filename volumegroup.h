@@ -36,7 +36,6 @@ public:
 	long		pv_count;
 	long		lv_count;
 	std::string	vg_attr;
-	long long	vg_extent_size;
 	long long	vg_extent_count;
 	long long	vg_free_count;
 	long		vg_seqno;
