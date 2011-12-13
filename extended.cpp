@@ -38,3 +38,28 @@ Extended::~Extended()
 {
 }
 
+/**
+ * dump_dot
+ */
+std::string Extended::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << dump_table_header ("Extended", "#d0dd80");
+
+	output << Container::dump_dot();
+
+	output << dump_table_footer();
+
+#if 1
+	// now iterate through all the children
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		output << "\n";
+		output << (*i)->dump_dot();
+		output << "obj_" << this << " -> " << "obj_" << (*i) << ";\n";
+		output << "\n";
+	}
+#endif
+
+	return output.str();
+}

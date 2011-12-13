@@ -29,6 +29,8 @@ public:
 	Extended (void);
 	virtual ~Extended();
 
+	virtual std::string dump_dot (void);
+
 protected:
 
 private:
