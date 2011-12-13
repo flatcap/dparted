@@ -27,7 +27,7 @@
 class StringNum : public std::string
 {
 public:
-	StringNum()
+	StringNum() : std::string()
 	{
 	}
 
@@ -35,7 +35,7 @@ public:
 	{
 	}
 
-	const std::string operator = (const std::string &value)
+	const std::string operator= (const std::string &value)
 	{
 		return std::string::operator= (value);
 	}
