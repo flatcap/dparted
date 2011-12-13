@@ -351,3 +351,5 @@ gfx: lvm tag		gfx:linear(all3)	logical vol: linear	partitions:sda[123]
 lvm: linear		gfx:linear(all3)	logical vol: linear	partitions:sda[123]
 part: sda3		gfx:linear(3/3)		logical vol: linear	partitions:sda3
 
+gfx: yellow bar for %age in use; use a colour for %age completion of mirror generation
+
