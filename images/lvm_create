@@ -10,9 +10,9 @@ function populate()
 	local size="$2"
 	local dir="$(mktemp -d)"
 
-	sudo mount $dev $dir
+	mount $dev $dir
 	dd if=/dev/zero bs=1M count=$size of=$dir/filler
-	sudo umount $dir
+	umount $dir
 	rmdir $dir
 }
 
@@ -29,23 +29,23 @@ losetup /dev/loop0 $IMAGE0
 losetup /dev/loop1 $IMAGE1
 losetup /dev/loop2 $IMAGE2
 
-sudo pvcreate /dev/loop0
-sudo pvcreate /dev/loop1
-sudo pvcreate /dev/loop2
+pvcreate /dev/loop0
+pvcreate /dev/loop1
+pvcreate /dev/loop2
 
-sudo vgcreate tmpvol /dev/loop0 /dev/loop1 /dev/loop2
+vgcreate tmpvol /dev/loop0 /dev/loop1 /dev/loop2
 
-sudo lvcreate -i2 --size 400m --name stripe2 tmpvol
-sudo lvcreate     --size 200m --name root    tmpvol
-sudo lvcreate     --size  52m --name junk    tmpvol
-sudo lvcreate -m2 --size 200m --name mirror3 tmpvol
-sudo lvcreate -i3 --size 300m --name stripe3 tmpvol
-sudo lvcreate     --size 352m --name home    tmpvol
-sudo lvcreate     --size 400m --name tv      tmpvol
-sudo lvcreate -m1 --size 200m --name mirror2 tmpvol
-sudo lvcreate     --size 300m --name data    tmpvol
+lvcreate -i2 --size 400m --name stripe2 tmpvol
+lvcreate     --size 200m --name root    tmpvol
+lvcreate     --size  52m --name junk    tmpvol
+lvcreate -m2 --size 200m --name mirror3 tmpvol
+lvcreate -i3 --size 300m --name stripe3 tmpvol
+lvcreate     --size 352m --name home    tmpvol
+lvcreate     --size 400m --name tv      tmpvol
+lvcreate -m1 --size 200m --name mirror2 tmpvol
+lvcreate     --size 300m --name data    tmpvol
 
-sudo lvremove -f /dev/tmpvol/junk
+lvremove -f /dev/tmpvol/junk
 
 mke2fs -t ext4 -L tmpvol_stripe2 /dev/tmpvol/stripe2
 mke2fs -t ext4 -L tmpvol_root    /dev/tmpvol/root
@@ -56,7 +56,7 @@ mkntfs -Q      -L tmpvol_tv      /dev/tmpvol/tv
 mke2fs -t ext4 -L tmpvol_mirror2 /dev/tmpvol/mirror2
 mke2fs -t ext4 -L tmpvol_data    /dev/tmpvol/data
 
-sudo lvs --all -o lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count tmpvol
+lvs --all -o lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count tmpvol
 
 populate stripe2 320 # 80% of 400
 populate root     70 # 35% of 200
@@ -70,4 +70,6 @@ populate data    240 # 80% of 300
 du -sh $IMAGE0
 du -sh $IMAGE1
 du -sh $IMAGE2
+
+chown flatcap.flatcap $IMAGE0 $IMAGE1 $IMAGE2
 

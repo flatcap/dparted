@@ -2,8 +2,8 @@
 
 IMAGE3="disk3"
 
-sudo lvremove -f /dev/shuffle/*
-sudo vgremove -f shuffle
+lvremove -f /dev/shuffle/*
+vgremove -f shuffle
 
 losetup -d /dev/loop3
 

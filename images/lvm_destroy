@@ -4,8 +4,8 @@ IMAGE0="disk0"
 IMAGE1="disk1"
 IMAGE2="disk2"
 
-sudo lvremove -f /dev/tmpvol/*
-sudo vgremove -f tmpvol
+lvremove -f /dev/tmpvol/*
+vgremove -f tmpvol
 
 losetup -d /dev/loop0
 losetup -d /dev/loop1
