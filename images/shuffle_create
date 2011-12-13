@@ -1,0 +1,47 @@
+#!/bin/bash
+
+IMAGE3="disk3"
+
+function populate()
+{
+	local dev="/dev/shuffle/$1"
+	local size="$2"
+	local dir="$(mktemp -d)"
+
+	sudo mount $dev $dir
+	dd if=/dev/zero bs=1M count=$size of=$dir/filler
+	sudo umount $dir
+	rmdir $dir
+}
+
+
+rm -f $IMAGE3
+
+truncate -s 200M $IMAGE3
+
+losetup /dev/loop3 $IMAGE3
+
+sudo pvcreate /dev/loop3
+
+sudo vgcreate shuffle /dev/loop3
+
+sudo lvcreate --size 52m --name data  shuffle
+sudo lvcreate --size 52m --name junk1 shuffle
+sudo lvcreate --size 52m --name junk2 shuffle
+sudo lvcreate --size 40m --name junk3 shuffle
+
+sudo lvremove -f /dev/shuffle/junk2
+sudo lvextend --size +52m /dev/shuffle/data
+sudo lvremove -f /dev/shuffle/junk1
+sudo lvextend --size +52m /dev/shuffle/data
+sudo lvremove -f /dev/shuffle/junk3
+sudo lvextend --size +40m /dev/shuffle/data
+
+mke2fs -t ext4 -L shuffle_data /dev/shuffle/data
+
+sudo lvs --all -o lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count shuffle
+
+populate data 100
+
+du -sh $IMAGE3
+

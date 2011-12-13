@@ -1,0 +1,73 @@
+#!/bin/bash
+
+IMAGE0="disk0"
+IMAGE1="disk1"
+IMAGE2="disk2"
+
+function populate()
+{
+	local dev="/dev/tmpvol/$1"
+	local size="$2"
+	local dir="$(mktemp -d)"
+
+	sudo mount $dev $dir
+	dd if=/dev/zero bs=1M count=$size of=$dir/filler
+	sudo umount $dir
+	rmdir $dir
+}
+
+
+rm -f $IMAGE0
+rm -f $IMAGE1
+rm -f $IMAGE2
+
+truncate -s 1G $IMAGE0
+truncate -s 1G $IMAGE1
+truncate -s 1G $IMAGE2
+
+losetup /dev/loop0 $IMAGE0
+losetup /dev/loop1 $IMAGE1
+losetup /dev/loop2 $IMAGE2
+
+sudo pvcreate /dev/loop0
+sudo pvcreate /dev/loop1
+sudo pvcreate /dev/loop2
+
+sudo vgcreate tmpvol /dev/loop0 /dev/loop1 /dev/loop2
+
+sudo lvcreate -i2 --size 400m --name stripe2 tmpvol
+sudo lvcreate     --size 200m --name root    tmpvol
+sudo lvcreate     --size  52m --name junk    tmpvol
+sudo lvcreate -m2 --size 200m --name mirror3 tmpvol
+sudo lvcreate -i3 --size 300m --name stripe3 tmpvol
+sudo lvcreate     --size 352m --name home    tmpvol
+sudo lvcreate     --size 400m --name tv      tmpvol
+sudo lvcreate -m1 --size 200m --name mirror2 tmpvol
+sudo lvcreate     --size 300m --name data    tmpvol
+
+sudo lvremove -f /dev/tmpvol/junk
+
+mke2fs -t ext4 -L tmpvol_stripe2 /dev/tmpvol/stripe2
+mke2fs -t ext4 -L tmpvol_root    /dev/tmpvol/root
+mkntfs -Q      -L tmpvol_mirror3 /dev/tmpvol/mirror3
+mke2fs -t ext4 -L tmpvol_home    /dev/tmpvol/home
+mkntfs -Q      -L tmpvol_stripe3 /dev/tmpvol/stripe3
+mkntfs -Q      -L tmpvol_tv      /dev/tmpvol/tv
+mke2fs -t ext4 -L tmpvol_mirror2 /dev/tmpvol/mirror2
+mke2fs -t ext4 -L tmpvol_data    /dev/tmpvol/data
+
+sudo lvs --all -o lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count tmpvol
+
+populate stripe2 320 # 80% of 400
+populate root     70 # 35% of 200
+populate mirror3 150 # 75% of 200
+populate home    150 # 50% of 300
+populate stripe3 240 # 60% of 400
+populate tv      220 # 55% of 400
+populate mirror2  20 # 10% of 200
+populate data    240 # 80% of 300
+
+du -sh $IMAGE0
+du -sh $IMAGE1
+du -sh $IMAGE2
+

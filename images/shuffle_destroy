@@ -1,0 +1,11 @@
+#!/bin/bash
+
+IMAGE3="disk3"
+
+sudo lvremove -f /dev/shuffle/*
+sudo vgremove -f shuffle
+
+losetup -d /dev/loop3
+
+rm -f $IMAGE3
+
