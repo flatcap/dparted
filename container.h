@@ -33,6 +33,7 @@ public:
 	virtual void dump2 (void);
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
+	virtual std::string dump_dot_children (void);
 
 	virtual void add_child    (Container *child);
 	virtual void delete_child (Container *child);

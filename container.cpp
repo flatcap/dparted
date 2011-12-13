@@ -163,6 +163,24 @@ std::string Container::dump_dot (void)
 	return output.str();
 }
 
+/**
+ * dump_dot_children
+ */
+std::string Container::dump_dot_children (void)
+{
+	std::ostringstream s;
+
+	// now iterate through all the children
+	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		s << "\n";
+		s << (*i)->dump_dot();
+		s << "obj_" << this << " -> obj_" << (*i) << ";\n";
+		s << "\n";
+	}
+
+	return s.str();
+}
+
 
 /**
  * dump_row

@@ -70,16 +70,7 @@ std::string Segment::dump_dot (void)
 	output << dump_row ("whole", whole);
 
 	output << dump_table_footer();
-
-#if 1
-	// now iterate through all the children
-	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
-		output << "\n";
-		output << (*i)->dump_dot();
-		output << "obj_" << this << " -> " << "obj_" << (*i) << ";\n";
-		output << "\n";
-	}
-#endif
+	output << dump_dot_children();
 
 	return output.str();
 }

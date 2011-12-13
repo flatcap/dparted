@@ -100,14 +100,7 @@ std::string VolumeGroup::dump_dot (void)
 	output << dump_row ("vg_seqno",        vg_seqno);
 
 	output << dump_table_footer();
-
-	// now iterate through all the children
-	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
-		output << "\n";
-		output << (*i)->dump_dot();
-		output << "obj_" << this << " -> " << "obj_" << (*i) << ";\n";
-		output << "\n";
-	}
+	output << dump_dot_children();
 
 	return output.str();
 }

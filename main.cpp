@@ -65,7 +65,9 @@ unsigned int disk_get_list (Container &disks)
 {
 	const char *disk_list[] = {
 		"/dev/sda", "/dev/sdb", "/dev/sdc", "/dev/sdd",
-		"/dev/loop0", "/dev/loop1", "/dev/loop2", "/dev/loop3", "/dev/loop4", // "/dev/loop5", "/dev/loop6", "/dev/loop7",
+		"/dev/loop0", "/dev/loop1", "/dev/loop2", "/dev/loop3",
+		"/dev/loop4",
+		//"/dev/loop5", "/dev/loop6", "/dev/loop7",
 		NULL
 	};
 	PedDevice *dev = NULL;
@@ -544,30 +546,9 @@ unsigned int mounts_get_list (Container &mounts)
 int main (int argc, char *argv[])
 {
 	Container disks;
+
 	disk_get_list (disks);
-	//disks.children[0]->dump2();
-
-#if 0
-	printf ("\e[36mDevice     Type                         Name                  Offset(Parent)         Bytes      Size     Used     Free\e[0m\n");
-	disks.dump2();
-#endif
-	//printf ("ContainerType,Device,Name,Blocksize,Label,UUID,Total,Used,Free\n");
-	//disks.dump_csv();
-
-#if 0
-	Container *lvm = disks.find_device ("/dev/sda8");
-	printf ("\nlvm = %p\n", lvm);
-	fflush (stdout);
-	printf ("name = %s\n", lvm->name.c_str());
-#endif
-
 	logicals_get_list (disks);
-	//disks.children[1]->dump();
-	//disks.dump2();
-
-	//Container mounts;
-	//mounts_get_list (mounts);
-	//mounts.dump(-8);
 
 #if 1
 	std::string dot;
@@ -579,21 +560,9 @@ int main (int argc, char *argv[])
 	for (i = 0; i < disks.children.size(); i++) {
 		dot += disks.children[i]->dump_dot();
 	}
-	if (0)
-	{
-		std::ostringstream output;
-
-		Container *d = disks.children[0];
-		Container *m = d->children[0];
-
-		output << "{ rank=same obj_" << d << " obj_" << m << " }\n";
-
-		dot += output.str();
-	}
 	dot += "\n};";
 
 	printf ("%s\n", dot.c_str());
-	//printf ("\n");
 #endif
 
 	return 0;
