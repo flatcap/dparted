@@ -171,10 +171,10 @@ std::string Container::dump_row (const char *name, long long value)
 {
 	std::ostringstream s;
 
-	s << "<tr>\n";
-	s << "<td align=\"left\">" << name << "</td>\n";
-	s << "<td>=</td>\n";
-	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << value << "</td>";
 	s << "</tr>\n";
 
 	return s.str();
@@ -187,10 +187,10 @@ std::string Container::dump_row (const char *name, long value)
 {
 	std::ostringstream s;
 
-	s << "<tr>\n";
-	s << "<td align=\"left\">" << name << "</td>\n";
-	s << "<td>=</td>\n";
-	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << value << "</td>";
 	s << "</tr>\n";
 
 	return s.str();
@@ -203,10 +203,10 @@ std::string Container::dump_row (const char *name, int value)
 {
 	std::ostringstream s;
 
-	s << "<tr>\n";
-	s << "<td align=\"left\">" << name << "</td>\n";
-	s << "<td>=</td>\n";
-	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << value << "</td>";
 	s << "</tr>\n";
 
 	return s.str();
@@ -219,10 +219,10 @@ std::string Container::dump_row (const char *name, unsigned int value)
 {
 	std::ostringstream s;
 
-	s << "<tr>\n";
-	s << "<td align=\"left\">" << name << "</td>\n";
-	s << "<td>=</td>\n";
-	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << value << "</td>";
 	s << "</tr>\n";
 
 	return s.str();
@@ -235,10 +235,10 @@ std::string Container::dump_row (const char *name, bool value)
 {
 	std::ostringstream s;
 
-	s << "<tr>\n";
-	s << "<td align=\"left\">" << name << "</td>\n";
-	s << "<td>=</td>\n";
-	s << "<td align=\"left\">" << (value ? "true" : "false") << "</td>\n";
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << (value ? "true" : "false") << "</td>";
 	s << "</tr>\n";
 
 	return s.str();
@@ -251,10 +251,10 @@ std::string Container::dump_row (const char *name, std::string &value)
 {
 	std::ostringstream s;
 
-	s << "<tr>\n";
-	s << "<td align=\"left\">" << name << "</td>\n";
-	s << "<td>=</td>\n";
-	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << value << "</td>";
 	s << "</tr>\n";
 
 	return s.str();
@@ -267,10 +267,10 @@ std::string Container::dump_row (const char *name, void *value)
 {
 	std::ostringstream s;
 
-	s << "<tr>\n";
-	s << "<td align=\"left\">" << name << "</td>\n";
-	s << "<td>=</td>\n";
-	s << "<td align=\"left\">" << value << "</td>\n";
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << value << "</td>";
 	s << "</tr>\n";
 
 	return s.str();
