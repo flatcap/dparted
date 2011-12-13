@@ -219,6 +219,12 @@ unsigned int disk_get_list (Container &disks)
 					f->device = p->device;
 					f->device_offset = 0;
 					p->add_child (f);
+				} else {
+					if (part->type == PED_PARTITION_LOGICAL) {
+						//fprintf (stderr, "no filesystem on %s (%u)\n", p->device.c_str(), part->type);
+						//std::string fs = get_fs (p->device, 0);
+						//fprintf (stderr, "fs = %s\n", fs.c_str());
+					}
 				}
 				if (part->type & PED_PARTITION_LOGICAL) {
 					extended->add_child (p);
@@ -434,29 +440,47 @@ unsigned int logicals_get_list (Container &disks)
 			vol->uuid    = lv_uuid;	//RAR except for mirrors
 			vol->lv_attr = lv_attr;
 			vg->add_child (vol);
+
+			vol->device       = tags["LVM2_LV_PATH"];
+			vol->bytes_size   = tags["LVM2_LV_SIZE"];
+			vol->kernel_major = tags["LVM2_LV_KERNEL_MAJOR"];
+			vol->kernel_minor = tags["LVM2_LV_KERNEL_MINOR"];
+
+			if ((lv_attr[0] != 'i') && (lv_attr[0] != 'l')) { // mirror (i)mage or (l)og
+				std::string fs_type;
+				fs_type = get_fs (vol->device, 0);
+				//printf ("fs_type = %s\n", fs_type.c_str());
+				if (!fs_type.empty()) {
+					Filesystem *fs = new Filesystem;
+					//fs->bytes_size = vol->bytes_size;	//RAR for now
+					fs->name = fs_type;
+					fs->parent = vol; //RAR tmp
+					fs->device = vol->device; //RAR tmp
+					fs->dump();
+					vol->add_child (fs);
+				}
+			}
+		}
+
+		if (lv_attr[0] == 'm') {		// mirror
+			vol->device       = tags["LVM2_LV_PATH"];
+			std::string fs_type;
+			fs_type = get_fs (vol->device, 0);
+			//printf ("fs_type = %s\n", fs_type.c_str());
+			if (!fs_type.empty()) {
+				Filesystem *fs = new Filesystem;
+				//fs->bytes_size = vol->bytes_size;	//RAR for now
+				fs->name = fs_type;
+				fs->parent = vol; //RAR tmp
+				fs->device = vol->device; //RAR tmp
+				fs->dump();
+				vol->add_child (fs);
+			}
 		}
 
 		//printf ("vol = %p\n", vol);
 
 		std::string mlog = tags["LVM2_MIRROR_LOG"];
-
-		vol->device       = tags["LVM2_LV_PATH"];
-		vol->bytes_size   = tags["LVM2_LV_SIZE"];
-		vol->kernel_major = tags["LVM2_LV_KERNEL_MAJOR"];
-		vol->kernel_minor = tags["LVM2_LV_KERNEL_MINOR"];
-
-		std::string fs_type;
-		//RAR fs_type = get_fs (vol->device, 0);
-		//printf ("fs_type = %s\n", fs_type.c_str());
-		if (!fs_type.empty()) {
-			Filesystem *fs = new Filesystem;
-			//fs->bytes_size = vol->bytes_size;	//RAR for now
-			fs->name = fs_type;
-			fs->parent = vol; //RAR tmp
-			fs->device = vol->device; //RAR tmp
-			fs->dump();
-			vol->add_child (fs);
-		}
 
 		std::string seg_count     = tags["LVM2_SEG_COUNT"];	//printf ("\tseg count = %s\n", seg_count.c_str());
 		std::string segtype       = tags["LVM2_SEGTYPE"];	//printf ("\tseg type = %s\n", segtype.c_str());
