@@ -48,10 +48,11 @@ std::string Whole::dump_dot (void)
 
 	output << Container::dump_dot();
 
-	output << dump_row ("segments", count);	// vector
-
-	for (std::vector<Segment*>::iterator i = segments.begin(); i != segments.end(); i++) {
-		output << dump_row ("", (*i));
+	if (count > 0) {
+		output << dump_row ("segments", count);
+		for (std::vector<Segment*>::iterator i = segments.begin(); i != segments.end(); i++) {
+			output << dump_row ("", (*i));
+		}
 	}
 
 	return output.str();

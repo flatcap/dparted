@@ -33,10 +33,6 @@ public:
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
-				// container
-	long long start;	// offset?
-	long long end;		// ???
-
 	int num;
 protected:
 

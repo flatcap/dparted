@@ -27,8 +27,6 @@
  * Partition
  */
 Partition::Partition (void) :
-	start (0),
-	end (0),
 	num (0)
 {
 	type = "partition";
@@ -54,11 +52,9 @@ void Partition::dump (int indent /* = 0 */)
 
 	iprintf (indent,   "%s%d (%s)\n", device.c_str()+5, num, size.c_str());
 	//iprintf (indent+8, "Type:   %s\n",   type.c_str());
-	iprintf (indent+8, "Start:  %lld\n", start);
 
 	//iprintf (indent+8, "Number: %d\n",   num);
 	//iprintf (indent+8, "Length: %s\n",   size.c_str());
-	//iprintf (indent+8, "End:    %lld\n", end);
 
 	Container::dump (indent);
 }
@@ -90,9 +86,6 @@ std::string Partition::dump_dot (void)
 	output << dump_table_header ("Partition", "green");
 
 	output << Container::dump_dot();
-
-	output << dump_row ("start", start);
-	output << dump_row ("end",   end);
 
 	output << dump_table_footer();
 

@@ -149,8 +149,16 @@ std::string Container::dump_dot (void)
 	output << dump_row ("block_size",    block_size);
 	output << dump_row ("bytes_size",    bytes_size);
 	output << dump_row ("bytes_used",    bytes_used);
+	output << dump_row ("bytes_free",    bytes_size - bytes_used);
 	output << dump_row ("parent",        parent);
-	output << dump_row ("children",      count);	// vector
+
+	if (count > 0) {
+		output << dump_row ("children",      count);
+		for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+			output << dump_row ("", (*i));
+		}
+	}
+
 
 	return output.str();
 }
