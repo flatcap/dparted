@@ -26,6 +26,7 @@
 
 #include "container.h"
 #include "disk.h"
+#include "extended.h"
 #include "filesystem.h"
 #include "metadata.h"
 #include "mount.h"
