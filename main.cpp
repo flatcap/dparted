@@ -306,7 +306,7 @@ unsigned int logicals_get_list (Container &disks)
 	printf ("\n");
 #endif
 
-	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,vg_uuid,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count";
+	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,vg_uuid,vg_name,vg_extent_size,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count";
 	execute_command (command, output, error);
 	//printf ("%s\n", command.c_str());
 	//printf ("%s\n", output.c_str());
@@ -339,6 +339,7 @@ unsigned int logicals_get_list (Container &disks)
 			vg_seg->bytes_size = cont->bytes_size;
 			vg_seg->name = vg_name;
 			vg_seg->type = "volumegroup";
+			vg_seg->block_size = tags["LVM2_VG_EXTENT_SIZE"];
 
 			cont->add_child (vg_seg);
 
@@ -519,6 +520,10 @@ unsigned int logicals_get_list (Container &disks)
 
 			Segment *vol_seg = new Segment;
 			vol_seg->type = "volume";
+
+			vol_seg->block_size = vg->block_size;
+			vol_seg->bytes_size = vol_seg->block_size * (pe_finish - pe_start);
+			vol_seg->bytes_used = vol_seg->bytes_size;
 
 			//vol_seg->volume_offset = seg_start;
 			vol_seg->device        = pe_device;
