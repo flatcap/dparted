@@ -29,7 +29,6 @@
 #include "extended.h"
 #include "filesystem.h"
 #include "metadata.h"
-#include "mount.h"
 #include "msdos.h"
 #include "partition.h"
 #include "segment.h"

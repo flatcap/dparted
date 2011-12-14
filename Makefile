@@ -1,7 +1,7 @@
 CC	= g++
 
-SRC	= container.cpp disk.cpp extended.cpp filesystem.cpp main.cpp metadata.cpp mount.cpp msdos.cpp partition.cpp segment.cpp utils.cpp volume.cpp volumegroup.cpp whole.cpp
-HDR	= container.h disk.h extended.h filesystem.h metadata.h mount.h msdos.h partition.h segment.h utils.h volume.h volumegroup.h whole.h
+SRC	= container.cpp disk.cpp extended.cpp filesystem.cpp main.cpp metadata.cpp msdos.cpp partition.cpp segment.cpp utils.cpp volume.cpp volumegroup.cpp whole.cpp
+HDR	= container.h disk.h extended.h filesystem.h metadata.h msdos.h partition.h segment.h utils.h volume.h volumegroup.h whole.h
 OBJ	= $(SRC:.cpp=.o)
 
 OUT	= main
@@ -30,9 +30,8 @@ container.o:	container.cpp container.h utils.h
 disk.o:		disk.cpp disk.h container.h utils.h
 extended.o:	extended.cpp extended.h
 filesystem.o:	filesystem.cpp filesystem.h container.h partition.h utils.h
-main.o:		main.cpp container.h disk.h extended.h filesystem.h mount.h msdos.h partition.h segment.h volumegroup.h whole.h volume.h utils.h
+main.o:		main.cpp container.h disk.h extended.h filesystem.h msdos.h partition.h segment.h volumegroup.h whole.h volume.h utils.h
 metadata.o:	metadata.cpp metadata.h container.h utils.h
-mount.o:	mount.cpp mount.h container.h utils.h
 msdos.o:	msdos.cpp msdos.h container.h utils.h
 partition.o:	partition.cpp partition.h container.h utils.h
 segment.o:	segment.cpp segment.h container.h
