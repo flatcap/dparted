@@ -255,7 +255,7 @@ Mounts
 	/home		/dev/sda2
 	/mnt/backup	/sdb1
 
-cvs columns
+csv columns
 	container type		disk, partition, filesystem
 	name			sda, msdos, ext4
 	block size		4096
