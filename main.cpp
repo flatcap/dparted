@@ -155,7 +155,7 @@ unsigned int disk_get_list (Container &disks)
 						prev_metadata = false;
 						continue;
 					} else {
-						prev_metadata = true;
+						//prev_metadata = true;	//RAR coalesce metadata
 					}
 				} else {
 					prev_metadata = false;
