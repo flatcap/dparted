@@ -1,7 +1,7 @@
 GPP	= g++
 GCC	= gcc
 
-OUT	= cast compare format fs inherit loop lvm map parted spawn
+OUT	= cast compare format fs inherit loop lvm map parted spawn template
 
 CFLAGS	= -g -Wall
 
@@ -42,6 +42,9 @@ parted:	parted.c
 
 spawn:	spawn.cpp
 	$(GPP) $(CFLAGS) -o $@ spawn.cpp $(shell pkg-config --cflags --libs glibmm-2.4)
+
+template:	template.cpp
+	$(GPP) $(CFLAGS) -o $@ template.cpp
 
 force:
 
