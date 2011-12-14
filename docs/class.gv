@@ -1,16 +1,97 @@
-digraph class {
+digraph classes {
 	graph [ rankdir = "BT", bgcolor = white ];
 	node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];
 
-	Disk -> Container;
-	Extended -> Partition;
-	Filesystem -> Container;
-	Metadata -> Container;
-	Mount -> Container;
-	Msdos -> Container;
-	Partition -> Container;
-	Segment -> Container;
-	VolumeGroup -> Whole;
-	Volume -> Whole;
-	Whole -> Container;
+	Container [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Container</b></td></tr>
+				<tr><td align="left">string</td><td align="left">type</td></tr>
+				<tr><td align="left">string</td><td align="left">name</td></tr>
+				<tr><td align="left">string</td><td align="left">uuid</td></tr>
+				<tr><td align="left">string</td><td align="left">device</td></tr>
+				<tr><td align="left">long long</td><td align="left">device_offset</td></tr>
+				<tr><td align="left">long</td><td align="left">block_size</td></tr>
+				<tr><td align="left">long long</td><td align="left">bytes_size</td></tr>
+				<tr><td align="left">long long</td><td align="left">bytes_used</td></tr>
+				<tr><td align="left">Container</td><td align="left">*parent</td></tr>
+				<tr><td align="left">vector&lt;Container*&gt;</td><td align="left">children</td></tr>
+			</table>>];
+
+	Disk [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Disk</b></td></tr>
+				<tr><td align="left">bool</td><td align="left">read_only</td></tr>
+				<tr><td align="left">int</td><td align="left">hw_cylinders</td></tr>
+				<tr><td align="left">int</td><td align="left">hw_heads</td></tr>
+				<tr><td align="left">int</td><td align="left">hw_sectors</td></tr>
+				<tr><td align="left">int</td><td align="left">bios_cylinders</td></tr>
+				<tr><td align="left">int</td><td align="left">bios_heads</td></tr>
+				<tr><td align="left">int</td><td align="left">bios_sectors</td></tr>
+				<tr><td align="left">int</td><td align="left">host</td></tr>
+				<tr><td align="left">int</td><td align="left">did</td></tr>
+			</table>>];
+
+	Extended [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Extended</b></td></tr>
+			</table>>];
+
+	Filesystem [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Filesystem</b></td></tr>
+				<tr><td align="left">string</td><td align="left">label</td></tr>
+			</table>>];
+
+	Metadata [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Metadata</b></td></tr>
+			</table>>];
+
+	Msdos [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Msdos</b></td></tr>
+			</table>>];
+
+	Partition [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Partition</b></td></tr>
+				<tr><td align="left">int</td><td align="left">num</td></tr>
+			</table>>];
+
+	Segment [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Segment</b></td></tr>
+				<tr><td align="left">Whole</td><td align="left">*whole</td></tr>
+			</table>>];
+
+	VolumeGroup [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>VolumeGroup</b></td></tr>
+				<tr><td align="left">long</td><td align="left">pv_count</td></tr>
+				<tr><td align="left">long</td><td align="left">lv_count</td></tr>
+				<tr><td align="left">string</td><td align="left">vg_attr</td></tr>
+				<tr><td align="left">long long</td><td align="left">vg_extent_count</td></tr>
+				<tr><td align="left">long long</td><td align="left">vg_free_count</td></tr>
+				<tr><td align="left">long</td><td align="left">vg_seqno</td></tr>
+			</table>>];
+
+	Volume [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Volume</b></td></tr>
+				<tr><td align="left">string</td><td align="left">lv_attr</td></tr>
+				<tr><td align="left">long</td><td align="left">kernel_major</td></tr>
+				<tr><td align="left">long</td><td align="left">kernel_minor</td></tr>
+			</table>>];
+
+	Whole [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Whole</b></td></tr>
+				<tr><td align="left">vector&lt;Segment*&gt;</td><td align="left">segments</td></tr>
+			</table>>];
+
+	Disk		-> Container;
+	Extended	-> Partition;
+	Filesystem	-> Container;
+	Metadata	-> Container;
+	Msdos		-> Container;
+	Partition	-> Container;
+	Segment		-> Container;
+	VolumeGroup	-> Whole;
+	Volume		-> Whole;
+	Whole		-> Container;
+
+	Segment		-> Whole [ dir="both" ];
+
+{ rank=same Segment Whole };
+
 };
+
