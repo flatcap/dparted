@@ -1,0 +1,16 @@
+digraph class {
+	graph [ rankdir = "BT", bgcolor = white ];
+	node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];
+
+	Disk -> Container;
+	Extended -> Partition;
+	Filesystem -> Container;
+	Metadata -> Container;
+	Mount -> Container;
+	Msdos -> Container;
+	Partition -> Container;
+	Segment -> Container;
+	VolumeGroup -> Whole;
+	Volume -> Whole;
+	Whole -> Container;
+};
