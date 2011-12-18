@@ -4,9 +4,21 @@ IMAGE0="disk0"
 IMAGE1="disk1"
 IMAGE2="disk2"
 
+function populate_ext4()
+{
+	local dev="$1"
+	local size="$2"
+	local dir="$(mktemp -d)"
+
+	mount $dev $dir
+	fallocate --length $size $dir/filler
+	umount $dir
+	rmdir $dir
+}
+
 function populate()
 {
-	local dev="/dev/tmpvol/$1"
+	local dev="$1"
 	local size="$2"
 	local dir="$(mktemp -d)"
 
@@ -21,9 +33,9 @@ rm -f $IMAGE0
 rm -f $IMAGE1
 rm -f $IMAGE2
 
-truncate -s 1G $IMAGE0
-truncate -s 1G $IMAGE1
-truncate -s 1G $IMAGE2
+fallocate --length 1G $IMAGE0
+fallocate --length 1G $IMAGE1
+fallocate --length 1G $IMAGE2
 
 losetup /dev/loop0 $IMAGE0
 losetup /dev/loop1 $IMAGE1
@@ -58,14 +70,14 @@ mke2fs -t ext4 -L tmpvol_data    /dev/tmpvol/data
 
 lvs --all -o lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count tmpvol
 
-populate stripe2 320 # 80% of 400
-populate root     70 # 35% of 200
-populate mirror3 150 # 75% of 200
-populate home    150 # 50% of 300
-populate stripe3 240 # 60% of 400
-populate tv      220 # 55% of 400
-populate mirror2  20 # 10% of 200
-populate data    240 # 80% of 300
+populate_ext4 /dev/tmpvol/stripe2 320M # 80% of 400
+populate_ext4 /dev/tmpvol/root     70M # 35% of 200
+populate      /dev/tmpvol/mirror3 150  # 75% of 200
+populate_ext4 /dev/tmpvol/home    150M # 50% of 300
+populate      /dev/tmpvol/stripe3 240  # 60% of 400
+populate      /dev/tmpvol/tv      220  # 55% of 400
+populate_ext4 /dev/tmpvol/mirror2  20M # 10% of 200
+populate_ext4 /dev/tmpvol/data    240M # 80% of 300
 
 du -sh $IMAGE0
 du -sh $IMAGE1
