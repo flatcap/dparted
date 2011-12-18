@@ -353,3 +353,5 @@ part: sda3		gfx:linear(3/3)		logical vol: linear	partitions:sda3
 
 gfx: yellow bar for %age in use; use a colour for %age completion of mirror generation
 
+find out if partition/filesystem is mounted
+
