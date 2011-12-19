@@ -66,10 +66,12 @@ std::string get_partition_type (int type)
 unsigned int disk_get_list (Container &disks)
 {
 	const char *disk_list[] = {
-		"/dev/sda", "/dev/sdb", "/dev/sdc", "/dev/sdd",
-		"/dev/loop0", "/dev/loop1", "/dev/loop2", "/dev/loop3",
-		"/dev/loop4",
+		//"/dev/sda",
+		//"/dev/sdb", "/dev/sdc", "/dev/sdd",
+		//"/dev/loop0", "/dev/loop1", "/dev/loop2", "/dev/loop3",
+		//"/dev/loop4",
 		//"/dev/loop5", "/dev/loop6", "/dev/loop7",
+		"/dev/loop8", "/dev/loop9", "/dev/loop10", "/dev/loop11", "/dev/loop12", "/dev/loop13", "/dev/loop14", "/dev/loop15",
 		NULL
 	};
 	PedDevice *dev = NULL;

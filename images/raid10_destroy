@@ -1,0 +1,10 @@
+#!/bin/bash
+
+lvremove -f /dev/bigvol/*
+vgremove -f bigvol
+
+for i in $(enum 8 15); do
+	losetup -d /dev/loop$i
+	rm -f disk$i
+done
+
