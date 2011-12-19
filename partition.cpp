@@ -18,16 +18,13 @@
 
 #include <stdio.h>
 #include <string>
-#include <sstream>
 
 #include "partition.h"
-#include "utils.h"
 
 /**
  * Partition
  */
-Partition::Partition (void) :
-	num (0)
+Partition::Partition (void)
 {
 	type = "partition";
 }
@@ -40,55 +37,3 @@ Partition::~Partition()
 }
 
 
-/**
- * dump
- */
-void Partition::dump (int indent /* = 0 */)
-{
-	if (num < 0)
-		return;
-
-	std::string size = get_size (bytes_size);
-
-	iprintf (indent,   "%s%d (%s)\n", device.c_str()+5, num, size.c_str());
-	//iprintf (indent+8, "Type:   %s\n",   type.c_str());
-
-	//iprintf (indent+8, "Number: %d\n",   num);
-	//iprintf (indent+8, "Length: %s\n",   size.c_str());
-
-	Container::dump (indent);
-}
-
-/**
- * dump_csv
- */
-void Partition::dump_csv (void)
-{
-	printf ("%s,%s,%s,%ld,%s,%lld,%lld,%lld\n",
-		"Partition",
-		device.c_str(),
-		name.c_str(),
-		block_size,
-		uuid.c_str(),
-		bytes_size,
-		bytes_used,
-		bytes_size - bytes_used);
-	Container::dump_csv();
-}
-
-/**
- * dump_dot
- */
-std::string Partition::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << dump_table_header ("Partition", "green");
-
-	output << Container::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
-
-	return output.str();
-}

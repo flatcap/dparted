@@ -21,9 +21,9 @@
 
 #include <string>
 
-#include "container.h"
+#include "partition.h"
 
-class Metadata : public Container
+class Metadata : public Partition
 {
 public:
 	Metadata (void);

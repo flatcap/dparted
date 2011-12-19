@@ -23,8 +23,6 @@
 
 #include "container.h"
 
-class Partition;
-
 class Filesystem : public Container
 {
 public:

@@ -21,9 +21,9 @@
 
 #include <string>
 
-#include "container.h"
+#include "block.h"
 
-class Disk : public Container
+class Disk : public Block
 {
 public:
 	Disk (void);

@@ -16,24 +16,24 @@
  */
 
 
-#ifndef _PARTITION_H_
-#define _PARTITION_H_
-
+#include <stdio.h>
 #include <string>
+#include <sstream>
 
-#include "container.h"
+#include "loop.h"
 
-class Partition : public Container
+/**
+ * Loop
+ */
+Loop::Loop (void)
 {
-public:
-	Partition (void);
-	virtual ~Partition();
+	type = "loop";
+}
 
-protected:
-
-private:
-
-};
-
-#endif // _PARTITION_H_
+/**
+ * ~Loop
+ */
+Loop::~Loop()
+{
+}
 

@@ -16,18 +16,18 @@
  */
 
 
-#ifndef _PARTITION_H_
-#define _PARTITION_H_
+#ifndef _BLOCK_H_
+#define _BLOCK_H_
 
 #include <string>
 
 #include "container.h"
 
-class Partition : public Container
+class Block : public Container
 {
 public:
-	Partition (void);
-	virtual ~Partition();
+	Block (void);
+	virtual ~Block();
 
 protected:
 
@@ -35,5 +35,5 @@ private:
 
 };
 
-#endif // _PARTITION_H_
+#endif // _BLOCK_H_
 

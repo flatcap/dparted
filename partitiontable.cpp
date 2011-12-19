@@ -16,24 +16,24 @@
  */
 
 
-#ifndef _PARTITION_H_
-#define _PARTITION_H_
-
+#include <stdio.h>
 #include <string>
 
-#include "container.h"
+#include "partitiontable.h"
 
-class Partition : public Container
+/**
+ * PartitionTable
+ */
+PartitionTable::PartitionTable (void)
 {
-public:
-	Partition (void);
-	virtual ~Partition();
+	type = "partitiontable";
+}
 
-protected:
+/**
+ * ~PartitionTable
+ */
+PartitionTable::~PartitionTable()
+{
+}
 
-private:
-
-};
-
-#endif // _PARTITION_H_
 

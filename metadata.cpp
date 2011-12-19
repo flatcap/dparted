@@ -50,7 +50,7 @@ std::string Metadata::dump_dot (void)
 
 	// no specfics for now
 
-	output << Container::dump_dot();
+	output << Partition::dump_dot();
 
 	output << dump_table_footer();
 

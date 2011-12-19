@@ -78,11 +78,16 @@ digraph classes {
 				<tr><td align="left">vector&lt;Segment*&gt;</td><td align="left">segments</td></tr>
 			</table>>];
 
-	Disk		-> Container;
+	Block		-> Container;
+	Disk		-> Block;
+	Loop		-> Block;
 	Extended	-> Partition;
 	Filesystem	-> Container;
-	Metadata	-> Container;
-	Msdos		-> Container;
+	Metadata	-> Partition;
+	DataPartition	-> Partition;
+	PartitionTable  -> Container;
+	Msdos		-> PartitionTable;
+	Gpt		-> PartitionTable;
 	Partition	-> Container;
 	Segment		-> Container;
 	VolumeGroup	-> Whole;

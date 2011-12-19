@@ -21,9 +21,9 @@
 
 #include <string>
 
-#include "container.h"
+#include "partitiontable.h"
 
-class Msdos : public Container
+class Msdos : public PartitionTable
 {
 public:
 	Msdos (void);

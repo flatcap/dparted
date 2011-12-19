@@ -70,7 +70,7 @@ void Disk::dump (int indent /* = 0 */)
 	//iprintf (indent+8, "Host:                 %d\n",         host);
 	//iprintf (indent+8, "DID:                  %d\n",         did);
 
-	Container::dump (indent);
+	Block::dump (indent);
 }
 
 /**
@@ -87,7 +87,7 @@ void Disk::dump_csv (void)
 		bytes_size,
 		bytes_used,
 		bytes_size - bytes_used);
-	Container::dump_csv();
+	Block::dump_csv();
 }
 
 /**
@@ -99,7 +99,7 @@ std::string Disk::dump_dot (void)
 
 	output << dump_table_header ("Disk", "red");
 
-	output << Container::dump_dot();
+	output << Block::dump_dot();
 
 	output << dump_row ("hw_cylinders",   hw_cylinders);
 	output << dump_row ("hw_heads",       hw_heads);
@@ -164,7 +164,7 @@ Container * Disk::find_device (const std::string &dev)
 	// iterate through my children
 	if (device.compare (0, dev_len, dev, 0, dev_len) == 0) {
 		//printf ("similar\n");
-		return Container::find_device (dev);
+		return Block::find_device (dev);
 	}
 
 	return NULL;

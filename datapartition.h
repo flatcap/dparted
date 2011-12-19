@@ -16,24 +16,29 @@
  */
 
 
-#ifndef _PARTITION_H_
-#define _PARTITION_H_
+#ifndef _DATAPARTITION_H_
+#define _DATAPARTITION_H_
 
 #include <string>
 
-#include "container.h"
+#include "partition.h"
 
-class Partition : public Container
+class DataPartition : public Partition
 {
 public:
-	Partition (void);
-	virtual ~Partition();
+	DataPartition (void);
+	virtual ~DataPartition();
 
+	virtual void dump (int indent = 0);
+	virtual void dump_csv (void);
+	virtual std::string dump_dot (void);
+
+	int num;
 protected:
 
 private:
 
 };
 
-#endif // _PARTITION_H_
+#endif // _DATAPARTITION_H_
 

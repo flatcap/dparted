@@ -16,18 +16,18 @@
  */
 
 
-#ifndef _PARTITION_H_
-#define _PARTITION_H_
+#ifndef _LOOP_H_
+#define _LOOP_H_
 
 #include <string>
 
-#include "container.h"
+#include "block.h"
 
-class Partition : public Container
+class Loop : public Block
 {
 public:
-	Partition (void);
-	virtual ~Partition();
+	Loop (void);
+	virtual ~Loop();
 
 protected:
 
@@ -35,5 +35,5 @@ private:
 
 };
 
-#endif // _PARTITION_H_
+#endif // _LOOP_H_
 

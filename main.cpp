@@ -25,9 +25,11 @@
 #include <parted/parted.h>
 
 #include "container.h"
+#include "datapartition.h"
 #include "disk.h"
 #include "extended.h"
 #include "filesystem.h"
+#include "loop.h"
 #include "metadata.h"
 #include "msdos.h"
 #include "partition.h"
@@ -73,7 +75,7 @@ unsigned int disk_get_list (Container &disks)
 	PedDisk *disk = NULL;
 	PedDiskType *type = NULL;
 	PedPartition *part = NULL;
-	Partition *extended = NULL;
+	Extended *extended = NULL;
 	int reserved = 1;
 	int i;
 
@@ -167,13 +169,13 @@ unsigned int disk_get_list (Container &disks)
 				} else if (part->type & PED_PARTITION_EXTENDED) {
 					p = new Extended;
 				} else {
-					p = new Partition;
+					p = new DataPartition;
 				}
 
 				//p->parent = m;
 				//std::cout << get_partition_type (part->type) << std::endl;
 				if (part->type == PED_PARTITION_EXTENDED) {
-					extended = static_cast<Partition*>(p);
+					extended = static_cast<Extended*>(p);
 					extended->type = "extended";
 				}
 				p->name = get_partition_type (part->type);

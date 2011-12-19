@@ -20,32 +20,70 @@
 #include <string>
 #include <sstream>
 
-#include "extended.h"
+#include "datapartition.h"
 #include "utils.h"
 
 /**
- * Extended
+ * DataPartition
  */
-Extended::Extended (void)
+DataPartition::DataPartition (void) :
+	num (0)
 {
-	type = "extended";
+	type = "datapartition";
 }
 
 /**
- * ~Extended
+ * ~DataPartition
  */
-Extended::~Extended()
+DataPartition::~DataPartition()
 {
+}
+
+
+/**
+ * dump
+ */
+void DataPartition::dump (int indent /* = 0 */)
+{
+	if (num < 0)
+		return;
+
+	std::string size = get_size (bytes_size);
+
+	iprintf (indent,   "%s%d (%s)\n", device.c_str()+5, num, size.c_str());
+	//iprintf (indent+8, "Type:   %s\n",   type.c_str());
+
+	//iprintf (indent+8, "Number: %d\n",   num);
+	//iprintf (indent+8, "Length: %s\n",   size.c_str());
+
+	Partition::dump (indent);
+}
+
+/**
+ * dump_csv
+ */
+void DataPartition::dump_csv (void)
+{
+	printf ("%s,%s,%s,%ld,%s,%lld,%lld,%lld\n",
+		"DataPartition",
+		device.c_str(),
+		name.c_str(),
+		block_size,
+		uuid.c_str(),
+		bytes_size,
+		bytes_used,
+		bytes_size - bytes_used);
+	Partition::dump_csv();
 }
 
 /**
  * dump_dot
  */
-std::string Extended::dump_dot (void)
+std::string DataPartition::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Extended", "#d0dd80");
+	output << dump_table_header ("DataPartition", "green");
 
 	output << Partition::dump_dot();
 
