@@ -1,8 +1,8 @@
 # executables
-/l
 /main
-/p
 
 # useful stuff
 /watcher
 
+# generated docs
+/html

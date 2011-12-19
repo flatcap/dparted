@@ -1,8 +1,12 @@
+# executables
+cast
 compare
 format
 fs
+inherit
 loop
 lvm
 map
 parted
 spawn
+template
