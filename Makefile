@@ -1,4 +1,5 @@
 CC	= g++
+RM	= rm -fr
 
 SRC	= block.cpp container.cpp datapartition.cpp disk.cpp extended.cpp filesystem.cpp gpt.cpp loop.cpp main.cpp metadata.cpp msdos.cpp partition.cpp partitiontable.cpp segment.cpp utils.cpp volume.cpp volumegroup.cpp whole.cpp
 HDR	= block.h container.h datapartition.h disk.h extended.h filesystem.h gpt.h loop.h metadata.h msdos.h partition.h partitiontable.h segment.h stringnum.h utils.h volumegroup.h volume.h whole.h
@@ -18,6 +19,9 @@ all:	$(OUT)
 
 clean:
 	$(RM) $(OUT) $(OBJ) tags
+
+distclean: clean
+	$(RM) html
 
 main: $(OBJ) tags
 	$(CC) -o $@ $(OBJ) $(LDFLAGS)
