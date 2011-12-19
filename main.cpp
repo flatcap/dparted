@@ -29,6 +29,7 @@
 #include "disk.h"
 #include "extended.h"
 #include "filesystem.h"
+#include "gpt.h"
 #include "loop.h"
 #include "metadata.h"
 #include "msdos.h"

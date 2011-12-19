@@ -28,7 +28,7 @@
  */
 Msdos::Msdos (void)
 {
-	type = "part.table";
+	type = "msdos";
 }
 
 /**
