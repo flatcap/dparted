@@ -124,16 +124,25 @@ unsigned int disk_get_list (Container &disks)
 
 		type = ped_disk_probe (dev);
 		if (type) {
-			Msdos *m = new Msdos;
+			PartitionTable *table = NULL;
 
-			//m->parent = d;
-			m->bytes_size = d->bytes_size;
-			//m->bytes_used = d->bytes_size;
-			//m->device = d->device;
-			m->device_offset = 0;
-			m->name = "msdos";
+			if (strcmp (type->name, "msdos") == 0) {
+				table = new Msdos;
+			} else if (strcmp (type->name, "gpt") == 0) {
+				table = new Gpt;
+			} else {
+				//XXX error
+				continue;
+			}
 
-			d->add_child (m);
+			//table->parent = d;
+			table->bytes_size = d->bytes_size;
+			//table->bytes_used = d->bytes_size;
+			//table->device = d->device;
+			table->device_offset = 0;
+			table->name = type->name;
+
+			d->add_child (table);
 
 			//printf ("name = %s\n", type->name);			// msdos
 			//printf ("features = %d\n", type->features);
@@ -173,7 +182,7 @@ unsigned int disk_get_list (Container &disks)
 					p = new DataPartition;
 				}
 
-				//p->parent = m;
+				//p->parent = table;
 				//std::cout << get_partition_type (part->type) << std::endl;
 				if (part->type == PED_PARTITION_EXTENDED) {
 					extended = static_cast<Extended*>(p);
@@ -198,7 +207,7 @@ unsigned int disk_get_list (Container &disks)
 						if (part->type & PED_PARTITION_LOGICAL) {
 							extended->bytes_used -= p->bytes_size;
 						} else {
-							m->bytes_used -= p->bytes_size;
+							table->bytes_used -= p->bytes_size;
 						}
 					} else {
 						p->type = "metadata";
@@ -235,7 +244,7 @@ unsigned int disk_get_list (Container &disks)
 						p->device = d->device;
 					}
 				} else {
-					m->add_child (p);
+					table->add_child (p);
 				}
 			}
 			ped_disk_destroy (disk);

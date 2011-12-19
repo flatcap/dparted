@@ -17,6 +17,7 @@
 
 
 #include <stdio.h>
+#include <sstream>
 
 #include "gpt.h"
 
@@ -35,3 +36,22 @@ Gpt::~Gpt()
 {
 }
 
+
+/**
+ * dump_dot
+ */
+std::string Gpt::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << dump_table_header ("Gpt", "yellow");
+
+	// no specfics for now
+
+	output << PartitionTable::dump_dot();
+
+	output << dump_table_footer();
+	output << dump_dot_children();
+
+	return output.str();
+}

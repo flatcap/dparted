@@ -27,6 +27,8 @@ public:
 	Gpt (void);
 	virtual ~Gpt();
 
+	virtual std::string dump_dot (void);
+
 protected:
 
 private:
