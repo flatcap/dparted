@@ -1,0 +1,217 @@
+/dev/bigvol/bob -> ../dm-20
+
+/dev/tmpvol/data -> ../dm-15
+/dev/tmpvol/home -> ../dm-9
+/dev/tmpvol/mirror2 -> ../dm-14
+/dev/tmpvol/mirror3 -> ../dm-7
+/dev/tmpvol/root -> ../dm-1
+/dev/tmpvol/stripe2 -> ../dm-0
+/dev/tmpvol/stripe3 -> ../dm-8
+/dev/tmpvol/tv -> ../dm-10
+
+/dev/disk/by-label/backup -> ../../sdc3
+/dev/disk/by-label/bigvol_bob -> ../../dm-20
+/dev/disk/by-label/home -> ../../sdd1
+/dev/disk/by-label/md_raid -> ../../md0
+/dev/disk/by-label/tera -> ../../sdb1
+/dev/disk/by-label/tmpvol_data -> ../../dm-15
+/dev/disk/by-label/tmpvol_home -> ../../dm-9
+/dev/disk/by-label/tmpvol_mirror2 -> ../../dm-14
+/dev/disk/by-label/tmpvol_mirror3 -> ../../dm-7
+/dev/disk/by-label/tmpvol_root -> ../../dm-1
+/dev/disk/by-label/tmpvol_stripe2 -> ../../dm-0
+/dev/disk/by-label/tmpvol_stripe3 -> ../../dm-8
+/dev/disk/by-label/tmpvol_tv -> ../../dm-10
+/dev/disk/by-label/vm -> ../../sda2
+/dev/disk/by-label/xray -> ../../sda5
+/dev/disk/by-label/yankee -> ../../sda6
+/dev/disk/by-label/zulu -> ../../sda7
+
+/dev/disk/by-uuid/1a4cd44e-0cb2-4d94-a9e8-5e84775e920d -> ../../dm-1
+/dev/disk/by-uuid/1B060975087F9ED0 -> ../../dm-8
+/dev/disk/by-uuid/20776686-377b-47ed-9f47-ee749116c21c -> ../../sda5
+/dev/disk/by-uuid/39c9e084-b0da-4214-aa0a-86c952a3855a -> ../../dm-14
+/dev/disk/by-uuid/3F39F8EE1E7B882D -> ../../dm-7
+/dev/disk/by-uuid/66f32d93-a8a0-4898-9f1a-107086bbf61b -> ../../sda6
+/dev/disk/by-uuid/74886ac9-a970-4da0-88cf-13e9189c5b26 -> ../../sdc3
+/dev/disk/by-uuid/7f6bbddb-7c0f-4ea6-9f6e-dd243ada4644 -> ../../sdd1
+/dev/disk/by-uuid/aacc2387-8330-424d-8262-c24e1e3626a0 -> ../../dm-15
+/dev/disk/by-uuid/b0ab0715-0493-4608-9ae1-9bd4d82032b9 -> ../../sdb1
+/dev/disk/by-uuid/b38a8fad-b401-40fe-b323-851e04cb2890 -> ../../md0
+/dev/disk/by-uuid/c153d407-27d5-479c-a8d6-513bb45265e9 -> ../../dm-0
+/dev/disk/by-uuid/e0ae8b51-d320-4bac-acbe-c886bbc0ecb1 -> ../../dm-20
+/dev/disk/by-uuid/e6194957-d627-4f78-a7b5-4c02669f1c18 -> ../../sda2
+/dev/disk/by-uuid/e69b562c-eb25-4b79-8fb4-1dfb8cb6254a -> ../../dm-9
+/dev/disk/by-uuid/e6cc0d0c-ba4a-4098-863b-9f226d69e74a -> ../../sda1
+/dev/disk/by-uuid/f56dc652-b7af-4284-ab68-24132310233d -> ../../sdc1
+/dev/disk/by-uuid/fc3e6a8b-3f2c-4114-b641-cc74d1e68e66 -> ../../sda7
+
+/dev/disk/by-path/pci-0000:00:12.0-scsi-0:0:0:0-part1 -> ../../sda1
+/dev/disk/by-path/pci-0000:00:12.0-scsi-0:0:0:0-part2 -> ../../sda2
+/dev/disk/by-path/pci-0000:00:12.0-scsi-0:0:0:0-part3 -> ../../sda3
+/dev/disk/by-path/pci-0000:00:12.0-scsi-0:0:0:0-part5 -> ../../sda5
+/dev/disk/by-path/pci-0000:00:12.0-scsi-0:0:0:0-part6 -> ../../sda6
+/dev/disk/by-path/pci-0000:00:12.0-scsi-0:0:0:0-part7 -> ../../sda7
+/dev/disk/by-path/pci-0000:00:12.0-scsi-0:0:0:0 -> ../../sda
+/dev/disk/by-path/pci-0000:00:12.0-scsi-2:0:0:0-part1 -> ../../sdb1
+/dev/disk/by-path/pci-0000:00:12.0-scsi-2:0:0:0 -> ../../sdb
+/dev/disk/by-path/pci-0000:00:12.0-scsi-3:0:0:0 -> ../../sr0
+/dev/disk/by-path/pci-0000:00:14.1-scsi-0:0:0:0-part1 -> ../../sdc1
+/dev/disk/by-path/pci-0000:00:14.1-scsi-0:0:0:0-part3 -> ../../sdc3
+/dev/disk/by-path/pci-0000:00:14.1-scsi-0:0:0:0 -> ../../sdc
+/dev/disk/by-path/pci-0000:00:14.1-scsi-0:0:1:0-part1 -> ../../sdd1
+/dev/disk/by-path/pci-0000:00:14.1-scsi-0:0:1:0 -> ../../sdd
+
+/dev/disk/by-id/ata-ATAPI_DVD_A_DH16A6S -> ../../sr0
+
+/dev/disk/by-id/ata-Maxtor_6B200P0_B40JZ6MH-part1 -> ../../sdd1
+/dev/disk/by-id/ata-Maxtor_6B200P0_B40JZ6MH -> ../../sdd
+
+/dev/disk/by-id/ata-MAXTOR_STM3320820A_9QF49N9A-part1 -> ../../sdc1
+/dev/disk/by-id/ata-MAXTOR_STM3320820A_9QF49N9A-part3 -> ../../sdc3
+/dev/disk/by-id/ata-MAXTOR_STM3320820A_9QF49N9A -> ../../sdc
+
+/dev/disk/by-id/ata-SAMSUNG_HD103SJ_S246J9AB707393-part1 -> ../../sdb1
+/dev/disk/by-id/ata-SAMSUNG_HD103SJ_S246J9AB707393 -> ../../sdb
+
+/dev/disk/by-id/ata-WDC_WD5000AAVS-00ZTB0_WD-WCASU4948693-part1 -> ../../sda1
+/dev/disk/by-id/ata-WDC_WD5000AAVS-00ZTB0_WD-WCASU4948693-part2 -> ../../sda2
+/dev/disk/by-id/ata-WDC_WD5000AAVS-00ZTB0_WD-WCASU4948693-part3 -> ../../sda3
+/dev/disk/by-id/ata-WDC_WD5000AAVS-00ZTB0_WD-WCASU4948693-part5 -> ../../sda5
+/dev/disk/by-id/ata-WDC_WD5000AAVS-00ZTB0_WD-WCASU4948693-part6 -> ../../sda6
+/dev/disk/by-id/ata-WDC_WD5000AAVS-00ZTB0_WD-WCASU4948693-part7 -> ../../sda7
+/dev/disk/by-id/ata-WDC_WD5000AAVS-00ZTB0_WD-WCASU4948693 -> ../../sda
+
+/dev/disk/by-id/dm-name-bigvol-bob -> ../../dm-20
+
+/dev/disk/by-id/dm-name-tmpvol-data -> ../../dm-15
+/dev/disk/by-id/dm-name-tmpvol-home -> ../../dm-9
+/dev/disk/by-id/dm-name-tmpvol-mirror2 -> ../../dm-14
+/dev/disk/by-id/dm-name-tmpvol-mirror3 -> ../../dm-7
+/dev/disk/by-id/dm-name-tmpvol-root -> ../../dm-1
+/dev/disk/by-id/dm-name-tmpvol-stripe2 -> ../../dm-0
+/dev/disk/by-id/dm-name-tmpvol-stripe3 -> ../../dm-8
+/dev/disk/by-id/dm-name-tmpvol-tv -> ../../dm-10
+
+/dev/disk/by-id/dm-uuid-LVM-clQ6gAjO96NjKwmbm7P6cwdovJT4skLG5rbIpiXaFsMnMaLwG3yWkN0faP1DHcKs -> ../../dm-7
+/dev/disk/by-id/dm-uuid-LVM-clQ6gAjO96NjKwmbm7P6cwdovJT4skLGDPWurqH2H6f5TGBKTejgoADpZFfPptnM -> ../../dm-10
+/dev/disk/by-id/dm-uuid-LVM-clQ6gAjO96NjKwmbm7P6cwdovJT4skLGeG0z2NLGINB8jXcOBxqWaH0xGOwemDS2 -> ../../dm-0
+/dev/disk/by-id/dm-uuid-LVM-clQ6gAjO96NjKwmbm7P6cwdovJT4skLGEiLPCLu9f9VYlaczYJxDVccd3xU9Md9E -> ../../dm-15
+/dev/disk/by-id/dm-uuid-LVM-clQ6gAjO96NjKwmbm7P6cwdovJT4skLGLU4OUBgandgcfvuQWGMh0XQ4C9cP6N6z -> ../../dm-8
+/dev/disk/by-id/dm-uuid-LVM-clQ6gAjO96NjKwmbm7P6cwdovJT4skLGRRdqQN3q5Nbj4pKtdoCtGR6sbSoHZteJ -> ../../dm-1
+/dev/disk/by-id/dm-uuid-LVM-clQ6gAjO96NjKwmbm7P6cwdovJT4skLGXD7DgNFpoqO0tO7jzChJuOzYDjfocjs5 -> ../../dm-9
+/dev/disk/by-id/dm-uuid-LVM-clQ6gAjO96NjKwmbm7P6cwdovJT4skLGycT8iIKzAHAiYpeXV87oZOfdGuDPcVSd -> ../../dm-14
+
+/dev/disk/by-id/dm-uuid-LVM-zOAgetgkxg2kKPlW9bHxNkHh2SxJUlvZJ1VI20w55Y4BFU68tcK9T8I9o1A8sAJg -> ../../dm-20
+
+/dev/disk/by-id/md-name-rich.flatcap.org:0 -> ../../md0
+
+/dev/disk/by-id/md-uuid-639feddc:d63117ee:9d31679f:2c2307b6 -> ../../md0
+
+/dev/disk/by-id/scsi-SATA_Maxtor_6B200P0_B40JZ6MH-part1 -> ../../sdd1
+/dev/disk/by-id/scsi-SATA_Maxtor_6B200P0_B40JZ6MH -> ../../sdd
+
+/dev/disk/by-id/scsi-SATA_MAXTOR_STM33208_9QF49N9A-part1 -> ../../sdc1
+/dev/disk/by-id/scsi-SATA_MAXTOR_STM33208_9QF49N9A-part3 -> ../../sdc3
+/dev/disk/by-id/scsi-SATA_MAXTOR_STM33208_9QF49N9A -> ../../sdc
+
+/dev/disk/by-id/scsi-SATA_SAMSUNG_HD103SJS246J9AB707393-part1 -> ../../sdb1
+/dev/disk/by-id/scsi-SATA_SAMSUNG_HD103SJS246J9AB707393 -> ../../sdb
+
+/dev/disk/by-id/scsi-SATA_WDC_WD5000AAVS-_WD-WCASU4948693-part1 -> ../../sda1
+/dev/disk/by-id/scsi-SATA_WDC_WD5000AAVS-_WD-WCASU4948693-part2 -> ../../sda2
+/dev/disk/by-id/scsi-SATA_WDC_WD5000AAVS-_WD-WCASU4948693-part3 -> ../../sda3
+/dev/disk/by-id/scsi-SATA_WDC_WD5000AAVS-_WD-WCASU4948693-part5 -> ../../sda5
+/dev/disk/by-id/scsi-SATA_WDC_WD5000AAVS-_WD-WCASU4948693-part6 -> ../../sda6
+/dev/disk/by-id/scsi-SATA_WDC_WD5000AAVS-_WD-WCASU4948693-part7 -> ../../sda7
+/dev/disk/by-id/scsi-SATA_WDC_WD5000AAVS-_WD-WCASU4948693 -> ../../sda
+
+/dev/disk/by-id/wwn-0x50014ee1abbf198d-part1 -> ../../sda1
+/dev/disk/by-id/wwn-0x50014ee1abbf198d-part2 -> ../../sda2
+/dev/disk/by-id/wwn-0x50014ee1abbf198d-part3 -> ../../sda3
+/dev/disk/by-id/wwn-0x50014ee1abbf198d-part5 -> ../../sda5
+/dev/disk/by-id/wwn-0x50014ee1abbf198d-part6 -> ../../sda6
+/dev/disk/by-id/wwn-0x50014ee1abbf198d-part7 -> ../../sda7
+/dev/disk/by-id/wwn-0x50014ee1abbf198d -> ../../sda
+
+/dev/disk/by-id/wwn-0x50024e9205b66e6d-part1 -> ../../sdb1
+/dev/disk/by-id/wwn-0x50024e9205b66e6d -> ../../sdb
+
+/dev/block/7:0 -> ../loop0
+/dev/block/7:10 -> ../loop10
+/dev/block/7:11 -> ../loop11
+/dev/block/7:12 -> ../loop12
+/dev/block/7:13 -> ../loop13
+/dev/block/7:14 -> ../loop14
+/dev/block/7:15 -> ../loop15
+/dev/block/7:16 -> ../loop16
+/dev/block/7:1 -> ../loop1
+/dev/block/7:2 -> ../loop2
+/dev/block/7:3 -> ../loop3
+/dev/block/7:4 -> ../loop4
+/dev/block/7:5 -> ../loop5
+/dev/block/7:6 -> ../loop6
+/dev/block/7:7 -> ../loop7
+/dev/block/7:8 -> ../loop8
+/dev/block/7:9 -> ../loop9
+/dev/block/8:0 -> ../sda
+/dev/block/8:16 -> ../sdb
+/dev/block/8:17 -> ../sdb1
+/dev/block/8:1 -> ../sda1
+/dev/block/8:2 -> ../sda2
+/dev/block/8:32 -> ../sdc
+/dev/block/8:33 -> ../sdc1
+/dev/block/8:35 -> ../sdc3
+/dev/block/8:3 -> ../sda3
+/dev/block/8:48 -> ../sdd
+/dev/block/8:49 -> ../sdd1
+/dev/block/8:5 -> ../sda5
+/dev/block/8:6 -> ../sda6
+/dev/block/8:7 -> ../sda7
+/dev/block/9:0 -> ../md0
+/dev/block/11:0 -> ../sr0
+/dev/block/253:0 -> ../dm-0
+/dev/block/253:10 -> ../dm-10
+/dev/block/253:11 -> ../dm-11
+/dev/block/253:12 -> ../dm-12
+/dev/block/253:13 -> ../dm-13
+/dev/block/253:14 -> ../dm-14
+/dev/block/253:15 -> ../dm-15
+/dev/block/253:16 -> ../dm-16
+/dev/block/253:17 -> ../dm-17
+/dev/block/253:18 -> ../dm-18
+/dev/block/253:19 -> ../dm-19
+/dev/block/253:1 -> ../dm-1
+/dev/block/253:20 -> ../dm-20
+/dev/block/253:2 -> ../dm-2
+/dev/block/253:3 -> ../dm-3
+/dev/block/253:4 -> ../dm-4
+/dev/block/253:5 -> ../dm-5
+/dev/block/253:6 -> ../dm-6
+/dev/block/253:7 -> ../dm-7
+/dev/block/253:8 -> ../dm-8
+/dev/block/253:9 -> ../dm-9
+
+/dev/mapper/bigvol-bob -> ../dm-20
+/dev/mapper/bigvol-bob_mimage_0 -> ../dm-16
+/dev/mapper/bigvol-bob_mimage_1 -> ../dm-17
+/dev/mapper/bigvol-bob_mimage_2 -> ../dm-18
+/dev/mapper/bigvol-bob_mimage_3 -> ../dm-19
+/dev/mapper/bigvol-bob_mlog -> ../dm-2
+
+/dev/mapper/tmpvol-data -> ../dm-15
+/dev/mapper/tmpvol-home -> ../dm-9
+/dev/mapper/tmpvol-mirror2 -> ../dm-14
+/dev/mapper/tmpvol-mirror2_mimage_0 -> ../dm-12
+/dev/mapper/tmpvol-mirror2_mimage_1 -> ../dm-13
+/dev/mapper/tmpvol-mirror2_mlog -> ../dm-11
+/dev/mapper/tmpvol-mirror3 -> ../dm-7
+/dev/mapper/tmpvol-mirror3_mimage_0 -> ../dm-4
+/dev/mapper/tmpvol-mirror3_mimage_1 -> ../dm-5
+/dev/mapper/tmpvol-mirror3_mimage_2 -> ../dm-6
+/dev/mapper/tmpvol-mirror3_mlog -> ../dm-3
+/dev/mapper/tmpvol-root -> ../dm-1
+/dev/mapper/tmpvol-stripe2 -> ../dm-0
+/dev/mapper/tmpvol-stripe3 -> ../dm-8
+/dev/mapper/tmpvol-tv -> ../dm-10
+
