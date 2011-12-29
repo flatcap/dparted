@@ -32,9 +32,11 @@
 #include "gpt.h"
 #include "loop.h"
 #include "metadata.h"
+#include "mirror.h"
 #include "msdos.h"
 #include "partition.h"
 #include "segment.h"
+#include "stripe.h"
 #include "volumegroup.h"
 #include "volume.h"
 
