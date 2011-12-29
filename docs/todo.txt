@@ -355,3 +355,16 @@ gfx: yellow bar for %age in use; use a colour for %age completion of mirror gene
 
 find out if partition/filesystem is mounted
 
+take a vm image and mount / manipulate the partitions within
+after analysis, list the commands needed for the user to do the same
+
+bool container::verify()
+
+change
+	int function (in_param, &out_param);
+to the less efficient, but clearer
+	output = function (in_param);
+
+stripe size -> block_size
+if creating a filesystem, take block_size into account
+

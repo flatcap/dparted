@@ -1,0 +1,37 @@
+LV                 Attr   LV UUID LSize     Path                         KMaj KMin Type    #Str Stripe PE Ranges
+data               -wi-a- X1tsZN- 205520896 /dev/shuffle/data            253  21   linear     1      0 /dev/loop3:0-12
+data               -wi-a- X1tsZN- 205520896 /dev/shuffle/data            253  21   linear     1      0 /dev/loop3:26-38
+data               -wi-a- X1tsZN- 205520896 /dev/shuffle/data            253  21   linear     1      0 /dev/loop3:13-25
+data               -wi-a- X1tsZN- 205520896 /dev/shuffle/data            253  21   linear     1      0 /dev/loop3:39-48
+
+------------------------------------------------------------------------------------------------------------------------
+
+LV                 Attr   LV UUID LSize     Path                         KMaj KMin Type    #Str Stripe PE Ranges
+[mirror2_mlog]     lwi-ao wi2WFX-   4194304 /dev/tmpvol/mirror2_mlog     253  11   linear     1      0 /dev/loop1:213-213
+[mirror2_mimage_0] iwi-ao A1VZr9- 209715200 /dev/tmpvol/mirror2_mimage_0 253  12   linear     1      0 /dev/loop0:188-237
+[mirror2_mimage_1] iwi-ao B5OwBj- 209715200 /dev/tmpvol/mirror2_mimage_1 253  13   linear     1      0 /dev/loop2:176-225
+mirror2            mwi-a- ycT8iI- 209715200 /dev/tmpvol/mirror2          253  14   mirror     2      0 mirror2_mimage_0:0-49
+                                                                                                       mirror2_mimage_1:0-49
+
+------------------------------------------------------------------------------------------------------------------------
+
+LV                 Attr   LV UUID LSize     Path                         KMaj KMin Type    #Str Stripe PE Ranges
+[bob_mlog]         lwi-ao 2t23vd-   4194304 /dev/bigvol/bob_mlog         253  2    linear     1      0 /dev/loop15:40-40
+
+[bob_mimage_0]     iwi-ao e4GIQw- 335544320 /dev/bigvol/bob_mimage_0     253  16   striped    2  65536 /dev/loop8:0-39
+                                                                                                       /dev/loop9:0-39
+
+[bob_mimage_1]     iwi-ao XQfIHh- 335544320 /dev/bigvol/bob_mimage_1     253  17   striped    2  65536 /dev/loop10:0-39
+                                                                                                       /dev/loop11:0-39
+
+[bob_mimage_2]     iwi-ao DGOxFo- 335544320 /dev/bigvol/bob_mimage_2     253  18   striped    2  65536 /dev/loop12:0-39
+                                                                                                       /dev/loop13:0-39
+
+[bob_mimage_3]     iwi-ao zffxTm- 335544320 /dev/bigvol/bob_mimage_3     253  19   striped    2  65536 /dev/loop14:0-39
+                                                                                                       /dev/loop15:0-39
+
+bob                mwi-a- J1VI20- 335544320 /dev/bigvol/bob              253  20   mirror     4      0 bob_mimage_0:0-79
+                                                                                                       bob_mimage_1:0-79
+                                                                                                       bob_mimage_2:0-79
+                                                                                                       bob_mimage_3:0-79
+
