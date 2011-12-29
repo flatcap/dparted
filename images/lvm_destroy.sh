@@ -3,6 +3,7 @@
 IMAGE0="disk0"
 IMAGE1="disk1"
 IMAGE2="disk2"
+VOLUME="tmpvol"
 
 lvremove -f /dev/tmpvol/*
 vgremove -f tmpvol

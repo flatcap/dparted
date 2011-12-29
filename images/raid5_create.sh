@@ -1,17 +1,6 @@
 #!/bin/bash
 
-function populate_ext4()
-{
-	local dev="$1"
-	local size="$2"
-	local dir="$(mktemp -d)"
-
-	mount $dev $dir
-	fallocate --length $size $dir/filler
-	umount $dir
-	rmdir $dir
-}
-
+source common.sh
 
 fallocate -l 1G disk5
 fallocate -l 1G disk6
@@ -23,7 +12,7 @@ losetup /dev/loop7 disk7
 
 mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/loop{5,6,7}
 
-chown flatcap.flatcap disk{5,6,7}
+rm -f disk{5,6,7}
 
 mke2fs -t ext4 -L md_raid /dev/md0
 

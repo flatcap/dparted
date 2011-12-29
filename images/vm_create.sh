@@ -2,18 +2,7 @@
 
 IMAGE4="disk4"
 
-function populate_ext4()
-{
-	local dev="$1"
-	local size="$2"
-	local dir="$(mktemp -d)"
-
-	mount $dev $dir
-	fallocate --length $size $dir/filler
-	umount $dir
-	rmdir $dir
-}
-
+source common.sh
 
 rm -f $IMAGE4
 fallocate --length 1G $IMAGE4
@@ -72,5 +61,5 @@ losetup -d /dev/loop4
 
 losetup /dev/loop4 $IMAGE4
 
-chown flatcap.flatcap $IMAGE4
+rm -f $IMAGE4
 
