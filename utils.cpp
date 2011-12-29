@@ -284,7 +284,7 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 }
 
 /**
- * parse_tagged_output
+ * parse_tagged_line
  */
 unsigned int parse_tagged_line (const std::string &line, std::map<std::string,StringNum> &tags)
 {
@@ -305,7 +305,7 @@ unsigned int parse_tagged_line (const std::string &line, std::map<std::string,St
 
 #if 0
 	printf ("map:\n");
-	std::map<std::string,std::string>::iterator it2;
+	std::map<std::string,StringNum>::iterator it2;
 	for (it2 = tags.begin(); it2 != tags.end(); it2++) {
 
 		std::string name  = (*it2).first;
