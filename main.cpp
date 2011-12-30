@@ -295,7 +295,7 @@ unsigned int logicals_get_list (Container &disks)
 		vg->parent = &disks;
 		vg->device = "/dev/dm-0";
 
-		vg->name		= tags["LVM2_VG_NAME"];		//printf ("name = %s\n", vg->name.c_str(;
+		vg->name		= tags["LVM2_VG_NAME"];
 		vg->pv_count		= tags["LVM2_PV_COUNT"];
 		vg->lv_count		= tags["LVM2_LV_COUNT"];
 		vg->vg_attr		= tags["LVM2_VG_ATTR"];
@@ -502,7 +502,7 @@ unsigned int logicals_get_list (Container &disks)
 	}
 #endif
 
-	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges";
+	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,vg_name,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices";
 	execute_command (command, output, error);
 	//printf ("%s\n", command.c_str());
 	//printf ("%s\n", output.c_str());
@@ -510,16 +510,23 @@ unsigned int logicals_get_list (Container &disks)
 	lines.clear();
 	explode ("\n", output, lines);
 
-	return 0;
-
 	for (i = 0; i < lines.size(); i++) {
 		tags.clear();
 		parse_tagged_line ((lines[i]), tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];	//printf ("vg_uuid = %s\n", vg_uuid.c_str());
+		std::string vg_name = tags["LVM2_VG_NAME"];	//printf ("vg_name = %s\n", vg_name.c_str());
 		std::string lv_name = tags["LVM2_LV_NAME"];	//printf ("lv_name = %s\n", lv_name.c_str());
 		std::string lv_attr = tags["LVM2_LV_ATTR"];	//printf ("lv_attr = %s\n", lv_attr.c_str());
 		std::string lv_uuid = tags["LVM2_LV_UUID"];	//printf ("lv_uuid = %s\n", lv_uuid.c_str());
+		std::string devices = tags["LVM2_DEVICES"];	//printf ("devices = %s\n", devices.c_str());
+
+		size_t pos = devices.find (',');
+		if (pos != std::string::npos)
+			devices = devices.substr (0, pos);
+
+		printf ("%s:%s:%s\n", vg_name.c_str(), lv_name.c_str(), devices.c_str());
+		continue;
 
 		if ((lv_attr[0] == 'i') || (lv_attr[0] == 'l')) { // mirror (i)mage or (l)og
 			// De-mangle the lv_name
@@ -681,7 +688,7 @@ int main (int argc, char *argv[])
 	disk_get_list (disks);
 	logicals_get_list (disks);
 
-#if 1
+#if 0
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
