@@ -68,12 +68,12 @@ std::string get_partition_type (int type)
 unsigned int disk_get_list (Container &disks)
 {
 	const char *disk_list[] = {
-		//"/dev/sda",
-		//"/dev/sdb", "/dev/sdc", "/dev/sdd",
-		//"/dev/loop0", "/dev/loop1", "/dev/loop2",
-		//"/dev/loop3",
-		//"/dev/loop4",
-		//"/dev/loop5", "/dev/loop6", "/dev/loop7",
+		"/dev/sda",
+		"/dev/sdb", "/dev/sdc", "/dev/sdd",
+		"/dev/loop0", "/dev/loop1", "/dev/loop2",
+		"/dev/loop3",
+		"/dev/loop4",
+		"/dev/loop5", "/dev/loop6", "/dev/loop7",
 		"/dev/loop8", "/dev/loop9", "/dev/loop10", "/dev/loop11", "/dev/loop12", "/dev/loop13", "/dev/loop14", "/dev/loop15",
 		NULL
 	};
@@ -279,7 +279,7 @@ unsigned int logicals_get_list (Container &disks)
 	std::vector<std::string> lines;
 	std::map<std::string,StringNum> tags;
 
-	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno";
+	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno,pv_name";
 	execute_command (command, output, error);
 	//printf ("%s\n", command.c_str());
 	//printf ("%s\n", output.c_str());
@@ -287,37 +287,96 @@ unsigned int logicals_get_list (Container &disks)
 	lines.clear();
 	explode ("\n", output, lines);
 
+	//printf ("Volume Groups\n");
 	for (i = 0; i < lines.size(); i++) {
-		tags.clear();
 		parse_tagged_line ((lines[i]), tags);
 
-		vg = new VolumeGroup;
-		vg->parent = &disks;
-		vg->device = "/dev/dm-0";
+		std::string vg_uuid = tags["LVM2_VG_UUID"];
+		std::string pv_name = tags["LVM2_PV_NAME"];
 
-		vg->name		= tags["LVM2_VG_NAME"];
-		vg->pv_count		= tags["LVM2_PV_COUNT"];
-		vg->lv_count		= tags["LVM2_LV_COUNT"];
-		vg->vg_attr		= tags["LVM2_VG_ATTR"];
-		vg->bytes_size		= tags["LVM2_VG_SIZE"];
-		//vg->vg_free		= tags["LVM2_VG_FREE"];
-		vg->uuid		= tags["LVM2_VG_UUID"];
-		vg->block_size		= tags["LVM2_VG_EXTENT_SIZE"];
-		vg->vg_extent_count	= tags["LVM2_VG_EXTENT_COUNT"];
-		vg->vg_free_count	= tags["LVM2_VG_FREE_COUNT"];
-		vg->vg_seqno		= tags["LVM2_VG_SEQNO"];
+		vg = vg_lookup[vg_uuid];
+		if (vg == NULL) {
+			vg = new VolumeGroup;
+			vg->parent = &disks;
+			vg->device = "/dev/dm-0"; //RAR what?
 
-		disks.add_child (vg);
+			vg->name		= tags["LVM2_VG_NAME"];
+			vg->pv_count		= tags["LVM2_PV_COUNT"];
+			vg->lv_count		= tags["LVM2_LV_COUNT"];
+			vg->vg_attr		= tags["LVM2_VG_ATTR"];
+			vg->bytes_size		= tags["LVM2_VG_SIZE"];
+			//vg->vg_free		= tags["LVM2_VG_FREE"];
+			vg->uuid		= vg_uuid;
+			vg->block_size		= tags["LVM2_VG_EXTENT_SIZE"];
+			vg->vg_extent_count	= tags["LVM2_VG_EXTENT_COUNT"];
+			vg->vg_free_count	= tags["LVM2_VG_FREE_COUNT"];
+			vg->vg_seqno		= tags["LVM2_VG_SEQNO"];
 
-		vg_lookup[vg->uuid] = vg;
-	}
+			disks.add_child (vg);
 
+			vg_lookup[vg->uuid] = vg;
+		}
+
+		std::string seg_id = vg->name + ":" + pv_name;
+
+		//printf ("\t%s\n", seg_id.c_str());
+
+		Container *cont = disks.find_device (pv_name);
+		//printf ("cont for %s = %p\n", pv_name.c_str(), cont);
+
+		Segment *vg_seg = new Segment;
+		vg_seg->bytes_size = cont->bytes_size;
+		vg_seg->type = "vg segment";
+		vg_seg->block_size = vg->block_size;
+		vg_seg->uuid = vg_uuid;
+		vg_seg->name = vg->name;
+
+		cont->add_child (vg_seg);
+
+		//printf ("lookup uuid %s\n", vg_uuid.c_str());
+		vg->add_segment (vg_seg);
+
+		//printf ("whole = %p\n", vg_seg->whole);
+
+		//printf ("pv_name = %s\n", pv_name.c_str());
+		seg_lookup[pv_name] = vg_seg;
 #if 0
+		Metadata *reserved1 = new Metadata;
+		// get size from LVM2_PE_START
+		reserved1->bytes_size = 1048576;
+		reserved1->bytes_used = 1048576;
+		reserved1->device_offset = 0;
+		reserved1->type = "metadata";
+		vg_seg->add_child (reserved1);
+#endif
+		//RAR need to calculate this from vg_seg size and vg block size
+#if 0
+		Metadata *reserved2 = new Metadata;
+		// get size from LVM2_PV_PE_ALLOC_COUNT and LVM2_PE_START
+		reserved2->bytes_size = 3145728;
+		reserved2->bytes_used = 3145728;
+		reserved2->device_offset = cont->bytes_size - reserved2->bytes_size;
+		reserved2->type = "reserved";
+		vg_seg->add_child (reserved2);
+#endif
+	}
+	//printf ("\n");
+
+#if 1
 	std::map<std::string,VolumeGroup*>::iterator it;
-	printf ("map:\n");
+	printf ("Volume Group map:\n");
 	for (it = vg_lookup.begin(); it != vg_lookup.end(); it++) {
 		VolumeGroup *vg1 = (*it).second;
 		printf ("\t%s => %s\n", (*it).first.c_str(), vg1->name.c_str());
+	}
+	printf ("\n");
+#endif
+#if 1
+	std::map<std::string,Segment*>::iterator it2;
+	printf ("Volume Group Segments map:\n");
+	for (it2 = seg_lookup.begin(); it2 != seg_lookup.end(); it2++) {
+		Segment *s1 = (*it2).second;
+		printf ("\t%s => %s\n", (*it2).first.c_str(), s1->name.c_str());
 	}
 	printf ("\n");
 #endif
@@ -330,8 +389,8 @@ unsigned int logicals_get_list (Container &disks)
 	lines.clear();
 	explode ("\n", output, lines);
 
+	printf ("Physical extents\n");
 	for (i = 0; i < lines.size(); i++) {
-		tags.clear();
 		parse_tagged_line ((lines[i]), tags);
 
 		std::string dev     = tags["LVM2_PV_NAME"];	// /dev/loop0
@@ -342,12 +401,13 @@ unsigned int logicals_get_list (Container &disks)
 		std::string devices = tags["LVM2_DEVICES"];
 		long        start   = tags["LVM2_SEG_START_PE"];
 
+		//std::string lookup_id = 
 		if (lv_type != "free") {
 			size_t pos = devices.find (',');
 			if (pos != std::string::npos)
 				devices = devices.substr (0, pos);
 
-			printf ("%s:%s(%ld):%s\n", vg_name.c_str(), lv_name.c_str(), start, dev.c_str());
+			printf ("\t%s:%s(%ld):%s\n", vg_name.c_str(), lv_name.c_str(), start, dev.c_str());
 		}
 
 		Container *cont = disks.find_device (dev);
@@ -398,13 +458,12 @@ unsigned int logicals_get_list (Container &disks)
 			//printf ("vg segment exists for %s\n", dev.c_str());
 		}
 
-		std::string type = tags["LVM2_SEGTYPE"];
-		if (type == "free")
+		if (lv_type == "free")
 			continue;
 
 		Segment *vol_seg = new Segment;
 		vol_seg->name = tags["LVM2_LV_NAME"];
-		vol_seg->type = type;			// striped
+		vol_seg->type = lv_type;			// striped
 
 		vol_seg->bytes_size = tags["LVM2_PVSEG_SIZE"];
 		vol_seg->bytes_size *= vg->block_size;
@@ -428,7 +487,6 @@ unsigned int logicals_get_list (Container &disks)
 	explode ("\n", output, lines);
 
 	for (i = 0; i < lines.size(); i++) {
-		tags.clear();
 		parse_tagged_line ((lines[i]), tags);
 
 		/* is /dev/sda8 in seg_lookup
@@ -525,7 +583,6 @@ unsigned int logicals_get_list (Container &disks)
 	explode ("\n", output, lines);
 
 	for (i = 0; i < lines.size(); i++) {
-		tags.clear();
 		parse_tagged_line ((lines[i]), tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];	//printf ("vg_uuid = %s\n", vg_uuid.c_str());
