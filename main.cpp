@@ -322,7 +322,7 @@ unsigned int logicals_get_list (Container &disks)
 	printf ("\n");
 #endif
 
-	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,lv_name,vg_uuid,segtype,pvseg_start,pvseg_size";
+	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,lv_name,vg_uuid,vg_name,segtype,pvseg_start,seg_start_pe,pvseg_size,devices";
 	execute_command (command, output, error);
 	//printf ("%s\n", command.c_str());
 	//printf ("%s\n", output.c_str());
@@ -336,6 +336,19 @@ unsigned int logicals_get_list (Container &disks)
 
 		std::string dev     = tags["LVM2_PV_NAME"];	// /dev/loop0
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
+		std::string vg_name = tags["LVM2_VG_NAME"];
+		std::string lv_name = tags["LVM2_LV_NAME"];
+		std::string lv_type = tags["LVM2_SEGTYPE"];
+		std::string devices = tags["LVM2_DEVICES"];
+		long        start   = tags["LVM2_SEG_START_PE"];
+
+		if (lv_type != "free") {
+			size_t pos = devices.find (',');
+			if (pos != std::string::npos)
+				devices = devices.substr (0, pos);
+
+			printf ("%s:%s(%ld):%s\n", vg_name.c_str(), lv_name.c_str(), start, dev.c_str());
+		}
 
 		Container *cont = disks.find_device (dev);
 		//printf ("cont for %s = %p\n", dev.c_str(), cont);
@@ -403,6 +416,7 @@ unsigned int logicals_get_list (Container &disks)
 
 		vg_seg->add_child (vol_seg);
 	}
+	printf ("\n");
 
 #if 0
 	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,vg_uuid,vg_name,vg_extent_size,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count";
