@@ -288,6 +288,7 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
  */
 unsigned int parse_tagged_line (const std::string &line, std::map<std::string,StringNum> &tags)
 {
+	//XXX optional param: bool clear_array = true;
 	int middle;
 	std::vector<std::string> list;
 
