@@ -1,3 +1,5 @@
+// g++ -g -Wall -o template{,.cpp}
+
 #include <sstream>
 #include <iostream>
 

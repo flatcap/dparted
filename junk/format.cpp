@@ -1,3 +1,5 @@
+// g++ -g -Wall -o format{,.cpp}
+
 #include <string>
 #include <vector>
 

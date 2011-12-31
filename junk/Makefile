@@ -1,7 +1,7 @@
 GPP	= g++
 GCC	= gcc
 
-OUT	= cast compare format fs inherit loop lvm map parted spawn template
+OUT	= cast compare format fs inherit loop lvm map parted random size spawn template
 
 CFLAGS	= -g -Wall
 
@@ -39,6 +39,12 @@ map:	map.cpp
 
 parted:	parted.c
 	$(GCC) $(CFLAGS) -o $@ parted.c $(shell pkg-config --cflags --libs libparted) -lm
+
+random:	random.cpp
+	$(GPP) $(CFLAGS) -o $@ random.cpp
+
+size:	size.c
+	$(GCC) $(CFLAGS) -o $@ size.c
 
 spawn:	spawn.cpp
 	$(GPP) $(CFLAGS) -o $@ spawn.cpp $(shell pkg-config --cflags --libs glibmm-2.4)
