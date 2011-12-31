@@ -1,0 +1,42 @@
+A list of all the things we might need to identify:
+
+Blocks
+	hard disk
+	loop device
+	file
+
+Partition Tables
+	msdos
+	gpt
+	ldm
+	lvm
+	etc
+
+Filesystems
+	ext{2,3,4}
+	fat
+	ntfs
+	btrfs
+	etc
+
+Empty
+
+Block contains
+	Empty
+	Partition table
+	Filesystem
+
+Partition table contains
+	Free space
+	Partitions
+	Metadata
+	Reserved space
+
+Partition contains
+	Empty
+	Filesystem
+	Extended partition
+	LVM VolumeGroup
+	LDM VolumeGroup
+
+
