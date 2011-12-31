@@ -30,6 +30,7 @@
 #include "extended.h"
 #include "filesystem.h"
 #include "gpt.h"
+#include "linear.h"
 #include "loop.h"
 #include "metadata.h"
 #include "mirror.h"
