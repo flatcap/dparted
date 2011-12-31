@@ -457,6 +457,9 @@ unsigned int logicals_get_list (Container &disks)
 	lines.clear();
 	explode ("\n", output, lines);
 
+	std::map<std::string,Container*> q_easy;
+	std::map<std::string,Container*> q_hard;
+
 	printf ("Volumes:\n");
 	for (i = 0; i < lines.size(); i++) {
 		parse_tagged_line ((lines[i]), tags);
