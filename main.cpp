@@ -75,11 +75,11 @@ std::string get_partition_type (int type)
 unsigned int disk_get_list (Container &disks)
 {
 	const char *disk_list[] = {
-		//"/dev/sda",
-		//"/dev/sdb", "/dev/sdc", "/dev/sdd",
-		//"/dev/loop0", "/dev/loop1", "/dev/loop2",
-		//"/dev/loop3",
-		//"/dev/loop4",
+		"/dev/sda",
+		"/dev/sdb", "/dev/sdc", "/dev/sdd",
+		"/dev/loop0", "/dev/loop1", "/dev/loop2",
+		"/dev/loop3",
+		"/dev/loop4",
 		//"/dev/loop5", "/dev/loop6", "/dev/loop7",
 		"/dev/loop8", "/dev/loop9", "/dev/loop10", "/dev/loop11", "/dev/loop12", "/dev/loop13", "/dev/loop14", "/dev/loop15",
 		NULL
@@ -506,8 +506,8 @@ unsigned int logicals_get_list (Container &disks)
 			continue;
 		}
 
-		item->name = lv_name;		//RAR and other details...
-		item->parent = vg;		//XXX until we know better
+		item->name = lv_name;			//RAR and other details...
+		item->parent = vg_lookup[vg_uuid];	//XXX until we know better
 
 		for (unsigned int k = 0; k < device_list.size(); k++) {
 			std::string seg_id = vg_name + ":" + lv_name + ":" + device_list[k];
@@ -757,7 +757,8 @@ unsigned int logicals_get_list (Container &disks)
 	std::map<std::string,Container*>::iterator it9;
 	for (it9 = q_easy.begin(); it9 != q_easy.end(); it9++) {
 		Container *c1 = (*it9).second;
-		vg->add_child (c1);
+		c1->parent->add_child (c1);
+		//vg->add_child (c1);
 	}
 #endif
 	return disks.children.size();
