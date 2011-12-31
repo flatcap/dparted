@@ -44,6 +44,12 @@
 #include "utils.h"
 #include "stringnum.h"
 
+struct queue_item {
+	std::string name;
+	Container *item;
+	std::vector<std::string> requires;
+};
+
 /**
  * get_partition_type
  */
@@ -364,7 +370,7 @@ unsigned int logicals_get_list (Container &disks)
 	}
 	//printf ("\n");
 
-#if 1
+#if 0
 	std::map<std::string,VolumeGroup*>::iterator it;
 	printf ("Volume Group map:\n");
 	for (it = vg_lookup.begin(); it != vg_lookup.end(); it++) {
@@ -373,7 +379,7 @@ unsigned int logicals_get_list (Container &disks)
 	}
 	printf ("\n");
 #endif
-#if 1
+#if 0
 	std::map<std::string,Segment*>::iterator it2;
 	printf ("Volume Group Segments map:\n");
 	for (it2 = vg_seg_lookup.begin(); it2 != vg_seg_lookup.end(); it2++) {
@@ -440,7 +446,7 @@ unsigned int logicals_get_list (Container &disks)
 	}
 	//printf ("\n");
 
-#if 1
+#if 0
 	std::map<std::string,Segment*>::iterator it3;
 	printf ("Volume Segments map:\n");
 	for (it3 = vol_seg_lookup.begin(); it3 != vol_seg_lookup.end(); it3++) {
@@ -450,7 +456,7 @@ unsigned int logicals_get_list (Container &disks)
 	printf ("\n");
 #endif
 
-	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,vg_name,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices";
+	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,vg_name,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_start_pe,seg_size,seg_pe_ranges,devices";
 	execute_command (command, output, error);
 	//printf ("%s\n", command.c_str());
 	//printf ("%s\n", output.c_str());
@@ -459,9 +465,9 @@ unsigned int logicals_get_list (Container &disks)
 	explode ("\n", output, lines);
 
 	std::map<std::string,Container*> q_easy;
-	std::map<std::string,Container*> q_hard;
+	std::vector<struct queue_item> q_hard;
 
-	printf ("Volumes:\n");
+	//printf ("Volumes:\n");
 	for (i = 0; i < lines.size(); i++) {
 		parse_tagged_line ((lines[i]), tags);
 
@@ -471,6 +477,8 @@ unsigned int logicals_get_list (Container &disks)
 		std::string lv_attr = tags["LVM2_LV_ATTR"];	//printf ("lv_attr = %s\n", lv_attr.c_str());
 		std::string lv_uuid = tags["LVM2_LV_UUID"];	//printf ("lv_uuid = %s\n", lv_uuid.c_str());
 		std::string devices = tags["LVM2_DEVICES"];	//printf ("devices = %s\n", devices.c_str());
+		std::string lv_type = tags["LVM2_SEGTYPE"];
+		std::string mirrlog = tags["LVM2_MIRROR_LOG"];
 
 		std::vector<std::string> device_list;
 		explode (",", devices, device_list);
@@ -478,19 +486,67 @@ unsigned int logicals_get_list (Container &disks)
 		if ((lv_attr[0] == 'i') || (lv_attr[0] == 'l')) {	// mirror image/log
 			// Strip the []'s
 			lv_name = lv_name.substr (1, lv_name.length() - 2);
+		} else if (lv_attr[0] == 'm') {
+			// Add an extra dependency for mirrors
+			std::string dep_name = mirrlog + "(0)";
+			//printf ("ADD DEP: %s\n", dep_name.c_str());
+			device_list.push_back (dep_name);
 		}
+
+		bool found_everything = true;
+		Container *item = NULL;
+		if (lv_type == "linear") {
+			item = new Linear;
+		} else if (lv_type == "striped") {
+			item = new Stripe;
+		} else if (lv_type == "mirror") {
+			item = new Mirror;
+		} else {
+			printf ("UNKNOWN type %s\n", lv_type.c_str());
+			continue;
+		}
+
+		item->name = lv_name;		//RAR and other details...
+		item->parent = vg;		//XXX until we know better
 
 		for (unsigned int k = 0; k < device_list.size(); k++) {
 			std::string seg_id = vg_name + ":" + lv_name + ":" + device_list[k];
 			Segment *vol_seg = vol_seg_lookup[seg_id];
-			vol_seg_lookup.erase (vol_seg_lookup.find(seg_id));
 #if 1
-			printf ("\t%s ", lv_attr.c_str());
-			if (vol_seg)
-				printf ("\t%s => \e[32m%s\e[0m\n", seg_id.c_str(), vol_seg->name.c_str());
-			else
-				printf ("\t%s => \e[31m%s\e[0m\n", seg_id.c_str(), "MISSING");
+			//vol_seg_lookup.erase (vol_seg_lookup.find(seg_id));
+			//printf ("\t%s ", lv_attr.c_str());
+			if (vol_seg) {
+				//printf ("\t%s => \e[32m%s\e[0m\n", seg_id.c_str(), vol_seg->name.c_str());
+				if (lv_type == "striped") {
+					Linear *lin = new Linear;
+					lin->name = vol_seg->name; // XXX copy other details
+					item->add_child (lin);
+					// need to link to segments
+				}
+			} else {
+				found_everything = false;
+				//printf ("\t%s => \e[31m%s\e[0m\n", seg_id.c_str(), "MISSING");
+			}
 #endif
+		}
+
+		// search for all segments
+		// all found?
+		//	yes -> easy
+		//	no  -> hard
+
+		std::string sstart = tags["LVM2_SEG_START_PE"];
+		//printf ("SEG_START = %s\n", sstart.c_str());
+		std::string seg_id = vg_name + ":" + lv_name + "(" + sstart + ")"; //RAR uniq?
+		if (found_everything) {
+			q_easy[seg_id] = item;
+		} else {
+			struct queue_item i = { seg_id, item, device_list };
+			for (unsigned int m = 0; m < i.requires.size(); m++) {
+				// prefix with volume name
+				i.requires[m] = vg_name + ":" + i.requires[m];
+			}
+			q_hard.push_back (i);
 		}
 
 		continue;
@@ -618,19 +674,92 @@ unsigned int logicals_get_list (Container &disks)
 		//printf ("\n");
 		//printf ("vg = %s   lv = %s\n", tmp1.c_str(), vol->name.c_str());
 	}
-	printf ("\n");
+
+	//printf ("\n");
+
+	for (unsigned int p = 0; p < 1; p++) {
+#if 0
+		std::map<std::string,Container*>::iterator it4;
+		printf ("Easy Queue map:\n");
+		for (it4 = q_easy.begin(); it4 != q_easy.end(); it4++) {
+			Container *c1 = (*it4).second;
+			printf ("\t%s => %s\n", (*it4).first.c_str(), c1->name.c_str());
+			for (unsigned int n = 0; n < c1->children.size(); n++) {
+				printf ("\t\t%s\n", c1->children[n]->name.c_str());
+			}
+		}
+		printf ("\n");
+#endif
 
 #if 0
-	std::map<std::string,Segment*>::iterator it4;
-	printf ("Volume Segments map:\n");
-	for (it4 = vol_seg_lookup.begin(); it4 != vol_seg_lookup.end(); it4++) {
-		Segment *s1 = (*it4).second;
-		printf ("\t%s => %s\n", (*it4).first.c_str(), s1->name.c_str());
+		std::vector<struct queue_item>::iterator it5;
+		printf ("Hard Queue map:\n");
+		for (it5 = q_hard.begin(); it5 != q_hard.end(); it5++) {
+			printf ("\t%s => %p\n", (*it5).name.c_str(), (*it5).item);
+			for (unsigned int l = 0; l < (*it5).requires.size(); l++) {
+				printf ("\t\t%s\n", (*it5).requires[l].c_str());
+			}
+		}
+		printf ("\n");
+#endif
+		if (q_hard.size() == 0)
+			break;
+
+		//XXX iterate backwards so we can erase things?
+		std::vector<struct queue_item>::iterator it6;
+		for (it6 = q_hard.begin(); it6 != q_hard.end(); it6++) {
+			bool found_all_hard_stuff = true;
+			for (unsigned int q = 0; q < (*it6).requires.size(); q++) {
+				std::string req_name = (*it6).requires[q];
+				Container *req = q_easy[req_name];
+				if (req != NULL) {
+					//printf ("found req\n");
+					(*it6).item->add_child (req);
+					q_easy.erase (q_easy.find(req_name));
+				} else {
+					printf ("DIDN'T found req: %s\n", req_name.c_str());
+					found_all_hard_stuff = false;
+				}
+			}
+			if (found_all_hard_stuff) {
+				q_easy["done"] = (*it6).item;
+				//q_hard.erase (it6);	//RAR can't do erase in for loop!
+			}
+		}
+	}
+
+#if 0
+	std::map<std::string,Container*>::iterator it7;
+	printf ("Easy Queue map:\n");
+	for (it7 = q_easy.begin(); it7 != q_easy.end(); it7++) {
+		Container *c1 = (*it7).second;
+		printf ("\t%s => %s\n", (*it7).first.c_str(), c1->name.c_str());
+		for (unsigned int n = 0; n < c1->children.size(); n++) {
+			printf ("\t\t%s\n", c1->children[n]->name.c_str());
+		}
 	}
 	printf ("\n");
 #endif
 
+#if 0
+	std::vector<struct queue_item>::iterator it8;
+	printf ("Hard Queue map:\n");
+	for (it8 = q_hard.begin(); it8 != q_hard.end(); it8++) {
+		printf ("\t%s => %p\n", (*it8).name.c_str(), (*it8).item);
+		for (unsigned int l = 0; l < (*it8).requires.size(); l++) {
+			printf ("\t\t%s\n", (*it8).requires[l].c_str());
+		}
+	}
+	printf ("\n");
+#endif
 
+#if 1
+	std::map<std::string,Container*>::iterator it9;
+	for (it9 = q_easy.begin(); it9 != q_easy.end(); it9++) {
+		Container *c1 = (*it9).second;
+		vg->add_child (c1);
+	}
+#endif
 	return disks.children.size();
 }
 
@@ -667,7 +796,7 @@ int main (int argc, char *argv[])
 	disk_get_list (disks);
 	logicals_get_list (disks);
 
-#if 0
+#if 1
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
