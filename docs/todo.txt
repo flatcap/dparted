@@ -372,3 +372,5 @@ check version of lvm before starting
 	LVM version:     2.02.86(2) (2011-07-08)
 	Library version: 1.02.65 (2011-07-08)
 
+images - prereq for high-numbered loops in shell script
+
