@@ -5,6 +5,8 @@ Blocks
 	loop device
 	file
 
+Empty
+
 Partition Tables
 	msdos
 	gpt
@@ -19,15 +21,22 @@ Filesystems
 	btrfs
 	etc
 
-Empty
+Logical
+	lvm
+	ldm
+	md
+	etc
+
+------------------------------------------------------
 
 Block contains
 	Empty
 	Partition table
 	Filesystem
+	Logical
 
-Partition table contains
-	Free space
+Table contains
+	Empty
 	Partitions
 	Metadata
 	Reserved space
@@ -36,7 +45,23 @@ Partition contains
 	Empty
 	Filesystem
 	Extended partition
-	LVM VolumeGroup
-	LDM VolumeGroup
+	Logical
 
+Empty contains
+	n/a
 
+Filesystem contains
+	n/a
+
+Logical contains
+	Empty
+	Segments (VolumeGroup)
+
+VolumeGroup contains
+	Empty
+	Segments (Volume)
+
+Volume contains
+	Empty
+	Filesystem
+	Volume
