@@ -2,7 +2,7 @@
 /main
 
 # useful stuff
-/watcher
+/watcher*
 
 # generated docs
 /html
