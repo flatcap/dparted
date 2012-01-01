@@ -176,6 +176,12 @@ useful tools
 	blkid
 	lsblk
 	fintmnt
+	blockdev
+
+blockdev --getsize /dev/sda
+976773168				# size in 512 byte blocks
+blockdev --getsize64 /dev/sda
+500107862016				# size in bytes
 
 need metadata / reserved classes
 
@@ -373,4 +379,11 @@ check version of lvm before starting
 	Library version: 1.02.65 (2011-07-08)
 
 images - prereq for high-numbered loops in shell script
+
+/var/lib/libvirt/images/fedora-16.imgo
+
+ifndef __USE_FILE_OFFSET64 
+#ifdef __USE_LARGEFILE64 
+extern int stat64 (__const char *__restrict __file, 
+extern int fstat64 (int __fd, struct stat64 *__buf) __THROW __nonnull ((2)); 
 
