@@ -47,7 +47,7 @@ filesystem.o:		filesystem.cpp filesystem.h container.h partition.h utils.h strin
 gpt.o:			gpt.cpp gpt.h table.h container.h
 linear.o:		linear.cpp linear.h volume.h whole.h container.h utils.h stringnum.h
 loop.o:			loop.cpp loop.h block.h container.h
-main.o:			main.cpp container.h partition.h disk.h block.h extended.h file.h filesystem.h gpt.h table.h linear.h volume.h whole.h loop.h mirror.h msdos.h segment.h stripe.h volumegroup.h utils.h stringnum.h
+main.o:			main.cpp container.h disk.h block.h extended.h partition.h file.h filesystem.h gpt.h table.h linear.h volume.h whole.h loop.h mirror.h msdos.h segment.h stripe.h volumegroup.h utils.h stringnum.h
 mirror.o:		mirror.cpp mirror.h volume.h whole.h container.h utils.h stringnum.h
 msdos.o:		msdos.cpp msdos.h table.h container.h utils.h stringnum.h
 partition.o:		partition.cpp partition.h container.h
@@ -55,6 +55,7 @@ segment.o:		segment.cpp segment.h container.h
 stripe.o:		stripe.cpp stripe.h volume.h whole.h container.h utils.h stringnum.h
 table.o:		table.cpp table.h container.h
 utils.o:		utils.cpp utils.h stringnum.h container.h
-volumegroup.o:		volumegroup.cpp volumegroup.h whole.h container.h utils.h stringnum.h
 volume.o:		volume.cpp volume.h whole.h container.h utils.h stringnum.h
+volumegroup.o:		volumegroup.cpp volumegroup.h whole.h container.h utils.h stringnum.h
 whole.o:		whole.cpp whole.h container.h segment.h
+
