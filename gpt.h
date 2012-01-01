@@ -19,9 +19,9 @@
 #ifndef _GPT_H
 #define _GPT_H
 
-#include "partitiontable.h"
+#include "table.h"
 
-class Gpt : public PartitionTable
+class Gpt : public Table
 {
 public:
 	Gpt (void);

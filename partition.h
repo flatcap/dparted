@@ -29,6 +29,10 @@ public:
 	Partition (void);
 	virtual ~Partition();
 
+	//XXX flag for protective partition
+	//XXX partition number - nth in set?
+	//XXX partition type - 0x82 Linux Swap
+
 protected:
 
 private:

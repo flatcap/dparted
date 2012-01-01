@@ -1,38 +1,51 @@
 digraph G
 {
- // INTERACTIVE_SVG=YES
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node1 [label="Container",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classContainer.html"];
-  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node2 [label="Block",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classBlock.html"];
-  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node3 [label="Disk",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classDisk.html"];
-  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node4 [label="Loop",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classLoop.html"];
-  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node5 [label="Filesystem",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classFilesystem.html"];
-  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node6 [label="Partition",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classPartition.html"];
-  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node7 [label="DataPartition",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classDataPartition.html"];
-  Node6 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node8 [label="Extended",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classExtended.html"];
-  Node6 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node9 [label="Metadata",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classMetadata.html"];
-  Node1 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node10 [label="PartitionTable",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classPartitionTable.html"];
-  Node10 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node11 [label="Gpt",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classGpt.html"];
-  Node10 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node12 [label="Msdos",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classMsdos.html"];
-  Node1 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node13 [label="Segment",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classSegment.html"];
-  Node1 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node14 [label="Whole",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classWhole.html"];
-  Node14 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node15 [label="Volume",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classVolume.html"];
-  Node14 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node16 [label="VolumeGroup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classVolumeGroup.html"];
+	graph [ rankdir="RL", bgcolor="#002200", color=white ];
+	node  [ shape=record, style=filled, fillcolor="#bbbbbb", color=darkgreen ];
+	edge  [ color="#cccccc", penwidth=2.0 ];
+
+	Container [ fillcolor="#ffffff" ];
+
+	Block [ fillcolor="#aaffaa" ];
+	Disk  [ fillcolor="#aaffaa" ];
+	File  [ fillcolor="#aaffaa" ];
+	Loop  [ fillcolor="#aaffaa" ];
+
+	Table [ fillcolor="#ffbbbb" ];
+	Gpt   [ fillcolor="#ffbbbb" ];
+	Msdos [ fillcolor="#ffbbbb" ];
+
+	Partition [ fillcolor="#ffffdd" ];
+	Extended  [ fillcolor="#ffffdd" ];
+
+	Whole       [ fillcolor="#ccccff" ];
+	Volume      [ fillcolor="#ccccff" ];
+	VolumeGroup [ fillcolor="#ccccff" ];
+	Linear      [ fillcolor="#ccccff" ];
+	Mirror      [ fillcolor="#ccccff" ];
+	Stripe      [ fillcolor="#ccccff" ];
+	Segment     [ fillcolor="#ccccff" ];
+
+	Filesystem [ fillcolor="#bbffff" ];
+
+	Block       -> Container;
+	Disk        -> Block;
+	Extended    -> Partition;
+	File        -> Block;
+	Filesystem  -> Container;
+	Gpt         -> Table;
+	Linear      -> Volume;
+	Loop        -> Block;
+	Mirror      -> Volume;
+	Msdos       -> Table;
+	Partition   -> Container;
+	Segment     -> Container;
+	Stripe      -> Volume;
+	Table       -> Container;
+	VolumeGroup -> Whole;
+	Volume      -> Whole;
+	Whole       -> Container;
+
+	Whole       -> Segment [ constraint=false, style=dotted, dir=none, minlen=1 ];
 }
+

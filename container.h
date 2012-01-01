@@ -23,6 +23,13 @@
 #include <vector>
 #include <map>
 
+enum ContainerType
+{
+	CONT_NORMAL,		// Ordinary container
+	CONT_METADATA,		// Accounting data
+	CONT_RESERVED		// Empty space that isn't usable
+};
+
 class Container
 {
 public:
@@ -51,6 +58,8 @@ public:
 	virtual Container * find_device (const std::string &dev);
 	virtual Container * find_uuid   (const std::string &uuid);
 	virtual Container * find_name   (const std::string &name);
+
+	enum ContainerType cont_type;
 
 	std::string	 type;
 

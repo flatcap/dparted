@@ -25,19 +25,19 @@
 #include <parted/parted.h>
 
 #include "container.h"
-#include "datapartition.h"
 #include "disk.h"
 #include "extended.h"
+#include "file.h"
 #include "filesystem.h"
 #include "gpt.h"
 #include "linear.h"
 #include "loop.h"
-#include "metadata.h"
 #include "mirror.h"
 #include "msdos.h"
 #include "partition.h"
 #include "segment.h"
 #include "stripe.h"
+#include "table.h"
 #include "volumegroup.h"
 #include "volume.h"
 
@@ -136,7 +136,7 @@ unsigned int disk_get_list (Container &disks)
 
 		type = ped_disk_probe (dev);
 		if (type) {
-			PartitionTable *table = NULL;
+			Table *table = NULL;
 
 			if (strcmp (type->name, "msdos") == 0) {
 				table = new Msdos;
@@ -187,11 +187,12 @@ unsigned int disk_get_list (Container &disks)
 				Container *p = NULL;
 				if ((part->type & PED_PARTITION_FREESPACE) ||
 				    (part->type & PED_PARTITION_METADATA)) {
-					p = new Metadata;
+					p = new Partition;
+					//XXX type = metadata/reserved
 				} else if (part->type & PED_PARTITION_EXTENDED) {
 					p = new Extended;
 				} else {
-					p = new DataPartition;
+					p = new Partition; // just a normal data partition
 				}
 
 				//p->parent = table;
@@ -349,7 +350,8 @@ unsigned int logicals_get_list (Container &disks)
 		//printf ("pv_name = %s\n", pv_name.c_str());
 		vg_seg_lookup[pv_name] = vg_seg;
 #if 0
-		Metadata *reserved1 = new Metadata;
+		Partition *reserved1 = new Partition;
+		//XXX type = metadata/reserved
 		// get size from LVM2_PE_START
 		reserved1->bytes_size = 1048576;
 		reserved1->bytes_used = 1048576;
@@ -359,7 +361,8 @@ unsigned int logicals_get_list (Container &disks)
 #endif
 		//RAR need to calculate this from vg_seg size and vg block size
 #if 0
-		Metadata *reserved2 = new Metadata;
+		Partition *reserved2 = new Partition;
+		//XXX type = metadata/reserved
 		// get size from LVM2_PV_PE_ALLOC_COUNT and LVM2_PE_START
 		reserved2->bytes_size = 3145728;
 		reserved2->bytes_used = 3145728;

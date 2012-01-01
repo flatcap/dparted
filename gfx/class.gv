@@ -1,5 +1,5 @@
 digraph classes {
-	graph [ rankdir = "BT", bgcolor = white ];
+	graph [ rankdir = "RL", bgcolor = white ];
 	node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];
 
 	Block [label=<<table border="0" cellspacing="0" cellpadding="0">
@@ -33,11 +33,6 @@ digraph classes {
 				<tr><td align="left">int</td><td align="left">did</td></tr>
 			</table>>];
 
-	DataPartition [label=<<table border="0" cellspacing="0" cellpadding="0">
-				<tr><td colspan="2"><b>DataPartition</b></td></tr>
-				<tr><td align="left">int</td><td align="left">num</td></tr>
-			</table>>];
-
 	Extended [label=<<table border="0" cellspacing="0" cellpadding="0">
 				<tr><td colspan="2"><b>Extended</b></td></tr>
 			</table>>];
@@ -55,10 +50,6 @@ digraph classes {
 				<tr><td colspan="2"><b>Loop</b></td></tr>
 			</table>>];
 
-	Metadata [label=<<table border="0" cellspacing="0" cellpadding="0">
-				<tr><td colspan="2"><b>Metadata</b></td></tr>
-			</table>>];
-
 	Msdos [label=<<table border="0" cellspacing="0" cellpadding="0">
 				<tr><td colspan="2"><b>Msdos</b></td></tr>
 			</table>>];
@@ -67,8 +58,8 @@ digraph classes {
 				<tr><td colspan="2"><b>Partition</b></td></tr>
 			</table>>];
 
-	PartitionTable [label=<<table border="0" cellspacing="0" cellpadding="0">
-				<tr><td colspan="2"><b>PartitionTable</b></td></tr>
+	Table [label=<<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td colspan="2"><b>Table</b></td></tr>
 			</table>>];
 
 	Segment [label=<<table border="0" cellspacing="0" cellpadding="0">
@@ -99,19 +90,21 @@ digraph classes {
 			</table>>];
 
 	Block		-> Container;
-	DataPartition	-> Partition;
 	Disk		-> Block;
 	Extended	-> Partition;
 	Filesystem	-> Container;
-	Gpt		-> PartitionTable;
+	Gpt		-> Table;
 	Loop		-> Block;
-	Metadata	-> Partition;
-	Msdos		-> PartitionTable;
+	File		-> Block;
+	Msdos		-> Table;
 	Partition	-> Container;
-	PartitionTable  -> Container;
+	Table		-> Container;
 	Segment		-> Container;
 	VolumeGroup	-> Whole;
 	Volume		-> Whole;
+	Linear		-> Volume;
+	Mirror		-> Volume;
+	Stripe		-> Volume;
 	Whole		-> Container;
 
 	Segment		-> Whole [ dir="both" ];

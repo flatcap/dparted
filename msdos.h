@@ -21,9 +21,9 @@
 
 #include <string>
 
-#include "partitiontable.h"
+#include "table.h"
 
-class Msdos : public PartitionTable
+class Msdos : public Table
 {
 public:
 	Msdos (void);

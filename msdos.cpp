@@ -47,7 +47,7 @@ void Msdos::dump (int indent /* = 0 */)
 	std::string size = get_size (bytes_size);
 
 	iprintf (indent, "msdos (%s)\n", size.c_str());
-	PartitionTable::dump (indent);
+	Table::dump (indent);
 }
 
 /**
@@ -64,7 +64,7 @@ void Msdos::dump_csv (void)
 		bytes_size,
 		bytes_used,
 		bytes_size - bytes_used);
-	PartitionTable::dump_csv();
+	Table::dump_csv();
 }
 
 /**
@@ -78,7 +78,7 @@ std::string Msdos::dump_dot (void)
 
 	// no specfics for now
 
-	output << PartitionTable::dump_dot();
+	output << Table::dump_dot();
 
 	output << dump_table_footer();
 	output << dump_dot_children();

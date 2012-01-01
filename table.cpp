@@ -16,26 +16,24 @@
  */
 
 
-#ifndef _METADATA_H
-#define _METADATA_H
-
+#include <stdio.h>
 #include <string>
 
-#include "partition.h"
+#include "table.h"
 
-class Metadata : public Partition
+/**
+ * Table
+ */
+Table::Table (void)
 {
-public:
-	Metadata (void);
-	virtual ~Metadata();
+	type = "table";
+}
 
-	virtual std::string dump_dot (void);
+/**
+ * ~Table
+ */
+Table::~Table()
+{
+}
 
-protected:
-
-private:
-
-};
-
-#endif /* _METADATA_H */
 

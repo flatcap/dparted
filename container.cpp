@@ -28,6 +28,7 @@
  * Container
  */
 Container::Container (void) :
+	cont_type (CONT_NORMAL),
 	device_offset (0),
 	block_size (0),
 	bytes_size (0),

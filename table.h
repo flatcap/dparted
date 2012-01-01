@@ -16,43 +16,24 @@
  */
 
 
-#include <stdio.h>
+#ifndef _TABLE_H_
+#define _TABLE_H_
+
 #include <string>
-#include <sstream>
 
-#include "metadata.h"
-#include "utils.h"
+#include "container.h"
 
-/**
- * Metadata
- */
-Metadata::Metadata (void)
+class Table : public Container
 {
-	type = "metadata";
-}
+public:
+	Table (void);
+	virtual ~Table();
 
-/**
- * ~Metadata
- */
-Metadata::~Metadata()
-{
-}
+protected:
 
+private:
 
-/**
- * dump_dot
- */
-std::string Metadata::dump_dot (void)
-{
-	std::ostringstream output;
+};
 
-	output << dump_table_header ("Metadata", "white");
+#endif // _TABLE_H_
 
-	// no specfics for now
-
-	output << Partition::dump_dot();
-
-	output << dump_table_footer();
-
-	return output.str();
-}

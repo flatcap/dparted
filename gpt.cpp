@@ -48,7 +48,7 @@ std::string Gpt::dump_dot (void)
 
 	// no specfics for now
 
-	output << PartitionTable::dump_dot();
+	output << Table::dump_dot();
 
 	output << dump_table_footer();
 	output << dump_dot_children();
