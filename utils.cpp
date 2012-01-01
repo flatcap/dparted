@@ -17,12 +17,13 @@
 
 
 #include <stdio.h>
-#include <glibmm/spawn.h>
 #include <math.h>
 #include <stdlib.h>
+#include <parted/parted.h>
+#include <glibmm/spawn.h>
+
 #include <vector>
 #include <string>
-#include <parted/parted.h>
 
 #include "utils.h"
 #include "stringnum.h"

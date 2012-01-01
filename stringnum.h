@@ -19,8 +19,9 @@
 #ifndef _STRINGNUM_H
 #define _STRINGNUM_H
 
-#include <string>
 #include <stdlib.h>
+
+#include <string>
 
 #include "container.h"
 

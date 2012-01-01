@@ -19,6 +19,8 @@
 #ifndef _GPT_H
 #define _GPT_H
 
+#include <string>
+
 #include "table.h"
 
 class Gpt : public Table

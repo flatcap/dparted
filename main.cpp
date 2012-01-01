@@ -18,11 +18,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <parted/parted.h>
+
 #include <vector>
 #include <string>
 #include <sstream>
 #include <map>
-#include <parted/parted.h>
 
 #include "container.h"
 #include "disk.h"
