@@ -19,6 +19,7 @@ Filesystems
 	fat
 	ntfs
 	btrfs
+	swap
 	etc
 
 Logical
