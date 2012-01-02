@@ -20,6 +20,7 @@
 #define _DISK_H_
 
 #include <string>
+#include <map>
 
 #include "block.h"
 

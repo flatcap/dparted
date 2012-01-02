@@ -20,6 +20,7 @@
 #define _WHOLE_H_
 
 #include <string>
+#include <vector>
 
 #include "container.h"
 

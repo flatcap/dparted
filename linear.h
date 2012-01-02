@@ -20,6 +20,7 @@
 #define _LINEAR_H_
 
 #include <string>
+#include <vector>
 
 #include "volume.h"
 
