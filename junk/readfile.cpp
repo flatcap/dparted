@@ -36,7 +36,6 @@ int main (int argc, char *argv[])
 		std::cout << "Unable to open file";
 	}
 
-
 	return 0;
 }
 

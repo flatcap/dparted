@@ -17,6 +17,7 @@
 
 
 #include <stdio.h>
+
 #include <string>
 #include <sstream>
 
@@ -45,6 +46,19 @@ Disk::Disk (void) :
  */
 Disk::~Disk()
 {
+}
+
+
+/**
+ * probe
+ */
+bool Disk::probe (const std::string &name, const struct stat &st)
+{
+	// for /dev/sda look at
+	//	/sys/block/sda/size
+	//	/sys/block/sda/device/vendor
+	//	/sys/block/sda/device/model
+	return false;
 }
 
 

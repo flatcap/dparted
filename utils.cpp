@@ -24,6 +24,8 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
+#include <fstream>
 
 #include "utils.h"
 #include "stringnum.h"
@@ -322,5 +324,25 @@ unsigned int parse_tagged_line (const std::string &line, std::map<std::string,St
 #endif
 
 	return tags.size();
+}
+
+
+/**
+ * read_file_line
+ */
+std::string read_file_line (const std::string &filename)
+{
+	std::ifstream in (filename.c_str());
+	std::string line;
+	if (in.is_open()) {
+		while (in.good()) {
+			getline (in,line);
+		}
+		in.close();
+	} else {
+		std::cout << "Unable to open file";
+	}
+
+	return line;
 }
 

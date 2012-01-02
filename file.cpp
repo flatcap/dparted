@@ -38,3 +38,11 @@ File::~File()
 {
 }
 
+/**
+ * probe
+ */
+bool File::probe (const std::string &name, const struct stat &st)
+{
+	return false;
+}
+

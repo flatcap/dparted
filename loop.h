@@ -30,6 +30,7 @@ public:
 	virtual ~Loop();
 
 protected:
+	virtual bool probe (const std::string &name, const struct stat &st);
 
 private:
 

@@ -73,18 +73,8 @@ std::string get_partition_type (int type)
 /**
  * disk_get_list
  */
-unsigned int disk_get_list (Container &disks)
+unsigned int disk_get_list (const char *disk_list[], Container &disks)
 {
-	const char *disk_list[] = {
-		"/dev/sda",
-		"/dev/sdb", "/dev/sdc", "/dev/sdd",
-		"/dev/loop0", "/dev/loop1", "/dev/loop2",
-		"/dev/loop3",
-		"/dev/loop4",
-		//"/dev/loop5", "/dev/loop6", "/dev/loop7",
-		"/dev/loop8", "/dev/loop9", "/dev/loop10", "/dev/loop11", "/dev/loop12", "/dev/loop13", "/dev/loop14", "/dev/loop15",
-		NULL
-	};
 	PedDevice *dev = NULL;
 	PedDisk *disk = NULL;
 	PedDiskType *type = NULL;
@@ -798,10 +788,28 @@ int main (int argc, char *argv[])
 {
 	Container disks;
 
-	disk_get_list (disks);
-	logicals_get_list (disks);
+	const char *disk_list[] = {
+		"/dev/sda",
+		"/dev/sdb", "/dev/sdc", "/dev/sdd",
+		"/dev/loop0", "/dev/loop1", "/dev/loop2",
+		"/dev/loop3",
+		"/dev/loop4",
+		//"/dev/loop5", "/dev/loop6", "/dev/loop7",
+		//"/dev/loop8", "/dev/loop9", "/dev/loop10", "/dev/loop11", "/dev/loop12", "/dev/loop13", "/dev/loop14", "/dev/loop15",
+		"/var/lib/libvirt/images/f16.img",
+		NULL
+	};
 
-#if 1
+	for (int i = 0; disk_list[i]; i++) {
+		Block::probe (disk_list[i], disks);
+	}
+
+#if 0
+	disk_get_list (disk_list, disks);
+	logicals_get_list (disks);
+#endif
+
+#if 0
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";

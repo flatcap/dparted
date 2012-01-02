@@ -30,6 +30,7 @@ public:
 	virtual ~File();
 
 protected:
+	virtual bool probe (const std::string &name, const struct stat &st);
 
 private:
 

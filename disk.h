@@ -57,6 +57,7 @@ public:
 	int		did;
 
 protected:
+	virtual bool probe (const std::string &name, const struct stat &st);
 
 private:
 
