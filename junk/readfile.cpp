@@ -20,6 +20,23 @@ int main (int argc, char *argv[])
 	std::cout << "contents:" << std::endl;
 	std::cout << contents    << std::endl;
 
+	// Seek back to beginning of file
+	in.seekg (0, std::ios_base::beg);
+
+	std::cout << "-------------------------------" << std::endl;
+
+	std::string line;
+	if (in.is_open()) {
+		while (in.good()) {
+			getline (in,line);
+			std::cout << line << std::endl;
+		}
+		in.close();
+	} else {
+		std::cout << "Unable to open file";
+	}
+
+
 	return 0;
 }
 
