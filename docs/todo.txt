@@ -175,7 +175,7 @@ actions
 useful tools
 	blkid
 	lsblk
-	fintmnt
+	findmnt
 	blockdev
 
 blockdev --getsize /dev/sda
