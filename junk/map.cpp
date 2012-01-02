@@ -1,4 +1,4 @@
-// g++ -o map{,.cpp} -Wall -g
+// g++ -Wall -g -o map{,.cpp}
 
 #include <stdio.h>
 #include <map>

@@ -1,4 +1,4 @@
-// g++ -g -Wall -o inherit{,.cpp}
+// g++ -Wall -g -o inherit{,.cpp}
 
 #include <string>
 #include <stdio.h>
@@ -18,7 +18,7 @@ public:
 	}
 };
 
-int main()
+int main (int argc, char *argv[])
 {
 	CString s ("1234");
 	long num = s;

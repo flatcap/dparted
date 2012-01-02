@@ -1,4 +1,4 @@
-// g++ -o spawn{,.cpp} -Wall -g $(pkg-config --cflags --libs glibmm-2.4)
+// g++ -Wall -g -o spawn{,.cpp} $(pkg-config --cflags --libs glibmm-2.4)
 
 #include <stdio.h>
 #include <glibmm/spawn.h>
@@ -42,7 +42,7 @@ int execute_command (const std::string &command, std::string &output, std::strin
 int main (int argc, char *argv[])
 {
 	if (argc != 2) {
-		printf ("Usage: s program\n");
+		printf ("Usage: spawn program\n");
 		return 1;
 	}
 

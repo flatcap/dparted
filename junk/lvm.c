@@ -1,4 +1,4 @@
-// gcc -o lvm{,.c} -Wall -g $(pkg-config --cflags --libs lvm2app devmapper) -lm
+// gcc -Wall -g -o lvm{,.c} $(pkg-config --cflags --libs lvm2app devmapper) -lm
 
 #include <stdio.h>
 #include <lvm2app.h>
@@ -52,8 +52,7 @@ print_size (uint64_t size)
 /**
  * main
  */
-int
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
 	lvm_t l;
 	vg_t vg;

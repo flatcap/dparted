@@ -1,4 +1,4 @@
-// gcc -g -Wall -o size{,.c}
+// gcc -Wall -g -o size{,.c}
 
 #include <stdio.h>
 

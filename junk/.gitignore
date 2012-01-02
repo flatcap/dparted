@@ -1,6 +1,7 @@
 # executables
 cast
 compare
+enum
 format
 fs
 inherit
@@ -8,5 +9,8 @@ loop
 lvm
 map
 parted
+random
+readfile
+size
 spawn
 template

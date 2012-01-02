@@ -1,4 +1,4 @@
-// g++ -g -Wall -o format{,.cpp}
+// g++ -Wall -g -o format{,.cpp}
 
 #include <string>
 #include <vector>

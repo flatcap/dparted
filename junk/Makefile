@@ -1,7 +1,8 @@
 GPP	= g++
 GCC	= gcc
 
-OUT	= cast compare enum format fs inherit loop lvm map parted random size spawn template
+OUT	= cast compare enum format fs inherit loop lvm map parted random \
+	  readfile size spawn template
 
 CFLAGS	= -g -Wall
 
@@ -45,6 +46,9 @@ parted:	parted.c
 
 random:	random.cpp
 	$(GPP) $(CFLAGS) -o $@ random.cpp
+
+readfile:	readfile.cpp
+	$(GPP) $(CFLAGS) -o $@ readfile.cpp
 
 size:	size.c
 	$(GCC) $(CFLAGS) -o $@ size.c

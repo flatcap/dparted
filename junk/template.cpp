@@ -1,4 +1,4 @@
-// g++ -g -Wall -o template{,.cpp}
+// g++ -Wall -g -o template{,.cpp}
 
 #include <sstream>
 #include <iostream>

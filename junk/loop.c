@@ -1,4 +1,4 @@
-// gcc -o loop{,.c} -Wall -g $(pkg-config --cflags --libs libparted) -lm
+// gcc -Wall -g -o loop{,.c} $(pkg-config --cflags --libs libparted) -lm
 
 #include <stdio.h>
 #include <parted/parted.h>

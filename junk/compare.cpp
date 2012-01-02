@@ -1,4 +1,4 @@
-// g++ -o compare{,.cpp} -Wall -g
+// g++ -Wall -g -o compare{,.cpp}
 
 #include <stdio.h>
 #include <string>

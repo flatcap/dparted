@@ -1,3 +1,5 @@
+// gcc -Wall -g -o enum{,.c}
+
 #include <stdio.h>
 
 enum jim 
