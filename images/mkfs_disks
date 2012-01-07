@@ -7,13 +7,13 @@ for i in $TYPES; do
 	truncate -s 1G disk.$i
 done
 
-mkfs.btrfs        disk.btrfs
-mkfs.ext2     -F  disk.ext2
-mkfs.ext3     -F  disk.ext3
-mkfs.ext4     -F  disk.ext4
-mkfs.ntfs     -fF disk.ntfs
-mkfs.reiserfs -ff disk.reiserfs
-mkswap            disk.swap
-mkfs.vfat         disk.vfat
-mkfs.xfs          disk.xfs
+mkfs.btrfs        -L "btrfs_label"    disk.btrfs
+mkfs.ext2     -F  -L "ext2_label"     disk.ext2
+mkfs.ext3     -F  -L "ext3_label"     disk.ext3
+mkfs.ext4     -F  -L "ext4_label"     disk.ext4
+mkfs.ntfs     -fF -L "ntfs_label"     disk.ntfs
+mkfs.reiserfs -ff -l "reiserfs_label" disk.reiserfs
+mkswap            -L "swap_label"     disk.swap
+mkfs.vfat         -n "vfat_label"     disk.vfat
+mkfs.xfs          -L "xfs_label"      disk.xfs
 
