@@ -58,6 +58,45 @@ int identify_ext2 (char *name, char *buffer, int bufsize)
 }
 
 /**
+ * identify_gpt
+ */
+int identify_gpt (char *name, char *buffer, int bufsize)
+{
+	int i;
+	int j;
+
+	if (strncmp (buffer+512, "EFI PART", 8))
+		return 0;
+
+	printf ("%s: gpt\n", name);
+
+	printf ("\tuuid = %02hhx%02hhx%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx\n",
+		buffer[568], buffer[569], buffer[570], buffer[571], buffer[572], buffer[573], buffer[574], buffer[575], buffer[576], buffer[577], buffer[578], buffer[579], buffer[580], buffer[581], buffer[582], buffer[583]);
+
+	buffer += 1024;
+	printf ("\tpartitions:\n");
+	for (i = 0; i < 128; i++, buffer += 128) {
+		if (*(long long*) (buffer+32) == 0)
+			break;
+		if (buffer[56]) {
+			printf ("\t\tlabel = ");
+			for (j = 0; j < 32; j += 2) {
+				if (buffer[56+j] == 0)
+					break;
+				printf ("%c", buffer[56+j]);
+			}
+			printf ("\n");
+		}
+		//printf ("\t\ttype uuid = %02hhx%02hhx%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx\n",
+		//	buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7], buffer[8], buffer[9], buffer[10], buffer[11], buffer[12], buffer[13], buffer[14], buffer[15]);
+		printf ("\t\tpart uuid = %02hhx%02hhx%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx\n",
+			buffer[16], buffer[17], buffer[18], buffer[19], buffer[20], buffer[21], buffer[22], buffer[23], buffer[24], buffer[25], buffer[26], buffer[27], buffer[28], buffer[29], buffer[30], buffer[31]);
+	}
+
+	return 1;
+}
+
+/**
  * identify_ntfs
  */
 int identify_ntfs (char *name, char *buffer, int bufsize)
@@ -192,7 +231,8 @@ int identify (char *name, char *buffer, int bufsize)
 		identify_swap     (name, buffer, bufsize) ||
 		identify_vfat     (name, buffer, bufsize) ||
 		identify_xfs      (name, buffer, bufsize) ||
-		identify_lvm      (name, buffer, bufsize));
+		identify_lvm      (name, buffer, bufsize) ||
+		identify_gpt      (name, buffer, bufsize));
 }
 
 /**
