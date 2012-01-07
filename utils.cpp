@@ -333,15 +333,12 @@ unsigned int parse_tagged_line (const std::string &line, std::map<std::string,St
 std::string read_file_line (const std::string &filename)
 {
 	std::ifstream in (filename.c_str());
-	std::string line;
-	if (in.is_open()) {
-		while (in.good()) {
-			getline (in,line);
-		}
-		in.close();
-	} else {
-		std::cout << "Unable to open file";
-	}
+
+	std::string line ((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+
+	size_t pos = line.find_first_of ("\r\n");
+	if (pos != std::string::npos)
+		line = line.substr (0, pos);
 
 	return line;
 }

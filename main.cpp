@@ -20,10 +20,11 @@
 #include <stdlib.h>
 #include <parted/parted.h>
 
-#include <vector>
-#include <string>
-#include <sstream>
 #include <map>
+#include <queue>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "container.h"
 #include "disk.h"
@@ -50,6 +51,19 @@ struct queue_item {
 	Container *item;
 	std::vector<std::string> requires;
 };
+
+queue<Container*> probe_queue;
+
+/**
+ * queue_add_probe
+ */
+void queue_add_probe (Container *item)
+{
+	if (!item)
+		return;
+
+	probe_queue.push_back (item);
+}
 
 /**
  * get_partition_type

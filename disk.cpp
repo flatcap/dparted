@@ -58,6 +58,14 @@ bool Disk::probe (const std::string &name, const struct stat &st)
 	//	/sys/block/sda/size
 	//	/sys/block/sda/device/vendor
 	//	/sys/block/sda/device/model
+
+	std::string readonly = read_file_line ("/sys/block/sda/ro");
+	std::string size     = read_file_line ("/sys/block/sda/size");
+	std::string model    = read_file_line ("/sys/block/sda/device/vendor");
+	std::string vendor   = read_file_line ("/sys/block/sda/device/model");
+
+	printf ("%s: %s\n", __FUNCTION__, model.c_str());
+
 	return false;
 }
 

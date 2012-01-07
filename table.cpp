@@ -37,4 +37,11 @@ Table::~Table()
 {
 }
 
+/**
+ * probe
+ */
+Table * Table::probe (char *buffer, int buf_size)
+{
+	return NULL;
+}
 

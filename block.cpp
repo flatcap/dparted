@@ -99,7 +99,7 @@ bool Block::probe (const std::string &name, Container &list)
 	close (fd);
 
 	item->bytes_size = st.st_size;
-	item->device     = name;		// This and offset, should be delegated to the child
+	item->device     = name;		// This and offset should be delegated to the child
 	item->block_size = st.st_blksize;
 
 	//printf ("device = %s\n", name.c_str());

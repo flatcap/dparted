@@ -16,26 +16,12 @@
  */
 
 
-#ifndef _TABLE_H_
-#define _TABLE_H_
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
-#include <string>
+class Container;
 
-#include "container.h"
+void queue_add_probe (Container *item);
 
-class Table : public Container
-{
-public:
-	Table (void);
-	virtual ~Table();
-
-	static Table * probe (char *buffer, int buf_size);
-
-protected:
-
-private:
-
-};
-
-#endif // _TABLE_H_
+#endif // _MAIN_H_
 

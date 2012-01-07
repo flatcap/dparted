@@ -405,3 +405,5 @@ msdos::probe
 gpt::probe
 	return a valid (populated) container
 
+copyright 2011-2012
+
