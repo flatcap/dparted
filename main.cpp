@@ -52,7 +52,7 @@ struct queue_item {
 	std::vector<std::string> requires;
 };
 
-queue<Container*> probe_queue;
+std::queue<Container*> probe_queue;
 
 /**
  * queue_add_probe
@@ -62,7 +62,7 @@ void queue_add_probe (Container *item)
 	if (!item)
 		return;
 
-	probe_queue.push_back (item);
+	probe_queue.push (item);
 }
 
 /**
