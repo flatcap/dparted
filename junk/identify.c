@@ -162,6 +162,23 @@ int identify_xfs (char *name, char *buffer, int bufsize)
 	return 1;
 }
 
+/**
+ * identify_lvm
+ */
+int identify_lvm (char *name, char *buffer, int bufsize)
+{
+	if (strncmp (buffer+536, "LVM2 001", 8))
+		return 0;
+
+	printf ("%s: lvm\n", name);
+
+	printf ("\tuuid = %.6s-%.4s-%.4s-%.4s-%.4s-%.4s-%.6s\n",
+		buffer+544, buffer+550, buffer+554, buffer+558, buffer+562, buffer+566, buffer+570);
+	printf ("\tsize = %lld\n", *(long long*) (buffer+576));
+
+	return 1;
+}
+
 
 /**
  * identify
@@ -174,7 +191,8 @@ int identify (char *name, char *buffer, int bufsize)
 		identify_reiserfs (name, buffer, bufsize) ||
 		identify_swap     (name, buffer, bufsize) ||
 		identify_vfat     (name, buffer, bufsize) ||
-		identify_xfs      (name, buffer, bufsize));
+		identify_xfs      (name, buffer, bufsize) ||
+		identify_lvm      (name, buffer, bufsize));
 }
 
 /**
