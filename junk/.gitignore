@@ -4,6 +4,7 @@ compare
 enum
 format
 fs
+identify
 inherit
 loop
 lvm
