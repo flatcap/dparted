@@ -2,12 +2,12 @@ CC	= g++
 RM	= rm -fr
 
 SRC	= block.cpp container.cpp disk.cpp extended.cpp \
-	  file.cpp filesystem.cpp gpt.cpp linear.cpp loop.cpp main.cpp \
-	  mirror.cpp msdos.cpp partition.cpp table.cpp \
+	  file.cpp filesystem.cpp gpt.cpp identify.cpp linear.cpp loop.cpp \
+	  main.cpp mirror.cpp msdos.cpp partition.cpp table.cpp \
 	  segment.cpp stripe.cpp utils.cpp  volume.cpp volumegroup.cpp whole.cpp
 
 HDR	= block.h container.h disk.h extended.h file.h \
-	  filesystem.h gpt.h linear.h loop.h mirror.h msdos.h \
+	  filesystem.h gpt.h identify.h linear.h loop.h mirror.h msdos.h \
 	  partition.h table.h segment.h stringnum.h stripe.h utils.h \
 	  volumegroup.h volume.h whole.h
 
@@ -45,6 +45,7 @@ extended.o:		extended.cpp extended.h partition.h container.h utils.h stringnum.h
 file.o:			file.cpp file.h block.h container.h
 filesystem.o:		filesystem.cpp filesystem.h container.h partition.h utils.h stringnum.h
 gpt.o:			gpt.cpp gpt.h table.h container.h
+identify.o:		identify.cpp
 linear.o:		linear.cpp linear.h volume.h whole.h container.h utils.h stringnum.h
 loop.o:			loop.cpp loop.h block.h container.h
 main.o:			main.cpp container.h disk.h block.h extended.h partition.h file.h filesystem.h gpt.h table.h linear.h volume.h whole.h loop.h mirror.h msdos.h segment.h stripe.h volumegroup.h utils.h stringnum.h
