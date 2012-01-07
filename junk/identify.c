@@ -97,6 +97,29 @@ int identify_gpt (char *name, char *buffer, int bufsize)
 }
 
 /**
+ * identify_msdos
+ */
+int identify_msdos (char *name, char *buffer, int bufsize)
+{
+	int i;
+
+	if (*(unsigned short int *) (buffer+510) != 0xAA55)	// boot signature
+		return 0;
+
+	printf ("%s: msdos\n", name);
+
+	buffer += 446;
+	printf ("\tpartitions:\n");
+	for (i = 0; i < 4; i++, buffer += 16) {
+		if (buffer[4] == 0)
+			continue;
+		printf ("\t\tnumber %d : type 0x%02hhx\n", i+1, buffer[4]);
+	}
+
+	return 1;
+}
+
+/**
  * identify_ntfs
  */
 int identify_ntfs (char *name, char *buffer, int bufsize)
@@ -232,7 +255,8 @@ int identify (char *name, char *buffer, int bufsize)
 		identify_vfat     (name, buffer, bufsize) ||
 		identify_xfs      (name, buffer, bufsize) ||
 		identify_lvm      (name, buffer, bufsize) ||
-		identify_gpt      (name, buffer, bufsize));
+		identify_gpt      (name, buffer, bufsize) ||
+		identify_msdos    (name, buffer, bufsize));
 }
 
 /**
