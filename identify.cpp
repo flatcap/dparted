@@ -35,6 +35,22 @@ int identify_ext2 (char *buffer, int bufsize)
 }
 
 /**
+ * identify_gpt
+ */
+int identify_gpt (char *name, char *buffer, int bufsize)
+
+	return (strncmp (buffer+512, "EFI PART", 8) == 0);
+}
+
+/**
+ * identify_msdos
+ */
+int identify_msdos (char *name, char *buffer, int bufsize)
+{
+	return (*(unsigned short int *) (buffer+510) == 0xAA55);
+}
+
+/**
  * identify_ntfs
  */
 int identify_ntfs (char *buffer, int bufsize)
@@ -91,5 +107,4 @@ int identify_lvm (char *buffer, int bufsize)
 {
 	return (strncmp (buffer+536, "LVM2 001", 8) == 0);
 }
-
 

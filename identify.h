@@ -21,6 +21,7 @@
 
 int identify_btrfs    (char *buffer, int bufsize);
 int identify_ext2     (char *buffer, int bufsize);
+int identify_gpt      (char *buffer, int bufsize);
 int identify_lvm      (char *buffer, int bufsize);
 int identify_ntfs     (char *buffer, int bufsize);
 int identify_reiserfs (char *buffer, int bufsize);

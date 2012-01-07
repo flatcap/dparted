@@ -32,6 +32,7 @@
 #include "file.h"
 #include "filesystem.h"
 #include "gpt.h"
+#include "identify.h"
 #include "linear.h"
 #include "loop.h"
 #include "mirror.h"
