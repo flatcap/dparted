@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TYPES="ext2 ext3 ext4 btrfs ntfs reiserfs vfat xfs"
+TYPES="ext2 ext3 ext4 btrfs ntfs reiserfs swap vfat xfs"
 
 for i in $TYPES; do
 	rm -f disk.$i
@@ -13,6 +13,7 @@ mkfs.ext3     -F  disk.ext3
 mkfs.ext4     -F  disk.ext4
 mkfs.ntfs     -fF disk.ntfs
 mkfs.reiserfs -ff disk.reiserfs
+mkswap            disk.swap
 mkfs.vfat         disk.vfat
 mkfs.xfs          disk.xfs
 
