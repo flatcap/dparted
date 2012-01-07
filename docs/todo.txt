@@ -183,8 +183,6 @@ blockdev --getsize /dev/sda
 blockdev --getsize64 /dev/sda
 500107862016				# size in bytes
 
-need metadata / reserved classes
-
 unique things? map<>
 	disk
 	uuid
@@ -324,7 +322,7 @@ Automatic dump functions
 		add_member (handle, "name", value_reference);
 	disk ctor
 		handle = create_section ("Disk");
-		add_member (handle, "name", value_reference);o
+		add_member (handle, "name", value_reference);
 Sections: map<name, members>
 members: vector<M>
 M struct <name, type, pointer>
@@ -380,10 +378,30 @@ check version of lvm before starting
 
 images - prereq for high-numbered loops in shell script
 
-/var/lib/libvirt/images/fedora-16.imgo
+/var/lib/libvirt/images/fedora-16.img
 
 ifndef __USE_FILE_OFFSET64 
 #ifdef __USE_LARGEFILE64 
 extern int stat64 (__const char *__restrict __file, 
 extern int fstat64 (int __fd, struct stat64 *__buf) __THROW __nonnull ((2)); 
+
+create copy ctors to create backup versions of container trees
+
+partition/fs clone vs copy
+	clone = identical bit for bit => same uuid
+	copy = efficient duplication, just copy the data regions ($Bitmap)
+
+container::snapshot_create
+container::snapshot_revert
+	recursively copies / reverts a container tree
+
+register_*
+	table
+	filesystem
+	logical
+keep track of "contained by"?
+
+msdos::probe
+gpt::probe
+	return a valid (populated) container
 
