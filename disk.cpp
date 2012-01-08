@@ -64,7 +64,7 @@ bool Disk::probe (const std::string &name, const struct stat &st)
 	std::string model    = read_file_line ("/sys/block/sda/device/vendor");
 	std::string vendor   = read_file_line ("/sys/block/sda/device/model");
 
-	printf ("%s: %s\n", __FUNCTION__, model.c_str());
+	//printf ("%s: %s\n", __FUNCTION__, model.c_str());
 
 	return false;
 }

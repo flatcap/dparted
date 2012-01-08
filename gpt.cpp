@@ -17,10 +17,14 @@
 
 
 #include <stdio.h>
+#include <string.h>
 
 #include <sstream>
 
 #include "gpt.h"
+#include "partition.h"
+#include "utils.h"
+#include "main.h"
 
 /**
  * Gpt
@@ -37,6 +41,54 @@ Gpt::~Gpt()
 {
 }
 
+
+Gpt * Gpt::probe (unsigned char *buffer, int bufsize)
+{
+	Gpt *g = NULL;
+
+	if (strncmp ((char*) buffer+512, "EFI PART", 8))	// XXX replace with strict identify function (static)
+		return NULL;
+
+	g = new Gpt;
+
+	g->name = "gpt";
+	g->bytes_size = 1234;		// unknown as yet
+	g->bytes_used = 0;
+	g->device = "unknown";
+	g->device_offset = 0;
+	g->block_size = 0;
+	g->uuid = read_uuid (buffer+568);
+
+	int i;
+	int j;
+	Partition *p = NULL;
+	buffer += 1024;
+
+	for (i = 0; i < 128; i++, buffer += 128) {
+		if (*(long long*) (buffer+32) == 0)
+			break;
+
+		p = new Partition;
+		p->bytes_size = 1234;
+		p->bytes_used = 0;
+		p->device = "unknown";
+		p->device_offset = 0;
+		p->uuid = read_uuid (buffer+16);
+		//p->part_type_uuid = read_guid (buffer+0);
+
+		if (buffer[56]) {
+			for (j = 0; j < 32; j += 2) {
+				if (buffer[56+j] == 0)
+					break;
+				p->name += buffer[56+j];
+			}
+		}
+
+		queue_add_probe (p);
+	}
+
+	return g;
+}
 
 /**
  * dump_dot

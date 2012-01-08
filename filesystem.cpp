@@ -42,6 +42,22 @@ Filesystem::~Filesystem()
 
 
 /**
+ * probe
+ */
+Filesystem * Filesystem::probe (char *buffer, int bufsize)
+{
+	//int identify_btrfs    (char *buffer, int bufsize);
+	//int identify_ext2     (char *buffer, int bufsize);
+	//int identify_ntfs     (char *buffer, int bufsize);
+	//int identify_reiserfs (char *buffer, int bufsize);
+	//int identify_swap     (char *buffer, int bufsize);
+	//int identify_vfat     (char *buffer, int bufsize);
+	//int identify_xfs      (char *buffer, int bufsize);
+	return NULL;
+}
+
+
+/**
  * dump
  */
 void Filesystem::dump (int indent /* = 0 */)

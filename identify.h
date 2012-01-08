@@ -19,15 +19,16 @@
 #ifndef _IDENTIFY_H_
 #define _IDENTIFY_H_
 
-int identify_btrfs    (char *buffer, int bufsize);
-int identify_ext2     (char *buffer, int bufsize);
-int identify_gpt      (char *buffer, int bufsize);
-int identify_lvm      (char *buffer, int bufsize);
-int identify_ntfs     (char *buffer, int bufsize);
-int identify_reiserfs (char *buffer, int bufsize);
-int identify_swap     (char *buffer, int bufsize);
-int identify_vfat     (char *buffer, int bufsize);
-int identify_xfs      (char *buffer, int bufsize);
+int identify_btrfs    (unsigned char *buffer, int bufsize);
+int identify_ext2     (unsigned char *buffer, int bufsize);
+int identify_gpt      (unsigned char *buffer, int bufsize);
+int identify_lvm      (unsigned char *buffer, int bufsize);
+int identify_msdos    (unsigned char *buffer, int bufsize);
+int identify_ntfs     (unsigned char *buffer, int bufsize);
+int identify_reiserfs (unsigned char *buffer, int bufsize);
+int identify_swap     (unsigned char *buffer, int bufsize);
+int identify_vfat     (unsigned char *buffer, int bufsize);
+int identify_xfs      (unsigned char *buffer, int bufsize);
 
 #endif // _IDENTIFY_H_
 

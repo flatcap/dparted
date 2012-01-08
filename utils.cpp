@@ -17,6 +17,7 @@
 
 
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include <stdlib.h>
 #include <parted/parted.h>
@@ -326,7 +327,6 @@ unsigned int parse_tagged_line (const std::string &line, std::map<std::string,St
 	return tags.size();
 }
 
-
 /**
  * read_file_line
  */
@@ -341,5 +341,18 @@ std::string read_file_line (const std::string &filename)
 		line = line.substr (0, pos);
 
 	return line;
+}
+
+/**
+ * read_uuid
+ */
+std::string read_uuid (unsigned char *buffer)
+{
+	char uuid[40];
+
+	snprintf (uuid, sizeof (uuid), "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+		buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7], buffer[8], buffer[9], buffer[10], buffer[11], buffer[12], buffer[13], buffer[14], buffer[15]);
+
+	return uuid;
 }
 

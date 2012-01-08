@@ -21,15 +21,15 @@
 /**
  * identify_btrfs
  */
-int identify_btrfs (char *buffer, int bufsize)
+int identify_btrfs (unsigned char *buffer, int bufsize)
 {
-	return (strncmp (buffer+65600, "_BHRfS_M", 8) == 0);
+	return (strncmp ((char*) buffer+65600, "_BHRfS_M", 8) == 0);
 }
 
 /**
  * identify_ext2
  */
-int identify_ext2 (char *buffer, int bufsize)
+int identify_ext2 (unsigned char *buffer, int bufsize)
 {
 	return (*(unsigned short int *) (buffer+1080) == 0xEF53);
 }
@@ -37,15 +37,15 @@ int identify_ext2 (char *buffer, int bufsize)
 /**
  * identify_gpt
  */
-int identify_gpt (char *name, char *buffer, int bufsize)
-
-	return (strncmp (buffer+512, "EFI PART", 8) == 0);
+int identify_gpt (unsigned char *buffer, int bufsize)
+{
+	return (strncmp ((char*) buffer+512, "EFI PART", 8) == 0);
 }
 
 /**
  * identify_msdos
  */
-int identify_msdos (char *name, char *buffer, int bufsize)
+int identify_msdos (unsigned char *buffer, int bufsize)
 {
 	return (*(unsigned short int *) (buffer+510) == 0xAA55);
 }
@@ -53,36 +53,36 @@ int identify_msdos (char *name, char *buffer, int bufsize)
 /**
  * identify_ntfs
  */
-int identify_ntfs (char *buffer, int bufsize)
+int identify_ntfs (unsigned char *buffer, int bufsize)
 {
-	return (strncmp (buffer+3, "NTFS    ", 8) == 0);
+	return (strncmp ((char*) buffer+3, "NTFS    ", 8) == 0);
 }
 
 /**
  * identify_reiserfs
  */
-int identify_reiserfs (char *buffer, int bufsize)
+int identify_reiserfs (unsigned char *buffer, int bufsize)
 {
-	return (!strncmp (buffer+65588, "ReIsErFs",  8) ||
-		!strncmp (buffer+65588, "ReIsEr2Fs", 8) ||
-		!strncmp (buffer+65588, "ReIsEr3Fs", 9));
+	return (!strncmp ((char*) buffer+65588, "ReIsErFs",  8) ||
+		!strncmp ((char*) buffer+65588, "ReIsEr2Fs", 8) ||
+		!strncmp ((char*) buffer+65588, "ReIsEr3Fs", 9));
 }
 
 /**
  * identify_swap
  */
-int identify_swap (char *buffer, int bufsize)
+int identify_swap (unsigned char *buffer, int bufsize)
 {
-	return (!strncmp (buffer+4086, "SWAPSPACE2",           10) ||
-		!strncmp (buffer+4086, "SWAP-SPACE",           10) ||
-		!strncmp (buffer+4076, "SWAPSPACE2S1SUSPEND",  19) ||
-		!strncmp (buffer+4076, "SWAPSPACE2LINHIB0001", 20));
+	return (!strncmp ((char*) buffer+4086, "SWAPSPACE2",           10) ||
+		!strncmp ((char*) buffer+4086, "SWAP-SPACE",           10) ||
+		!strncmp ((char*) buffer+4076, "SWAPSPACE2S1SUSPEND",  19) ||
+		!strncmp ((char*) buffer+4076, "SWAPSPACE2LINHIB0001", 20));
 }
 
 /**
  * identify_vfat
  */
-int identify_vfat (char *buffer, int bufsize)
+int identify_vfat (unsigned char *buffer, int bufsize)
 {
 	return ((*(unsigned short int *) (buffer+510) == 0xAA55) &&
 		(buffer[3] != 0) &&
@@ -95,16 +95,16 @@ int identify_vfat (char *buffer, int bufsize)
 /**
  * identify_xfs
  */
-int identify_xfs (char *buffer, int bufsize)
+int identify_xfs (unsigned char *buffer, int bufsize)
 {
-	return (strncmp (buffer, "XFSB", 4) == 0);
+	return (strncmp ((char*) buffer, "XFSB", 4) == 0);
 }
 
 /**
  * identify_lvm
  */
-int identify_lvm (char *buffer, int bufsize)
+int identify_lvm (unsigned char *buffer, int bufsize)
 {
-	return (strncmp (buffer+536, "LVM2 001", 8) == 0);
+	return (strncmp ((char*) buffer+536, "LVM2 001", 8) == 0);
 }
 

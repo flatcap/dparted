@@ -33,6 +33,7 @@
 #include "disk.h"
 #include "file.h"
 #include "loop.h"
+#include "main.h"
 
 /**
  * Block
@@ -48,6 +49,7 @@ Block::Block (void)
 Block::~Block()
 {
 }
+
 
 /**
  * probe
@@ -88,7 +90,7 @@ bool Block::probe (const std::string &name, Container &list)
 		return false;
 	}
 
-	item->probe (name, st);
+	//item->probe (name, st);
 
 	long long file_size_in_bytes = 0;
 	int fd = -1;
@@ -98,7 +100,8 @@ bool Block::probe (const std::string &name, Container &list)
 	//printf ("res = %d\n", res);
 	close (fd);
 
-	item->bytes_size = st.st_size;
+	//item->bytes_size = st.st_size;
+	item->bytes_size = file_size_in_bytes;
 	item->device     = name;		// This and offset should be delegated to the child
 	item->block_size = st.st_blksize;
 
@@ -108,6 +111,7 @@ bool Block::probe (const std::string &name, Container &list)
 	//printf ("block = %ld\n", st.st_blksize);
 	if (item) {
 		list.add_child (item);
+		queue_add_probe (item);	// queue the container for action
 	}
 
 	// exists and I've dealt with it

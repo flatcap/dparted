@@ -38,6 +38,7 @@ std::string get_fs (const std::string &device, long long offset);
 unsigned int parse_tagged_line (const std::string &line, std::map<std::string,StringNum> &tags, bool clear_map = true);
 unsigned int explode (const char *separators, const std::string &input, std::vector<std::string> &parts);
 std::string read_file_line (const std::string &filename);
+std::string read_uuid (unsigned char *buffer);
 
 #endif // _UTILS_H_
 

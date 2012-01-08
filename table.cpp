@@ -21,6 +21,9 @@
 #include <string>
 
 #include "table.h"
+#include "identify.h"
+#include "gpt.h"
+#include "msdos.h"
 
 /**
  * Table
@@ -37,11 +40,21 @@ Table::~Table()
 {
 }
 
+
 /**
  * probe
  */
-Table * Table::probe (char *buffer, int buf_size)
+Table * Table::probe (unsigned char *buffer, int bufsize)
 {
-	return NULL;
+	Table *result = NULL;
+
+	if ((result = Gpt::probe (buffer, bufsize))) {
+		// do nothing
+	} else if (identify_msdos (buffer, bufsize)) {
+		printf ("\tmsdos\n");
+		result = new Msdos;
+	}
+
+	return result;
 }
 

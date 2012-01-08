@@ -29,7 +29,7 @@ public:
 	Table (void);
 	virtual ~Table();
 
-	static Table * probe (char *buffer, int buf_size);
+	static Table * probe (unsigned char *buffer, int bufsize);
 
 protected:
 
