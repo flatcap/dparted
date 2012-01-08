@@ -29,7 +29,7 @@ public:
 	Filesystem (void);
 	virtual ~Filesystem();
 
-	Filesystem * probe (char *buffer, int bufsize);
+	static Filesystem * probe (Container *parent, unsigned char *buffer, int bufsize);
 
 	virtual void dump (int indent = 0);
 	virtual void dump_csv (void);

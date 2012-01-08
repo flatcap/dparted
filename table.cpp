@@ -44,11 +44,11 @@ Table::~Table()
 /**
  * probe
  */
-Table * Table::probe (unsigned char *buffer, int bufsize)
+Table * Table::probe (Container *parent, unsigned char *buffer, int bufsize)
 {
 	Table *result = NULL;
 
-	if ((result = Gpt::probe (buffer, bufsize))) {
+	if ((result = Gpt::probe (parent, buffer, bufsize))) {
 		// do nothing
 	} else if (identify_msdos (buffer, bufsize)) {
 		printf ("\tmsdos\n");

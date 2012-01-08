@@ -66,6 +66,7 @@ void queue_add_probe (Container *item)
 		return;
 
 	probe_queue.push (item);
+	//printf ("QUEUE has %lu items\n", probe_queue.size());
 }
 
 /**
@@ -824,7 +825,8 @@ int main (int argc, char *argv[])
 
 	unsigned char *buffer = NULL;
 	int bufsize = 4096;
-	int count;
+	long long count;
+	long long seek;
 	int fd;
 
 	buffer = (unsigned char*) malloc (bufsize);
@@ -834,6 +836,7 @@ int main (int argc, char *argv[])
 	while ((item = probe_queue.front())) {
 		printf ("queued item %p\n", item);
 		probe_queue.pop();
+		//printf ("QUEUE has %lu items\n", probe_queue.size());
 
 		std::string s;
 		s = get_size (item->bytes_size);
@@ -847,20 +850,43 @@ int main (int argc, char *argv[])
 			continue;
 		}
 
+		//printf ("reading from:\n");
+		//printf ("\tdevice = %s\n", item->device.c_str());
+		//printf ("\tdevice_offset = %lld\n", item->device_offset);
+
+		seek = lseek (fd, item->device_offset, SEEK_SET);
+		if (seek != item->device_offset) {
+			printf ("seek failed (%lld)\n", seek);
+			close (fd);
+			continue;
+		}
+		//printf ("seek succeeded\n"); fflush (stdout);
+
 		count = read (fd, buffer, bufsize);
 		if (count != bufsize) {
 			printf ("read failed for %s (%d bytes)\n", item->device.c_str(), bufsize);
 			close (fd);
 			continue;
 		}
+		//printf ("read succeeded\n"); fflush (stdout);
+
+		//printf ("\t%02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x\n", buffer[1070], buffer[1071], buffer[1072], buffer[1073], buffer[1074], buffer[1075], buffer[1076], buffer[1077], buffer[1078], buffer[1079], buffer[1080], buffer[1081], buffer[1082], buffer[1083], buffer[1084], buffer[1085]);
 
 		close (fd);
-		Table *t = Table::probe (buffer, bufsize);
 
-		printf ("\ttable: %s\n", t->name.c_str());
-		printf ("\t\tuuid = %s\n", t->uuid.c_str());
+		Table *t = Table::probe (item, buffer, bufsize);
+		if (t) {
+			printf ("\ttable: %s\n", t->name.c_str());
+			printf ("\t\tuuid = %s\n", t->uuid.c_str());
+			delete t;
+		}
 
-		delete t;
+		Filesystem *f = Filesystem::probe (item, buffer, bufsize);
+		if (f) {
+			printf ("\tfilesystem: %s\n", f->name.c_str());
+			delete f;
+		}
+
 	}
 
 #if 0

@@ -31,7 +31,7 @@ public:
 
 	virtual std::string dump_dot (void);
 
-	static Gpt * probe (unsigned char *buffer, int bufsize);
+	static Gpt * probe (Container *parent, unsigned char *buffer, int bufsize);
 
 protected:
 

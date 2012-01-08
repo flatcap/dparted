@@ -42,7 +42,10 @@ Gpt::~Gpt()
 }
 
 
-Gpt * Gpt::probe (unsigned char *buffer, int bufsize)
+/**
+ * probe
+ */
+Gpt * Gpt::probe (Container *parent, unsigned char *buffer, int bufsize)
 {
 	Gpt *g = NULL;
 
@@ -54,7 +57,7 @@ Gpt * Gpt::probe (unsigned char *buffer, int bufsize)
 	g->name = "gpt";
 	g->bytes_size = 1234;		// unknown as yet
 	g->bytes_used = 0;
-	g->device = "unknown";
+	g->device = parent->device;
 	g->device_offset = 0;
 	g->block_size = 0;
 	g->uuid = read_uuid (buffer+568);
@@ -69,12 +72,16 @@ Gpt * Gpt::probe (unsigned char *buffer, int bufsize)
 			break;
 
 		p = new Partition;
-		p->bytes_size = 1234;
 		p->bytes_used = 0;
-		p->device = "unknown";
-		p->device_offset = 0;
+		p->device = g->device;
 		p->uuid = read_uuid (buffer+16);
 		//p->part_type_uuid = read_guid (buffer+0);
+
+		long long start  = *(long long*) (buffer+32);
+		long long finish = *(long long*) (buffer+40);
+
+		p->device_offset = start * 512;
+		p->bytes_size = (finish - start + 1) * 512;
 
 		if (buffer[56]) {
 			for (j = 0; j < 32; j += 2) {
@@ -84,11 +91,18 @@ Gpt * Gpt::probe (unsigned char *buffer, int bufsize)
 			}
 		}
 
+		std::string s = get_size (p->bytes_size);
+		printf ("\t\tlabel  = %s\n",   p->name.c_str());
+		printf ("\t\t\tstart  = %lld\n", *(long long*) (buffer+32) * 512);
+		printf ("\t\t\tfinish = %lld\n", *(long long*) (buffer+40) * 512);
+		printf ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
+
 		queue_add_probe (p);
 	}
 
 	return g;
 }
+
 
 /**
  * dump_dot

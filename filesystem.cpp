@@ -24,6 +24,7 @@
 #include "filesystem.h"
 #include "partition.h"
 #include "utils.h"
+#include "identify.h"
 
 /**
  * Filesystem
@@ -44,16 +45,33 @@ Filesystem::~Filesystem()
 /**
  * probe
  */
-Filesystem * Filesystem::probe (char *buffer, int bufsize)
+Filesystem * Filesystem::probe (Container *parent, unsigned char *buffer, int bufsize)
 {
-	//int identify_btrfs    (char *buffer, int bufsize);
-	//int identify_ext2     (char *buffer, int bufsize);
-	//int identify_ntfs     (char *buffer, int bufsize);
-	//int identify_reiserfs (char *buffer, int bufsize);
-	//int identify_swap     (char *buffer, int bufsize);
-	//int identify_vfat     (char *buffer, int bufsize);
-	//int identify_xfs      (char *buffer, int bufsize);
-	return NULL;
+	Filesystem *f = NULL;
+	std::string name;
+
+	if (identify_btrfs (buffer, bufsize))
+		name = "btrfs";
+	else if (identify_ext2 (buffer, bufsize))
+		name = "ext2";
+	else if (identify_ntfs (buffer, bufsize))
+		name = "ntfs";
+	else if (identify_reiserfs (buffer, bufsize))
+		name = "reiserfs";
+	else if (identify_swap (buffer, bufsize))
+		name = "swap";
+	else if (identify_vfat (buffer, bufsize))
+		name = "vfat";
+	else if (identify_xfs (buffer, bufsize))
+		name = "xfs";
+
+	//printf ("NAME = %s\n", name.c_str());
+	if (!name.empty()) {
+		f = new Filesystem;
+		f->name = name;
+	}
+
+	return f;
 }
 
 
