@@ -96,7 +96,7 @@ bool Block::probe (const std::string &name, Container &list)
 	int fd = -1;
 	fd = open (name.c_str(), O_RDONLY);
 	//printf ("fd = %d\n", fd);
-	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes);
+	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); //XXX replace with ftell (user, not root)
 	//printf ("res = %d\n", res);
 	close (fd);
 

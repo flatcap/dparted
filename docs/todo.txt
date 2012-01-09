@@ -407,3 +407,7 @@ gpt::probe
 
 copyright 2011-2012
 
+reduce/isolate the amount of root-only things
+so that a normal user can run it on a loop device, or vm image
+without extra privs
+

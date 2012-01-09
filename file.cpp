@@ -28,6 +28,7 @@
  */
 File::File (void)
 {
+	name = "file";
 	type = "file";
 }
 

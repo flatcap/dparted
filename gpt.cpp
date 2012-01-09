@@ -92,11 +92,12 @@ Gpt * Gpt::probe (Container *parent, unsigned char *buffer, int bufsize)
 		}
 
 		std::string s = get_size (p->bytes_size);
-		printf ("\t\tlabel  = %s\n",   p->name.c_str());
-		printf ("\t\t\tstart  = %lld\n", *(long long*) (buffer+32) * 512);
-		printf ("\t\t\tfinish = %lld\n", *(long long*) (buffer+40) * 512);
-		printf ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
+		//printf ("\t\tlabel  = %s\n",   p->name.c_str());
+		//printf ("\t\t\tstart  = %lld\n", *(long long*) (buffer+32) * 512);
+		//printf ("\t\t\tfinish = %lld\n", *(long long*) (buffer+40) * 512);
+		//printf ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
 
+		g->add_child (p);
 		queue_add_probe (p);
 	}
 

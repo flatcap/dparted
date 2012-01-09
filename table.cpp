@@ -50,9 +50,8 @@ Table * Table::probe (Container *parent, unsigned char *buffer, int bufsize)
 
 	if ((result = Gpt::probe (parent, buffer, bufsize))) {
 		// do nothing
-	} else if (identify_msdos (buffer, bufsize)) {
-		printf ("\tmsdos\n");
-		result = new Msdos;
+	} else if ((result = Msdos::probe (parent, buffer, bufsize))) {
+		// do nothing
 	}
 
 	return result;

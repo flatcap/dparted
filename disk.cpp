@@ -38,6 +38,7 @@ Disk::Disk (void) :
 	host (0),
 	did (0)
 {
+	name = "disk";
 	type = "disk";
 }
 

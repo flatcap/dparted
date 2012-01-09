@@ -28,6 +28,7 @@
  */
 Loop::Loop (void)
 {
+	name = "loop";
 	type = "loop";
 }
 

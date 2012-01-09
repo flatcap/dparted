@@ -808,11 +808,13 @@ int main (int argc, char *argv[])
 	Container *item = NULL;
 
 	const char *disk_list[] = {
-		"/dev/sda",
-		"/dev/sdb", "/dev/sdc", "/dev/sdd",
+		//"/dev/sda",
+		//"/dev/sdb",
+		"/dev/sdc",
+		//"/dev/sdd",
 		//"/dev/loop0", "/dev/loop1", "/dev/loop2",
 		//"/dev/loop3",
-		"/dev/loop4",
+		//"/dev/loop4",
 		//"/dev/loop5", "/dev/loop6", "/dev/loop7",
 		//"/dev/loop8", "/dev/loop9", "/dev/loop10", "/dev/loop11", "/dev/loop12", "/dev/loop13", "/dev/loop14", "/dev/loop15",
 		//`"/var/lib/libvirt/images/f16.img",
@@ -834,13 +836,12 @@ int main (int argc, char *argv[])
 		return 1;
 
 	while ((item = probe_queue.front())) {
-		printf ("queued item %p\n", item);
+		printf ("queued item: %s\n", item->name.c_str());
 		probe_queue.pop();
 		//printf ("QUEUE has %lu items\n", probe_queue.size());
 
 		std::string s;
 		s = get_size (item->bytes_size);
-		printf ("\tname       = %s\n",        item->name.c_str());
 		printf ("\tdevice     = %s\n",        item->device.c_str());
 		printf ("\ttotal size = %lld (%s)\n", item->bytes_size, s.c_str());
 
@@ -879,14 +880,17 @@ int main (int argc, char *argv[])
 			printf ("\ttable: %s\n", t->name.c_str());
 			printf ("\t\tuuid = %s\n", t->uuid.c_str());
 			delete t;
+			continue;
 		}
 
 		Filesystem *f = Filesystem::probe (item, buffer, bufsize);
 		if (f) {
 			printf ("\tfilesystem: %s\n", f->name.c_str());
 			delete f;
+			continue;
 		}
 
+		//logicals...
 	}
 
 #if 0
