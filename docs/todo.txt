@@ -411,3 +411,52 @@ reduce/isolate the amount of root-only things
 so that a normal user can run it on a loop device, or vm image
 without extra privs
 
+new top-level panel for virtual disk images
+path, size, %age used, etc
+
+mounts panel
+	show all
+	show/hide type "tmpfs", etc
+	show/hide virtual fs
+	show/hide net fs
+
+if I use a stock icon on a panel
+will it be themed?
+
+identify - need bytes
+	ntfs 512
+	swap 4K
+	fat 512
+	ext2 1024
+	btrfs 65K
+
+register probe
+	type: table, filesystems, logical
+	size: how much to identify self
+
+msdos reads partition table
+	knows about / creates: partition, extended, reserved
+	queues probe for partition contents
+
+gpt reads partition table
+	knows about / creates partition/reserved
+	queues probe for partition
+
+partition contains
+	empty
+	fs
+	lvm, etc
+
+container::read (buffer, size)
+	does the right thing
+
+filesystems have children?
+	vm images withing?
+	NO
+	but menu highlights owner
+
+btrfs object for snapshots, subvolumes, etc
+some for other fs, defrag, fsck, etc
+
+find all the ioctl in fdisk, parted, gparted, etc
+
