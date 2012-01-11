@@ -1,8 +1,14 @@
 fix gparted so it only needs (disk group rw privs)
 why does it need anything else?
 ioctls - which ones?  necessary?
+	drive geometry
+	without which what can't we do?
 
 disk display:
+	linear
+	logorithmic
+
+partition display with a disk:
 	linear
 	logorithmic
 
@@ -29,7 +35,7 @@ text labels
 		\s		small text
 		\o		ordinary text
 
-able to work on vm image files
+able to work on vm image files (raw, vmdk, cow, etc)
 choose custom colours
 resize "working" dialog
 	shouldn't be modal
@@ -47,6 +53,7 @@ configurable sizes:
 device selection
 	"all devices" (default) -- run in new mode with all devices visible
 	/dev/sda, etc -- run in classic mode examining one device
+	compact mode with all devices visible, but vertically compressed
 
 right click on ONE part of a lvm/raid/etc setup and get menus:
 	delete WHOLE lvm/raid/etc
@@ -60,6 +67,9 @@ just flag them?
 	lvm, gpt, ldm, md
 
 monitor the vg seq num to avoid unnecessary updates
+can we checksum the relevant regions of disks for other partition schemes
+on "refresh" we check the crc of the data region: save unnecessary updates
+can we use inotify to monitor a section of a file/device (ie the first 4K)?
 
 block size = sector size = extent size = stripe size
 	one name for all
@@ -200,6 +210,10 @@ disk -> SMART
 lvm -> add mirror, stripe, break mirror
 
 fs convert
+	requires asking destination fs for action
+	actions for ext2
+		convert to btrfs
+	should we ask btrfs for actions on other fs?
 part scheme convert
 lvm convert
 encrypt / decrypt
@@ -459,4 +473,12 @@ btrfs object for snapshots, subvolumes, etc
 some for other fs, defrag, fsck, etc
 
 find all the ioctl in fdisk, parted, gparted, etc
+
+build
+	alter Makefile to just echo
+		CC partition.o
+		etc
+	alter Makefile to build its own deps
+
+test case of 100 disks/devices/images
 
