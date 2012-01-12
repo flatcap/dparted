@@ -5,6 +5,7 @@ enum
 format
 fs
 identify
+ioctl
 inherit
 loop
 lvm

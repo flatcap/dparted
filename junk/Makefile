@@ -1,7 +1,7 @@
 GPP	= g++
 GCC	= gcc
 
-OUT	= cast compare enum format fs identify inherit loop lvm map parted \
+OUT	= cast compare enum format fs identify ioctl inherit loop lvm map parted \
 	  random readfile size spawn template
 
 CFLAGS	= -g -Wall
@@ -31,6 +31,9 @@ fs:	fs.c
 
 identify:	identify.c
 	$(GCC) $(CFLAGS) -o $@ identify.c
+
+ioctl:	ioctl.c
+	$(GCC) $(CFLAGS) -o $@ ioctl.c
 
 inherit:	inherit.cpp
 	$(GPP) $(CFLAGS) -o $@ inherit.cpp
