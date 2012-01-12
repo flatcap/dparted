@@ -32,7 +32,9 @@ public:
 	static bool probe (const std::string &name, Container &list);
 
 protected:
-	virtual bool probe (const std::string &name, const struct stat &st) = 0;
+	//virtual bool probe (const std::string &name, const struct stat &st);
+
+	//XXX int fd;
 
 private:
 

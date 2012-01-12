@@ -17,11 +17,16 @@
 
 
 #include <stdio.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <string>
 #include <sstream>
 
 #include "loop.h"
+#include "main.h"
 
 /**
  * Loop
@@ -43,8 +48,20 @@ Loop::~Loop()
 /**
  * probe
  */
-bool Loop::probe (const std::string &name, const struct stat &st)
+bool Loop::probe (const std::string &name, int fd, struct stat &st, Container &list)
 {
-	return false;
+	Loop *l = NULL;
+
+	l = new Loop;
+
+	l->device        = name;
+	l->device_offset = 0;
+	l->bytes_size    = st.st_size;
+	l->bytes_used    = 0;
+
+	list.add_child (l);
+	queue_add_probe (l);	// queue the container for action
+
+	return true;
 }
 

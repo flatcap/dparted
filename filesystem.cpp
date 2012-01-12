@@ -25,6 +25,7 @@
 #include "partition.h"
 #include "utils.h"
 #include "identify.h"
+#include "stringnum.h"
 
 /**
  * Filesystem
@@ -43,6 +44,104 @@ Filesystem::~Filesystem()
 
 
 /**
+ * ext2_get_usage
+ */
+long long Filesystem::ext2_get_usage (void)
+{
+	std::ostringstream build;
+	std::string dev = device;
+	std::string command;
+	std::string output;
+	std::string error;
+	long block_size = 512;
+	long long bfree = 0;
+
+	if (device_offset != 0) {
+		//printf ("create loop device\n");
+		build << "losetup /dev/loop0 " << device << " -o " << device_offset;
+		command = build.str();
+		execute_command (command, output, error);
+		//printf ("command = %s\n", command.c_str());
+		//execute_command ("losetup /dev/loop0 ", output, error);
+		dev = "/dev/loop0";
+	}
+
+	// do something
+	command = "tune2fs -l " + dev;
+	//printf ("command = %s\n", command.c_str());
+
+	execute_command (command, output, error);
+	//printf ("result = \n%s\n", output.c_str());
+
+	//interpret results
+	std::string tmp;
+	size_t pos1 = std::string::npos;
+	size_t pos2 = std::string::npos;
+
+	//printf ("volume:\n");
+
+	pos1 = output.find ("Filesystem volume name:");
+	if (pos1 != std::string::npos) {
+		pos1 = output.find_first_not_of (" ", pos1 + 23);
+		pos2 = output.find_first_of ("\n\r", pos1);
+
+		tmp = output.substr (pos1, pos2 - pos1);
+		//printf ("\tname = '%s'\n", tmp.c_str());
+	}
+
+	pos1 = output.find ("Filesystem UUID:");
+	if (pos1 != std::string::npos) {
+		pos1 = output.find_first_not_of (" ", pos1 + 16);
+		pos2 = output.find_first_of ("\n\r", pos1);
+
+		tmp = output.substr (pos1, pos2 - pos1);
+		//printf ("\tuuid = '%s'\n", tmp.c_str());
+	}
+
+	pos1 = output.find ("Block size:");
+	if (pos1 != std::string::npos) {
+		pos1 = output.find_first_not_of (" ", pos1 + 11);
+		pos2 = output.find_first_of ("\n\r", pos1);
+
+		tmp = output.substr (pos1, pos2 - pos1);
+		StringNum s (tmp.c_str());
+		block_size = s;
+		//printf ("\tfree blocks = %ld\n", block_size);
+	}
+
+	pos1 = output.find ("Block count:");
+	if (pos1 != std::string::npos) {
+		pos1 = output.find_first_not_of (" ", pos1 + 12);
+		pos2 = output.find_first_of ("\n\r", pos1);
+
+		tmp = output.substr (pos1, pos2 - pos1);
+		//printf ("\tblock count = %s\n", tmp.c_str());
+	}
+
+	pos1 = output.find ("Free blocks:");
+	if (pos1 != std::string::npos) {
+		pos1 = output.find_first_not_of (" ", pos1 + 12);
+		pos2 = output.find_first_of ("\n\r", pos1);
+
+		tmp = output.substr (pos1, pos2 - pos1);
+		StringNum s (tmp.c_str());
+		bfree = (long long) s * block_size;
+		//printf ("\tfree blocks = %s\n", tmp.c_str());
+		//printf ("\tbytes free = %lld\n", bfree);
+	}
+
+	if (device_offset != 0) {
+		command = "losetup -d /dev/loop0";
+		execute_command (command, output, error);
+		//printf ("dismantle loop device\n");
+		//printf ("command = %s\n", command.c_str());
+	}
+
+	return bfree;
+}
+
+
+/**
  * probe
  */
 Filesystem * Filesystem::probe (Container *parent, unsigned char *buffer, int bufsize)
@@ -50,25 +149,31 @@ Filesystem * Filesystem::probe (Container *parent, unsigned char *buffer, int bu
 	Filesystem *f = NULL;
 	std::string name;
 
-	if (identify_btrfs (buffer, bufsize))
+	if (identify_btrfs (buffer, bufsize)) {
 		name = "btrfs";
-	else if (identify_ext2 (buffer, bufsize))
+	} else if (identify_ext2 (buffer, bufsize)) {
 		name = "ext2";
-	else if (identify_ntfs (buffer, bufsize))
+	} else if (identify_ntfs (buffer, bufsize)) {
 		name = "ntfs";
-	else if (identify_reiserfs (buffer, bufsize))
+	} else if (identify_reiserfs (buffer, bufsize)) {
 		name = "reiserfs";
-	else if (identify_swap (buffer, bufsize))
+	} else if (identify_swap (buffer, bufsize)) {
 		name = "swap";
-	else if (identify_vfat (buffer, bufsize))
+	} else if (identify_vfat (buffer, bufsize)) {
 		name = "vfat";
-	else if (identify_xfs (buffer, bufsize))
+	} else if (identify_xfs (buffer, bufsize)) {
 		name = "xfs";
+	}
 
 	//printf ("NAME = %s\n", name.c_str());
 	if (!name.empty()) {
 		f = new Filesystem;
 		f->name = name;
+		f->device = parent->device;
+		f->device_offset = parent->device_offset;
+		if (name == "ext2") {
+			f->bytes_used = f->ext2_get_usage();
+		}
 	}
 
 	return f;

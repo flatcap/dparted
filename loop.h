@@ -29,8 +29,9 @@ public:
 	Loop (void);
 	virtual ~Loop();
 
+	static bool probe (const std::string &name, int fd, struct stat &st, Container &list);
+
 protected:
-	virtual bool probe (const std::string &name, const struct stat &st);
 
 private:
 

@@ -65,7 +65,7 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 		if (buffer[446 + (i*16) + 4] == 0)
 			continue;
 		p = new Partition;
-		printf ("number %d : type 0x%02hhx\n", i+1, buffer[4]);
+		printf ("number %d : type 0x%02x\n", i+1, buffer[446 + (i*16) + 4]);
 
 		p->name = "partition";
 		p->bytes_size = 1234;
@@ -96,12 +96,14 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 		// number of sectors / track = 63
 		lba = (c * 255 + h) * 63 + (s - 1);
 
+#if 0
 		printf ("start\n");
 		printf ("\tc   = %d\n", c);
 		printf ("\th   = %d\n", h);
 		printf ("\ts   = %d\n", s);
 		printf ("\tlba = %d\n", lba);
 		printf ("\tlba = %d\n", *(int *) (buffer + 446 + (i*16) + 8));
+#endif
 
 		h = buffer[446 + (i*16) + 5];
 		s = buffer[446 + (i*16) + 6] & 0x3F;
@@ -112,13 +114,14 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 		// number of sectors / track = 63
 		lba = (c * 255 + h) * 63 + (s - 1);
 
+#if 0
 		printf ("end\n");
 		printf ("\tc   = %d\n", c);
 		printf ("\th   = %d\n", h);
 		printf ("\ts   = %d\n", s);
 		printf ("\tlba = %d\n", lba);
 		printf ("\tsize= %d\n", *(int *) (buffer + 446 + (i*16) + 12));
-
+#endif
 
 		m->add_child (p);
 		queue_add_probe (p);

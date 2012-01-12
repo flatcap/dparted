@@ -40,6 +40,7 @@ public:
 protected:
 
 private:
+	long long ext2_get_usage (void);
 
 };
 

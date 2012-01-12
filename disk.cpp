@@ -17,12 +17,18 @@
 
 
 #include <stdio.h>
+#include <fcntl.h>
+#include <linux/fs.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include <string>
 #include <sstream>
 
 #include "disk.h"
 #include "utils.h"
+#include "main.h"
 
 /**
  * Disk
@@ -53,22 +59,49 @@ Disk::~Disk()
 /**
  * probe
  */
-bool Disk::probe (const std::string &name, const struct stat &st)
+bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &list)
 {
 	// for /dev/sda look at
 	//	/sys/block/sda/size
 	//	/sys/block/sda/device/vendor
 	//	/sys/block/sda/device/model
 
+	int res;
+	long long file_size_in_bytes;
+
+#if 0
 	std::string readonly = read_file_line ("/sys/block/sda/ro");
 	std::string size     = read_file_line ("/sys/block/sda/size");
 	std::string model    = read_file_line ("/sys/block/sda/device/vendor");
 	std::string vendor   = read_file_line ("/sys/block/sda/device/model");
+#endif
 
 	//printf ("%s: %s\n", __FUNCTION__, model.c_str());
+	Disk *d = NULL;
 
-	return false;
+	d = new Disk;
+
+	//printf ("fd = %d\n", fd);
+	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); //XXX replace with ftell (user, not root)
+	//printf ("res = %d\n", res);
+	if (!res) {
+	}
+
+	d->device        = name;
+	d->device_offset = 0;
+	d->bytes_size    = file_size_in_bytes;
+	d->bytes_used    = 0;
+
+	printf ("disk\n");
+	printf ("\tname = %s\n", name.c_str());
+	printf ("\tsize = %lld\n", file_size_in_bytes);
+
+	list.add_child (d);
+	queue_add_probe (d);	// queue the container for action
+
+	return true;
 }
+
 
 
 /**

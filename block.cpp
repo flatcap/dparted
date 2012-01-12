@@ -58,29 +58,36 @@ bool Block::probe (const std::string &name, Container &list)
 {
 	struct stat st;
 	int res = -1;
-	Block *item = NULL;
+	//Block *item = NULL;
+	long long file_size_in_bytes = 0;
+	int fd = -1;
 
-	res = stat (name.c_str(), &st);
+	fd = open (name.c_str(), O_RDONLY);
+	if (fd < 0) {
+		printf ("can't open file %s\n", name.c_str());
+		return false;
+	}
+
+	res = fstat (fd, &st);
 	if (res < 0) {
-		printf ("%s doesn't exist\n", name.c_str());
-		return false;			// Doesn't exist
+		printf ("stat on %s failed\n", name.c_str());
+		close (fd);
+		return false;
 	}
 
 	if (S_ISREG (st.st_mode)) {
-		//printf ("%s file\n", name.c_str());
-		//printf ("\tdevice id = 0x%lx\n", st.st_dev);
-		//printf ("\tinode = %ld\n", st.st_ino);
-		item = new File;
+		File::probe (name, fd, st, list);
 	} else if (S_ISBLK (st.st_mode)) {
 		//printf ("%s block\n", name.c_str());
 		//printf ("\tdevice id = 0x%lx\n", st.st_rdev);
 		if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
 			//printf ("\tloop\n");
-			item = new Loop;
+			//item = new Loop;
+			Loop::probe (name, fd, st, list);
 		} else if (MAJOR (st.st_rdev) == SCSI_DISK0_MAJOR) {
 			//printf ("\tdisk\n");
-			item = new Disk;
-
+			//item = new Disk;
+			Disk::probe (name, fd, st, list);
 		} else {
 			// exists, but I can't deal with it
 			printf ("Unknown block device 0x%lx\n", st.st_rdev);
@@ -92,27 +99,24 @@ bool Block::probe (const std::string &name, Container &list)
 
 	//item->probe (name, st);
 
-	long long file_size_in_bytes = 0;
-	int fd = -1;
-	fd = open (name.c_str(), O_RDONLY);
 	//printf ("fd = %d\n", fd);
 	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); //XXX replace with ftell (user, not root)
 	//printf ("res = %d\n", res);
 	close (fd);
 
 	//item->bytes_size = st.st_size;
-	item->bytes_size = file_size_in_bytes;
-	item->device     = name;		// This and offset should be delegated to the child
-	item->block_size = st.st_blksize;
+	//item->bytes_size = file_size_in_bytes;
+	//item->device     = name;		// This and offset should be delegated to the child
+	//item->block_size = st.st_blksize;
 
 	//printf ("device = %s\n", name.c_str());
 	//printf ("size = %ld\n", st.st_size);
 	//printf ("size = %lld\n", file_size_in_bytes);
 	//printf ("block = %ld\n", st.st_blksize);
-	if (item) {
-		list.add_child (item);
-		queue_add_probe (item);	// queue the container for action
-	}
+//	if (item) {
+//		list.add_child (item);
+//		queue_add_probe (item);	// queue the container for action
+//	}
 
 	// exists and I've dealt with it
 	return false;

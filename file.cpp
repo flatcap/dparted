@@ -17,11 +17,17 @@
 
 
 #include <stdio.h>
+#include <linux/fs.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <string>
 #include <sstream>
 
 #include "file.h"
+#include "main.h"
 
 /**
  * File
@@ -39,11 +45,39 @@ File::~File()
 {
 }
 
+
 /**
  * probe
  */
-bool File::probe (const std::string &name, const struct stat &st)
+bool File::probe (const std::string &name, int fd, struct stat &st, Container &list)
 {
-	return false;
+	File *f = NULL;
+
+	f = new File;
+#if 0
+	printf ("dev     = 0x%04lx\n", st.st_dev);
+	printf ("ino     = %ld\n",     st.st_ino);
+	printf ("nlink   = %ld\n",     st.st_nlink);
+	printf ("mode    = %06o\n",    st.st_mode);
+	printf ("uid     = %d\n",      st.st_uid);
+	printf ("gid     = %d\n",      st.st_gid);
+	printf ("rdev    = %ld\n",     st.st_rdev);
+	printf ("size    = %ld\n",     st.st_size);
+	printf ("blksize = %ld\n",     st.st_blksize);
+	printf ("blocks  = %ld\n",     st.st_blocks);
+	printf ("atime   = %ld\n",     st.st_atim.tv_sec);
+	printf ("mtime   = %ld\n",     st.st_mtim.tv_sec);
+	printf ("ctime   = %ld\n",     st.st_ctim.tv_sec);
+#endif
+
+	f->device        = name;
+	f->device_offset = 0;
+	f->bytes_size    = st.st_size;
+	f->bytes_used    = 0;
+
+	list.add_child (f);
+	queue_add_probe (f);	// queue the container for action
+
+	return true;
 }
 

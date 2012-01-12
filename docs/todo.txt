@@ -482,3 +482,8 @@ build
 
 test case of 100 disks/devices/images
 
+Container::add_child
+	if bytes_size/bytes_used is < 0 don't alter them
+
+need to be able to identify full, but unrecognisable boot partitions
+
