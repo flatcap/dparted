@@ -30,6 +30,7 @@ public:
 	virtual ~Msdos();
 
 	static Msdos * probe (Container *parent, unsigned char *buffer, int bufsize);
+	static void read_table (int fd, long long offset);
 
 	virtual void dump (int indent = 0);
 	virtual void dump_csv (void);

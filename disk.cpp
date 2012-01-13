@@ -92,16 +92,17 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 	d->bytes_size    = file_size_in_bytes;
 	d->bytes_used    = 0;
 
+#if 0
 	printf ("disk\n");
 	printf ("\tname = %s\n", name.c_str());
 	printf ("\tsize = %lld\n", file_size_in_bytes);
+#endif
 
 	list.add_child (d);
 	queue_add_probe (d);	// queue the container for action
 
 	return true;
 }
-
 
 
 /**
