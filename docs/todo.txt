@@ -487,3 +487,8 @@ Container::add_child
 
 need to be able to identify full, but unrecognisable boot partitions
 
+put a sequence number in every object
+increment the seq num on any changes
+gfx object can check whether to update themselves
+changing an object invalidates all its children
+
