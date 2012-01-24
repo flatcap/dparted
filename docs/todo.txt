@@ -492,3 +492,7 @@ increment the seq num on any changes
 gfx object can check whether to update themselves
 changing an object invalidates all its children
 
+can I put a text ui on top
+	lines of text (tables and stuff)?
+	full ncurses?
+
