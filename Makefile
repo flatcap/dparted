@@ -21,15 +21,13 @@ CFLAGS	= -g -Wall
 CFLAGS  += `pkg-config glibmm-2.4 lvm2app devmapper libparted --cflags`
 LDFLAGS += `pkg-config glibmm-2.4 lvm2app devmapper libparted --libs`
 
-all:	$(DEP) $(OUT)
+all:	$(OUT)
 
 dep deps: $(DEP)
 
-.cpp.o:
-	$(CC) $(CFLAGS) -c $< -o $@
-
-%.d: %.cpp
-	$(CC) -MM $^ > $@
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
+	$(CC) -MM $(CFLAGS) -c $*.cpp > $*.d 
 
 clean:
 	$(RM) $(OUT) $(OBJ) tags
@@ -45,5 +43,5 @@ tags:   force
 
 force:
 
-include $(DEP)
+-include $(DEP)
 
