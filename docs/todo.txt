@@ -478,7 +478,6 @@ build
 	alter Makefile to just echo
 		CC partition.o
 		etc
-	alter Makefile to build its own deps
 
 test case of 100 disks/devices/images
 
