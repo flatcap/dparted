@@ -21,17 +21,36 @@ CFLAGS	= -g -Wall
 CFLAGS  += `pkg-config glibmm-2.4 lvm2app devmapper libparted --cflags`
 LDFLAGS += `pkg-config glibmm-2.4 lvm2app devmapper libparted --libs`
 
-all:	$(DEPDIR) $(OUT)
+ifeq ("$(origin V)", "command line")
+	KBUILD_VERBOSE = $(V)
+endif
+ifndef KBUILD_VERBOSE
+	KBUILD_VERBOSE = 0
+endif
+
+ifeq ($(KBUILD_VERBOSE),1)
+	Q=
+else
+	Q=@
+endif
+
+all:	$(DEPDIR) $(OUT) tags
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
+ifeq ($(KBUILD_VERBOSE),0)
+	@echo "CC	$*.cpp"
+endif
+	$(Q)$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 	@$(CC) -MM $(CFLAGS) -c $*.cpp > $(DEPDIR)/$*.d 
 	@cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
 	@sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d
 	@rm -f $(DEPDIR)/$*.d.tmp
 
 $(DEPDIR):
-	mkdir -p $@
+ifeq ($(KBUILD_VERBOSE),0)
+	@echo "MKDIR	$@"
+endif
+	$(Q)mkdir -p $@
 
 clean:
 	$(RM) $(OUT) $(OBJ) tags
@@ -39,11 +58,14 @@ clean:
 distclean: clean
 	$(RM) $(DEPDIR) html
 
-main: $(OBJ) tags
-	$(CC) -o $@ $(OBJ) $(LDFLAGS)
+main: $(OBJ)
+ifeq ($(KBUILD_VERBOSE),0)
+	@echo "LN	$@"
+endif
+	$(Q)$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 tags:   force
-	ctags *.cpp *.h /usr/include/parted/*.h
+	@ctags *.cpp *.h /usr/include/parted/*.h
 
 force:
 
