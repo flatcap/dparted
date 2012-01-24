@@ -11,7 +11,7 @@ HDR	= block.h container.h disk.h extended.h file.h \
 	  partition.h table.h segment.h stringnum.h stripe.h utils.h \
 	  volumegroup.h volume.h whole.h
 
-DEP	= $(SRC:.cpp=.d)
+DEPDIR	= .deps
 
 OBJ	= $(SRC:.cpp=.o)
 
@@ -21,20 +21,23 @@ CFLAGS	= -g -Wall
 CFLAGS  += `pkg-config glibmm-2.4 lvm2app devmapper libparted --cflags`
 LDFLAGS += `pkg-config glibmm-2.4 lvm2app devmapper libparted --libs`
 
-all:	$(OUT)
+all:	$(DEPDIR) $(OUT)
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
-	@$(CC) -MM $(CFLAGS) -c $*.cpp > $*.d 
-	@cp -f $*.d $*.d.tmp
-	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
-	@rm -f $*.d.tmp
+	@$(CC) -MM $(CFLAGS) -c $*.cpp > $(DEPDIR)/$*.d 
+	@cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
+	@sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d
+	@rm -f $(DEPDIR)/$*.d.tmp
+
+$(DEPDIR):
+	mkdir -p $@
 
 clean:
 	$(RM) $(OUT) $(OBJ) tags
 
 distclean: clean
-	$(RM) $(DEP) html
+	$(RM) $(DEPDIR) html
 
 main: $(OBJ) tags
 	$(CC) -o $@ $(OBJ) $(LDFLAGS)
@@ -44,5 +47,5 @@ tags:   force
 
 force:
 
--include $(DEP)
+-include $(SRC:%.cpp=$(DEPDIR)/%.d)
 
