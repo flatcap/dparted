@@ -23,8 +23,6 @@ LDFLAGS += `pkg-config glibmm-2.4 lvm2app devmapper libparted --libs`
 
 all:	$(OUT)
 
-dep deps: $(DEP)
-
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 	@$(CC) -MM $(CFLAGS) -c $*.cpp > $*.d 
