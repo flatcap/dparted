@@ -6,3 +6,6 @@
 
 # generated docs
 /html
+
+# generated deps
+/*.d
