@@ -11,9 +11,10 @@ HDR	= block.h container.h disk.h extended.h file.h \
 	  partition.h table.h segment.h stringnum.h stripe.h utils.h \
 	  volumegroup.h volume.h whole.h
 
-DEPDIR	= .deps
+DEPDIR	= .dep
+OBJDIR	= .obj
 
-OBJ	= $(SRC:.cpp=.o)
+OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
 OUT	= main
 
@@ -34,19 +35,19 @@ else
 	Q=@
 endif
 
-all:	$(DEPDIR) $(OUT) tags
+all:	$(OBJDIR) $(DEPDIR) $(OUT) tags
 
-%.o: %.cpp
+$(OBJDIR)/%.o: %.cpp
 ifeq ($(KBUILD_VERBOSE),0)
-	@echo "CC	$*.cpp"
+	@echo "G++	$*.cpp"
 endif
-	$(Q)$(CC) $(CFLAGS) -c $*.cpp -o $*.o
-	@$(CC) -MM $(CFLAGS) -c $*.cpp > $(DEPDIR)/$*.d 
+	$(Q)$(CC) $(CFLAGS) -c $*.cpp -o $(OBJDIR)/$*.o
+	@$(CC) -MM $(CFLAGS) -c $*.cpp | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d 
 	@cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
 	@sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d
 	@rm -f $(DEPDIR)/$*.d.tmp
 
-$(DEPDIR):
+$(DEPDIR) $(OBJDIR):
 ifeq ($(KBUILD_VERBOSE),0)
 	@echo "MKDIR	$@"
 endif
@@ -56,7 +57,7 @@ clean:
 	$(RM) $(OUT) $(OBJ) tags
 
 distclean: clean
-	$(RM) $(DEPDIR) html
+	$(RM) $(DEPDIR) $(OBJDIR) html
 
 main: $(OBJ)
 ifeq ($(KBUILD_VERBOSE),0)
