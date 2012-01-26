@@ -495,3 +495,14 @@ can I put a text ui on top
 	lines of text (tables and stuff)?
 	full ncurses?
 
+minimal package set to install/build dparted on
+	fedora
+	debian
+	ubuntu
+	mint
+	opensuse
+=> repository for fedora/suse
+=> ppa for debian/ubuntu
+
+for publishing: who should I tell?
+
