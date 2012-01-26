@@ -490,6 +490,7 @@ put a sequence number in every object
 increment the seq num on any changes
 gfx object can check whether to update themselves
 changing an object invalidates all its children
+seq number of -1 => object is dead
 
 can I put a text ui on top
 	lines of text (tables and stuff)?
