@@ -1,5 +1,6 @@
 CC	= g++
 RM	= rm -fr
+MKDIR	= mkdir -p
 
 SRC	= block.cpp container.cpp disk.cpp extended.cpp \
 	  file.cpp filesystem.cpp gpt.cpp identify.cpp linear.cpp loop.cpp \
@@ -11,10 +12,10 @@ HDR	= block.h container.h disk.h extended.h file.h \
 	  partition.h table.h segment.h stringnum.h stripe.h utils.h \
 	  volumegroup.h volume.h whole.h
 
+OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
+
 DEPDIR	= .dep
 OBJDIR	= .obj
-
-OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
 OUT	= main
 
@@ -22,51 +23,78 @@ CFLAGS	= -g -Wall
 CFLAGS  += `pkg-config glibmm-2.4 lvm2app devmapper libparted --cflags`
 LDFLAGS += `pkg-config glibmm-2.4 lvm2app devmapper libparted --libs`
 
-ifeq ("$(origin V)", "command line")
-	KBUILD_VERBOSE = $(V)
-endif
-ifndef KBUILD_VERBOSE
-	KBUILD_VERBOSE = 0
-endif
+V	?= 0
 
-ifeq ($(KBUILD_VERBOSE),1)
-	Q=
+ifeq ($(V),1)
+	quiet=
 else
-	Q=@
+	quiet=quiet_
 endif
 
 all:	$(OBJDIR) $(DEPDIR) $(OUT) tags
 
+# ----------------------------------------------------------------------------
+
+# If quiet is set, only print short version of command
+cmd	= @$(if $($(quiet)cmd_$(1)),\
+		echo '$($(quiet)cmd_$(1))' &&) $(cmd_$(1))
+
+# ----------------------------------------------------------------------------
+
+quiet_cmd_TAGS	= CTAGS	$@
+      cmd_TAGS	= ctags $(SRC) /usr/include/parted/*.h
+
+tags:	$(SRC) $(HDR)
+	$(call cmd,TAGS)
+
+# ----------------------------------------------------------------------------
+
+# TODO
+# Execute command, saving output to a TMP file
+#	g++ -g -Wall `pkg-config glibmm-2.4 lvm2app devmapper libparted --cflags` -c gpt.cpp -o .obj/gpt.o
+# $? = 0 && TMP file empty
+# 	echo "CC	gpt.c"
+# ?$ = 0 && TMP file non-empty
+# 	echo "CC	gpt.c"
+# 	cat TMP file
+# ?$ = 1
+# 	echo "CC	gpt.c"
+# 	cat TMP file
+# 	stop compilation
+
+quiet_cmd_CC	= CC	$<
+      cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@;													\
+		  $(CC) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;							\
+		  cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp;											\
+		  sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d;		\
+		  rm -f $(DEPDIR)/$*.d.tmp
+
 $(OBJDIR)/%.o: %.cpp
-ifeq ($(KBUILD_VERBOSE),0)
-	@echo "G++	$*.cpp"
-endif
-	$(Q)$(CC) $(CFLAGS) -c $*.cpp -o $(OBJDIR)/$*.o
-	@$(CC) -MM $(CFLAGS) -c $*.cpp | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d 
-	@cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
-	@sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d
-	@rm -f $(DEPDIR)/$*.d.tmp
+	$(call cmd,CC)
 
-$(DEPDIR) $(OBJDIR):
-ifeq ($(KBUILD_VERBOSE),0)
-	@echo "MKDIR	$@"
-endif
-	$(Q)mkdir -p $@
+# ----------------------------------------------------------------------------
 
-clean:
-	$(RM) $(OUT) $(OBJ) tags
-
-distclean: clean
-	$(RM) $(DEPDIR) $(OBJDIR) html
+quiet_cmd_LN	= LN	$@
+      cmd_LN	= $(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 main: $(OBJ)
-ifeq ($(KBUILD_VERBOSE),0)
-	@echo "LN	$@"
-endif
-	$(Q)$(CC) -o $@ $(OBJ) $(LDFLAGS)
+	$(call cmd,LN)
 
-tags:   force
-	@ctags *.cpp *.h /usr/include/parted/*.h
+# ----------------------------------------------------------------------------
+
+quiet_cmd_MKDIR	= MKDIR	$@
+      cmd_MKDIR	= $(MKDIR) $@
+
+$(DEPDIR) $(OBJDIR):
+	$(call cmd,MKDIR)
+
+# ----------------------------------------------------------------------------
+
+clean:
+	$(RM) $(OUT) $(OBJ)
+
+distclean: clean
+	$(RM) $(DEPDIR) $(OBJDIR) tags html
 
 force:
 
