@@ -39,6 +39,7 @@ Extended::~Extended()
 {
 }
 
+
 /**
  * dump_dot
  */
@@ -48,7 +49,9 @@ std::string Extended::dump_dot (void)
 
 	output << dump_table_header ("Extended", "#d0dd80");
 
-	output << Partition::dump_dot();
+	// no specfics for now
+
+	output << Container::dump_dot(); //RAR skip a level for now
 
 	output << dump_table_footer();
 	output << dump_dot_children();

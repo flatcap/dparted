@@ -885,8 +885,8 @@ int main (int argc, char *argv[])
 #if 1
 		Table *t = Table::probe (item, buffer, bufsize);
 		if (t) {
-			printf ("\ttable: %s\n", t->name.c_str());
-			printf ("\t\tuuid = %s\n", t->uuid.c_str());
+			//printf ("\ttable: %s\n", t->name.c_str());
+			//printf ("\t\tuuid = %s\n", t->uuid.c_str());
 			//delete t;
 			continue;
 		}
@@ -909,7 +909,7 @@ int main (int argc, char *argv[])
 	logicals_get_list (disks);
 #endif
 
-#if 0
+#if 1
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";

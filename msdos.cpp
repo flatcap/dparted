@@ -29,6 +29,7 @@
 
 #include "msdos.h"
 #include "utils.h"
+#include "extended.h"
 #include "partition.h"
 #include "main.h"
 
@@ -101,9 +102,11 @@ void Msdos::read_table (Container *parent, int fd, long long offset)
 {
 	unsigned char buffer[512];
 	struct partition part;
+	long long ext_start = -1;
+	//long long ext_size = -1;
 	int i;
 
-	printf ("SEEK %lld\n", offset);
+	//printf ("SEEK %lld\n", offset);
 	lseek (fd, offset, SEEK_SET);
 	read (fd, buffer, sizeof (buffer));
 
@@ -111,17 +114,66 @@ void Msdos::read_table (Container *parent, int fd, long long offset)
 		if (!read_partition (buffer, i, &part))
 			continue;
 
+		if (part.type == 0x05) {
+			ext_start = part.start;
+			//ext_size  = part.size;
+			continue;
+		}
+
 		std::string s1 = get_size (part.start);
 		std::string s2 = get_size (part.size);
 
+#if 0
 		printf ("partition %d (0x%02x)\n", i+1, part.type);
 		printf ("\tstart = %lld (%s)\n", part.start, s1.c_str());
 		printf ("\tsize  = %lld (%s)\n", part.size,  s2.c_str());
-
 		printf ("\n");
-		if (part.type == 0x05) {		// extended
-			read_table (parent, fd, offset + part.start);
+#endif
+
+		Partition *p = new Partition;
+		p->bytes_size = part.size;
+		p->device_offset = part.start;
+
+		parent->add_child (p);
+	}
+
+	if (ext_start < 0)
+		return;
+
+	offset = ext_start;
+	for (i = 5; i < 50; i++) {
+		//printf ("SEEK %lld\n", offset);
+		lseek (fd, offset, SEEK_SET);
+		read (fd, buffer, sizeof (buffer));
+
+		if (!read_partition (buffer, 0, &part))
+			break;
+
+		std::string s1 = get_size (part.start);
+		std::string s2 = get_size (part.size);
+
+#if 0
+		printf ("partition %d (0x%02x)\n", i, part.type);
+		printf ("\tstart = %lld (%s)\n", part.start, s1.c_str());
+		printf ("\tsize  = %lld (%s)\n", part.size,  s2.c_str());
+		printf ("\n");
+#endif
+
+		Extended *e = new Extended;
+		e->bytes_size = part.size;
+		e->device_offset = part.start;
+
+		parent->add_child (e);
+
+		if (!read_partition (buffer, 1, &part))
+			break;
+
+		if (part.type != 0x05) {
+			break;
 		}
+
+		offset = ext_start + part.start;
+
 	}
 }
 
@@ -153,18 +205,10 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 	printf ("sectors   = %d\n", geometry.sectors);
 	printf ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
 #endif
-
-#if 1
 	read_table (m, fd, 0);
-#else
-	read_table (m, fd, 0);
-	read_table (m, fd, 73038561280);
-	read_table (m, fd, 126726888960);
-	read_table (m, fd, 169677422592);
-#endif
 
-	exit (1);
 	close (fd);
+	parent->add_child (m);
 	return m;
 }
 
@@ -215,3 +259,4 @@ std::string Msdos::dump_dot (void)
 
 	return output.str();
 }
+

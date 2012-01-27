@@ -29,6 +29,8 @@ public:
 	Partition (void);
 	virtual ~Partition();
 
+	virtual std::string dump_dot (void);
+
 	//XXX flag for protective partition
 	//XXX partition number - nth in set?
 	//XXX partition type - 0x82 Linux Swap

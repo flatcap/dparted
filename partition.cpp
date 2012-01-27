@@ -19,6 +19,7 @@
 #include <stdio.h>
 
 #include <string>
+#include <sstream>
 
 #include "partition.h"
 
@@ -38,3 +39,21 @@ Partition::~Partition()
 }
 
 
+/**
+ * dump_dot
+ */
+std::string Partition::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << dump_table_header ("Partition", "#d0dd80");
+
+	// no specfics for now
+
+	output << Container::dump_dot();
+
+	output << dump_table_footer();
+	output << dump_dot_children();
+
+	return output.str();
+}
