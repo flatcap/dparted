@@ -808,16 +808,16 @@ int main (int argc, char *argv[])
 	Container *item = NULL;
 
 	const char *disk_list[] = {
-		//"/dev/sda",
-		//"/dev/sdb",
+		"/dev/sda",
+		"/dev/sdb",
 		"/dev/sdc",
-		//"/dev/sdd",
-		//"/dev/loop0", "/dev/loop1", "/dev/loop2",
-		//"/dev/loop3",
-		//"/dev/loop4",
-		//"/dev/loop5", "/dev/loop6", "/dev/loop7",
-		//"/dev/loop8", "/dev/loop9", "/dev/loop10", "/dev/loop11", "/dev/loop12", "/dev/loop13", "/dev/loop14", "/dev/loop15",
-		//"/var/lib/libvirt/images/f16.img",
+		"/dev/sdd",
+		"/dev/loop0", "/dev/loop1", "/dev/loop2",
+		"/dev/loop3",
+		"/dev/loop4",
+		"/dev/loop5", "/dev/loop6", "/dev/loop7",
+		"/dev/loop8", "/dev/loop9", "/dev/loop10", "/dev/loop11", "/dev/loop12", "/dev/loop13", "/dev/loop14", "/dev/loop15",
+		"/var/lib/libvirt/images/f16.img",
 		NULL
 	};
 
@@ -892,10 +892,10 @@ int main (int argc, char *argv[])
 		}
 #endif
 
-#if 0
+#if 1
 		Filesystem *f = Filesystem::probe (item, buffer, bufsize);
 		if (f) {
-			printf ("\tfilesystem: %s\n", f->name.c_str());
+			//printf ("\tfilesystem: %s\n", f->name.c_str());
 			//delete f;
 			continue;
 		}
@@ -904,7 +904,7 @@ int main (int argc, char *argv[])
 		//logicals...
 	}
 
-#if 0
+#if 1
 	disk_get_list (disk_list, disks);
 	logicals_get_list (disks);
 #endif

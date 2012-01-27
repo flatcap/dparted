@@ -135,6 +135,7 @@ void Msdos::read_table (Container *parent, int fd, long long offset)
 		p->device_offset = part.start;
 
 		parent->add_child (p);
+		//RAR queue_add_probe (p);
 	}
 
 	if (ext_start < 0)
@@ -164,6 +165,7 @@ void Msdos::read_table (Container *parent, int fd, long long offset)
 		e->device_offset = part.start;
 
 		parent->add_child (e);
+		//RAR queue_add_probe (e);
 
 		if (!read_partition (buffer, 1, &part))
 			break;

@@ -65,3 +65,23 @@ bool Loop::probe (const std::string &name, int fd, struct stat &st, Container &l
 	return true;
 }
 
+
+/**
+ * dump_dot
+ */
+std::string Loop::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << dump_table_header ("Loop", "#00ff88");
+
+	// no specfics for now
+
+	output << Block::dump_dot();
+
+	output << dump_table_footer();
+	output << dump_dot_children();
+
+	return output.str();
+}
+
