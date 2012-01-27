@@ -31,6 +31,10 @@ else
 	quiet=quiet_
 endif
 
+ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
+	quiet=silent_
+endif
+
 all:	$(OBJDIR) $(DEPDIR) $(OUT) tags
 
 # ----------------------------------------------------------------------------
