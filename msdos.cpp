@@ -32,6 +32,12 @@
 #include "partition.h"
 #include "main.h"
 
+struct partition {
+	long long start;
+	long long size;
+	int type;
+};
+
 /**
  * Msdos
  */
@@ -49,81 +55,73 @@ Msdos::~Msdos()
 
 
 /**
+ * read_chs
+ */
+void Msdos::read_chs (unsigned char *buffer, int *cylinder, int *head, int *sector)
+{
+	if (!buffer || !cylinder || !head || !sector)
+		return;
+
+	*head     = buffer[0];
+	*sector   = buffer[1] & 0x3F;
+	*cylinder = buffer[2] + ((buffer[1] & 0xC0) << 2);
+}
+
+/**
+ * read_partition
+ */
+bool Msdos::read_partition (unsigned char *buffer, int index, struct partition *part)
+{
+	if (!buffer || !part)
+		return false;
+	if ((index < 0) || (index > 3))
+		return false;
+
+	buffer += 446;
+	index  *= 16;
+
+	if (buffer[index + 4] == 0)
+		return false;
+
+	part->type = buffer[index + 4];
+
+	part->start = *(int *) (buffer + index + 8);
+	part->start *= 512;
+
+	part->size = *(int *) (buffer + index + 12);
+	part->size *= 512;
+
+	return true;
+}
+
+/**
  * read_table
  */
-void Msdos::read_table (int fd, long long offset)
+void Msdos::read_table (Container *parent, int fd, long long offset)
 {
 	unsigned char buffer[512];
+	struct partition part;
 	int i;
 
+	printf ("SEEK %lld\n", offset);
 	lseek (fd, offset, SEEK_SET);
 	read (fd, buffer, sizeof (buffer));
 
 	for (i = 0; i < 4; i++) {
-		if (buffer[446 + (i*16) + 4] == 0)
+		if (!read_partition (buffer, i, &part))
 			continue;
-		printf ("partition %d (0x%02x)\n", i+1, buffer[446 + (i*16) + 4]);
 
-#if 0
-		int c = 0;
-		int h = 0;
-		int s = 0;
-		int lba = 0;
+		std::string s1 = get_size (part.start);
+		std::string s2 = get_size (part.size);
 
-		h = buffer[446 + (i*16) + 1];
-		s = buffer[446 + (i*16) + 2] & 0x3F;
-		c = buffer[446 + (i*16) + 3] + ((buffer[446 + (i*16) + 2] & 0xC0) << 2);
+		printf ("partition %d (0x%02x)\n", i+1, part.type);
+		printf ("\tstart = %lld (%s)\n", part.start, s1.c_str());
+		printf ("\tsize  = %lld (%s)\n", part.size,  s2.c_str());
 
-		// number of heads = 255
-		// number of sectors / track = 63
-		lba = (c * 255 + h) * 63 + (s - 1);
-#endif
-
-#if 1
-		//long long l1;
-		long long l2;
-		long long l3;
-
-		//std::string s1;
-		std::string s2;
-		std::string s3;
-
-		//l1 = (c * 255 + h) * 63 + (s - 1);
-		l2 = *(int *) (buffer + 446 + (i*16) + 8);
-		l2 *= 512;
-		l3 = *(int *) (buffer + 446 + (i*16) + 12);
-		l3 *= 512;
-
-		//s1 = get_size (l1);
-		s2 = get_size (l2);
-		s3 = get_size (l3);
-
-		//printf ("start\n");
-		//printf ("\tchs = %d,%d,%d\n", c, h, s);
-		//printf ("\tlba = %lld (%s)\n", l1, s1.c_str());
-		printf ("\toffset = %lld (%s)\n", l2, s2.c_str());
-		printf ("\tsize   = %lld (%s)\n", l3, s3.c_str());
-#endif
-
-#if 0
-		h = buffer[446 + (i*16) + 5];
-		s = buffer[446 + (i*16) + 6] & 0x3F;
-		c = buffer[446 + (i*16) + 7] +
-		    ((buffer[446 + (i*16) + 6] & 0xC0) << 2);
-
-		// number of heads = 255
-		// number of sectors / track = 63
-		lba = (c * 255 + h) * 63 + (s - 1);
-#endif
-
-#if 0
-		printf ("end\n");
-		printf ("\tc   = %d\n", c);
-		printf ("\th   = %d\n", h);
-		printf ("\ts   = %d\n", s);
-		printf ("\tlba = %d\n", lba);
-		printf ("\tsize= %d\n", *(int *) (buffer + 446 + (i*16) + 12));
-#endif
+		printf ("\n");
+		if (part.type == 0x05) {		// extended
+			read_table (parent, fd, offset + part.start);
+		}
 	}
 }
 
@@ -134,22 +132,10 @@ void Msdos::read_table (int fd, long long offset)
 Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 {
 	Msdos *m = NULL;
-	Partition *p = NULL;
-	int i;
 	int fd;
 
 	if (*(unsigned short int *) (buffer+510) != 0xAA55)
 		return NULL;
-
-#if 1
-	fd = open (parent->device.c_str(), O_RDONLY);
-	read_table (fd, 0);		printf ("\n");
-	read_table (fd, 75307679744);	printf ("\n");		// ext part: 75307679744 + 0
-	read_table (fd, 117270642688);	printf ("\n");		//           75307679744 + 41962962944
-	read_table (fd, 151841144832);	printf ("\n");		//           75307679744 + 76533465088
-	close (fd);
-	return NULL;
-#endif
 
 	m = new Msdos;
 
@@ -158,73 +144,27 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 	m->device = parent->device;
 	m->device_offset = 0;
 
-#if 1
+	fd = open (parent->device.c_str(), O_RDONLY);
+#if 0
 	struct hd_geometry geometry;
 
-	fd = open (parent->device.c_str(), O_RDONLY);
 	ioctl(fd, HDIO_GETGEO, &geometry);
 	printf ("heads     = %d\n", geometry.heads);
 	printf ("sectors   = %d\n", geometry.sectors);
 	printf ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
 #endif
 
-	for (i = 0; i < 4; i++) {
-		if (buffer[446 + (i*16) + 4] == 0)
-			continue;
-		p = new Partition;
-		printf ("number %d : type 0x%02x\n", i+1, buffer[446 + (i*16) + 4]);
-
-		p->name = "partition";
-		p->bytes_size = 1234;
-		p->bytes_used = 0;
-		p->device = m->device;
-		p->device_offset = 1234;
-
-		int c = 0;
-		int h = 0;
-		int s = 0;
-		int lba = 0;
-
-		h = buffer[446 + (i*16) + 1];
-		s = buffer[446 + (i*16) + 2] & 0x3F;
-		c = buffer[446 + (i*16) + 3] +
-		    ((buffer[446 + (i*16) + 2] & 0xC0) << 2);
-
-		// number of heads = 255
-		// number of sectors / track = 63
-		lba = (c * 255 + h) * 63 + (s - 1);
-
 #if 1
-		printf ("start\n");
-		printf ("\tc   = %d\n", c);
-		printf ("\th   = %d\n", h);
-		printf ("\ts   = %d\n", s);
-		printf ("\tlba = %d\n", lba);
-		printf ("\tlba = %d\n", *(int *) (buffer + 446 + (i*16) + 8));
+	read_table (m, fd, 0);
+#else
+	read_table (m, fd, 0);
+	read_table (m, fd, 73038561280);
+	read_table (m, fd, 126726888960);
+	read_table (m, fd, 169677422592);
 #endif
 
-		h = buffer[446 + (i*16) + 5];
-		s = buffer[446 + (i*16) + 6] & 0x3F;
-		c = buffer[446 + (i*16) + 7] +
-		    ((buffer[446 + (i*16) + 6] & 0xC0) << 2);
-
-		// number of heads = 255
-		// number of sectors / track = 63
-		lba = (c * 255 + h) * 63 + (s - 1);
-
-#if 0
-		printf ("end\n");
-		printf ("\tc   = %d\n", c);
-		printf ("\th   = %d\n", h);
-		printf ("\ts   = %d\n", s);
-		printf ("\tlba = %d\n", lba);
-		printf ("\tsize= %d\n", *(int *) (buffer + 446 + (i*16) + 12));
-#endif
-
-		m->add_child (p);
-		//queue_add_probe (p);
-	}
-
+	exit (1);
+	close (fd);
 	return m;
 }
 
