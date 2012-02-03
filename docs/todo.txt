@@ -418,6 +418,7 @@ keep track of "contained by"?
 msdos::probe
 gpt::probe
 	return a valid (populated) container
+	offset a parent into which the object gets inserted, but also return the object
 
 reduce/isolate the amount of root-only things
 so that a normal user can run it on a loop device, or vm image
@@ -489,6 +490,7 @@ increment the seq num on any changes
 gfx object can check whether to update themselves
 changing an object invalidates all its children
 seq number of -1 => object is dead
+ref count, too
 
 can I put a text ui on top
 	lines of text (tables and stuff)?
@@ -504,4 +506,10 @@ minimal package set to install/build dparted on
 => ppa for debian/ubuntu
 
 for publishing: who should I tell?
+
+what does /proc/partitions say on a virtual machine?
+	xen
+	kvm
+	vmware
+	etc
 
