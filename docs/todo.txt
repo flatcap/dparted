@@ -513,3 +513,16 @@ what does /proc/partitions say on a virtual machine?
 	vmware
 	etc
 
+need a way of marking invalid objects
+it's probably one of these, but something doesn't make sense
+why bother?
+what can we do if it's broken?
+e.g. msdos partition table
+	valid, empty
+	valid, partial
+	valid, full
+	invalid
+
+pre-emptively create object (at first identification)
+then log and "delete this" if necessary
+
