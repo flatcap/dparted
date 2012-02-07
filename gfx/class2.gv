@@ -11,12 +11,12 @@ digraph G
 	File  [ fillcolor="#aaffaa" ];
 	Loop  [ fillcolor="#aaffaa" ];
 
-	Table [ fillcolor="#ffbbbb" ];
-	Gpt   [ fillcolor="#ffbbbb" ];
-	Msdos [ fillcolor="#ffbbbb" ];
+	Table    [ fillcolor="#ffbbbb" ];
+	Gpt      [ fillcolor="#ffbbbb" ];
+	Msdos    [ fillcolor="#ffbbbb" ];
+	Extended [ fillcolor="#ffbbbb" ];
 
 	Partition [ fillcolor="#ffffdd" ];
-	Extended  [ fillcolor="#ffffdd" ];
 
 	Whole       [ fillcolor="#ccccff" ];
 	Volume      [ fillcolor="#ccccff" ];
@@ -30,7 +30,7 @@ digraph G
 
 	Block       -> Container;
 	Disk        -> Block;
-	Extended    -> Partition;
+	Extended    -> Msdos;
 	File        -> Block;
 	Filesystem  -> Container;
 	Gpt         -> Table;

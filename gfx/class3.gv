@@ -7,13 +7,13 @@ digraph G
 	Disk  [ fillcolor="#aaffaa" ];
 
 	Msdos    [ fillcolor="#ffbbbb" ];
-	Extended [ label="Extended",  fillcolor="#ffbbbb" ];
 
-	Part1     [ label="Partition", fillcolor="#ffffdd" ];
-	Part2     [ label="Partition", fillcolor="#ffffdd" ];
-	Part5     [ label="Partition", fillcolor="#ffffdd" ];
-	Part6     [ label="Partition", fillcolor="#ffffdd" ];
-	Part7     [ label="Partition", fillcolor="#ffffdd" ];
+	Part1     [ label="Partition 1", fillcolor="#ffffdd" ];
+	Part2     [ label="Partition 2", fillcolor="#ffffdd" ];
+	Extended  [ label="Extended",    fillcolor="#ffbbbb" ];
+	Part5     [ label="Partition 5", fillcolor="#ffffdd" ];
+	Part6     [ label="Partition 6", fillcolor="#ffffdd" ];
+	Part7     [ label="Partition 7", fillcolor="#ffffdd" ];
 
 	Filesystem1 [ label="Filesystem", fillcolor="#bbffff" ];
 	Filesystem2 [ label="Filesystem", fillcolor="#bbffff" ];
@@ -35,6 +35,6 @@ digraph G
 	Part6		-> Filesystem6;
 	Part7		-> Filesystem7;
 
-	{ rank=same Msdos Extended }
+	{ rank=same Part1 Part2 Part5 Part6 Part7 }
 }
 
