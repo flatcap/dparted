@@ -24,6 +24,7 @@
 #include <sstream>
 
 #include "extended.h"
+#include "partition.h"
 #include "utils.h"
 
 /**
@@ -56,6 +57,20 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 	int loop = 0;
 	long long table_offset = offset;
 
+	// create extended
+	// add to parent
+	// create partitions
+	// add to extended
+
+	ext = new Extended;
+
+	ext->name = "extended";
+	ext->bytes_size = size;
+	ext->device = parent->device;
+	ext->device_offset = offset;
+
+	//parent->add_child (ext);
+
 	buffer = (unsigned char*) malloc (bufsize);
 	if (!buffer)
 		return NULL;
@@ -84,12 +99,14 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 
 		//printf ("extended partition\n");
 
-		ext = new Extended;
+		Partition *p = new Partition;
 
-		ext->name = "extended";
-		ext->bytes_size = size;
-		ext->device = parent->device;
-		ext->device_offset = table_offset;
+		p->name = "partition";
+		p->bytes_size = size;
+		p->device = parent->device;
+		p->device_offset = table_offset;
+
+		ext->add_child (p);
 
 		int num = 0;
 		unsigned int i;

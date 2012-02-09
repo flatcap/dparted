@@ -358,6 +358,8 @@ void Container::add_child (Container *child)
 		children.push_back (child);
 	}
 
+	//printf ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
+
 	child->parent = this;
 }
 

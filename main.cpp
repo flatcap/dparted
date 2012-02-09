@@ -807,6 +807,8 @@ int main (int argc, char *argv[])
 	Container disks;
 	Container *item = NULL;
 
+	disks.name = "container";	//XXX dummy
+
 	const char *disk_list[] = {
 		//"/dev/sda",
 		//"/dev/sdb",

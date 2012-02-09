@@ -131,6 +131,8 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 	m->device = parent->device;
 	m->device_offset = 0;
 
+	parent->add_child (m);
+
 	fd = open (parent->device.c_str(), O_RDONLY);
 #if 0
 	struct hd_geometry geometry;
@@ -161,20 +163,20 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 		Container *c = NULL;
 
 		if (vp[i].type == 0x05) {
-			c = Extended::probe (parent, fd, vp[i].start, vp[i].size);
+			c = Extended::probe (m, fd, vp[i].start, vp[i].size);
 			if (!c)
 				continue;
 		} else {
 			c = new Partition;
+			c->name = "partition";
 			c->bytes_size = vp[i].size;
 			c->device_offset = vp[i].start;
 			//queue_add_probe (c);
 		}
-		parent->add_child (c);
+		m->add_child (c);
 	}
 
 	close (fd);	// XXX or keep it for later?
-	parent->add_child (m);
 	return m;
 }
 
