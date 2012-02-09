@@ -71,6 +71,8 @@ can we checksum the relevant regions of disks for other partition schemes
 on "refresh" we check the crc of the data region: save unnecessary updates
 can we use inotify to monitor a section of a file/device (ie the first 4K)?
 
+alter watcher to use inotifywait
+
 block size = sector size = extent size = stripe size
 	one name for all
 
@@ -525,4 +527,23 @@ e.g. msdos partition table
 
 pre-emptively create object (at first identification)
 then log and "delete this" if necessary
+
+int container::preferred_alignment
+
+how to identify an OS on a partition
+/etc/system-release for linux
+what about windows/bsd/macos/etc
+tooltip showing contents:
+	"Windows 7"
+	"Fedora 16"
+	"Dir1\nDir2\nDir3\n..."
+
+flags
+	general container flags
+		valid
+		read-only
+		etc
+	container-type specific flags
+		extended partition
+		etc
 
