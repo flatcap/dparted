@@ -127,7 +127,7 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 	m = new Msdos;
 
 	m->name = "msdos";
-	m->bytes_size = 0;
+	m->bytes_size = parent->bytes_size;
 	m->device = parent->device;
 	m->device_offset = 0;
 
@@ -151,7 +151,7 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 	}
 
 	for (i = 0; i < vp.size(); i++) {
-#if 1
+#if 0
 		std::string s1 = get_size (vp[i].start);
 		std::string s2 = get_size (vp[i].size);
 
@@ -171,7 +171,8 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 			c->name = "partition";
 			c->bytes_size = vp[i].size;
 			c->device_offset = vp[i].start;
-			//queue_add_probe (c);
+			c->device = m->device;
+			queue_add_probe (c);
 		}
 		m->add_child (c);
 	}

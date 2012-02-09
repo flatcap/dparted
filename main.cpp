@@ -838,7 +838,7 @@ int main (int argc, char *argv[])
 		return 1;
 
 	while ((item = probe_queue.front())) {
-#if 1
+#if 0
 		printf ("queued item: '%s'\n", item->name.c_str());
 #endif
 		probe_queue.pop();
@@ -848,7 +848,7 @@ int main (int argc, char *argv[])
 		std::string s2;
 		s1 = get_size (item->device_offset);
 		s2 = get_size (item->bytes_size);
-#if 1
+#if 0
 		printf ("\tdevice     = %s\n",        item->device.c_str());
 		printf ("\toffset     = %lld (%s)\n", item->device_offset, s1.c_str());
 		printf ("\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
@@ -886,20 +886,20 @@ int main (int argc, char *argv[])
 		close (fd);
 
 #if 1
-		Table *t = Table::probe (item, buffer, bufsize);
-		if (t) {
-			//printf ("\ttable: %s\n", t->name.c_str());
-			//printf ("\t\tuuid = %s\n", t->uuid.c_str());
-			//delete t;
+		Filesystem *f = Filesystem::probe (item, buffer, bufsize);
+		if (f) {
+			//printf ("\tfilesystem: %s\n", f->name.c_str());
+			//delete f;
 			continue;
 		}
 #endif
 
 #if 1
-		Filesystem *f = Filesystem::probe (item, buffer, bufsize);
-		if (f) {
-			//printf ("\tfilesystem: %s\n", f->name.c_str());
-			//delete f;
+		Table *t = Table::probe (item, buffer, bufsize);
+		if (t) {
+			//printf ("\ttable: %s\n", t->name.c_str());
+			//printf ("\t\tuuid = %s\n", t->uuid.c_str());
+			//delete t;
 			continue;
 		}
 #endif
@@ -912,7 +912,7 @@ int main (int argc, char *argv[])
 	logicals_get_list (disks);
 #endif
 
-#if 0
+#if 1
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";

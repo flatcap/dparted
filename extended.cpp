@@ -26,6 +26,7 @@
 #include "extended.h"
 #include "partition.h"
 #include "utils.h"
+#include "main.h"
 
 /**
  * Extended
@@ -99,15 +100,6 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 
 		//printf ("extended partition\n");
 
-		Partition *p = new Partition;
-
-		p->name = "partition";
-		p->bytes_size = size;
-		p->device = parent->device;
-		p->device_offset = table_offset;
-
-		ext->add_child (p);
-
 		int num = 0;
 		unsigned int i;
 		std::vector<struct partition> vp;
@@ -119,7 +111,7 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 		}
 
 		for (i = 0; i < vp.size(); i++) {
-#if 1
+#if 0
 			if (vp[i].type != 5) {
 				std::string s1 = get_size (vp[i].start);
 				std::string s2 = get_size (vp[i].size);
@@ -130,23 +122,18 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 				printf ("\n");
 			}
 #endif
-			//Container *c = NULL;
+			Container *c = NULL;
 
 			if (vp[i].type == 0x05) {
 				table_offset = offset + vp[i].start;
-				//c = Extended::probe (parent, fd, vp[i].start, vp[i].size);
-				//if (!c)
-					//continue;
-			}
-#if 0
 			} else {
 				c = new Partition;
 				c->bytes_size = vp[i].size;
-				c->device_offset = vp[i].start;
-				//queue_add_probe (c);
+				c->device_offset = table_offset + vp[i].start;
+				c->device = parent->device;
+				ext->add_child (c);
+				queue_add_probe (c);
 			}
-			parent->add_child (c);
-#endif
 		}
 		if (vp.size() == 1)
 			break;
@@ -164,7 +151,7 @@ std::string Extended::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Extended", "#d0dd80");
+	output << dump_table_header ("Extended", "yellow");
 
 	// no specfics for now
 
@@ -172,6 +159,8 @@ std::string Extended::dump_dot (void)
 
 	output << dump_table_footer();
 	output << dump_dot_children();
+
+	output << "{ rank=same obj_" << this << " obj_" << parent << " }\n";
 
 	return output.str();
 }

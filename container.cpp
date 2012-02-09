@@ -145,22 +145,23 @@ std::string Container::dump_dot (void)
 
 	//output << dump_row ("type",          type);
 	output << dump_row ("name",          name);
-	output << dump_row ("uuid",          uuid_short); //RAR temp
+	//output << dump_row ("uuid",          uuid_short); //RAR temp
 	output << dump_row ("device",        device);
 	output << dump_row ("device_offset", device_offset);
-	output << dump_row ("block_size",    block_size);
+	//output << dump_row ("block_size",    block_size);
 	output << dump_row ("bytes_size",    bytes_size);
 	output << dump_row ("bytes_used",    bytes_used);
 	output << dump_row ("bytes_free",    bytes_size - bytes_used);
-	output << dump_row ("parent",        parent);
+	//output << dump_row ("parent",        parent);
 
+#if 0
 	if (count > 0) {
 		output << dump_row ("children",      count);
 		for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
 			output << dump_row ("", (*i));
 		}
 	}
-
+#endif
 
 	return output.str();
 }
@@ -190,11 +191,12 @@ std::string Container::dump_dot_children (void)
 std::string Container::dump_row (const char *name, long long value)
 {
 	std::ostringstream s;
+	std::string str = get_size (value);
 
 	s << "<tr>";
 	s << "<td align=\"left\">" << name << "</td>";
 	s << "<td>=</td>";
-	s << "<td align=\"left\">" << value << "</td>";
+	s << "<td align=\"left\">" << value << " (" << str << ")</td>";
 	s << "</tr>\n";
 
 	return s.str();
