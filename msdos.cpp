@@ -33,12 +33,6 @@
 #include "partition.h"
 #include "main.h"
 
-struct partition {
-	long long start;
-	long long size;
-	int type;
-};
-
 /**
  * Msdos
  */
@@ -73,6 +67,7 @@ void Msdos::read_chs (unsigned char *buffer, int *cylinder, int *head, int *sect
  */
 bool Msdos::read_partition (unsigned char *buffer, int index, struct partition *part)
 {
+	//XXX include this in read_table?
 	if (!buffer || !part)
 		return false;
 	if ((index < 0) || (index > 3))
@@ -98,85 +93,19 @@ bool Msdos::read_partition (unsigned char *buffer, int index, struct partition *
 /**
  * read_table
  */
-void Msdos::read_table (Container *parent, int fd, long long offset)
+unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, int fd, long long offset, std::vector<struct partition> &vp)
 {
-	unsigned char buffer[512];
 	struct partition part;
-	long long ext_start = -1;
-	//long long ext_size = -1;
 	int i;
 
-	//printf ("SEEK %lld\n", offset);
-	lseek (fd, offset, SEEK_SET);
-	read (fd, buffer, sizeof (buffer));
-
 	for (i = 0; i < 4; i++) {
-		if (!read_partition (buffer, i, &part))
-			continue;
+		if (!read_partition (buffer, i, &part))	// could flag Msdos object as invalid
+			continue;		// RAR or return -1
 
-		if (part.type == 0x05) {
-			ext_start = part.start;
-			//ext_size  = part.size;
-			continue;
-		}
-
-		std::string s1 = get_size (part.start);
-		std::string s2 = get_size (part.size);
-
-#if 0
-		printf ("partition %d (0x%02x)\n", i+1, part.type);
-		printf ("\tstart = %lld (%s)\n", part.start, s1.c_str());
-		printf ("\tsize  = %lld (%s)\n", part.size,  s2.c_str());
-		printf ("\n");
-#endif
-
-		Partition *p = new Partition;
-		p->bytes_size = part.size;
-		p->device_offset = part.start;
-
-		parent->add_child (p);
-		//RAR queue_add_probe (p);
+		vp.push_back (part);
 	}
 
-	if (ext_start < 0)
-		return;
-
-	offset = ext_start;
-	for (i = 5; i < 50; i++) {
-		//printf ("SEEK %lld\n", offset);
-		lseek (fd, offset, SEEK_SET);
-		read (fd, buffer, sizeof (buffer));
-
-		if (!read_partition (buffer, 0, &part))
-			break;
-
-		std::string s1 = get_size (part.start);
-		std::string s2 = get_size (part.size);
-
-#if 0
-		printf ("partition %d (0x%02x)\n", i, part.type);
-		printf ("\tstart = %lld (%s)\n", part.start, s1.c_str());
-		printf ("\tsize  = %lld (%s)\n", part.size,  s2.c_str());
-		printf ("\n");
-#endif
-
-		Extended *e = new Extended;
-		e->bytes_size = part.size;
-		e->device_offset = part.start;
-
-		parent->add_child (e);
-		//RAR queue_add_probe (e);
-
-		if (!read_partition (buffer, 1, &part))
-			break;
-
-		if (part.type != 0x05) {
-			break;
-		}
-
-		offset = ext_start + part.start;
-
-	}
+	return vp.size();
 }
 
 
@@ -187,9 +116,13 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 {
 	Msdos *m = NULL;
 	int fd;
+	unsigned int i;
+	int count = 0;
 
 	if (*(unsigned short int *) (buffer+510) != 0xAA55)
 		return NULL;
+
+	// and some other quick checks
 
 	m = new Msdos;
 
@@ -207,9 +140,40 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 	printf ("sectors   = %d\n", geometry.sectors);
 	printf ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
 #endif
-	read_table (m, fd, 0);
+	std::vector<struct partition> vp;
+	count = m->read_table (buffer, bufsize, fd, 0, vp);
 
-	close (fd);
+	if ((count < 0) || (vp.size() > 4)) {
+		printf ("partition table is corrupt\n");	// bugger
+		return NULL;
+	}
+
+	for (i = 0; i < vp.size(); i++) {
+#if 1
+		std::string s1 = get_size (vp[i].start);
+		std::string s2 = get_size (vp[i].size);
+
+		printf ("partition %d (0x%02x)\n", i+1, vp[i].type);
+		printf ("\tstart = %lld (%s)\n", vp[i].start, s1.c_str());
+		printf ("\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
+		printf ("\n");
+#endif
+		Container *c = NULL;
+
+		if (vp[i].type == 0x05) {
+			c = Extended::probe (parent, fd, vp[i].start, vp[i].size);
+			if (!c)
+				continue;
+		} else {
+			c = new Partition;
+			c->bytes_size = vp[i].size;
+			c->device_offset = vp[i].start;
+			//queue_add_probe (c);
+		}
+		parent->add_child (c);
+	}
+
+	close (fd);	// XXX or keep it for later?
 	parent->add_child (m);
 	return m;
 }

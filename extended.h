@@ -21,13 +21,15 @@
 
 #include <string>
 
-#include "partition.h"
+#include "msdos.h"
 
-class Extended : public Partition
+class Extended : public Msdos
 {
 public:
 	Extended (void);
 	virtual ~Extended();
+
+	static Extended * probe (Container *parent, int fd, long long offset, long long size);
 
 	virtual std::string dump_dot (void);
 

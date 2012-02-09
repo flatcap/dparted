@@ -17,6 +17,8 @@
 
 
 #include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <string>
 #include <sstream>
@@ -37,6 +39,104 @@ Extended::Extended (void)
  */
 Extended::~Extended()
 {
+}
+
+
+/**
+ * probe
+ */
+Extended * Extended::probe (Container *parent, int fd, long long offset, long long size)
+{
+	Extended *ext = NULL;
+
+	unsigned char *buffer = NULL;
+	int bufsize = 512;
+	off_t seek = 0;
+	ssize_t count = 0;
+	int loop = 0;
+	long long table_offset = offset;
+
+	buffer = (unsigned char*) malloc (bufsize);
+	if (!buffer)
+		return NULL;
+
+	for (loop = 0; loop < 50; loop++) {
+		seek = lseek (fd, table_offset, SEEK_SET);
+		if (seek != table_offset) {
+			printf ("seek failed (%ld)\n", seek);
+			free(buffer);
+			return NULL;
+		}
+		//printf ("seek succeeded\n"); fflush (stdout);
+
+		count = read (fd, buffer, bufsize);
+		if (count != bufsize) {
+			printf ("read failed for (%d bytes)\n", bufsize);
+			free(buffer);
+			return NULL;
+		}
+		//printf ("read succeeded\n"); fflush (stdout);
+
+		if (*(unsigned short int *) (buffer+510) != 0xAA55) {
+			printf ("not an extended partition\n");
+			return NULL;
+		}
+
+		//printf ("extended partition\n");
+
+		ext = new Extended;
+
+		ext->name = "extended";
+		ext->bytes_size = size;
+		ext->device = parent->device;
+		ext->device_offset = table_offset;
+
+		int num = 0;
+		unsigned int i;
+		std::vector<struct partition> vp;
+		num = ext->read_table (buffer, bufsize, fd, 0, vp);
+
+		if ((num < 0) || (vp.size() > 2)) {
+			printf ("partition table is corrupt\n");	// bugger
+			return NULL;
+		}
+
+		for (i = 0; i < vp.size(); i++) {
+#if 1
+			if (vp[i].type != 5) {
+				std::string s1 = get_size (vp[i].start);
+				std::string s2 = get_size (vp[i].size);
+
+				printf ("\tpartition %d (0x%02x)\n", i+1, vp[i].type);
+				printf ("\t\tstart = %lld (%s)\n", vp[i].start, s1.c_str());
+				printf ("\t\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
+				printf ("\n");
+			}
+#endif
+			//Container *c = NULL;
+
+			if (vp[i].type == 0x05) {
+				table_offset = offset + vp[i].start;
+				//c = Extended::probe (parent, fd, vp[i].start, vp[i].size);
+				//if (!c)
+					//continue;
+			}
+#if 0
+			} else {
+				c = new Partition;
+				c->bytes_size = vp[i].size;
+				c->device_offset = vp[i].start;
+				//queue_add_probe (c);
+			}
+			parent->add_child (c);
+#endif
+		}
+		if (vp.size() == 1)
+			break;
+	}
+
+	free (buffer);
+	return ext;
 }
 
 

@@ -23,6 +23,12 @@
 
 #include "table.h"
 
+struct partition {
+	long long start;
+	long long size;
+	int type;
+};
+
 class Msdos : public Table
 {
 public:
@@ -30,15 +36,15 @@ public:
 	virtual ~Msdos();
 
 	static Msdos * probe (Container *parent, unsigned char *buffer, int bufsize);
-	static void read_table (Container *parent, int fd, long long offset);
-	static bool read_partition (unsigned char *buffer, int index, struct partition *part);
-	static void read_chs (unsigned char *buffer, int *cylinder, int *head, int *sector);
 
 	virtual void dump (int indent = 0);
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
 protected:
+	virtual bool read_partition (unsigned char *buffer, int index, struct partition *part);
+	virtual unsigned int read_table (unsigned char *buffer, int bufsize, int fd, long long offset, std::vector<struct partition> &vp);
+	virtual void read_chs (unsigned char *buffer, int *cylinder, int *head, int *sector);
 
 private:
 
