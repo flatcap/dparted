@@ -106,7 +106,7 @@ long long Filesystem::ext2_get_usage (void)
 		tmp = output.substr (pos1, pos2 - pos1);
 		StringNum s (tmp.c_str());
 		block_size = s;
-		//printf ("\tfree blocks = %ld\n", block_size);
+		//printf ("\tblock size = %ld\n", block_size);
 	}
 
 	pos1 = output.find ("Block count:");
@@ -135,6 +135,7 @@ long long Filesystem::ext2_get_usage (void)
 		execute_command (command, output, error);
 		//printf ("dismantle loop device\n");
 		//printf ("command = %s\n", command.c_str());
+		//printf ("\n");
 	}
 
 	return bfree;
