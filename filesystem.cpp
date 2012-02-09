@@ -58,12 +58,12 @@ long long Filesystem::ext2_get_usage (void)
 
 	if (device_offset != 0) {
 		//printf ("create loop device\n");
-		build << "losetup /dev/loop0 " << device << " -o " << device_offset;
+		build << "losetup /dev/loop16 " << device << " -o " << device_offset;
 		command = build.str();
 		execute_command (command, output, error);
 		//printf ("command = %s\n", command.c_str());
-		//execute_command ("losetup /dev/loop0 ", output, error);
-		dev = "/dev/loop0";
+		//execute_command ("losetup /dev/loop16 ", output, error);
+		dev = "/dev/loop16";
 	}
 
 	// do something
@@ -131,7 +131,7 @@ long long Filesystem::ext2_get_usage (void)
 	}
 
 	if (device_offset != 0) {
-		command = "losetup -d /dev/loop0";
+		command = "losetup -d /dev/loop16";
 		execute_command (command, output, error);
 		//printf ("dismantle loop device\n");
 		//printf ("command = %s\n", command.c_str());
