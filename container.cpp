@@ -135,7 +135,7 @@ std::string Container::dump_dot (void)
 {
 	std::ostringstream output;
 	std::string uuid_short = uuid;
-	unsigned int count = children.size();
+	//unsigned int count = children.size();
 
 	if (!uuid_short.empty()) {
 		uuid_short = uuid.substr (0, 6) + "...";
@@ -196,7 +196,11 @@ std::string Container::dump_row (const char *name, long long value)
 	s << "<tr>";
 	s << "<td align=\"left\">" << name << "</td>";
 	s << "<td>=</td>";
+#if 1
+	s << "<td align=\"left\">" << str << "</td>";
+#else
 	s << "<td align=\"left\">" << value << " (" << str << ")</td>";
+#endif
 	s << "</tr>\n";
 
 	return s.str();

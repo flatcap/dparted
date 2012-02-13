@@ -158,15 +158,15 @@ std::string Disk::dump_dot (void)
 
 	output << Block::dump_dot();
 
-	output << dump_row ("hw_cylinders",   hw_cylinders);
-	output << dump_row ("hw_heads",       hw_heads);
-	output << dump_row ("hw_sectors",     hw_sectors);
-	output << dump_row ("read_only",      read_only);
-	output << dump_row ("bios_cylinders", bios_cylinders);
-	output << dump_row ("bios_heads",     bios_heads);
-	output << dump_row ("bios_sectors",   bios_sectors);
-	output << dump_row ("host",           host);
-	output << dump_row ("did",            did);
+	//output << dump_row ("hw_cylinders",   hw_cylinders);
+	//output << dump_row ("hw_heads",       hw_heads);
+	//output << dump_row ("hw_sectors",     hw_sectors);
+	//output << dump_row ("read_only",      read_only);
+	//output << dump_row ("bios_cylinders", bios_cylinders);
+	//output << dump_row ("bios_heads",     bios_heads);
+	//output << dump_row ("bios_sectors",   bios_sectors);
+	//output << dump_row ("host",           host);
+	//output << dump_row ("did",            did);
 
 	output << dump_table_footer();
 	output << dump_dot_children();

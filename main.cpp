@@ -810,9 +810,9 @@ int main (int argc, char *argv[])
 	disks.name = "container";	//XXX dummy
 
 	const char *disk_list[] = {
-		//"/dev/sda",
+		"/dev/sda",
 		//"/dev/sdb",
-		"/dev/sdc",
+		//"/dev/sdc",
 		//"/dev/sdd",
 		//"/dev/loop0", "/dev/loop1", "/dev/loop2",
 		//"/dev/loop3",
