@@ -51,12 +51,15 @@ Loop::~Loop()
 bool Loop::probe (const std::string &name, int fd, struct stat &st, Container &list)
 {
 	Loop *l = NULL;
+	long long seek;
+
+	seek = lseek (fd, 0, SEEK_END);
 
 	l = new Loop;
 
 	l->device        = name;
 	l->device_offset = 0;
-	l->bytes_size    = st.st_size;
+	l->bytes_size    = seek;
 	l->bytes_used    = 0;
 
 	list.add_child (l);

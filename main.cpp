@@ -810,13 +810,13 @@ int main (int argc, char *argv[])
 	disks.name = "container";	//XXX dummy
 
 	const char *disk_list[] = {
-		"/dev/sda",
+		//"/dev/sda",
 		//"/dev/sdb",
 		//"/dev/sdc",
 		//"/dev/sdd",
 		//"/dev/loop0", "/dev/loop1", "/dev/loop2",
 		//"/dev/loop3",
-		//"/dev/loop4",
+		"/dev/loop4",
 		//"/dev/loop5", "/dev/loop6", "/dev/loop7",
 		//"/dev/loop8", "/dev/loop9", "/dev/loop10", "/dev/loop11", "/dev/loop12", "/dev/loop13", "/dev/loop14", "/dev/loop15",
 		//"/var/lib/libvirt/images/f16.img",
@@ -915,7 +915,7 @@ int main (int argc, char *argv[])
 #if 1
 	std::string dot;
 	dot += "digraph disks {\n";
-	dot += "graph [ rankdir = \"TB\", bgcolor = white ];\n";
+	dot += "graph [ rankdir = \"TB\", bgcolor = grey ];\n";
 	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
 
 	unsigned int i;

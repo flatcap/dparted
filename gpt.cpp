@@ -55,12 +55,14 @@ Gpt * Gpt::probe (Container *parent, unsigned char *buffer, int bufsize)
 	g = new Gpt;
 
 	g->name = "gpt";
-	g->bytes_size = 1234;		// unknown as yet
+	g->bytes_size = parent->bytes_size;
 	g->bytes_used = 0;
 	g->device = parent->device;
 	g->device_offset = 0;
 	g->block_size = 0;
 	g->uuid = read_uuid (buffer+568);
+
+	parent->add_child (g);
 
 	int i;
 	int j;
