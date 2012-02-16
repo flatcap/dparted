@@ -308,6 +308,14 @@ unsigned int parse_tagged_line (const std::string &line, std::map<std::string,St
 		std::string name  = (*it).substr (0, middle);
 		std::string value = (*it).substr (middle + 1);
 
+		// trim quotes XXX
+		unsigned int len = value.length();
+		if (len > 0) {
+			if ((value[0] == '"') || (value[0] == '\'')) {
+				value = value.substr (1, len - 2);
+			}
+		}
+
 		tags[name] = value;
 	}
 
