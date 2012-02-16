@@ -106,6 +106,81 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 
 
 /**
+ * find_devices
+ */
+unsigned int Disk::find_devices (std::vector<Container *> &list)
+{
+	int retval = -1;
+
+	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
+	std::string command = "lsblk -b -P -e 7";
+	std::string output;
+	std::string error;
+
+	retval = execute_command (command, output, error);
+	if (retval < 0)
+		return 0;
+
+	//printf ("%s\n", output.c_str());
+
+	std::string device;
+	std::string type;
+	std::string mount;
+	int kernel_major = -1;
+	int kernel_minor = -1;
+	long long size;
+	unsigned int count;
+	std::vector<std::string> lines;
+	unsigned int i;
+	std::string part;
+	int scan;
+	std::map<std::string,StringNum> tags;
+
+	count = explode ("\n", output, lines);
+	//printf ("%d lines\n", count);
+
+	for (i = 0; i < count; i++) {
+		parse_tagged_line ((lines[i]), tags);
+
+		type = tags["TYPE"];
+		if (type != "disk")
+			continue;
+
+		device = tags["NAME"];
+		//printf ("%s\n", device.c_str());
+
+		std::string majmin = tags["MAJ:MIN"];
+		scan = sscanf (majmin.c_str(), "%d:%d", &kernel_major, &kernel_minor);
+		if (scan != 2) {
+			printf ("scan failed1\n");
+			continue;
+		}
+
+		size = tags["SIZE"];
+		mount = tags["MOUNTPOINT"];
+
+#if 0
+		printf ("\tmajor: %d\n", kernel_major);
+		printf ("\tminor: %d\n", kernel_minor);
+		printf ("\tsize:  %lld\n", size);
+		printf ("\tmount: %s\n", mount.c_str());
+		printf ("\n");
+#endif
+
+		Disk *d = new Disk;
+		d->kernel_major = kernel_major;
+		d->kernel_minor = kernel_minor;
+		d->mounts = mount;
+		d->bytes_size = size;
+
+		list.push_back (d);
+	}
+
+	//printf ("%lu objects\n", list.size());
+	return list.size();
+}
+
+/**
  * dump
  */
 void Disk::dump (int indent /* = 0 */)
