@@ -33,12 +33,18 @@ public:
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
+	static bool probe (const std::string &name, int fd, struct stat &st, Container &list);
+	static unsigned int find_devices (Container &list);
+
 	long		pv_count;
 	long		lv_count;
 	std::string	vg_attr;
 	long long	vg_extent_count;
 	long long	vg_free_count;
 	long		vg_seqno;
+
+	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
+	std::vector<std::string> components;
 
 protected:
 
