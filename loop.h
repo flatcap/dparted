@@ -23,6 +23,8 @@
 
 #include "block.h"
 
+class Container;
+
 class Loop : public Block
 {
 public:
@@ -30,10 +32,16 @@ public:
 	virtual ~Loop();
 
 	static bool probe (const std::string &name, int fd, struct stat &st, Container &list);
+	static unsigned int find_devices (std::vector<Container *> &list);
 
 	virtual std::string dump_dot (void);
 
 protected:
+	// these refer to the backing file, not the loop device itself
+	int kernel_major;
+	int kernel_minor;
+	long inode;
+	std::string file;
 
 private:
 

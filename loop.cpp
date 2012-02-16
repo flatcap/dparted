@@ -27,6 +27,7 @@
 
 #include "loop.h"
 #include "main.h"
+#include "utils.h"
 
 /**
  * Loop
@@ -66,6 +67,110 @@ bool Loop::probe (const std::string &name, int fd, struct stat &st, Container &l
 	queue_add_probe (l);	// queue the container for action
 
 	return true;
+}
+
+/**
+ * find_devices
+ */
+unsigned int Loop::find_devices (std::vector<Container *> &list)
+{
+	int retval = -1;
+
+	// /dev/loop0: [0831]:4457032 (/home/flatcap/work/partitions/images/disk0)
+	std::string command = "losetup -a";
+	std::string output;
+	std::string error;
+
+	retval = execute_command (command, output, error);
+	if (retval < 0);
+
+	//printf ("%s\n", output.c_str());
+
+	std::string device;
+	std::string file;
+	int kernel_major = -1;
+	int kernel_minor = -1;
+	long inode;
+	unsigned int count;
+	size_t pos;
+	std::vector<std::string> lines;
+	unsigned int i;
+	std::string part;
+	int scan;
+
+	count = explode ("\n", output, lines);
+	//printf ("%d lines\n", count);
+
+	for (i = 0; i < count; i++) {
+		pos = lines[i].find (": [");
+		if (pos == std::string::npos) {
+			printf ("corrupt line1\n");
+			continue;
+		}
+		device = lines[i].substr (0, pos);
+		//printf ("%s\n", device.c_str());
+
+		part = lines[i].substr (pos + 3, 4);
+		//printf ("%s\n", part.c_str());
+		scan = sscanf (part.c_str(), "%02x%02x", &kernel_major, &kernel_minor);
+		if (scan != 2) {
+			printf ("scan failed1\n");
+			continue;
+		}
+		//printf ("\tmajor: %d\n", kernel_major);
+		//printf ("\tminor: %d\n", kernel_minor);
+
+		part = lines[i].substr (pos + 9);
+
+		pos = part.find (" (");
+		if (pos == std::string::npos) {
+			printf ("corrupt line2\n");
+			continue;
+		}
+
+		part = part.substr (0, pos);
+		//printf ("part = %s\n", part.c_str());
+
+		scan = sscanf (part.c_str(), "%ld", &inode);
+		if (scan != 1) {
+			printf ("scan failed2\n");
+			continue;
+		}
+		//printf ("\tinode: %ld\n", inode);
+
+		pos = lines[i].find (" (");
+		if (pos == std::string::npos) {
+			printf ("corrupt line3\n");
+			continue;
+		}
+
+		part = lines[i].substr (pos + 2);
+		//printf ("part = %s\n", part.c_str());
+
+		pos = part.length();
+		if (part[pos - 1] != ')') {
+			printf ("corrupt line4\n");
+			continue;
+		}
+
+		part = part.substr (0, pos - 1);
+		//printf ("\tfile:  %s\n", part.c_str());
+
+		//printf ("\n");
+
+		Loop *l = new Loop;
+		l->device = device;
+		l->device_offset = 0;
+		l->kernel_major = kernel_major;
+		l->kernel_minor = kernel_minor;
+		l->inode = inode;
+		l->file = file;
+
+		list.push_back (l);
+	}
+
+	//printf ("%lu objects\n", list.size());
+	return list.size();
 }
 
 
