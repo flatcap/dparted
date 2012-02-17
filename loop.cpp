@@ -82,7 +82,8 @@ unsigned int Loop::find_devices (std::vector<Container *> &list)
 	std::string error;
 
 	retval = execute_command (command, output, error);
-	if (retval < 0);
+	if (retval < 0)
+		return 0;
 
 	//printf ("%s\n", output.c_str());
 
