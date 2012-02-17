@@ -290,13 +290,13 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 /**
  * parse_tagged_line
  */
-unsigned int parse_tagged_line (const std::string &line, std::map<std::string,StringNum> &tags, bool clear_map /* = true */)
+unsigned int parse_tagged_line (const std::string &line, const char *separators, std::map<std::string,StringNum> &tags, bool clear_map /* = true */)
 {
 	//XXX optional param: bool clear_array = true;
 	int middle;
 	std::vector<std::string> list;
 
-	explode ("\t", line, list);
+	explode (separators, line, list);
 
 	if (clear_map)
 		tags.clear();

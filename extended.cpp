@@ -129,8 +129,14 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 			} else {
 				c = new Partition;
 				c->bytes_size = vp[i].size;
-				c->device_offset = table_offset + vp[i].start;
-				c->device = parent->device;
+
+				//c->device_offset = table_offset + vp[i].start;
+				//c->device = parent->device;
+
+				char num = '5' + loop;
+				c->device_offset = 0;
+				c->device = parent->device + num;
+
 				ext->add_child (c);
 				queue_add_probe (c);
 			}

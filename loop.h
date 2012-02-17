@@ -32,7 +32,7 @@ public:
 	virtual ~Loop();
 
 	static bool probe (const std::string &name, int fd, struct stat &st, Container &list);
-	static unsigned int find_devices (std::vector<Container *> &list);
+	static unsigned int find_devices (Container &list);
 
 	virtual std::string dump_dot (void);
 

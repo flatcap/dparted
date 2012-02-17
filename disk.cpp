@@ -108,7 +108,7 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 /**
  * find_devices
  */
-unsigned int Disk::find_devices (std::vector<Container *> &list)
+unsigned int Disk::find_devices (Container &list)
 {
 	int retval = -1;
 
@@ -135,12 +135,13 @@ unsigned int Disk::find_devices (std::vector<Container *> &list)
 	std::string part;
 	int scan;
 	std::map<std::string,StringNum> tags;
+	int added = 0;
 
 	count = explode ("\n", output, lines);
 	//printf ("%d lines\n", count);
 
 	for (i = 0; i < count; i++) {
-		parse_tagged_line ((lines[i]), tags);
+		parse_tagged_line ((lines[i]), " ", tags);
 
 		type = tags["TYPE"];
 		if (type != "disk")
@@ -168,16 +169,18 @@ unsigned int Disk::find_devices (std::vector<Container *> &list)
 #endif
 
 		Disk *d = new Disk;
+		d->device = "/dev/" + device;
+		d->device_offset = 0;
 		d->kernel_major = kernel_major;
 		d->kernel_minor = kernel_minor;
 		d->mounts = mount;
 		d->bytes_size = size;
 
-		list.push_back (d);
+		list.add_child (d);
+		added++;
 	}
 
-	//printf ("%lu objects\n", list.size());
-	return list.size();
+	return added;
 }
 
 /**

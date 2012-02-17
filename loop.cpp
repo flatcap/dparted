@@ -72,7 +72,7 @@ bool Loop::probe (const std::string &name, int fd, struct stat &st, Container &l
 /**
  * find_devices
  */
-unsigned int Loop::find_devices (std::vector<Container *> &list)
+unsigned int Loop::find_devices (Container &list)
 {
 	int retval = -1;
 
@@ -98,6 +98,7 @@ unsigned int Loop::find_devices (std::vector<Container *> &list)
 	unsigned int i;
 	std::string part;
 	int scan;
+	int added = 0;
 
 	count = explode ("\n", output, lines);
 	//printf ("%d lines\n", count);
@@ -167,11 +168,11 @@ unsigned int Loop::find_devices (std::vector<Container *> &list)
 		l->inode = inode;
 		l->file = file;
 
-		list.push_back (l);
+		list.add_child (l);
+		added++;
 	}
 
-	//printf ("%lu objects\n", list.size());
-	return list.size();
+	return added;
 }
 
 

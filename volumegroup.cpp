@@ -89,12 +89,13 @@ unsigned int VolumeGroup::find_devices (Container &list)
 	std::vector<std::string> lines;
 	unsigned int i;
 	std::map<std::string,StringNum> tags;
+	int added = 0;
 
 	count = explode ("\n", output, lines);
 	//printf ("%d lines\n", count);
 
 	for (i = 0; i < count; i++) {
-		parse_tagged_line ((lines[i]), tags);
+		parse_tagged_line ((lines[i]), "\t", tags);
 
 		name = tags["LVM2_VG_NAME"];
 		comp = tags["LVM2_PV_NAME"];
@@ -119,11 +120,11 @@ unsigned int VolumeGroup::find_devices (Container &list)
 
 			vg->components.push_back (comp);
 			list.add_child (vg);
+			added++;
 		}
 	}
 
-	//printf ("%lu objects\n", list.children.size());
-	return list.children.size();
+	return added;
 }
 
 /**

@@ -166,12 +166,19 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 			c = Extended::probe (m, fd, vp[i].start, vp[i].size);
 			if (!c)
 				continue;
+
+			char num = '1' + i;
+			c->device_offset = 0;
+			c->device = m->device + num;
 		} else {
 			c = new Partition;
 			c->name = "partition";
 			c->bytes_size = vp[i].size;
-			c->device_offset = vp[i].start;
-			c->device = m->device;
+
+			char num = '1' + i;
+			c->device_offset = 0;
+			c->device = m->device + num;
+
 			queue_add_probe (c);
 		}
 		m->add_child (c);

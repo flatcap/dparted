@@ -307,7 +307,7 @@ unsigned int logicals_get_list (Container &disks)
 
 	//printf ("Volume Groups\n");
 	for (i = 0; i < lines.size(); i++) {
-		parse_tagged_line ((lines[i]), tags);
+		parse_tagged_line ((lines[i]), "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		std::string pv_name = tags["LVM2_PV_NAME"];
@@ -411,7 +411,7 @@ unsigned int logicals_get_list (Container &disks)
 
 	//printf ("Physical extents\n");
 	for (i = 0; i < lines.size(); i++) {
-		parse_tagged_line ((lines[i]), tags);
+		parse_tagged_line ((lines[i]), "\t", tags);
 
 		std::string dev     = tags["LVM2_PV_NAME"];	// /dev/loop0
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
@@ -481,7 +481,7 @@ unsigned int logicals_get_list (Container &disks)
 
 	//printf ("Volumes:\n");
 	for (i = 0; i < lines.size(); i++) {
-		parse_tagged_line ((lines[i]), tags);
+		parse_tagged_line ((lines[i]), "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];	//printf ("vg_uuid = %s\n", vg_uuid.c_str());
 		std::string vg_name = tags["LVM2_VG_NAME"];	//printf ("vg_name = %s\n", vg_name.c_str());
@@ -809,37 +809,28 @@ int main (int argc, char *argv[])
 
 	disks.name = "container";	//XXX dummy
 
-	const char *disk_list[] = {
-		//"/dev/sda",
-		//"/dev/sdb",
-		//"/dev/sdc",
-		//"/dev/sdd",
-		"/dev/loop0", "/dev/loop1", "/dev/loop2",
-		//"/dev/loop3",
-		//"/dev/loop4",
-		//"/dev/loop5", "/dev/loop6", "/dev/loop7",
-		//"/dev/loop8", "/dev/loop9", "/dev/loop10", "/dev/loop11", "/dev/loop12", "/dev/loop13", "/dev/loop14", "/dev/loop15",
-		//"/var/lib/libvirt/images/f16.img",
-		NULL
-	};
-
-	for (int i = 0; disk_list[i]; i++) {
-		Block::probe (disk_list[i], disks);
-	}
+	Disk::find_devices (disks);
+	//Loop::find_devices (disks);
+	//VolumeGroup::find_devices (disks);
 
 	unsigned char *buffer = NULL;
 	int bufsize = 4096;
 	long long count;
 	long long seek;
 	int fd;
+	unsigned int j;
+
+	for (j = 0; j < disks.children.size(); j++) {
+		queue_add_probe (disks.children[j]);
+	}
 
 	buffer = (unsigned char*) malloc (bufsize);
 	if (!buffer)
 		return 1;
 
 	while ((item = probe_queue.front())) {
-#if 0
-		printf ("queued item: '%s'\n", item->name.c_str());
+#if 1
+		fprintf (stderr, "queued item: '%s'\n", item->name.c_str());
 #endif
 		probe_queue.pop();
 		//printf ("QUEUE has %lu items\n", probe_queue.size());
@@ -848,11 +839,11 @@ int main (int argc, char *argv[])
 		std::string s2;
 		s1 = get_size (item->device_offset);
 		s2 = get_size (item->bytes_size);
-#if 0
-		printf ("\tdevice     = %s\n",        item->device.c_str());
-		printf ("\toffset     = %lld (%s)\n", item->device_offset, s1.c_str());
-		printf ("\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
-		printf ("\n");
+#if 1
+		fprintf (stderr, "\tdevice     = %s\n",        item->device.c_str());
+		fprintf (stderr, "\toffset     = %lld (%s)\n", item->device_offset, s1.c_str());
+		fprintf (stderr, "\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
+		fprintf (stderr, "\n");
 #endif
 
 		fd = open (item->device.c_str(), O_RDONLY);
@@ -908,11 +899,6 @@ int main (int argc, char *argv[])
 
 		//empty
 	}
-
-#if 0
-	//disk_get_list (disk_list, disks);
-	logicals_get_list (disks);
-#endif
 
 #if 1
 	std::string dot;
