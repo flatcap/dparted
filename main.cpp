@@ -835,11 +835,11 @@ int main (int argc, char *argv[])
 		probe_queue.pop();
 		//printf ("QUEUE has %lu items\n", probe_queue.size());
 
+#if 0
 		std::string s1;
 		std::string s2;
 		s1 = get_size (item->device_offset);
 		s2 = get_size (item->bytes_size);
-#if 0
 		fprintf (stderr, "\tdevice     = %s\n",        item->device.c_str());
 		fprintf (stderr, "\toffset     = %lld (%s)\n", item->device_offset, s1.c_str());
 		fprintf (stderr, "\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
@@ -856,9 +856,9 @@ int main (int argc, char *argv[])
 		//printf ("\tdevice = %s\n", item->device.c_str());
 		//printf ("\tdevice_offset = %lld\n", item->device_offset);
 
-		seek = lseek (fd, item->device_offset, SEEK_SET);
-		if (seek != item->device_offset) {
-			printf ("seek failed (%lld)\n", seek);
+		seek = lseek (fd, 0, SEEK_SET);	//XXX was item->device_offset
+		if (seek != 0) {
+			printf ("seek failed %s : %lld\n", item->device.c_str(), seek);
 			close (fd);
 			continue;
 		}
@@ -900,7 +900,7 @@ int main (int argc, char *argv[])
 		//empty
 	}
 
-#if 0
+#if 1
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = grey ];\n";

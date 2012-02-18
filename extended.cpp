@@ -134,7 +134,7 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 				//c->device = parent->device;
 
 				char num = '5' + loop;
-				c->device_offset = 0;
+				c->device_offset = table_offset + vp[i].start - ext->device_offset;
 				c->device = parent->device + num;
 
 				ext->add_child (c);

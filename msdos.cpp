@@ -155,28 +155,27 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 		std::string s1 = get_size (vp[i].start);
 		std::string s2 = get_size (vp[i].size);
 
-		printf ("partition %d (0x%02x)\n", i+1, vp[i].type);
-		printf ("\tstart = %lld (%s)\n", vp[i].start, s1.c_str());
-		printf ("\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
-		printf ("\n");
+		fprintf (stderr, "partition %d (0x%02x)\n", i+1, vp[i].type);
+		fprintf (stderr, "\tstart = %lld (%s)\n", vp[i].start, s1.c_str());
+		fprintf (stderr, "\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
+		fprintf (stderr, "\n");
 #endif
 		Container *c = NULL;
 
+		char num = '1' + i;
 		if (vp[i].type == 0x05) {
 			c = Extended::probe (m, fd, vp[i].start, vp[i].size);
 			if (!c)
 				continue;
 
-			char num = '1' + i;
-			c->device_offset = 0;
+			c->device_offset = vp[i].start;
 			c->device = m->device + num;
 		} else {
 			c = new Partition;
 			c->name = "partition";
 			c->bytes_size = vp[i].size;
 
-			char num = '1' + i;
-			c->device_offset = 0;
+			c->device_offset = vp[i].start;
 			c->device = m->device + num;
 
 			queue_add_probe (c);

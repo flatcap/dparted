@@ -171,7 +171,7 @@ Filesystem * Filesystem::probe (Container *parent, unsigned char *buffer, int bu
 		f = new Filesystem;
 		f->name = name;
 		f->device = parent->device;
-		f->device_offset = parent->device_offset;
+		f->device_offset = 0;	//XXX was parent->device_offset;
 		f->bytes_size = parent->bytes_size;
 		if (name == "ext2") {
 			long long bfree = f->ext2_get_usage();
