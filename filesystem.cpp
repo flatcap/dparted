@@ -56,9 +56,9 @@ long long Filesystem::ext2_get_usage (void)
 	long block_size = 512;
 	long long bfree = 0;
 
-	if (device_offset != 0) {
+	if (parent_offset != 0) {
 		//printf ("create loop device\n");
-		build << "losetup /dev/loop16 " << device << " -o " << device_offset;
+		build << "losetup /dev/loop16 " << device << " -o " << parent_offset;
 		command = build.str();
 		execute_command (command, output, error);
 		//printf ("command = %s\n", command.c_str());
@@ -130,7 +130,7 @@ long long Filesystem::ext2_get_usage (void)
 		//printf ("\tbytes free = %lld\n", bfree);
 	}
 
-	if (device_offset != 0) {
+	if (parent_offset != 0) {
 		command = "losetup -d /dev/loop16";
 		execute_command (command, output, error);
 		//printf ("dismantle loop device\n");
@@ -171,7 +171,7 @@ Filesystem * Filesystem::probe (Container *parent, unsigned char *buffer, int bu
 		f = new Filesystem;
 		f->name = name;
 		f->device = parent->device;
-		f->device_offset = 0;	//XXX was parent->device_offset;
+		f->parent_offset = 0;	//XXX was parent->parent_offset;
 		f->bytes_size = parent->bytes_size;
 		if (name == "ext2") {
 			long long bfree = f->ext2_get_usage();

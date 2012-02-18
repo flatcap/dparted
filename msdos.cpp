@@ -129,7 +129,7 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 	m->name = "msdos";
 	m->bytes_size = parent->bytes_size;
 	m->device = parent->device;
-	m->device_offset = 0;
+	m->parent_offset = 0;
 
 	parent->add_child (m);
 
@@ -168,14 +168,14 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 			if (!c)
 				continue;
 
-			c->device_offset = vp[i].start;
+			c->parent_offset = vp[i].start;
 			c->device = m->device + num;
 		} else {
 			c = new Partition;
 			c->name = "partition";
 			c->bytes_size = vp[i].size;
 
-			c->device_offset = vp[i].start;
+			c->parent_offset = vp[i].start;
 			c->device = m->device + num;
 
 			queue_add_probe (c);

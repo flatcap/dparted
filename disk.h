@@ -36,7 +36,7 @@ public:
 
 	virtual long          get_block_size (void);
 	//virtual std::string   get_device_name (void);
-	//virtual long long     get_device_offset (void);
+	//virtual long long     get_parent_offset (void);
 	virtual unsigned int  get_device_space (std::map<long long, long long> &spaces);
 
 	virtual Container * find_device (const std::string &dev);

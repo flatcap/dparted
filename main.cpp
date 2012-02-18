@@ -108,10 +108,10 @@ int main (int argc, char *argv[])
 #if 0
 		std::string s1;
 		std::string s2;
-		s1 = get_size (item->device_offset);
+		s1 = get_size (item->parent_offset);
 		s2 = get_size (item->bytes_size);
 		fprintf (stderr, "\tdevice     = %s\n",        item->device.c_str());
-		fprintf (stderr, "\toffset     = %lld (%s)\n", item->device_offset, s1.c_str());
+		fprintf (stderr, "\toffset     = %lld (%s)\n", item->parent_offset, s1.c_str());
 		fprintf (stderr, "\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
 		fprintf (stderr, "\n");
 #endif
@@ -124,9 +124,9 @@ int main (int argc, char *argv[])
 
 		//printf ("reading from:\n");
 		//printf ("\tdevice = %s\n", item->device.c_str());
-		//printf ("\tdevice_offset = %lld\n", item->device_offset);
+		//printf ("\tparent_offset = %lld\n", item->parent_offset);
 
-		seek = lseek (fd, 0, SEEK_SET);	//XXX was item->device_offset
+		seek = lseek (fd, 0, SEEK_SET);	//XXX was item->parent_offset
 		if (seek != 0) {
 			printf ("seek failed %s : %lld\n", item->device.c_str(), seek);
 			close (fd);

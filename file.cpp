@@ -71,7 +71,7 @@ bool File::probe (const std::string &name, int fd, struct stat &st, Container &l
 #endif
 
 	f->device        = name;
-	f->device_offset = 0;
+	f->parent_offset = 0;
 	f->bytes_size    = st.st_size;
 	f->bytes_used    = 0;
 

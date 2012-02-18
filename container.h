@@ -48,7 +48,7 @@ public:
 
 	virtual long          get_block_size (void);
 	virtual std::string   get_device_name (void);
-	virtual long long     get_device_offset (void);
+	virtual long long     get_parent_offset (void);
 	virtual unsigned int  get_device_space (std::map<long long, long long> &spaces);
 
 	virtual long long get_size_total (void);
@@ -70,7 +70,7 @@ public:
 	std::string	 uuid;
 
 	std::string	 device;
-	long long	 device_offset;
+	long long	 parent_offset;
 
 	long		 block_size;
 	long long	 bytes_size;

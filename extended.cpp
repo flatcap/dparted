@@ -68,7 +68,7 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 	ext->name = "extended";
 	ext->bytes_size = size;
 	ext->device = parent->device;
-	ext->device_offset = offset;
+	ext->parent_offset = offset;
 
 	//parent->add_child (ext);
 
@@ -130,11 +130,11 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 				c = new Partition;
 				c->bytes_size = vp[i].size;
 
-				//c->device_offset = table_offset + vp[i].start;
+				//c->parent_offset = table_offset + vp[i].start;
 				//c->device = parent->device;
 
 				char num = '5' + loop;
-				c->device_offset = table_offset + vp[i].start - ext->device_offset;
+				c->parent_offset = table_offset + vp[i].start - ext->parent_offset;
 				c->device = parent->device + num;
 
 				ext->add_child (c);

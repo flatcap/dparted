@@ -89,7 +89,7 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 	}
 
 	d->device        = name;
-	d->device_offset = 0;
+	d->parent_offset = 0;
 	d->bytes_size    = file_size_in_bytes;
 	d->bytes_used    = 0;
 
@@ -172,7 +172,7 @@ unsigned int Disk::find_devices (Container &list)
 
 		Disk *d = new Disk;
 		d->device = "/dev/" + device;
-		d->device_offset = 0;
+		d->parent_offset = 0;
 		d->kernel_major = kernel_major;
 		d->kernel_minor = kernel_minor;
 		d->mounts = mount;
@@ -273,9 +273,9 @@ std::string Disk::get_device_name (void)
 }
 
 /**
- * get_device_offset
+ * get_parent_offset
  */
-long long Disk::get_device_offset (void)
+long long Disk::get_parent_offset (void)
 {
 	return 0;
 }

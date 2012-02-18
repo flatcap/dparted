@@ -58,7 +58,7 @@ Gpt * Gpt::probe (Container *parent, unsigned char *buffer, int bufsize)
 	g->bytes_size = parent->bytes_size;
 	g->bytes_used = 0;
 	g->device = parent->device;
-	g->device_offset = 0;
+	g->parent_offset = 0;
 	g->block_size = 0;
 	g->uuid = read_uuid (buffer+568);
 
@@ -82,7 +82,7 @@ Gpt * Gpt::probe (Container *parent, unsigned char *buffer, int bufsize)
 		long long start  = *(long long*) (buffer+32);
 		long long finish = *(long long*) (buffer+40);
 
-		p->device_offset = start * 512;
+		p->parent_offset = start * 512;
 		p->bytes_size = (finish - start + 1) * 512;
 
 		if (buffer[56]) {

@@ -34,7 +34,7 @@
  */
 Container::Container (void) :
 	cont_type (CONT_NORMAL),
-	device_offset (0),
+	parent_offset (0),
 	block_size (0),
 	bytes_size (0),
 	bytes_used (0),
@@ -85,7 +85,7 @@ void Container::dump2 (void)
 		s = get_size ((*i)->bytes_size);
 		u = get_size ((*i)->bytes_used);
 		f = get_size ((*i)->bytes_size - (*i)->bytes_used);
-		o = get_size ((*i)->device_offset);
+		o = get_size ((*i)->parent_offset);
 		d = (*i)->get_device_name();
 		t = (*i)->type;
 		const char *indent = "";
@@ -118,7 +118,7 @@ void Container::dump2 (void)
 			t.c_str(),
 			undent,
 			(*i)->name.c_str(),
-			(*i)->device_offset,
+			(*i)->parent_offset,
 			(*i)->bytes_size,
 			s.c_str(),
 			u.c_str(),
@@ -156,7 +156,7 @@ std::string Container::dump_dot (void)
 	output << dump_row ("name",          name);
 	//output << dump_row ("uuid",          uuid_short); //RAR temp
 	output << dump_row ("device",        device);
-	output << dump_row ("device_offset", device_offset);
+	output << dump_row ("parent_offset", parent_offset);
 	//output << dump_row ("block_size",    block_size);
 	output << dump_row ("bytes_size",    bytes_size);
 	output << dump_row ("bytes_used",    bytes_used);
@@ -362,7 +362,7 @@ void Container::add_child (Container *child)
 	bool inserted = false;
 
 	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
-		if ((*i)->device_offset > child->device_offset) {
+		if ((*i)->parent_offset > child->parent_offset) {
 			children.insert (i, child);
 			inserted = true;
 			break;
@@ -422,11 +422,11 @@ std::string Container::get_device_name (void)
 }
 
 /**
- * get_device_offset
+ * get_parent_offset
  */
-long long Container::get_device_offset (void)
+long long Container::get_parent_offset (void)
 {
-	return device_offset;
+	return parent_offset;
 }
 
 /**

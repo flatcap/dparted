@@ -270,7 +270,7 @@ unsigned int logicals_get_list (Container &disks)
 		// get size from LVM2_PE_START
 		reserved1->bytes_size = 1048576;
 		reserved1->bytes_used = 1048576;
-		reserved1->device_offset = 0;
+		reserved1->parent_offset = 0;
 		reserved1->type = "metadata";
 		vg_seg->add_child (reserved1);
 #endif
@@ -281,7 +281,7 @@ unsigned int logicals_get_list (Container &disks)
 		// get size from LVM2_PV_PE_ALLOC_COUNT and LVM2_PE_START
 		reserved2->bytes_size = 3145728;
 		reserved2->bytes_used = 3145728;
-		reserved2->device_offset = cont->bytes_size - reserved2->bytes_size;
+		reserved2->parent_offset = cont->bytes_size - reserved2->bytes_size;
 		reserved2->type = "reserved";
 		vg_seg->add_child (reserved2);
 #endif
@@ -350,7 +350,7 @@ unsigned int logicals_get_list (Container &disks)
 
 		vol_seg->bytes_size = tags["LVM2_PVSEG_SIZE"];
 		vol_seg->bytes_size *= vg->block_size;
-		vol_seg->device_offset = tags["LVM2_PVSEG_START"];
+		vol_seg->parent_offset = tags["LVM2_PVSEG_START"];
 
 		vol_seg->whole = NULL; //RAR we don't know this yet
 
@@ -578,8 +578,8 @@ unsigned int logicals_get_list (Container &disks)
 			//vol_seg->volume_offset = seg_start;
 			vol_seg->device        = pe_device;
 			//vol_seg->segment_size  = seg_size;
-			vol_seg->device_offset = pe_start * vg->block_size;
-			//printf ("volume offset = %lld, device = %s, seg size = %lld, device offset = %lld\n", vol_seg.volume_offset, vol_seg.device.c_str(), vol_seg.segment_size, vol_seg.device_offset);
+			vol_seg->parent_offset = pe_start * vg->block_size;
+			//printf ("volume offset = %lld, device = %s, seg size = %lld, device offset = %lld\n", vol_seg.volume_offset, vol_seg.device.c_str(), vol_seg.segment_size, vol_seg.parent_offset);
 
 			vol_seg->name = lv_name;
 			vol_seg->uuid = vol->uuid;

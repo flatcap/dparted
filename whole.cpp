@@ -67,7 +67,7 @@ void Whole::add_segment (Segment *seg)
 	bool inserted = false;
 
 	for (std::vector<Segment*>::iterator i = segments.begin(); i != segments.end(); i++) {
-		if ((*i)->device_offset > seg->device_offset) {
+		if ((*i)->parent_offset > seg->parent_offset) {
 			segments.insert (i, seg);
 			inserted = true;
 			break;

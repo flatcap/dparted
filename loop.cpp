@@ -60,7 +60,7 @@ bool Loop::probe (const std::string &name, int fd, struct stat &st, Container &l
 	l = new Loop;
 
 	l->device        = name;
-	l->device_offset = 0;
+	l->parent_offset = 0;
 	l->bytes_size    = seek;
 	l->bytes_used    = 0;
 
@@ -165,7 +165,7 @@ unsigned int Loop::find_devices (Container &list)
 
 		Loop *l = new Loop;
 		l->device = device;
-		l->device_offset = 0;
+		l->parent_offset = 0;
 		l->kernel_major = kernel_major;
 		l->kernel_minor = kernel_minor;
 		l->inode = inode;
