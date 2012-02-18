@@ -17,6 +17,10 @@
 
 
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include <string>
 #include <typeinfo>
@@ -34,7 +38,8 @@ Container::Container (void) :
 	block_size (0),
 	bytes_size (0),
 	bytes_used (0),
-	parent (NULL)
+	parent (NULL),
+	fd (-1)
 {
 	type = "container";
 }
@@ -46,6 +51,10 @@ Container::~Container()
 {
 	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
 		delete *i;
+	}
+
+	if (fd >= 0) {
+		close (fd);
 	}
 }
 
@@ -514,4 +523,53 @@ Container * Container::find_name (const std::string &name)
 
 	return NULL;
 }
+
+
+/**
+ * open_device
+ */
+int Container::open_device (void)
+{
+	// flags? ro, rw
+	if (fd >= 0)
+		return fd;
+
+	if (device.empty())
+		return -1;
+
+	fd = open (device.c_str(), O_RDONLY);
+
+	return fd;
+}
+
+/**
+ * read_data
+ */
+int Container::read_data (long long offset, long long size, unsigned char *buffer)
+{
+	// if offset >= 0, seek there
+	long long current = -1;
+	long long bytes = 0;
+
+	if (!buffer)
+		return -1;
+
+	open_device();
+	if (fd < 0)
+		return -1;
+
+	if (offset >= 0) {
+		current = lseek (fd, SEEK_SET, offset);
+	} else {
+		current = lseek (fd, SEEK_CUR, 0);
+	}
+
+	if ((current + size) > bytes_size)
+		return -1;
+
+	bytes = read (fd, buffer, size);
+
+	return bytes;
+}
+
 

@@ -59,6 +59,9 @@ public:
 	virtual Container * find_uuid   (const std::string &uuid);
 	virtual Container * find_name   (const std::string &name);
 
+	virtual int open_device (void);
+	virtual int read_data (long long offset, long long size, unsigned char *buffer);
+
 	enum ContainerType cont_type;
 
 	std::string	 type;
@@ -87,6 +90,8 @@ protected:
 
 	std::string dump_table_header (const char *name, const char *colour);
 	std::string dump_table_footer (void);
+
+	int		fd;
 
 private:
 
