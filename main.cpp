@@ -900,7 +900,7 @@ int main (int argc, char *argv[])
 		//empty
 	}
 
-#if 1
+#if 0
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = grey ];\n";

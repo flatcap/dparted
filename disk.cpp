@@ -56,6 +56,7 @@ Disk::~Disk()
 }
 
 
+#if 0
 /**
  * probe
  */
@@ -104,6 +105,7 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 	return true;
 }
 
+#endif
 
 /**
  * find_devices

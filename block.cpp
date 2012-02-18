@@ -51,6 +51,7 @@ Block::~Block()
 }
 
 
+#if 0
 /**
  * probe
  */
@@ -121,3 +122,4 @@ bool Block::probe (const std::string &name, Container &list)
 	// exists and I've dealt with it
 	return false;
 }
+#endif
