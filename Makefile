@@ -20,8 +20,8 @@ OBJDIR	= .obj
 OUT	= main
 
 CFLAGS	= -g -Wall
-CFLAGS  += `pkg-config glibmm-2.4 lvm2app devmapper libparted --cflags`
-LDFLAGS += `pkg-config glibmm-2.4 lvm2app devmapper libparted --libs`
+CFLAGS  += `pkg-config glibmm-2.4 lvm2app --cflags`
+LDFLAGS += `pkg-config glibmm-2.4 lvm2app --libs`
 
 V	?= 0
 
@@ -46,7 +46,7 @@ cmd	= @$(if $($(quiet)cmd_$(1)),\
 # ----------------------------------------------------------------------------
 
 quiet_cmd_TAGS	= CTAGS	$@
-      cmd_TAGS	= ctags $(SRC) /usr/include/parted/*.h
+      cmd_TAGS	= ctags $(SRC)
 
 tags:	$(SRC) $(HDR)
 	$(call cmd,TAGS)
@@ -55,7 +55,7 @@ tags:	$(SRC) $(HDR)
 
 # TODO
 # Execute command, saving output to a TMP file
-#	g++ -g -Wall `pkg-config glibmm-2.4 lvm2app devmapper libparted --cflags` -c gpt.cpp -o .obj/gpt.o
+#	g++ -g -Wall `pkg-config glibmm-2.4 lvm2app --cflags` -c gpt.cpp -o .obj/gpt.o
 # $? = 0 && TMP file empty
 # 	echo "CC	gpt.c"
 # ?$ = 0 && TMP file non-empty
