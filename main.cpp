@@ -21,38 +21,16 @@
 #include <sys/types.h>
 #include <fcntl.h>
 
-#include <map>
 #include <queue>
-#include <sstream>
 #include <string>
 #include <vector>
 
 #include "container.h"
 #include "disk.h"
-#include "extended.h"
-#include "file.h"
 #include "filesystem.h"
-#include "gpt.h"
-#include "identify.h"
-#include "linear.h"
-#include "loop.h"
-#include "mirror.h"
-#include "msdos.h"
-#include "partition.h"
-#include "segment.h"
-#include "stripe.h"
 #include "table.h"
-#include "volumegroup.h"
-#include "volume.h"
 
 #include "utils.h"
-#include "stringnum.h"
-
-struct queue_item {
-	std::string name;
-	Container *item;
-	std::vector<std::string> requires;
-};
 
 std::queue<Container*> probe_queue;
 
