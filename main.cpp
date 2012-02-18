@@ -829,7 +829,7 @@ int main (int argc, char *argv[])
 		return 1;
 
 	while ((item = probe_queue.front())) {
-#if 1
+#if 0
 		fprintf (stderr, "queued item: '%s'\n", item->name.c_str());
 #endif
 		probe_queue.pop();
@@ -839,7 +839,7 @@ int main (int argc, char *argv[])
 		std::string s2;
 		s1 = get_size (item->device_offset);
 		s2 = get_size (item->bytes_size);
-#if 1
+#if 0
 		fprintf (stderr, "\tdevice     = %s\n",        item->device.c_str());
 		fprintf (stderr, "\toffset     = %lld (%s)\n", item->device_offset, s1.c_str());
 		fprintf (stderr, "\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
