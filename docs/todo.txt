@@ -550,3 +550,18 @@ flags
 list of error conditions for every function
 errno, etc
 
+along with each test image
+need a broken image testing every "if (!x)" in the entire program
+fuzzing tool?
+	corrupt tables
+	zero lengths
+	size overruns
+	read failed
+	command not found
+	command output corrupt
+
+check all the necessary commands exist
+continue without them, if possible?
+
+check all return paths for releasing buffers
+
