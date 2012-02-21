@@ -30,6 +30,7 @@
 #include "filesystem.h"
 #include "loop.h"
 #include "table.h"
+#include "volume.h"
 #include "volumegroup.h"
 
 #include "utils.h"
@@ -85,7 +86,7 @@ int main (int argc, char *argv[])
 
 	//Disk::find_devices (disks);
 	Loop::find_devices (disks);
-	//VolumeGroup::find_devices (disks);
+	VolumeGroup::find_devices (disks);
 
 	unsigned char *buffer = NULL;
 	int bufsize = 4096;
@@ -100,13 +101,13 @@ int main (int argc, char *argv[])
 		return 1;
 
 	while ((item = probe_queue.front())) {
-#if 0
+#if 1
 		fprintf (stderr, "queued item: '%s'\n", item->name.c_str());
 #endif
 		probe_queue.pop();
 		//printf ("QUEUE has %lu items\n", probe_queue.size());
 
-#if 0
+#if 1
 		std::string s1;
 		std::string s2;
 		s1 = get_size (item->parent_offset);
@@ -137,7 +138,14 @@ int main (int argc, char *argv[])
 		}
 #endif
 
-		//logicals...
+#if 1
+		//XXX some probes return 1 item, this will return many
+		Volume *v = Volume::probe (item, buffer, bufsize);
+		if (v) {
+			fprintf (stderr, "volume %s\n", v->name.c_str());
+			continue
+		}
+#endif
 
 		//empty
 	}

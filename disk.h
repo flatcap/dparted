@@ -57,7 +57,7 @@ public:
 	int		host;
 	int		did;
 
-	static bool probe (const std::string &name, int fd, struct stat &st, Container &list);
+	//static bool probe (const std::string &name, int fd, struct stat &st, Container &list);
 	static unsigned int find_devices (Container &list);
 
 protected:

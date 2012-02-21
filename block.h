@@ -34,8 +34,6 @@ public:
 protected:
 	//virtual bool probe (const std::string &name, const struct stat &st);
 
-	//XXX int fd;
-
 private:
 
 };

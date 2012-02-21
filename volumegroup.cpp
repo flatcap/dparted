@@ -21,6 +21,7 @@
 #include <string>
 #include <sstream>
 
+#include "main.h"
 #include "volumegroup.h"
 #include "utils.h"
 
@@ -44,14 +45,6 @@ VolumeGroup::~VolumeGroup()
 {
 }
 
-
-/**
- * probe
- */
-bool VolumeGroup::probe (const std::string &name, int fd, struct stat &st, Container &list)
-{
-	return false;
-}
 
 /**
  * find_devices

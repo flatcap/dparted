@@ -43,6 +43,15 @@ Volume::~Volume()
 
 
 /**
+ * probe
+ */
+Volume * Volume::probe (Container *parent, long long offset, long long size)
+{
+	fprintf (stderr, "Volume::probe\n");
+	return false;
+}
+
+/**
  * dump
  */
 void Volume::dump (int indent /* = 0 */)

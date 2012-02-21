@@ -33,7 +33,6 @@ public:
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
-	static bool probe (const std::string &name, int fd, struct stat &st, Container &list);
 	static unsigned int find_devices (Container &list);
 
 	long		pv_count;

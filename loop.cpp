@@ -173,10 +173,9 @@ unsigned int Loop::find_devices (Container &list)
 
 		l->open_device();
 
+		// move to container::find_size or utils
 		long long seek;
-
 		seek = lseek (l->fd, 0, SEEK_END);
-
 		l->bytes_size    = seek;
 
 		list.add_child (l);

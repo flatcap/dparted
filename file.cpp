@@ -46,6 +46,7 @@ File::~File()
 }
 
 
+#if 0
 /**
  * probe
  */
@@ -81,6 +82,7 @@ bool File::probe (const std::string &name, int fd, struct stat &st, Container &l
 	return true;
 }
 
+#endif
 
 /**
  * dump_dot

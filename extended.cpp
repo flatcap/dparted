@@ -79,23 +79,6 @@ Extended * Extended::probe (Container *parent, long long offset, long long size)
 	for (loop = 0; loop < 5; loop++) {
 		//fprintf (stderr, "table_offset = %lld\n", table_offset);
 		parent->read_data (table_offset, bufsize, buffer);
-#if 0
-		seek = lseek (fd, table_offset, SEEK_SET);
-		if (seek != table_offset) {
-			printf ("seek failed (%ld)\n", seek);
-			free(buffer);
-			return NULL;
-		}
-		//printf ("seek succeeded\n"); fflush (stdout);
-
-		count = read (fd, buffer, bufsize);
-		if (count != bufsize) {
-			printf ("read failed for (%d bytes)\n", bufsize);
-			free(buffer);
-			return NULL;
-		}
-		//printf ("read succeeded\n"); fflush (stdout);
-#endif
 
 		if (*(unsigned short int *) (buffer+510) != 0xAA55) {
 			printf ("not an extended partition\n");
