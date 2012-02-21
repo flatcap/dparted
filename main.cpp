@@ -28,7 +28,9 @@
 #include "container.h"
 #include "disk.h"
 #include "filesystem.h"
+#include "loop.h"
 #include "table.h"
+#include "volumegroup.h"
 
 #include "utils.h"
 
@@ -81,8 +83,8 @@ int main (int argc, char *argv[])
 
 	disks.name = "container";	//XXX dummy
 
-	Disk::find_devices (disks);
-	//Loop::find_devices (disks);
+	//Disk::find_devices (disks);
+	Loop::find_devices (disks);
 	//VolumeGroup::find_devices (disks);
 
 	unsigned char *buffer = NULL;

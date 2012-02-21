@@ -171,6 +171,14 @@ unsigned int Loop::find_devices (Container &list)
 		l->inode = inode;
 		l->file = file;
 
+		l->open_device();
+
+		long long seek;
+
+		seek = lseek (l->fd, 0, SEEK_END);
+
+		l->bytes_size    = seek;
+
 		list.add_child (l);
 		added++;
 	}
