@@ -574,3 +574,10 @@ move iprintf (indented) to log.cpp
 
 force fflush of log?
 
+build-in test mode into gui
+	create some loop devices
+	create some demo partitions, volumes, etc
+
+as well as reading the filesystem magic, we should try to read the fs size
+and validate it against its container
+
