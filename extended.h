@@ -29,7 +29,7 @@ public:
 	Extended (void);
 	virtual ~Extended();
 
-	static Extended * probe (Container *parent, int fd, long long offset, long long size);
+	static Extended * probe (Container *parent, long long offset, long long size);
 
 	virtual std::string dump_dot (void);
 

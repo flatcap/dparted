@@ -47,14 +47,14 @@ Extended::~Extended()
 /**
  * probe
  */
-Extended * Extended::probe (Container *parent, int fd, long long offset, long long size)
+Extended * Extended::probe (Container *parent, long long offset, long long size)
 {
 	Extended *ext = NULL;
 
 	unsigned char *buffer = NULL;
 	int bufsize = 512;
-	off_t seek = 0;
-	ssize_t count = 0;
+	//off_t seek = 0;
+	//ssize_t count = 0;
 	int loop = 0;
 	long long table_offset = offset;
 
@@ -76,7 +76,10 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 	if (!buffer)
 		return NULL;
 
-	for (loop = 0; loop < 50; loop++) {
+	for (loop = 0; loop < 5; loop++) {
+		//fprintf (stderr, "table_offset = %lld\n", table_offset);
+		parent->read_data (table_offset, bufsize, buffer);
+#if 0
 		seek = lseek (fd, table_offset, SEEK_SET);
 		if (seek != table_offset) {
 			printf ("seek failed (%ld)\n", seek);
@@ -92,6 +95,7 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 			return NULL;
 		}
 		//printf ("read succeeded\n"); fflush (stdout);
+#endif
 
 		if (*(unsigned short int *) (buffer+510) != 0xAA55) {
 			printf ("not an extended partition\n");
@@ -103,10 +107,13 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 		int num = 0;
 		unsigned int i;
 		std::vector<struct partition> vp;
-		num = ext->read_table (buffer, bufsize, fd, 0, vp);
+		num = ext->read_table (buffer, bufsize, 0, vp);
+		//fprintf (stderr, "num = %d\n", num); fflush (stderr);
+		//dump_hex (buffer, bufsize);
 
 		if ((num < 0) || (vp.size() > 2)) {
-			printf ("partition table is corrupt\n");	// bugger
+			fprintf (stderr, "partition table is corrupt\n");	// bugger
+			fflush (stderr);
 			return NULL;
 		}
 
@@ -128,6 +135,7 @@ Extended * Extended::probe (Container *parent, int fd, long long offset, long lo
 				table_offset = offset + vp[i].start;
 			} else {
 				c = new Partition;
+				c->name = "partition";
 				c->bytes_size = vp[i].size;
 
 				//c->parent_offset = table_offset + vp[i].start;

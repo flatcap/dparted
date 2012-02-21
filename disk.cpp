@@ -107,6 +107,18 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 
 #endif
 
+#if 0
+	int fd;
+	fd = open (parent->device.c_str(), O_RDONLY);
+	struct hd_geometry geometry;
+
+	ioctl(fd, HDIO_GETGEO, &geometry);
+	printf ("heads     = %d\n", geometry.heads);
+	printf ("sectors   = %d\n", geometry.sectors);
+	printf ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
+	//close (fd);	// XXX or keep it for later?
+#endif
+
 /**
  * find_devices
  */
@@ -177,6 +189,8 @@ unsigned int Disk::find_devices (Container &list)
 		d->kernel_minor = kernel_minor;
 		d->mounts = mount;
 		d->bytes_size = size;
+
+		d->open_device();
 
 		list.add_child (d);
 		added++;

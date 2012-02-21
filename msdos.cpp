@@ -93,7 +93,7 @@ bool Msdos::read_partition (unsigned char *buffer, int index, struct partition *
 /**
  * read_table
  */
-unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, int fd, long long offset, std::vector<struct partition> &vp)
+unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long long offset, std::vector<struct partition> &vp)
 {
 	struct partition part;
 	int i;
@@ -115,7 +115,6 @@ unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, int fd, long
 Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 {
 	Msdos *m = NULL;
-	int fd;
 	unsigned int i;
 	int count = 0;
 
@@ -133,17 +132,8 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 
 	parent->add_child (m);
 
-	fd = open (parent->device.c_str(), O_RDONLY);
-#if 0
-	struct hd_geometry geometry;
-
-	ioctl(fd, HDIO_GETGEO, &geometry);
-	printf ("heads     = %d\n", geometry.heads);
-	printf ("sectors   = %d\n", geometry.sectors);
-	printf ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
-#endif
 	std::vector<struct partition> vp;
-	count = m->read_table (buffer, bufsize, fd, 0, vp);
+	count = m->read_table (buffer, bufsize, 0, vp);
 
 	if ((count < 0) || (vp.size() > 4)) {
 		printf ("partition table is corrupt\n");	// bugger
@@ -164,7 +154,8 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 
 		char num = '1' + i;
 		if (vp[i].type == 0x05) {
-			c = Extended::probe (m, fd, vp[i].start, vp[i].size);
+			//fprintf (stderr, "vp[i].start = %lld\n", vp[i].start);
+			c = Extended::probe (m, vp[i].start, vp[i].size);
 			if (!c)
 				continue;
 
@@ -183,7 +174,6 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 		m->add_child (c);
 	}
 
-	close (fd);	// XXX or keep it for later?
 	return m;
 }
 

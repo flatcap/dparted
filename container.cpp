@@ -534,11 +534,20 @@ int Container::open_device (void)
 	if (fd >= 0)
 		return fd;
 
+	if (parent)
+		fd = parent->open_device();
+	if (fd >= 0)
+		return fd;
+
 	if (device.empty())
 		return -1;
 
 	fd = open (device.c_str(), O_RDONLY);
+	if (fd < 0) {
+		fprintf (stderr, "failed to open device %s\n", device.c_str());
+	}
 
+	//fprintf (stderr, "OPEN %s = %d\n", device.c_str(), fd);
 	return fd;
 }
 
@@ -554,20 +563,32 @@ int Container::read_data (long long offset, long long size, unsigned char *buffe
 	if (!buffer)
 		return -1;
 
-	open_device();
-	if (fd < 0)
-		return -1;
+	if (fd < 0) {
+		if (parent) {
+			return parent->read_data (offset + parent_offset, size, buffer);
+		} else {
+			return -1;
+		}
+	}
 
 	if (offset >= 0) {
-		current = lseek (fd, SEEK_SET, offset);
+		current = lseek (fd, offset, SEEK_SET);
 	} else {
-		current = lseek (fd, SEEK_CUR, 0);
+		current = lseek (fd, 0, SEEK_CUR);
+	}
+
+	if (current < 0) {
+		fprintf (stderr, "seek to %lld failed on %s (%d)\n", offset, device.c_str(), fd);
+		perror ("seek");
+		return 1;
 	}
 
 	if ((current + size) > bytes_size)
 		return -1;
 
 	bytes = read (fd, buffer, size);
+	std::string s = get_size (current);
+	//fprintf (stderr, "READ: device %s, offset %lld (%s), size %lld = %lld\n", device.c_str(), current, s.c_str(), size, bytes);
 
 	return bytes;
 }

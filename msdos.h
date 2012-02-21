@@ -43,7 +43,7 @@ public:
 
 protected:
 	virtual bool read_partition (unsigned char *buffer, int index, struct partition *part);
-	virtual unsigned int read_table (unsigned char *buffer, int bufsize, int fd, long long offset, std::vector<struct partition> &vp);
+	virtual unsigned int read_table (unsigned char *buffer, int bufsize, long long offset, std::vector<struct partition> &vp);
 	virtual void read_chs (unsigned char *buffer, int *cylinder, int *head, int *sector);
 
 private:
