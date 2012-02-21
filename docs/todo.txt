@@ -565,3 +565,8 @@ continue without them, if possible?
 
 check all return paths for releasing buffers
 
+Container::read_data must be limited to block_size
+otherwise the data could span different locations
+
+minimum/maximum sizes for volumes, filesystems, etc
+
