@@ -342,3 +342,32 @@ std::string read_uuid (unsigned char *buffer)
 	return uuid;
 }
 
+/**
+ * dump_hex
+ */
+void dump_hex (unsigned char *buffer, int bufsize)
+{
+	int i;
+
+	for (i = 0; i < bufsize; i += 16) {
+		fprintf (stderr, "%06x  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
+				i,
+				buffer[i +  0],
+				buffer[i +  1],
+				buffer[i +  2],
+				buffer[i +  3],
+				buffer[i +  4],
+				buffer[i +  5],
+				buffer[i +  6],
+				buffer[i +  7],
+				buffer[i +  8],
+				buffer[i +  9],
+				buffer[i + 10],
+				buffer[i + 11],
+				buffer[i + 12],
+				buffer[i + 13],
+				buffer[i + 14],
+				buffer[i + 15]);
+	}
+}
+
