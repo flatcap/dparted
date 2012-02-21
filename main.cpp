@@ -33,6 +33,7 @@
 #include "volume.h"
 #include "volumegroup.h"
 
+#include "log.h"
 #include "utils.h"
 
 std::queue<Container*> probe_queue;
@@ -81,6 +82,8 @@ int main (int argc, char *argv[])
 {
 	Container disks;
 	Container *item = NULL;
+
+	log_init ("/dev/pts/1");
 
 	disks.name = "container";	//XXX dummy
 
@@ -138,7 +141,7 @@ int main (int argc, char *argv[])
 		}
 #endif
 
-#if 1
+#if 0
 		//XXX some probes return 1 item, this will return many
 		Volume *v = Volume::probe (item, buffer, bufsize);
 		if (v) {
@@ -165,6 +168,7 @@ int main (int argc, char *argv[])
 	printf ("%s\n", dot.c_str());
 #endif
 
+	log_close();
 	return 0;
 }
 
