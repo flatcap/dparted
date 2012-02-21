@@ -23,6 +23,7 @@
 
 #include "whole.h"
 #include "segment.h"
+#include "log.h"
 
 /**
  * Whole

@@ -26,6 +26,7 @@
 #include "utils.h"
 #include "identify.h"
 #include "stringnum.h"
+#include "log.h"
 
 /**
  * Filesystem
@@ -57,28 +58,28 @@ long long Filesystem::ext2_get_usage (void)
 	long long bfree = 0;
 
 	if (parent_offset != 0) {
-		//printf ("create loop device\n");
+		//log_debug ("create loop device\n");
 		build << "losetup /dev/loop16 " << device << " -o " << parent_offset;
 		command = build.str();
 		execute_command (command, output, error);
-		//printf ("command = %s\n", command.c_str());
+		//log_debug ("command = %s\n", command.c_str());
 		//execute_command ("losetup /dev/loop16 ", output, error);
 		dev = "/dev/loop16";
 	}
 
 	// do something
 	command = "tune2fs -l " + dev;
-	//printf ("command = %s\n", command.c_str());
+	//log_debug ("command = %s\n", command.c_str());
 
 	execute_command (command, output, error);
-	//printf ("result = \n%s\n", output.c_str());
+	//log_debug ("result = \n%s\n", output.c_str());
 
 	//interpret results
 	std::string tmp;
 	size_t pos1 = std::string::npos;
 	size_t pos2 = std::string::npos;
 
-	//printf ("volume:\n");
+	//log_debug ("volume:\n");
 
 	pos1 = output.find ("Filesystem volume name:");
 	if (pos1 != std::string::npos) {
@@ -86,7 +87,7 @@ long long Filesystem::ext2_get_usage (void)
 		pos2 = output.find_first_of ("\n\r", pos1);
 
 		tmp = output.substr (pos1, pos2 - pos1);
-		//printf ("\tname = '%s'\n", tmp.c_str());
+		//log_debug ("\tname = '%s'\n", tmp.c_str());
 	}
 
 	pos1 = output.find ("Filesystem UUID:");
@@ -95,7 +96,7 @@ long long Filesystem::ext2_get_usage (void)
 		pos2 = output.find_first_of ("\n\r", pos1);
 
 		tmp = output.substr (pos1, pos2 - pos1);
-		//printf ("\tuuid = '%s'\n", tmp.c_str());
+		//log_debug ("\tuuid = '%s'\n", tmp.c_str());
 	}
 
 	pos1 = output.find ("Block size:");
@@ -106,7 +107,7 @@ long long Filesystem::ext2_get_usage (void)
 		tmp = output.substr (pos1, pos2 - pos1);
 		StringNum s (tmp.c_str());
 		block_size = s;
-		//printf ("\tblock size = %ld\n", block_size);
+		//log_debug ("\tblock size = %ld\n", block_size);
 	}
 
 	pos1 = output.find ("Block count:");
@@ -115,7 +116,7 @@ long long Filesystem::ext2_get_usage (void)
 		pos2 = output.find_first_of ("\n\r", pos1);
 
 		tmp = output.substr (pos1, pos2 - pos1);
-		//printf ("\tblock count = %s\n", tmp.c_str());
+		//log_debug ("\tblock count = %s\n", tmp.c_str());
 	}
 
 	pos1 = output.find ("Free blocks:");
@@ -126,16 +127,16 @@ long long Filesystem::ext2_get_usage (void)
 		tmp = output.substr (pos1, pos2 - pos1);
 		StringNum s (tmp.c_str());
 		bfree = (long long) s * block_size;
-		//printf ("\tfree blocks = %s\n", tmp.c_str());
-		//printf ("\tbytes free = %lld\n", bfree);
+		//log_debug ("\tfree blocks = %s\n", tmp.c_str());
+		//log_debug ("\tbytes free = %lld\n", bfree);
 	}
 
 	if (parent_offset != 0) {
 		command = "losetup -d /dev/loop16";
 		execute_command (command, output, error);
-		//printf ("dismantle loop device\n");
-		//printf ("command = %s\n", command.c_str());
-		//printf ("\n");
+		//log_debug ("dismantle loop device\n");
+		//log_debug ("command = %s\n", command.c_str());
+		//log_debug ("\n");
 	}
 
 	return bfree;
@@ -166,7 +167,7 @@ Filesystem * Filesystem::probe (Container *parent, unsigned char *buffer, int bu
 		name = "xfs";
 	}
 
-	//printf ("NAME = %s\n", name.c_str());
+	//log_debug ("NAME = %s\n", name.c_str());
 	if (!name.empty()) {
 		f = new Filesystem;
 		f->name = name;
@@ -198,21 +199,21 @@ void Filesystem::dump (int indent /* = 0 */)
 	unsigned int index = -1;
 	//int result = -1;
 
-	//fprintf (stderr, "%s: %s\n", __PRETTY_FUNCTION__, name.c_str());
+	//log_debug ("%s: %s\n", __PRETTY_FUNCTION__, name.c_str());
 	if ((name == "ext4") || (name == "ext3") || (name == "ext2")) {
 		long long free = 0;
 
 		command = "dumpe2fs -h " + parent->device;
 		//command += '0' + part->num;
-		//fprintf (stderr, "device = %s, command = %s\n", parent->device.c_str(), command.c_str());
+		//log_debug ("device = %s, command = %s\n", parent->device.c_str(), command.c_str());
 		execute_command (command, output, error);
 
-		//fprintf (stderr, "command = %s\n", command.c_str());
-		//fprintf (stderr, "%s\n", output.c_str());
+		//log_debug ("command = %s\n", command.c_str());
+		//log_debug ("%s\n", output.c_str());
 
 		index = output.find ("Filesystem UUID:") + 16;
 		uuid = extract_bare_string (output, index);
-		//fprintf (stderr, "uuid = %s\n", uuid.c_str());
+		//log_debug ("uuid = %s\n", uuid.c_str());
 
 		index = output.find ("Block size:");
 		block_size = extract_number (output, index);
@@ -320,12 +321,12 @@ void Filesystem::dump (int indent /* = 0 */)
 	std::string size = get_size (bytes_size);
 	std::string used = get_size (bytes_used);
 
-	iprintf (indent,   "%s\n", name.c_str());
-	iprintf (indent+8, "Size: %s\n",  size.c_str());
-	iprintf (indent+8, "Used: %s\n",  used.c_str());
-	//iprintf (indent+8, "Command: %s\n", command.c_str());
+	ilog_debug (indent,   "%s\n", name.c_str());
+	ilog_debug (indent+8, "Size: %s\n",  size.c_str());
+	ilog_debug (indent+8, "Used: %s\n",  used.c_str());
+	//ilog_debug (indent+8, "Command: %s\n", command.c_str());
 
-	//iprintf (indent+8, "Type: %s\n", type.c_str());
+	//ilog_debug (indent+8, "Type: %s\n", type.c_str());
 #endif
 
 	Container::dump (indent);
@@ -336,7 +337,7 @@ void Filesystem::dump (int indent /* = 0 */)
  */
 void Filesystem::dump_csv (void)
 {
-	printf ("%s,%s,%s,%ld,%s,%s,%lld,%lld,%lld\n",
+	log_debug ("%s,%s,%s,%ld,%s,%s,%lld,%lld,%lld\n",
 		"Filesystem",
 		device.c_str(),
 		name.c_str(),

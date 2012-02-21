@@ -28,6 +28,7 @@
 
 #include "file.h"
 #include "main.h"
+#include "log.h"
 
 /**
  * File
@@ -56,19 +57,19 @@ bool File::probe (const std::string &name, int fd, struct stat &st, Container &l
 
 	f = new File;
 #if 0
-	printf ("dev     = 0x%04lx\n", st.st_dev);
-	printf ("ino     = %ld\n",     st.st_ino);
-	printf ("nlink   = %ld\n",     st.st_nlink);
-	printf ("mode    = %06o\n",    st.st_mode);
-	printf ("uid     = %d\n",      st.st_uid);
-	printf ("gid     = %d\n",      st.st_gid);
-	printf ("rdev    = %ld\n",     st.st_rdev);
-	printf ("size    = %ld\n",     st.st_size);
-	printf ("blksize = %ld\n",     st.st_blksize);
-	printf ("blocks  = %ld\n",     st.st_blocks);
-	printf ("atime   = %ld\n",     st.st_atim.tv_sec);
-	printf ("mtime   = %ld\n",     st.st_mtim.tv_sec);
-	printf ("ctime   = %ld\n",     st.st_ctim.tv_sec);
+	log_debug ("dev     = 0x%04lx\n", st.st_dev);
+	log_debug ("ino     = %ld\n",     st.st_ino);
+	log_debug ("nlink   = %ld\n",     st.st_nlink);
+	log_debug ("mode    = %06o\n",    st.st_mode);
+	log_debug ("uid     = %d\n",      st.st_uid);
+	log_debug ("gid     = %d\n",      st.st_gid);
+	log_debug ("rdev    = %ld\n",     st.st_rdev);
+	log_debug ("size    = %ld\n",     st.st_size);
+	log_debug ("blksize = %ld\n",     st.st_blksize);
+	log_debug ("blocks  = %ld\n",     st.st_blocks);
+	log_debug ("atime   = %ld\n",     st.st_atim.tv_sec);
+	log_debug ("mtime   = %ld\n",     st.st_mtim.tv_sec);
+	log_debug ("ctime   = %ld\n",     st.st_ctim.tv_sec);
 #endif
 
 	f->device        = name;

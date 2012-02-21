@@ -29,6 +29,7 @@
 #include "disk.h"
 #include "utils.h"
 #include "main.h"
+#include "log.h"
 
 /**
  * Disk
@@ -77,14 +78,14 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 	std::string vendor   = read_file_line ("/sys/block/sda/device/model");
 #endif
 
-	//printf ("%s: %s\n", __FUNCTION__, model.c_str());
+	//log_debug ("%s: %s\n", __FUNCTION__, model.c_str());
 	Disk *d = NULL;
 
 	d = new Disk;
 
-	//printf ("fd = %d\n", fd);
+	//log_debug ("fd = %d\n", fd);
 	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); //XXX replace with ftell (user, not root)
-	//printf ("res = %d\n", res);
+	//log_debug ("res = %d\n", res);
 	if (!res) {
 	}
 
@@ -94,9 +95,9 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 	d->bytes_used    = 0;
 
 #if 0
-	printf ("disk\n");
-	printf ("\tname = %s\n", name.c_str());
-	printf ("\tsize = %lld\n", file_size_in_bytes);
+	log_debug ("disk\n");
+	log_debug ("\tname = %s\n", name.c_str());
+	log_debug ("\tsize = %lld\n", file_size_in_bytes);
 #endif
 
 	list.add_child (d);
@@ -113,9 +114,9 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 	struct hd_geometry geometry;
 
 	ioctl(fd, HDIO_GETGEO, &geometry);
-	printf ("heads     = %d\n", geometry.heads);
-	printf ("sectors   = %d\n", geometry.sectors);
-	printf ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
+	log_debug ("heads     = %d\n", geometry.heads);
+	log_debug ("sectors   = %d\n", geometry.sectors);
+	log_debug ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
 	//close (fd);	// XXX or keep it for later?
 #endif
 
@@ -135,7 +136,7 @@ unsigned int Disk::find_devices (Container &list)
 	if (retval < 0)
 		return 0;
 
-	//printf ("%s\n", output.c_str());
+	//log_debug ("%s\n", output.c_str());
 
 	std::string device;
 	std::string type;
@@ -152,7 +153,7 @@ unsigned int Disk::find_devices (Container &list)
 	int added = 0;
 
 	count = explode ("\n", output, lines);
-	//printf ("%d lines\n", count);
+	//log_debug ("%d lines\n", count);
 
 	for (i = 0; i < count; i++) {
 		parse_tagged_line ((lines[i]), " ", tags);
@@ -162,12 +163,12 @@ unsigned int Disk::find_devices (Container &list)
 			continue;
 
 		device = tags["NAME"];
-		//printf ("%s\n", device.c_str());
+		//log_debug ("%s\n", device.c_str());
 
 		std::string majmin = tags["MAJ:MIN"];
 		scan = sscanf (majmin.c_str(), "%d:%d", &kernel_major, &kernel_minor);
 		if (scan != 2) {
-			printf ("scan failed1\n");
+			log_debug ("scan failed1\n");
 			continue;
 		}
 
@@ -175,11 +176,11 @@ unsigned int Disk::find_devices (Container &list)
 		mount = tags["MOUNTPOINT"];
 
 #if 0
-		printf ("\tmajor: %d\n", kernel_major);
-		printf ("\tminor: %d\n", kernel_minor);
-		printf ("\tsize:  %lld\n", size);
-		printf ("\tmount: %s\n", mount.c_str());
-		printf ("\n");
+		log_debug ("\tmajor: %d\n", kernel_major);
+		log_debug ("\tminor: %d\n", kernel_minor);
+		log_debug ("\tsize:  %lld\n", size);
+		log_debug ("\tmount: %s\n", mount.c_str());
+		log_debug ("\n");
 #endif
 
 		Disk *d = new Disk;
@@ -229,7 +230,7 @@ void Disk::dump (int indent /* = 0 */)
  */
 void Disk::dump_csv (void)
 {
-	printf ("%s,%s,%s,%ld,%s,%lld,%lld,%lld\n",
+	log_debug ("%s,%s,%s,%ld,%s,%lld,%lld,%lld\n",
 		"Disk",
 		device.c_str(),
 		name.c_str(),
@@ -314,7 +315,7 @@ Container * Disk::find_device (const std::string &dev)
 
 	// iterate through my children
 	if (device.compare (0, dev_len, dev, 0, dev_len) == 0) {
-		//printf ("similar\n");
+		//log_debug ("similar\n");
 		return Block::find_device (dev);
 	}
 

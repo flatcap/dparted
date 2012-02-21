@@ -22,6 +22,7 @@
 #include <sstream>
 
 #include "partition.h"
+#include "log.h"
 
 /**
  * Partition

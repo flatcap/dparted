@@ -23,6 +23,7 @@
 
 #include "stripe.h"
 #include "utils.h"
+#include "log.h"
 
 /**
  * Stripe

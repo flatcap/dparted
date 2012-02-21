@@ -34,6 +34,7 @@
 #include "file.h"
 #include "loop.h"
 #include "main.h"
+#include "log.h"
 
 /**
  * Block
@@ -65,13 +66,13 @@ bool Block::probe (const std::string &name, Container &list)
 
 	fd = open (name.c_str(), O_RDONLY);
 	if (fd < 0) {
-		printf ("can't open file %s\n", name.c_str());
+		log_debug ("can't open file %s\n", name.c_str());
 		return false;
 	}
 
 	res = fstat (fd, &st);
 	if (res < 0) {
-		printf ("stat on %s failed\n", name.c_str());
+		log_debug ("stat on %s failed\n", name.c_str());
 		close (fd);
 		return false;
 	}
@@ -79,19 +80,19 @@ bool Block::probe (const std::string &name, Container &list)
 	if (S_ISREG (st.st_mode)) {
 		File::probe (name, fd, st, list);
 	} else if (S_ISBLK (st.st_mode)) {
-		//printf ("%s block\n", name.c_str());
-		//printf ("\tdevice id = 0x%lx\n", st.st_rdev);
+		//log_debug ("%s block\n", name.c_str());
+		//log_debug ("\tdevice id = 0x%lx\n", st.st_rdev);
 		if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
-			//printf ("\tloop\n");
+			//log_debug ("\tloop\n");
 			//item = new Loop;
 			Loop::probe (name, fd, st, list);
 		} else if (MAJOR (st.st_rdev) == SCSI_DISK0_MAJOR) {
-			//printf ("\tdisk\n");
+			//log_debug ("\tdisk\n");
 			//item = new Disk;
 			Disk::probe (name, fd, st, list);
 		} else {
 			// exists, but I can't deal with it
-			printf ("Unknown block device 0x%lx\n", st.st_rdev);
+			log_debug ("Unknown block device 0x%lx\n", st.st_rdev);
 			return false;
 		}
 	} else {
@@ -100,9 +101,9 @@ bool Block::probe (const std::string &name, Container &list)
 
 	//item->probe (name, st);
 
-	//printf ("fd = %d\n", fd);
+	//log_debug ("fd = %d\n", fd);
 	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); //XXX replace with ftell (user, not root)
-	//printf ("res = %d\n", res);
+	//log_debug ("res = %d\n", res);
 	close (fd);
 
 	//item->bytes_size = st.st_size;
@@ -110,10 +111,10 @@ bool Block::probe (const std::string &name, Container &list)
 	//item->device     = name;		// This and offset should be delegated to the child
 	//item->block_size = st.st_blksize;
 
-	//printf ("device = %s\n", name.c_str());
-	//printf ("size = %ld\n", st.st_size);
-	//printf ("size = %lld\n", file_size_in_bytes);
-	//printf ("block = %ld\n", st.st_blksize);
+	//log_debug ("device = %s\n", name.c_str());
+	//log_debug ("size = %ld\n", st.st_size);
+	//log_debug ("size = %lld\n", file_size_in_bytes);
+	//log_debug ("block = %ld\n", st.st_blksize);
 //	if (item) {
 //		list.add_child (item);
 //		queue_add_probe (item);	// queue the container for action

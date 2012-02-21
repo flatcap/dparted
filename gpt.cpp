@@ -25,6 +25,7 @@
 #include "partition.h"
 #include "utils.h"
 #include "main.h"
+#include "log.h"
 
 /**
  * Gpt
@@ -94,10 +95,10 @@ Gpt * Gpt::probe (Container *parent, unsigned char *buffer, int bufsize)
 		}
 
 		std::string s = get_size (p->bytes_size);
-		//printf ("\t\tlabel  = %s\n",   p->name.c_str());
-		//printf ("\t\t\tstart  = %lld\n", *(long long*) (buffer+32) * 512);
-		//printf ("\t\t\tfinish = %lld\n", *(long long*) (buffer+40) * 512);
-		//printf ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
+		//log_debug ("\t\tlabel  = %s\n",   p->name.c_str());
+		//log_debug ("\t\t\tstart  = %lld\n", *(long long*) (buffer+32) * 512);
+		//log_debug ("\t\t\tfinish = %lld\n", *(long long*) (buffer+40) * 512);
+		//log_debug ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
 
 		g->add_child (p);
 		queue_add_probe (p);

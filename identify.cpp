@@ -18,6 +18,8 @@
 
 #include <string.h>
 
+#include "log.h"
+
 /**
  * identify_btrfs
  */

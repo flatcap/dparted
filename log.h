@@ -35,7 +35,9 @@
 #define LOG_LEAVE	(1 << 11) /* Leave a function */
 #endif
 
-int log (const char *format, ...) __attribute__ ((format (printf, 1, 2)));
+int log_info  (const char *format, ...) __attribute__ ((format (printf, 1, 2)));
+int log_error (const char *format, ...) __attribute__ ((format (printf, 1, 2)));
+int log_debug (const char *format, ...) __attribute__ ((format (printf, 1, 2)));
 
 bool log_init (const char *name);
 void log_close (void);

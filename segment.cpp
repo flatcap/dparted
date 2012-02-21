@@ -23,6 +23,7 @@
 
 #include "segment.h"
 #include "container.h"
+#include "log.h"
 
 /**
  * Segment

@@ -48,8 +48,8 @@ void queue_add_probe (Container *item)
 
 	probe_queue.push (item);
 	std::string s = get_size (item->parent_offset);
-	//fprintf (stderr, "QUEUE: %s %s - %lld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
-	//printf ("QUEUE has %lu items\n", probe_queue.size());
+	//log_debug ("QUEUE: %s %s - %lld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
+	//log_info ("QUEUE has %lu items\n", probe_queue.size());
 }
 
 /**
@@ -69,7 +69,7 @@ unsigned int mounts_get_list (Container &mounts)
 
 	for (i = 0; i < lines.size(); i++) {
 		std::string line = lines[i];
-		printf ("line%d:\n%s\n\n", i, line.c_str());
+		log_debug ("line%d:\n%s\n\n", i, line.c_str());
 	}
 
 	return mounts.children.size();
@@ -105,27 +105,27 @@ int main (int argc, char *argv[])
 
 	while ((item = probe_queue.front())) {
 #if 1
-		fprintf (stderr, "queued item: '%s'\n", item->name.c_str());
+		log_debug ("queued item: '%s'\n", item->name.c_str());
 #endif
 		probe_queue.pop();
-		//printf ("QUEUE has %lu items\n", probe_queue.size());
+		//log_debug ("QUEUE has %lu items\n", probe_queue.size());
 
 #if 1
 		std::string s1;
 		std::string s2;
 		s1 = get_size (item->parent_offset);
 		s2 = get_size (item->bytes_size);
-		fprintf (stderr, "\tdevice     = %s\n",        item->device.c_str());
-		fprintf (stderr, "\toffset     = %lld (%s)\n", item->parent_offset, s1.c_str());
-		fprintf (stderr, "\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
-		fprintf (stderr, "\n");
+		log_debug ("\tdevice     = %s\n",        item->device.c_str());
+		log_debug ("\toffset     = %lld (%s)\n", item->parent_offset, s1.c_str());
+		log_debug ("\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
+		log_debug ("\n");
 #endif
 		item->read_data (0, bufsize, buffer);
 
 #if 1
 		Filesystem *f = Filesystem::probe (item, buffer, bufsize);
 		if (f) {
-			//printf ("\tfilesystem: %s\n", f->name.c_str());
+			//log_debug ("\tfilesystem: %s\n", f->name.c_str());
 			//delete f;
 			continue;
 		}
@@ -134,8 +134,8 @@ int main (int argc, char *argv[])
 #if 1
 		Table *t = Table::probe (item, buffer, bufsize);
 		if (t) {
-			//printf ("\ttable: %s\n", t->name.c_str());
-			//printf ("\t\tuuid = %s\n", t->uuid.c_str());
+			//log_debug ("\ttable: %s\n", t->name.c_str());
+			//log_debug ("\t\tuuid = %s\n", t->uuid.c_str());
 			//delete t;
 			continue;
 		}
@@ -145,7 +145,7 @@ int main (int argc, char *argv[])
 		//XXX some probes return 1 item, this will return many
 		Volume *v = Volume::probe (item, buffer, bufsize);
 		if (v) {
-			fprintf (stderr, "volume %s\n", v->name.c_str());
+			log_debug ("volume %s\n", v->name.c_str());
 			continue
 		}
 #endif
@@ -153,7 +153,7 @@ int main (int argc, char *argv[])
 		//empty
 	}
 
-#if 1
+#if 0
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = grey ];\n";
@@ -165,7 +165,7 @@ int main (int argc, char *argv[])
 	}
 	dot += "\n};";
 
-	printf ("%s\n", dot.c_str());
+	log_debug ("%s\n", dot.c_str());
 #endif
 
 	log_close();

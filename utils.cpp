@@ -30,6 +30,7 @@
 
 #include "utils.h"
 #include "stringnum.h"
+#include "log.h"
 
 /**
  * execute_command
@@ -141,8 +142,8 @@ std::string extract_quoted_string (const std::string &text, unsigned int &index)
 	start  = text.find ('\'', index) + 1;
 	finish = text.find ('\'', start);
 
-	//printf ("text = >>%s<<\n", text.c_str());
-	//printf ("index = %d, start = %d, finish = %d\n", index, start, finish);
+	//log_debug ("text = >>%s<<\n", text.c_str());
+	//log_debug ("index = %d, start = %d, finish = %d\n", index, start, finish);
 
 	index = finish;
 
@@ -214,14 +215,14 @@ int extract_dev_range (const std::string &text, std::string &device, int &start,
 
 	int colon = text.find (':', index);
 	int dash  = text.find ('-', index);
-	//printf ("\tindex = %d, colon = %d, dash = %d\n", index, colon, dash);
+	//log_debug ("\tindex = %d, colon = %d, dash = %d\n", index, colon, dash);
 
 	device = text.substr (index, colon - index);
 
 	start  = strtol (text.substr (colon + 1, dash - 1).c_str(), NULL, 10);
 	finish = strtol (text.substr (dash + 1).c_str(), NULL, 10);
 
-	//printf ("\tdevice = %s, start = %d, finish = %d\n", device.c_str(), start, finish);
+	//log_debug ("\tdevice = %s, start = %d, finish = %d\n", device.c_str(), start, finish);
 	return 0;
 }
 
@@ -251,15 +252,15 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 	}
 
 #if 0
-	printf ("vector:\n");
+	log_debug ("vector:\n");
 	std::vector<std::string>::iterator it2;
 	for (it2 = parts.begin(); it2 != parts.end(); it2++) {
 
 		std::string value = (*it2);
 
-		printf ("\t>>%s<<\n", value.c_str());
+		log_debug ("\t>>%s<<\n", value.c_str());
 	}
-	printf ("\n");
+	log_debug ("\n");
 #endif
 
 	return parts.size();
@@ -298,16 +299,16 @@ unsigned int parse_tagged_line (const std::string &line, const char *separators,
 	}
 
 #if 0
-	printf ("map:\n");
+	log_debug ("map:\n");
 	std::map<std::string,StringNum>::iterator it2;
 	for (it2 = tags.begin(); it2 != tags.end(); it2++) {
 
 		std::string name  = (*it2).first;
 		std::string value = (*it2).second;
 
-		printf ("\t%s -> %s\n", name.c_str(), value.c_str());
+		log_debug ("\t%s -> %s\n", name.c_str(), value.c_str());
 	}
-	printf ("\n");
+	log_debug ("\n");
 #endif
 
 	return tags.size();
@@ -350,24 +351,10 @@ void dump_hex (unsigned char *buffer, int bufsize)
 	int i;
 
 	for (i = 0; i < bufsize; i += 16) {
-		fprintf (stderr, "%06x  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
-				i,
-				buffer[i +  0],
-				buffer[i +  1],
-				buffer[i +  2],
-				buffer[i +  3],
-				buffer[i +  4],
-				buffer[i +  5],
-				buffer[i +  6],
-				buffer[i +  7],
-				buffer[i +  8],
-				buffer[i +  9],
-				buffer[i + 10],
-				buffer[i + 11],
-				buffer[i + 12],
-				buffer[i + 13],
-				buffer[i + 14],
-				buffer[i + 15]);
+		log_debug ("%06x  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
+			i,
+			buffer[i +  0], buffer[i +  1], buffer[i +  2], buffer[i +  3], buffer[i +  4], buffer[i +  5], buffer[i +  6], buffer[i +  7],
+			buffer[i +  8], buffer[i +  9], buffer[i + 10], buffer[i + 11], buffer[i + 12], buffer[i + 13], buffer[i + 14], buffer[i + 15]);
 	}
 }
 

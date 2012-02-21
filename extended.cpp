@@ -27,6 +27,7 @@
 #include "partition.h"
 #include "utils.h"
 #include "main.h"
+#include "log.h"
 
 /**
  * Extended
@@ -77,26 +78,25 @@ Extended * Extended::probe (Container *parent, long long offset, long long size)
 		return NULL;
 
 	for (loop = 0; loop < 5; loop++) {
-		//fprintf (stderr, "table_offset = %lld\n", table_offset);
+		//log_debug ("table_offset = %lld\n", table_offset);
 		parent->read_data (table_offset, bufsize, buffer);
 
 		if (*(unsigned short int *) (buffer+510) != 0xAA55) {
-			printf ("not an extended partition\n");
+			log_debug ("not an extended partition\n");
 			return NULL;
 		}
 
-		//printf ("extended partition\n");
+		//log_debug ("extended partition\n");
 
 		int num = 0;
 		unsigned int i;
 		std::vector<struct partition> vp;
 		num = ext->read_table (buffer, bufsize, 0, vp);
-		//fprintf (stderr, "num = %d\n", num); fflush (stderr);
+		//log_debug ("num = %d\n", num);
 		//dump_hex (buffer, bufsize);
 
 		if ((num < 0) || (vp.size() > 2)) {
-			fprintf (stderr, "partition table is corrupt\n");	// bugger
-			fflush (stderr);
+			log_error ("partition table is corrupt\n");	// bugger
 			return NULL;
 		}
 
@@ -106,10 +106,10 @@ Extended * Extended::probe (Container *parent, long long offset, long long size)
 				std::string s1 = get_size (vp[i].start);
 				std::string s2 = get_size (vp[i].size);
 
-				printf ("\tpartition %d (0x%02x)\n", i+1, vp[i].type);
-				printf ("\t\tstart = %lld (%s)\n", vp[i].start, s1.c_str());
-				printf ("\t\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
-				printf ("\n");
+				log_debug ("\tpartition %d (0x%02x)\n", i+1, vp[i].type);
+				log_debug ("\t\tstart = %lld (%s)\n", vp[i].start, s1.c_str());
+				log_debug ("\t\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
+				log_debug ("\n");
 			}
 #endif
 			Container *c = NULL;

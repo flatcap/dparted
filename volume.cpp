@@ -23,6 +23,7 @@
 
 #include "volume.h"
 #include "utils.h"
+#include "log.h"
 
 /**
  * Volume
@@ -47,7 +48,7 @@ Volume::~Volume()
  */
 Volume * Volume::probe (Container *parent, long long offset, long long size)
 {
-	fprintf (stderr, "Volume::probe\n");
+	log_debug ("Volume::probe\n");
 	return false;
 }
 

@@ -28,6 +28,7 @@
 
 #include "container.h"
 #include "utils.h"
+#include "log.h"
 
 /**
  * Container
@@ -112,7 +113,7 @@ void Container::dump2 (void)
 			indent = "                        ";
 			undent = "";
 		}
-		printf ("%-10s %s%-20s%s  %-22s %13lld %13lld  %8s %8s %8s\n",
+		log_debug ("%-10s %s%-20s%s  %-22s %13lld %13lld  %8s %8s %8s\n",
 			d.c_str(),
 			indent,
 			t.c_str(),
@@ -373,7 +374,7 @@ void Container::add_child (Container *child)
 		children.push_back (child);
 	}
 
-	//printf ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
+	//log_debug ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
 
 	child->parent = this;
 }
@@ -412,7 +413,7 @@ long Container::get_block_size (void)
  */
 std::string Container::get_device_name (void)
 {
-	//printf ("i am %s\n", typeid(*this).name());
+	//log_debug ("i am %s\n", typeid(*this).name());
 	if (device.length() > 0)
 		return device;
 	else if (parent)
@@ -476,15 +477,15 @@ Container * Container::find_device (const std::string &dev)
 	Container *match = NULL;
 
 	// am *I* the device?
-	//printf ("Me? %s %s\n", device.c_str(), dev.c_str());
+	//log_debug ("Me? %s %s\n", device.c_str(), dev.c_str());
 	if (dev == device)
 		return this;
 
 	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
-		//printf ("child %p (%s)\n", (*i), (*i)->device.c_str());
+		//log_debug ("child %p (%s)\n", (*i), (*i)->device.c_str());
 		match = (*i)->find_device (dev);
 		if (match) {
-			//printf ("MATCHES! %s (%s)\n", match->type.c_str(), match->name.c_str());
+			//log_debug ("MATCHES! %s (%s)\n", match->type.c_str(), match->name.c_str());
 			break;
 		}
 	}
@@ -544,10 +545,10 @@ int Container::open_device (void)
 
 	fd = open (device.c_str(), O_RDONLY);
 	if (fd < 0) {
-		fprintf (stderr, "failed to open device %s\n", device.c_str());
+		log_error ("failed to open device %s\n", device.c_str());
 	}
 
-	//fprintf (stderr, "OPEN %s = %d\n", device.c_str(), fd);
+	//log_info ("OPEN %s = %d\n", device.c_str(), fd);
 	return fd;
 }
 
@@ -578,7 +579,7 @@ int Container::read_data (long long offset, long long size, unsigned char *buffe
 	}
 
 	if (current < 0) {
-		fprintf (stderr, "seek to %lld failed on %s (%d)\n", offset, device.c_str(), fd);
+		log_error ("seek to %lld failed on %s (%d)\n", offset, device.c_str(), fd);
 		perror ("seek");
 		return 1;
 	}
@@ -588,7 +589,7 @@ int Container::read_data (long long offset, long long size, unsigned char *buffe
 
 	bytes = read (fd, buffer, size);
 	std::string s = get_size (current);
-	//fprintf (stderr, "READ: device %s, offset %lld (%s), size %lld = %lld\n", device.c_str(), current, s.c_str(), size, bytes);
+	//log_info ("READ: device %s, offset %lld (%s), size %lld = %lld\n", device.c_str(), current, s.c_str(), size, bytes);
 
 	return bytes;
 }

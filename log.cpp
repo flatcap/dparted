@@ -27,8 +27,21 @@ static FILE *file = NULL;
 /**
  * log
  */
+__attribute__ ((format (printf, 1, 0)))
+static int log (const char *format, va_list args)
+{
+	if (!file)
+		return 0;
+
+	return vfprintf (file, format, args);
+}
+
+
+/**
+ * log_debug
+ */
 __attribute__ ((format (printf, 1, 2)))
-int log (const char *format, ...)
+int log_debug (const char *format, ...)
 {
 	va_list args;
 	int retval;
@@ -37,11 +50,56 @@ int log (const char *format, ...)
 		return 0;
 
 	va_start (args, format);
-	retval = vfprintf (file, format, args);
+	fprintf (file, "\e[33m");
+	retval = log (format, args);
+	fprintf (file, "\e[0m");
 	va_end (args);
 
 	return retval;
 }
+
+/**
+ * log_error
+ */
+__attribute__ ((format (printf, 1, 2)))
+int log_error (const char *format, ...)
+{
+	va_list args;
+	int retval;
+
+	if (!file)
+		return 0;
+
+	va_start (args, format);
+	fprintf (file, "\e[31m");
+	retval = log (format, args);
+	fprintf (file, "\e[0m");
+	va_end (args);
+
+	return retval;
+}
+
+/**
+ * log_info
+ */
+__attribute__ ((format (printf, 1, 2)))
+int log_info (const char *format, ...)
+{
+	va_list args;
+	int retval;
+
+	if (!file)
+		return 0;
+
+	va_start (args, format);
+	fprintf (file, "\e[32m");
+	retval = log (format, args);
+	fprintf (file, "\e[0m");
+	va_end (args);
+
+	return retval;
+}
+
 
 /**
  * log_init

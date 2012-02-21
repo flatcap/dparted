@@ -32,6 +32,7 @@
 #include "extended.h"
 #include "partition.h"
 #include "main.h"
+#include "log.h"
 
 /**
  * Msdos
@@ -136,7 +137,7 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 	count = m->read_table (buffer, bufsize, 0, vp);
 
 	if ((count < 0) || (vp.size() > 4)) {
-		printf ("partition table is corrupt\n");	// bugger
+		log_debug ("partition table is corrupt\n");	// bugger
 		return NULL;
 	}
 
@@ -145,16 +146,16 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 		std::string s1 = get_size (vp[i].start);
 		std::string s2 = get_size (vp[i].size);
 
-		fprintf (stderr, "partition %d (0x%02x)\n", i+1, vp[i].type);
-		fprintf (stderr, "\tstart = %lld (%s)\n", vp[i].start, s1.c_str());
-		fprintf (stderr, "\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
-		fprintf (stderr, "\n");
+		log_debug ("partition %d (0x%02x)\n", i+1, vp[i].type);
+		log_debug ("\tstart = %lld (%s)\n", vp[i].start, s1.c_str());
+		log_debug ("\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
+		log_debug ("\n");
 #endif
 		Container *c = NULL;
 
 		char num = '1' + i;
 		if (vp[i].type == 0x05) {
-			//fprintf (stderr, "vp[i].start = %lld\n", vp[i].start);
+			//log_debug ("vp[i].start = %lld\n", vp[i].start);
 			c = Extended::probe (m, vp[i].start, vp[i].size);
 			if (!c)
 				continue;
@@ -194,7 +195,7 @@ void Msdos::dump (int indent /* = 0 */)
  */
 void Msdos::dump_csv (void)
 {
-	printf ("%s,%s,%s,%ld,%s,%lld,%lld,%lld\n",
+	log_debug ("%s,%s,%s,%ld,%s,%lld,%lld,%lld\n",
 		"MSDOS",
 		"<none>",
 		name.c_str(),

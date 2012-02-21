@@ -23,6 +23,7 @@
 
 #include "mirror.h"
 #include "utils.h"
+#include "log.h"
 
 /**
  * Mirror

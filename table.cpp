@@ -24,6 +24,7 @@
 #include "identify.h"
 #include "gpt.h"
 #include "msdos.h"
+#include "log.h"
 
 /**
  * Table

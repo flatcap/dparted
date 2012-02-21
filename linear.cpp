@@ -23,6 +23,7 @@
 
 #include "linear.h"
 #include "utils.h"
+#include "log.h"
 
 /**
  * Linear

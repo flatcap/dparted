@@ -28,6 +28,7 @@
 #include "loop.h"
 #include "main.h"
 #include "utils.h"
+#include "log.h"
 
 /**
  * Loop
@@ -88,7 +89,7 @@ unsigned int Loop::find_devices (Container &list)
 	if (retval < 0)
 		return 0;
 
-	//printf ("%s\n", output.c_str());
+	//log_debug ("%s\n", output.c_str());
 
 	std::string device;
 	std::string file;
@@ -104,64 +105,64 @@ unsigned int Loop::find_devices (Container &list)
 	int added = 0;
 
 	count = explode ("\n", output, lines);
-	//printf ("%d lines\n", count);
+	//log_debug ("%d lines\n", count);
 
 	for (i = 0; i < count; i++) {
 		pos = lines[i].find (": [");
 		if (pos == std::string::npos) {
-			printf ("corrupt line1\n");
+			log_debug ("corrupt line1\n");
 			continue;
 		}
 		device = lines[i].substr (0, pos);
-		//printf ("%s\n", device.c_str());
+		//log_debug ("%s\n", device.c_str());
 
 		part = lines[i].substr (pos + 3, 4);
-		//printf ("%s\n", part.c_str());
+		//log_debug ("%s\n", part.c_str());
 		scan = sscanf (part.c_str(), "%02x%02x", &kernel_major, &kernel_minor);
 		if (scan != 2) {
-			printf ("scan failed1\n");
+			log_debug ("scan failed1\n");
 			continue;
 		}
-		//printf ("\tmajor: %d\n", kernel_major);
-		//printf ("\tminor: %d\n", kernel_minor);
+		//log_debug ("\tmajor: %d\n", kernel_major);
+		//log_debug ("\tminor: %d\n", kernel_minor);
 
 		part = lines[i].substr (pos + 9);
 
 		pos = part.find (" (");
 		if (pos == std::string::npos) {
-			printf ("corrupt line2\n");
+			log_debug ("corrupt line2\n");
 			continue;
 		}
 
 		part = part.substr (0, pos);
-		//printf ("part = %s\n", part.c_str());
+		//log_debug ("part = %s\n", part.c_str());
 
 		scan = sscanf (part.c_str(), "%ld", &inode);
 		if (scan != 1) {
-			printf ("scan failed2\n");
+			log_debug ("scan failed2\n");
 			continue;
 		}
-		//printf ("\tinode: %ld\n", inode);
+		//log_debug ("\tinode: %ld\n", inode);
 
 		pos = lines[i].find (" (");
 		if (pos == std::string::npos) {
-			printf ("corrupt line3\n");
+			log_debug ("corrupt line3\n");
 			continue;
 		}
 
 		part = lines[i].substr (pos + 2);
-		//printf ("part = %s\n", part.c_str());
+		//log_debug ("part = %s\n", part.c_str());
 
 		pos = part.length();
 		if (part[pos - 1] != ')') {
-			printf ("corrupt line4\n");
+			log_debug ("corrupt line4\n");
 			continue;
 		}
 
 		part = part.substr (0, pos - 1);
-		//printf ("\tfile:  %s\n", part.c_str());
+		//log_debug ("\tfile:  %s\n", part.c_str());
 
-		//printf ("\n");
+		//log_debug ("\n");
 
 		Loop *l = new Loop;
 		l->device = device;
