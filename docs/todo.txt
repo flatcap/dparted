@@ -570,3 +570,7 @@ otherwise the data could span different locations
 
 minimum/maximum sizes for volumes, filesystems, etc
 
+move iprintf (indented) to log.cpp
+
+force fflush of log?
+
