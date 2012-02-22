@@ -581,3 +581,8 @@ build-in test mode into gui
 as well as reading the filesystem magic, we should try to read the fs size
 and validate it against its container
 
+move mount handling into mounts.cpp?
+
+lvm, md, ldm as separate plugins
+filesystems should be pluggable too
+
