@@ -592,3 +592,5 @@ should the volumegroup object keep a list of free segments?
 
 make sure we're using all the lvm fields we ask for
 
+watcher -- crashes when there's no 'vi' window
+
