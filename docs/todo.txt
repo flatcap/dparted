@@ -586,3 +586,9 @@ move mount handling into mounts.cpp?
 lvm, md, ldm as separate plugins
 filesystems should be pluggable too
 
+reduce reliance on command line tools -- use shared libraries where possible
+
+should the volumegroup object keep a list of free segments?
+
+make sure we're using all the lvm fields we ask for
+

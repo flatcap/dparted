@@ -31,6 +31,7 @@
 Stripe::Stripe (void)
 {
 	type = "stripe";
+	//log_debug ("ctor stripe (%p)\n", this);
 }
 
 /**
@@ -38,6 +39,7 @@ Stripe::Stripe (void)
  */
 Stripe::~Stripe()
 {
+	//log_debug ("dtor stripe (%p)\n", this);
 }
 
 

@@ -31,6 +31,7 @@
 Mirror::Mirror (void)
 {
 	type = "mirror";
+	//log_debug ("ctor mirror (%p)\n", this);
 }
 
 /**
@@ -38,6 +39,7 @@ Mirror::Mirror (void)
  */
 Mirror::~Mirror()
 {
+	//log_debug ("dtor mirror (%p)\n", this);
 }
 
 

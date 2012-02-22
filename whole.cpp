@@ -40,6 +40,7 @@ Whole::~Whole()
 {
 }
 
+
 /**
  * dump_dot
  */

@@ -155,7 +155,7 @@ std::string Container::dump_dot (void)
 
 	//output << dump_row ("type",          type);
 	output << dump_row ("name",          name);
-	//output << dump_row ("uuid",          uuid_short); //RAR temp
+	output << dump_row ("uuid",          uuid_short); //RAR temp
 	output << dump_row ("device",        device);
 	output << dump_row ("parent_offset", parent_offset);
 	//output << dump_row ("block_size",    block_size);

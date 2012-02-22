@@ -31,6 +31,7 @@
 Linear::Linear (void)
 {
 	type = "linear";
+	//log_debug ("ctor linear (%p)\n", this);
 }
 
 /**
@@ -38,6 +39,7 @@ Linear::Linear (void)
  */
 Linear::~Linear()
 {
+	//log_debug ("dtor linear (%p)\n", this);
 }
 
 
