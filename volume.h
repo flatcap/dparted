@@ -37,8 +37,6 @@ public:
 	long		kernel_major;
 	long		kernel_minor;
 
-	static Volume * probe (Container *parent, long long offset, long long size);
-
 protected:
 
 private:

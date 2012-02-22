@@ -46,12 +46,12 @@ Gpt::~Gpt()
 /**
  * probe
  */
-Gpt * Gpt::probe (Container *parent, unsigned char *buffer, int bufsize)
+bool Gpt::probe (Container *parent, unsigned char *buffer, int bufsize)
 {
 	Gpt *g = NULL;
 
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	// XXX replace with strict identify function (static)
-		return NULL;
+		return false;
 
 	g = new Gpt;
 
@@ -104,7 +104,7 @@ Gpt * Gpt::probe (Container *parent, unsigned char *buffer, int bufsize)
 		queue_add_probe (p);
 	}
 
-	return g;
+	return (g != NULL);
 }
 
 

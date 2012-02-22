@@ -50,7 +50,7 @@ int log_debug (const char *format, ...)
 		return 0;
 
 	va_start (args, format);
-	fprintf (file, "\e[33m");
+	fprintf (file, "\e[38;5;229m");
 	retval = log (format, args);
 	fprintf (file, "\e[0m");
 	va_end (args);
@@ -92,7 +92,7 @@ int log_info (const char *format, ...)
 		return 0;
 
 	va_start (args, format);
-	fprintf (file, "\e[32m");
+	fprintf (file, "\e[38;5;79m");
 	retval = log (format, args);
 	fprintf (file, "\e[0m");
 	va_end (args);

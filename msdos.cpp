@@ -113,14 +113,14 @@ unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long long of
 /**
  * probe
  */
-Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
+bool Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 {
 	Msdos *m = NULL;
 	unsigned int i;
 	int count = 0;
 
 	if (*(unsigned short int *) (buffer+510) != 0xAA55)
-		return NULL;
+		return false;
 
 	// and some other quick checks
 
@@ -138,7 +138,7 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 
 	if ((count < 0) || (vp.size() > 4)) {
 		log_debug ("partition table is corrupt\n");	// bugger
-		return NULL;
+		return false;
 	}
 
 	for (i = 0; i < vp.size(); i++) {
@@ -175,7 +175,7 @@ Msdos * Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 		m->add_child (c);
 	}
 
-	return m;
+	return (m != NULL);
 }
 
 

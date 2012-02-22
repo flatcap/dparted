@@ -146,7 +146,7 @@ long long Filesystem::ext2_get_usage (void)
 /**
  * probe
  */
-Filesystem * Filesystem::probe (Container *parent, unsigned char *buffer, int bufsize)
+bool Filesystem::probe (Container *parent, unsigned char *buffer, int bufsize)
 {
 	Filesystem *f = NULL;
 	std::string name;
@@ -184,7 +184,7 @@ Filesystem * Filesystem::probe (Container *parent, unsigned char *buffer, int bu
 		parent->add_child (f);
 	}
 
-	return f;
+	return (f != NULL);
 }
 
 

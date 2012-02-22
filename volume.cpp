@@ -44,15 +44,6 @@ Volume::~Volume()
 
 
 /**
- * probe
- */
-Volume * Volume::probe (Container *parent, long long offset, long long size)
-{
-	log_debug ("Volume::probe\n");
-	return false;
-}
-
-/**
  * dump
  */
 void Volume::dump (int indent /* = 0 */)

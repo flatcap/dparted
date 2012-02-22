@@ -45,16 +45,9 @@ Table::~Table()
 /**
  * probe
  */
-Table * Table::probe (Container *parent, unsigned char *buffer, int bufsize)
+bool Table::probe (Container *parent, unsigned char *buffer, int bufsize)
 {
-	Table *result = NULL;
-
-	if ((result = Gpt::probe (parent, buffer, bufsize))) {
-		// do nothing
-	} else if ((result = Msdos::probe (parent, buffer, bufsize))) {
-		// do nothing
-	}
-
-	return result;
+	return (Gpt::probe (parent, buffer, bufsize) ||
+		Msdos::probe (parent, buffer, bufsize));
 }
 

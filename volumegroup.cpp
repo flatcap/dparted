@@ -21,10 +21,22 @@
 #include <string>
 #include <sstream>
 
+#include "linear.h"
 #include "main.h"
+#include "mirror.h"
+#include "segment.h"
+#include "stripe.h"
 #include "volumegroup.h"
+#include "volume.h"
+
 #include "utils.h"
 #include "log.h"
+
+struct queue_item {
+	std::string name;
+	Container *item;
+	std::vector<std::string> requires;
+};
 
 /**
  * VolumeGroup
@@ -47,12 +59,16 @@ VolumeGroup::~VolumeGroup()
 }
 
 
+#ifdef QWQ
 /**
  * find_devices
  */
-unsigned int VolumeGroup::find_devices (Container &list)
+void VolumeGroup::find_devices (Container &list)
 {
 	int retval = -1;
+	std::string command;
+	std::string output;
+	std::string error;
 
 	// LVM2_VG_NAME=tmpvol
 	// LVM2_PV_COUNT=3
@@ -67,14 +83,12 @@ unsigned int VolumeGroup::find_devices (Container &list)
 	// LVM2_VG_SEQNO=13
 	// LVM2_PV_NAME=/dev/loop0
 
-	std::string command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno,pv_name";
-	std::string output;
-	std::string error;
-
+	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno,pv_name";
 	retval = execute_command (command, output, error);
 	if (retval < 0)
-		return 0;
+		return;
 
+	//log_debug ("%s\n", command.c_str());
 	//log_debug ("%s\n", output.c_str());
 
 	std::string name;
@@ -83,16 +97,16 @@ unsigned int VolumeGroup::find_devices (Container &list)
 	std::vector<std::string> lines;
 	unsigned int i;
 	std::map<std::string,StringNum> tags;
-	int added = 0;
 
 	count = explode ("\n", output, lines);
-	//log_debug ("%d lines\n", count);
 
+	log_debug ("Volume Groups\n");
 	for (i = 0; i < count; i++) {
 		parse_tagged_line ((lines[i]), "\t", tags);
 
 		name = tags["LVM2_VG_NAME"];
 		comp = tags["LVM2_PV_NAME"];
+		// XXX find by uuid instead
 		VolumeGroup *vg = static_cast<VolumeGroup*> (list.find_name (name));
 		if (vg) {
 			vg->components.push_back (comp);
@@ -114,75 +128,90 @@ unsigned int VolumeGroup::find_devices (Container &list)
 
 			vg->components.push_back (comp);
 			list.add_child (vg);
-			added++;
 		}
 	}
 
-	return added;
+	// ------------------------------------------------------------
+
+	// LVM2_PV_NAME=/dev/loop0
+	// LVM2_LV_NAME=data
+	// LVM2_LV_ATTR=-wi-a-
+	// LVM2_VG_UUID=4geriZ-jmke-Z0xk-RuAt-XGtK-xNUB-5kmfa2
+	// LVM2_VG_NAME=tmpvol
+	// LVM2_SEGTYPE=linear
+	// LVM2_PVSEG_START=238
+	// LVM2_SEG_START_PE=70
+	// LVM2_PVSEG_SIZE=5
+	// LVM2_DEVICES=/dev/loop0(238)
+
+	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,lv_name,lv_attr,vg_uuid,vg_name,segtype,pvseg_start,seg_start_pe,pvseg_size,devices";
+	retval = execute_command (command, output, error);
+	if (retval < 0)
+		return;
+
+	//log_debug ("%s\n", command.c_str());
+	//log_debug ("%s\n", output.c_str());
+
+	lines.clear();
+	explode ("\n", output, lines);
+
+	log_debug ("Physical extents\n");
+	for (i = 0; i < lines.size(); i++) {
+		parse_tagged_line ((lines[i]), "\t", tags);
+
+		std::string dev     = tags["LVM2_PV_NAME"];	// /dev/loop0
+		std::string vg_uuid = tags["LVM2_VG_UUID"];
+		std::string vg_name = tags["LVM2_VG_NAME"];
+		std::string lv_name = tags["LVM2_LV_NAME"];
+		std::string lv_attr = tags["LVM2_LV_ATTR"];
+		std::string lv_type = tags["LVM2_SEGTYPE"];
+		std::string pv_name = tags["LVM2_PV_NAME"];
+		std::string start   = tags["LVM2_PVSEG_START"];
+
+		if ((lv_attr[0] == 'i') || (lv_attr[0] == 'l')) {	// mirror image/log
+			// Strip the []'s
+			lv_name = lv_name.substr (1, lv_name.length() - 2);
+		}
+
+		std::string seg_id = vg_name + ":" + lv_name + ":" + pv_name + "(" + start + ")";
+		log_debug ("\t%s\n", seg_id.c_str());
+
+		log_debug ("lookup uuid %s\n", vg_uuid.c_str());
+		VolumeGroup *vg = static_cast<VolumeGroup*> (list.find_name (vg_name));
+		log_debug ("vg extent size = %ld\n", vg->block_size);
+
+		Segment *vg_seg = vg_seg_lookup[dev]; //XXX this should exist
+		if (!vg_seg)
+			continue;
+
+		Segment *vol_seg = new Segment;
+		vol_seg->name = tags["LVM2_LV_NAME"];
+		vol_seg->type = lv_type;			// striped, etc
+
+		vol_seg->bytes_size = tags["LVM2_PVSEG_SIZE"];
+		vol_seg->bytes_size *= vg->block_size;
+		vol_seg->parent_offset = tags["LVM2_PVSEG_START"];
+
+		vol_seg->whole = NULL; //RAR we don't know this yet
+
+		log_debug ("whole = %p\n", vg_seg->whole);
+
+		vg_seg->add_child (vol_seg);
+
+		if (lv_type != "free") {
+			vol_seg_lookup[seg_id] = vol_seg;
+		}
+	}
+	log_debug ("\n");
+
+
 }
 
-/**
- * dump
- */
-void VolumeGroup::dump (int indent /* = 0 */)
-{
-	std::string size = get_size (bytes_size);
-	std::string free = get_size (bytes_size - bytes_used);
-
-	iprintf (indent, "%s (%s)\n", name.c_str(), size.c_str());
-
-	iprintf (indent+8, "pv_count:        %ld\n", pv_count);
-	iprintf (indent+8, "vg_free:         %s\n", free.c_str());
-	iprintf (indent+8, "vg_uuid:         %s\n", uuid.c_str());
-
-	//iprintf (indent+8, "vg_attr:         %s\n",   vg_attr.c_str());
-	//iprintf (indent+8, "vg_name:         %s\n",   vg_name.c_str());
-	//iprintf (indent+8, "lv_count:        %d\n",   lv_count);
-	//iprintf (indent+8, "vg_size:         %lld\n", vg_size);
-	//iprintf (indent+8, "vg_extent_count: %lld\n", vg_extent_count);
-	//iprintf (indent+8, "vg_free_count:   %lld\n", vg_free_count);
-	//iprintf (indent+8, "vg_seqno:        %ld\n",  vg_seqno);
-
-	Whole::dump (indent);
-}
-
-/**
- * dump_csv
- */
-void VolumeGroup::dump_csv (void)
-{
-	Whole::dump_csv();
-}
-
-/**
- * dump_dot
- */
-std::string VolumeGroup::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << dump_table_header ("VolumeGroup", "#008080");
-
-	output << Whole::dump_dot();
-
-	output << dump_row ("pv_count",        pv_count);
-	output << dump_row ("lv_count",        lv_count);
-	output << dump_row ("vg_attr",         vg_attr);
-	output << dump_row ("vg_extent_count", vg_extent_count);
-	output << dump_row ("vg_free_count",   vg_free_count);
-	output << dump_row ("vg_seqno",        vg_seqno);
-
-	output << dump_table_footer();
-	output << dump_dot_children();
-
-	return output.str();
-}
-
-#if 0
+#endif
 /**
  * logicals_get_list
  */
-unsigned int logicals_get_list (Container &disks)
+void VolumeGroup::find_devices (Container &disks)
 {
 	std::string command;
 	std::string output;
@@ -492,6 +521,8 @@ unsigned int logicals_get_list (Container &disks)
 			vol->kernel_minor = tags["LVM2_LV_KERNEL_MINOR"];
 
 			if ((lv_attr[0] != 'i') && (lv_attr[0] != 'l')) { // mirror (i)mage or (l)og
+#if 0
+				//RAR QUEUE THIS
 				std::string fs_type;
 				fs_type = get_fs (vol->device, 0);
 				//log_debug ("fs_type = %s\n", fs_type.c_str());
@@ -504,9 +535,12 @@ unsigned int logicals_get_list (Container &disks)
 					fs->dump();
 					vol->add_child (fs);
 				}
+#endif
 			}
 		}
 
+#if 0
+		//RAR QUEUE THIS
 		if (lv_attr[0] == 'm') {		// mirror
 			vol->device       = tags["LVM2_LV_PATH"];
 			std::string fs_type;
@@ -522,6 +556,7 @@ unsigned int logicals_get_list (Container &disks)
 				vol->add_child (fs);
 			}
 		}
+#endif
 
 		//log_debug ("vol = %p\n", vol);
 
@@ -673,7 +708,62 @@ unsigned int logicals_get_list (Container &disks)
 		//vg->add_child (c1);
 	}
 #endif
-	return disks.children.size();
 }
 
-#endif
+/**
+ * dump
+ */
+void VolumeGroup::dump (int indent /* = 0 */)
+{
+	std::string size = get_size (bytes_size);
+	std::string free = get_size (bytes_size - bytes_used);
+
+	iprintf (indent, "%s (%s)\n", name.c_str(), size.c_str());
+
+	iprintf (indent+8, "pv_count:        %ld\n", pv_count);
+	iprintf (indent+8, "vg_free:         %s\n", free.c_str());
+	iprintf (indent+8, "vg_uuid:         %s\n", uuid.c_str());
+
+	//iprintf (indent+8, "vg_attr:         %s\n",   vg_attr.c_str());
+	//iprintf (indent+8, "vg_name:         %s\n",   vg_name.c_str());
+	//iprintf (indent+8, "lv_count:        %d\n",   lv_count);
+	//iprintf (indent+8, "vg_size:         %lld\n", vg_size);
+	//iprintf (indent+8, "vg_extent_count: %lld\n", vg_extent_count);
+	//iprintf (indent+8, "vg_free_count:   %lld\n", vg_free_count);
+	//iprintf (indent+8, "vg_seqno:        %ld\n",  vg_seqno);
+
+	Whole::dump (indent);
+}
+
+/**
+ * dump_csv
+ */
+void VolumeGroup::dump_csv (void)
+{
+	Whole::dump_csv();
+}
+
+/**
+ * dump_dot
+ */
+std::string VolumeGroup::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << dump_table_header ("VolumeGroup", "#008080");
+
+	output << Whole::dump_dot();
+
+	output << dump_row ("pv_count",        pv_count);
+	output << dump_row ("lv_count",        lv_count);
+	output << dump_row ("vg_attr",         vg_attr);
+	output << dump_row ("vg_extent_count", vg_extent_count);
+	output << dump_row ("vg_free_count",   vg_free_count);
+	output << dump_row ("vg_seqno",        vg_seqno);
+
+	output << dump_table_footer();
+	output << dump_dot_children();
+
+	return output.str();
+}
+

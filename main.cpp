@@ -89,7 +89,6 @@ int main (int argc, char *argv[])
 
 	//Disk::find_devices (disks);
 	Loop::find_devices (disks);
-	VolumeGroup::find_devices (disks);
 
 	unsigned char *buffer = NULL;
 	int bufsize = 4096;
@@ -104,56 +103,36 @@ int main (int argc, char *argv[])
 		return 1;
 
 	while ((item = probe_queue.front())) {
-#if 1
+#if 0
 		log_debug ("queued item: '%s'\n", item->name.c_str());
-#endif
-		probe_queue.pop();
-		//log_debug ("QUEUE has %lu items\n", probe_queue.size());
-
-#if 1
-		std::string s1;
-		std::string s2;
-		s1 = get_size (item->parent_offset);
-		s2 = get_size (item->bytes_size);
+		std::string s1 = get_size (item->parent_offset);
+		std::string s2 = get_size (item->bytes_size);
 		log_debug ("\tdevice     = %s\n",        item->device.c_str());
 		log_debug ("\toffset     = %lld (%s)\n", item->parent_offset, s1.c_str());
 		log_debug ("\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
 		log_debug ("\n");
 #endif
+		probe_queue.pop();
+
 		item->read_data (0, bufsize, buffer);
 
-#if 1
-		Filesystem *f = Filesystem::probe (item, buffer, bufsize);
-		if (f) {
-			//log_debug ("\tfilesystem: %s\n", f->name.c_str());
-			//delete f;
+		if (Filesystem::probe (item, buffer, bufsize)) {
 			continue;
 		}
-#endif
 
-#if 1
-		Table *t = Table::probe (item, buffer, bufsize);
-		if (t) {
-			//log_debug ("\ttable: %s\n", t->name.c_str());
-			//log_debug ("\t\tuuid = %s\n", t->uuid.c_str());
-			//delete t;
+		if (Table::probe (item, buffer, bufsize)) {
 			continue;
 		}
-#endif
 
-#if 0
-		//XXX some probes return 1 item, this will return many
-		Volume *v = Volume::probe (item, buffer, bufsize);
-		if (v) {
-			log_debug ("volume %s\n", v->name.c_str());
-			continue
-		}
-#endif
-
-		//empty
+		//empty?
 	}
 
-#if 0
+	VolumeGroup::find_devices (disks);
+
+	if (probe_queue.size() > 0)
+		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());
+
+#if 1
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = grey ];\n";
@@ -165,7 +144,7 @@ int main (int argc, char *argv[])
 	}
 	dot += "\n};";
 
-	log_debug ("%s\n", dot.c_str());
+	printf ("%s\n", dot.c_str());
 #endif
 
 	log_close();
