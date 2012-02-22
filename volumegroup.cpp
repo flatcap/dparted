@@ -38,6 +38,13 @@ struct queue_item {
 	std::vector<std::string> requires;
 };
 
+//RAR lazy
+std::map<std::string, VolumeGroup*> vg_lookup;
+std::map<std::string, Segment*> vg_seg_lookup;
+std::map<std::string, Segment*> vol_seg_lookup;
+std::map<std::string,Container*> q_easy;
+std::vector<struct queue_item> q_hard;
+
 /**
  * VolumeGroup
  */
@@ -59,172 +66,31 @@ VolumeGroup::~VolumeGroup()
 }
 
 
-#ifdef QWQ
 /**
- * find_devices
+ * fd_vgs - Create the VolumeGroup objects
  */
-void VolumeGroup::find_devices (Container &list)
+void fd_vgs (Container &disks)
 {
-	int retval = -1;
 	std::string command;
 	std::string output;
 	std::string error;
-
-	// LVM2_VG_NAME=tmpvol
-	// LVM2_PV_COUNT=3
-	// LVM2_LV_COUNT=8
-	// LVM2_VG_ATTR=wz--n-
-	// LVM2_VG_SIZE=3208642560
-	// LVM2_VG_FREE=104857600
-	// LVM2_VG_UUID=G95j9O-fOkt-zdbk-wsxY-jupm-8MR6-TpZllQ
-	// LVM2_VG_EXTENT_SIZE=4194304
-	// LVM2_VG_EXTENT_COUNT=765
-	// LVM2_VG_FREE_COUNT=25
-	// LVM2_VG_SEQNO=13
-	// LVM2_PV_NAME=/dev/loop0
-
-	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno,pv_name";
-	retval = execute_command (command, output, error);
-	if (retval < 0)
-		return;
-
-	//log_debug ("%s\n", command.c_str());
-	//log_debug ("%s\n", output.c_str());
-
-	std::string name;
-	std::string comp;
-	unsigned int count;
 	std::vector<std::string> lines;
-	unsigned int i;
 	std::map<std::string,StringNum> tags;
-
-	count = explode ("\n", output, lines);
-
-	log_debug ("Volume Groups\n");
-	for (i = 0; i < count; i++) {
-		parse_tagged_line ((lines[i]), "\t", tags);
-
-		name = tags["LVM2_VG_NAME"];
-		comp = tags["LVM2_PV_NAME"];
-		// XXX find by uuid instead
-		VolumeGroup *vg = static_cast<VolumeGroup*> (list.find_name (name));
-		if (vg) {
-			vg->components.push_back (comp);
-		} else {
-			vg = new VolumeGroup;
-			vg->name = name;
-
-			vg->pv_count   = tags["LVM2_PV_COUNT"];
-			vg->lv_count   = tags["LVM2_LV_COUNT"];
-			vg->vg_attr    = tags["LVM2_VG_ATTR"];
-			vg->uuid       = tags["LVM2_VG_UUID"];
-			vg->block_size = tags["LVM2_VG_EXTENT_SIZE"];
-			vg->vg_seqno   = tags["LVM2_VG_SEQNO"];
-			vg->bytes_size = tags["LVM2_VG_SIZE"];
-
-			// LVM2_VG_FREE=104857600
-			// LVM2_VG_EXTENT_COUNT=765
-			// LVM2_VG_FREE_COUNT=25
-
-			vg->components.push_back (comp);
-			list.add_child (vg);
-		}
-	}
-
-	// ------------------------------------------------------------
-
-	// LVM2_PV_NAME=/dev/loop0
-	// LVM2_LV_NAME=data
-	// LVM2_LV_ATTR=-wi-a-
-	// LVM2_VG_UUID=4geriZ-jmke-Z0xk-RuAt-XGtK-xNUB-5kmfa2
-	// LVM2_VG_NAME=tmpvol
-	// LVM2_SEGTYPE=linear
-	// LVM2_PVSEG_START=238
-	// LVM2_SEG_START_PE=70
-	// LVM2_PVSEG_SIZE=5
-	// LVM2_DEVICES=/dev/loop0(238)
-
-	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,lv_name,lv_attr,vg_uuid,vg_name,segtype,pvseg_start,seg_start_pe,pvseg_size,devices";
-	retval = execute_command (command, output, error);
-	if (retval < 0)
-		return;
-
-	//log_debug ("%s\n", command.c_str());
-	//log_debug ("%s\n", output.c_str());
-
-	lines.clear();
-	explode ("\n", output, lines);
-
-	log_debug ("Physical extents\n");
-	for (i = 0; i < lines.size(); i++) {
-		parse_tagged_line ((lines[i]), "\t", tags);
-
-		std::string dev     = tags["LVM2_PV_NAME"];	// /dev/loop0
-		std::string vg_uuid = tags["LVM2_VG_UUID"];
-		std::string vg_name = tags["LVM2_VG_NAME"];
-		std::string lv_name = tags["LVM2_LV_NAME"];
-		std::string lv_attr = tags["LVM2_LV_ATTR"];
-		std::string lv_type = tags["LVM2_SEGTYPE"];
-		std::string pv_name = tags["LVM2_PV_NAME"];
-		std::string start   = tags["LVM2_PVSEG_START"];
-
-		if ((lv_attr[0] == 'i') || (lv_attr[0] == 'l')) {	// mirror image/log
-			// Strip the []'s
-			lv_name = lv_name.substr (1, lv_name.length() - 2);
-		}
-
-		std::string seg_id = vg_name + ":" + lv_name + ":" + pv_name + "(" + start + ")";
-		log_debug ("\t%s\n", seg_id.c_str());
-
-		log_debug ("lookup uuid %s\n", vg_uuid.c_str());
-		VolumeGroup *vg = static_cast<VolumeGroup*> (list.find_name (vg_name));
-		log_debug ("vg extent size = %ld\n", vg->block_size);
-
-		Segment *vg_seg = vg_seg_lookup[dev]; //XXX this should exist
-		if (!vg_seg)
-			continue;
-
-		Segment *vol_seg = new Segment;
-		vol_seg->name = tags["LVM2_LV_NAME"];
-		vol_seg->type = lv_type;			// striped, etc
-
-		vol_seg->bytes_size = tags["LVM2_PVSEG_SIZE"];
-		vol_seg->bytes_size *= vg->block_size;
-		vol_seg->parent_offset = tags["LVM2_PVSEG_START"];
-
-		vol_seg->whole = NULL; //RAR we don't know this yet
-
-		log_debug ("whole = %p\n", vg_seg->whole);
-
-		vg_seg->add_child (vol_seg);
-
-		if (lv_type != "free") {
-			vol_seg_lookup[seg_id] = vol_seg;
-		}
-	}
-	log_debug ("\n");
-
-
-}
-
-#endif
-/**
- * logicals_get_list
- */
-void VolumeGroup::find_devices (Container &disks)
-{
-	std::string command;
-	std::string output;
-	std::string error;
 	VolumeGroup *vg = NULL;
-	Volume *vol = NULL;
-	std::map<std::string, VolumeGroup*> vg_lookup;
-	std::map<std::string, Segment*> vg_seg_lookup;
-	std::map<std::string, Segment*> vol_seg_lookup;
 	unsigned int i;
-	//VolumeSegment vol_seg;
-	std::vector<std::string> lines;
-	std::map<std::string,StringNum> tags;
+
+	// LVM2_VG_NAME=shuffle
+	// LVM2_PV_COUNT=1
+	// LVM2_LV_COUNT=1
+	// LVM2_VG_ATTR=wz--n-
+	// LVM2_VG_SIZE=205520896
+	// LVM2_VG_FREE=0
+	// LVM2_VG_UUID=Usi3h1-mPFH-Z7kS-JNdQ-lron-H8CN-6dyTsC
+	// LVM2_VG_EXTENT_SIZE=4194304
+	// LVM2_VG_EXTENT_COUNT=49
+	// LVM2_VG_FREE_COUNT=0
+	// LVM2_VG_SEQNO=11
+	// LVM2_PV_NAME=/dev/loop3
 
 	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno,pv_name";
 	execute_command (command, output, error);
@@ -311,7 +177,7 @@ void VolumeGroup::find_devices (Container &disks)
 	}
 	//log_debug ("\n");
 
-#if 0
+#if 1
 	std::map<std::string,VolumeGroup*>::iterator it;
 	log_debug ("Volume Group map:\n");
 	for (it = vg_lookup.begin(); it != vg_lookup.end(); it++) {
@@ -320,7 +186,7 @@ void VolumeGroup::find_devices (Container &disks)
 	}
 	log_debug ("\n");
 #endif
-#if 0
+#if 1
 	std::map<std::string,Segment*>::iterator it2;
 	log_debug ("Volume Group Segments map:\n");
 	for (it2 = vg_seg_lookup.begin(); it2 != vg_seg_lookup.end(); it2++) {
@@ -329,6 +195,31 @@ void VolumeGroup::find_devices (Container &disks)
 	}
 	log_debug ("\n");
 #endif
+
+}
+
+/**
+ * fd_pvs - Attach all the Segments (VolumeGroup and Volumes)
+ */
+void fd_pvs (Container &disks)
+{
+	std::string command;
+	std::string output;
+	std::string error;
+	unsigned int i;
+	std::vector<std::string> lines;
+	std::map<std::string,StringNum> tags;
+
+	// LVM2_PV_NAME=/dev/loop3
+	// LVM2_LV_NAME=jigsaw
+	// LVM2_LV_ATTR=-wi-a-
+	// LVM2_VG_UUID=Usi3h1-mPFH-Z7kS-JNdQ-lron-H8CN-6dyTsC
+	// LVM2_VG_NAME=shuffle
+	// LVM2_SEGTYPE=linear
+	// LVM2_PVSEG_START=0
+	// LVM2_SEG_START_PE=0
+	// LVM2_PVSEG_SIZE=13
+	// LVM2_DEVICES=/dev/loop3(0)
 
 	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,lv_name,lv_attr,vg_uuid,vg_name,segtype,pvseg_start,seg_start_pe,pvseg_size,devices";
 	execute_command (command, output, error);
@@ -387,7 +278,7 @@ void VolumeGroup::find_devices (Container &disks)
 	}
 	//log_debug ("\n");
 
-#if 0
+#if 1
 	std::map<std::string,Segment*>::iterator it3;
 	log_debug ("Volume Segments map:\n");
 	for (it3 = vol_seg_lookup.begin(); it3 != vol_seg_lookup.end(); it3++) {
@@ -397,6 +288,42 @@ void VolumeGroup::find_devices (Container &disks)
 	log_debug ("\n");
 #endif
 
+}
+
+/**
+ * fd_lvs - Build the Volumes from the Segments
+ */
+void fd_lvs (Container &disks)
+{
+	std::string command;
+	std::string output;
+	std::string error;
+	unsigned int i;
+	VolumeGroup *vg = NULL;
+	Volume *vol = NULL;
+	std::vector<std::string> lines;
+	std::map<std::string,StringNum> tags;
+
+	// LVM2_VG_UUID=Usi3h1-mPFH-Z7kS-JNdQ-lron-H8CN-6dyTsC
+	// LVM2_VG_NAME=shuffle
+	// LVM2_LV_NAME=jigsaw
+	// LVM2_LV_ATTR=-wi-a-
+	// LVM2_MIRROR_LOG=
+	// LVM2_LV_UUID=MjxcHc-tfc6-ZfBV-Zlta-59eS-cpud-dojf09
+	// LVM2_LV_SIZE=205520896
+	// LVM2_LV_PATH=/dev/shuffle/jigsaw
+	// LVM2_LV_KERNEL_MAJOR=253
+	// LVM2_LV_KERNEL_MINOR=2
+	// LVM2_SEG_COUNT=4
+	// LVM2_SEGTYPE=linear
+	// LVM2_STRIPES=1
+	// LVM2_STRIPE_SIZE=0
+	// LVM2_SEG_START=0
+	// LVM2_SEG_START_PE=0
+	// LVM2_SEG_SIZE=54525952
+	// LVM2_SEG_PE_RANGES=/dev/loop3:0-12
+	// LVM2_DEVICES=/dev/loop3(0)
+
 	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,vg_name,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_start_pe,seg_size,seg_pe_ranges,devices";
 	execute_command (command, output, error);
 	//log_debug ("%s\n", command.c_str());
@@ -405,21 +332,19 @@ void VolumeGroup::find_devices (Container &disks)
 	lines.clear();
 	explode ("\n", output, lines);
 
-	std::map<std::string,Container*> q_easy;
-	std::vector<struct queue_item> q_hard;
-
 	//log_debug ("Volumes:\n");
 	for (i = 0; i < lines.size(); i++) {
 		parse_tagged_line ((lines[i]), "\t", tags);
 
-		std::string vg_uuid = tags["LVM2_VG_UUID"];	//log_debug ("vg_uuid = %s\n", vg_uuid.c_str());
-		std::string vg_name = tags["LVM2_VG_NAME"];	//log_debug ("vg_name = %s\n", vg_name.c_str());
-		std::string lv_name = tags["LVM2_LV_NAME"];	//log_debug ("lv_name = %s\n", lv_name.c_str());
-		std::string lv_attr = tags["LVM2_LV_ATTR"];	//log_debug ("lv_attr = %s\n", lv_attr.c_str());
-		std::string lv_uuid = tags["LVM2_LV_UUID"];	//log_debug ("lv_uuid = %s\n", lv_uuid.c_str());
-		std::string devices = tags["LVM2_DEVICES"];	//log_debug ("devices = %s\n", devices.c_str());
+		std::string vg_uuid = tags["LVM2_VG_UUID"];	log_debug ("vg_uuid = %s\n", vg_uuid.c_str());
+		std::string vg_name = tags["LVM2_VG_NAME"];	log_debug ("vg_name = %s\n", vg_name.c_str());
+		std::string lv_name = tags["LVM2_LV_NAME"];	log_debug ("lv_name = %s\n", lv_name.c_str());
+		std::string lv_attr = tags["LVM2_LV_ATTR"];	log_debug ("lv_attr = %s\n", lv_attr.c_str());
+		std::string lv_uuid = tags["LVM2_LV_UUID"];	log_debug ("lv_uuid = %s\n", lv_uuid.c_str());
+		std::string devices = tags["LVM2_DEVICES"];	log_debug ("devices = %s\n", devices.c_str());
 		std::string lv_type = tags["LVM2_SEGTYPE"];
 		std::string mirrlog = tags["LVM2_MIRROR_LOG"];
+		log_debug ("\n");
 
 		std::vector<std::string> device_list;
 		explode (",", devices, device_list);
@@ -443,7 +368,7 @@ void VolumeGroup::find_devices (Container &disks)
 		} else if (lv_type == "mirror") {
 			item = new Mirror;
 		} else {
-			log_debug ("UNKNOWN type %s\n", lv_type.c_str());
+			log_error ("UNKNOWN type %s\n", lv_type.c_str());
 			continue;
 		}
 
@@ -454,7 +379,7 @@ void VolumeGroup::find_devices (Container &disks)
 			std::string seg_id = vg_name + ":" + lv_name + ":" + device_list[k];
 			Segment *vol_seg = vol_seg_lookup[seg_id];
 #if 1
-			//vol_seg_lookup.erase (vol_seg_lookup.find(seg_id));
+			vol_seg_lookup.erase (vol_seg_lookup.find(seg_id));
 			//log_debug ("\t%s ", lv_attr.c_str());
 			if (vol_seg) {
 				//log_debug ("\t%s => \e[32m%s\e[0m\n", seg_id.c_str(), vol_seg->name.c_str());
@@ -624,8 +549,15 @@ void VolumeGroup::find_devices (Container &disks)
 
 	//log_debug ("\n");
 
+}
+
+/**
+ * fd_stitch - Assemble all the pieces
+ */
+void fd_stitch (Container &disks)
+{
 	for (unsigned int p = 0; p < 1; p++) {
-#if 0
+#if 1
 		std::map<std::string,Container*>::iterator it4;
 		log_debug ("Easy Queue map:\n");
 		for (it4 = q_easy.begin(); it4 != q_easy.end(); it4++) {
@@ -638,7 +570,7 @@ void VolumeGroup::find_devices (Container &disks)
 		log_debug ("\n");
 #endif
 
-#if 0
+#if 1
 		std::vector<struct queue_item>::iterator it5;
 		log_debug ("Hard Queue map:\n");
 		for (it5 = q_hard.begin(); it5 != q_hard.end(); it5++) {
@@ -675,7 +607,7 @@ void VolumeGroup::find_devices (Container &disks)
 		}
 	}
 
-#if 0
+#if 1
 	std::map<std::string,Container*>::iterator it7;
 	log_debug ("Easy Queue map:\n");
 	for (it7 = q_easy.begin(); it7 != q_easy.end(); it7++) {
@@ -688,7 +620,7 @@ void VolumeGroup::find_devices (Container &disks)
 	log_debug ("\n");
 #endif
 
-#if 0
+#if 1
 	std::vector<struct queue_item>::iterator it8;
 	log_debug ("Hard Queue map:\n");
 	for (it8 = q_hard.begin(); it8 != q_hard.end(); it8++) {
@@ -709,6 +641,18 @@ void VolumeGroup::find_devices (Container &disks)
 	}
 #endif
 }
+
+/**
+ * find_devices
+ */
+void VolumeGroup::find_devices (Container &disks)
+{
+	fd_vgs (disks);
+	fd_pvs (disks);
+	fd_lvs (disks);
+	fd_stitch (disks);
+}
+
 
 /**
  * dump

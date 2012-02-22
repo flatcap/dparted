@@ -48,7 +48,7 @@ std::string Linear::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("linear", "purple");
+	output << dump_table_header ("Linear", "purple");
 
 	output << Whole::dump_dot();
 
