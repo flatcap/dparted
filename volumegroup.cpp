@@ -33,18 +33,15 @@
 #include "log.h"
 
 struct queue_item {
-	std::string name;
 	Container *item;
 	std::vector<std::string> requires;
 };
 
 //RAR lazy
 std::map<std::string, VolumeGroup*> vg_lookup;
-std::map<std::string, Volume*> vol_lookup;
 std::map<std::string, Segment*> vg_seg_lookup;
 std::map<std::string, Segment*> vol_seg_lookup;
-std::map<std::string,Container*> q_easy;
-std::vector<struct queue_item> q_hard;
+std::map<std::string, struct queue_item> q_hard;
 
 /**
  * VolumeGroup
@@ -183,7 +180,7 @@ void fd_vgs (Container &disks)
 	}
 	//log_debug ("\n");
 
-#if 1
+#if 0
 	std::map<std::string,VolumeGroup*>::iterator it;
 	log_debug ("Volume Group map (vg_lookup):\n");
 	for (it = vg_lookup.begin(); it != vg_lookup.end(); it++) {
@@ -192,7 +189,7 @@ void fd_vgs (Container &disks)
 	}
 	log_debug ("\n");
 #endif
-#if 1
+#if 0
 	std::map<std::string,Segment*>::iterator it2;
 	log_debug ("Volume Group Segments map (vg_seg_lookup):\n");
 	for (it2 = vg_seg_lookup.begin(); it2 != vg_seg_lookup.end(); it2++) {
@@ -219,18 +216,17 @@ void fd_pvs (Container &disks)
 	/*
 	 * LVM2_PV_NAME=/dev/loop3
 	 * LVM2_LV_NAME=jigsaw
+	 * LVM2_LV_UUID=uaAoyD-iscK-5mTi-QJBY-4dwT-Yc1q-kEdi5O
 	 * LVM2_LV_ATTR=-wi-a-
 	 * LVM2_VG_UUID=Usi3h1-mPFH-Z7kS-JNdQ-lron-H8CN-6dyTsC
 	 * LVM2_VG_NAME=shuffle
 	 * LVM2_SEGTYPE=linear
 	 * LVM2_PVSEG_START=0
-	 * LVM2_SEG_START_PE=0
 	 * LVM2_PVSEG_SIZE=13
-	 * LVM2_DEVICES=/dev/loop3(0)
 	 */
 
 
-	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,lv_name,lv_attr,vg_uuid,vg_name,segtype,pvseg_start,seg_start_pe,pvseg_size,devices";
+	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,lv_name,lv_uuid,lv_attr,vg_uuid,vg_name,segtype,pvseg_start,pvseg_size";
 	execute_command (command, output, error);
 	//log_debug ("%s\n", command.c_str());
 	//log_debug ("%s\n", output.c_str());
@@ -242,14 +238,18 @@ void fd_pvs (Container &disks)
 	for (i = 0; i < lines.size(); i++) {
 		parse_tagged_line ((lines[i]), "\t", tags);
 
+		std::string lv_type = tags["LVM2_SEGTYPE"];
+		if (lv_type == "free")				//XXX could process this and add it to the VGSeg's empty list
+			continue;
+
 		std::string dev     = tags["LVM2_PV_NAME"];	// /dev/loop0
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		std::string vg_name = tags["LVM2_VG_NAME"];
 		std::string lv_name = tags["LVM2_LV_NAME"];
+		std::string lv_uuid = tags["LVM2_LV_UUID"];
 		std::string lv_attr = tags["LVM2_LV_ATTR"];
-		std::string lv_type = tags["LVM2_SEGTYPE"];
 		std::string pv_name = tags["LVM2_PV_NAME"];
-		std::string start   = tags["LVM2_PVSEG_START"];
+		std::string start   = tags["LVM2_PVSEG_START"];	// physical volume offset, i.e. how far into /dev/loop0?
 
 		if ((lv_attr[0] == 'i') || (lv_attr[0] == 'l')) {	// mirror image/log
 			// Strip the []'s
@@ -268,7 +268,8 @@ void fd_pvs (Container &disks)
 			continue;
 
 		Segment *vol_seg = new Segment;
-		vol_seg->name = tags["LVM2_LV_NAME"];
+		vol_seg->name = lv_name;
+		vol_seg->uuid = lv_uuid;
 		vol_seg->type = lv_type;			// linear, striped, etc
 
 		vol_seg->bytes_size = tags["LVM2_PVSEG_SIZE"];
@@ -288,7 +289,7 @@ void fd_pvs (Container &disks)
 	}
 	//log_debug ("\n");
 
-#if 1
+#if 0
 	std::map<std::string,Segment*>::iterator it3;
 	log_debug ("Volume Segments map (vol_seg_lookup):\n");
 	for (it3 = vol_seg_lookup.begin(); it3 != vol_seg_lookup.end(); it3++) {
@@ -309,10 +310,11 @@ void fd_lvs (Container &disks)
 	std::string output;
 	std::string error;
 	unsigned int i;
-	VolumeGroup *vg = NULL;
-	Volume *vol = NULL;
+	//VolumeGroup *vg = NULL;
+	//Volume *vol = NULL;
 	std::vector<std::string> lines;
 	std::map<std::string,StringNum> tags;
+	Volume *item = NULL;
 
 	/*
 	 * LVM2_VG_UUID=Usi3h1-mPFH-Z7kS-JNdQ-lron-H8CN-6dyTsC
@@ -329,15 +331,13 @@ void fd_lvs (Container &disks)
 	 * LVM2_SEGTYPE=linear
 	 * LVM2_STRIPES=1
 	 * LVM2_STRIPE_SIZE=0
-	 * LVM2_SEG_START=0
 	 * LVM2_SEG_START_PE=0
-	 * LVM2_SEG_SIZE=54525952
 	 * LVM2_SEG_PE_RANGES=/dev/loop3:0-12
 	 * LVM2_DEVICES=/dev/loop3(0)
 	 */
 
 
-	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,vg_name,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_start_pe,seg_size,seg_pe_ranges,devices";
+	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,vg_name,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start_pe,seg_pe_ranges,devices";
 	execute_command (command, output, error);
 	//log_debug ("%s\n", command.c_str());
 	//log_debug ("%s\n", output.c_str());
@@ -362,9 +362,8 @@ void fd_lvs (Container &disks)
 		std::vector<std::string> device_list;
 		explode (",", devices, device_list);
 
-		if ((lv_attr[0] == 'i') || (lv_attr[0] == 'l')) {	// mirror image/log
-			// Strip the []'s
-			lv_name = lv_name.substr (1, lv_name.length() - 2);
+		if ((lv_attr[0] == 'i') || (lv_attr[0] == 'l')) {		// mirror image/log
+			lv_name = lv_name.substr (1, lv_name.length() - 2);	// Strip the []'s
 		} else if (lv_attr[0] == 'm') {
 			// Add an extra dependency for mirrors
 			std::string dep_name = mirrlog + "(0)";
@@ -372,15 +371,13 @@ void fd_lvs (Container &disks)
 			device_list.push_back (dep_name);
 		}
 
-		Volume *item = NULL;
-
 		std::string vol_id = vg_name + ":" + lv_name;
 		//log_info ("key = %s\n", vol_id.c_str());
 
-		item = vol_lookup[vol_id];
-		if (item) {
-			continue;
-		} else {
+		std::map<std::string, struct queue_item>::iterator it;
+
+		it = q_hard.find (vol_id);
+		if (it == q_hard.end()) {
 			if (lv_type == "linear") {
 				item = new Linear;
 			} else if (lv_type == "striped") {
@@ -393,11 +390,117 @@ void fd_lvs (Container &disks)
 			}
 
 			item->name = lv_name;			//RAR and other details...
-			item->parent = vg_lookup[vg_uuid];	//XXX until we know better
+			//item->parent = vg_lookup[vg_uuid];	//XXX until we know better
 
-			vol_lookup[vol_id] = item;
+			struct queue_item jim;
+			jim.item = item;
+			jim.requires = device_list;
+
+			q_hard[vol_id] = jim;
+		} else {
+			// transfer new deps onto existing object
+			std::vector<std::string>::iterator it4;
+			for (it4 = device_list.begin(); it4 != device_list.end(); it4++) {
+				(*it).second.requires.push_back ((*it4));
+			}
 		}
 
+		log_debug ("%s\n", lv_name.c_str());
+		for (unsigned int m = 0; m < device_list.size(); m++) {
+			log_debug ("\t%s\n", device_list[m].c_str());
+		}
+
+	}
+
+	//log_debug ("\n");
+#if 1
+	std::map<std::string, struct queue_item>::iterator it2;
+	for (it2 = q_hard.begin(); it2 != q_hard.end(); it2++) {
+		std::string name = (*it2).first;
+		Container *c = (*it2).second.item;
+		log_debug ("%s (%p)\n", name.c_str(), c);
+		std::vector<std::string>::iterator it3;
+		for (it3 = (*it2).second.requires.begin(); it3 != (*it2).second.requires.end(); it3++) {
+			log_debug ("\t%s\n", (*it3).c_str());
+		}
+		log_debug ("\n");
+	}
+#endif
+}
+
+#if 0
+/**
+ * fd_stitch - Assemble all the pieces
+ */
+void fd_stitch (Container &disks)
+{
+	std::map<std::string,Container*> q_easy;
+
+	for (unsigned int p = 0; p < 1; p++) {		// XXX 1 is the complexity of the arrangement of the segments
+#if 1
+		std::map<std::string,Container*>::iterator it4;
+		log_debug ("Easy Queue map (q_easy):\n");
+		for (it4 = q_easy.begin(); it4 != q_easy.end(); it4++) {
+			Container *c1 = (*it4).second;
+			log_debug ("\t%s => %s\n", (*it4).first.c_str(), c1->name.c_str());
+			for (unsigned int n = 0; n < c1->children.size(); n++) {
+				log_debug ("\t\t%s\n", c1->children[n]->name.c_str());
+			}
+		}
+		log_debug ("\n");
+#endif
+
+#if 1
+		std::vector<struct queue_item>::iterator it5;
+		log_debug ("Hard Queue map (q_hard):\n");
+		for (it5 = q_hard.begin(); it5 != q_hard.end(); it5++) {
+			log_debug ("\t%s => %p\n", (*it5).name.c_str(), (*it5).item);
+			for (unsigned int l = 0; l < (*it5).requires.size(); l++) {
+				log_debug ("\t\t%s\n", (*it5).requires[l].c_str());
+			}
+		}
+		log_debug ("\n");
+#endif
+		if (q_hard.size() == 0)
+			break;
+
+		//XXX iterate backwards so we can erase things?
+		std::vector<struct queue_item>::iterator it6;
+		for (it6 = q_hard.begin(); it6 != q_hard.end(); it6++) {
+			bool found_all_hard_stuff = true;
+			for (unsigned int q = 0; q < (*it6).requires.size(); q++) {
+				std::string req_name = (*it6).requires[q];
+				Container *req = q_easy[req_name];
+				if (req != NULL) {
+					log_debug ("found req\n");
+					(*it6).item->add_child (req);
+					q_easy.erase (q_easy.find(req_name));
+				} else {
+					log_debug ("DIDN'T found req: %s\n", req_name.c_str());
+					found_all_hard_stuff = false;
+				}
+			}
+			if (found_all_hard_stuff) {
+				q_easy["done"] = (*it6).item;
+				//q_hard.erase (it6);	//RAR can't do erase in for loop!
+			}
+		}
+	}
+
+#if 0
+	std::map<std::string,Container*>::iterator it7;
+	log_debug ("Easy Queue map (q_easy):\n");
+	for (it7 = q_easy.begin(); it7 != q_easy.end(); it7++) {
+		Container *c1 = (*it7).second;
+		log_debug ("\t%s => %s\n", (*it7).first.c_str(), c1->name.c_str());
+		for (unsigned int n = 0; n < c1->children.size(); n++) {
+			log_debug ("\t\t%s\n", c1->children[n]->name.c_str());
+		}
+	}
+	log_debug ("\n");
+#endif
+
+#ifdef JUNK
 		bool found_everything = true;
 #if 0
 		for (unsigned int k = 0; k < device_list.size(); k++) {
@@ -532,81 +635,7 @@ void fd_lvs (Container &disks)
 
 		//log_debug ("\n");
 		//log_debug ("vg = %s   lv = %s\n", tmp1.c_str(), vol->name.c_str());
-	}
-
-	//log_debug ("\n");
-
-}
-
-/**
- * fd_stitch - Assemble all the pieces
- */
-void fd_stitch (Container &disks)
-{
-	for (unsigned int p = 0; p < 1; p++) {		// XXX 1 is the complexity of the arrangement of the segments
-#if 1
-		std::map<std::string,Container*>::iterator it4;
-		log_debug ("Easy Queue map (q_easy):\n");
-		for (it4 = q_easy.begin(); it4 != q_easy.end(); it4++) {
-			Container *c1 = (*it4).second;
-			log_debug ("\t%s => %s\n", (*it4).first.c_str(), c1->name.c_str());
-			for (unsigned int n = 0; n < c1->children.size(); n++) {
-				log_debug ("\t\t%s\n", c1->children[n]->name.c_str());
-			}
-		}
-		log_debug ("\n");
-#endif
-
-#if 1
-		std::vector<struct queue_item>::iterator it5;
-		log_debug ("Hard Queue map (q_hard):\n");
-		for (it5 = q_hard.begin(); it5 != q_hard.end(); it5++) {
-			log_debug ("\t%s => %p\n", (*it5).name.c_str(), (*it5).item);
-			for (unsigned int l = 0; l < (*it5).requires.size(); l++) {
-				log_debug ("\t\t%s\n", (*it5).requires[l].c_str());
-			}
-		}
-		log_debug ("\n");
-#endif
-		if (q_hard.size() == 0)
-			break;
-
-		//XXX iterate backwards so we can erase things?
-		std::vector<struct queue_item>::iterator it6;
-		for (it6 = q_hard.begin(); it6 != q_hard.end(); it6++) {
-			bool found_all_hard_stuff = true;
-			for (unsigned int q = 0; q < (*it6).requires.size(); q++) {
-				std::string req_name = (*it6).requires[q];
-				Container *req = q_easy[req_name];
-				if (req != NULL) {
-					log_debug ("found req\n");
-					(*it6).item->add_child (req);
-					q_easy.erase (q_easy.find(req_name));
-				} else {
-					log_debug ("DIDN'T found req: %s\n", req_name.c_str());
-					found_all_hard_stuff = false;
-				}
-			}
-			if (found_all_hard_stuff) {
-				q_easy["done"] = (*it6).item;
-				//q_hard.erase (it6);	//RAR can't do erase in for loop!
-			}
-		}
-	}
-
-#if 0
-	std::map<std::string,Container*>::iterator it7;
-	log_debug ("Easy Queue map (q_easy):\n");
-	for (it7 = q_easy.begin(); it7 != q_easy.end(); it7++) {
-		Container *c1 = (*it7).second;
-		log_debug ("\t%s => %s\n", (*it7).first.c_str(), c1->name.c_str());
-		for (unsigned int n = 0; n < c1->children.size(); n++) {
-			log_debug ("\t\t%s\n", c1->children[n]->name.c_str());
-		}
-	}
-	log_debug ("\n");
-#endif
-
+#endif // JUNK
 #if 0
 	std::vector<struct queue_item>::iterator it8;
 	log_debug ("Hard Queue map (q_hard):\n");
@@ -629,6 +658,7 @@ void fd_stitch (Container &disks)
 #endif
 }
 
+#endif
 /**
  * find_devices
  */
@@ -637,7 +667,9 @@ void VolumeGroup::find_devices (Container &disks)
 	fd_vgs (disks);
 	fd_pvs (disks);
 	fd_lvs (disks);
+#if 0
 	fd_stitch (disks);
+#endif
 }
 
 

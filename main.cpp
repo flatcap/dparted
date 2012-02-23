@@ -132,7 +132,7 @@ int main (int argc, char *argv[])
 	if (probe_queue.size() > 0)
 		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());
 
-#if 1
+#if 0
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = grey ];\n";
