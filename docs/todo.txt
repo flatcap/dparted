@@ -609,3 +609,5 @@ trying reversing the lvm sort field to test the code assembly
 create test case with lots of duplicate names
 duplicate uuids too?
 
+use scanf a LOT more
+
