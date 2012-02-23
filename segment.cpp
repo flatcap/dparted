@@ -72,7 +72,10 @@ std::string Segment::dump_dot (void)
 	output << dump_row ("whole", whole);
 
 	output << dump_table_footer();
-	output << "{ rank=same obj_" << this << " obj_" << whole << " }\n";
+
+	if (whole) //XXX only want to do this for the volume group segment
+		output << "{ rank=same obj_" << this << " obj_" << whole << " }\n";
+
 	output << dump_dot_children();
 
 	return output.str();
