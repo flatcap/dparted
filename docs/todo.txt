@@ -594,3 +594,18 @@ make sure we're using all the lvm fields we ask for
 
 watcher -- crashes when there's no 'vi' window
 
+examine guestfs-browser
+
+shorten uuids
+vim
+	:%s/\([a-z0-9]\{6}\)\(-[a-z0-9]\{4}\)\{5}-[a-z0-9]\{6}/\1 /
+	:%s/\C\(UUID \)                               /\1/
+sed
+	-e 's/\([A-Za-z0-9]\{6\}\)\(-[A-Za-z0-9]\{4\}\)\{5\}-[A-Za-z0-9]\{6\}/\1 /g'
+	-e 's/\(UUID \)                               /\1/g'
+
+trying reversing the lvm sort field to test the code assembly
+
+create test case with lots of duplicate names
+duplicate uuids too?
+
