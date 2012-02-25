@@ -17,6 +17,7 @@
 
 
 #include <stdio.h>
+#include <string.h>
 #include <stdarg.h>
 
 #include "log.h"
@@ -107,6 +108,10 @@ int log_info (const char *format, ...)
 bool log_init (const char *name)
 {
 	file = fopen (name, "a");
+
+	if (strncmp (name, "/dev/pts/", 9) == 0) {
+		fprintf (file, "\ec");			// reset
+	}
 
 	return (file != NULL);
 }
