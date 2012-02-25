@@ -1,8 +1,8 @@
 GPP	= g++
 GCC	= gcc
 
-OUT	= cast compare enum format fs identify ioctl inherit loop lvm map parted \
-	  random readfile size spawn template
+OUT	= cast compare enum format fs identify ioctl inherit list loop lvm map \
+	  parted random readfile size spawn template
 
 CFLAGS	= -g -Wall
 
@@ -37,6 +37,9 @@ ioctl:	ioctl.c
 
 inherit:	inherit.cpp
 	$(GPP) $(CFLAGS) -o $@ inherit.cpp
+
+list:	list.cpp
+	$(GPP) $(CFLAGS) -o $@ list.cpp
 
 loop:	loop.c
 	$(GCC) $(CFLAGS) -o $@ loop.c $(shell pkg-config --cflags --libs libparted devmapper) -lm
