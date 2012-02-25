@@ -614,3 +614,9 @@ use scanf a LOT more
 container::is_valid()
 	do a sanity check on this object and all its children
 
+reset terminal
+echo -en "\ec" > /dev/pts/1
+use it in log_init()
+
+could log different levels to different files / ttys
+
