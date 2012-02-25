@@ -32,6 +32,11 @@ public:
 	virtual std::string dump_dot (void);
 
 protected:
+	//XXX need custom AddChild()
+	// children sum to this.bytes_size
+	// num of children
+	//	stripes - LVM2_STRIPES
+	// num of segments = 0
 
 private:
 

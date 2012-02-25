@@ -611,3 +611,6 @@ duplicate uuids too?
 
 use scanf a LOT more
 
+container::is_valid()
+	do a sanity check on this object and all its children
+

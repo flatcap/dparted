@@ -41,6 +41,7 @@ int execute_command (const std::string &command, std::string &output, std::strin
 	std::string std_out;
 	std::string std_error;
 
+	//XXX log command and output
 	try
 	{
 		std::vector<std::string>argv;

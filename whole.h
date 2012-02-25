@@ -36,6 +36,7 @@ public:
 
 	virtual void add_segment (Segment *seg);
 
+	// seg_count - LVM2_SEG_COUNT
 	std::vector<Segment*> segments;
 
 protected:

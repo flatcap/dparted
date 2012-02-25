@@ -33,6 +33,12 @@ public:
 	virtual std::string dump_dot (void);
 
 protected:
+	//XXX need custom AddChild()
+	// children are this.bytes_size
+	// num of children
+	//	stripes - LVM2_STRIPES
+	// num of segments = 0
+	// Linear *log_file;
 
 private:
 
