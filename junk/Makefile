@@ -2,7 +2,7 @@ GPP	= g++
 GCC	= gcc
 
 OUT	= cast compare enum format fs identify ioctl inherit list loop lvm map \
-	  parted random readfile size spawn template
+	  parted queue random readfile size spawn template
 
 CFLAGS	= -g -Wall
 
@@ -52,6 +52,9 @@ map:	map.cpp
 
 parted:	parted.c
 	$(GCC) $(CFLAGS) -o $@ parted.c $(shell pkg-config --cflags --libs libparted) -lm
+
+queue:	queue.cpp
+	$(GPP) $(CFLAGS) -o $@ queue.cpp
 
 random:	random.cpp
 	$(GPP) $(CFLAGS) -o $@ random.cpp
