@@ -2,7 +2,7 @@ GPP	= g++
 GCC	= gcc
 
 OUT	= cast compare enum format fs identify ioctl inherit list loop lvm map \
-	  parted queue random readfile size spawn template
+	  parted queue random readfile size spawn spawn2 template
 
 CFLAGS	= -g -Wall
 
@@ -67,6 +67,9 @@ size:	size.c
 
 spawn:	spawn.cpp
 	$(GPP) $(CFLAGS) -o $@ spawn.cpp $(shell pkg-config --cflags --libs glibmm-2.4)
+
+spawn2:	spawn2.cpp
+	$(GPP) $(CFLAGS) -o $@ spawn2.cpp
 
 template:	template.cpp
 	$(GPP) $(CFLAGS) -o $@ template.cpp
