@@ -35,15 +35,15 @@ public:
 
 	static void find_devices (Container &list);
 
-	long		pv_count;
-	long		lv_count;
+	long		pv_count;	//XXX put this in seg_count in Whole
+	long		lv_count;	//XXX this matches children.size()
 	std::string	vg_attr;
 	long long	vg_extent_count;
 	long long	vg_free_count;
 	long		vg_seqno;
 
 	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
-	std::vector<std::string> components;
+	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
 
 protected:
 
