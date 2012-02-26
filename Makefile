@@ -35,7 +35,7 @@ ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
 	quiet=silent_
 endif
 
-all:	$(OBJDIR) $(DEPDIR) $(OUT) tags
+all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT) tags
 
 # ----------------------------------------------------------------------------
 
