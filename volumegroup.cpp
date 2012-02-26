@@ -120,6 +120,22 @@ void dump_vol_group_seg (void)
 
 
 /**
+ * fd_probe_children
+ */
+void fd_probe_children (Container *item)
+{
+	// recurse through children and add_probe()
+	if (item->children.size() == 0) {
+		log_info ("PROBE: %s\n", item->name.c_str());
+		queue_add_probe (item);
+	}
+
+	for (unsigned int i = 0; i < item->children.size(); i++) {
+		fd_probe_children (item->children[i]);
+	}
+}
+
+/**
  * fd_vgs - Create the VolumeGroup objects
  */
 void fd_vgs (Container &disks)
@@ -402,7 +418,12 @@ void fd_lvs (Container &disks)
 			}
 
 			v->name = lv_name;			//RAR and other details...
-			//v->parent = vg_lookup[vg_uuid];	//XXX until we know better
+			v->uuid = lv_uuid;
+			v->lv_attr = lv_attr;
+			v->bytes_size = tags["LVM2_LV_SIZE"];
+			v->device = "/dev/mapper/" + vg_name + "-" + lv_name;
+			v->parent_offset = 0;
+			v->parent = vg_lookup[vg_uuid];		//XXX until we know better
 
 			vol_lookup[vol_id] = v;
 		}
@@ -447,7 +468,10 @@ void fd_lvs (Container &disks)
 	//transfer volumes to disks
 	std::map<std::string, Volume*>::iterator it_vol;
 	for (it_vol = vol_lookup.begin(); it_vol != vol_lookup.end(); it_vol++) {
-		disks.add_child ((*it_vol).second);
+		Container *c = (*it_vol).second;
+		//log_debug ("volume %s (%s)\n", c->name.c_str(), c->parent->name.c_str());
+		c->parent->add_child (c);
+		fd_probe_children (c);
 	}
 }
 

@@ -83,7 +83,7 @@ int main (int argc, char *argv[])
 	Container disks;
 	Container *item = NULL;
 
-	log_init ("/dev/pts/1");
+	log_init ("/dev/pts/2");
 
 	disks.name = "container";	//XXX dummy
 
@@ -103,7 +103,7 @@ int main (int argc, char *argv[])
 		return 1;
 
 	while ((item = probe_queue.front())) {
-#if 0
+#if 1
 		log_debug ("queued item: '%s'\n", item->name.c_str());
 		std::string s1 = get_size (item->parent_offset);
 		std::string s2 = get_size (item->bytes_size);
@@ -128,6 +128,31 @@ int main (int argc, char *argv[])
 	}
 
 	VolumeGroup::find_devices (disks);
+
+	while ((item = probe_queue.front())) {
+#if 1
+		log_debug ("queued item: '%s'\n", item->name.c_str());
+		std::string s1 = get_size (item->parent_offset);
+		std::string s2 = get_size (item->bytes_size);
+		log_debug ("\tdevice     = %s\n",        item->device.c_str());
+		log_debug ("\toffset     = %lld (%s)\n", item->parent_offset, s1.c_str());
+		log_debug ("\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
+		log_debug ("\n");
+#endif
+		probe_queue.pop();
+
+		item->read_data (0, bufsize, buffer);
+
+		if (Filesystem::probe (item, buffer, bufsize)) {
+			continue;
+		}
+
+		if (Table::probe (item, buffer, bufsize)) {
+			continue;
+		}
+
+		//empty?
+	}
 
 	if (probe_queue.size() > 0)
 		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());

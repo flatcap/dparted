@@ -105,3 +105,16 @@ std::string Volume::dump_dot (void)
 	return output.str();
 }
 
+
+/**
+ * read_data
+ */
+int Volume::read_data (long long offset, long long size, unsigned char *buffer)
+{
+	if (fd < 0) {
+		open_device();
+	}
+
+	return Whole::read_data (offset, size, buffer);
+}
+

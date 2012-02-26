@@ -37,6 +37,7 @@ public:
 	long		kernel_major;
 	long		kernel_minor;
 
+	virtual int read_data (long long offset, long long size, unsigned char *buffer);
 protected:
 
 private:

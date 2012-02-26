@@ -192,6 +192,7 @@ unsigned int Loop::find_devices (Container &list)
  */
 std::string Loop::dump_dot (void)
 {
+	return ""; //RAR TEMPORARY
 	std::ostringstream output;
 
 	output << dump_table_header ("Loop", "#00ff88");

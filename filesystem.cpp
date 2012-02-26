@@ -167,7 +167,7 @@ bool Filesystem::probe (Container *parent, unsigned char *buffer, int bufsize)
 		name = "xfs";
 	}
 
-	//log_debug ("NAME = %s\n", name.c_str());
+	log_debug ("NAME = %s\n", name.c_str());
 	if (!name.empty()) {
 		f = new Filesystem;
 		f->name = name;

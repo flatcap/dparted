@@ -548,7 +548,7 @@ int Container::open_device (void)
 		log_error ("failed to open device %s\n", device.c_str());
 	}
 
-	//log_info ("OPEN %s = %d\n", device.c_str(), fd);
+	log_info ("OPEN %s = %d\n", device.c_str(), fd);
 	return fd;
 }
 
