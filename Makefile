@@ -67,11 +67,11 @@ tags:	$(SRC) $(HDR)
 # 	stop compilation
 
 quiet_cmd_CC	= CC	$<
-      cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@;													\
+      cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@ && (												\
 		  $(CC) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;							\
 		  cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp;											\
 		  sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d;		\
-		  rm -f $(DEPDIR)/$*.d.tmp
+		  rm -f $(DEPDIR)/$*.d.tmp)
 
 $(OBJDIR)/%.o: %.cpp
 	$(call cmd,CC)
