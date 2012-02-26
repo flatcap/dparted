@@ -623,3 +623,5 @@ could log different levels to different files / ttys
 LOG_ENTER macro that references __FUNCTION__
 enables per function logging!
 
+mmap example for read/write
+
