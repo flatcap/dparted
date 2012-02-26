@@ -60,6 +60,10 @@ int execute_command (const std::string &command, std::string &output, std::strin
 		 return -1;
 	}
 
+	if (!error.empty() {
+		log_error ("command error: %s\n", std_error.c_str());
+	}
+
 	output = std_out;
 	error = std_error;
 
