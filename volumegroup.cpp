@@ -126,7 +126,7 @@ void fd_probe_children (Container *item)
 {
 	// recurse through children and add_probe()
 	if (item->children.size() == 0) {
-		log_info ("PROBE: %s\n", item->name.c_str());
+		//log_info ("PROBE: %s\n", item->name.c_str());
 		queue_add_probe (item);
 	}
 
@@ -179,7 +179,7 @@ void fd_vgs (Container &disks)
 		if (vg == NULL) {
 			vg = new VolumeGroup;
 			vg->parent = &disks;
-			vg->device = "/dev/dm-0"; //RAR what?
+			//vg->device = "/dev/dm-0"; //RAR what?
 			// VolumeGroup doesn't have a dedicated device, so it would have to delegate to the vg segment
 
 			vg->name		= tags["LVM2_VG_NAME"];

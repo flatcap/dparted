@@ -157,6 +157,7 @@ std::string Container::dump_dot (void)
 	output << dump_row ("name",          name);
 	output << dump_row ("uuid",          uuid_short); //RAR temp
 	output << dump_row ("device",        device);
+	output << dump_row ("file desc",     fd);
 	output << dump_row ("parent_offset", parent_offset);
 	//output << dump_row ("block_size",    block_size);
 	output << dump_row ("bytes_size",    bytes_size);
@@ -535,20 +536,19 @@ int Container::open_device (void)
 	if (fd >= 0)
 		return fd;
 
-	if (parent)
-		fd = parent->open_device();
-	if (fd >= 0)
+	if (device.empty()) {
+		if (parent) {
+			fd = parent->open_device();
+		}
 		return fd;
-
-	if (device.empty())
-		return -1;
+	}
 
 	fd = open (device.c_str(), O_RDONLY);
 	if (fd < 0) {
 		log_error ("failed to open device %s\n", device.c_str());
 	}
 
-	log_info ("OPEN %s = %d\n", device.c_str(), fd);
+	//log_info ("OPEN %s = %d\n", device.c_str(), fd);
 	return fd;
 }
 
@@ -589,7 +589,7 @@ int Container::read_data (long long offset, long long size, unsigned char *buffe
 
 	bytes = read (fd, buffer, size);
 	std::string s = get_size (current);
-	//log_info ("READ: device %s, offset %lld (%s), size %lld = %lld\n", device.c_str(), current, s.c_str(), size, bytes);
+	//log_info ("READ: device %s (%d), offset %lld (%s), size %lld = %lld\n", device.c_str(), fd, current, s.c_str(), size, bytes);
 
 	return bytes;
 }

@@ -167,12 +167,12 @@ bool Filesystem::probe (Container *parent, unsigned char *buffer, int bufsize)
 		name = "xfs";
 	}
 
-	log_debug ("NAME = %s\n", name.c_str());
+	//log_debug ("NAME = %s\n", name.c_str());
 	if (!name.empty()) {
 		f = new Filesystem;
 		f->name = name;
-		f->device = parent->device;
-		f->parent_offset = 0;	//XXX was parent->parent_offset;
+		//f->device = parent->device;
+		f->parent_offset = 0;
 		f->bytes_size = parent->bytes_size;
 		if (name == "ext2") {
 			long long bfree = f->ext2_get_usage();

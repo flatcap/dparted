@@ -111,6 +111,8 @@ std::string Volume::dump_dot (void)
  */
 int Volume::read_data (long long offset, long long size, unsigned char *buffer)
 {
+	//log_error ("%s\n", __PRETTY_FUNCTION__);
+	//log_error ("%s - %s\n", name.c_str(), device.c_str());
 	if (fd < 0) {
 		open_device();
 	}
