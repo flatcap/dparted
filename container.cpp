@@ -40,7 +40,7 @@ Container::Container (void) :
 	bytes_size (0),
 	bytes_used (0),
 	parent (NULL),
-	fd (-1)
+	fd (NULL)
 {
 	type = "container";
 }
@@ -54,8 +54,8 @@ Container::~Container()
 		delete *i;
 	}
 
-	if (fd >= 0) {
-		close (fd);
+	if (fd) {
+		fclose (fd);
 	}
 }
 
@@ -530,10 +530,10 @@ Container * Container::find_name (const std::string &name)
 /**
  * open_device
  */
-int Container::open_device (void)
+FILE * Container::open_device (void)
 {
 	// flags? ro, rw
-	if (fd >= 0)
+	if (fd)
 		return fd;
 
 	if (device.empty()) {
@@ -543,12 +543,12 @@ int Container::open_device (void)
 		return fd;
 	}
 
-	fd = open (device.c_str(), O_RDONLY | O_CLOEXEC);
-	if (fd < 0) {
+	fd = fopen (device.c_str(), "re");	// read, close on exec
+	if (fd == NULL) {
 		log_error ("failed to open device %s\n", device.c_str());
 	}
 
-	//log_info ("OPEN %s = %d\n", device.c_str(), fd);
+	//log_info ("OPEN %s = %p\n", device.c_str(), fd);
 	return fd;
 }
 
@@ -564,7 +564,7 @@ int Container::read_data (long long offset, long long size, unsigned char *buffe
 	if (!buffer)
 		return -1;
 
-	if (fd < 0) {
+	if (fd == NULL) {
 		if (parent) {
 			return parent->read_data (offset + parent_offset, size, buffer);
 		} else {
@@ -573,13 +573,13 @@ int Container::read_data (long long offset, long long size, unsigned char *buffe
 	}
 
 	if (offset >= 0) {
-		current = lseek (fd, offset, SEEK_SET);
+		current = fseek (fd, offset, SEEK_SET);
 	} else {
-		current = lseek (fd, 0, SEEK_CUR);
+		current = fseek (fd, 0, SEEK_CUR);
 	}
 
 	if (current < 0) {
-		log_error ("seek to %lld failed on %s (%d)\n", offset, device.c_str(), fd);
+		log_error ("seek to %lld failed on %s (%p)\n", offset, device.c_str(), fd);
 		perror ("seek");
 		return 1;
 	}
@@ -587,9 +587,9 @@ int Container::read_data (long long offset, long long size, unsigned char *buffe
 	if ((current + size) > bytes_size)
 		return -1;
 
-	bytes = read (fd, buffer, size);
+	bytes = fread (buffer, size, 1, fd);
 	std::string s = get_size (current);
-	//log_info ("READ: device %s (%d), offset %lld (%s), size %lld = %lld\n", device.c_str(), fd, current, s.c_str(), size, bytes);
+	//log_info ("READ: device %s (%p), offset %lld (%s), size %lld = %lld\n", device.c_str(), fd, current, s.c_str(), size, bytes);
 
 	return bytes;
 }

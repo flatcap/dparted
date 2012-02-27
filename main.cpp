@@ -81,7 +81,7 @@ int main (int argc, char *argv[])
 	Container disks;
 	Container *item = NULL;
 
-	log_init ("/dev/pts/2");
+	log_init ("/dev/stderr");
 
 	disks.name = "container";	//XXX dummy
 
