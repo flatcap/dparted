@@ -629,3 +629,7 @@ remove/separate junk dir using git filter
 
 copy lvm code to check for open file descriptors on exit?
 
+change open -> fopen
+
+container.h need forward def for FILE*
+
