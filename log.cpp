@@ -108,6 +108,7 @@ int log_info (const char *format, ...)
 bool log_init (const char *name)
 {
 	file = fopen (name, "a");
+	//log_info ("log init: %s\n", name);
 
 	if (strncmp (name, "/dev/pts/", 9) == 0) {
 		fprintf (file, "\ec");			// reset

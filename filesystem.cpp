@@ -53,7 +53,6 @@ long long Filesystem::ext2_get_usage (void)
 	std::string dev = device;
 	std::string command;
 	std::string output;
-	std::string error;
 	long block_size = 512;
 	long long bfree = 0;
 
@@ -61,9 +60,9 @@ long long Filesystem::ext2_get_usage (void)
 		//log_debug ("create loop device\n");
 		build << "losetup /dev/loop16 " << device << " -o " << parent_offset;
 		command = build.str();
-		execute_command (command, output, error);
+		execute_command (command, output);
 		//log_debug ("command = %s\n", command.c_str());
-		//execute_command ("losetup /dev/loop16 ", output, error);
+		//execute_command ("losetup /dev/loop16 ", output);
 		dev = "/dev/loop16";
 	}
 
@@ -71,7 +70,7 @@ long long Filesystem::ext2_get_usage (void)
 	command = "tune2fs -l " + dev;
 	//log_debug ("command = %s\n", command.c_str());
 
-	execute_command (command, output, error);
+	execute_command (command, output);
 	//log_debug ("result = \n%s\n", output.c_str());
 
 	//interpret results
@@ -133,7 +132,7 @@ long long Filesystem::ext2_get_usage (void)
 
 	if (parent_offset != 0) {
 		command = "losetup -d /dev/loop16";
-		execute_command (command, output, error);
+		execute_command (command, output);
 		//log_debug ("dismantle loop device\n");
 		//log_debug ("command = %s\n", command.c_str());
 		//log_debug ("\n");
@@ -206,7 +205,7 @@ void Filesystem::dump (int indent /* = 0 */)
 		command = "dumpe2fs -h " + parent->device;
 		//command += '0' + part->num;
 		//log_debug ("device = %s, command = %s\n", parent->device.c_str(), command.c_str());
-		execute_command (command, output, error);
+		execute_command (command, output);
 
 		//log_debug ("command = %s\n", command.c_str());
 		//log_debug ("%s\n", output.c_str());
@@ -254,7 +253,7 @@ void Filesystem::dump (int indent /* = 0 */)
 		// Block size 1024?
 
 		command = "cat /proc/swaps";
-		execute_command (command, output, error);
+		execute_command (command, output);
 
 		index = output.find ("/dev/sdc1") + 10; //strlen ("/dev/sdc1")
 		bytes_size = 1024 * extract_number (output, index);
@@ -264,7 +263,7 @@ void Filesystem::dump (int indent /* = 0 */)
 		//command = "ntfsresize -P -i -f -v " + part->device;
 		command = "df -B1 " + parent->device;
 		//RAR command += '0' + parent->num;
-		execute_command (command, output, error);
+		execute_command (command, output);
 
 		index = output.find ("/dev/sda7") + 10; //strlen ("/dev/sda7")
 		bytes_size = extract_number (output, index);
@@ -281,7 +280,7 @@ void Filesystem::dump (int indent /* = 0 */)
 	} else if (name == "fat32") {
 		command = "dosfsck -n -v " + parent->device;
 		//RAR command += '0' + parent->num;
-		execute_command (command, output, error);
+		execute_command (command, output);
 
 		index = output.find ("bytes per cluster") - 12;
 		block_size = extract_number (output, index);
@@ -315,7 +314,7 @@ void Filesystem::dump (int indent /* = 0 */)
 
 #endif
 
-	//result = execute_command (command, output, error);
+	//result = execute_command (command, output);
 
 #if 0
 	std::string size = get_size (bytes_size);

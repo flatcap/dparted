@@ -20,8 +20,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include <parted/parted.h>
-#include <glibmm/spawn.h>
+#include <stdarg.h>
 
 #include <vector>
 #include <string>
@@ -35,39 +34,62 @@
 /**
  * execute_command
  */
-int execute_command (const std::string &command, std::string &output, std::string &error)
+unsigned int execute_command (const std::string &command, std::vector<std::string> &output)
 {
-	int exit_status = -1;
-	std::string std_out;
-	std::string std_error;
+	FILE *file = NULL;
+	char *ptr = NULL;
+	size_t n = 0;
+	int count = 0;
+
+	output.clear();
 
 	//XXX log command and output
-	try
-	{
-		std::vector<std::string>argv;
-		argv.push_back ("sh");
-		argv.push_back ("-c");
-		argv.push_back (command);
-		//argv.push_back ("sudo " + command);
 
-		//Spawn command inheriting the parent's environment
-		Glib::spawn_sync (".", argv, Glib::SPAWN_SEARCH_PATH, sigc::slot<void>(), &std_out, &std_error, &exit_status);
-	}
-	catch  (Glib::Exception & e)
-	{
-		 error = e.what();
-
-		 return -1;
+	//log_debug ("running command: %s\n", command.c_str());
+	// Execute command and save its output to stdout
+	file = popen (command.c_str(), "r");
+	if (file == NULL) {
+		log_error ("popen failed");	//XXX log_perror
+		return -1;
 	}
 
-	if (!error.empty() {
-		log_error ("command error: %s\n", std_error.c_str());
+	do {
+		ptr = NULL;
+		n = 0;
+		count = getline (&ptr, &n, file);
+		if (count > 0) {
+			if (ptr[count-1] == '\n')
+				ptr[count-1] = 0;
+			output.push_back (ptr);
+		}
+		free (ptr);
+	} while (count > 0);
+
+	if (pclose (file) == -1) {
+		log_error ("pclose failed");	//XXX log_perror
+		return -1;
 	}
 
-	output = std_out;
-	error = std_error;
+	return output.size();
+}
 
-	return exit_status;
+/**
+ * execute_command
+ */
+unsigned int execute_command (const std::string &command, std::string &output)
+{
+	std::vector<std::string> v;
+	std::vector<std::string>::iterator it;
+	int count;
+
+	count = execute_command (command, v);
+
+	output.clear();
+	for (it = v.begin(); it != v.end(); it++) {
+		output += (*it);
+	}
+
+	return count;
 }
 
 /**

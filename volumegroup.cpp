@@ -141,9 +141,8 @@ void fd_probe_children (Container *item)
 void fd_vgs (Container &disks)
 {
 	std::string command;
-	std::string output;
+	std::vector<std::string> output;
 	std::string error;
-	std::vector<std::string> lines;
 	std::map<std::string,StringNum> tags;
 	VolumeGroup *vg = NULL;
 	unsigned int i;
@@ -164,13 +163,10 @@ void fd_vgs (Container &disks)
 	 */
 
 	command = "vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno,pv_name";
-	execute_command (command, output, error);
+	execute_command (command, output);
 
-	lines.clear();
-	explode ("\n", output, lines);
-
-	for (i = 0; i < lines.size(); i++) {
-		parse_tagged_line ((lines[i]), "\t", tags);
+	for (i = 0; i < output.size(); i++) {
+		parse_tagged_line ((output[i]), "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		std::string pv_name = tags["LVM2_PV_NAME"];
@@ -257,10 +253,9 @@ void fd_vgs (Container &disks)
 void fd_pvs (Container &disks)
 {
 	std::string command;
-	std::string output;
+	std::vector<std::string> output;
 	std::string error;
 	unsigned int i;
-	std::vector<std::string> lines;
 	std::map<std::string,StringNum> tags;
 
 	/*
@@ -276,13 +271,10 @@ void fd_pvs (Container &disks)
 	 */
 
 	command = "pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,lv_name,lv_uuid,lv_attr,vg_uuid,vg_name,segtype,pvseg_start,pvseg_size";
-	execute_command (command, output, error);
+	execute_command (command, output);
 
-	lines.clear();
-	explode ("\n", output, lines);
-
-	for (i = 0; i < lines.size(); i++) {
-		parse_tagged_line ((lines[i]), "\t", tags);
+	for (i = 0; i < output.size(); i++) {
+		parse_tagged_line ((output[i]), "\t", tags);
 
 		std::string lv_type = tags["LVM2_SEGTYPE"];
 		if (lv_type == "free")				//XXX could process this and add it to the VGSeg's empty list
@@ -343,10 +335,9 @@ void fd_pvs (Container &disks)
 void fd_lvs (Container &disks)
 {
 	std::string command;
-	std::string output;
+	std::vector<std::string> output;
 	std::string error;
 	unsigned int i;
-	std::vector<std::string> lines;
 	std::map<std::string,StringNum> tags;
 
 	/*
@@ -370,14 +361,11 @@ void fd_lvs (Container &disks)
 	 */
 
 	command = "lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options vg_uuid,vg_name,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start_pe,seg_pe_ranges,devices";
-	execute_command (command, output, error);
-
-	lines.clear();
-	explode ("\n", output, lines);
+	execute_command (command, output);
 
 	//log_debug ("Volumes:\n");
-	for (i = 0; i < lines.size(); i++) {
-		parse_tagged_line ((lines[i]), "\t", tags);
+	for (i = 0; i < output.size(); i++) {
+		parse_tagged_line ((output[i]), "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];	//log_debug ("vg_uuid = %s\n", vg_uuid.c_str());
 		std::string vg_name = tags["LVM2_VG_NAME"];	//log_debug ("vg_name = %s\n", vg_name.c_str());

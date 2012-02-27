@@ -78,15 +78,15 @@ bool Loop::probe (const std::string &name, int fd, struct stat &st, Container &l
  */
 unsigned int Loop::find_devices (Container &list)
 {
-	int retval = -1;
 
 	// /dev/loop0: [0831]:4457032 (/home/flatcap/work/partitions/images/disk0)
 	std::string command = "losetup -a";
-	std::string output;
+	std::vector <std::string> output;
 	std::string error;
+	unsigned int count;
 
-	retval = execute_command (command, output, error);
-	if (retval < 0)
+	count = execute_command (command, output);
+	if (count < 0)
 		return 0;
 
 	//log_debug ("%s\n", output.c_str());
@@ -96,27 +96,25 @@ unsigned int Loop::find_devices (Container &list)
 	int kernel_major = -1;
 	int kernel_minor = -1;
 	long inode;
-	unsigned int count;
 	size_t pos;
-	std::vector<std::string> lines;
 	unsigned int i;
 	std::string part;
 	int scan;
 	int added = 0;
 
-	count = explode ("\n", output, lines);
 	//log_debug ("%d lines\n", count);
 
 	for (i = 0; i < count; i++) {
-		pos = lines[i].find (": [");
+		//log_debug ("line = >>%s<<\n", output[i].c_str());
+		pos = output[i].find (": [");
 		if (pos == std::string::npos) {
 			log_debug ("corrupt line1\n");
 			continue;
 		}
-		device = lines[i].substr (0, pos);
+		device = output[i].substr (0, pos);
 		//log_debug ("%s\n", device.c_str());
 
-		part = lines[i].substr (pos + 3, 4);
+		part = output[i].substr (pos + 3, 4);
 		//log_debug ("%s\n", part.c_str());
 		scan = sscanf (part.c_str(), "%02x%02x", &kernel_major, &kernel_minor);
 		if (scan != 2) {
@@ -126,7 +124,7 @@ unsigned int Loop::find_devices (Container &list)
 		//log_debug ("\tmajor: %d\n", kernel_major);
 		//log_debug ("\tminor: %d\n", kernel_minor);
 
-		part = lines[i].substr (pos + 9);
+		part = output[i].substr (pos + 9);
 
 		pos = part.find (" (");
 		if (pos == std::string::npos) {
@@ -144,13 +142,13 @@ unsigned int Loop::find_devices (Container &list)
 		}
 		//log_debug ("\tinode: %ld\n", inode);
 
-		pos = lines[i].find (" (");
+		pos = output[i].find (" (");
 		if (pos == std::string::npos) {
 			log_debug ("corrupt line3\n");
 			continue;
 		}
 
-		part = lines[i].substr (pos + 2);
+		part = output[i].substr (pos + 2);
 		//log_debug ("part = %s\n", part.c_str());
 
 		pos = part.length();

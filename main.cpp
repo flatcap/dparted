@@ -58,17 +58,15 @@ void queue_add_probe (Container *item)
 unsigned int mounts_get_list (Container &mounts)
 {
 	std::string command;
-	std::string output;
+	std::vector<std::string> output;
 	std::string error;
-	std::vector<std::string> lines;
 	unsigned int i;
 
 	command = "grep '^/dev' /proc/mounts";
-	execute_command (command, output, error);
-	explode ("\n", output, lines);
+	execute_command (command, output);
 
-	for (i = 0; i < lines.size(); i++) {
-		std::string line = lines[i];
+	for (i = 0; i < output.size(); i++) {
+		std::string line = output[i];
 		log_debug ("line%d:\n%s\n\n", i, line.c_str());
 	}
 
@@ -154,8 +152,9 @@ int main (int argc, char *argv[])
 		//empty?
 	}
 
-	if (probe_queue.size() > 0)
+	if (probe_queue.size() > 0) {
 		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());
+	}
 
 #if 1
 	std::string dot;

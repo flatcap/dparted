@@ -125,15 +125,14 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
  */
 unsigned int Disk::find_devices (Container &list)
 {
-	int retval = -1;
-
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
 	std::string command = "lsblk -b -P -e 7";
-	std::string output;
+	std::vector<std::string> output;
 	std::string error;
+	unsigned int count;
 
-	retval = execute_command (command, output, error);
-	if (retval < 0)
+	count = execute_command (command, output);
+	if (count < 0)
 		return 0;
 
 	//log_debug ("%s\n", output.c_str());
@@ -144,19 +143,16 @@ unsigned int Disk::find_devices (Container &list)
 	int kernel_major = -1;
 	int kernel_minor = -1;
 	long long size;
-	unsigned int count;
-	std::vector<std::string> lines;
 	unsigned int i;
 	std::string part;
 	int scan;
 	std::map<std::string,StringNum> tags;
 	int added = 0;
 
-	count = explode ("\n", output, lines);
 	//log_debug ("%d lines\n", count);
 
 	for (i = 0; i < count; i++) {
-		parse_tagged_line ((lines[i]), " ", tags);
+		parse_tagged_line ((output[i]), " ", tags);
 
 		type = tags["TYPE"];
 		if (type != "disk")

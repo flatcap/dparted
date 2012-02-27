@@ -20,8 +20,6 @@ OBJDIR	= .obj
 OUT	= main
 
 CFLAGS	= -g -Wall
-CFLAGS  += `pkg-config glibmm-2.4 lvm2app --cflags`
-LDFLAGS += `pkg-config glibmm-2.4 lvm2app --libs`
 
 V	?= 0
 
