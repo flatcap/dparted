@@ -543,7 +543,7 @@ int Container::open_device (void)
 		return fd;
 	}
 
-	fd = open (device.c_str(), O_RDONLY);
+	fd = open (device.c_str(), O_RDONLY | O_CLOEXEC);
 	if (fd < 0) {
 		log_error ("failed to open device %s\n", device.c_str());
 	}

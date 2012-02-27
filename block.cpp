@@ -64,7 +64,7 @@ bool Block::probe (const std::string &name, Container &list)
 	long long file_size_in_bytes = 0;
 	int fd = -1;
 
-	fd = open (name.c_str(), O_RDONLY);
+	fd = open (name.c_str(), O_RDONLY | O_CLOEXEC);
 	if (fd < 0) {
 		log_debug ("can't open file %s\n", name.c_str());
 		return false;

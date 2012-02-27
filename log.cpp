@@ -107,7 +107,7 @@ int log_info (const char *format, ...)
  */
 bool log_init (const char *name)
 {
-	file = fopen (name, "a");
+	file = fopen (name, "ae");	// append, close on exec
 	//log_info ("log init: %s\n", name);
 
 	if (strncmp (name, "/dev/pts/", 9) == 0) {

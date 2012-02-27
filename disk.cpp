@@ -110,7 +110,7 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 
 #if 0
 	int fd;
-	fd = open (parent->device.c_str(), O_RDONLY);
+	fd = open (parent->device.c_str(), O_RDONLY | O_CLOEXEC);
 	struct hd_geometry geometry;
 
 	ioctl(fd, HDIO_GETGEO, &geometry);
