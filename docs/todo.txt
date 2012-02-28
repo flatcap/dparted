@@ -633,3 +633,11 @@ change open -> fopen
 
 container.h need forward def for FILE*
 
+read-only
+	command line option
+	preferences option
+	compile-time option
+
+get a list of supported filesystems
+/proc/filesystems
+
