@@ -9,3 +9,7 @@
 
 # generated deps
 /.dep
+
+# other repos
+/junk
+/empty
