@@ -66,6 +66,9 @@ long long Filesystem::ext2_get_usage (void)
 		dev = "/dev/loop16";
 	}
 
+	if (dev.empty())	//XXX shouldn't happen
+		return 0;
+
 	// do something
 	command = "tune2fs -l " + dev;
 	//log_debug ("command = %s\n", command.c_str());
