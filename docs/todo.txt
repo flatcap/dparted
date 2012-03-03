@@ -537,6 +537,7 @@ tooltip showing contents:
 	"Windows 7"
 	"Fedora 16"
 	"Dir1\nDir2\nDir3\n..."
+must be mirrored by a properties menu option (for accessiblility)
 
 flags
 	general container flags
@@ -640,4 +641,25 @@ read-only
 
 get a list of supported filesystems
 /proc/filesystems
+
+define DISABLE_DEPRECATED
+
+expanding treeview rows to highlight current selection
+
+drag'n'drop partition moving
+if you drop a large partition into a smaller space, it will offer to shrink the volume (if that's possible)
+or move things out of the way
+
+determine what to do for single/multiple selections in the treeview
+
+treeview double-click -> infobox
+
+preferences dialog
+tabbed (notebook) of options
+OK, Cancel, Cautious (set defaults for a novice user), Expert (select defaults for an expert user)
+
+for plugins we need to register
+	partition_table
+	filesystem
+	volume manager?
 
