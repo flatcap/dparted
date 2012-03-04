@@ -19,9 +19,9 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-class Container;
+class DPContainer;
 
-void queue_add_probe (Container *item);
+void queue_add_probe (DPContainer *item);
 
 #endif // _MAIN_H_
 

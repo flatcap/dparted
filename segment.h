@@ -25,7 +25,7 @@
 
 class Whole;
 
-class Segment : public Container
+class Segment : public DPContainer
 {
 public:
 	Segment (void);

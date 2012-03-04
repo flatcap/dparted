@@ -61,7 +61,7 @@ Disk::~Disk()
 /**
  * probe
  */
-bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &list)
+bool Disk::probe (const std::string &name, int fd, struct stat &st, DPContainer &list)
 {
 	// for /dev/sda look at
 	//	/sys/block/sda/size
@@ -123,7 +123,7 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, Container &l
 /**
  * find_devices
  */
-unsigned int Disk::find_devices (Container &list)
+unsigned int Disk::find_devices (DPContainer &list)
 {
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
 	std::string command = "lsblk -b -P -e 7";
@@ -304,7 +304,7 @@ unsigned int Disk::get_device_space (std::map<long long, long long> &spaces)
 /**
  * find_device
  */
-Container * Disk::find_device (const std::string &dev)
+DPContainer * Disk::find_device (const std::string &dev)
 {
 	// does it sound like one of my children?  /dev/sdaX, /dev/sdaXX
 	unsigned int dev_len = device.length();

@@ -23,7 +23,7 @@
 
 #include "container.h"
 
-class Partition : public Container
+class Partition : public DPContainer
 {
 public:
 	Partition (void);

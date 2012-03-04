@@ -33,7 +33,7 @@ public:
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
-	static void find_devices (Container &list);
+	static void find_devices (DPContainer &list);
 
 	long		pv_count;	//XXX put this in seg_count in Whole
 	long		lv_count;	//XXX this matches children.size()

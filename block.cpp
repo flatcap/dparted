@@ -56,7 +56,7 @@ Block::~Block()
 /**
  * probe
  */
-bool Block::probe (const std::string &name, Container &list)
+bool Block::probe (const std::string &name, DPContainer &list)
 {
 	struct stat st;
 	int res = -1;

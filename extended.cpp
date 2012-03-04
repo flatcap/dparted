@@ -48,7 +48,7 @@ Extended::~Extended()
 /**
  * probe
  */
-Extended * Extended::probe (Container *parent, long long offset, long long size)
+Extended * Extended::probe (DPContainer *parent, long long offset, long long size)
 {
 	Extended *ext = NULL;
 
@@ -112,7 +112,7 @@ Extended * Extended::probe (Container *parent, long long offset, long long size)
 				log_debug ("\n");
 			}
 #endif
-			Container *c = NULL;
+			DPContainer *c = NULL;
 
 			if (vp[i].type == 0x05) {
 				table_offset = offset + vp[i].start;
@@ -152,7 +152,7 @@ std::string Extended::dump_dot (void)
 
 	// no specfics for now
 
-	output << Container::dump_dot(); //RAR skip a level for now
+	output << DPContainer::dump_dot(); //RAR skip a level for now
 
 	output << dump_table_footer();
 	output << dump_dot_children();

@@ -45,7 +45,7 @@ Table::~Table()
 /**
  * probe
  */
-bool Table::probe (Container *parent, unsigned char *buffer, int bufsize)
+bool Table::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	return (Gpt::probe (parent, buffer, bufsize) ||
 		Msdos::probe (parent, buffer, bufsize));

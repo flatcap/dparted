@@ -148,7 +148,7 @@ long long Filesystem::ext2_get_usage (void)
 /**
  * probe
  */
-bool Filesystem::probe (Container *parent, unsigned char *buffer, int bufsize)
+bool Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	Filesystem *f = NULL;
 	std::string name;
@@ -331,7 +331,7 @@ void Filesystem::dump (int indent /* = 0 */)
 	//ilog_debug (indent+8, "Type: %s\n", type.c_str());
 #endif
 
-	Container::dump (indent);
+	DPContainer::dump (indent);
 }
 
 /**
@@ -349,7 +349,7 @@ void Filesystem::dump_csv (void)
 		bytes_size,
 		bytes_used,
 		bytes_size - bytes_used);
-	Container::dump_csv();
+	DPContainer::dump_csv();
 }
 
 /**
@@ -361,7 +361,7 @@ std::string Filesystem::dump_dot (void)
 
 	output << dump_table_header ("Filesystem", "cyan");
 
-	output << Container::dump_dot();
+	output << DPContainer::dump_dot();
 
 	output << dump_row ("label", label);
 

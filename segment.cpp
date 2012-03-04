@@ -47,7 +47,7 @@ Segment::~Segment()
  */
 void Segment::dump (int indent /* = 0 */)
 {
-	Container::dump (indent);
+	DPContainer::dump (indent);
 }
 
 /**
@@ -55,7 +55,7 @@ void Segment::dump (int indent /* = 0 */)
  */
 void Segment::dump_csv (void)
 {
-	Container::dump_csv();
+	DPContainer::dump_csv();
 }
 
 /**
@@ -67,7 +67,7 @@ std::string Segment::dump_dot (void)
 
 	output << dump_table_header ("Segment", "magenta");
 
-	output << Container::dump_dot();
+	output << DPContainer::dump_dot();
 
 	output << dump_row ("whole", whole);
 

@@ -51,7 +51,7 @@ File::~File()
 /**
  * probe
  */
-bool File::probe (const std::string &name, int fd, struct stat &st, Container &list)
+bool File::probe (const std::string &name, int fd, struct stat &st, DPContainer &list)
 {
 	File *f = NULL;
 

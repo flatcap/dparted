@@ -122,7 +122,7 @@ void dump_vol_group_seg (void)
 /**
  * fd_probe_children
  */
-void fd_probe_children (Container *item)
+void fd_probe_children (DPContainer *item)
 {
 	// recurse through children and add_probe()
 	if (item->children.size() == 0) {
@@ -138,7 +138,7 @@ void fd_probe_children (Container *item)
 /**
  * fd_vgs - Create the VolumeGroup objects
  */
-void fd_vgs (Container &disks)
+void fd_vgs (DPContainer &disks)
 {
 	std::string command;
 	std::vector<std::string> output;
@@ -198,7 +198,7 @@ void fd_vgs (Container &disks)
 		//std::string seg_id = vg->name + ":" + pv_name;
 		//log_debug ("\t%s\n", seg_id.c_str());
 
-		Container *cont = disks.find_device (pv_name);
+		DPContainer *cont = disks.find_device (pv_name);
 		//log_debug ("cont for %s = %p\n", pv_name.c_str(), cont);
 
 		Segment *vg_seg = new Segment;
@@ -250,7 +250,7 @@ void fd_vgs (Container &disks)
 /**
  * fd_pvs - Attach all the Segments (VolumeGroup and Volumes)
  */
-void fd_pvs (Container &disks)
+void fd_pvs (DPContainer &disks)
 {
 	std::string command;
 	std::vector<std::string> output;
@@ -332,7 +332,7 @@ void fd_pvs (Container &disks)
 /**
  * fd_lvs - Build the Volumes from the Segments
  */
-void fd_lvs (Container &disks)
+void fd_lvs (DPContainer &disks)
 {
 	std::string command;
 	std::vector<std::string> output;
@@ -456,7 +456,7 @@ void fd_lvs (Container &disks)
 	//transfer volumes to disks
 	std::map<std::string, Volume*>::iterator it_vol;
 	for (it_vol = vol_lookup.begin(); it_vol != vol_lookup.end(); it_vol++) {
-		Container *c = (*it_vol).second;
+		DPContainer *c = (*it_vol).second;
 		//log_debug ("volume %s (%s)\n", c->name.c_str(), c->parent->name.c_str());
 		c->parent->add_child (c);
 		fd_probe_children (c);
@@ -466,7 +466,7 @@ void fd_lvs (Container &disks)
 /**
  * find_devices
  */
-void VolumeGroup::find_devices (Container &disks)
+void VolumeGroup::find_devices (DPContainer &disks)
 {
 	fd_vgs (disks);
 	fd_pvs (disks);

@@ -23,13 +23,13 @@
 
 #include "container.h"
 
-class Filesystem : public Container
+class Filesystem : public DPContainer
 {
 public:
 	Filesystem (void);
 	virtual ~Filesystem();
 
-	static bool probe (Container *parent, unsigned char *buffer, int bufsize);
+	static bool probe (DPContainer *parent, unsigned char *buffer, int bufsize);
 
 	virtual void dump (int indent = 0);
 	virtual void dump_csv (void);

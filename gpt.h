@@ -31,7 +31,7 @@ public:
 
 	virtual std::string dump_dot (void);
 
-	static bool probe (Container *parent, unsigned char *buffer, int bufsize);
+	static bool probe (DPContainer *parent, unsigned char *buffer, int bufsize);
 
 protected:
 

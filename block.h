@@ -23,13 +23,13 @@
 
 #include "container.h"
 
-class Block : public Container
+class Block : public DPContainer
 {
 public:
 	Block (void);
 	virtual ~Block();
 
-	static bool probe (const std::string &name, Container &list);
+	static bool probe (const std::string &name, DPContainer &list);
 
 protected:
 	//virtual bool probe (const std::string &name, const struct stat &st);

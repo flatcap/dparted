@@ -30,11 +30,11 @@ enum ContainerType
 	CONT_RESERVED		// Empty space that isn't usable
 };
 
-class Container
+class DPContainer
 {
 public:
-	Container (void);
-	virtual ~Container();
+	DPContainer (void);
+	virtual ~DPContainer();
 
 	virtual void dump (int indent = 0);
 	virtual void dump2 (void);
@@ -42,9 +42,9 @@ public:
 	virtual std::string dump_dot (void);
 	virtual std::string dump_dot_children (void);
 
-	virtual void add_child    (Container *child);
-	virtual void delete_child (Container *child);
-	virtual void move_child   (Container *child, long long offset, long long size);
+	virtual void add_child    (DPContainer *child);
+	virtual void delete_child (DPContainer *child);
+	virtual void move_child   (DPContainer *child, long long offset, long long size);
 
 	virtual long          get_block_size (void);
 	virtual std::string   get_device_name (void);
@@ -55,9 +55,9 @@ public:
 	virtual long long get_size_used (void);
 	virtual long long get_size_free (void);
 
-	virtual Container * find_device (const std::string &dev);
-	virtual Container * find_uuid   (const std::string &uuid);
-	virtual Container * find_name   (const std::string &name);
+	virtual DPContainer * find_device (const std::string &dev);
+	virtual DPContainer * find_uuid   (const std::string &uuid);
+	virtual DPContainer * find_name   (const std::string &name);
 
 	virtual FILE * open_device (void);
 	virtual int read_data (long long offset, long long size, unsigned char *buffer);
@@ -76,8 +76,8 @@ public:
 	long long	 bytes_size;
 	long long	 bytes_used;
 
-	Container	*parent;
-	std::vector<Container*> children;
+	DPContainer	*parent;
+	std::vector<DPContainer*> children;
 
 protected:
 	std::string dump_row (const char *name, long long value);

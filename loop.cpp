@@ -51,7 +51,7 @@ Loop::~Loop()
 /**
  * probe
  */
-bool Loop::probe (const std::string &name, int fd, struct stat &st, Container &list)
+bool Loop::probe (const std::string &name, int fd, struct stat &st, DPContainer &list)
 {
 	Loop *l = NULL;
 	long long seek;
@@ -76,7 +76,7 @@ bool Loop::probe (const std::string &name, int fd, struct stat &st, Container &l
 /**
  * find_devices
  */
-unsigned int Loop::find_devices (Container &list)
+unsigned int Loop::find_devices (DPContainer &list)
 {
 
 	// /dev/loop0: [0831]:4457032 (/home/flatcap/work/partitions/images/disk0)

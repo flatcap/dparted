@@ -31,9 +31,9 @@
 #include "log.h"
 
 /**
- * Container
+ * DPContainer
  */
-Container::Container (void) :
+DPContainer::DPContainer (void) :
 	cont_type (CONT_NORMAL),
 	parent_offset (0),
 	block_size (0),
@@ -46,11 +46,11 @@ Container::Container (void) :
 }
 
 /**
- * ~Container
+ * ~DPContainer
  */
-Container::~Container()
+DPContainer::~DPContainer()
 {
-	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
 		delete *i;
 	}
 
@@ -63,9 +63,9 @@ Container::~Container()
 /**
  * dump
  */
-void Container::dump (int indent /* = 0 */)
+void DPContainer::dump (int indent /* = 0 */)
 {
-	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
 		(*i)->dump (indent + 8);
 	}
 }
@@ -73,7 +73,7 @@ void Container::dump (int indent /* = 0 */)
 /**
  * dump2
  */
-void Container::dump2 (void)
+void DPContainer::dump2 (void)
 {
 	std::string d;
 	std::string f;
@@ -82,7 +82,7 @@ void Container::dump2 (void)
 	std::string t;
 	std::string u;
 
-	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
 		s = get_size ((*i)->bytes_size);
 		u = get_size ((*i)->bytes_used);
 		f = get_size ((*i)->bytes_size - (*i)->bytes_used);
@@ -131,9 +131,9 @@ void Container::dump2 (void)
 /**
  * dump_csv
  */
-void Container::dump_csv (void)
+void DPContainer::dump_csv (void)
 {
-	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
 		(*i)->dump_csv();
 	}
 }
@@ -141,7 +141,7 @@ void Container::dump_csv (void)
 /**
  * dump_dot
  */
-std::string Container::dump_dot (void)
+std::string DPContainer::dump_dot (void)
 {
 	std::ostringstream output;
 	std::string uuid_short = uuid;
@@ -151,7 +151,7 @@ std::string Container::dump_dot (void)
 		uuid_short = uuid.substr (0, 6) + "...";
 	}
 
-	//output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>Container</b></font></td></tr>\n";
+	//output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>DPContainer</b></font></td></tr>\n";
 
 	//output << dump_row ("type",          type);
 	output << dump_row ("name",          name);
@@ -168,7 +168,7 @@ std::string Container::dump_dot (void)
 #if 0
 	if (count > 0) {
 		output << dump_row ("children",      count);
-		for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+		for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
 			output << dump_row ("", (*i));
 		}
 	}
@@ -180,12 +180,12 @@ std::string Container::dump_dot (void)
 /**
  * dump_dot_children
  */
-std::string Container::dump_dot_children (void)
+std::string DPContainer::dump_dot_children (void)
 {
 	std::ostringstream s;
 
 	// now iterate through all the children
-	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
 		s << "\n";
 		s << (*i)->dump_dot();
 		s << "obj_" << this << " -> obj_" << (*i) << ";\n";
@@ -199,7 +199,7 @@ std::string Container::dump_dot_children (void)
 /**
  * dump_row
  */
-std::string Container::dump_row (const char *name, long long value)
+std::string DPContainer::dump_row (const char *name, long long value)
 {
 	std::ostringstream s;
 	std::string str = get_size (value);
@@ -220,7 +220,7 @@ std::string Container::dump_row (const char *name, long long value)
 /**
  * dump_row
  */
-std::string Container::dump_row (const char *name, long value)
+std::string DPContainer::dump_row (const char *name, long value)
 {
 	std::ostringstream s;
 
@@ -236,7 +236,7 @@ std::string Container::dump_row (const char *name, long value)
 /**
  * dump_row
  */
-std::string Container::dump_row (const char *name, int value)
+std::string DPContainer::dump_row (const char *name, int value)
 {
 	std::ostringstream s;
 
@@ -252,7 +252,7 @@ std::string Container::dump_row (const char *name, int value)
 /**
  * dump_row
  */
-std::string Container::dump_row (const char *name, unsigned int value)
+std::string DPContainer::dump_row (const char *name, unsigned int value)
 {
 	std::ostringstream s;
 
@@ -268,7 +268,7 @@ std::string Container::dump_row (const char *name, unsigned int value)
 /**
  * dump_row
  */
-std::string Container::dump_row (const char *name, bool value)
+std::string DPContainer::dump_row (const char *name, bool value)
 {
 	std::ostringstream s;
 
@@ -284,7 +284,7 @@ std::string Container::dump_row (const char *name, bool value)
 /**
  * dump_row
  */
-std::string Container::dump_row (const char *name, std::string &value)
+std::string DPContainer::dump_row (const char *name, std::string &value)
 {
 	std::ostringstream s;
 
@@ -300,7 +300,7 @@ std::string Container::dump_row (const char *name, std::string &value)
 /**
  * dump_row
  */
-std::string Container::dump_row (const char *name, void *value)
+std::string DPContainer::dump_row (const char *name, void *value)
 {
 	std::ostringstream s;
 
@@ -317,7 +317,7 @@ std::string Container::dump_row (const char *name, void *value)
 /**
  * dump_table_header
  */
-std::string Container::dump_table_header (const char *name, const char *colour)
+std::string DPContainer::dump_table_header (const char *name, const char *colour)
 {
 	std::ostringstream output;
 
@@ -330,7 +330,7 @@ std::string Container::dump_table_header (const char *name, const char *colour)
 /**
  * dump_table_footer
  */
-std::string Container::dump_table_footer (void)
+std::string DPContainer::dump_table_footer (void)
 {
 	std::ostringstream output;
 
@@ -343,7 +343,7 @@ std::string Container::dump_table_footer (void)
 /**
  * add_child
  */
-void Container::add_child (Container *child)
+void DPContainer::add_child (DPContainer *child)
 {
 	/* Check:
 	 *	available space
@@ -353,7 +353,7 @@ void Container::add_child (Container *child)
 	 */
 #if 0
 	if (children.size() > 0) {
-		Container *last = children.back();
+		DPContainer *last = children.back();
 
 		last->next = child;
 		child->prev = last;
@@ -363,7 +363,7 @@ void Container::add_child (Container *child)
 
 	bool inserted = false;
 
-	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
 		if ((*i)->parent_offset > child->parent_offset) {
 			children.insert (i, child);
 			inserted = true;
@@ -383,14 +383,14 @@ void Container::add_child (Container *child)
 /**
  * delete_child
  */
-void Container::delete_child (Container *child)
+void DPContainer::delete_child (DPContainer *child)
 {
 }
 
 /**
  * move_child
  */
-void Container::move_child (Container *child, long long offset, long long size)
+void DPContainer::move_child (DPContainer *child, long long offset, long long size)
 {
 }
 
@@ -398,7 +398,7 @@ void Container::move_child (Container *child, long long offset, long long size)
 /**
  * get_block_size
  */
-long Container::get_block_size (void)
+long DPContainer::get_block_size (void)
 {
 	if (block_size > 0)
 		return block_size;
@@ -412,7 +412,7 @@ long Container::get_block_size (void)
 /**
  * get_device_name
  */
-std::string Container::get_device_name (void)
+std::string DPContainer::get_device_name (void)
 {
 	//log_debug ("i am %s\n", typeid(*this).name());
 	if (device.length() > 0)
@@ -426,7 +426,7 @@ std::string Container::get_device_name (void)
 /**
  * get_parent_offset
  */
-long long Container::get_parent_offset (void)
+long long DPContainer::get_parent_offset (void)
 {
 	return parent_offset;
 }
@@ -434,7 +434,7 @@ long long Container::get_parent_offset (void)
 /**
  * get_device_space
  */
-unsigned int Container::get_device_space (std::map<long long, long long> &spaces)
+unsigned int DPContainer::get_device_space (std::map<long long, long long> &spaces)
 {
 	spaces.clear();
 
@@ -448,7 +448,7 @@ unsigned int Container::get_device_space (std::map<long long, long long> &spaces
 /**
  * get_size_total
  */
-long long Container::get_size_total (void)
+long long DPContainer::get_size_total (void)
 {
 	return bytes_size;
 }
@@ -456,7 +456,7 @@ long long Container::get_size_total (void)
 /**
  * get_size_used
  */
-long long Container::get_size_used (void)
+long long DPContainer::get_size_used (void)
 {
 	return bytes_used;
 }
@@ -464,7 +464,7 @@ long long Container::get_size_used (void)
 /**
  * get_size_free
  */
-long long Container::get_size_free (void)
+long long DPContainer::get_size_free (void)
 {
 	return bytes_size - bytes_used;
 }
@@ -473,16 +473,16 @@ long long Container::get_size_free (void)
 /**
  * find_device
  */
-Container * Container::find_device (const std::string &dev)
+DPContainer * DPContainer::find_device (const std::string &dev)
 {
-	Container *match = NULL;
+	DPContainer *match = NULL;
 
 	// am *I* the device?
 	//log_debug ("Me? %s %s\n", device.c_str(), dev.c_str());
 	if (dev == device)
 		return this;
 
-	for (std::vector<Container*>::iterator i = children.begin(); i != children.end(); i++) {
+	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
 		//log_debug ("child %p (%s)\n", (*i), (*i)->device.c_str());
 		match = (*i)->find_device (dev);
 		if (match) {
@@ -497,9 +497,9 @@ Container * Container::find_device (const std::string &dev)
 /**
  * find_uuid
  */
-Container * Container::find_uuid (const std::string &uuid)
+DPContainer * DPContainer::find_uuid (const std::string &uuid)
 {
-	std::vector<Container*>::iterator i;
+	std::vector<DPContainer*>::iterator i;
 
 	for (i = children.begin(); i != children.end(); i++) {
 		if ((*i)->uuid == uuid) {
@@ -513,9 +513,9 @@ Container * Container::find_uuid (const std::string &uuid)
 /**
  * find_name
  */
-Container * Container::find_name (const std::string &name)
+DPContainer * DPContainer::find_name (const std::string &name)
 {
-	std::vector<Container*>::iterator i;
+	std::vector<DPContainer*>::iterator i;
 
 	for (i = children.begin(); i != children.end(); i++) {
 		if ((*i)->name == name) {
@@ -530,7 +530,7 @@ Container * Container::find_name (const std::string &name)
 /**
  * open_device
  */
-FILE * Container::open_device (void)
+FILE * DPContainer::open_device (void)
 {
 	// flags? ro, rw
 	if (fd)
@@ -555,7 +555,7 @@ FILE * Container::open_device (void)
 /**
  * read_data
  */
-int Container::read_data (long long offset, long long size, unsigned char *buffer)
+int DPContainer::read_data (long long offset, long long size, unsigned char *buffer)
 {
 	// if offset >= 0, seek there
 	long long current = -1;

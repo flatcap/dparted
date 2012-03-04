@@ -49,7 +49,7 @@ std::string Whole::dump_dot (void)
 	std::ostringstream output;
 	unsigned int count = segments.size();
 
-	output << Container::dump_dot();
+	output << DPContainer::dump_dot();
 
 	if (count > 0) {
 		output << dump_row ("segments", count);

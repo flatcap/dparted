@@ -36,12 +36,14 @@
 #include "log.h"
 #include "utils.h"
 
-std::queue<Container*> probe_queue;
+#include "dparted.h"
+
+std::queue<DPContainer*> probe_queue;
 
 /**
  * queue_add_probe
  */
-void queue_add_probe (Container *item)
+void queue_add_probe (DPContainer *item)
 {
 	if (!item)
 		return;
@@ -55,7 +57,7 @@ void queue_add_probe (Container *item)
 /**
  * mounts_get_list
  */
-unsigned int mounts_get_list (Container &mounts)
+unsigned int mounts_get_list (DPContainer &mounts)
 {
 	std::string command;
 	std::vector<std::string> output;
@@ -78,14 +80,14 @@ unsigned int mounts_get_list (Container &mounts)
  */
 int main (int argc, char *argv[])
 {
-	Container disks;
-	Container *item = NULL;
+	DPContainer disks;
+	DPContainer *item = NULL;
 
 	log_init ("/dev/stderr");
 
 	disks.name = "container";	//XXX dummy
 
-	//Disk::find_devices (disks);
+	Disk::find_devices (disks);
 	Loop::find_devices (disks);
 
 	unsigned char *buffer = NULL;
@@ -156,7 +158,7 @@ int main (int argc, char *argv[])
 		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());
 	}
 
-#if 1
+#if 0
 	std::string dot;
 	dot += "digraph disks {\n";
 	dot += "graph [ rankdir = \"TB\", bgcolor = grey ];\n";

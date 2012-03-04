@@ -51,7 +51,7 @@ std::string Partition::dump_dot (void)
 
 	// no specfics for now
 
-	output << Container::dump_dot();
+	output << DPContainer::dump_dot();
 
 	output << dump_table_footer();
 	output << dump_dot_children();

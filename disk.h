@@ -39,7 +39,7 @@ public:
 	//virtual long long     get_parent_offset (void);
 	virtual unsigned int  get_device_space (std::map<long long, long long> &spaces);
 
-	virtual Container * find_device (const std::string &dev);
+	virtual DPContainer * find_device (const std::string &dev);
 
 	//std::string	model;
 	//std::string	path;
@@ -57,8 +57,8 @@ public:
 	int		host;
 	int		did;
 
-	//static bool probe (const std::string &name, int fd, struct stat &st, Container &list);
-	static unsigned int find_devices (Container &list);
+	//static bool probe (const std::string &name, int fd, struct stat &st, DPContainer &list);
+	static unsigned int find_devices (DPContainer &list);
 
 protected:
 	int kernel_major;

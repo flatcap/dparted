@@ -46,7 +46,7 @@ Gpt::~Gpt()
 /**
  * probe
  */
-bool Gpt::probe (Container *parent, unsigned char *buffer, int bufsize)
+bool Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	Gpt *g = NULL;
 

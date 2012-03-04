@@ -23,13 +23,13 @@
 
 #include "container.h"
 
-class Table : public Container
+class Table : public DPContainer
 {
 public:
 	Table (void);
 	virtual ~Table();
 
-	static bool probe (Container *parent, unsigned char *buffer, int bufsize);
+	static bool probe (DPContainer *parent, unsigned char *buffer, int bufsize);
 
 protected:
 

@@ -113,7 +113,7 @@ unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long long of
 /**
  * probe
  */
-bool Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
+bool Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	Msdos *m = NULL;
 	unsigned int i;
@@ -151,7 +151,7 @@ bool Msdos::probe (Container *parent, unsigned char *buffer, int bufsize)
 		log_debug ("\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
 		log_debug ("\n");
 #endif
-		Container *c = NULL;
+		DPContainer *c = NULL;
 
 		char num = '1' + i;
 		if (vp[i].type == 0x05) {
