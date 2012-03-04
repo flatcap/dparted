@@ -25,6 +25,8 @@
 #include <string>
 #include <vector>
 
+#include <gtkmm.h>
+
 #include "container.h"
 #include "disk.h"
 #include "filesystem.h"
@@ -171,6 +173,15 @@ int main (int argc, char *argv[])
 	dot += "\n};";
 
 	printf ("%s\n", dot.c_str());
+#endif
+
+#if 1
+	Gtk::Main kit (argc, argv);
+
+	DParted d;
+	d.set_data (&disks);
+
+	Gtk::Main::run (d);
 #endif
 
 	log_close();

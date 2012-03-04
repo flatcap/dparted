@@ -7,10 +7,14 @@ SRC	= block.cpp container.cpp disk.cpp extended.cpp log.cpp \
 	  main.cpp mirror.cpp msdos.cpp partition.cpp table.cpp \
 	  segment.cpp stripe.cpp utils.cpp  volume.cpp volumegroup.cpp whole.cpp
 
+SRC	+= dparted.cpp drawingarea.cpp treeview.cpp
+
 HDR	= block.h container.h disk.h extended.h file.h log.h \
 	  filesystem.h gpt.h identify.h linear.h loop.h mirror.h msdos.h \
 	  partition.h table.h segment.h stringnum.h stripe.h utils.h \
 	  volumegroup.h volume.h whole.h
+
+HDR	+= dparted.h drawingarea.h treeview.h
 
 OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
@@ -20,6 +24,12 @@ OBJDIR	= .obj
 OUT	= main
 
 CFLAGS	= -g -Wall
+CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
+
+PACKAGES = gtkmm-3.0
+
+CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
+LDFLAGS += $(shell pkg-config --libs   $(PACKAGES))
 
 V	?= 0
 
