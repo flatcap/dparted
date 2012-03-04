@@ -663,3 +663,9 @@ for plugins we need to register
 	filesystem
 	volume manager?
 
+keyboard control
+tab between items
+F6 to switch sections
+Shift-F10 (or Menu) for context menu
+what about arrows? left/right/up/down?
+
