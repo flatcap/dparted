@@ -157,6 +157,7 @@ void TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 			tree_add_row (x, &row);
 		}
 	}
+	expand_all();
 }
 
 
