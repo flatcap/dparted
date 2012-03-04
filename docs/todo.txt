@@ -669,3 +669,5 @@ F6 to switch sections
 Shift-F10 (or Menu) for context menu
 what about arrows? left/right/up/down?
 
+command line option - read-only
+
