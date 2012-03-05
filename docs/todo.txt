@@ -671,3 +671,6 @@ what about arrows? left/right/up/down?
 
 command line option - read-only
 
+give Container the ability to store user-supplied info
+(for the benefit of the gui)
+
