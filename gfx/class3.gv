@@ -35,6 +35,6 @@ digraph G
 	Part6		-> Filesystem6;
 	Part7		-> Filesystem7;
 
-	{ rank=same Part1 Part2 Part5 Part6 Part7 }
+	{ rank=same Msdos Extended }
 }
 

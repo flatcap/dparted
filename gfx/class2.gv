@@ -27,6 +27,9 @@ digraph G
 	Segment     [ fillcolor="#ccccff" ];
 
 	Filesystem [ fillcolor="#bbffff" ];
+	Ext4       [ fillcolor="#bbffff" ];
+	Btrfs      [ fillcolor="#bbffff" ];
+	Ntfs       [ fillcolor="#bbffff" ];
 
 	Block       -> Container;
 	Disk        -> Block;
@@ -45,6 +48,10 @@ digraph G
 	VolumeGroup -> Whole;
 	Volume      -> Whole;
 	Whole       -> Container;
+
+	Ext4        -> Filesystem;
+	Btrfs       -> Filesystem;
+	Ntfs        -> Filesystem;
 
 	Whole       -> Segment [ constraint=false, style=dotted, dir=none, minlen=1 ];
 }
