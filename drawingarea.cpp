@@ -174,6 +174,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	if (m_c) {
 		int children = m_c->children.size();
+		//printf ("%d children\n", children);
+		//RAR should only be one child
 
 		for (int c = 0; c < children; c++) {
 			draw_container (cr, 0, c*50, width, 47, m_c->children[c]);
