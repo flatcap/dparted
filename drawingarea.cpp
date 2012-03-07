@@ -7,9 +7,9 @@
 #include "container.h"
 
 /**
- * DrawingArea
+ * DPDrawingArea
  */
-DrawingArea::DrawingArea()
+DPDrawingArea::DPDrawingArea()
 {
 	set_size_request (0, 0);
 	set_hexpand (true);
@@ -17,14 +17,14 @@ DrawingArea::DrawingArea()
 
 	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK);
 
-	signal_button_press_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_click));
-	signal_motion_notify_event().connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_motion));
+	signal_button_press_event() .connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_click));
+	signal_motion_notify_event().connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_motion));
 }
 
 /**
- * ~DrawingArea
+ * ~DPDrawingArea
  */
-DrawingArea::~DrawingArea()
+DPDrawingArea::~DPDrawingArea()
 {
 }
 
@@ -32,7 +32,7 @@ DrawingArea::~DrawingArea()
 /**
  * draw_rect
  */
-void DrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double width, double height, double red, double green, double blue, double alpha)
+void DPDrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double width, double height, double red, double green, double blue, double alpha)
 {
 	cr->set_source_rgba (red, green, blue, alpha);
 	cr->rectangle (x, y, width, height);
@@ -42,7 +42,7 @@ void DrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context>& cr, double x, 
 /**
  * draw_box
  */
-void DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double width, double height, double line_width, double red, double green, double blue, double alpha)
+void DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double width, double height, double line_width, double red, double green, double blue, double alpha)
 {
 	cr->set_line_width(line_width);
 	cr->set_source_rgba (red, green, blue, alpha);
@@ -53,8 +53,8 @@ void DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, double x, d
 	cr->set_antialias (Cairo::ANTIALIAS_NONE);
 
 	//cr->set_line_cap (Cairo::LINE_CAP_ROUND);
-	cr->set_line_cap (Cairo::LINE_CAP_SQUARE);
-	//cr->set_line_join (Cairo::LINE_JOIN_ROUND);
+	//cr->set_line_cap (Cairo::LINE_CAP_SQUARE);
+	cr->set_line_join (Cairo::LINE_JOIN_ROUND);
 
 	cr->move_to (x + half,         y + half);
 	cr->line_to (x + width - half, y + half);
@@ -70,7 +70,7 @@ void DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, double x, d
 /**
  * get_colour
  */
-void DrawingArea::get_colour (std::string &name, double &red, double &green, double &blue)
+void DPDrawingArea::get_colour (std::string &name, double &red, double &green, double &blue)
 {
 	if (name == "disk") {
 		red   = 1.0;
@@ -114,7 +114,7 @@ void DrawingArea::get_colour (std::string &name, double &red, double &green, dou
 /**
  * draw_container
  */
-void DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c)
+void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c)
 {
 	double red   = 1.0;
 	double green = 1.0;
@@ -123,11 +123,11 @@ void DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x
 	//printf ("draw x = %d, y = %d, width = %d, height = %d\n", x, y, width, height);
 	get_colour (c->name, red, green, blue);
 	draw_rect (cr, x, y, 16,    height,    red, green, blue, 1.0);
-	draw_box  (cr, x, y, width, height, 1, red, green, blue, 1.0);
+	draw_box  (cr, x, y, width, height, 3, red, green, blue, 1.0);
 	x      += 16;
-	y      +=  1;
+	y      +=  3;
 	width  -= 16;
-	height -=  2;
+	height -=  6;
 
 	// we have got width pixels for c->bytes_size bytes
 	//
@@ -149,7 +149,7 @@ void DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x
 /**
  * on_draw
  */
-bool DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
+bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	Gtk::Allocation allocation = get_allocation();
 
@@ -176,7 +176,7 @@ bool DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		int children = m_c->children.size();
 
 		for (int c = 0; c < children; c++) {
-			draw_container (cr, 0, c*50, width, 48, m_c->children[c]);
+			draw_container (cr, 0, c*50, width, 47, m_c->children[c]);
 		}
 	}
 
@@ -194,6 +194,36 @@ bool DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << "," << bg.get_alpha() << std::endl;
 #endif
 
+#if 0
+	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
+
+	Pango::FontDescription font; // ("Wingdings 48");
+	font.set_family ("Liberation Sans");
+	font.set_size (18 * Pango::SCALE);
+
+	//font = layout->get_font_description();
+	//std::cout << font.get_family() << std::endl;
+	//std::cout << (font.get_size() / Pango::SCALE) << std::endl;
+
+	int stringWidth = 0;
+	int stringHeight = 0;
+
+	layout->set_font_description (font);
+	layout->set_markup("<b>X---X</b>");
+
+	layout->get_pixel_size(stringWidth, stringHeight);
+	std::cout << "text: " << stringWidth << "x" << stringHeight << std::endl;
+	draw_rect (cr, (width-stringWidth)/2, (height-stringHeight)/2, stringWidth, stringHeight, 1, 1, 1, 1);
+	draw_box  (cr, (width-stringWidth)/2-1, (height-stringHeight)/2-1, stringWidth+2, stringHeight+2, 1, 0, 0, 0, 1);
+	cr->move_to ((width-stringWidth)/2, (height-stringHeight)/2);
+
+	//cr->move_to (20, 100);
+	cr->set_source_rgb(0.0, 1.0, 0.0);
+
+	layout->update_from_cairo_context (cr);
+	layout->show_in_cairo_context (cr);
+#endif
+
 	return true;
 }
 
@@ -201,7 +231,7 @@ bool DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 /**
  * on_mouse_motion
  */
-bool DrawingArea::on_mouse_motion (GdkEventMotion *event)
+bool DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
 {
 	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")" << std::endl;
 
@@ -215,13 +245,33 @@ bool DrawingArea::on_mouse_motion (GdkEventMotion *event)
 /**
  * on_mouse_click
  */
-bool DrawingArea::on_mouse_click (GdkEventButton *event)
+bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 {
 	//std::cout << "mouse click: (" << event->x << "," << event->y << ")" << std::endl;
 
 	if ((event->x >= 100) && (event->x < 200) &&
 	    (event->y >= 50)  && (event->y < 150)) {
 	}
+#if 0
+	std::cout << event->type << std::endl;
+	std::cout << event->state << std::endl;
+	std::cout << event->button << std::endl;
+	std::cout << event->time << std::endl;
+	std::cout << event->x << std::endl;
+	std::cout << event->y << std::endl;
+
+	GdkEventType type;
+	GdkWindow *window;
+	gint8 send_event;
+	guint32 time;
+	gdouble x;
+	gdouble y;
+	gdouble *axes;
+	guint state;
+	guint button;
+	GdkDevice *device;
+	gdouble x_root, y_root;
+#endif
 
 	return true;
 }
@@ -229,7 +279,7 @@ bool DrawingArea::on_mouse_click (GdkEventButton *event)
 /**
  * set_data
  */
-void DrawingArea::set_data (DPContainer *c)
+void DPDrawingArea::set_data (DPContainer *c)
 {
 	m_c = c;
 	if (!m_c)

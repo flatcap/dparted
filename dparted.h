@@ -28,7 +28,8 @@ protected:
 	Gtk::Grid		grid;
 	Gtk::MenuBar		menubar;
 	//Gtk::Toolbar		toolbar;
-	DrawingArea		drawingarea;
+	Gtk::Grid		da_grid;
+	//DPDrawingArea		drawingarea;
 	TreeView		treeview;
 	//Gtk::Statusbar		statusbar;
 

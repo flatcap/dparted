@@ -23,19 +23,27 @@ DParted::DParted () :
 	//grid.set_row_homogeneous (false);
 	//grid.add (menubar);
 
+	da_grid.set_orientation (Gtk::ORIENTATION_VERTICAL);
+
 	//Get the menubar and toolbar widgets, and add them to a container widget:
 	Gtk::Widget* pMenubar = m_refUIManager->get_widget ("/MenuBar");
-	if (pMenubar)
+	if (pMenubar) {
+		pMenubar->set_hexpand (true);
 		grid.add (*pMenubar);
+	}
 
 	Gtk::Widget* pToolbar = m_refUIManager->get_widget ("/ToolBar") ;
-	if (pToolbar)
+	if (pToolbar) {
+		pToolbar->set_hexpand (true);
 		grid.add (*pToolbar);
+	}
 
 	//grid.add (toolbar);
 	//grid.add (scrolledwindow);
 
-	grid.add (drawingarea);
+	treeview.set_hexpand (true);
+
+	grid.add (da_grid);
 	grid.add (treeview);
 
 	show_all();
@@ -62,7 +70,13 @@ void DParted::set_data (DPContainer *c)
 {
 	m_c = c;
 	treeview.init_treeview (m_c);
-	drawingarea.set_data (m_c);
+
+	for (std::vector<DPContainer*>::iterator i = c->children.begin(); i != c->children.end(); i++) {
+		DPDrawingArea *da = manage (new DPDrawingArea());
+		da_grid.add (*da);
+		da_grid.show_all();
+		da->set_data (*i);
+	}
 }
 
 /**

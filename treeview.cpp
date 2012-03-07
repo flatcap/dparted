@@ -33,6 +33,8 @@ TreeView::TreeView()
 	m_refTreeModel = Gtk::TreeStore::create (m_Columns);
 	set_model (m_refTreeModel);
 
+	set_level_indentation (20);
+
 	//Connect signal:
 	signal_row_activated().connect (sigc::mem_fun (*this, &TreeView::on_row_activated));
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &TreeView::on_query_tooltip));
@@ -147,7 +149,7 @@ void TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 			row = *(m_refTreeModel->append());
 		}
 		//row[m_Columns.col_icon] = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
-		row[m_Columns.col_partition] = x->name;
+		row[m_Columns.col_partition] = x->device;
 		row[m_Columns.col_size] = x->bytes_size;
 		row[m_Columns.col_used] = x->bytes_used;
 		row[m_Columns.col_unused] = x->bytes_size - x->bytes_used;
@@ -157,7 +159,7 @@ void TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 			tree_add_row (x, &row);
 		}
 	}
-	expand_all();
+	//RAR expand_all();
 }
 
 

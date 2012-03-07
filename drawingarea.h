@@ -5,11 +5,13 @@
 
 class DPContainer;
 
-class DrawingArea : public Gtk::DrawingArea
+typedef struct { int l; int h; DPContainer *p; } Range;
+
+class DPDrawingArea : public Gtk::DrawingArea
 {
 public:
-	DrawingArea();
-	virtual ~DrawingArea();
+	DPDrawingArea();
+	virtual ~DPDrawingArea();
 
 	void set_data (DPContainer *c);
 
@@ -28,6 +30,7 @@ private:
 	void get_colour (std::string &name, double &red, double &green, double &blue);
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c);
 
+	std::vector<Range> vRange;
 };
 
 #endif // _DRAWINGAREA_
