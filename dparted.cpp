@@ -9,7 +9,7 @@ DParted::DParted () :
 	m_c (NULL)
 {
 	set_title ("DParted");
-	set_default_size (1000, 800);
+	set_default_size (1439, 255); //RAR 1440, 800
 
 	add (scrolledwindow);
 
@@ -25,6 +25,7 @@ DParted::DParted () :
 
 	da_grid.set_orientation (Gtk::ORIENTATION_VERTICAL);
 
+#if 0
 	//Get the menubar and toolbar widgets, and add them to a container widget:
 	Gtk::Widget* pMenubar = m_refUIManager->get_widget ("/MenuBar");
 	if (pMenubar) {
@@ -37,6 +38,7 @@ DParted::DParted () :
 		pToolbar->set_hexpand (true);
 		grid.add (*pToolbar);
 	}
+#endif
 
 	//grid.add (toolbar);
 	//grid.add (scrolledwindow);
@@ -44,15 +46,15 @@ DParted::DParted () :
 	treeview.set_hexpand (true);
 
 	grid.add (da_grid);
-	grid.add (treeview);
+	//RAR grid.add (treeview);
 
 	show_all();
 
 	int width = 0;
 	int height = 0;
 	get_size (width, height);
-	move (1920+1440 - width, 900 - height);
-	//move (1920, 0);
+	//move (1920+1440 - width, 900 - height);
+	move (1920, 0);
 }
 
 /**
@@ -78,6 +80,7 @@ void DParted::set_data (DPContainer *c)
 		DPDrawingArea *da = manage (new DPDrawingArea());
 		da_grid.add (*da);
 		da_grid.show_all();
+		//std::cout << (*i)->device << std::endl;
 		da->set_data (*i);
 	}
 }

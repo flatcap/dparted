@@ -23,14 +23,18 @@ protected:
 
 	bool on_mouse_motion (GdkEventMotion *event);
 	bool on_mouse_click  (GdkEventButton *event);
+	bool on_mouse_leave  (GdkEventCrossing *event);
 
 private:
 	DPContainer *m_c;
 
 	void get_colour (std::string &name, double &red, double &green, double &blue);
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c);
+	void write_label (const Cairo::RefPtr<Cairo::Context>& cr, const Glib::ustring &text);
 
 	std::vector<Range> vRange;
+
+	bool mouse_close;
 };
 
 #endif // _DRAWINGAREA_
