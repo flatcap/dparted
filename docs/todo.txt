@@ -674,3 +674,8 @@ command line option - read-only
 give Container the ability to store user-supplied info
 (for the benefit of the gui)
 
+timer watching filesystems:
+	filesystem mounted
+	filesystem unmounted
+	mounted filesystem freespace has changed!
+
