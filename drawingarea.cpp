@@ -1,7 +1,8 @@
 #include <iostream>
-#include <stdio.h>
 
+#include <stdio.h>
 #include <gtkmm.h>
+#include <stdlib.h>
 
 #include "drawingarea.h"
 #include "container.h"
@@ -127,30 +128,69 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 	double green = 1.0;
 	double blue  = 1.0;
 
-	//printf ("draw x = %d, y = %d, width = %d, height = %d\n", x, y, width, height);
-	get_colour (c->name, red, green, blue);
-	draw_rect (cr, x, y, 32,    height,    red, green, blue, 1.0);
-	draw_box  (cr, x, y, width, height, 3, red, green, blue, 1.0);
-	x      += 32;
-	y      +=  3;
-	width  -= 32;
-	height -=  6;
+	//if (c->type == "extended") {
+	if ((c->type != "msdos") && (c->type != "vg segment") && (c->type != "partition")) {
+		//printf ("draw x = %4d, y = %4d, width = %4d, height = %4d\n", x, y, width, height);
+		get_colour (c->name, red, green, blue);
+		if (c->type == "extended") {
+			draw_rect (cr, x, y, 10, height, red, green, blue, 1.0);
+		} else {
+			draw_rect  (cr, x, y, width, height, 1, 1, 1, 1.0);
+#if 1
+			int r = rand() % (width - 5);
+			draw_rect  (cr, x, y, r, height, 0.96, 0.96, 0.72, 1.0);
+
+			Pango::FontDescription font;
+			font.set_family ("Liberation Sans");
+
+			int w = 0;
+			int h = 0;
+
+			Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
+			layout->set_font_description (font);
+			std::string label;
+			size_t pos = m_c->device.find_last_of ('/');
+			if (pos == std::string::npos) {
+				label = m_c->device;
+			} else {
+				label = m_c->device.substr (pos+1);
+			}
+			layout->set_markup("<b>" + label + "</b>");
+			layout->get_pixel_size(w, h);
+			if ((w + 10) < width) {
+				cr->set_source_rgb (0.0, 0.0, 0.0);
+				//cr->move_to (x + (width-w)/2, y + (height-h)/2);
+				cr->move_to (x + 10, y + (height-h)/2);
+				layout->update_from_cairo_context (cr);
+				layout->show_in_cairo_context (cr);
+			}
+#endif
+		}
+		draw_box  (cr, x, y, width, height, 3, red, green, blue, 1.0);
+		x      += 10;
+		y      +=  3;
+		width  -= 10;
+		height -=  6;
+
+	}
+
+	//width -= 3;
 
 	// we have got width pixels for c->bytes_size bytes
-	//
+
 	double bytes_per_pixel = c->bytes_size / width;
-	//printf ("container is %lld bytes (%.0f bytes per pixel)\n", c->bytes_size, bytes_per_pixel);
+	//printf ("container (%s) is %lld bytes (%.0f bytes per pixel)\n", c->name.c_str(), c->bytes_size, bytes_per_pixel);
 
 	unsigned int num = c->children.size();
 	for (unsigned int i = 0; i < num; i++) {
 		double offset = c->children[i]->parent_offset / bytes_per_pixel;
 		width = c->children[i]->bytes_size / bytes_per_pixel;
+		width -= 2;
 		//printf ("\e[32m%s\e[0m\n", c->children[i]->name.c_str());
 		//printf ("\tparent offset = %lld (%.0f pixels)\n", c->children[i]->parent_offset, offset);
 		//printf ("\tsize = %lld (%d pixels)\n", c->children[i]->bytes_size, width);
 		draw_container (cr, x + offset, y, width, height, c->children[i]);
 	}
-
 }
 
 /**
@@ -181,7 +221,11 @@ void DPDrawingArea::write_label (const Cairo::RefPtr<Cairo::Context>& cr, const 
 	//std::cout << "radius = " << radius << std::endl;
 	//std::cout << "bar    = " << bar << std::endl;
 
-	cr->set_source_rgb(1.0, 1.0, 1.0);
+	if (text == "<b>loop3</b>") {
+		cr->set_source_rgb (0.79, 0.59, 0.39);
+	} else {
+		cr->set_source_rgb (1.0, 1.0, 1.0);
+	}
 
 	cr->arc (2+radius, 45-radius, radius, M_PI/2, 3*M_PI/2);
 	cr->arc (2+radius+bar, 45-radius, radius, 3*M_PI/2, M_PI/2);
@@ -203,7 +247,6 @@ void DPDrawingArea::write_label (const Cairo::RefPtr<Cairo::Context>& cr, const 
 	cr->move_to (3+radius-(radius/2), 44-h);
 	layout->update_from_cairo_context (cr);
 	layout->show_in_cairo_context (cr);
-
 }
 
 /**
@@ -214,37 +257,36 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	if (!m_c)
 		return true;
 
+	//if (m_c->device != "/dev/loop3") return true;
+
 	Gtk::Allocation allocation = get_allocation();
 
 	int width  = allocation.get_width();
-	int height = allocation.get_height();
+	//int height = allocation.get_height();
 
-	printf ("allocation = %dx%d\n", width, height);
-
-#if 0
-	cr->set_antialias (Cairo::ANTIALIAS_NONE);
-	cr->set_source_rgba (0, 0, 0, 0.3);
-	cr->set_line_width(1);
-
-	for (int i = 0; i < width; i += 50) {
-		cr->move_to (i, 0);
-		cr->line_to (i, height);
-	}
-	cr->stroke();
-#endif
+	//printf ("allocation = %dx%d\n", width, height);
 
 	//width -= 100;
 
-	if (m_c) {
+	if (m_c && (m_c->children.size() > 0)) {
 		int children = m_c->children.size();
 		//printf ("%d children\n", children);
 		//RAR should only be one child
+		//printf ("child is a %s\n", m_c->children[0]->type.c_str());
 
 		for (int c = 0; c < children; c++) {
-			draw_container (cr, 0, c*50, width, 47, m_c->children[c]);
+			draw_container (cr, 50, c*50, width-50, 47, m_c->children[c]);
 		}
-		if (!mouse_close)
-			write_label (cr, "<b>" + m_c->device + "</b>");
+		if (!mouse_close) {
+			std::string label;
+			size_t pos = m_c->device.find_last_of ('/');
+			if (pos == std::string::npos) {
+				label = m_c->device;
+			} else {
+				label = m_c->device.substr (pos+1);
+			}
+			write_label (cr, "<b>" + label + "</b>");
+		}
 	}
 
 #if 1
@@ -297,6 +339,17 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	layout->show_in_cairo_context (cr);
 #endif
 
+#if 0
+	cr->set_antialias (Cairo::ANTIALIAS_NONE);
+	cr->set_source_rgba (0, 0, 0, 0.3);
+	cr->set_line_width(1);
+
+	for (int i = 0; i < width; i += 50) {
+		cr->move_to (i, 0);
+		cr->line_to (i, height);
+	}
+	cr->stroke();
+#endif
 	return true;
 }
 
