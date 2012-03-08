@@ -679,3 +679,18 @@ timer watching filesystems:
 	filesystem unmounted
 	mounted filesystem freespace has changed!
 
+lib_identify_filesystem
+lib_identify_operating_system
+
+view menu: Labels
+name gui disks with fs labels (if poss)
+
+need test cases for differently-sized disks
+test display strategies
+	disk: linear, logorithmic
+	partition: linear, logorithmic
+
+ability to save details of actions
+after and *before* operations
+make it a list of commands that can the copied
+
