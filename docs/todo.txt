@@ -694,3 +694,7 @@ ability to save details of actions
 after and *before* operations
 make it a list of commands that can the copied
 
+have two modes: live and queued
+expert live mode make changes are you click on things
+novice queued mode, queues the changes, explains them and then waits for OK
+
