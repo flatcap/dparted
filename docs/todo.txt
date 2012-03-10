@@ -698,3 +698,26 @@ have two modes: live and queued
 expert live mode make changes are you click on things
 novice queued mode, queues the changes, explains them and then waits for OK
 
+top-level devices:
+	disk
+	loop
+	file
+	network
+
+fix image creation tools to:
+	 check that enough loops exist
+	 pick a loop device and use that one
+	 destroy should look for the image name in losetup -a
+
+use css to theme the colours,font,icons?
+
+theme:
+	light
+	dark
+	auto - guess from the default colours
+	custom - filename.css
+
+filesystem option: open in nautilus ("View files")
+may require mounting the filesystem
+watch fuser - unmount automatically?
+
