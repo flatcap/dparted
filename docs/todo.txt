@@ -729,4 +729,14 @@ properties to control
 	etc
 would need plenty of overridable methods
 
+when performing operations what should the cancel button do?
+between operations:
+	stop work
+	list of what got done
+	list of what didn't get done
+mid large operation:
+	nothing un-reversable has happened, therefore ok
+	some potential for undo? back to sane state
+	"this will destroy...", continue y/n
+	cancel should SIGSTOP all operations until further notice
 
