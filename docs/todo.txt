@@ -721,3 +721,12 @@ filesystem option: open in nautilus ("View files")
 may require mounting the filesystem
 watch fuser - unmount automatically?
 
+make the drawing area completely self-container
+i.e. pluggable into another app
+properties to control
+	colour scheme
+	tooltips
+	etc
+would need plenty of overridable methods
+
+
