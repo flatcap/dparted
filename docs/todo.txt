@@ -740,3 +740,20 @@ mid large operation:
 	"this will destroy...", continue y/n
 	cancel should SIGSTOP all operations until further notice
 
+for partition move, only move the data (read the bitmap)
+
+image tools - use losetup -f file.img
+grep name from losetup -a
+safely get device without race condition
+
+does r/o loop mounting a fs alter the last mounted time?
+if not I can keep track of the filesystem contents
+	mount r/o loop
+	get fs type
+	get os type
+	get file listing for root dir
+	record last mounted time
+later when needing the data again
+if mounted time has changed, rescan fs
+if not used cached data
+
