@@ -757,3 +757,10 @@ later when needing the data again
 if mounted time has changed, rescan fs
 if not used cached data
 
+on a timer, keep track of
+	free space in mounted filesystems / swap devices
+	last mount time of unmounted filesystems
+	list of mounted filesystems
+	list of loop devices
+	list of lvm volumes, etc
+
