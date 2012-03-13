@@ -141,19 +141,12 @@ void DPDrawingArea::get_colour (std::string &name, double &red, double &green, d
 /**
  * draw_focus
  */
-void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr,
-				int x, int y, int w, int h,
-				DPContainer *c,
-				std::string label_left, std::string label_right,
-				int w_fs, int w_usage,
-				Glib::RefPtr<Gdk::Pixbuf> icon1,
-				Glib::RefPtr<Gdk::Pixbuf> icon2,
-				Gdk::RGBA &colour)
+void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h)
 {
-	const int r = 8;						// Radius
+	const int r = 8;					// Radius
 
 	cr->save();
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);			// Set clipping area
+	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);		// Set clipping area
 	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
 	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
 	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
@@ -161,9 +154,7 @@ void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr,
 
 	double dashes[] = { 10.0, 10.0 };
 	std::valarray<double> va (dashes, sizeof (dashes)/sizeof(dashes[0]));
-
-	static double offset = 0.0;
-	offset += 5;
+	double offset = 0.0;
 
 	cr->set_line_width (4);
 
@@ -185,25 +176,18 @@ void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr,
 	cr->close_path();
 	cr->stroke();
 
-	cr->restore();							// End clipping
+	cr->restore();						// End clipping
 }
 
 /**
  * draw_frame
  */
-void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context>& cr,
-				int x, int y, int w, int h,
-				DPContainer *c,
-				std::string label_left, std::string label_right,
-				int w_fs, int w_usage,
-				Glib::RefPtr<Gdk::Pixbuf> icon1,
-				Glib::RefPtr<Gdk::Pixbuf> icon2,
-				Gdk::RGBA &colour)
+void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context>& cr, int &x, int &y, int &w, int &h, const Gdk::RGBA &colour)
 {
-	const int r = 8;						// Radius
+	const int r = 8;					// Radius
 
 	cr->save();
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);			// Set clipping area
+	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);		// Set clipping area
 	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
 	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
 	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
@@ -211,37 +195,35 @@ void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context>& cr,
 
 	cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
 
-	cr->set_line_width (r);						// Thick top bar
-	cr->move_to (x, y+4);
+	cr->set_line_width (r);					// Thick top bar
+	cr->move_to (x, y+(r/2));
 	cr->rel_line_to (w, 0);
 	cr->stroke();
 
-	cr->set_line_width (2);						// Thin side bars
+	cr->set_line_width (2);					// Thin side bars
 	cr->move_to (x+1, y+r);
 	cr->rel_line_to (0, h-(2*r));
 	cr->move_to (x+w-1, y+r);
 	cr->rel_line_to (0, h-(2*r));
 	cr->stroke();
 
-	cr->set_line_width (4);						// Thin bottom bar
+	cr->set_line_width (4);					// Thin bottom bar
 	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
 	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->stroke();
 
-	cr->restore();							// End clipping
+	cr->restore();						// End clipping
+
+	x += 2;							// The space remaining inside
+	y += r;
+	w -= 4;
+	h -= r+2;
 }
 
 /**
  * draw_tabframe
  */
-void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context>& cr,
-				int x, int y, int w, int h,
-				DPContainer *c,
-				std::string label_left, std::string label_right,
-				int width_fs, int width_usage,
-				Glib::RefPtr<Gdk::Pixbuf> icon1,
-				Glib::RefPtr<Gdk::Pixbuf> icon2,
-				Gdk::RGBA &colour)
+void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context>& cr, int &x, int &y, int &w, int &h, const Gdk::RGBA &colour)
 {
 	const int r = 8;						// Radius
 	const int t = 26;						// Tab width
@@ -283,19 +265,20 @@ void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context>& cr,
 	cr->stroke();
 
 	cr->restore();							// End clipping
+
+	x += t;								// The space remaining inside
+	y += r;
+	w -= t+2;
+	h -= r+2;
 }
 
 /**
  * draw_partition
  */
 void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
-				    int x, int y, int w, int h,
-				    DPContainer *c,
-				    std::string label_left, std::string label_right,
+				    int &x, int y, int w, int h,
 				    int width_fs, int width_usage,
-				    Glib::RefPtr<Gdk::Pixbuf> icon1,
-				    Glib::RefPtr<Gdk::Pixbuf> icon2,
-				    Gdk::RGBA &colour)
+				    const Gdk::RGBA &colour)
 {
 	const int r = 8;						// Radius
 
@@ -348,6 +331,8 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 	cr->stroke();
 
 	cr->restore();							// End clipping
+
+	x += w;								// The space remaining inside
 }
 
 /**
@@ -581,7 +566,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		int y = 0;
 		int w = 400;
 		int h = 77;	//47;
-		DPContainer *c = NULL;
+		//DPContainer *c = NULL;
 		std::string left;
 		std::string right;
 		int width_fs = w;
@@ -597,8 +582,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		get_colour (name, red, green, blue);
 		colour.set_rgba (red, green, blue);
 
-		draw_partition (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
-		x += w + 4;
+		draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
 
 		name = "extended";
 		get_colour (name, red, green, blue);
@@ -606,18 +590,16 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		w = 800;
 		width_usage = 85*w/100;
 
-		draw_tabframe (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
-		//draw_focus (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
+		draw_tabframe (cr, x, y, w, h, colour);
+		//draw_focus (cr, x, y, w, h);
 
 		const char *file = "icons/table.png";
 
 		Glib::RefPtr<Gdk::Pixbuf> pb;
 		pb = Gdk::Pixbuf::create_from_file (file);
-		Gdk::Cairo::set_source_pixbuf(cr, pb, x+2, y+10);
-		cr->rectangle(x+2, y+10, pb->get_width(), pb->get_height());
+		Gdk::Cairo::set_source_pixbuf(cr, pb, x-24, y+2);
+		cr->rectangle(x-24, y+2, pb->get_width(), pb->get_height());
 		cr->fill();
-
-		x += 26; y += 8; h -= 10;
 
 		name = "red";
 		get_colour (name, red, green, blue);
@@ -625,9 +607,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		w = 250;
 		width_usage = 15*w/100;
 
-		draw_partition (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
-		//draw_focus (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
-		x += w+2;
+		draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
+		draw_focus (cr, x-w, y, w, h);
 
 		name = "green";
 		get_colour (name, red, green, blue);
@@ -635,8 +616,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		w = 350;
 		width_usage = 15*w/100;
 
-		draw_frame (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
-		//draw_focus (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
+		draw_frame (cr, x, y, w, h, colour);
+		//draw_focus (cr, x, y, w, h);
 
 		return true;
 	}
