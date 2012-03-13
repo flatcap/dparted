@@ -59,8 +59,8 @@ void DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, double x,
 
 	double half = line_width/2;
 
-	Cairo::Antialias a = cr->get_antialias();
-	cr->set_antialias (Cairo::ANTIALIAS_NONE);
+	//Cairo::Antialias a = cr->get_antialias();
+	//cr->set_antialias (Cairo::ANTIALIAS_NONE);
 
 	//cr->set_line_cap (Cairo::LINE_CAP_ROUND);
 	//cr->set_line_cap (Cairo::LINE_CAP_SQUARE);
@@ -73,7 +73,7 @@ void DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, double x,
 	cr->close_path();
 
 	cr->stroke();
-	cr->set_antialias (a);
+	//cr->set_antialias (a);
 }
 
 
@@ -560,12 +560,48 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	return true;
 #endif
 
+#if 0	// end markers
+	cr->set_line_width (1);
+	cr->set_antialias (Cairo::ANTIALIAS_NONE);
+
+	cr->set_source_rgba (0, 0, 1, 1);		// BLUE
+	cr->move_to (0.5, 0.5);
+	cr->rel_line_to (0, height);
+	cr->stroke();
+	cr->move_to (0.5, 0.5);
+	cr->rel_line_to (width, 0);
+	cr->stroke();
+
+#if 0
+	cr->set_source_rgba (1, 0, 0, 1);		// RED
+	cr->move_to (49, 0);
+	cr->rel_line_to (0, height);
+	cr->stroke();
+	cr->move_to (150, 0);
+	cr->rel_line_to (0, height);
+	cr->stroke();
+	cr->move_to (0, 7);
+	cr->rel_line_to (width, 0);
+	cr->stroke();
+	cr->move_to (0, 92);
+	cr->rel_line_to (width, 0);
+	cr->stroke();
+
+	cr->set_source_rgba (0, 1, 0, 1);		// GREEN
+	cr->rectangle (50+0.5, 7+0.5, 99, 83);
+	cr->stroke();
+#endif
+
+	cr->set_antialias (Cairo::ANTIALIAS_DEFAULT);
+	//return true;
+#endif	// end markers
+
 #if 1
 	if (m_c->device == "/dev/sdc") {
-		int x = 50;
+		int x = 0;
 		int y = 0;
-		int w = 400;
-		int h = 77;	//47;
+		int w = 100;
+		int h = 84;	//47;
 		//DPContainer *c = NULL;
 		std::string left;
 		std::string right;
@@ -583,6 +619,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		colour.set_rgba (red, green, blue);
 
 		draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
+		return true;
 
 		name = "extended";
 		get_colour (name, red, green, blue);
