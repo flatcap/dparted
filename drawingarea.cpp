@@ -18,6 +18,8 @@ const double ARC_W = M_PI;
  * DPDrawingArea
  */
 DPDrawingArea::DPDrawingArea() :
+	sel_x (-1),
+	sel_y (-1),
 	mouse_close (false)
 {
 	set_size_request (800, 50);
@@ -155,6 +157,31 @@ void DPDrawingArea::get_colour (std::string &name, double &red, double &green, d
 }
 
 /**
+ * get_focus
+ */
+bool DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
+{
+	if ((sel_x < 0) || (sel_y < 0))
+		return false;
+
+	bool b = false;
+	std::deque<Range>::iterator it;
+	for (it = vRange.begin(); it != vRange.end(); it++) {
+		b = ((sel_x >= (*it).x) && (sel_x < ((*it).x + (*it).w)) &&
+		     (sel_y >= (*it).y) && (sel_y < ((*it).y + (*it).h)));
+		if (b) {
+			x = (*it).x;
+			y = (*it).y;
+			w = (*it).w;
+			h = (*it).h;
+			break;
+		}
+	}
+
+	return b;
+}
+
+/**
  * draw_focus
  */
 void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h)
@@ -231,6 +258,9 @@ void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context>& cr, int &x,
 
 	cr->restore();						// End clipping
 
+	Range rg = { x, y, w, h, NULL };
+	vRange.push_front (rg);
+
 	x += 2;							// The space remaining inside
 	y += r;
 	w -= 4;
@@ -282,6 +312,9 @@ void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context>& cr, int 
 	cr->stroke();
 
 	cr->restore();							// End clipping
+
+	Range rg = { x, y, w, h, NULL };
+	vRange.push_front (rg);
 
 	x += t;								// The space remaining inside
 	y += r;
@@ -348,6 +381,9 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 	cr->stroke();
 
 	cr->restore();							// End clipping
+
+	Range rg = { x, y, w, h, NULL };
+	vRange.push_front (rg);
 
 	x += w;								// The space remaining inside
 }
@@ -555,6 +591,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	//if (m_c->device != "/dev/loop3") return true;
 	if (m_c->device != "/dev/sdc") return true;
 
+	vRange.clear();
+
 	Gtk::Allocation allocation = get_allocation();
 
 	int width  = allocation.get_width();
@@ -661,7 +699,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		width_usage = 15*w/100;
 
 		draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
-		draw_focus (cr, x-w, y, w, h);
+		//draw_focus (cr, x-w, y, w, h);
 
 		name = "green";
 		get_colour (name, red, green, blue);
@@ -671,6 +709,11 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 		draw_frame (cr, x, y, w, h, colour);
 		//draw_focus (cr, x, y, w, h);
+
+		int fx, fy, fh, fw;
+		if (get_focus (fx, fy, fw, fh)) {
+			draw_focus (cr, fx, fy, fw, fh);
+		}
 
 		return true;
 	}
@@ -892,6 +935,7 @@ bool DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
 {
 	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")" << std::endl;
 
+#if 0
 	bool old = mouse_close;
 
 	mouse_close = ((event->y > 25) and (event->x < 90));
@@ -899,6 +943,7 @@ bool DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
 	if (mouse_close != old) {
 		get_window()->invalidate (false); //RAR everything for now
 	}
+#endif
 
 	return true;
 }
@@ -908,24 +953,44 @@ bool DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
  */
 bool DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
 {
+#if 0
 	if (mouse_close) {
 		mouse_close = false;
 		get_window()->invalidate (false); //RAR everything for now
 	}
+#endif
 	return true;
 }
-
 
 /**
  * on_mouse_click
  */
 bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 {
-	//std::cout << "mouse click: (" << event->x << "," << event->y << ")" << std::endl;
+	std::cout << "mouse click: (" << event->x << "," << event->y << ")" << std::endl;
 
+#if 1
+	sel_x = event->x;
+	sel_y = event->y;
+
+	std::deque<Range>::iterator it;
+	for (it = vRange.begin(); it != vRange.end(); it++) {
+		bool b = ((event->x >= (*it).x) && (event->x < ((*it).x + (*it).w)) &&
+			  (event->y >= (*it).y) && (event->y < ((*it).y + (*it).h)));
+		if (b) printf ("\e[31m");
+		printf ("Range: %d,%d %d,%d %p\n", (*it).x, (*it).y, (*it).w, (*it).h, (*it).p);
+		if (b) printf ("\e[0m");
+	}
+	printf ("\n");
+
+	get_window()->invalidate (false); //RAR everything for now
+#endif
+
+#if 0
 	if ((event->x >= 100) && (event->x < 200) &&
 	    (event->y >= 50)  && (event->y < 150)) {
 	}
+#endif
 #if 0
 	std::cout << event->type << std::endl;
 	std::cout << event->state << std::endl;
@@ -949,6 +1014,7 @@ bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 
 	return true;
 }
+
 
 /**
  * set_data

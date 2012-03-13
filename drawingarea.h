@@ -5,7 +5,7 @@
 
 class DPContainer;
 
-typedef struct { int l; int h; DPContainer *p; } Range;
+typedef struct { int x; int y; int w; int h; DPContainer *p; } Range;
 
 class DPDrawingArea : public Gtk::DrawingArea
 {
@@ -31,6 +31,7 @@ private:
 	DPContainer *m_c;
 
 	void get_colour (std::string &name, double &red, double &green, double &blue);
+	bool get_focus (int &x, int &y, int &w, int &h);
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c);
 	void draw_frame (const Cairo::RefPtr<Cairo::Context>& cr, int &x, int &y, int &w, int &h, const Gdk::RGBA &colour);
 	void draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h);
@@ -38,7 +39,10 @@ private:
 	void draw_partition (const Cairo::RefPtr<Cairo::Context>& cr, int &x, int y, int w, int h, int width_fs, int width_usage, const Gdk::RGBA &colour);
 	void write_label (const Cairo::RefPtr<Cairo::Context>& cr, const Glib::ustring &text);
 
-	std::vector<Range> vRange;
+	std::deque<Range> vRange;
+
+	int sel_x;
+	int sel_y;
 
 	bool mouse_close;
 };
