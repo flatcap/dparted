@@ -766,3 +766,5 @@ on a timer, keep track of
 
 remove all container knowledge from drawingarea?
 
+disable clipping regions onces tested and range-checked
+

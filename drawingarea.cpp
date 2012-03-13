@@ -309,6 +309,16 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 	draw_rect (cr, x, y+r, width_usage, h-r, 0.96, 0.96, 0.72, 1.0); // Yellow usage
 	draw_rect (cr, x+width_usage, y+r,  width_fs-width_usage, h-r, 1.00, 1.00, 1.00, 1.0);	// White background
 
+	if ((width_fs - width_usage) > 1) {
+		cr->set_source_rgb (1, 1, 1);
+		cr->move_to (x+width_usage, y+r);			// Curvy corners
+		cr->arc (x+width_usage-r, y+(2*r), r, ARC_N, ARC_E);
+		cr->fill();
+		cr->move_to (x+width_usage, y+h-2);
+		cr->arc (x+width_usage-r, y+h-2-r, r, ARC_E, ARC_S);
+		cr->fill();
+	}
+
 	Cairo::RefPtr<Cairo::LinearGradient> grad;			// Gradient shading
 	grad = Cairo::LinearGradient::create (0.0, 0.0, 0.0, h);
 	grad->add_color_stop_rgba (0.00, 0.0, 0.0, 0.0, 0.2);
@@ -550,6 +560,22 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	printf ("allocation = %dx%d\n", width, height);
 
+#if 0
+	if (m_c->device == "/dev/sdc") {
+		cr->set_line_join (Cairo::LINE_JOIN_ROUND);
+		cr->set_line_width (50);
+		cr->set_source_rgba (1, 0, 0, 1);
+		cr->move_to (500, 50);
+		cr->rel_line_to (1, 0);
+		cr->rel_line_to (0, 1);
+		cr->rel_line_to (-1, 0);
+		cr->close_path();
+		cr->stroke();
+	}
+	return true;
+#endif
+
+#if 1
 	if (m_c->device == "/dev/sdc") {
 		int x = 50;
 		int y = 0;
@@ -581,7 +607,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		width_usage = 85*w/100;
 
 		draw_tabframe (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
-		draw_focus (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
+		//draw_focus (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
 
 		const char *file = "icons/table.png";
 
@@ -600,7 +626,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		width_usage = 15*w/100;
 
 		draw_partition (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
-		draw_focus (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
+		//draw_focus (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
 		x += w+2;
 
 		name = "green";
@@ -610,10 +636,11 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		width_usage = 15*w/100;
 
 		draw_frame (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
-		draw_focus (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
+		//draw_focus (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
 
 		return true;
 	}
+#endif
 
 #if 0	// gradient
 #if 1
