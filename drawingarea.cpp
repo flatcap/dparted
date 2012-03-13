@@ -9,13 +9,18 @@
 #include "drawingarea.h"
 #include "container.h"
 
+const double ARC_N = 3*M_PI_2;		// Compass points in radians
+const double ARC_E = 0;
+const double ARC_S = M_PI_2;
+const double ARC_W = M_PI;
+
 /**
  * DPDrawingArea
  */
 DPDrawingArea::DPDrawingArea() :
 	mouse_close (false)
 {
-	set_size_request (400, 50);
+	set_size_request (800, 50);
 	set_hexpand (true);
 	set_vexpand (false);
 
@@ -137,38 +142,40 @@ void DPDrawingArea::get_colour (std::string &name, double &red, double &green, d
  * draw_frame
  */
 void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context>& cr,
-				int x, int y, int width, int height,
+				int x, int y, int w, int h,
 				DPContainer *c,
 				std::string label_left, std::string label_right,
-				int width_fs, int width_usage,
+				int w_fs, int w_usage,
 				Glib::RefPtr<Gdk::Pixbuf> icon1,
 				Glib::RefPtr<Gdk::Pixbuf> icon2,
 				Gdk::RGBA &colour)
 {
+	const int r = 8;						// Radius
+
 	cr->save();
-	cr->arc (x+8,       y+       8, 8,   M_PI,   3*M_PI_2);		// NW
-	cr->arc (x+width-8, y+       8, 8, 3*M_PI_2,      0);		// NE
-	cr->arc (x+width-8, y+height-8, 8,      0,     M_PI_2);		// SE
-	cr->arc (x+8,       y+height-8, 8,   M_PI_2,   M_PI);		// SW
+	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
+	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
+	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->clip();
 
 	cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
 
-	cr->set_line_width (8);						// Thick top bar
+	cr->set_line_width (r);						// Thick top bar
 	cr->move_to (x, y+4);
-	cr->rel_line_to (width, 0);
+	cr->rel_line_to (w, 0);
 	cr->stroke();
 
 	cr->set_line_width (2);						// Thin side bars
-	cr->move_to (x+1, y+8);
-	cr->rel_line_to (0, height-16);
-	cr->move_to (x+width-1, y+8);
-	cr->rel_line_to (0, height-16);
+	cr->move_to (x+1, y+r);
+	cr->rel_line_to (0, h-(2*r));
+	cr->move_to (x+w-1, y+r);
+	cr->rel_line_to (0, h-(2*r));
 	cr->stroke();
 
 	cr->set_line_width (4);						// Thin bottom bar
-	cr->arc (x+width-8, y+height-8, 8,      0, M_PI_2);		// SE
-	cr->arc (x+8,       y+height-8, 8, M_PI_2, M_PI);		// SW
+	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->stroke();
 
 	cr->restore();							// End clipping
@@ -178,7 +185,7 @@ void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context>& cr,
  * draw_tabframe
  */
 void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context>& cr,
-				int x, int y, int width, int height,
+				int x, int y, int w, int h,
 				DPContainer *c,
 				std::string label_left, std::string label_right,
 				int width_fs, int width_usage,
@@ -186,44 +193,43 @@ void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context>& cr,
 				Glib::RefPtr<Gdk::Pixbuf> icon2,
 				Gdk::RGBA &colour)
 {
+	const int r = 8;						// Radius
+	const int t = 26;						// Tab width
+
 	cr->save();
-	cr->arc (x+8,       y+       8, 8,   M_PI,   3*M_PI_2);		// NW
-	cr->arc (x+width-8, y+       8, 8, 3*M_PI_2,      0);		// NE
-	cr->arc (x+width-8, y+height-8, 8,      0,     M_PI_2);		// SE
-	cr->arc (x+8,       y+height-8, 8,   M_PI_2,   M_PI);		// SW
+	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
+	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
+	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->clip();
 
 	cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
 
-	int tabwidth = 26;
-
-	cr->set_line_width (8);						// Thick top bar
+	cr->set_line_width (r);						// Thick top bar
 	cr->move_to (x, y+4);
-	cr->rel_line_to (width, 0);
+	cr->rel_line_to (w, 0);
 	cr->stroke();
 
-	cr->set_line_width (tabwidth);					// Thick side bar
-	cr->move_to (x+(tabwidth/2), y+8);
-	cr->rel_line_to (0, height-8);
+	cr->set_line_width (t);						// Thick side bar
+	cr->move_to (x+(t/2), y+r);
+	cr->rel_line_to (0, h-r);
 	cr->stroke();
 
-	cr->set_line_width (1);						// Curvy inner corners
-	cr->move_to (x+tabwidth, y+8);
-	cr->arc (x+tabwidth+8, y+8+8, 8, M_PI, 3*M_PI_2);
+	cr->move_to (x+t, y+r);						// Curvy inner corners
+	cr->arc (x+t+r, y+(2*r), r, ARC_W, ARC_N);
 	cr->fill();
-
-	cr->move_to (x+tabwidth, y+height-2);
-	cr->arc (x+tabwidth+8, y+height-10, 8, M_PI_2, M_PI);
+	cr->move_to (x+t, y+h-2);
+	cr->arc (x+t+r, y+h-10, r, ARC_S, ARC_W);
 	cr->fill();
 
 	cr->set_line_width (2);						// Thin side bar
-	cr->move_to (x+width-1, y+8);
-	cr->rel_line_to (0, height-16);
+	cr->move_to (x+w-1, y+r);
+	cr->rel_line_to (0, h-16);
 	cr->stroke();
 
 	cr->set_line_width (4);						// Thin bottom bar
-	cr->arc (x+width-8, y+height-8, 8,      0, M_PI_2);		// SE
-	cr->arc (x+8,       y+height-8, 8, M_PI_2, M_PI);		// SW
+	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->stroke();
 
 	cr->restore();							// End clipping
@@ -233,7 +239,7 @@ void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context>& cr,
  * draw_partition
  */
 void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
-				    int x, int y, int width, int height,
+				    int x, int y, int w, int h,
 				    DPContainer *c,
 				    std::string label_left, std::string label_right,
 				    int width_fs, int width_usage,
@@ -241,42 +247,44 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 				    Glib::RefPtr<Gdk::Pixbuf> icon2,
 				    Gdk::RGBA &colour)
 {
+	const int r = 8;						// Radius
+
 	cr->save();
-	cr->arc (x+8,       y+       8, 8,   M_PI,   3*M_PI_2);		// NW
-	cr->arc (x+width-8, y+       8, 8, 3*M_PI_2,      0);		// NE
-	cr->arc (x+width-8, y+height-8, 8,      0,     M_PI_2);		// SE
-	cr->arc (x+8,       y+height-8, 8,   M_PI_2,   M_PI);		// SW
+	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
+	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
+	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->clip();
 
-	draw_rect (cr, x, y+8, width_usage, height-8, 0.96, 0.96, 0.72, 1.0); // Yellow usage
-	draw_rect (cr, x+width_usage, y+8,  width_fs-width_usage, height-8, 1.00, 1.00, 1.00, 1.0);	// White background
+	draw_rect (cr, x, y+r, width_usage, h-r, 0.96, 0.96, 0.72, 1.0); // Yellow usage
+	draw_rect (cr, x+width_usage, y+r,  width_fs-width_usage, h-r, 1.00, 1.00, 1.00, 1.0);	// White background
 
 	Cairo::RefPtr<Cairo::LinearGradient> grad;			// Gradient shading
-	grad = Cairo::LinearGradient::create (0.0, 0.0, 0.0, height);
+	grad = Cairo::LinearGradient::create (0.0, 0.0, 0.0, h);
 	grad->add_color_stop_rgba (0.00, 0.0, 0.0, 0.0, 0.2);
 	grad->add_color_stop_rgba (0.50, 0.0, 0.0, 0.0, 0.0);
 	grad->add_color_stop_rgba (1.00, 0.0, 0.0, 0.0, 0.1);
 	cr->set_source (grad);
-	cr->rectangle (x, y, width, height);
+	cr->rectangle (x, y, w, h);
 	cr->fill();
 
 	cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
 
-	cr->set_line_width (8);						// Thick top bar
+	cr->set_line_width (r);						// Thick top bar
 	cr->move_to (x, y+4);
-	cr->rel_line_to (width, 0);
+	cr->rel_line_to (w, 0);
 	cr->stroke();
 
 	cr->set_line_width (2);						// Thin side bars
-	cr->move_to (x+1, y+8);
-	cr->rel_line_to (0, height-16);
-	cr->move_to (x+width-1, y+8);
-	cr->rel_line_to (0, height-16);
+	cr->move_to (x+1, y+r);
+	cr->rel_line_to (0, h-(2*r));
+	cr->move_to (x+w-1, y+r);
+	cr->rel_line_to (0, h-(2*r));
 	cr->stroke();
 
 	cr->set_line_width (4);						// Thin bottom bar
-	cr->arc (x+width-8, y+height-8, 8,      0, M_PI_2);		// SE
-	cr->arc (x+8,       y+height-8, 8, M_PI_2, M_PI);		// SW
+	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->stroke();
 
 	cr->restore();							// End clipping
@@ -523,6 +531,15 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		width_usage = 85*w/100;
 
 		draw_tabframe (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
+
+		const char *file = "icons/table.png";
+
+		Glib::RefPtr<Gdk::Pixbuf> pb;
+		pb = Gdk::Pixbuf::create_from_file (file);
+		Gdk::Cairo::set_source_pixbuf(cr, pb, x+2, y+10);
+		cr->rectangle(x+2, y+10, pb->get_width(), pb->get_height());
+		cr->fill();
+
 		x += 26; y += 8; h -= 10;
 
 		name = "red";
@@ -832,9 +849,9 @@ void DPDrawingArea::set_data (DPContainer *c)
 	//unsigned int children = c->children.size();
 
 	if (m_c->device == "/dev/sdc")
-		set_size_request (400, 150);
+		set_size_request (800, 150);
 	else
-		set_size_request (400, 25);
+		set_size_request (800, 25);
 	//set_size_request (400, 50 * children);
 }
 
