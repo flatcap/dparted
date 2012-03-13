@@ -31,6 +31,7 @@ private:
 	void get_colour (std::string &name, double &red, double &green, double &blue);
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c);
 	void draw_frame (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c, std::string label_left, std::string label_right, int width_fs, int width_usage, Glib::RefPtr<Gdk::Pixbuf> icon1, Glib::RefPtr<Gdk::Pixbuf> icon2, Gdk::RGBA &colour);
+	void draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c, std::string label_left, std::string label_right, int width_fs, int width_usage, Glib::RefPtr<Gdk::Pixbuf> icon1, Glib::RefPtr<Gdk::Pixbuf> icon2, Gdk::RGBA &colour);
 	void draw_tabframe (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c, std::string label_left, std::string label_right, int width_fs, int width_usage, Glib::RefPtr<Gdk::Pixbuf> icon1, Glib::RefPtr<Gdk::Pixbuf> icon2, Gdk::RGBA &colour);
 	void draw_partition (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c, std::string label_left, std::string label_right, int width_fs, int width_usage, Glib::RefPtr<Gdk::Pixbuf> icon1, Glib::RefPtr<Gdk::Pixbuf> icon2, Gdk::RGBA &colour);
 	void write_label (const Cairo::RefPtr<Cairo::Context>& cr, const Glib::ustring &text);
