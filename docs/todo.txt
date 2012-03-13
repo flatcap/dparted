@@ -764,3 +764,5 @@ on a timer, keep track of
 	list of loop devices
 	list of lvm volumes, etc
 
+remove all container knowledge from drawingarea?
+

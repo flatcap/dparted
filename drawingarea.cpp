@@ -146,38 +146,87 @@ void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context>& cr,
 				Gdk::RGBA &colour)
 {
 	cr->save();
-	cr->arc (x+8,       y+       8, 8,   M_PI,   3*M_PI_2);
-	cr->arc (x+width-8, y+       8, 8, 3*M_PI_2,      0);
-	cr->arc (x+width-8, y+height-8, 8,      0,     M_PI_2);
-	cr->arc (x+8,       y+height-8, 8,   M_PI_2,   M_PI);
+	cr->arc (x+8,       y+       8, 8,   M_PI,   3*M_PI_2);		// NW
+	cr->arc (x+width-8, y+       8, 8, 3*M_PI_2,      0);		// NE
+	cr->arc (x+width-8, y+height-8, 8,      0,     M_PI_2);		// SE
+	cr->arc (x+8,       y+height-8, 8,   M_PI_2,   M_PI);		// SW
 	cr->clip();
 
-	cr->set_line_width (2);
 	cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
-	cr->arc (x+8,       y+8, 8,   M_PI,   3*M_PI_2);
-	cr->arc (x+width-8, y+8, 8, 3*M_PI_2, 0);
-	cr->stroke();
 
+	cr->set_line_width (8);						// Thick top bar
 	cr->move_to (x, y+4);
-	cr->set_line_width (8);
 	cr->rel_line_to (width, 0);
 	cr->stroke();
 
-	cr->set_line_width (2);
+	cr->set_line_width (2);						// Thin side bars
 	cr->move_to (x+1, y+8);
 	cr->rel_line_to (0, height-16);
-
 	cr->move_to (x+width-1, y+8);
 	cr->rel_line_to (0, height-16);
-
 	cr->stroke();
 
-	cr->set_line_width (4);
-	cr->arc_negative (x+8,       y+height-8, 8, M_PI, M_PI_2);
-	cr->arc_negative (x+width-8, y+height-8, 8, M_PI_2, 0);
+	cr->set_line_width (4);						// Thin bottom bar
+	cr->arc (x+width-8, y+height-8, 8,      0, M_PI_2);		// SE
+	cr->arc (x+8,       y+height-8, 8, M_PI_2, M_PI);		// SW
 	cr->stroke();
 
-	cr->restore();
+	cr->restore();							// End clipping
+}
+
+/**
+ * draw_tabframe
+ */
+void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context>& cr,
+				int x, int y, int width, int height,
+				DPContainer *c,
+				std::string label_left, std::string label_right,
+				int width_fs, int width_usage,
+				Glib::RefPtr<Gdk::Pixbuf> icon1,
+				Glib::RefPtr<Gdk::Pixbuf> icon2,
+				Gdk::RGBA &colour)
+{
+	cr->save();
+	cr->arc (x+8,       y+       8, 8,   M_PI,   3*M_PI_2);		// NW
+	cr->arc (x+width-8, y+       8, 8, 3*M_PI_2,      0);		// NE
+	cr->arc (x+width-8, y+height-8, 8,      0,     M_PI_2);		// SE
+	cr->arc (x+8,       y+height-8, 8,   M_PI_2,   M_PI);		// SW
+	cr->clip();
+
+	cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
+
+	int tabwidth = 26;
+
+	cr->set_line_width (8);						// Thick top bar
+	cr->move_to (x, y+4);
+	cr->rel_line_to (width, 0);
+	cr->stroke();
+
+	cr->set_line_width (tabwidth);					// Thick side bar
+	cr->move_to (x+(tabwidth/2), y+8);
+	cr->rel_line_to (0, height-8);
+	cr->stroke();
+
+	cr->set_line_width (1);						// Curvy inner corners
+	cr->move_to (x+tabwidth, y+8);
+	cr->arc (x+tabwidth+8, y+8+8, 8, M_PI, 3*M_PI_2);
+	cr->fill();
+
+	cr->move_to (x+tabwidth, y+height-2);
+	cr->arc (x+tabwidth+8, y+height-10, 8, M_PI_2, M_PI);
+	cr->fill();
+
+	cr->set_line_width (2);						// Thin side bar
+	cr->move_to (x+width-1, y+8);
+	cr->rel_line_to (0, height-16);
+	cr->stroke();
+
+	cr->set_line_width (4);						// Thin bottom bar
+	cr->arc (x+width-8, y+height-8, 8,      0, M_PI_2);		// SE
+	cr->arc (x+8,       y+height-8, 8, M_PI_2, M_PI);		// SW
+	cr->stroke();
+
+	cr->restore();							// End clipping
 }
 
 /**
@@ -193,50 +242,44 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 				    Gdk::RGBA &colour)
 {
 	cr->save();
-	cr->arc (x+8,       y+       8, 8,   M_PI,   3*M_PI_2);
-	cr->arc (x+width-8, y+       8, 8, 3*M_PI_2,      0);
-	cr->arc (x+width-8, y+height-8, 8,      0,     M_PI_2);
-	cr->arc (x+8,       y+height-8, 8,   M_PI_2,   M_PI);
+	cr->arc (x+8,       y+       8, 8,   M_PI,   3*M_PI_2);		// NW
+	cr->arc (x+width-8, y+       8, 8, 3*M_PI_2,      0);		// NE
+	cr->arc (x+width-8, y+height-8, 8,      0,     M_PI_2);		// SE
+	cr->arc (x+8,       y+height-8, 8,   M_PI_2,   M_PI);		// SW
 	cr->clip();
 
 	draw_rect (cr, x, y+8, width_usage, height-8, 0.96, 0.96, 0.72, 1.0); // Yellow usage
 	draw_rect (cr, x+width_usage, y+8,  width_fs-width_usage, height-8, 1.00, 1.00, 1.00, 1.0);	// White background
 
-	Cairo::RefPtr<Cairo::LinearGradient> grad;
+	Cairo::RefPtr<Cairo::LinearGradient> grad;			// Gradient shading
 	grad = Cairo::LinearGradient::create (0.0, 0.0, 0.0, height);
-	grad->add_color_stop_rgba (0.00, 0.0, 0.0, 0.0, 0.3);
+	grad->add_color_stop_rgba (0.00, 0.0, 0.0, 0.0, 0.2);
 	grad->add_color_stop_rgba (0.50, 0.0, 0.0, 0.0, 0.0);
 	grad->add_color_stop_rgba (1.00, 0.0, 0.0, 0.0, 0.1);
 	cr->set_source (grad);
-	cr->rectangle (x, y, width, height);	// contents
+	cr->rectangle (x, y, width, height);
 	cr->fill();
 
-	cr->set_line_width (2);
 	cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
-	cr->arc (x+8,       y+8, 8,   M_PI,   3*M_PI_2);
-	cr->arc (x+width-8, y+8, 8, 3*M_PI_2, 0);
-	cr->stroke();
 
+	cr->set_line_width (8);						// Thick top bar
 	cr->move_to (x, y+4);
-	cr->set_line_width (8);
 	cr->rel_line_to (width, 0);
 	cr->stroke();
 
-	cr->set_line_width (2);
+	cr->set_line_width (2);						// Thin side bars
 	cr->move_to (x+1, y+8);
 	cr->rel_line_to (0, height-16);
-
 	cr->move_to (x+width-1, y+8);
 	cr->rel_line_to (0, height-16);
-
 	cr->stroke();
 
-	cr->set_line_width (4);
-	cr->arc_negative (x+8,       y+height-8, 8, M_PI, M_PI_2);
-	cr->arc_negative (x+width-8, y+height-8, 8, M_PI_2, 0);
+	cr->set_line_width (4);						// Thin bottom bar
+	cr->arc (x+width-8, y+height-8, 8,      0, M_PI_2);		// SE
+	cr->arc (x+8,       y+height-8, 8, M_PI_2, M_PI);		// SW
 	cr->stroke();
 
-	cr->restore();
+	cr->restore();							// End clipping
 }
 
 /**
@@ -479,15 +522,14 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		w = 800;
 		width_usage = 85*w/100;
 
-		draw_frame (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
+		draw_tabframe (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
+		x += 26; y += 8; h -= 10;
 
 		name = "red";
 		get_colour (name, red, green, blue);
 		colour.set_rgba (red, green, blue);
 		w = 250;
 		width_usage = 15*w/100;
-
-		x += 2; y += 8; h -= 10;
 
 		draw_partition (cr, x, y, w, h, c, left, right, width_fs, width_usage, icon1, icon2, colour);
 		x += w+2;
