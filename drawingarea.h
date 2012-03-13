@@ -25,6 +25,8 @@ protected:
 	bool on_mouse_click  (GdkEventButton *event);
 	bool on_mouse_leave  (GdkEventCrossing *event);
 
+	bool on_timeout (int timer_number);
+
 private:
 	DPContainer *m_c;
 

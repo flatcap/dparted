@@ -29,6 +29,11 @@ DPDrawingArea::DPDrawingArea() :
 	signal_button_press_event() .connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_click));
 	signal_motion_notify_event().connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_motion));
 	signal_leave_notify_event() .connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_leave));
+
+#if 0
+	sigc::slot<bool> my_slot = sigc::bind (sigc::mem_fun (*this, &DPDrawingArea::on_timeout), 0);
+	sigc::connection conn = Glib::signal_timeout().connect(my_slot, 800); // ms
+#endif
 }
 
 /**
@@ -38,6 +43,17 @@ DPDrawingArea::~DPDrawingArea()
 {
 }
 
+
+/**
+ * on_timeout
+ */
+bool DPDrawingArea::on_timeout(int timer_number)
+{
+	//std::cout << "timer" << std::endl;
+	get_window()->invalidate (false); //RAR everything for now
+	return (m_c->device == "/dev/sdc");
+	//return false;
+}
 
 /**
  * draw_rect
@@ -152,9 +168,10 @@ void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, int x, 
 	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->clip();
 
-	double dashes[] = { 10.0, 10.0 };
+	double dashes[] = { 5.0, 5.0 };
 	std::valarray<double> va (dashes, sizeof (dashes)/sizeof(dashes[0]));
-	double offset = 0.0;
+	static double offset = 0.0;
+	offset += 2;
 
 	cr->set_line_width (4);
 
@@ -167,7 +184,7 @@ void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, int x, 
 	cr->close_path();
 	cr->stroke();
 
-	cr->set_dash (va, offset+10);
+	cr->set_dash (va, offset+5);
 	cr->set_source_rgb (1, 1, 1);
 	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
 	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
@@ -541,9 +558,9 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	Gtk::Allocation allocation = get_allocation();
 
 	int width  = allocation.get_width();
-	int height = allocation.get_height();
+	//int height = allocation.get_height();
 
-	printf ("allocation = %dx%d\n", width, height);
+	//printf ("allocation = %dx%d\n", width, height);
 
 #if 0
 	if (m_c->device == "/dev/sdc") {
@@ -598,10 +615,10 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 #if 1
 	if (m_c->device == "/dev/sdc") {
-		int x = 0;
+		int x = 50;
 		int y = 0;
-		int w = 100;
-		int h = 84;	//47;
+		int w = 400;
+		int h = 77;	//47;
 		//DPContainer *c = NULL;
 		std::string left;
 		std::string right;
@@ -619,7 +636,6 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		colour.set_rgba (red, green, blue);
 
 		draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
-		return true;
 
 		name = "extended";
 		get_colour (name, red, green, blue);
