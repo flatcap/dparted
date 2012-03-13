@@ -32,6 +32,8 @@ private:
 
 	void get_colour (std::string &name, double &red, double &green, double &blue);
 	bool get_focus (int &x, int &y, int &w, int &h);
+
+	void draw_border (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h, int r);
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c);
 	void draw_frame (const Cairo::RefPtr<Cairo::Context>& cr, int &x, int &y, int &w, int &h, const Gdk::RGBA &colour);
 	void draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h);

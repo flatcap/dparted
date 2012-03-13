@@ -181,6 +181,18 @@ bool DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
 	return b;
 }
 
+
+/**
+ * draw_border
+ */
+void DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h, int r)
+{
+	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
+	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
+	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
+}
+
 /**
  * draw_focus
  */
@@ -188,35 +200,25 @@ void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, int x, 
 {
 	const int r = 8;					// Radius
 
-	cr->save();
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);		// Set clipping area
-	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
-	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
-	cr->clip();
+	std::vector<double> dashes;
+	dashes.push_back (5);
+	dashes.push_back (5);
 
-	double dashes[] = { 5.0, 5.0 };
-	std::valarray<double> va (dashes, sizeof (dashes)/sizeof(dashes[0]));
-	static double offset = 0.0;
-	offset += 2;
+	cr->save();
+	draw_border (cr, x, y, w, h, r);			// Set clipping area
+	cr->clip();
 
 	cr->set_line_width (4);
 
-	cr->set_dash (va, offset);
+	cr->set_dash (dashes, 0);
 	cr->set_source_rgb (0, 0, 0);
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
-	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
-	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
+	draw_border (cr, x, y, w, h, r);
 	cr->close_path();
 	cr->stroke();
 
-	cr->set_dash (va, offset+5);
+	cr->set_dash (dashes, 5);
 	cr->set_source_rgb (1, 1, 1);
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
-	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
-	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
+	draw_border (cr, x, y, w, h, r);
 	cr->close_path();
 	cr->stroke();
 
@@ -231,10 +233,7 @@ void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context>& cr, int &x,
 	const int r = 8;					// Radius
 
 	cr->save();
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);		// Set clipping area
-	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
-	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
+	draw_border (cr, x, y, w, h, r);			// Set clipping area
 	cr->clip();
 
 	cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
@@ -272,51 +271,48 @@ void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context>& cr, int &x,
  */
 void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context>& cr, int &x, int &y, int &w, int &h, const Gdk::RGBA &colour)
 {
-	const int r = 8;						// Radius
-	const int t = 26;						// Tab width
+	const int r = 8;					// Radius
+	const int t = 26;					// Tab width
 
 	cr->save();
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);			// Set clipping area
-	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
-	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
+	draw_border (cr, x, y, w, h, r);			// Set clipping area
 	cr->clip();
 
 	cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
 
-	cr->set_line_width (r);						// Thick top bar
+	cr->set_line_width (r);					// Thick top bar
 	cr->move_to (x, y+4);
 	cr->rel_line_to (w, 0);
 	cr->stroke();
 
-	cr->set_line_width (t);						// Thick side bar
+	cr->set_line_width (t);					// Thick side bar
 	cr->move_to (x+(t/2), y+r);
 	cr->rel_line_to (0, h-r);
 	cr->stroke();
 
-	cr->move_to (x+t, y+r);						// Curvy inner corners
+	cr->move_to (x+t, y+r);					// Curvy inner corners
 	cr->arc (x+t+r, y+(2*r), r, ARC_W, ARC_N);
 	cr->fill();
 	cr->move_to (x+t, y+h-2);
 	cr->arc (x+t+r, y+h-10, r, ARC_S, ARC_W);
 	cr->fill();
 
-	cr->set_line_width (2);						// Thin side bar
+	cr->set_line_width (2);					// Thin side bar
 	cr->move_to (x+w-1, y+r);
 	cr->rel_line_to (0, h-16);
 	cr->stroke();
 
-	cr->set_line_width (4);						// Thin bottom bar
+	cr->set_line_width (4);					// Thin bottom bar
 	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
 	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->stroke();
 
-	cr->restore();							// End clipping
+	cr->restore();						// End clipping
 
 	Range rg = { x, y, w, h, NULL };
 	vRange.push_front (rg);
 
-	x += t;								// The space remaining inside
+	x += t;							// The space remaining inside
 	y += r;
 	w -= t+2;
 	h -= r+2;
@@ -333,10 +329,7 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 	const int r = 8;						// Radius
 
 	cr->save();
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);			// Set clipping area
-	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
-	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
+	draw_border (cr, x, y, w, h, r);				// Set clipping area
 	cr->clip();
 
 	draw_rect (cr, x, y+r, width_usage, h-r, 0.96, 0.96, 0.72, 1.0); // Yellow usage
@@ -387,6 +380,7 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 
 	x += w;								// The space remaining inside
 }
+
 
 /**
  * draw_container
