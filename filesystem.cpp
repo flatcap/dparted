@@ -17,6 +17,7 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <string>
 #include <sstream>
@@ -182,8 +183,11 @@ bool Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 		} else {
 			f->bytes_used = parent->bytes_size;
 		}
+		//printf ("%s: size = %lld, used = %lld\n", f->name.c_str(), f->bytes_size, f->bytes_used);
 
 		parent->add_child (f);
+
+		f->bytes_used = (rand()%90) * f->bytes_size / 100; //RAR
 	}
 
 	return (f != NULL);

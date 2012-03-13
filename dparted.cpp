@@ -9,7 +9,11 @@ DParted::DParted () :
 	m_c (NULL)
 {
 	set_title ("DParted");
-	set_default_size (1439, 255); //RAR 1440, 800
+#if 1
+	set_default_size (1439, 255);
+#else
+	set_default_size (1439, 800); //RAR 1439, 800
+#endif
 
 	add (scrolledwindow);
 
@@ -55,6 +59,11 @@ DParted::DParted () :
 	get_size (width, height);
 	//move (1920+1440 - width, 900 - height);
 	move (1920, 0);
+
+#if 1
+	Glib::RefPtr<Gtk::Settings> s = get_settings();
+	s->property_gtk_tooltip_timeout() = 3000;
+#endif
 }
 
 /**

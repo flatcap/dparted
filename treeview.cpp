@@ -39,7 +39,7 @@ TreeView::TreeView()
 	signal_row_activated().connect (sigc::mem_fun (*this, &TreeView::on_row_activated));
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &TreeView::on_query_tooltip));
 
-#if 0
+#if 1
 	//Fill popup menu:
 	Gtk::MenuItem* item = Gtk::manage(new Gtk::MenuItem("_Edit", true));
 	item->signal_activate().connect( sigc::mem_fun(*this, &TreeView::on_menu_file_popup_generic) );
@@ -161,7 +161,7 @@ void TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 			tree_add_row (x, &row);
 		}
 	}
-	//RAR expand_all();
+	expand_all();
 }
 
 
@@ -201,7 +201,7 @@ void TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeView
  */
 bool TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
-#if 0
+#if 1
 	if (keyboard_tooltip)
 		return false;
 
@@ -215,7 +215,7 @@ bool TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib
 	Gtk::TreeModel::Path path;
 
 	if (get_path_at_pos (tx, ty, path)) {
-#if 0
+#if 1
 		tooltip->set_text (path.to_string());
 #else
 		Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter (path);
