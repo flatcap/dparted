@@ -969,10 +969,10 @@ bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 {
 	std::cout << "mouse click: (" << event->x << "," << event->y << ")" << std::endl;
 
-#if 1
 	sel_x = event->x;
 	sel_y = event->y;
 
+#if 0
 	std::deque<Range>::iterator it;
 	for (it = vRange.begin(); it != vRange.end(); it++) {
 		bool b = ((event->x >= (*it).x) && (event->x < ((*it).x + (*it).w)) &&
@@ -982,9 +982,9 @@ bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 		if (b) printf ("\e[0m");
 	}
 	printf ("\n");
+#endif
 
 	get_window()->invalidate (false); //RAR everything for now
-#endif
 
 #if 0
 	if ((event->x >= 100) && (event->x < 200) &&
