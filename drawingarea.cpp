@@ -60,9 +60,9 @@ bool DPDrawingArea::on_timeout(int timer_number)
 /**
  * draw_rect
  */
-void DPDrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double width, double height, double red, double green, double blue, double alpha)
+void DPDrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double width, double height, double red, double green, double blue)
 {
-	cr->set_source_rgba (red, green, blue, alpha);
+	cr->set_source_rgb (red, green, blue);
 	cr->rectangle (x, y, width, height);
 	cr->fill();
 }
@@ -70,10 +70,10 @@ void DPDrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context>& cr, double x
 /**
  * draw_box
  */
-void DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double width, double height, double line_width, double red, double green, double blue, double alpha)
+void DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double width, double height, double line_width, double red, double green, double blue)
 {
 	cr->set_line_width(line_width);
-	cr->set_source_rgba (red, green, blue, alpha);
+	cr->set_source_rgb (red, green, blue);
 
 	double half = line_width/2;
 
@@ -332,8 +332,8 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 	draw_border (cr, x, y, w, h, r);				// Set clipping area
 	cr->clip();
 
-	draw_rect (cr, x, y+r, width_usage, h-r, 0.96, 0.96, 0.72, 1.0); // Yellow usage
-	draw_rect (cr, x+width_usage, y+r,  width_fs-width_usage, h-r, 1.00, 1.00, 1.00, 1.0);	// White background
+	draw_rect (cr, x, y+r, width_usage, h-r, 0.96, 0.96, 0.72);	 // Yellow usage
+	draw_rect (cr, x+width_usage, y+r,  width_fs-width_usage, h-r, 1.00, 1.00, 1.00);	// White background
 
 	if ((width_fs - width_usage) > 1) {
 		cr->set_source_rgb (1, 1, 1);
@@ -396,7 +396,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 		//printf ("draw x = %4d, y = %4d, width = %4d, height = %4d\n", x, y, width, height);
 		get_colour (c->name, red, green, blue);
 		if (c->type == "extended") {
-			draw_rect (cr, x, y, 28, height, red, green, blue, 1.0);
+			draw_rect (cr, x, y, 28, height, red, green, blue);
 #if 1
 			Glib::RefPtr<Gdk::Pixbuf> pb3;
 
@@ -410,11 +410,11 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 			x += 18;
 			width -= 18;
 		} else {
-			draw_rect  (cr, x, y, width, height, 1, 1, 1, 1.0); // White background
+			draw_rect  (cr, x, y, width, height, 1, 1, 1);		// White background
 #if 1
 			int bytes_per_pixel = c->bytes_size / width;
 			int uw = c->bytes_used / bytes_per_pixel;
-			draw_rect  (cr, x, y, uw, height, 0.96, 0.96, 0.72, 1.0); // Yellow usage
+			draw_rect  (cr, x, y, uw, height, 0.96, 0.96, 0.72);	 // Yellow usage
 
 			Pango::FontDescription font;
 			font.set_family ("Liberation Sans");
@@ -471,7 +471,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 
 #endif
 		}
-		draw_box  (cr, x, y, width, height, 3, red, green, blue, 1.0);
+		draw_box  (cr, x, y, width, height, 3, red, green, blue);
 		x      += 10;
 		y      +=  3;
 		width  -= 10;
@@ -594,57 +594,6 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	//printf ("allocation = %dx%d\n", width, height);
 
-#if 0
-	if (m_c->device == "/dev/sdc") {
-		cr->set_line_join (Cairo::LINE_JOIN_ROUND);
-		cr->set_line_width (50);
-		cr->set_source_rgba (1, 0, 0, 1);
-		cr->move_to (500, 50);
-		cr->rel_line_to (1, 0);
-		cr->rel_line_to (0, 1);
-		cr->rel_line_to (-1, 0);
-		cr->close_path();
-		cr->stroke();
-	}
-	return true;
-#endif
-
-#if 0	// end markers
-	cr->set_line_width (1);
-	cr->set_antialias (Cairo::ANTIALIAS_NONE);
-
-	cr->set_source_rgba (0, 0, 1, 1);		// BLUE
-	cr->move_to (0.5, 0.5);
-	cr->rel_line_to (0, height);
-	cr->stroke();
-	cr->move_to (0.5, 0.5);
-	cr->rel_line_to (width, 0);
-	cr->stroke();
-
-#if 0
-	cr->set_source_rgba (1, 0, 0, 1);		// RED
-	cr->move_to (49, 0);
-	cr->rel_line_to (0, height);
-	cr->stroke();
-	cr->move_to (150, 0);
-	cr->rel_line_to (0, height);
-	cr->stroke();
-	cr->move_to (0, 7);
-	cr->rel_line_to (width, 0);
-	cr->stroke();
-	cr->move_to (0, 92);
-	cr->rel_line_to (width, 0);
-	cr->stroke();
-
-	cr->set_source_rgba (0, 1, 0, 1);		// GREEN
-	cr->rectangle (50+0.5, 7+0.5, 99, 83);
-	cr->stroke();
-#endif
-
-	cr->set_antialias (Cairo::ANTIALIAS_DEFAULT);
-	//return true;
-#endif	// end markers
-
 #if 1
 	if (m_c->device == "/dev/sdc") {
 		int x = 50;
@@ -676,7 +625,6 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		width_usage = 85*w/100;
 
 		draw_tabframe (cr, x, y, w, h, colour);
-		//draw_focus (cr, x, y, w, h);
 
 		const char *file = "icons/table.png";
 
@@ -693,7 +641,6 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		width_usage = 15*w/100;
 
 		draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
-		//draw_focus (cr, x-w, y, w, h);
 
 		name = "green";
 		get_colour (name, red, green, blue);
@@ -702,7 +649,6 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		width_usage = 15*w/100;
 
 		draw_frame (cr, x, y, w, h, colour);
-		//draw_focus (cr, x, y, w, h);
 
 		int fx, fy, fh, fw;
 		if (get_focus (fx, fy, fw, fh)) {
@@ -711,60 +657,6 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 		return true;
 	}
-#endif
-
-#if 0	// gradient
-#if 1
-	draw_rect  (cr, 20, 2, 170, 46, 1, 1, 1, 1.0); // White background
-	draw_rect  (cr, 20, 2, 85, 46, 0.96, 0.96, 0.72, 1.0); // Yellow usage
-	//draw_box   (cr, 20, 2, 170, 46, 4, 0.9, 0.0, 0, 1.0);
-#endif
-
-#if 1
-	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
-	cr->set_source_rgb(0.0, 0.0, 0.0);
-	layout->set_markup ("<b>hello world</b>");
-	cr->move_to (30, 20);
-	layout->update_from_cairo_context (cr);
-	layout->show_in_cairo_context (cr);
-#endif
-
-#if 1
-	Cairo::RefPtr<Cairo::LinearGradient> grad;
-	grad = Cairo::LinearGradient::create (0.0, 0.0, 0.0, 38.0);
-	grad->add_color_stop_rgba (0.00, 0.0, 0.0, 0.0, 0.4);
-	grad->add_color_stop_rgba (0.50, 0.0, 0.0, 0.0, 0.0);
-	grad->add_color_stop_rgba (1.00, 0.0, 0.0, 0.0, 0.2);
-	cr->set_source (grad);
-	//cr->set_source_rgb (0, 0, 0);
-	cr->rectangle (24, 6, 162, 38);	// contents
-	//cr->rectangle (20, 2, 170, 46);	// whole
-	//cr->rectangle (0, 0, 1400, 50);
-	cr->fill();
-#endif
-
-#if 0
-	cr->set_source_rgba (0, 0, 0, 1);
-	cr->set_line_width (1);
-	cr->move_to (250, 0);
-	cr->rel_line_to (0, 50);
-	cr->stroke();
-	cr->move_to (750, 0);
-	cr->rel_line_to (0, 50);
-	cr->stroke();
-#endif
-	return true;
-#endif // gradient
-
-#if 0
-	Glib::RefPtr<Gdk::Pixbuf> pb;
-	pb = render_icon_pixbuf (Gtk::Stock::HARDDISK, Gtk::IconSize (Gtk::ICON_SIZE_MENU));
-	for (int i = 0; i < 400; i += 50) {
-		Gdk::Cairo::set_source_pixbuf(cr, pb, i, 0);
-		cr->rectangle(i, 0, pb->get_width(), pb->get_height());
-		cr->fill();
-	}
-	return true;
 #endif
 
 #if 1
@@ -786,18 +678,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 #endif
 
 #if 0
-	cr->save();
-	cr->rectangle (0, 0, 25, 50);
-	cr->clip();
-	cr->restore();
-#endif
-
-#if 0
 	Glib::RefPtr<Gdk::Pixbuf> pb;
-	pb = render_icon_pixbuf (Gtk::Stock::HARDDISK, Gtk::IconSize (Gtk::ICON_SIZE_LARGE_TOOLBAR));
-	Gdk::Cairo::set_source_pixbuf(cr, pb, 2, 0);
-	cr->rectangle(2, 0, pb->get_width()+2, pb->get_height());
-	cr->fill();
 	pb = render_icon_pixbuf (Gtk::Stock::INDEX, Gtk::IconSize (Gtk::ICON_SIZE_LARGE_TOOLBAR));
 	Gdk::Cairo::set_source_pixbuf(cr, pb, 26, 2);
 	cr->rectangle(26, 2, pb->get_width()+2, pb->get_height());
@@ -807,8 +688,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 #if 1
 	Glib::RefPtr<Gdk::Pixbuf> pb2;
 
-	draw_rect (cr, 52, 0, 30, 48,    1, 1, 1, 1);
-	draw_box  (cr, 52, 0, 30, 48, 2, 0, 0, 0, 0.3);
+	draw_rect (cr, 52, 0, 30, 48,    1, 1, 1);
+	draw_box  (cr, 52, 0, 30, 48, 2, 0, 0, 0);
 
 	pb2 = Gdk::Pixbuf::create_from_file ("icons/table.png");
 	Gdk::Cairo::set_source_pixbuf(cr, pb2, 56, 1);
@@ -819,20 +700,6 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	Gdk::Cairo::set_source_pixbuf(cr, pb2, 55, 24);
 	cr->rectangle(55, 24, pb2->get_width(), pb2->get_height());
 	cr->fill();
-	//return true;
-#endif
-
-#if 0
-	Glib::RefPtr<Gdk::Pixbuf> pb3;
-
-	draw_rect (cr, 84, 0, 30, 48,    1, 1, 1, 1);
-	draw_box  (cr, 84, 0, 30, 48, 2, 0, 0, 0, 0.3);
-
-	pb3 = Gdk::Pixbuf::create_from_file ("icons/table.png");
-	Gdk::Cairo::set_source_pixbuf(cr, pb3, 88, 1);
-	cr->rectangle(88, 1, pb3->get_width(), pb3->get_height());
-	cr->fill();
-
 	//return true;
 #endif
 
@@ -868,8 +735,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	fg = style->get_color (Gtk::STATE_FLAG_NORMAL);
 	bg = style->get_background_color(Gtk::STATE_FLAG_NORMAL);
 
-	std::cout << "fg = " << fg.get_red() << "," << fg.get_green() << "," << fg.get_blue() << "," << fg.get_alpha() << std::endl;
-	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << "," << bg.get_alpha() << std::endl;
+	std::cout << "fg = " << fg.get_red() << "," << fg.get_green() << "," << fg.get_blue() << std::endl;
+	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << std::endl;
 #endif
 
 #if 0
@@ -891,8 +758,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	layout->get_pixel_size(stringWidth, stringHeight);
 	std::cout << "text: " << stringWidth << "x" << stringHeight << std::endl;
-	draw_rect (cr, (width-stringWidth)/2, (height-stringHeight)/2, stringWidth, stringHeight, 1, 1, 1, 1);
-	draw_box  (cr, (width-stringWidth)/2-1, (height-stringHeight)/2-1, stringWidth+2, stringHeight+2, 1, 0, 0, 0, 1);
+	draw_rect (cr, (width-stringWidth)/2, (height-stringHeight)/2, stringWidth, stringHeight, 1, 1);
+	draw_box  (cr, (width-stringWidth)/2-1, (height-stringHeight)/2-1, stringWidth+2, stringHeight+2, 1, 0, 0, 0);
 	cr->move_to ((width-stringWidth)/2, (height-stringHeight)/2);
 
 	//cr->move_to (20, 100);
@@ -901,23 +768,6 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	layout->update_from_cairo_context (cr);
 	layout->show_in_cairo_context (cr);
 #endif
-
-#if 0	// lines
-	cr->set_antialias (Cairo::ANTIALIAS_NONE);
-	cr->set_source_rgba (0, 0, 0, 0.3);
-
-	for (int i = 0; i < width; i += 50) {
-		if ((i % 100) == 0) {
-			cr->set_line_width(2);
-		} else {
-			cr->set_line_width(1);
-		}
-
-		cr->move_to (i, 0);
-		cr->line_to (i, height);
-		cr->stroke();
-	}
-#endif	// lines
 	return true;
 }
 
