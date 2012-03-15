@@ -18,6 +18,7 @@ const double ARC_W = M_PI;
  * DPDrawingArea
  */
 DPDrawingArea::DPDrawingArea() :
+	//Glib::ObjectBase ("MyDrawingArea"),
 	sel_x (-1),
 	sel_y (-1),
 	mouse_close (false)
@@ -36,6 +37,7 @@ DPDrawingArea::DPDrawingArea() :
 	sigc::slot<bool> my_slot = sigc::bind (sigc::mem_fun (*this, &DPDrawingArea::on_timeout), 0);
 	sigc::connection conn = Glib::signal_timeout().connect(my_slot, 800); // ms
 #endif
+	//std::cout << "GType name: " << G_OBJECT_TYPE_NAME(gobj()) << std::endl;
 }
 
 /**
@@ -51,10 +53,10 @@ DPDrawingArea::~DPDrawingArea()
  */
 bool DPDrawingArea::on_timeout(int timer_number)
 {
-	//std::cout << "timer" << std::endl;
+	std::cout << "timer" << std::endl;
 	get_window()->invalidate (false); //RAR everything for now
-	return (m_c->device == "/dev/sdc");
-	//return false;
+	//return (m_c->device == "/dev/sdc");
+	return false;
 }
 
 /**
@@ -587,77 +589,19 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	vRange.clear();
 
+#if 0
 	Gtk::Allocation allocation = get_allocation();
-
 	int width  = allocation.get_width();
-	//int height = allocation.get_height();
-
-	//printf ("allocation = %dx%d\n", width, height);
-
-#if 1
-	if (m_c->device == "/dev/sdc") {
-		int x = 50;
-		int y = 0;
-		int w = 400;
-		int h = 77;	//47;
-		//DPContainer *c = NULL;
-		std::string left;
-		std::string right;
-		int width_fs = w;
-		int width_usage = 35*w/100;
-		Glib::RefPtr<Gdk::Pixbuf> icon1;
-		Glib::RefPtr<Gdk::Pixbuf> icon2;
-		Gdk::RGBA colour;
-
-		double red, green, blue;
-		std::string name;
-
-		name = "ext2";
-		get_colour (name, red, green, blue);
-		colour.set_rgba (red, green, blue);
-
-		draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
-
-		name = "extended";
-		get_colour (name, red, green, blue);
-		colour.set_rgba (red, green, blue);
-		w = 800;
-		width_usage = 85*w/100;
-
-		draw_tabframe (cr, x, y, w, h, colour);
-
-		const char *file = "icons/table.png";
-
-		Glib::RefPtr<Gdk::Pixbuf> pb;
-		pb = Gdk::Pixbuf::create_from_file (file);
-		Gdk::Cairo::set_source_pixbuf(cr, pb, x-24, y+2);
-		cr->rectangle(x-24, y+2, pb->get_width(), pb->get_height());
-		cr->fill();
-
-		name = "red";
-		get_colour (name, red, green, blue);
-		colour.set_rgba (red, green, blue);
-		w = 250;
-		width_usage = 15*w/100;
-
-		draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
-
-		name = "green";
-		get_colour (name, red, green, blue);
-		colour.set_rgba (red, green, blue);
-		w = 350;
-		width_usage = 15*w/100;
-
-		draw_frame (cr, x, y, w, h, colour);
-
-		int fx, fy, fh, fw;
-		if (get_focus (fx, fy, fw, fh)) {
-			draw_focus (cr, fx, fy, fw, fh);
-		}
-
-		return true;
-	}
+	int height = allocation.get_height();
+	printf ("allocation = %dx%d\n", width, height);
 #endif
+
+	static int i = 0;
+	i++;
+	if (i < 2)
+		return true;
+
+	std::cout << m_c << std::endl;
 
 #if 1
 	const char *file = NULL;
@@ -677,6 +621,84 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	cr->fill();
 #endif
 
+	// block, empty
+	//	children.size() == 0
+	// block, table, empty
+	//	children.size() == 1
+	//	children[0] == table
+	//	table.children.size() == 0
+	// block, table, partition (protective)
+	//	children.size() == 1
+	//	children[0] == table
+	//	table.children.size() == 1
+	//	table.children[1] == partition
+	//	partition.size == table.size (delta)
+
+	std::cout << m_c->children[0] << std::endl;
+
+#if 0
+	int x = 50;
+	int y = 0;
+	int w = 400;
+	int h = 77;	//47;
+	//DPContainer *c = NULL;
+	std::string left;
+	std::string right;
+	int width_fs = w;
+	int width_usage = 35*w/100;
+	Glib::RefPtr<Gdk::Pixbuf> icon1;
+	Glib::RefPtr<Gdk::Pixbuf> icon2;
+	Gdk::RGBA colour;
+
+	double red, green, blue;
+	std::string name;
+
+	name = "ext2";
+	get_colour (name, red, green, blue);
+	colour.set_rgba (red, green, blue);
+
+	draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
+
+	name = "extended";
+	get_colour (name, red, green, blue);
+	colour.set_rgba (red, green, blue);
+	w = 800;
+	width_usage = 85*w/100;
+
+	draw_tabframe (cr, x, y, w, h, colour);
+
+	const char *file = "icons/table.png";
+
+	Glib::RefPtr<Gdk::Pixbuf> pb;
+	pb = Gdk::Pixbuf::create_from_file (file);
+	Gdk::Cairo::set_source_pixbuf(cr, pb, x-24, y+2);
+	cr->rectangle(x-24, y+2, pb->get_width(), pb->get_height());
+	cr->fill();
+
+	name = "red";
+	get_colour (name, red, green, blue);
+	colour.set_rgba (red, green, blue);
+	w = 250;
+	width_usage = 15*w/100;
+
+	draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
+
+	name = "green";
+	get_colour (name, red, green, blue);
+	colour.set_rgba (red, green, blue);
+	w = 350;
+	width_usage = 15*w/100;
+
+	draw_frame (cr, x, y, w, h, colour);
+
+	int fx, fy, fh, fw;
+	if (get_focus (fx, fy, fw, fh)) {
+		draw_focus (cr, fx, fy, fw, fh);
+	}
+
+	return true;
+#endif
+
 #if 0
 	Glib::RefPtr<Gdk::Pixbuf> pb;
 	pb = render_icon_pixbuf (Gtk::Stock::INDEX, Gtk::IconSize (Gtk::ICON_SIZE_LARGE_TOOLBAR));
@@ -685,7 +707,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	cr->fill();
 #endif
 
-#if 1
+#if 0
 	Glib::RefPtr<Gdk::Pixbuf> pb2;
 
 	draw_rect (cr, 52, 0, 30, 48,    1, 1, 1);
@@ -703,6 +725,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	//return true;
 #endif
 
+#if 0
 	if (m_c->children.size() > 0) {
 		int children = m_c->children.size();
 		//printf ("%d children\n", children);
@@ -723,6 +746,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 			write_label (cr, "<b>" + label + "</b>");
 		}
 	}
+#endif
 
 #if 0
 	// move to main window, add accessor function
