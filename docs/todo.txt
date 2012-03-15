@@ -768,3 +768,10 @@ remove all container knowledge from drawingarea?
 
 disable clipping regions onces tested and range-checked
 
+themeable items
+	colours
+	icons
+	sizes
+	text layout
+	gradients
+
