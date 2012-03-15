@@ -32,7 +32,7 @@ Volume::Volume (void) :
 	kernel_major (0),
 	kernel_minor (0)
 {
-	type = "volume";
+	type.push_back ("volume");
 }
 
 /**

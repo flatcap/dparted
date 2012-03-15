@@ -41,7 +41,7 @@
  */
 Block::Block (void)
 {
-	type = "block";
+	type.push_back ("block");
 }
 
 /**

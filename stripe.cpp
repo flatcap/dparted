@@ -30,7 +30,7 @@
  */
 Stripe::Stripe (void)
 {
-	type = "stripe";
+	type.push_back ("stripe");
 	//log_debug ("ctor stripe (%p)\n", this);
 }
 

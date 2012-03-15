@@ -36,7 +36,7 @@
 Loop::Loop (void)
 {
 	name = "loop";
-	type = "loop";
+	type.push_back ("loop");
 }
 
 /**

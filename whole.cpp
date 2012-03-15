@@ -30,7 +30,7 @@
  */
 Whole::Whole (void)
 {
-	type = "whole";
+	type.push_back ("whole");
 }
 
 /**

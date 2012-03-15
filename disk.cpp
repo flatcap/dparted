@@ -46,7 +46,7 @@ Disk::Disk (void) :
 	did (0)
 {
 	name = "disk";
-	type = "disk";
+	type.push_back ("disk");
 }
 
 /**

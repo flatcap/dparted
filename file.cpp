@@ -36,7 +36,7 @@
 File::File (void)
 {
 	name = "file";
-	type = "file";
+	type.push_back ("file");
 }
 
 /**

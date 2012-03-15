@@ -85,7 +85,7 @@ void DParted::set_data (DPContainer *c)
 	treeview.init_treeview (m_c);
 
 	for (std::vector<DPContainer*>::iterator i = c->children.begin(); i != c->children.end(); i++) {
-		if ((*i)->type == "volumegroup")
+		if ((*i)->is_a ("volumegroup"))
 			continue; //RAR for now ignore vg
 		//std::cout << (*i)->type << std::endl;
 		DPDrawingArea *da = manage (new DPDrawingArea());

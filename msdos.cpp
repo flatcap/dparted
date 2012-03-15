@@ -39,7 +39,7 @@
  */
 Msdos::Msdos (void)
 {
-	type = "msdos";
+	type.push_back ("msdos");
 }
 
 /**

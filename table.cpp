@@ -31,7 +31,7 @@
  */
 Table::Table (void)
 {
-	type = "table";
+	type.push_back ("table");
 }
 
 /**

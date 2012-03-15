@@ -32,7 +32,7 @@
  */
 Gpt::Gpt (void)
 {
-	type = "gpt";
+	type.push_back ("gpt");
 }
 
 /**

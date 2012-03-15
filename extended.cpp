@@ -34,7 +34,7 @@
  */
 Extended::Extended (void)
 {
-	type = "extended";
+	type.push_back ("extended");
 }
 
 /**

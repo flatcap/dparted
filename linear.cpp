@@ -30,7 +30,7 @@
  */
 Linear::Linear (void)
 {
-	type = "linear";
+	type.push_back ("linear");
 	//log_debug ("ctor linear (%p)\n", this);
 }
 

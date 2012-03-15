@@ -34,7 +34,7 @@
  */
 Filesystem::Filesystem (void)
 {
-	type = "filesystem";
+	type.push_back ("filesystem");
 }
 
 /**

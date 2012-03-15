@@ -394,10 +394,10 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 	double blue  = 1.0;
 
 	//if (c->type == "extended") {
-	if ((c->type != "msdos") && (c->type != "vg segment") && (c->type != "partition")) {
+	if ((c->is_a ("msdos")) && (c->is_a ("vg segment")) && (c->is_a ("partition"))) {
 		//printf ("draw x = %4d, y = %4d, width = %4d, height = %4d\n", x, y, width, height);
 		get_colour (c->name, red, green, blue);
-		if (c->type == "extended") {
+		if (c->is_a ("extended")) {
 			draw_rect (cr, x, y, 28, height, red, green, blue);
 #if 1
 			Glib::RefPtr<Gdk::Pixbuf> pb3;
@@ -602,6 +602,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		return true;
 
 	std::cout << m_c << std::endl;
+	if (m_c->is_a ("block"))
+		std::cout << "it's a block" << std::endl;
 
 #if 1
 	const char *file = NULL;

@@ -29,7 +29,7 @@
  */
 Partition::Partition (void)
 {
-	type = "partition";
+	type.push_back ("partition");
 }
 
 /**

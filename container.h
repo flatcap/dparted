@@ -63,9 +63,9 @@ public:
 	virtual FILE * open_device (void);
 	virtual int read_data (long long offset, long long size, unsigned char *buffer);
 
-	enum ContainerType cont_type;
+	virtual bool is_a (const std::string &type);
 
-	std::string	 type;
+	enum ContainerType cont_type;
 
 	std::string	 name;
 	std::string	 uuid;
@@ -96,6 +96,8 @@ protected:
 	std::string dump_table_footer (void);
 
 	FILE		*fd;
+
+	std::vector<std::string> type;
 
 private:
 

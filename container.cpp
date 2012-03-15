@@ -43,7 +43,7 @@ DPContainer::DPContainer (void) :
 	parent (NULL),
 	fd (NULL)
 {
-	type = "container";
+	type.push_back ("container");
 }
 
 /**
@@ -89,7 +89,7 @@ void DPContainer::dump2 (void)
 		f = get_size ((*i)->bytes_size - (*i)->bytes_used);
 		o = get_size ((*i)->parent_offset);
 		d = (*i)->get_device_name();
-		t = (*i)->type;
+		t = (*i)->type.back();
 		const char *indent = "";
 		const char *undent = "                        ";
 		if (parent == NULL) {
@@ -601,7 +601,7 @@ int DPContainer::read_data (long long offset, long long size, unsigned char *buf
  */
 std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
 {
-	stream << c.name << ", " << c.type << ", " << c.device << ", " << c.children.size();
+	stream << c.name << ", " << c.type.back() << ", " << c.device << ", " << c.children.size();
 	return stream;
 }
 
@@ -614,5 +614,24 @@ std::ostream& operator<< (std::ostream &stream, const DPContainer *c)
 		return operator<< (stream, *c);
 	else
 		return stream;
+}
+
+
+/**
+ * is_a
+ */
+bool DPContainer::is_a (const std::string &t)
+{
+	std::cout << "my type = " << type.back() << ", compare to " << t << std::endl;
+
+	std::vector<std::string>::reverse_iterator it;
+
+	for (it = type.rbegin(); it != type.rend(); it++) {
+		if ((*it) == t) {
+			return true;
+		}
+	}
+
+	return false;
 }
 

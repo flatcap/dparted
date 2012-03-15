@@ -30,7 +30,7 @@
  */
 Mirror::Mirror (void)
 {
-	type = "mirror";
+	type.push_back ("mirror");
 	//log_debug ("ctor mirror (%p)\n", this);
 }
 

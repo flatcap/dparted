@@ -31,7 +31,7 @@
 Segment::Segment (void) :
 	whole (NULL)
 {
-	type = "segment";
+	type.push_back ("segment");
 }
 
 /**

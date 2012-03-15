@@ -142,7 +142,7 @@ void TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 
 	for (i = c->children.begin(); i != c->children.end(); i++) {
 		DPContainer *x = (*i);
-		if (x->type == "volumegroup")
+		if (x->is_a ("volumegroup"))
 			continue; //RAR for now ignore vg
 		//std::cout << "name: " << x->name << std::endl;
 		if (parent) {

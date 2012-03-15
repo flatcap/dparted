@@ -49,7 +49,7 @@ VolumeGroup::VolumeGroup (void) :
 	vg_free_count (0),
 	vg_seqno (0)
 {
-	type = "volumegroup";
+	type.push_back ("volumegroup");
 }
 
 /**
@@ -203,7 +203,7 @@ void fd_vgs (DPContainer &disks)
 
 		Segment *vg_seg = new Segment;
 		vg_seg->bytes_size = cont->bytes_size;
-		vg_seg->type = "vg segment";
+		//RAR vg_seg->type.push_back ("vg segment");
 		vg_seg->block_size = vg->block_size;
 		vg_seg->uuid = vg_uuid;
 		vg_seg->name = vg->name;
