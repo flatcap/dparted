@@ -54,13 +54,15 @@ DParted::DParted () :
 
 	show_all();
 
+#if 1
 	int width = 0;
 	int height = 0;
 	get_size (width, height);
 	//move (1920+1440 - width, 900 - height);
 	move (1920, 0);
+#endif
 
-#if 1
+#if 0
 	Glib::RefPtr<Gtk::Settings> s = get_settings();
 	s->property_gtk_tooltip_timeout() = 3000;
 #endif
