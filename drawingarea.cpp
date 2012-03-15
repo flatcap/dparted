@@ -19,6 +19,8 @@ const double ARC_E = 0;
 const double ARC_S = M_PI_2;
 const double ARC_W = M_PI;
 
+const int    GAP   = 3;			// Space between partitions
+
 /**
  * DPDrawingArea
  */
@@ -400,6 +402,8 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 	double green = 1.0;
 	double blue  = 1.0;
 
+	w -= GAP;
+
 	std::cout << c << std::endl;
 	std::string s = get_size (c->bytes_size);
 	printf ("container size: %lld (%s)\n", c->bytes_size, s.c_str());
@@ -429,12 +433,13 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 		int offset = x + (child->parent_offset / bytes_per_pixel);
 		if (child->is_a ("table")) {
 			Gdk::RGBA colour ("blue");
-			draw_frame (cr, offset, y, child_width, h, colour);
 			int h2 = h;
-			draw_container (cr, offset, y, child_width, h2, child);
+			int y2 = y;
+			draw_frame (cr, offset, y2, child_width, h2, colour);
+			draw_container (cr, offset, y2, child_width, h2, child);
 		} else {
 			Gdk::RGBA colour ("green");
-			draw_partition (cr, offset, y, child_width, h, child_width, child_usage, colour);
+			draw_partition (cr, offset, y, child_width-GAP, h, child_width-GAP, child_usage, colour);
 		}
 	}
 
@@ -646,7 +651,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	cr->set_antialias (Cairo::ANTIALIAS_NONE);
 	cr->set_source_rgb (1, 0, 0);
 	cr->set_line_width (1);
-	cr->rectangle (0.5, 0.5, width, height-1);
+	cr->rectangle (0.5, 0.5, width-1, height-1);
 	cr->stroke();
 	cr->restore();
 #endif
@@ -672,7 +677,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	int x = 52;
 	int y = 1;
-	int w = width - x;
+	int w = width - x + GAP;
 	int h = height - 3;
 
 	Block *block = dynamic_cast<Block*> (m_c);
@@ -771,7 +776,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		cr->rectangle(x, y, pb->get_width(), pb->get_height());
 		cr->fill();
 
-		x = x + w2 - 2;
+		x = x + w2 - 2 + GAP;
 		y -= 8;
 
 		draw_container (cr, x, y, w, h, table);
