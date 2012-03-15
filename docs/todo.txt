@@ -775,3 +775,7 @@ themeable items
 	text layout
 	gradients
 
+option for scanning
+	ignore empty (don't give me object for empty spaces)
+	ignore reserved (leave gaps, instead of reserved objects)
+

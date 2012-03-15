@@ -27,7 +27,8 @@
 /**
  * Partition
  */
-Partition::Partition (void)
+Partition::Partition (void) :
+	ptype (0)
 {
 	type.push_back ("partition");
 }

@@ -35,6 +35,8 @@ public:
 	//XXX partition number - nth in set?
 	//XXX partition type - 0x82 Linux Swap
 
+	int ptype;
+
 protected:
 
 private:

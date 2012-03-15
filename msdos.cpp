@@ -163,7 +163,9 @@ bool Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 			c->parent_offset = vp[i].start;
 			c->device = m->device + num;
 		} else {
-			c = new Partition;
+			Partition *p = new Partition;
+			p->ptype = vp[i].type;
+			c = p;
 			c->name = "partition";
 			c->bytes_size = vp[i].size;
 

@@ -10,7 +10,7 @@ DParted::DParted () :
 {
 	set_title ("DParted");
 #if 1
-	set_default_size (1439, 255);
+	set_default_size (1439, 389);
 #else
 	set_default_size (1439, 800); //RAR 1439, 800
 #endif

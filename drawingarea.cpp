@@ -8,6 +8,11 @@
 
 #include "drawingarea.h"
 #include "container.h"
+#include "block.h"
+#include "table.h"
+#include "partition.h"
+#include "utils.h"
+#include "filesystem.h"
 
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
 const double ARC_E = 0;
@@ -23,7 +28,7 @@ DPDrawingArea::DPDrawingArea() :
 	sel_y (-1),
 	mouse_close (false)
 {
-	set_size_request (800, 50);
+	set_size_request (800, 77);
 	set_hexpand (true);
 	set_vexpand (false);
 
@@ -334,7 +339,9 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 	draw_border (cr, x, y, w, h, r);				// Set clipping area
 	cr->clip();
 
-	draw_rect (cr, x, y+r, width_usage, h-r, 0.96, 0.96, 0.72);	 // Yellow usage
+	if (width_usage > 0) {
+		draw_rect (cr, x, y+r, width_usage, h-r, 0.96, 0.96, 0.72);	 // Yellow usage
+	}
 	draw_rect (cr, x+width_usage, y+r,  width_fs-width_usage, h-r, 1.00, 1.00, 1.00);	// White background
 
 	if ((width_fs - width_usage) > 1) {
@@ -387,18 +394,57 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 /**
  * draw_container
  */
-void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int width, int height, DPContainer *c)
+void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h, DPContainer *c)
 {
 	double red   = 1.0;
 	double green = 1.0;
 	double blue  = 1.0;
 
+	std::cout << c << std::endl;
+	std::string s = get_size (c->bytes_size);
+	printf ("container size: %lld (%s)\n", c->bytes_size, s.c_str());
+	//assert (w > 0)
+	long bytes_per_pixel = c->bytes_size / w;
+	printf ("width = %d, bytes_per_pixel = %ld\n", w, bytes_per_pixel);
+
+	int num = c->children.size();
+	for (int i = 0; i < num; i++) {
+		DPContainer *child = c->children[i];
+		if (child->is_a ("partition")) {
+			printf ("partition\n");
+		} else if (child->is_a ("table")) {
+			printf ("table\n");
+		} else {
+			printf ("bugger\n");
+		}
+		int child_width = (child->bytes_size / bytes_per_pixel);
+		int child_usage = (child->bytes_used / bytes_per_pixel);
+		if ((child->children.size() == 1) && child->children[0]->is_a ("filesystem")) {
+			Filesystem *fs = dynamic_cast<Filesystem*> (child->children[0]);
+			child_usage = fs->bytes_used / bytes_per_pixel;
+		}
+
+		printf ("child bytes = %lld, child used = %lld\n", child->bytes_size, child->bytes_used);
+		printf ("child width = %d, child usage = %d\n", child_width, child_usage);
+		int offset = x + (child->parent_offset / bytes_per_pixel);
+		if (child->is_a ("table")) {
+			Gdk::RGBA colour ("blue");
+			draw_frame (cr, offset, y, child_width, h, colour);
+			int h2 = h;
+			draw_container (cr, offset, y, child_width, h2, child);
+		} else {
+			Gdk::RGBA colour ("green");
+			draw_partition (cr, offset, y, child_width, h, child_width, child_usage, colour);
+		}
+	}
+
+	return;
 	//if (c->type == "extended") {
 	if ((c->is_a ("msdos")) && (c->is_a ("vg segment")) && (c->is_a ("partition"))) {
-		//printf ("draw x = %4d, y = %4d, width = %4d, height = %4d\n", x, y, width, height);
+		//printf ("draw x = %4d, y = %4d, width = %4d, h = %4d\n", x, y, w, h);
 		get_colour (c->name, red, green, blue);
 		if (c->is_a ("extended")) {
-			draw_rect (cr, x, y, 28, height, red, green, blue);
+			draw_rect (cr, x, y, 28, h, red, green, blue);
 #if 1
 			Glib::RefPtr<Gdk::Pixbuf> pb3;
 
@@ -410,13 +456,13 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 			cr->fill();
 #endif
 			x += 18;
-			width -= 18;
+			w -= 18;
 		} else {
-			draw_rect  (cr, x, y, width, height, 1, 1, 1);		// White background
+			draw_rect  (cr, x, y, w, h, 1, 1, 1);		// White background
 #if 1
-			int bytes_per_pixel = c->bytes_size / width;
+			int bytes_per_pixel = c->bytes_size / w;
 			int uw = c->bytes_used / bytes_per_pixel;
-			draw_rect  (cr, x, y, uw, height, 0.96, 0.96, 0.72);	 // Yellow usage
+			draw_rect  (cr, x, y, uw, h, 0.96, 0.96, 0.72);	 // Yellow usage
 
 			Pango::FontDescription font;
 			font.set_family ("Liberation Sans");
@@ -436,10 +482,10 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 			//layout->set_markup("<b>" + label + "</b>");
 			layout->set_text (label);
 			layout->get_pixel_size(w, h);
-			if ((w + 10) < width) {
+			if ((w + 10) < w) {
 				cr->set_source_rgb (0.0, 0.0, 0.0);
-				//cr->move_to (x + (width-w)/2, y + (height-h)/2);
-				//cr->move_to (x + 10, y + (height-h)/2);
+				//cr->move_to (x + (w-w)/2, y + (h-h)/2);
+				//cr->move_to (x + 10, y + (h-h)/2);
 				cr->move_to (x + 4, y + 4);
 				layout->update_from_cairo_context (cr);
 				layout->show_in_cairo_context (cr);
@@ -473,31 +519,33 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 
 #endif
 		}
-		draw_box  (cr, x, y, width, height, 3, red, green, blue);
+		draw_box  (cr, x, y, w, h, 3, red, green, blue);
 		x      += 10;
 		y      +=  3;
-		width  -= 10;
-		height -=  6;
+		w  -= 10;
+		h -=  6;
 
 	}
 
-	//width -= 3;
+	//w -= 3;
 
-	// we have got width pixels for c->bytes_size bytes
+	// we have got w pixels for c->bytes_size bytes
 
-	double bytes_per_pixel = c->bytes_size / width;
+#if 0
+	double bytes_per_pixel = c->bytes_size / w;
 	//printf ("container (%s) is %lld bytes (%.0f bytes per pixel)\n", c->name.c_str(), c->bytes_size, bytes_per_pixel);
 
 	unsigned int num = c->children.size();
 	for (unsigned int i = 0; i < num; i++) {
 		double offset = c->children[i]->parent_offset / bytes_per_pixel;
-		width = c->children[i]->bytes_size / bytes_per_pixel;
-		width -= 2;
+		w = c->children[i]->bytes_size / bytes_per_pixel;
+		w -= 2;
 		//printf ("\e[32m%s\e[0m\n", c->children[i]->name.c_str());
 		//printf ("\tparent offset = %lld (%.0f pixels)\n", c->children[i]->parent_offset, offset);
-		//printf ("\tsize = %lld (%d pixels)\n", c->children[i]->bytes_size, width);
-		draw_container (cr, x + offset, y, width, height, c->children[i]);
+		//printf ("\tsize = %lld (%d pixels)\n", c->children[i]->bytes_size, w);
+		draw_container (cr, x + offset, y, w, h, c->children[i]);
 	}
+#endif
 }
 
 /**
@@ -584,37 +632,33 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	if (!m_c)
 		return true;
 
-	//if (m_c->device != "/dev/loop3") return true;
-	if (m_c->device != "/dev/sdc") return true;
-
 	vRange.clear();
 
-#if 0
+#if 1
 	Gtk::Allocation allocation = get_allocation();
 	int width  = allocation.get_width();
 	int height = allocation.get_height();
-	printf ("allocation = %dx%d\n", width, height);
+	//printf ("allocation = %dx%d\n", width, height);
 #endif
 
-	static int i = 0;
-	i++;
-	if (i < 2)
-		return true;
+#if 1
+	cr->save();
+	cr->set_antialias (Cairo::ANTIALIAS_NONE);
+	cr->set_source_rgb (1, 0, 0);
+	cr->set_line_width (1);
+	cr->rectangle (0.5, 0.5, width, height-1);
+	cr->stroke();
+	cr->restore();
+#endif
 
-	std::cout << m_c << std::endl;
-	if (m_c->is_a ("block"))
-		std::cout << "it's a block" << std::endl;
+	//std::cout << m_c << std::endl;
 
 #if 1
 	const char *file = NULL;
-	if (m_c->device.substr (0, 9) == "/dev/loop")
-		file = "/usr/share/icons/gnome/48x48/actions/gtk-refresh.png";
-	else if (m_c->device.substr (0, 7) == "/dev/sd")
-		file = "/usr/share/icons/gnome/48x48/devices/harddrive.png";
-	else if (m_c->device.substr (0, 5) != "/dev/")
-		file = "/usr/share/icons/gnome/48x48/mimetypes/txt.png";
-	else
-		file = "/usr/share/icons/gnome/48x48/status/connect_established.png";
+	if      (m_c->is_a ("loop")) file = "/usr/share/icons/gnome/48x48/actions/gtk-refresh.png";
+	else if (m_c->is_a ("disk")) file = "/usr/share/icons/gnome/48x48/devices/harddrive.png";
+	else if (m_c->is_a ("file")) file = "/usr/share/icons/gnome/48x48/mimetypes/txt.png";
+	else                         file = "/usr/share/icons/gnome/48x48/status/connect_established.png";
 
 	Glib::RefPtr<Gdk::Pixbuf> pb;
 	pb = Gdk::Pixbuf::create_from_file (file);
@@ -623,132 +667,116 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	cr->fill();
 #endif
 
+	if (m_c->is_a ("loop")) return true;
+	//if (m_c->device != "/dev/sdc") return true;
+
+	int x = 52;
+	int y = 1;
+	int w = width - x;
+	int h = height - 3;
+
+	Block *block = dynamic_cast<Block*> (m_c);
+
 	// block, empty
-	//	children.size() == 0
+	if (block->children.size() == 0) {
+		Gdk::RGBA colour ("grey");
+		draw_frame (cr, x, y, w, h, colour);
+		return true;
+	}
+
+	//ASSERT (block->children.size() == 1)	//RAR
+	//std::cout << "block->children = " << block->children.size() << std::endl;
+
+	//std::cout << "child = " << m_c->children[0] << std::endl;
+
 	// block, table, empty
-	//	children.size() == 1
-	//	children[0] == table
-	//	table.children.size() == 0
-	// block, table, partition (protective)
-	//	children.size() == 1
-	//	children[0] == table
-	//	table.children.size() == 1
-	//	table.children[1] == partition
-	//	partition.size == table.size (delta)
+	Table *table = dynamic_cast<Table*> (m_c->children[0]);
+	if (table->children.size() == 0) {
+		Gdk::RGBA colour ("grey");
+		int w2 = 28;
+		draw_partition (cr, x, y, w2, h, w2, 0, colour);
 
-	std::cout << m_c->children[0] << std::endl;
+		x = x - w2 + 2;
+		y += 8;
+		w -= w2;
 
-#if 0
-	int x = 50;
-	int y = 0;
-	int w = 400;
-	int h = 77;	//47;
-	//DPContainer *c = NULL;
-	std::string left;
-	std::string right;
-	int width_fs = w;
-	int width_usage = 35*w/100;
-	Glib::RefPtr<Gdk::Pixbuf> icon1;
-	Glib::RefPtr<Gdk::Pixbuf> icon2;
-	Gdk::RGBA colour;
+		Glib::RefPtr<Gdk::Pixbuf> pb;
+		pb = Gdk::Pixbuf::create_from_file ("icons/table.png");
+		Gdk::Cairo::set_source_pixbuf(cr, pb, x, y);
+		cr->rectangle(x, y, pb->get_width(), pb->get_height());
+		cr->fill();
 
-	double red, green, blue;
-	std::string name;
+		x = x + w2 - 2;
+		y -= 8;
 
-	name = "ext2";
-	get_colour (name, red, green, blue);
-	colour.set_rgba (red, green, blue);
-
-	draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
-
-	name = "extended";
-	get_colour (name, red, green, blue);
-	colour.set_rgba (red, green, blue);
-	w = 800;
-	width_usage = 85*w/100;
-
-	draw_tabframe (cr, x, y, w, h, colour);
-
-	const char *file = "icons/table.png";
-
-	Glib::RefPtr<Gdk::Pixbuf> pb;
-	pb = Gdk::Pixbuf::create_from_file (file);
-	Gdk::Cairo::set_source_pixbuf(cr, pb, x-24, y+2);
-	cr->rectangle(x-24, y+2, pb->get_width(), pb->get_height());
-	cr->fill();
-
-	name = "red";
-	get_colour (name, red, green, blue);
-	colour.set_rgba (red, green, blue);
-	w = 250;
-	width_usage = 15*w/100;
-
-	draw_partition (cr, x, y, w, h, width_fs, width_usage, colour);
-
-	name = "green";
-	get_colour (name, red, green, blue);
-	colour.set_rgba (red, green, blue);
-	w = 350;
-	width_usage = 15*w/100;
-
-	draw_frame (cr, x, y, w, h, colour);
-
-	int fx, fy, fh, fw;
-	if (get_focus (fx, fy, fw, fh)) {
-		draw_focus (cr, fx, fy, fw, fh);
+		colour.set ("grey");
+		draw_frame (cr, x, y, w, h, colour);
+		return true;
 	}
 
-	return true;
-#endif
+	if ((table->children.size() == 1) &&
+	    (table->children[0]->is_a ("partition"))) {
+		Partition *p = dynamic_cast<Partition*> (table->children[0]);
+		//std::cout << "ptype = " << p->ptype << std::endl;
+		if ((p->ptype == 0xEE) || (p->ptype == 0x42)) {
+			// block, table, partition (protective)
+			//	partition.size == table.size (delta)
+			//std::cout << "protective partition" << std::endl;
 
-#if 0
-	Glib::RefPtr<Gdk::Pixbuf> pb;
-	pb = render_icon_pixbuf (Gtk::Stock::INDEX, Gtk::IconSize (Gtk::ICON_SIZE_LARGE_TOOLBAR));
-	Gdk::Cairo::set_source_pixbuf(cr, pb, 26, 2);
-	cr->rectangle(26, 2, pb->get_width()+2, pb->get_height());
-	cr->fill();
-#endif
+			Gdk::RGBA colour ("grey");
+			int w2 = 28;
+			draw_partition (cr, x, y, w2, h, w2, 0, colour);
 
-#if 0
-	Glib::RefPtr<Gdk::Pixbuf> pb2;
+			x = x - w2 + 2;
+			y += 8;
+			w -= w2;
 
-	draw_rect (cr, 52, 0, 30, 48,    1, 1, 1);
-	draw_box  (cr, 52, 0, 30, 48, 2, 0, 0, 0);
+			Glib::RefPtr<Gdk::Pixbuf> pb;
+			pb = Gdk::Pixbuf::create_from_file ("icons/table.png");
+			Gdk::Cairo::set_source_pixbuf(cr, pb, x, y);
+			cr->rectangle(x, y, pb->get_width(), pb->get_height());
+			cr->fill();
 
-	pb2 = Gdk::Pixbuf::create_from_file ("icons/table.png");
-	Gdk::Cairo::set_source_pixbuf(cr, pb2, 56, 1);
-	cr->rectangle(56, 1, pb2->get_width(), pb2->get_height());
-	cr->fill();
+			pb = Gdk::Pixbuf::create_from_file ("icons/shield.png");
+			Gdk::Cairo::set_source_pixbuf(cr, pb, x, y+26);
+			cr->rectangle(x, y+26, pb->get_width(), pb->get_height());
+			cr->fill();
 
-	pb2 = Gdk::Pixbuf::create_from_file ("icons/shield.png");
-	Gdk::Cairo::set_source_pixbuf(cr, pb2, 55, 24);
-	cr->rectangle(55, 24, pb2->get_width(), pb2->get_height());
-	cr->fill();
-	//return true;
-#endif
+			x = x + w2 - 2;
+			y -= 8;
 
-#if 0
-	if (m_c->children.size() > 0) {
-		int children = m_c->children.size();
-		//printf ("%d children\n", children);
-		//RAR should only be one child
-		//printf ("child is a %s\n", m_c->children[0]->type.c_str());
-
-		for (int c = 0; c < children; c++) {
-			draw_container (cr, 84, c*50, width-84, 47, m_c->children[c]);
-		}
-		if (!mouse_close) {	//RAR just clip the name to the size of the block image
-			std::string label;
-			size_t pos = m_c->device.find_last_of ('/');
-			if (pos == std::string::npos) {
-				label = m_c->device;
-			} else {
-				label = m_c->device.substr (pos+1);
-			}
-			write_label (cr, "<b>" + label + "</b>");
+			colour.set ("grey");
+			draw_frame (cr, x, y, w, h, colour);
+			return true;
 		}
 	}
-#endif
+
+	if ((table->children.size() != 0) &&
+	    (table->children[0]->is_a ("partition"))) {
+		//Partition *p = dynamic_cast<Partition*> (table->children[0]);
+		//std::cout << "ptype = " << p->ptype << std::endl;
+
+		// block, table, partition
+		Gdk::RGBA colour ("grey");
+		int w2 = 28;
+		draw_partition (cr, x, y, w2, h, w2, 0, colour);
+
+		x = x - w2 + 2;
+		y += 8;
+		w -= w2;
+
+		Glib::RefPtr<Gdk::Pixbuf> pb;
+		pb = Gdk::Pixbuf::create_from_file ("icons/table.png");
+		Gdk::Cairo::set_source_pixbuf(cr, pb, x, y);
+		cr->rectangle(x, y, pb->get_width(), pb->get_height());
+		cr->fill();
+
+		x = x + w2 - 2;
+		y -= 8;
+
+		draw_container (cr, x, y, w, h, table);
+		return true;
+	}
 
 #if 0
 	// move to main window, add accessor function
@@ -765,35 +793,6 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << std::endl;
 #endif
 
-#if 0
-	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
-
-	Pango::FontDescription font; // ("Wingdings 48");
-	font.set_family ("Liberation Sans");
-	font.set_size (18 * Pango::SCALE);
-
-	//font = layout->get_font_description();
-	//std::cout << font.get_family() << std::endl;
-	//std::cout << (font.get_size() / Pango::SCALE) << std::endl;
-
-	int stringWidth = 0;
-	int stringHeight = 0;
-
-	layout->set_font_description (font);
-	layout->set_markup("<b>X---X</b>");
-
-	layout->get_pixel_size(stringWidth, stringHeight);
-	std::cout << "text: " << stringWidth << "x" << stringHeight << std::endl;
-	draw_rect (cr, (width-stringWidth)/2, (height-stringHeight)/2, stringWidth, stringHeight, 1, 1);
-	draw_box  (cr, (width-stringWidth)/2-1, (height-stringHeight)/2-1, stringWidth+2, stringHeight+2, 1, 0, 0, 0);
-	cr->move_to ((width-stringWidth)/2, (height-stringHeight)/2);
-
-	//cr->move_to (20, 100);
-	cr->set_source_rgb(0.0, 1.0, 0.0);
-
-	layout->update_from_cairo_context (cr);
-	layout->show_in_cairo_context (cr);
-#endif
 	return true;
 }
 
@@ -897,11 +896,6 @@ void DPDrawingArea::set_data (DPContainer *c)
 
 	// invalidate window
 	//unsigned int children = c->children.size();
-
-	if (m_c->device == "/dev/sdc")
-		set_size_request (800, 150);
-	else
-		set_size_request (800, 25);
 	//set_size_request (400, 50 * children);
 }
 
