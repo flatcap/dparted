@@ -25,6 +25,7 @@
 #include <string>
 #include <typeinfo>
 #include <sstream>
+#include <iostream>
 
 #include "container.h"
 #include "utils.h"
@@ -594,4 +595,24 @@ int DPContainer::read_data (long long offset, long long size, unsigned char *buf
 	return bytes;
 }
 
+
+/**
+ * operator<<
+ */
+std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
+{
+	stream << c.name << ", " << c.type << ", " << c.device << ", " << c.children.size();
+	return stream;
+}
+
+/**
+ * operator<<
+ */
+std::ostream& operator<< (std::ostream &stream, const DPContainer *c)
+{
+	if (c)
+		return operator<< (stream, *c);
+	else
+		return stream;
+}
 
