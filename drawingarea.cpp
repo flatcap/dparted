@@ -404,22 +404,22 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 
 	w -= GAP;
 
-	std::cout << c << std::endl;
-	std::string s = get_size (c->bytes_size);
-	printf ("container size: %lld (%s)\n", c->bytes_size, s.c_str());
+	//std::cout << c << std::endl;
+	//std::string s = get_size (c->bytes_size);
+	//printf ("container size: %lld (%s)\n", c->bytes_size, s.c_str());
 	//assert (w > 0)
 	long bytes_per_pixel = c->bytes_size / w;
-	printf ("width = %d, bytes_per_pixel = %ld\n", w, bytes_per_pixel);
+	//printf ("width = %d, bytes_per_pixel = %ld\n", w, bytes_per_pixel);
 
 	int num = c->children.size();
 	for (int i = 0; i < num; i++) {
 		DPContainer *child = c->children[i];
 		if (child->is_a ("partition")) {
-			printf ("partition\n");
+			//printf ("partition\n");
 		} else if (child->is_a ("table")) {
-			printf ("table\n");
+			//printf ("table\n");
 		} else {
-			printf ("bugger\n");
+			//printf ("bugger\n");
 		}
 		int child_width = (child->bytes_size / bytes_per_pixel);
 		int child_usage = (child->bytes_used / bytes_per_pixel);
@@ -428,8 +428,8 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 			child_usage = fs->bytes_used / bytes_per_pixel;
 		}
 
-		printf ("child bytes = %lld, child used = %lld\n", child->bytes_size, child->bytes_used);
-		printf ("child width = %d, child usage = %d\n", child_width, child_usage);
+		//printf ("child bytes = %lld, child used = %lld\n", child->bytes_size, child->bytes_used);
+		//printf ("child width = %d, child usage = %d\n", child_width, child_usage);
 		int offset = x + (child->parent_offset / bytes_per_pixel);
 		if (child->is_a ("table")) {
 			Gdk::RGBA colour ("blue");
