@@ -377,10 +377,17 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 		//printf ("child width = %d, child usage = %d\n", child_width, child_usage);
 		int offset = x + (child->parent_offset / bytes_per_pixel);
 		if (child->is_a ("table")) {
-			Gdk::RGBA colour ("blue");
+			Gdk::RGBA colour ("cyan");
 			int h2 = h;
 			int y2 = y;
 			draw_tabframe  (cr, offset, y2, child_width, h2, colour);
+
+			Glib::RefPtr<Gdk::Pixbuf> pb;
+			pb = Gdk::Pixbuf::create_from_file ("icons/table.png");
+			Gdk::Cairo::set_source_pixbuf(cr, pb, offset-24, 8);
+			cr->rectangle(offset-24, 8, pb->get_width(), pb->get_height());
+			cr->fill();
+
 			draw_container (cr, offset, y2, child_width, h2, child);
 		} else {
 			Gdk::RGBA colour ("green");
