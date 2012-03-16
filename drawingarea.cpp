@@ -83,34 +83,6 @@ void DPDrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context>& cr, double x
 }
 
 /**
- * draw_box
- */
-void DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double width, double height, double line_width, double red, double green, double blue)
-{
-	cr->set_line_width(line_width);
-	cr->set_source_rgb (red, green, blue);
-
-	double half = line_width/2;
-
-	//Cairo::Antialias a = cr->get_antialias();
-	//cr->set_antialias (Cairo::ANTIALIAS_NONE);
-
-	//cr->set_line_cap (Cairo::LINE_CAP_ROUND);
-	//cr->set_line_cap (Cairo::LINE_CAP_SQUARE);
-	cr->set_line_join (Cairo::LINE_JOIN_ROUND);
-
-	cr->move_to (x + half,         y + half);
-	cr->line_to (x + width - half, y + half);
-	cr->line_to (x + width - half, y + height - half);
-	cr->line_to (x + half,         y + height - half);
-	cr->close_path();
-
-	cr->stroke();
-	//cr->set_antialias (a);
-}
-
-
-/**
  * get_focus
  */
 bool DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
@@ -291,7 +263,7 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 	}
 	draw_rect (cr, x+width_usage, y+r,  width_fs-width_usage, h-r, 1.00, 1.00, 1.00);	// White background
 
-	if ((width_fs - width_usage) > 1) {
+	if ((width_usage > 0) && (width_fs - width_usage) > 1) {
 		cr->set_source_rgb (1, 1, 1);
 		cr->move_to (x+width_usage, y+r);			// Curvy corners
 		cr->arc (x+width_usage-r, y+(2*r), r, ARC_N, ARC_E);
@@ -645,6 +617,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		// block, table, partition
 		Gdk::RGBA colour ("grey");
 		int w2 = 28;
+		printf ("%d, %d, %d, %d\n", x, y, w2, h);
 		draw_partition (cr, x, y, w2, h, w2, 0, colour);
 
 		x = x - w2 + 2;
