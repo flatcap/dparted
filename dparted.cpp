@@ -31,13 +31,13 @@ DParted::DParted () :
 
 #if 0
 	//Get the menubar and toolbar widgets, and add them to a container widget:
-	Gtk::Widget* pMenubar = m_refUIManager->get_widget ("/MenuBar");
+	Gtk::Widget *pMenubar = m_refUIManager->get_widget ("/MenuBar");
 	if (pMenubar) {
 		pMenubar->set_hexpand (true);
 		grid.add (*pMenubar);
 	}
 
-	Gtk::Widget* pToolbar = m_refUIManager->get_widget ("/ToolBar") ;
+	Gtk::Widget *pToolbar = m_refUIManager->get_widget ("/ToolBar") ;
 	if (pToolbar) {
 		pToolbar->set_hexpand (true);
 		grid.add (*pToolbar);

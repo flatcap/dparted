@@ -9,7 +9,7 @@
 TreeView::TreeView()
 {
 	//Add the TreeView's view columns:
-	Gtk::TreeView::Column* col = NULL;
+	Gtk::TreeView::Column *col = NULL;
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Partition"));
 	col->pack_start(m_Columns.col_partition,  true);
@@ -41,7 +41,7 @@ TreeView::TreeView()
 
 #if 1
 	//Fill popup menu:
-	Gtk::MenuItem* item = Gtk::manage(new Gtk::MenuItem("_Edit", true));
+	Gtk::MenuItem *item = Gtk::manage(new Gtk::MenuItem("_Edit", true));
 	item->signal_activate().connect( sigc::mem_fun(*this, &TreeView::on_menu_file_popup_generic) );
 	m_Menu_Popup.append(*item);
 
@@ -82,7 +82,7 @@ bool TreeView::on_popup_menu (void)
 /**
  * on_button_press_event
  */
-bool TreeView::on_button_press_event(GdkEventButton* event)
+bool TreeView::on_button_press_event(GdkEventButton *event)
 {
 	bool return_value = false;
 

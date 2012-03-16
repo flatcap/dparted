@@ -80,8 +80,8 @@ public:
 	DPContainer	*parent;
 	std::vector<DPContainer*> children;
 
-	friend std::ostream& operator<< (std::ostream &stream, const DPContainer &c);
-	friend std::ostream& operator<< (std::ostream &stream, const DPContainer *c);
+	friend std::ostream & operator<< (std::ostream &stream, const DPContainer &c);
+	friend std::ostream & operator<< (std::ostream &stream, const DPContainer *c);
 
 protected:
 	std::string dump_row (const char *name, long long value);
