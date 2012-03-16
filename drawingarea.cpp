@@ -378,7 +378,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 		//printf ("child width = %d, child usage = %d\n", child_width, child_usage);
 		int offset = x + (child->parent_offset / bytes_per_pixel);
 		if (child->is_a ("table")) {
-			Gdk::RGBA colour ("cyan");
+			Gdk::RGBA colour = theme->get_colour ("extended");
 			int h2 = h;
 			int y2 = y;
 			draw_tabframe  (cr, offset, y2, child_width, h2, colour);
@@ -387,7 +387,8 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 
 			draw_container (cr, offset, y2, child_width, h2, child);
 		} else {
-			Gdk::RGBA colour ("green");
+			Filesystem *fs = dynamic_cast<Filesystem*> (child->children[0]);
+			Gdk::RGBA colour = theme->get_colour (fs->name);
 			draw_partition (cr, offset, y, child_width-GAP, h, child_width-GAP, child_usage, colour);
 
 			Pango::FontDescription font;
@@ -621,7 +622,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		// block, table, partition
 		Gdk::RGBA colour ("grey");
 		int w2 = 28;
-		printf ("%d, %d, %d, %d\n", x, y, w2, h);
+		//printf ("%d, %d, %d, %d\n", x, y, w2, h);
 		draw_partition (cr, x, y, w2, h, w2, 0, colour);
 
 		x = x - w2 + 2;

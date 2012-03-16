@@ -9,9 +9,8 @@ DParted::DParted () :
 	m_c (NULL)
 {
 	set_title ("DParted");
-#if 1
+#if 0
 	set_default_size (1439, 389);
-#else
 	set_default_size (1439, 800); //RAR 1439, 800
 #endif
 
@@ -84,6 +83,7 @@ void DParted::set_data (DPContainer *c)
 	m_c = c;
 	treeview.init_treeview (m_c);
 
+	int count = 0;
 	for (std::vector<DPContainer*>::iterator i = c->children.begin(); i != c->children.end(); i++) {
 		if ((*i)->is_a ("volumegroup"))
 			continue; //RAR for now ignore vg
@@ -93,7 +93,11 @@ void DParted::set_data (DPContainer *c)
 		da_grid.show_all();
 		//std::cout << (*i)->device << std::endl;
 		da->set_data (*i);
+		count++;
 	}
+
+	//std::cout << m_c->children.size() << " children" << std::endl;
+	set_size_request (1439, 77*count+4); //RAR
 }
 
 /**

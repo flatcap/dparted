@@ -53,7 +53,7 @@ void Theme::init_colours (void)
 	colours["ext2"]		= Gdk::RGBA ("#9db8d2");
 	colours["ext3"]		= Gdk::RGBA ("#7590ae");
 	colours["ext4"]		= Gdk::RGBA ("#4b6983");
-	colours["linux_swap"]	= Gdk::RGBA ("#c1665a");
+	colours["swap"]		= Gdk::RGBA ("#c1665a");
 	colours["fat16"]	= Gdk::RGBA ("#00ff00");
 	colours["fat32"]	= Gdk::RGBA ("#18d918");
 	colours["exfat"]	= Gdk::RGBA ("#2e8b57");
