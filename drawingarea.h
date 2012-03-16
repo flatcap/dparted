@@ -32,7 +32,6 @@ private:
 	DPContainer *m_c;
 	Theme *theme;
 
-	void get_colour (std::string &name, double &red, double &green, double &blue);
 	bool get_focus (int &x, int &y, int &w, int &h);
 
 	void draw_border (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h, int r);

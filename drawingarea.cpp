@@ -111,67 +111,6 @@ void DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, double x,
 
 
 /**
- * get_colour
- */
-void DPDrawingArea::get_colour (std::string &name, double &red, double &green, double &blue)
-{
-	//std::cout << name << std::endl;
-	if (name == "disk") {
-		red   = 1.0;
-		green = 0.0;
-		blue  = 0.0;
-	} else if (name == "msdos") {
-		red   = 1.0;
-		green = 1.0;
-		blue  = 0.0;
-	} else if (name == "partition") {
-		red   = 0.0;
-		green = 1.0;
-		blue  = 0.0;
-	} else if (name == "ext2") {
-		red   = 0.61;
-		green = 0.72;
-		blue  = 0.82;
-	} else if (name == "ntfs") {
-		red   = 0.25;
-		green = 0.89;
-		blue  = 0.67;
-	} else if (name == "swap") {
-		red   = 0.75;
-		green = 0.39;
-		blue  = 0.35;
-	} else if (name == "loop") {
-		red   = 0.0;
-		green = 0.0;
-		blue  = 1.0;
-	} else if (name == "extended") {
-		red   = 0.48;
-		green = 0.98;
-		blue  = 0.99;
-	} else if (name == "volume") {
-		red   = 0.79;
-		green = 0.59;
-		blue  = 0.39;
-	} else if (name == "red") {
-		red   = 1.00;
-		green = 0.00;
-		blue  = 0.00;
-	} else if (name == "green") {
-		red   = 0.00;
-		green = 1.00;
-		blue  = 0.00;
-	} else if (name == "blue") {
-		red   = 0.00;
-		green = 0.00;
-		blue  = 1.00;
-	} else {
-		red   = 0.2;
-		green = 0.5;
-		blue  = 0.2;
-	}
-}
-
-/**
  * get_focus
  */
 bool DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
@@ -441,7 +380,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 			Gdk::RGBA colour ("blue");
 			int h2 = h;
 			int y2 = y;
-			draw_frame (cr, offset, y2, child_width, h2, colour);
+			draw_tabframe  (cr, offset, y2, child_width, h2, colour);
 			draw_container (cr, offset, y2, child_width, h2, child);
 		} else {
 			Gdk::RGBA colour ("green");
@@ -453,9 +392,9 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 	//if (c->type == "extended") {
 	if ((c->is_a ("msdos")) && (c->is_a ("vg segment")) && (c->is_a ("partition"))) {
 		//printf ("draw x = %4d, y = %4d, width = %4d, h = %4d\n", x, y, w, h);
-		get_colour (c->name, red, green, blue);
+		Gdk::RGBA colour = theme->get_colour (c->name);
 		if (c->is_a ("extended")) {
-			draw_rect (cr, x, y, 28, h, red, green, blue);
+			draw_rect (cr, x, y, 28, h, colour.get_red_u(), colour.get_green_u(), colour.get_blue_u());
 #if 1
 			Glib::RefPtr<Gdk::Pixbuf> pb3;
 
