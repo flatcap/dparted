@@ -779,3 +779,7 @@ option for scanning
 	ignore empty (don't give me object for empty spaces)
 	ignore reserved (leave gaps, instead of reserved objects)
 
+base class CRefCount
+	reference()
+	unreference()
+
