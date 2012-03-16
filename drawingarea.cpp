@@ -343,10 +343,6 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
  */
 void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h, DPContainer *c)
 {
-	double red   = 1.0;
-	double green = 1.0;
-	double blue  = 1.0;
-
 	w -= GAP;
 
 	//std::cout << c << std::endl;
@@ -439,7 +435,7 @@ void DPDrawingArea::write_label (const Cairo::RefPtr<Cairo::Context>& cr, const 
 
 	Pango::FontDescription font;
 	font.set_family ("Liberation Sans");
-	//font.set_size (18 * Pango::SCALE);
+	font.set_size (14 * Pango::SCALE);
 
 	int w = 0;
 	int h = 0;
@@ -487,7 +483,7 @@ void DPDrawingArea::write_label (const Cairo::RefPtr<Cairo::Context>& cr, const 
 #endif
 
 	int x = 3+radius-(radius/2);
-	int y = 44-h;
+	int y = 44;
 
 #if 1
 	cr->set_source_rgb(1.0, 1.0, 1.0);
@@ -521,7 +517,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	//printf ("allocation = %dx%d\n", width, height);
 #endif
 
-#if 1
+#if 0
 	cr->save();
 	cr->set_antialias (Cairo::ANTIALIAS_NONE);
 	cr->set_source_rgb (1, 0, 0);
@@ -545,6 +541,16 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	Gdk::Cairo::set_source_pixbuf(cr, pb, 2, 0);
 	cr->rectangle(2, 0, pb->get_width(), pb->get_height());
 	cr->fill();
+
+	std::string label;
+	size_t pos = m_c->device.find_last_of ('/');
+	if (pos == std::string::npos) {
+		label = m_c->device;
+	} else {
+		label = m_c->device.substr (pos+1);
+	}
+	label = "<b>" + label + "</b>";
+	write_label (cr, label);
 #endif
 
 	if (m_c->is_a ("loop")) return true;
@@ -716,7 +722,7 @@ bool DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
  */
 bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 {
-	std::cout << "mouse click: (" << event->x << "," << event->y << ")" << std::endl;
+	//std::cout << "mouse click: (" << event->x << "," << event->y << ")" << std::endl;
 
 	sel_x = event->x;
 	sel_y = event->y;
@@ -733,7 +739,7 @@ bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 	printf ("\n");
 #endif
 
-	get_window()->invalidate (false); //RAR everything for now
+	//get_window()->invalidate (false); //RAR everything for now
 
 #if 0
 	if ((event->x >= 100) && (event->x < 200) &&
