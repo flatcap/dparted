@@ -366,11 +366,29 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 		} else {
 			//printf ("bugger\n");
 		}
+
+		std::string label1;
+		std::string label2;
+
+		size_t pos = child->device.find_last_of ('/');
+		if (pos == std::string::npos) {
+			label1 = child->device;
+		} else {
+			label1 = child->device.substr (pos+1);
+		}
+		label2 = get_size (child->bytes_size);
+
 		int child_width = (child->bytes_size / bytes_per_pixel);
 		int child_usage = (child->bytes_used / bytes_per_pixel);
+
 		if ((child->children.size() == 1) && child->children[0]->is_a ("filesystem")) {
 			Filesystem *fs = dynamic_cast<Filesystem*> (child->children[0]);
 			child_usage = fs->bytes_used / bytes_per_pixel;
+
+			if (!fs->label.empty()) {
+				label1 += " \"" + fs->label + "\"";
+			}
+			label2 = get_size (fs->bytes_size);
 		}
 
 		//printf ("child bytes = %lld, child used = %lld\n", child->bytes_size, child->bytes_used);
@@ -392,6 +410,20 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 		} else {
 			Gdk::RGBA colour ("green");
 			draw_partition (cr, offset, y, child_width-GAP, h, child_width-GAP, child_usage, colour);
+
+			Pango::FontDescription font;
+			font.set_family ("Liberation Sans");
+
+			Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
+			layout->set_font_description (font);
+
+			layout->set_text (label1 + "\n" + label2);
+			cr->set_source_rgb (0.0, 0.0, 0.0);
+			cr->move_to (offset - child_width + GAP + 4, y + 12);
+			layout->set_width (Pango::SCALE * (child_width - GAP - 8));
+			layout->set_ellipsize (Pango::ELLIPSIZE_END);
+			layout->update_from_cairo_context (cr);
+			layout->show_in_cairo_context (cr);
 		}
 	}
 
