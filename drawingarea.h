@@ -33,6 +33,7 @@ private:
 
 	bool get_focus (int &x, int &y, int &w, int &h);
 
+	void draw_icon      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, int x, int y);
 	void draw_border    (const Cairo::RefPtr<Cairo::Context> &cr, int x, int y, int w, int h, int r);
 	void draw_container (const Cairo::RefPtr<Cairo::Context> &cr, int x, int y, int width, int height, DPContainer *c);
 	void draw_frame     (const Cairo::RefPtr<Cairo::Context> &cr, int &x, int &y, int &w, int &h, const Gdk::RGBA &colour);

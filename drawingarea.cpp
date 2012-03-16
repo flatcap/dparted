@@ -109,6 +109,23 @@ bool DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
 
 
 /**
+ * draw_icon
+ */
+void DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, const std::string &name, int x, int y)
+{
+	Glib::RefPtr<Gdk::Pixbuf> pb;
+
+	pb = theme->get_icon (name);
+	if (!pb) {
+		return;
+	}
+
+	Gdk::Cairo::set_source_pixbuf(cr, pb, x, y);
+	cr->rectangle(x, y, pb->get_width(), pb->get_height());
+	cr->fill();
+}
+
+/**
  * draw_border
  */
 void DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h, int r)
@@ -368,10 +385,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 			int y2 = y;
 			draw_tabframe  (cr, offset, y2, child_width, h2, colour);
 
-			Glib::RefPtr<Gdk::Pixbuf> pb = theme->get_icon ("table");
-			Gdk::Cairo::set_source_pixbuf(cr, pb, offset-24, 8);
-			cr->rectangle(offset-24, 8, pb->get_width(), pb->get_height());
-			cr->fill();
+			draw_icon (cr, "table", offset-24, 8);
 
 			draw_container (cr, offset, y2, child_width, h2, child);
 		} else {
@@ -501,15 +515,13 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	//std::cout << m_c << std::endl;
 
 #if 1
-	Glib::RefPtr<Gdk::Pixbuf> pb;
-	if      (m_c->is_a ("loop")) pb = theme->get_icon ("loop");
-	else if (m_c->is_a ("disk")) pb = theme->get_icon ("disk");
-	else if (m_c->is_a ("file")) pb = theme->get_icon ("file");
-	else                         pb = theme->get_icon ("network");
+	std::string name;
+	if      (m_c->is_a ("loop")) name = "loop";
+	else if (m_c->is_a ("disk")) name = "disk";
+	else if (m_c->is_a ("file")) name = "file";
+	else                         name = "network";
 
-	Gdk::Cairo::set_source_pixbuf(cr, pb, 2, 0);
-	cr->rectangle(2, 0, pb->get_width(), pb->get_height());
-	cr->fill();
+	draw_icon (cr, name, 2, 0);
 
 	std::string label;
 	size_t pos = m_c->device.find_last_of ('/');
@@ -555,10 +567,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		y += 8;
 		w -= w2;
 
-		Glib::RefPtr<Gdk::Pixbuf> pb = theme->get_icon ("table");
-		Gdk::Cairo::set_source_pixbuf(cr, pb, x, y);
-		cr->rectangle(x, y, pb->get_width(), pb->get_height());
-		cr->fill();
+		draw_icon (cr, "table", x, y);
 
 		x = x + w2 - 2;
 		y -= 8;
@@ -585,16 +594,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 			y += 8;
 			w -= w2;
 
-			Glib::RefPtr<Gdk::Pixbuf> pb;
-			pb = theme->get_icon ("table");
-			Gdk::Cairo::set_source_pixbuf(cr, pb, x, y);
-			cr->rectangle(x, y, pb->get_width(), pb->get_height());
-			cr->fill();
-
-			pb = theme->get_icon ("shield");
-			Gdk::Cairo::set_source_pixbuf(cr, pb, x, y+26);
-			cr->rectangle(x, y+26, pb->get_width(), pb->get_height());
-			cr->fill();
+			draw_icon (cr, "table",  x, y);
+			draw_icon (cr, "shield", x+26, y);
 
 			x = x + w2 - 2;
 			y -= 8;
@@ -620,10 +621,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		y += 8;
 		w -= w2;
 
-		Glib::RefPtr<Gdk::Pixbuf> pb = theme->get_icon ("table");
-		Gdk::Cairo::set_source_pixbuf(cr, pb, x, y);
-		cr->rectangle(x, y, pb->get_width(), pb->get_height());
-		cr->fill();
+		draw_icon (cr, "table", x, y);
 
 		x = x + w2 - 2 + GAP;
 		y -= 8;
