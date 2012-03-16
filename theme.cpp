@@ -17,6 +17,7 @@
 
 
 #include <gdkmm/rgba.h>
+#include <gdkmm/pixbuf.h>
 
 #include <map>
 
@@ -27,7 +28,8 @@
  */
 Theme::Theme()
 {
-	set_colours();
+	init_colours();
+	init_icons();
 }
 
 /**
@@ -39,9 +41,9 @@ Theme::~Theme()
 
 
 /**
- * set_colours
+ * init_colours
  */
-void Theme::set_colours (void)
+void Theme::init_colours (void)
 {
 	colours["unallocated"]	= Gdk::RGBA ("#a9a9a9");
 	colours["unknown"]	= Gdk::RGBA ("#000000");
@@ -114,5 +116,49 @@ Gdk::RGBA Theme::get_colour (const std::string &name)
 	}
 
 	return c;
+}
+
+
+/**
+ * init_icons
+ */
+void Theme::init_icons (void)
+{
+	// We could load these on demand if it becomes slow.
+	add_icon ("table", "icons/table.png");
+	add_icon ("shield", "icons/shield.png");
+
+	add_icon ("loop",   "/usr/share/icons/gnome/48x48/actions/gtk-refresh.png");
+	add_icon ("disk",   "/usr/share/icons/gnome/48x48/devices/harddrive.png");
+	add_icon ("file",   "/usr/share/icons/gnome/48x48/mimetypes/txt.png");
+	add_icon ("network","/usr/share/icons/gnome/48x48/status/connect_established.png");
+
+	add_icon ("warning", "/usr/share/icons/gnome/24x24/status/dialog-warning.png");
+}
+
+/**
+ * add_icon
+ */
+Glib::RefPtr<Gdk::Pixbuf> Theme::add_icon (const std::string &name, const std::string &filename)
+{
+	Glib::RefPtr<Gdk::Pixbuf> &pb = icons[name];
+
+	pb = Gdk::Pixbuf::create_from_file (filename);
+
+	return pb;
+}
+
+/**
+ * get_icon
+ */
+Glib::RefPtr<Gdk::Pixbuf> Theme::get_icon (const std::string &name)
+{
+	Glib::RefPtr<Gdk::Pixbuf> &pb = icons[name];
+
+	if (!pb) {
+		pb = icons["warning"];
+	}
+
+	return pb;
 }
 

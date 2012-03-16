@@ -20,6 +20,7 @@
 #define _THEME_H_
 
 #include <gdkmm/rgba.h>
+#include <gdkmm/pixbuf.h>
 
 #include <map>
 
@@ -33,10 +34,15 @@ public:
 	Gdk::RGBA add_colour (const std::string &name, const Gdk::RGBA   &colour);
 	Gdk::RGBA get_colour (const std::string &name);
 
+	Glib::RefPtr<Gdk::Pixbuf> add_icon (const std::string &name, const std::string &filename);
+	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string &name);
+
 protected:
 	std::map<std::string,Gdk::RGBA> colours;
+	std::map<std::string,Glib::RefPtr<Gdk::Pixbuf> > icons;
 
-	void set_colours (void);
+	void init_colours (void);
+	void init_icons   (void);
 
 private:
 
