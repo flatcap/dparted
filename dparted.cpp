@@ -87,16 +87,16 @@ void DParted::set_data (DPContainer *c)
 	for (std::vector<DPContainer*>::iterator i = c->children.begin(); i != c->children.end(); i++) {
 		if ((*i)->is_a ("volumegroup"))
 			continue; //RAR for now ignore vg
-		//std::cout << (*i)->type << std::endl;
+		//std::cout << (*i)->type << "\n";
 		DPDrawingArea *da = manage (new DPDrawingArea());
 		da_grid.add (*da);
 		da_grid.show_all();
-		//std::cout << (*i)->device << std::endl;
+		//std::cout << (*i)->device << "\n";
 		da->set_data (*i);
 		count++;
 	}
 
-	//std::cout << m_c->children.size() << " children" << std::endl;
+	//std::cout << m_c->children.size() << " children\n";
 	set_size_request (1439, 77*count+4); //RAR
 }
 
@@ -215,7 +215,7 @@ void DParted::on_menu_file_quit()
  */
 void DParted::on_menu_file_new_generic()
 {
-	std::cout << "A File|New menu item was selected." << std::endl;
+	std::cout << "A File|New menu item was selected.\n";
 }
 
 /**
@@ -223,7 +223,7 @@ void DParted::on_menu_file_new_generic()
  */
 void DParted::on_menu_others()
 {
-	std::cout << "A menu item was selected." << std::endl;
+	std::cout << "A menu item was selected.\n";
 }
 
 /**
@@ -237,7 +237,7 @@ void DParted::on_menu_choices_one()
 	else
 		message = "Choice 1 was deselected";
 
-	std::cout << message << std::endl;
+	std::cout << message << "\n";
 }
 
 /**
@@ -251,7 +251,7 @@ void DParted::on_menu_choices_two()
 	else
 		message = "Choice 2 was deselected";
 
-	std::cout << message << std::endl;
+	std::cout << message << "\n";
 }
 
 

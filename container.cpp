@@ -622,7 +622,7 @@ std::ostream& operator<< (std::ostream &stream, const DPContainer *c)
  */
 bool DPContainer::is_a (const std::string &t)
 {
-	//std::cout << "my type = " << type.back() << ", compare to " << t << std::endl;
+	//std::cout << "my type = " << type.back() << ", compare to " << t << "\n";
 
 	// Start with the most derived type
 	std::vector<std::string>::reverse_iterator it;

@@ -104,7 +104,7 @@ bool TreeView::on_button_press_event(GdkEventButton *event)
  */
 void TreeView::on_menu_file_popup_generic()
 {
-	std::cout << "A popup menu item was selected." << std::endl;
+	std::cout << "A popup menu item was selected.\n";
 
 	Glib::RefPtr<Gtk::TreeView::Selection> refSelection = get_selection();
 	if(refSelection)
@@ -112,7 +112,7 @@ void TreeView::on_menu_file_popup_generic()
 		Gtk::TreeModel::iterator iter = refSelection->get_selected();
 		if(iter)
 		{
-			std::cout << "selected something" << std::endl;
+			std::cout << "selected something\n";
 		}
 	}
 }
@@ -144,7 +144,7 @@ void TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 		DPContainer *x = (*i);
 		if (x->is_a ("volumegroup"))
 			continue; //RAR for now ignore vg
-		//std::cout << "name: " << x->name << std::endl;
+		//std::cout << "name: " << x->name << "\n";
 		if (parent) {
 			row = *(m_refTreeModel->append (parent->children()));
 		} else {
@@ -179,19 +179,19 @@ void TreeView::init_treeview (DPContainer *c)
 void TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn *col)
 {
 #if 0
-	std::cout << "Path: " << path.to_string() << std::endl;
+	std::cout << "Path: " << path.to_string() << "\n";
 
 	Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter (path);
 	if (iter)
 	{
 		DPContainer *c = NULL;
 		Gtk::TreeModel::Row row = *iter;
-		std::cout << "Row activated: Name=" << row[m_Columns.col_name] << ", Type=" << row[m_Columns.col_type] << std::endl;
+		std::cout << "Row activated: Name=" << row[m_Columns.col_name] << ", Type=" << row[m_Columns.col_type] << "\n";
 
 		c = row[m_Columns.col_container];
-		std::cout << typeid(row[m_Columns.col_container]).name() << std::endl;
-		std::cout << typeid(c).name() << std::endl;
-		std::cout << "Name=" << c->name << std::endl;
+		std::cout << typeid(row[m_Columns.col_container]).name() << "\n";
+		std::cout << typeid(c).name() << "\n";
+		std::cout << "Name=" << c->name << "\n";
 	}
 #endif
 }
@@ -210,7 +210,7 @@ bool TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib
 
 	convert_widget_to_tree_coords (x, y, tx, ty);
 
-	//std::cout << "tooltip at (x,y) " << x << "," << y << "-- (tx,ty) " << tx << "," << ty << std::endl;
+	//std::cout << "tooltip at (x,y) " << x << "," << y << "-- (tx,ty) " << tx << "," << ty << "\n";
 
 	Gtk::TreeModel::Path path;
 

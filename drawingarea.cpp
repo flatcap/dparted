@@ -47,7 +47,7 @@ DPDrawingArea::DPDrawingArea() :
 	sigc::slot<bool> my_slot = sigc::bind (sigc::mem_fun (*this, &DPDrawingArea::on_timeout), 0);
 	sigc::connection conn = Glib::signal_timeout().connect(my_slot, 800); // ms
 #endif
-	//std::cout << "GType name: " << G_OBJECT_TYPE_NAME(gobj()) << std::endl;
+	//std::cout << "GType name: " << G_OBJECT_TYPE_NAME(gobj()) << "\n";
 
 	theme = new Theme();
 }
@@ -66,7 +66,7 @@ DPDrawingArea::~DPDrawingArea()
  */
 bool DPDrawingArea::on_timeout(int timer_number)
 {
-	std::cout << "timer" << std::endl;
+	std::cout << "timer" << "\n";
 	get_window()->invalidate (false); //RAR everything for now
 	//return (m_c->device == "/dev/sdc");
 	return false;
@@ -332,7 +332,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 {
 	w -= GAP;
 
-	//std::cout << c << std::endl;
+	//std::cout << c << "\n";
 	//std::string s = get_size (c->bytes_size);
 	//printf ("container size: %lld (%s)\n", c->bytes_size, s.c_str());
 	//assert (w > 0)
@@ -413,7 +413,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
  */
 void DPDrawingArea::write_label (const Cairo::RefPtr<Cairo::Context>& cr, const Glib::ustring &text, long size)
 {
-	//std::cout << text << std::endl;
+	//std::cout << text << "\n";
 
 	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
 
@@ -432,9 +432,9 @@ void DPDrawingArea::write_label (const Cairo::RefPtr<Cairo::Context>& cr, const 
 	int radius = 2 + (h/2);
 	//int bar    = w - (h/2);
 
-	//std::cout << "text   = " << w << "," << h << std::endl;
-	//std::cout << "radius = " << radius << std::endl;
-	//std::cout << "bar    = " << bar << std::endl;
+	//std::cout << "text   = " << w << "," << h << "\n";
+	//std::cout << "radius = " << radius << "\n";
+	//std::cout << "bar    = " << bar << "\n";
 
 #if 0
 	if (text == "<b>loop3</b>") {
@@ -520,7 +520,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	cr->restore();
 #endif
 
-	//std::cout << m_c << std::endl;
+	//std::cout << m_c << "\n";
 
 #if 1
 	std::string name;
@@ -560,9 +560,9 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	}
 
 	//ASSERT (block->children.size() == 1)	//RAR
-	//std::cout << "block->children = " << block->children.size() << std::endl;
+	//std::cout << "block->children = " << block->children.size() << "\n";
 
-	//std::cout << "child = " << m_c->children[0] << std::endl;
+	//std::cout << "child = " << m_c->children[0] << "\n";
 
 	// block, table, empty
 	Table *table = dynamic_cast<Table*> (m_c->children[0]);
@@ -588,11 +588,11 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	if ((table->children.size() == 1) &&
 	    (table->children[0]->is_a ("partition"))) {
 		Partition *p = dynamic_cast<Partition*> (table->children[0]);
-		//std::cout << "ptype = " << p->ptype << std::endl;
+		//std::cout << "ptype = " << p->ptype << "\n";
 		if ((p->ptype == 0xEE) || (p->ptype == 0x42)) {
 			// block, table, partition (protective)
 			//	partition.size == table.size (delta)
-			//std::cout << "protective partition" << std::endl;
+			//std::cout << "protective partition\n";
 
 			Gdk::RGBA colour ("grey");
 			int w2 = 28;
@@ -617,7 +617,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	if ((table->children.size() != 0) &&
 	    (table->children[0]->is_a ("partition"))) {
 		//Partition *p = dynamic_cast<Partition*> (table->children[0]);
-		//std::cout << "ptype = " << p->ptype << std::endl;
+		//std::cout << "ptype = " << p->ptype << "\n";
 
 		// block, table, partition
 		Gdk::RGBA colour ("grey");
@@ -649,8 +649,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	fg = style->get_color (Gtk::STATE_FLAG_NORMAL);
 	bg = style->get_background_color(Gtk::STATE_FLAG_NORMAL);
 
-	std::cout << "fg = " << fg.get_red() << "," << fg.get_green() << "," << fg.get_blue() << std::endl;
-	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << std::endl;
+	std::cout << "fg = " << fg.get_red() << "," << fg.get_green() << "," << fg.get_blue() << "\n";
+	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << "\n";
 #endif
 
 	return true;
@@ -662,7 +662,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
  */
 bool DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
 {
-	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")" << std::endl;
+	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")\n";
 
 #if 0
 	bool old = mouse_close;
@@ -696,7 +696,7 @@ bool DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
  */
 bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 {
-	//std::cout << "mouse click: (" << event->x << "," << event->y << ")" << std::endl;
+	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
 	sel_x = event->x;
 	sel_y = event->y;
@@ -721,12 +721,12 @@ bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 	}
 #endif
 #if 0
-	std::cout << event->type << std::endl;
-	std::cout << event->state << std::endl;
-	std::cout << event->button << std::endl;
-	std::cout << event->time << std::endl;
-	std::cout << event->x << std::endl;
-	std::cout << event->y << std::endl;
+	std::cout << event->type << "\n";
+	std::cout << event->state << "\n";
+	std::cout << event->button << "\n";
+	std::cout << event->time << "\n";
+	std::cout << event->x << "\n";
+	std::cout << event->y << "\n";
 
 	GdkEventType type;
 	GdkWindow *window;
