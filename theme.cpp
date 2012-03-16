@@ -45,31 +45,32 @@ Theme::~Theme()
  */
 void Theme::init_colours (void)
 {
-	colours["unallocated"]	= Gdk::RGBA ("#a9a9a9");
+	colours["unallocated"]	= Gdk::RGBA ("#A9A9A9");
 	colours["unknown"]	= Gdk::RGBA ("#000000");
 	colours["unformatted"]	= Gdk::RGBA ("#000000");
-	colours["extended"]	= Gdk::RGBA ("#7dfcfe");
-	colours["btrfs"]	= Gdk::RGBA ("#ff9955");
-	colours["ext2"]		= Gdk::RGBA ("#9db8d2");
-	colours["ext3"]		= Gdk::RGBA ("#7590ae");
-	colours["ext4"]		= Gdk::RGBA ("#4b6983");
-	colours["swap"]		= Gdk::RGBA ("#c1665a");
-	colours["fat16"]	= Gdk::RGBA ("#00ff00");
-	colours["fat32"]	= Gdk::RGBA ("#18d918");
-	colours["exfat"]	= Gdk::RGBA ("#2e8b57");
+	colours["extended"]	= Gdk::RGBA ("#7DFCFE");
+	colours["btrfs"]	= Gdk::RGBA ("#FF9955");
+	colours["ext2"]		= Gdk::RGBA ("#9DB8D2");
+	colours["ext3"]		= Gdk::RGBA ("#7590AE");
+	colours["ext4"]		= Gdk::RGBA ("#4B6983");
+	colours["swap"]		= Gdk::RGBA ("#C1665A");
+	colours["fat16"]	= Gdk::RGBA ("#00FF00");
+	colours["fat32"]	= Gdk::RGBA ("#18D918");
+	colours["exfat"]	= Gdk::RGBA ("#2E8B57");
 	colours["nilfs2"]	= Gdk::RGBA ("#826647");
-	colours["ntfs"]		= Gdk::RGBA ("#42e5ac");
-	colours["reiserfs"]	= Gdk::RGBA ("#ada7c8");
-	colours["reiser4"]	= Gdk::RGBA ("#887fa3");
-	colours["xfs"]		= Gdk::RGBA ("#eed680");
-	colours["jfs"]		= Gdk::RGBA ("#e0c39e");
-	colours["hfs"]		= Gdk::RGBA ("#e0b6af");
-	colours["hfsplus"]	= Gdk::RGBA ("#c0a39e");
-	colours["ufs"]		= Gdk::RGBA ("#d1940c");
-	colours["used"]		= Gdk::RGBA ("#f8f8ba");
-	colours["unused"]	= Gdk::RGBA ("#ffffff");
-	colours["lvm2_pv"]	= Gdk::RGBA ("#cc9966");
-	colours["luks"]		= Gdk::RGBA ("#625b81");
+	colours["ntfs"]		= Gdk::RGBA ("#42E5AC");
+	colours["reiserfs"]	= Gdk::RGBA ("#ADA7C8");
+	colours["reiser4"]	= Gdk::RGBA ("#887FA3");
+	colours["xfs"]		= Gdk::RGBA ("#EED680");
+	colours["jfs"]		= Gdk::RGBA ("#E0C39E");
+	colours["hfs"]		= Gdk::RGBA ("#E0B6AF");
+	colours["hfsplus"]	= Gdk::RGBA ("#C0A39E");
+	colours["ufs"]		= Gdk::RGBA ("#D1940C");
+	colours["used"]		= Gdk::RGBA ("#F8F8BA");
+	colours["unused"]	= Gdk::RGBA ("#FFFFFF");
+	colours["lvm2_pv"]	= Gdk::RGBA ("#CC9966");
+	colours["luks"]		= Gdk::RGBA ("#625B81");
+	colours["table"]	= Gdk::RGBA ("#BEBEBE");
 	colours["default"]	= Gdk::RGBA ("#000000");
 }
 
