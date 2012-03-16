@@ -275,9 +275,7 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 	draw_border (cr, x, y, w, h, r);				// Set clipping area
 	cr->clip();
 
-	if (width_usage > 0) {
-		draw_rect (cr, x, y+r, width_usage, h-r, 0.96, 0.96, 0.72);	 // Yellow usage
-	}
+	draw_rect (cr, x, y+r, width_usage, h-r, 0.96, 0.96, 0.72);	 // Yellow usage
 	draw_rect (cr, x+width_usage, y+r,  width_fs-width_usage, h-r, 1.00, 1.00, 1.00);	// White background
 
 	if ((width_usage > r) && (width_fs - width_usage) > 1) {
@@ -412,15 +410,15 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 /**
  * write_label
  */
-void DPDrawingArea::write_label (const Cairo::RefPtr<Cairo::Context>& cr, const Glib::ustring &text)
+void DPDrawingArea::write_label (const Cairo::RefPtr<Cairo::Context>& cr, const Glib::ustring &text, long size)
 {
 	//std::cout << text << std::endl;
 
 	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
 
 	Pango::FontDescription font;
-	font.set_family ("Liberation Sans");
-	font.set_size (14 * Pango::SCALE);
+	font.set_family ("Liberation Sans");		//XXX from theme
+	font.set_size (12 * Pango::SCALE);
 
 	int w = 0;
 	int h = 0;
@@ -483,6 +481,15 @@ void DPDrawingArea::write_label (const Cairo::RefPtr<Cairo::Context>& cr, const 
 	cr->move_to (x, y);
 	layout->update_from_cairo_context (cr);
 	layout->show_in_cairo_context (cr);
+
+	font.set_size (8 * Pango::SCALE);
+	layout->set_font_description (font);
+	std::string s = get_size (size);
+	//layout->set_markup("<b>" + s + "</b>");
+	layout->set_markup(s);
+	cr->move_to (x, y+17);
+	layout->update_from_cairo_context (cr);
+	layout->show_in_cairo_context (cr);
 }
 
 /**
@@ -531,7 +538,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		label = m_c->device.substr (pos+1);
 	}
 	label = "<b>" + label + "</b>";
-	write_label (cr, label);
+	write_label (cr, label, m_c->bytes_size);
 #endif
 
 	if (m_c->is_a ("loop")) return true;

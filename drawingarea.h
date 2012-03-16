@@ -40,7 +40,7 @@ private:
 	void draw_focus     (const Cairo::RefPtr<Cairo::Context> &cr, int x, int y, int w, int h);
 	void draw_tabframe  (const Cairo::RefPtr<Cairo::Context> &cr, int &x, int &y, int &w, int &h, const Gdk::RGBA &colour);
 	void draw_partition (const Cairo::RefPtr<Cairo::Context> &cr, int &x, int y, int w, int h, int width_fs, int width_usage, const Gdk::RGBA &colour);
-	void write_label    (const Cairo::RefPtr<Cairo::Context> &cr, const Glib::ustring &text);
+	void write_label    (const Cairo::RefPtr<Cairo::Context> &cr, const Glib::ustring &text, long size);
 
 	std::deque<Range> vRange;
 
