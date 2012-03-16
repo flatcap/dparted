@@ -4,6 +4,7 @@
 #include <gtkmm/drawingarea.h>
 
 class DPContainer;
+class Theme;
 
 typedef struct { int x; int y; int w; int h; DPContainer *p; } Range;
 
@@ -29,6 +30,7 @@ protected:
 
 private:
 	DPContainer *m_c;
+	Theme *theme;
 
 	void get_colour (std::string &name, double &red, double &green, double &blue);
 	bool get_focus (int &x, int &y, int &w, int &h);

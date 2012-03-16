@@ -13,6 +13,7 @@
 #include "partition.h"
 #include "utils.h"
 #include "filesystem.h"
+#include "theme.h"
 
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
 const double ARC_E = 0;
@@ -26,6 +27,8 @@ const int    GAP   = 3;			// Space between partitions
  */
 DPDrawingArea::DPDrawingArea() :
 	//Glib::ObjectBase ("MyDrawingArea"),
+	m_c (NULL),
+	theme (NULL),
 	sel_x (-1),
 	sel_y (-1),
 	mouse_close (false)
@@ -45,6 +48,8 @@ DPDrawingArea::DPDrawingArea() :
 	sigc::connection conn = Glib::signal_timeout().connect(my_slot, 800); // ms
 #endif
 	//std::cout << "GType name: " << G_OBJECT_TYPE_NAME(gobj()) << std::endl;
+
+	theme = new Theme();
 }
 
 /**
@@ -52,6 +57,7 @@ DPDrawingArea::DPDrawingArea() :
  */
 DPDrawingArea::~DPDrawingArea()
 {
+	delete theme;
 }
 
 
