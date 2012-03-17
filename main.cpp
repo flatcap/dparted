@@ -93,7 +93,7 @@ int main (int argc, char *argv[])
 	Loop::find_devices (disks);
 
 	unsigned char *buffer = NULL;
-	int bufsize = 4096;
+	int bufsize = 20480;	//RAR 4096;
 	unsigned int j;
 
 	for (j = 0; j < disks.children.size(); j++) {
