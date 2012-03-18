@@ -34,6 +34,7 @@
 #include "table.h"
 #include "volume.h"
 #include "volumegroup.h"
+#include "misc.h"
 
 #include "log.h"
 #include "utils.h"
@@ -93,7 +94,7 @@ int main (int argc, char *argv[])
 	Loop::find_devices (disks);
 
 	unsigned char *buffer = NULL;
-	int bufsize = 20480;	//RAR 4096;
+	int bufsize = 32768;	//RAR 4096;
 	unsigned int j;
 
 	for (j = 0; j < disks.children.size(); j++) {
@@ -126,7 +127,9 @@ int main (int argc, char *argv[])
 			continue;
 		}
 
-		//empty?
+		if (Misc::probe (item, buffer, bufsize)) {
+			continue;
+		}
 	}
 
 	//RAR VolumeGroup::find_devices (disks);
@@ -153,7 +156,9 @@ int main (int argc, char *argv[])
 			continue;
 		}
 
-		//empty?
+		if (Misc::probe (item, buffer, bufsize)) {
+			continue;
+		}
 	}
 
 	if (probe_queue.size() > 0) {

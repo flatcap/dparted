@@ -5,14 +5,14 @@ MKDIR	= mkdir -p
 SRC	= block.cpp container.cpp disk.cpp extended.cpp log.cpp \
 	  file.cpp filesystem.cpp gpt.cpp identify.cpp linear.cpp loop.cpp \
 	  main.cpp mirror.cpp msdos.cpp partition.cpp table.cpp \
-	  segment.cpp stripe.cpp utils.cpp  volume.cpp volumegroup.cpp whole.cpp
+	  segment.cpp stripe.cpp utils.cpp  volume.cpp volumegroup.cpp whole.cpp misc.cpp
 
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp
 
 HDR	= block.h container.h disk.h extended.h file.h log.h \
 	  filesystem.h gpt.h identify.h linear.h loop.h mirror.h msdos.h \
 	  partition.h table.h segment.h stringnum.h stripe.h utils.h \
-	  volumegroup.h volume.h whole.h
+	  volumegroup.h volume.h whole.h misc.h
 
 HDR	+= dparted.h drawingarea.h treeview.h theme.h
 
