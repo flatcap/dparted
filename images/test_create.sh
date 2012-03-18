@@ -263,7 +263,6 @@ function test_20()
 function test_21()
 {
 	local LOOP
-	local NUM
 
 	echo -n "$FUNCNAME: "
 
@@ -422,7 +421,6 @@ function test_24()
 function test_30()
 {
 	local LOOP
-	local NUM
 
 	echo -n "$FUNCNAME: "
 
@@ -443,7 +441,6 @@ function test_30()
 function test_31()
 {
 	local LOOP
-	local NUM
 
 	echo -n "$FUNCNAME: "
 
@@ -467,7 +464,6 @@ function test_31()
 function test_32()
 {
 	local LOOP
-	local NUM
 
 	echo -n "$FUNCNAME: "
 
@@ -500,7 +496,6 @@ function test_32()
 function test_33()
 {
 	local LOOP
-	local NUM
 
 	echo -n "$FUNCNAME: "
 
@@ -535,7 +530,6 @@ function test_33()
 function test_34()
 {
 	local LOOP
-	local NUM
 
 	echo -n "$FUNCNAME: "
 	echo
@@ -548,7 +542,6 @@ function test_34()
 
 	msdos_create $LOOP extended 500 4000
 	[ $? == 0 ] || error || return
-
 # FS1
 	msdos_create $LOOP logical 600 200
 	[ $? == 0 ] || error || return
@@ -768,8 +761,7 @@ function test_44()
 
 	gpt_init "$LOOP"
 	[ $? == 0 ] || error || return
-
-# FS1 ---------------------------------------------
+# FS1
 	gpt_create $LOOP 600 200
 	[ $? == 0 ] || error || return
 
@@ -782,8 +774,7 @@ function test_44()
 	sync
 	losetup -d $SUB
 	[ $? == 0 ] || error || return
-
-# FS2 ---------------------------------------------
+# FS2
 	gpt_create $LOOP 1000 499
 	[ $? == 0 ] || error || return
 
@@ -796,8 +787,7 @@ function test_44()
 	sync
 	losetup -d $SUB
 	[ $? == 0 ] || error || return
-
-# FS3 ---------------------------------------------
+# FS3
 	gpt_create $LOOP 1500 500
 	[ $? == 0 ] || error || return
 
@@ -810,8 +800,7 @@ function test_44()
 	sync
 	losetup -d $SUB
 	[ $? == 0 ] || error || return
-
-# FS4 ---------------------------------------------
+# FS4
 	gpt_create $LOOP 2500 199
 	[ $? == 0 ] || error || return
 
@@ -824,8 +813,7 @@ function test_44()
 	sync
 	losetup -d $SUB
 	[ $? == 0 ] || error || return
-
-# FS5 ---------------------------------------------
+# FS5
 	gpt_create $LOOP 2700 200
 	[ $? == 0 ] || error || return
 
@@ -838,8 +826,7 @@ function test_44()
 	sync
 	losetup -d $SUB
 	[ $? == 0 ] || error || return
-
-# FS6 ---------------------------------------------
+# FS6
 	gpt_create $LOOP 3000 199
 	[ $? == 0 ] || error || return
 
@@ -852,8 +839,7 @@ function test_44()
 	sync
 	losetup -d $SUB
 	[ $? == 0 ] || error || return
-
-# FS7 ---------------------------------------------
+# FS7
 	gpt_create $LOOP 3200 400
 	[ $? == 0 ] || error || return
 
@@ -866,8 +852,7 @@ function test_44()
 	sync
 	losetup -d $SUB
 	[ $? == 0 ] || error || return
-
-# FS8 ---------------------------------------------
+# FS8
 	gpt_create $LOOP 3800 200
 	[ $? == 0 ] || error || return
 
@@ -886,11 +871,232 @@ function test_44()
 
 
 ##
-# disk, table, partition, lvm table, empty
+# disk, lvm table, empty
 function test_50()
 {
 	local LOOP
-	local NUM
+
+	echo -n "$FUNCNAME: "
+
+	LOOP="$(create_loop $FUNCNAME)"
+	[ -n "$LOOP" ] || error || return
+
+	pvcreate "$LOOP" > /dev/null
+	[ $? == 0 ] || error || return
+
+	ok "$LOOP"
+}
+
+##
+# disk, lvm table, volume group, empty
+function test_51()
+{
+	local LOOP
+
+	echo -n "$FUNCNAME: "
+
+	LOOP="$(create_loop $FUNCNAME)"
+	[ -n "$LOOP" ] || error || return
+
+	pvcreate "$LOOP" > /dev/null 2>&1
+	[ $? == 0 ] || error || return
+
+	vgcreate $FUNCNAME "$LOOP" > /dev/null
+	[ $? == 0 ] || error || return
+
+	ok "$LOOP"
+}
+
+##
+# disk, lvm table, volume group, partition, empty
+function test_52()
+{
+	local LOOP
+	local GROUP=$FUNCNAME
+	local INDEX=${FUNCNAME##*_}
+	local VOLUME="simple$INDEX"
+
+	echo -n "$FUNCNAME: "
+
+	LOOP="$(create_loop $FUNCNAME)"
+	[ -n "$LOOP" ] || error || return
+
+	pvcreate "$LOOP" > /dev/null 2>&1
+	[ $? == 0 ] || error || return
+
+	vgcreate $GROUP "$LOOP" > /dev/null
+	[ $? == 0 ] || error || return
+
+	lvcreate --size 2500m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	ok "$LOOP"
+}
+
+##
+# disk, lvm table, volume group, partition, unknown
+function test_53()
+{
+	local LOOP
+	local GROUP=$FUNCNAME
+	local INDEX=${FUNCNAME##*_}
+	local VOLUME="simple$INDEX"
+
+	echo -n "$FUNCNAME: "
+
+	LOOP="$(create_loop $FUNCNAME)"
+	[ -n "$LOOP" ] || error || return
+
+	pvcreate "$LOOP" > /dev/null 2>&1
+	[ $? == 0 ] || error || return
+
+	vgcreate $GROUP "$LOOP" > /dev/null
+	[ $? == 0 ] || error || return
+
+	lvcreate --size 2500m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	dd if=/dev/urandom bs=16K count=1 of="/dev/mapper/$GROUP-$VOLUME" 2> /dev/null
+
+	ok "$LOOP"
+}
+
+##
+# disk, lvm table, volume group, partition, filesystem
+function test_54()
+{
+	local LOOP
+	local GROUP=$FUNCNAME
+	local INDEX=${FUNCNAME##*_}
+	local VOLUME="simple$INDEX"
+
+	echo -n "$FUNCNAME: "
+
+	LOOP="$(create_loop $FUNCNAME)"
+	[ -n "$LOOP" ] || error || return
+
+	pvcreate "$LOOP" > /dev/null 2>&1
+	[ $? == 0 ] || error || return
+
+	vgcreate $GROUP "$LOOP" > /dev/null
+	[ $? == 0 ] || error || return
+
+	lvcreate --size 2500m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
+	[ $? == 0 ] || error || return
+
+	ok "$LOOP"
+}
+
+##
+# disk, lvm table, volume group, (partition, filesystem) * 8
+# (include empty space)
+function test_55()
+{
+	local LOOP
+	local GROUP=$FUNCNAME
+	local INDEX=${FUNCNAME##*_}
+	local VOLUME
+
+	echo -n "$FUNCNAME: "
+
+	LOOP="$(create_loop $FUNCNAME)"
+	[ -n "$LOOP" ] || error || return
+
+	pvcreate "$LOOP" > /dev/null 2>&1
+	[ $? == 0 ] || error || return
+
+	vgcreate $GROUP "$LOOP" > /dev/null
+	[ $? == 0 ] || error || return
+# FS1
+	VOLUME="simple$INDEX.1"
+	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
+	[ $? == 0 ] || error || return
+# GAP1
+	VOLUME="gap$INDEX.1"
+	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+# FS2
+	VOLUME="simple$INDEX.2"
+	lvcreate --size 500m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
+	[ $? == 0 ] || error || return
+# FS3
+	VOLUME="simple$INDEX.3"
+	lvcreate --size 500m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
+	[ $? == 0 ] || error || return
+# GAP2
+	VOLUME="gap$INDEX.2"
+	lvcreate --size 500m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+# FS4
+	VOLUME="simple$INDEX.4"
+	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
+	[ $? == 0 ] || error || return
+# FS5
+	VOLUME="simple$INDEX.5"
+	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
+	[ $? == 0 ] || error || return
+# GAP3
+	VOLUME="gap$INDEX.3"
+	lvcreate --size 100m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+# FS6
+	VOLUME="simple$INDEX.6"
+	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
+	[ $? == 0 ] || error || return
+# FS7
+	VOLUME="simple$INDEX.7"
+	lvcreate --size 400m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
+	[ $? == 0 ] || error || return
+# GAP4
+	VOLUME="gap$INDEX.4"
+	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+# FS8
+	VOLUME="simple$INDEX.8"
+	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null
+	[ $? == 0 ] || error || return
+
+	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
+	[ $? == 0 ] || error || return
+
+	lvremove -f /dev/mapper/$GROUP-gap* > /dev/null
+	[ $? == 0 ] || error || return
+
+	ok "$LOOP"
+}
+
+
+exit
+
+##
+# disk, table, partition, lvm table, empty
+function test_60()
+{
+	local LOOP
 
 	echo -n "$FUNCNAME: "
 
@@ -907,16 +1113,8 @@ function test_50()
 }
 
 ##
-# disk, table, partition, lvm table, unknown
-function test_51()
-{
-	echo -n "$FUNCNAME: "
-	error
-}
-
-##
 # disk, table, partition, lvm table, partition, empty
-function test_52()
+function test_61()
 {
 	echo -n "$FUNCNAME: "
 	error
@@ -924,7 +1122,7 @@ function test_52()
 
 ##
 # disk, table, partition, lvm table, partition, unknown
-function test_53()
+function test_62()
 {
 	echo -n "$FUNCNAME: "
 	error
@@ -932,7 +1130,7 @@ function test_53()
 
 ##
 # disk, table, partition, lvm table, partition, filesystem
-function test_54()
+function test_63()
 {
 	echo -n "$FUNCNAME: "
 	error
@@ -941,126 +1139,10 @@ function test_54()
 ##
 # disk, table, partition, lvm table, (partition, filesystem) * 8
 # (include empty space)
-function test_55()
-{
-	echo -n "$FUNCNAME: "
-	error
-}
-
-
-test_50
-echo
-exit
-
-##
-# disk, lvm table, empty
-function test_60()
-{
-	echo -n "$FUNCNAME: "
-	error
-}
-
-##
-# disk, lvm table, unknown
-function test_61()
-{
-	echo -n "$FUNCNAME: "
-	error
-}
-
-##
-# disk, lvm table, partition, empty
-function test_62()
-{
-	echo -n "$FUNCNAME: "
-	error
-}
-
-##
-# disk, lvm table, partition, unknown
-function test_63()
-{
-	echo -n "$FUNCNAME: "
-	error
-}
-
-##
-# disk, lvm table, partition, filesystem
 function test_64()
 {
 	echo -n "$FUNCNAME: "
 	error
-}
-
-##
-# disk, lvm table, (partition, filesystem) * 8
-# (include empty space)
-function test_65()
-{
-	echo -n "$FUNCNAME: "
-	error
-}
-
-
-function test_other()
-{
-#	test different filesystem types
-#		one of each type - ext2, ext3, ext4, reiser, btrfs, jfs, xfs, swap, fat, fat32, ntfs
-#		space before and after each partition
-#		able to
-#			resize
-#			move
-#			create
-#			delete
-#			format
-#			info
-#			check
-#			label
-#			uuid
-#
-#	test different lvm configurations
-#		linear
-#			1 segment
-#			many segments
-#				add segment
-#				remove segment
-#		stripe
-#			2 stripes
-#			many stripes
-#				add stripe
-#				remove stripe
-#				add mirror
-#		mirror
-#			2 mirrors
-#			many mirrors
-#				add mirror
-#				remove mirror
-#				break mirror
-#		raid10 (mirrored stripes)
-#			2 mirrors
-#			many mirrors
-#				add mirror
-#				remove mirror
-#			2 stripes
-#			many stripes
-#				add stripe
-#				remove stripe
-#
-#	test different tables
-#		empty disk
-#		create table
-#			msdos
-#			gpt
-#			lvm
-#		convert one table type to another
-#
-#	misc
-#		filesystem smaller than the partition
-#			display empty space
-#			allow enlarging filesystem
-#		filesystem larger  than the partition!
-#			whole disk readonly
-#			replace block icon with STOP sign
 }
 
 
@@ -1092,5 +1174,13 @@ test_41
 test_42
 test_43
 test_44
+echo
+
+test_50
+test_51
+test_52
+test_53
+test_54
+test_55
 echo
 
