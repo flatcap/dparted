@@ -361,7 +361,6 @@ function test_24()
 
 	SUB="$(sub_loop $LOOP 1 500)"
 	[ $? == 0 ] || error || return
-	losetup -a | grep $SUB
 
 	mke2fs -t ext4 -q "$SUB"
 	[ $? == 0 ] || error || return
@@ -375,7 +374,6 @@ function test_24()
 
 	SUB="$(sub_loop $LOOP 600 500)"
 	[ $? == 0 ] || error || return
-	losetup -a | grep $SUB
 
 	mke2fs -t ext4 -q "$SUB"
 	[ $? == 0 ] || error || return
@@ -389,7 +387,6 @@ function test_24()
 
 	SUB="$(sub_loop $LOOP 2000 1000)"
 	[ $? == 0 ] || error || return
-	losetup -a | grep $SUB
 
 	mke2fs -t ext4 -q "$SUB"
 	[ $? == 0 ] || error || return
@@ -403,7 +400,6 @@ function test_24()
 
 	SUB="$(sub_loop $LOOP 3500 200)"
 	[ $? == 0 ] || error || return
-	losetup -a | grep $SUB
 
 	mke2fs -t ext4 -q "$SUB"
 	[ $? == 0 ] || error || return
@@ -532,7 +528,6 @@ function test_34()
 	local LOOP
 
 	echo -n "$FUNCNAME: "
-	echo
 
 	LOOP="$(create_loop $FUNCNAME)"
 	[ -n "$LOOP" ] || error || return
@@ -881,7 +876,7 @@ function test_50()
 	LOOP="$(create_loop $FUNCNAME)"
 	[ -n "$LOOP" ] || error || return
 
-	pvcreate "$LOOP" > /dev/null
+	pvcreate "$LOOP" > /dev/null 2>&1
 	[ $? == 0 ] || error || return
 
 	ok "$LOOP"
@@ -1090,8 +1085,6 @@ function test_55()
 }
 
 
-exit
-
 ##
 # disk, table, partition, lvm table, empty
 function test_60()
@@ -1145,8 +1138,6 @@ function test_64()
 	error
 }
 
-
-exit
 
 cleanup
 
