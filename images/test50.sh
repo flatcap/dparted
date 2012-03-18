@@ -91,7 +91,7 @@ function test_53()
 	lvcreate --size 2500m --name $VOLUME $GROUP > /dev/null
 	[ $? == 0 ] || error || return
 
-	dd if=/dev/urandom bs=16K count=1 of="/dev/mapper/$GROUP-$VOLUME" 2> /dev/null
+	dd if=/dev/urandom bs=32K count=1 of="/dev/mapper/$GROUP-$VOLUME" 2> /dev/null
 
 	ok "$LOOP"
 }

@@ -30,7 +30,7 @@ function test_11()
 	LOOP="$(create_loop $FUNCNAME)"
 	[ -n "$LOOP" ] || error || return
 
-	dd if=/dev/urandom bs=16K count=1 of="$LOOP" 2> /dev/null
+	dd if=/dev/urandom bs=32K count=1 of="$LOOP" 2> /dev/null
 
 	ok "$LOOP"
 }

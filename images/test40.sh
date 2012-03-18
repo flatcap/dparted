@@ -62,7 +62,7 @@ function test_42()
 	SUB="$(sub_loop $LOOP 1 500)"
 	[ $? == 0 ] || error || return
 
-	dd if=/dev/urandom bs=16K count=1 of="$SUB" 2> /dev/null
+	dd if=/dev/urandom bs=32K count=1 of="$SUB" 2> /dev/null
 
 	sync
 	losetup -d $SUB
