@@ -911,4 +911,7 @@ fewer options
 		Are you sure? [y/N]
 		Secure deletion [y/N]
 
+identify LUKS partitions and offer to open/close them
+need an icon
+
 
