@@ -891,6 +891,8 @@ test cases
 			sector
 			cylinder
 			megabyte
+		multiple, independent, volume groups on one disk
+		test gfx on LARGE numbers of volumes
 
 
 scripts, fold error conditions:
