@@ -19,7 +19,17 @@ function test_60()
 	msdos_init "$LOOP"
 	[ $? == 0 ] || error || return
 
-	msdos_create $LOOP primary 1 500
+	msdos_create $LOOP primary 500 4000
+	[ $? == 0 ] || error || return
+
+	SUB="$(sub_loop $LOOP 1000 1500)"
+	[ $? == 0 ] || error || return
+
+	pvcreate "$SUB" #> /dev/null 2>&1
+	[ $? == 0 ] || error || return
+
+	sync
+	losetup -d $SUB
 	[ $? == 0 ] || error || return
 
 	ok "$LOOP"
@@ -39,6 +49,15 @@ function test_62()
 {
 	echo -n "$FUNCNAME: "
 	error
+	SUB="$(sub_loop $LOOP 1000 1500)"
+	[ $? == 0 ] || error || return
+
+	dd if=/dev/urandom bs=16K count=1 of="$SUB" 2> /dev/null
+
+	sync
+	losetup -d $SUB
+	[ $? == 0 ] || error || return
+
 }
 
 ##
@@ -62,6 +81,7 @@ function test_64()
 cleanup
 
 test_60
+exit
 test_61
 test_62
 test_63
