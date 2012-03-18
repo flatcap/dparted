@@ -783,3 +783,120 @@ base class CRefCount
 	reference()
 	unreference()
 
+test mode fixes the theme -- sizes, colours, fonts, etc
+lie about device names too -- all "/dev/sda"
+make the output easily cut'n'pasteable
+
+test cases
+	disk, empty
+	disk, unknown
+	disk, filesystem
+
+	disk, msdos table, empty
+	disk, msdos table, partition, empty
+	disk, msdos table, partition, filesystem
+	disk, msdos table, partition, unknown
+	disk, msdos table, (partition, filesystem) * 4					(include empty space)
+
+	disk, msdos table, extended partition, empty
+	disk, msdos table, extended partition, partition, empty
+	disk, msdos table, extended partition, partition, unknown
+	disk, msdos table, extended partition, partition, filesystem
+	disk, msdos table, extended partition, (partition, filesystem) * 8		(include empty space)
+
+	disk, protective table, partition, empty
+	disk, protective table, partition, gpt table, empty
+	disk, protective table, partition, gpt table, partition, empty
+	disk, protective table, partition, gpt table, partition, unknown
+	disk, protective table, partition, gpt table, (partition, filesystem) * 8	(include empty space)
+
+	disk, gpt table, empty
+	disk, gpt table, partition, empty
+	disk, gpt table, partition, unknown
+	disk, gpt table, (partition, filesystem) * 8					(include empty space)
+
+	disk, protective table, partition, lvm table, empty
+	disk, protective table, partition, lvm table, unknown
+	disk, protective table, partition, lvm table, partition, empty
+	disk, protective table, partition, lvm table, partition, unknown
+	disk, protective table, partition, lvm table, partition, filesystem
+	disk, protective table, partition, lvm table, (partition, filesystem) * 8	(include empty space)
+
+	disk, lvm table, empty
+	disk, lvm table, unknown
+	disk, lvm table, partition, empty
+	disk, lvm table, partition, unknown
+	disk, lvm table, partition, filesystem
+	disk, lvm table, (partition, filesystem) * 8	(include empty space)
+
+	test different filesystem types
+		one of each type - ext2, ext3, ext4, reiser, btrfs, jfs, xfs, swap, fat, fat32, ntfs
+		space before and after each partition
+		able to
+			resize
+			move
+			create
+			delete
+			format
+			info
+			check
+			label
+			uuid
+
+	test different lvm configurations
+		linear
+			1 segment
+			many segments
+				add segment
+				remove segment
+		stripe
+			2 stripes
+			many stripes
+				add stripe
+				remove stripe
+				add mirror
+		mirror
+			2 mirrors
+			many mirrors
+				add mirror
+				remove mirror
+				break mirror
+		raid10 (mirrored stripes)
+			2 mirrors
+			many mirrors
+				add mirror
+				remove mirror
+			2 stripes
+			many stripes
+				add stripe
+				remove stripe
+
+	test different tables
+		empty disk
+		create table
+			msdos
+			gpt
+			lvm
+		convert one table type to another
+
+	misc
+		filesystem smaller than the partition
+			display empty space
+			allow enlarging filesystem
+		filesystem larger  than the partition!
+			whole disk readonly
+			replace block icon with STOP sign
+		alignment of partitions
+			none
+			sector
+			cylinder
+			megabyte
+
+
+scripts, fold error conditions:
+	LOOP="$(create_loop $FUNCNAME)"
+	[ -n "$LOOP" ] || error || return
+becomes
+	LOOP="$(create_loop $FUNCNAME)" || error || return
+
+
