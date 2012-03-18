@@ -14,6 +14,8 @@
 #include "utils.h"
 #include "filesystem.h"
 #include "theme.h"
+#include "segment.h"
+#include "whole.h"
 
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
 const double ARC_E = 0;
@@ -130,10 +132,25 @@ void DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, const st
  */
 void DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context>& cr, int x, int y, int w, int h, int r)
 {
+#if 0
+	printf ("border: %d, %d, %d, %d\n", x, y, w, h);
+	cr->set_line_width (1);
+	cr->save();
+	cr->set_source_rgb (0.0, 0.5, 0.0);
+	cr->move_to (x, 0);
+	cr->rel_line_to (0, 100);
+	cr->stroke();
+	cr->move_to (x+w-1, 0);
+	cr->rel_line_to (0, 100);
+	cr->stroke();
+	cr->restore();
+#endif
+	cr->move_to (x, y+8);
 	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
 	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
 	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
 	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
+	cr->close_path();
 }
 
 /**
@@ -278,7 +295,7 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context>& cr,
 	draw_rect (cr, x, y+r, width_usage, h-r, 0.96, 0.96, 0.72);	 // Yellow usage
 	draw_rect (cr, x+width_usage, y+r,  width_fs-width_usage, h-r, 1.00, 1.00, 1.00);	// White background
 
-	if ((width_usage > r) && (width_fs - width_usage) > 1) {
+	if ((width_fs - width_usage) > 1) {
 		cr->set_source_rgb (1, 1, 1);
 		cr->move_to (x+width_usage, y+r);			// Curvy corners
 		cr->arc (x+width_usage-r, y+(2*r), r, ARC_N, ARC_E);
@@ -343,11 +360,13 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 	for (int i = 0; i < num; i++) {
 		DPContainer *child = c->children[i];
 		if (child->is_a ("partition")) {
-			//printf ("partition\n");
+			printf ("partition\n");
+		} else if (child->is_a ("filesystem")) {
+			printf ("filesystem\n");
 		} else if (child->is_a ("table")) {
-			//printf ("table\n");
+			printf ("table\n");
 		} else {
-			//printf ("bugger\n");
+			printf ("CHILD is a %s\n", child->name.c_str());
 		}
 
 		std::string label1;
@@ -356,6 +375,8 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 		size_t pos = child->device.find_last_of ('/');
 		if (pos == std::string::npos) {
 			label1 = child->device;
+			if (label1.empty())
+				label1 = "<none>";	//RAR tmp
 		} else {
 			label1 = child->device.substr (pos+1);
 		}
@@ -365,6 +386,8 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 		int child_usage = (child->bytes_used / bytes_per_pixel);
 
 		if ((child->children.size() == 1) && child->children[0]->is_a ("filesystem")) {
+			if (child->children.size() == 0)
+				return;
 			Filesystem *fs = dynamic_cast<Filesystem*> (child->children[0]);
 			child_usage = fs->bytes_used / bytes_per_pixel;
 
@@ -373,9 +396,12 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 			}
 			label2 = get_size (fs->bytes_size);
 		}
-
-		//printf ("child bytes = %lld, child used = %lld\n", child->bytes_size, child->bytes_used);
-		//printf ("child width = %d, child usage = %d\n", child_width, child_usage);
+#if 1
+		printf ("child bytes = %lld, child used = %lld\n", child->bytes_size, child->bytes_used);
+		printf ("child width = %d, child usage = %d\n", child_width, child_usage);
+		printf ("label1: %s\n", label1.c_str());
+		printf ("label2: %s\n", label2.c_str());
+#endif
 		int offset = x + (child->parent_offset / bytes_per_pixel);
 		if (child->is_a ("table")) {
 			Gdk::RGBA colour = theme->get_colour ("extended");
@@ -386,8 +412,32 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, int
 			draw_icon (cr, "table", offset-24, 8);
 
 			draw_container (cr, offset, y2, child_width, h2, child);
+		} else if (child->is_a ("filesystem")) {
+			Filesystem *fs = dynamic_cast<Filesystem*> (child);
+			if (!fs)
+				return;
+			Gdk::RGBA colour = theme->get_colour (fs->name);
+			draw_partition (cr, offset, y, child_width-GAP, h, child_width-GAP, child_usage, colour);
+
+			Pango::FontDescription font;
+			font.set_family ("Liberation Sans");
+
+			Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
+			layout->set_font_description (font);
+
+			layout->set_text (label1 + "\n" + label2);
+			cr->set_source_rgb (0.0, 0.0, 0.0);
+			cr->move_to (offset - child_width + GAP + 4, y + 12);
+			layout->set_width (Pango::SCALE * (child_width - GAP - 8));
+			layout->set_ellipsize (Pango::ELLIPSIZE_END);
+			layout->update_from_cairo_context (cr);
+			layout->show_in_cairo_context (cr);
 		} else {
+			if (child->children.size() == 0)
+				return;
 			Filesystem *fs = dynamic_cast<Filesystem*> (child->children[0]);
+			if (!fs)
+				return;
 			Gdk::RGBA colour = theme->get_colour (fs->name);
 			draw_partition (cr, offset, y, child_width-GAP, h, child_width-GAP, child_usage, colour);
 
@@ -542,20 +592,36 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	write_label (cr, label, m_c->bytes_size);
 #endif
 
-	if (m_c->is_a ("loop")) return true;
+	//if (m_c->is_a ("loop")) return true;
 	//if (m_c->device != "/dev/sdc") return true;
 
 	int x = 52;
 	int y = 1;
-	int w = width - x + GAP;
+	int w = width - x;
 	int h = height - 3;
 
 	Block *block = dynamic_cast<Block*> (m_c);
 
 	// block, empty
 	if (block->children.size() == 0) {
-		Gdk::RGBA colour ("grey");
-		draw_frame (cr, x, y, w, h, colour);
+		Gdk::RGBA colour ("dark grey");
+		cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
+		draw_border (cr, x, y, w, h, 8);
+		cr->stroke();
+
+		Pango::FontDescription font;
+		font.set_family ("Liberation Sans");
+
+		Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
+		layout->set_font_description (font);
+
+		layout->set_markup ("<b>Unallocated</b>");
+		cr->set_source_rgb (0.0, 0.0, 0.0);
+		cr->move_to (x+6, y+6);
+		//layout->set_width (Pango::SCALE * (child_width - GAP - 8));
+		//layout->set_ellipsize (Pango::ELLIPSIZE_END);
+		layout->update_from_cairo_context (cr);
+		layout->show_in_cairo_context (cr);
 		return true;
 	}
 
@@ -564,10 +630,28 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	//std::cout << "child = " << m_c->children[0] << "\n";
 
+	if (m_c->children[0]->is_a ("filesystem")) {
+		draw_container (cr, x, y, w, h, m_c);
+		return true;
+	}
+
+	if (m_c->children[0]->is_a ("segment")) {
+		// hopefully a volume segment
+		Segment *seg = dynamic_cast<Segment*> (m_c->children[0]);
+		Whole *whole = seg->whole;
+		std::cout << whole << std::endl;
+		return true;
+	}
+
+	if (!m_c->children[0]->is_a ("table")) {
+		std::cout << "not a table" << std::endl;
+		return true;
+	}
+
 	// block, table, empty
 	Table *table = dynamic_cast<Table*> (m_c->children[0]);
 	if (table->children.size() == 0) {
-		Gdk::RGBA colour ("grey");
+		Gdk::RGBA colour = theme->get_colour ("table");
 		int w2 = 28;
 		draw_partition (cr, x, y, w2, h, w2, 0, colour);
 
@@ -580,7 +664,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		x = x + w2 - 2;
 		y -= 8;
 
-		colour.set ("grey");
+		colour = theme->get_colour ("unallocated");
 		draw_frame (cr, x, y, w, h, colour);
 		return true;
 	}
@@ -594,7 +678,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 			//	partition.size == table.size (delta)
 			//std::cout << "protective partition\n";
 
-			Gdk::RGBA colour ("grey");
+			Gdk::RGBA colour = theme->get_colour ("table");
 			int w2 = 28;
 			draw_partition (cr, x, y, w2, h, w2, 0, colour);
 
@@ -602,8 +686,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 			y += 8;
 			w -= w2;
 
-			draw_icon (cr, "table",  x, y);
-			draw_icon (cr, "shield", x+26, y);
+			draw_icon (cr, "shield", x,    y);
+			draw_icon (cr, "table",  x+26, y);
 
 			x = x + w2 - 2;
 			y -= 8;
@@ -620,7 +704,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		//std::cout << "ptype = " << p->ptype << "\n";
 
 		// block, table, partition
-		Gdk::RGBA colour ("grey");
+		Gdk::RGBA colour = theme->get_colour ("table");
 		int w2 = 28;
 		//printf ("%d, %d, %d, %d\n", x, y, w2, h);
 		draw_partition (cr, x, y, w2, h, w2, 0, colour);
