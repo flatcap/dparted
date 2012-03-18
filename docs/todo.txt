@@ -901,4 +901,14 @@ scripts, fold error conditions:
 becomes
 	LOOP="$(create_loop $FUNCNAME)" || error || return
 
+on delete partition offer to clean up
+	do nothing
+	write zeroes over the beginning of the partition
+	write zeroes over the entire partition
+	shred the entire partition
+fewer options
+	Delete:
+		Are you sure? [y/N]
+		Secure deletion [y/N]
+
 
