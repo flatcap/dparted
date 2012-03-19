@@ -6,7 +6,7 @@ IMAGE_DIR="."
 source common.sh
 
 ##
-# disk, msdos table, extended partition, empty
+# 30 disk, msdos table, extended partition, empty
 function test_30()
 {
 	local LOOP
@@ -26,7 +26,7 @@ function test_30()
 }
 
 ##
-# disk, msdos table, extended partition, partition, empty
+# 31 disk, msdos table, extended partition, partition, empty
 function test_31()
 {
 	local LOOP
@@ -49,7 +49,7 @@ function test_31()
 }
 
 ##
-# disk, msdos table, extended partition, partition, unknown
+# 32 disk, msdos table, extended partition, partition, unknown
 function test_32()
 {
 	local LOOP
@@ -81,7 +81,7 @@ function test_32()
 }
 
 ##
-# disk, msdos table, extended partition, partition, filesystem
+# 33 disk, msdos table, extended partition, partition, filesystem
 function test_33()
 {
 	local LOOP
@@ -114,7 +114,7 @@ function test_33()
 }
 
 ##
-# disk, msdos table, extended partition, (partition, filesystem) * 8
+# 34 disk, msdos table, extended partition, (partition, filesystem) * 8
 # (include empty space)
 function test_34()
 {

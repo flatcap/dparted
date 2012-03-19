@@ -6,7 +6,7 @@ IMAGE_DIR="."
 source common.sh
 
 ##
-# disk, empty
+# 10 disk, empty
 function test_10()
 {
 	local LOOP
@@ -20,7 +20,7 @@ function test_10()
 }
 
 ##
-# disk, unknown
+# 11 disk, unknown
 function test_11()
 {
 	local LOOP
@@ -36,7 +36,7 @@ function test_11()
 }
 
 ##
-# disk, filesystem
+# 12 disk, filesystem
 function test_12()
 {
 	local LOOP

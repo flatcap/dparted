@@ -6,7 +6,7 @@ IMAGE_DIR="."
 source common.sh
 
 ##
-# disk, lvm table, empty
+# 50 disk, lvm table, empty
 function test_50()
 {
 	local LOOP
@@ -23,7 +23,7 @@ function test_50()
 }
 
 ##
-# disk, lvm table, volume group, empty
+# 51 disk, lvm table, volume group, empty
 function test_51()
 {
 	local LOOP
@@ -43,7 +43,7 @@ function test_51()
 }
 
 ##
-# disk, lvm table, volume group, partition, empty
+# 52 disk, lvm table, volume group, partition, empty
 function test_52()
 {
 	local LOOP
@@ -69,7 +69,7 @@ function test_52()
 }
 
 ##
-# disk, lvm table, volume group, partition, unknown
+# 53 disk, lvm table, volume group, partition, unknown
 function test_53()
 {
 	local LOOP
@@ -97,7 +97,7 @@ function test_53()
 }
 
 ##
-# disk, lvm table, volume group, partition, filesystem
+# 54 disk, lvm table, volume group, partition, filesystem
 function test_54()
 {
 	local LOOP
@@ -126,7 +126,7 @@ function test_54()
 }
 
 ##
-# disk, lvm table, volume group, (partition, filesystem) * 8
+# 55 disk, lvm table, volume group, (partition, filesystem) * 8
 # (include empty space)
 function test_55()
 {

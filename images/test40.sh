@@ -6,7 +6,7 @@ IMAGE_DIR="."
 source common.sh
 
 ##
-# disk, protective table, partition, gpt table, empty
+# 40 disk, protective table, partition, gpt table, empty
 function test_40()
 {
 	local LOOP
@@ -23,7 +23,7 @@ function test_40()
 }
 
 ##
-# disk, protective table, partition, gpt table, partition, empty
+# 41 disk, protective table, partition, gpt table, partition, empty
 function test_41()
 {
 	local LOOP
@@ -43,7 +43,7 @@ function test_41()
 }
 
 ##
-# disk, protective table, partition, gpt table, partition, unknown
+# 42 disk, protective table, partition, gpt table, partition, unknown
 function test_42()
 {
 	local LOOP
@@ -72,7 +72,7 @@ function test_42()
 }
 
 ##
-# disk, protective table, partition, gpt table, partition, filesystem
+# 43 disk, protective table, partition, gpt table, partition, filesystem
 function test_43()
 {
 	local LOOP
@@ -102,7 +102,7 @@ function test_43()
 }
 
 ##
-# disk, protective table, partition, gpt table, (partition, filesystem) * 8
+# 44 disk, protective table, partition, gpt table, (partition, filesystem) * 8
 # (include empty space)
 function test_44()
 {
