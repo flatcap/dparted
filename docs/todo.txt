@@ -1003,3 +1003,84 @@ empty partition objects can ask parents for actions
 
 clicking on the disk gui should expand the tree view if necessary
 
+tooltips
+disk
+	ICON
+	Model: ATA Maxtor
+	Size 298GiB
+	Free/Used space (pie chart?)
+	device: /dev/sdc (8,32)
+	Partition table: msdos
+	CHS x,y,z
+	Sectors: 1234
+	Sector size: 512
+Extended
+	sdc2
+	size 150G
+	3 logical partitions
+	free/used space
+table
+	msdos partition table
+	5 data partitions (2 primary, 3 logical)
+	free/used space
+partition
+	type
+	size
+	free/used space
+filesystem (include in partition/whoever the parent is)
+	type
+	size
+	block size
+	free/used
+	fragmentation
+	etc
+
+if we have object for empty spaces, we need rules for coalescing empty spaces
+empty != reserved, etc
+
+localisation on object names
+no localisation in the lib
+
+put some limit on what containers can contain?
+what about new types (plugins) how do we know where to find them?
+
+vector<> container::get_free_space
+
+loop:find_devices()
+
+lvm
+	linear	=> no dependents : 1-n volumes
+	striped => n * linear volumes
+	mirror => log + n * volumes (linear or striped)
+
+/sys/block/X/size
+
+get list of devices from /proc/partitions or blkid
+	disk
+	loop
+	file
+	net?
+don't need to probe these fundamental types
+
+Using each disk/loop/file device/offset
+	for each parition table probe
+		read one sector and pass it to msdos, gpt, etc
+		in liklihood order
+	for each logical volume type: lvm, ldm, md, etc
+	for each filesystem type: etc2,3,4, fat, ntfs, etc
+		first probe the common ones and those that
+		require the least disk reading
+
+at each level of probing there are three outcomes
+	No: not my type, try someone else
+	Yes: I've dealt with it, nothing more to do
+	Yes: Probe my children
+
+raid10 = mirrored stripes, i.e.
+	1 mirror that contains (a log and)
+	4 stripes that contain
+	8 linear volumes
+
+PVSEG_START = PV offset
+SEG_START_PE = LV offset
+
