@@ -914,4 +914,92 @@ fewer options
 identify LUKS partitions and offer to open/close them
 need an icon
 
+support MS LBA extended partition 0x0f
+
+test scripts
+	-v verbose
+	-d delete
+
+test cases for LDM, md
+
+reserved space?
+	ignore it in the diskgui?
+
+unallocated vs empty partition -- distinguish them
+
+have own icons
+otherwise doesn't match docs
+easier to keep things aligned
+need a dark set too
+
+have a "dark" colour scheme
+
+identify protective partitions in the lib
+
+short fs (doesn't fill the container)
+less white bit
+
+autosize text (vertically) to fit disk gui
+count the number of lines we can get away with
+
+fs > partition size -- now what?
+
+option to show/hide reserved space
+
+are !'s visible enough to use in gui?
+
+when working (performing disk actions)
+highlight the current partition (red)?
+
+vim cpp <leader> + ?
+	c ctor
+	d dtor
+	i include
+	m make
+
+colour-code table blocks in disk-gui?
+too much?
+how do we distinguish between...?
+	disk, msdos, partition
+	disk, lvm, partition
+
+which items should be folded?
+container + child == same size
+child = filesystem
+
+gap 2px before and 1 after?
+
+handle 10px?
+
+list of custom signals
+
+prelight drawing area on hover => clickable
+tooltip on hover
+
+treeiter on container
+
+comments on docs a la mysql
+
+handles on disk, extended, lvm -- not disk?
+anything with multiple children
+disk,loop,file => icon
+
+hide
+	partition table?
+	partition?
+	protective partition?
+
+gparted table fields
+	0 Partition
+	1 Filesystem
+	2 Mount point
+	3 Label
+	4 Size
+	5 Used
+	6 Unused
+	7 Flags
+
+empty partition objects can ask parents for actions
+
+clicking on the disk gui should expand the tree view if necessary
 
