@@ -77,7 +77,7 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 	if (!buffer)
 		return NULL;
 
-	for (loop = 0; loop < 5; loop++) {
+	for (loop = 0; loop < 50; loop++) {
 		//log_debug ("table_offset = %lld\n", table_offset);
 		parent->read_data (table_offset, bufsize, buffer);
 
@@ -86,7 +86,7 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 			return NULL;
 		}
 
-		//log_debug ("extended partition\n");
+		log_debug ("extended partition\n");
 
 		int num = 0;
 		unsigned int i;
@@ -101,8 +101,8 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 		}
 
 		for (i = 0; i < vp.size(); i++) {
-#if 0
-			if (vp[i].type != 5) {
+#if 1
+			if ((vp[i].type != 5) || (vp[i].type != 5)) {
 				std::string s1 = get_size (vp[i].start);
 				std::string s2 = get_size (vp[i].size);
 
@@ -114,7 +114,7 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 #endif
 			DPContainer *c = NULL;
 
-			if (vp[i].type == 0x05) {
+			if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 				table_offset = offset + vp[i].start;
 			} else {
 				c = new Partition;

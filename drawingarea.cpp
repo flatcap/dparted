@@ -16,6 +16,7 @@
 #include "theme.h"
 #include "segment.h"
 #include "whole.h"
+#include "log.h"
 
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
 const double ARC_E = 0;
@@ -672,7 +673,7 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	if ((table->children.size() == 1) &&
 	    (table->children[0]->is_a ("partition"))) {
 		Partition *p = dynamic_cast<Partition*> (table->children[0]);
-		//std::cout << "ptype = " << p->ptype << "\n";
+		std::cout << "ptype = " << p->ptype << "\n";
 		if ((p->ptype == 0xEE) || (p->ptype == 0x42)) {
 			// block, table, partition (protective)
 			//	partition.size == table.size (delta)
@@ -721,6 +722,9 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 		draw_container (cr, x, y, w, h, table);
 		return true;
 	}
+
+	log_debug ("Other\n");
+	draw_container (cr, x, y, w, h, table);
 
 #if 0
 	// move to main window, add accessor function
