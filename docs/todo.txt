@@ -953,9 +953,21 @@ highlight the current partition (red)?
 
 vim cpp <leader> + ?
 	c ctor
+		first occurrence of "^\(\i\+\)::\1\s*("
 	d dtor
+		first occurrence of "^\(\i\+\)::\~\1\s*("
 	i include
+		last occurrence of "#include"
+		stop searching of "^{$" found
 	m make
+		use makeprg or shellpipe to duplicate output to other window
+	h swap c/cc/cpp/h
+		use filename and syntax to guess what file to find
+		:function! SomeCheck()
+		:   if filereadable("SpecificFile")
+		:       echo "SpecificFile exists"
+		:   endif
+		:endfunction
 
 colour-code table blocks in disk-gui?
 too much?
@@ -1083,4 +1095,24 @@ raid10 = mirrored stripes, i.e.
 
 PVSEG_START = PV offset
 SEG_START_PE = LV offset
+
+theme contains icon names too
+plugin filesystem/table can set theme info for itself
+
+change all the gfx parameters to doubles
+if the backend is swapped for svg it will still look good
+could be used to save appearance
+
+need to add alpha to all the colours I use from the theme
+(even if *I* don't want to use it)
+could be used for debugging by making certain elements translucent
+
+theme change the names to
+	fs_ntfs
+	fs_ext2
+	table_msdos
+	table_gpt
+
+changing the theme to "default" could re-call init_colours, etc
+send a signal afterwards to alert plugins
 
