@@ -968,6 +968,9 @@ vim cpp <leader> + ?
 		:       echo "SpecificFile exists"
 		:   endif
 		:endfunction
+	first time, find the place and mark it
+	second time jump to the mark
+	open fold
 
 colour-code table blocks in disk-gui?
 too much?
