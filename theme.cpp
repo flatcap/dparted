@@ -45,6 +45,14 @@ Theme::~Theme()
  */
 void Theme::init_colours (void)
 {
+	// "yellow"		Colour name
+	// "#F80"		Hex triplet: 1 digit  for Red, Green, Blue
+	// "#FF8800"		Hex triplet: 2 digits for Red, Green, Blue
+	// "#FFF888000"		Hex triplet: 3 digits for Red, Green, Blue
+	// "#FFFF88880000"	Hex triplet: 4 digits for Red, Green, Blue
+	// "rgb(255,128,0)	Decimal triplet: range 0-255 for Red, Green, Blue
+	// "rgba(255,128,0,0.5)	Decimal triplet + alpha (range 0.0 - 1.0)
+
 	colours["default"]	= Gdk::RGBA ("#000000");
 
 	colours["btrfs"]	= Gdk::RGBA ("#FF9955");
@@ -73,6 +81,9 @@ void Theme::init_colours (void)
 	colours["unused"]	= Gdk::RGBA ("#FFFFFF");
 	colours["used"]		= Gdk::RGBA ("#F8F8BA");
 	colours["xfs"]		= Gdk::RGBA ("#EED680");
+
+	colours["focus1"]	= Gdk::RGBA ("#000000");
+	colours["focus2"]	= Gdk::RGBA ("#FFFFFF");
 }
 
 /**
@@ -163,4 +174,20 @@ Glib::RefPtr<Gdk::Pixbuf> Theme::get_icon (const std::string &name)
 
 	return pb;
 }
+
+
+#if 0
+	// move to main window, add accessor function
+	Glib::RefPtr<Gtk::StyleContext> style;
+	style = get_style_context();
+
+	Gdk::RGBA fg;
+	Gdk::RGBA bg;
+
+	fg = style->get_color (Gtk::STATE_FLAG_NORMAL);
+	bg = style->get_background_color(Gtk::STATE_FLAG_NORMAL);
+
+	std::cout << "fg = " << fg.get_red() << "," << fg.get_green() << "," << fg.get_blue() << "\n";
+	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << "\n";
+#endif
 

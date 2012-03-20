@@ -27,7 +27,7 @@
 class Theme
 {
 public:
-	Theme (void);
+	Theme();
 	virtual ~Theme();
 
 	Gdk::RGBA add_colour (const std::string &name, const std::string &colour);
