@@ -22,6 +22,7 @@
 #include <map>
 
 #include "theme.h"
+#include "log.h"
 
 /**
  * Theme
@@ -115,16 +116,14 @@ Gdk::RGBA Theme::add_colour (const std::string &name, const Gdk::RGBA &colour)
  */
 Gdk::RGBA Theme::get_colour (const std::string &name)
 {
-	Gdk::RGBA c ("black");
+	Gdk::RGBA c ("rgba(255,0,255,0.3)");	//XXX change default to white
 
 	std::map<std::string,Gdk::RGBA>::iterator it;
 
 	it = colours.find (name);
 	if (it == colours.end()) {
-		it = colours.find ("default");
-	}
-
-	if (it != colours.end()) {
+		c.set (name);
+	} else {
 		c = (*it).second;
 	}
 
