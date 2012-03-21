@@ -16,7 +16,6 @@
  */
 
 
-#include <stdio.h>
 #include <stdlib.h>
 
 #include <string>
@@ -183,7 +182,7 @@ bool Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 		} else {
 			f->bytes_used = parent->bytes_size;
 		}
-		//printf ("%s: size = %lld, used = %lld\n", f->name.c_str(), f->bytes_size, f->bytes_used);
+		//log_info ("%s: size = %lld, used = %lld\n", f->name.c_str(), f->bytes_size, f->bytes_used);
 
 		parent->add_child (f);
 

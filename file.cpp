@@ -16,7 +16,6 @@
  */
 
 
-#include <stdio.h>
 #include <linux/fs.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>

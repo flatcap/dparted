@@ -1,6 +1,23 @@
+/* Copyright (c) 2012 Richard Russon (FlatCap)
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+
 #include <iostream>
 
-#include <stdio.h>
 #include <gtkmm.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -765,11 +782,10 @@ bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 	for (it = vRange.begin(); it != vRange.end(); it++) {
 		bool b = ((event->x >= (*it).x) && (event->x < ((*it).x + (*it).w)) &&
 			  (event->y >= (*it).y) && (event->y < ((*it).y + (*it).h)));
-		if (b) printf ("\e[31m");
-		printf ("Range: %d,%d %d,%d %p\n", (*it).x, (*it).y, (*it).w, (*it).h, (*it).p);
-		if (b) printf ("\e[0m");
+		if (b) log_error ("Range: %d,%d %d,%d %p\n", (*it).x, (*it).y, (*it).w, (*it).h, (*it).p);
+		else   log_info  ("Range: %d,%d %d,%d %p\n", (*it).x, (*it).y, (*it).w, (*it).h, (*it).p);
 	}
-	printf ("\n");
+	log_info ("\n");
 #endif
 
 	//get_window()->invalidate (false); //RAR everything for now

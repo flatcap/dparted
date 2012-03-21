@@ -16,8 +16,6 @@
  */
 
 
-#include <stdio.h>
-
 #include <list>
 #include <string>
 #include <sstream>
