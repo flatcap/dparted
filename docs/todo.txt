@@ -1119,3 +1119,18 @@ theme change the names to
 changing the theme to "default" could re-call init_colours, etc
 send a signal afterwards to alert plugins
 
+svg icons would mean a completely scalable output
+
+theme needs to contain
+	diskgui height
+	coloured bar height (hence radius)
+	NOT left-tabwidth (?) - measured from ALL the icons?
+	left-tabwidth - clip all the icons
+fix the icon widths and diskgui height for three modes?
+	small 24	~64
+	medium 48	~77
+	large 48	~128
+
+theme get_colour
+if not in map, try rendering the string directly
+
