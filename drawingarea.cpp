@@ -259,20 +259,20 @@ void DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPConta
 	ys = below.y + below.h - hs;
 
 	// Draw block label
-	cr->set_source_rgb(1.0, 1.0, 1.0);		//THEME - block_label_highlight_colour
+	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);	//THEME - block_label_highlight_colour
 	cr->move_to (xd+2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 	cr->move_to (xd-2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 	cr->move_to (xd+0, yd+2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 	cr->move_to (xd+0, yd-2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 
 	cr->move_to (xd, yd);
-	cr->set_source_rgb(0.0, 0.0, 0.0);		//THEME - block_label_text_colour
+	cr->set_source_rgba(0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
 	layoutd->update_from_cairo_context (cr);
 	layoutd->show_in_cairo_context (cr);
 
 	// Draw size label
 	cr->move_to (xs, ys);
-	cr->set_source_rgb(0.0, 0.0, 0.0);		//THEME - block_label_text_colour
+	cr->set_source_rgba(0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
 	layouts->update_from_cairo_context (cr);
 	layouts->show_in_cairo_context (cr);
 
@@ -329,13 +329,13 @@ void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const R
 	cr->set_line_width (4);
 
 	cr->set_dash (dashes, 0);
-	cr->set_source_rgb (0, 0, 0);			//RAR focus colours from theme
+	cr->set_source_rgba (0, 0, 0, 1.0);			//RAR focus colours from theme
 	draw_border (cr, shape);
 	cr->close_path();
 	cr->stroke();
 
 	cr->set_dash (dashes, 5);
-	cr->set_source_rgb (1, 1, 1);
+	cr->set_source_rgba (1, 1, 1, 1.0);
 	draw_border (cr, shape);
 	cr->close_path();
 	cr->stroke();
@@ -358,7 +358,7 @@ void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context> &cr, const G
 	draw_border (cr, shape);				// Set clipping area
 	cr->clip();
 
-	cr->set_source_rgb (colour.get_red(), colour.get_green(), colour.get_blue());
+	cr->set_source_rgba (colour.get_red(), colour.get_green(), colour.get_blue(), colour.get_alpha());
 
 	cr->set_line_width (r);					// Thick top bar
 	cr->move_to (x, y+(r/2));
@@ -498,7 +498,7 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context> &cr,
 	draw_rect (cr, "unused", r_white);
 
 	if ((width_fs - width_usage) > 1) {
-		cr->set_source_rgb (1, 1, 1);
+		cr->set_source_rgba (1, 1, 1, 1);
 		cr->move_to (x+width_usage, y+r);			// Curvy corners
 		cr->arc (x+width_usage-r, y+(2*r), r, ARC_N, ARC_E);
 		cr->fill();
@@ -617,7 +617,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 			layout->set_font_description (font);
 
 			layout->set_text (label1 + "\n" + label2);
-			cr->set_source_rgb (0.0, 0.0, 0.0);
+			cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
 			cr->move_to (inside.x + 2, inside.y + 2);
 			layout->set_width (Pango::SCALE * (inside.w - 4));
 			layout->set_ellipsize (Pango::ELLIPSIZE_END);
@@ -648,7 +648,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 			layout->set_font_description (font);
 
 			layout->set_text ("Unknown\n" + get_size (child->bytes_size));
-			cr->set_source_rgb (0.0, 0.0, 0.0);
+			cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
 			cr->move_to (inside.x + 2, inside.y + 2);
 			layout->set_width (Pango::SCALE * (child_width - GAP - 8));
 			layout->set_ellipsize (Pango::ELLIPSIZE_END);
@@ -872,7 +872,7 @@ void DPDrawingArea::draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, con
 	draw_border (cr, shape);
 	cr->clip();
 	draw_rect (cr, "rgba(0,128,0,0.2)", shape);
-	cr->set_source_rgb (1, 0, 0);
+	cr->set_source_rgba (1, 0, 0, 1);
 	draw_border (cr, shape);
 	cr->stroke();
 	cr->restore();
