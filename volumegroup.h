@@ -29,7 +29,6 @@ public:
 	VolumeGroup (void);
 	virtual ~VolumeGroup();
 
-	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
 	static void find_devices (DPContainer &list);

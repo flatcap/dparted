@@ -42,14 +42,6 @@ Volume::~Volume()
 
 
 /**
- * dump_csv
- */
-void Volume::dump_csv (void)
-{
-	Whole::dump_csv();
-}
-
-/**
  * dump_dot
  */
 std::string Volume::dump_dot (void)

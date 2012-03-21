@@ -181,23 +181,6 @@ bool Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 
 
 /**
- * dump_csv
- */
-void Msdos::dump_csv (void)
-{
-	log_debug ("%s,%s,%s,%ld,%s,%lld,%lld,%lld\n",
-		"MSDOS",
-		"<none>",
-		name.c_str(),
-		block_size,
-		uuid.c_str(),
-		bytes_size,
-		bytes_used,
-		bytes_size - bytes_used);
-	Table::dump_csv();
-}
-
-/**
  * dump_dot
  */
 std::string Msdos::dump_dot (void)

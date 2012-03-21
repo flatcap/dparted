@@ -194,24 +194,6 @@ bool Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 
 
 /**
- * dump_csv
- */
-void Filesystem::dump_csv (void)
-{
-	log_debug ("%s,%s,%s,%ld,%s,%s,%lld,%lld,%lld\n",
-		"Filesystem",
-		device.c_str(),
-		name.c_str(),
-		block_size,
-		label.c_str(),
-		uuid.c_str(),
-		bytes_size,
-		bytes_used,
-		bytes_size - bytes_used);
-	DPContainer::dump_csv();
-}
-
-/**
  * dump_dot
  */
 std::string Filesystem::dump_dot (void)

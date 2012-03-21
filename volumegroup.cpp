@@ -473,14 +473,6 @@ void VolumeGroup::find_devices (DPContainer &disks)
 
 
 /**
- * dump_csv
- */
-void VolumeGroup::dump_csv (void)
-{
-	Whole::dump_csv();
-}
-
-/**
  * dump_dot
  */
 std::string VolumeGroup::dump_dot (void)

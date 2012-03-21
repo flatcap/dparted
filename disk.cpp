@@ -197,23 +197,6 @@ unsigned int Disk::find_devices (DPContainer &list)
 }
 
 /**
- * dump_csv
- */
-void Disk::dump_csv (void)
-{
-	log_debug ("%s,%s,%s,%ld,%s,%lld,%lld,%lld\n",
-		"Disk",
-		device.c_str(),
-		name.c_str(),
-		block_size,
-		uuid.c_str(),
-		bytes_size,
-		bytes_used,
-		bytes_size - bytes_used);
-	Block::dump_csv();
-}
-
-/**
  * dump_dot
  */
 std::string Disk::dump_dot (void)

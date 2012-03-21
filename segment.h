@@ -31,7 +31,6 @@ public:
 	Segment (void);
 	virtual ~Segment();
 
-	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
 	Whole *whole;

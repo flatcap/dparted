@@ -30,7 +30,6 @@ public:
 	Disk (void);
 	virtual ~Disk();
 
-	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 
 	virtual long          get_block_size (void);

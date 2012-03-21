@@ -41,14 +41,6 @@ Segment::~Segment()
 
 
 /**
- * dump_csv
- */
-void Segment::dump_csv (void)
-{
-	DPContainer::dump_csv();
-}
-
-/**
  * dump_dot
  */
 std::string Segment::dump_dot (void)

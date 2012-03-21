@@ -62,16 +62,6 @@ DPContainer::~DPContainer()
 
 
 /**
- * dump_csv
- */
-void DPContainer::dump_csv (void)
-{
-	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
-		(*i)->dump_csv();
-	}
-}
-
-/**
  * dump_dot
  */
 std::string DPContainer::dump_dot (void)
