@@ -142,7 +142,7 @@ bool Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 	}
 
 	for (i = 0; i < vp.size(); i++) {
-#if 1
+#if 0
 		std::string s1 = get_size (vp[i].start);
 		std::string s2 = get_size (vp[i].size);
 
@@ -155,7 +155,7 @@ bool Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 
 		char num = '1' + i;
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
-			log_debug ("vp[i].start = %lld\n", vp[i].start);
+			//log_debug ("vp[i].start = %lld\n", vp[i].start);
 			c = Extended::probe (m, vp[i].start, vp[i].size);
 			if (!c)
 				continue;

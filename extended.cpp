@@ -86,7 +86,7 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 			return NULL;
 		}
 
-		log_debug ("extended partition\n");
+		//log_debug ("extended partition\n");
 
 		int num = 0;
 		unsigned int i;
@@ -101,7 +101,7 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 		}
 
 		for (i = 0; i < vp.size(); i++) {
-#if 1
+#if 0
 			if ((vp[i].type != 5) || (vp[i].type != 5)) {
 				std::string s1 = get_size (vp[i].start);
 				std::string s2 = get_size (vp[i].size);

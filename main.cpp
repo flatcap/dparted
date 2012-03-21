@@ -90,7 +90,7 @@ int main (int argc, char *argv[])
 
 	disks.name = "container";	//XXX dummy
 
-	//Disk::find_devices (disks);
+	Disk::find_devices (disks);
 	Loop::find_devices (disks);
 
 	unsigned char *buffer = NULL;
@@ -106,7 +106,7 @@ int main (int argc, char *argv[])
 		return 1;
 
 	while ((item = probe_queue.front())) {
-#if 1
+#if 0
 		log_debug ("queued item: '%s'\n", item->name.c_str());
 		std::string s1 = get_size (item->parent_offset);
 		std::string s2 = get_size (item->bytes_size);
@@ -135,7 +135,7 @@ int main (int argc, char *argv[])
 	//RAR VolumeGroup::find_devices (disks);
 
 	while ((item = probe_queue.front())) {
-#if 1
+#if 0
 		log_debug ("queued item: '%s'\n", item->name.c_str());
 		std::string s1 = get_size (item->parent_offset);
 		std::string s2 = get_size (item->bytes_size);
