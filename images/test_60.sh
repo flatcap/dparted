@@ -291,7 +291,7 @@ function test_65()
 }
 
 ##
-# 66 disk, msdos table, partition, lvm table, volume group, partition, filesystem
+# 66 disk, msdos table, extended partition, lvm table, volume group, partition, filesystem
 function test_66()
 {
 	local IMAGE
@@ -334,7 +334,6 @@ function test_66()
 	ok "$LOOP"
 }
 
-# extended partition
 
 if [ $# = 0 ]; then
 	cleanup
