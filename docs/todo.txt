@@ -1134,3 +1134,7 @@ fix the icon widths and diskgui height for three modes?
 theme get_colour
 if not in map, try rendering the string directly
 
+grep test_22 -l /sys/block/loop*/loop/backing_file
+/sys/block/loop0/loop/backing_file
+find which loop device has a file
+
