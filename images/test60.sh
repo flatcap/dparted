@@ -290,6 +290,49 @@ function test_65()
 	ok "$LOOP"
 }
 
+##
+# 66 disk, msdos table, partition, lvm table, volume group, partition, filesystem
+function test_66()
+{
+	local IMAGE
+	local LOOP
+	local GROUP=$FUNCNAME
+	local INDEX=${FUNCNAME##*_}
+	local VOLUME="simple$INDEX"
+
+	echo -n "$FUNCNAME: "
+
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
+
+	msdos_init "$IMAGE"
+	[ $? = 0 ] || error || return
+
+	msdos_create $IMAGE extended 500 4000			# partition 1
+	[ $? = 0 ] || error || return
+
+	msdos_create $IMAGE logical 600 2000			# logical partition 5
+	[ $? = 0 ] || error || return
+
+	LOOP="$(create_loop $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+	[ -b "${LOOP}p1" ] || error || return
+	[ -b "${LOOP}p5" ] || error || return
+
+	pvcreate "${LOOP}p5" > /dev/null 2>&1
+	[ $? = 0 ] || error || return
+
+	vgcreate $GROUP "${LOOP}p5" > /dev/null
+	[ $? = 0 ] || error || return
+
+	lvcreate --size 500m --name $VOLUME $GROUP > /dev/null	# lv partition 1
+	[ $? = 0 ] || error || return
+
+	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
+	[ $? = 0 ] || error || return
+
+	ok "$LOOP"
+}
 
 # extended partition
 
@@ -301,6 +344,7 @@ if [ $# = 0 ]; then
 	test_63
 	test_64
 	test_65
+	test_66
 elif [ $# = 1 -a $1 = "-d" ]; then
 	cleanup
 else
