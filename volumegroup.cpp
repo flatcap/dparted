@@ -473,31 +473,6 @@ void VolumeGroup::find_devices (DPContainer &disks)
 
 
 /**
- * dump
- */
-void VolumeGroup::dump (int indent /* = 0 */)
-{
-	std::string size = get_size (bytes_size);
-	std::string free = get_size (bytes_size - bytes_used);
-
-	iprintf (indent, "%s (%s)\n", name.c_str(), size.c_str());
-
-	iprintf (indent+8, "pv_count:        %ld\n", pv_count);
-	iprintf (indent+8, "vg_free:         %s\n", free.c_str());
-	iprintf (indent+8, "vg_uuid:         %s\n", uuid.c_str());
-
-	//iprintf (indent+8, "vg_attr:         %s\n",   vg_attr.c_str());
-	//iprintf (indent+8, "vg_name:         %s\n",   vg_name.c_str());
-	//iprintf (indent+8, "lv_count:        %d\n",   lv_count);
-	//iprintf (indent+8, "vg_size:         %lld\n", vg_size);
-	//iprintf (indent+8, "vg_extent_count: %lld\n", vg_extent_count);
-	//iprintf (indent+8, "vg_free_count:   %lld\n", vg_free_count);
-	//iprintf (indent+8, "vg_seqno:        %ld\n",  vg_seqno);
-
-	Whole::dump (indent);
-}
-
-/**
  * dump_csv
  */
 void VolumeGroup::dump_csv (void)

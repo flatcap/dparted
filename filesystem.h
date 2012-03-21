@@ -31,7 +31,6 @@ public:
 
 	static bool probe (DPContainer *parent, unsigned char *buffer, int bufsize);
 
-	virtual void dump (int indent = 0);
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 

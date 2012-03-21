@@ -37,8 +37,6 @@ public:
 	DPContainer (void);
 	virtual ~DPContainer();
 
-	virtual void dump (int indent = 0);
-	virtual void dump2 (void);
 	virtual void dump_csv (void);
 	virtual std::string dump_dot (void);
 	virtual std::string dump_dot_children (void);

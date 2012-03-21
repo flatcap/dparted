@@ -125,23 +125,6 @@ std::string get_size (long long size)
 }
 
 /**
- * iprintf - indented printf
- */
-__attribute__ ((format (printf, 2, 3)))
-int iprintf (int indent, const char *format, ...)
-{
-	const char *space = "                                                                ";
-	va_list ap;
-	int result = 0;
-
-	result = printf ("%.*s", indent, space);
-	va_start (ap, format);
-	result += vfprintf (stdout, format, ap);
-	va_end (ap);
-	return result;
-}
-
-/**
  * extract_number
  */
 long long extract_number (const std::string &text, unsigned int &index)

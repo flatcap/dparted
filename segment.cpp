@@ -41,14 +41,6 @@ Segment::~Segment()
 
 
 /**
- * dump
- */
-void Segment::dump (int indent /* = 0 */)
-{
-	DPContainer::dump (indent);
-}
-
-/**
  * dump_csv
  */
 void Segment::dump_csv (void)

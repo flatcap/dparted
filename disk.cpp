@@ -197,31 +197,6 @@ unsigned int Disk::find_devices (DPContainer &list)
 }
 
 /**
- * dump
- */
-void Disk::dump (int indent /* = 0 */)
-{
-	std::string size = get_size (bytes_size);
-
-	iprintf (indent,   "%s (%s)\n",  device.c_str(), size.c_str());
-	iprintf (indent+8, "Model:  %s\n",  name.c_str());
-	iprintf (indent+8, "Sector: %ld\n", block_size);
-
-	//iprintf (indent+8, "Path:   %s\n",   path.c_str());
-	//iprintf (indent+8, "Type:   %d\n",   type);
-	//iprintf (indent+8, "Length: %s\n", size.c_str());
-
-	//iprintf (indent+8, "Physical Sector Size: %ld\n",        phys_sector_size);
-	//iprintf (indent+8, "Read only:            %d\n",         read_only);
-	//iprintf (indent+8, "Hardware (CHS):       (%d,%d,%d)\n", hw_cylinders,   hw_heads,   hw_sectors);
-	//iprintf (indent+8, "BIOS     (CHS):       (%d,%d,%d)\n", bios_cylinders, bios_heads, bios_sectors);
-	//iprintf (indent+8, "Host:                 %d\n",         host);
-	//iprintf (indent+8, "DID:                  %d\n",         did);
-
-	Block::dump (indent);
-}
-
-/**
  * dump_csv
  */
 void Disk::dump_csv (void)

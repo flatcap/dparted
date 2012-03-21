@@ -181,17 +181,6 @@ bool Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 
 
 /**
- * dump
- */
-void Msdos::dump (int indent /* = 0 */)
-{
-	std::string size = get_size (bytes_size);
-
-	iprintf (indent, "msdos (%s)\n", size.c_str());
-	Table::dump (indent);
-}
-
-/**
  * dump_csv
  */
 void Msdos::dump_csv (void)

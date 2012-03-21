@@ -42,39 +42,6 @@ Volume::~Volume()
 
 
 /**
- * dump
- */
-void Volume::dump (int indent /* = 0 */)
-{
-	std::string size = get_size (bytes_size);
-
-	iprintf (indent,   "%s (%s)\n", name.c_str(), size.c_str());
-	iprintf (indent+8, "path: %s\n", device.c_str());
-
-	//iprintf (indent+8, "major: %d\n", kernel_major);
-	//iprintf (indent+8, "minor: %d\n", kernel_minor);
-	//iprintf (indent+8, "attr: %s\n", lv_attr.c_str());
-
-#if 0
-	for (unsigned int i = 0; i < segments.size(); i++) {
-		std::string vo = get_size (segments[i].volume_offset);
-		std::string ss = get_size (segments[i].segment_size);
-		std::string dd = get_size (segments[i].parent_offset);
-		iprintf (indent+8,  "Segment %d\n", i);
-		iprintf (indent+16, "vol offset    = %s\n", vo.c_str());
-		iprintf (indent+16, "seg size      = %s\n", ss.c_str());
-		iprintf (indent+16, "device        = %s (+%s)\n", segments[i].device.c_str(), dd.c_str());
-
-		//iprintf (indent+16, "seg size      = %lld\n", segments[i].segment_size);
-		//iprintf (indent+16, "vol offset    = %lld\n", segments[i].volume_offset);
-		//iprintf (indent+16, "device offset = %lld\n", segments[i].parent_offset);
-	}
-#endif
-
-	Whole::dump (indent);
-}
-
-/**
  * dump_csv
  */
 void Volume::dump_csv (void)
