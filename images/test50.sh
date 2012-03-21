@@ -16,7 +16,7 @@ function test_50()
 	IMAGE="$(create_image $FUNCNAME)"
 	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	pvcreate "$LOOP" > /dev/null 2>&1
@@ -37,7 +37,7 @@ function test_51()
 	IMAGE="$(create_image $FUNCNAME)"
 	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	pvcreate "$LOOP" > /dev/null 2>&1
@@ -64,7 +64,7 @@ function test_52()
 	IMAGE="$(create_image $FUNCNAME)"
 	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	pvcreate "$LOOP" > /dev/null 2>&1
@@ -94,7 +94,7 @@ function test_53()
 	IMAGE="$(create_image $FUNCNAME)"
 	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	pvcreate "$LOOP" > /dev/null 2>&1
@@ -126,7 +126,7 @@ function test_54()
 	IMAGE="$(create_image $FUNCNAME)"
 	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	pvcreate "$LOOP" > /dev/null 2>&1
@@ -160,7 +160,7 @@ function test_55()
 	IMAGE="$(create_image $FUNCNAME)"
 	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	pvcreate "$LOOP" > /dev/null 2>&1

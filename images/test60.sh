@@ -22,7 +22,7 @@ function test_60()
 	msdos_create $IMAGE primary 500 4000	# partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
@@ -51,7 +51,7 @@ function test_61()
 	msdos_create $IMAGE primary 500 4000	# partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
@@ -85,7 +85,7 @@ function test_62()
 	msdos_create $IMAGE primary 500 4000			# partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
@@ -122,7 +122,7 @@ function test_63()
 	msdos_create $IMAGE primary 500 4000			# partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
@@ -161,7 +161,7 @@ function test_64()
 	msdos_create $IMAGE primary 500 4000			# partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
@@ -202,7 +202,7 @@ function test_65()
 	msdos_create $IMAGE primary 500 4000			# partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 

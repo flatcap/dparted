@@ -19,7 +19,7 @@ function test_40()
 	gpt_init "$IMAGE"
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	ok "$LOOP"
@@ -43,7 +43,7 @@ function test_41()
 	gpt_create $IMAGE 1 500			# partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
@@ -68,7 +68,7 @@ function test_42()
 	gpt_create $IMAGE 1 500			# partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
@@ -95,7 +95,7 @@ function test_43()
 	gpt_create $IMAGE 1 500			# partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
@@ -145,7 +145,7 @@ function test_44()
 	gpt_create $IMAGE 3800 200		# partition 8
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 	[ -b "${LOOP}p2" ] || error || return

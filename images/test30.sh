@@ -22,7 +22,7 @@ function test_30()
 	msdos_create $IMAGE extended 500 3500	# extended partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
@@ -50,7 +50,7 @@ function test_31()
 	msdos_create $IMAGE logical 1000 1500	# logical partition 5
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 	[ -b "${LOOP}p5" ] || error || return
@@ -79,7 +79,7 @@ function test_32()
 	msdos_create $IMAGE logical 1000 1500	# logical partition 1
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
@@ -109,7 +109,7 @@ function test_33()
 	msdos_create $IMAGE logical 1000 1500	# logical partition 5
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 	[ -b "${LOOP}p5" ] || error || return
@@ -163,7 +163,7 @@ function test_34()
 	msdos_create $IMAGE logical 3800 200	# logical partition 12
 	[ $? = 0 ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1"  ] || error || return
 	[ -b "${LOOP}p5"  ] || error || return

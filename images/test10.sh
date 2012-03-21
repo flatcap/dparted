@@ -16,7 +16,7 @@ function test_10()
 	IMAGE="$(create_image $FUNCNAME)"
 	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	ok $LOOP
@@ -34,7 +34,7 @@ function test_11()
 	IMAGE="$(create_image $FUNCNAME)"
 	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	dd if=/dev/urandom bs=32K count=1 of="$LOOP" 2> /dev/null
@@ -54,7 +54,7 @@ function test_12()
 	IMAGE="$(create_image $FUNCNAME)"
 	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	LOOP="$(create_loop2 $IMAGE)"
+	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	mke2fs -t ext4 -q "$LOOP"

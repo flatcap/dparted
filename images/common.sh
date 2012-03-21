@@ -82,32 +82,6 @@ function cleanup()
 # Create a sparse image, then create a loop device from it
 function create_loop()
 {
-	local FUNC="$1"
-	local LOOP
-	local IMAGE
-
-	[ $# = 1 ] || return
-
-	[ -n "$IMAGE_SIZE" ] || return
-
-	IMAGE="$FUNC.img"
-	[ ! -f "$IMAGE" ] || return
-
-	truncate -s "$IMAGE_SIZE" "$IMAGE"
-	[ $? = 0 ] || return
-
-	LOOP=$(losetup --show -f "$IMAGE")
-	[ $? = 0 ] || return
-
-	#rm -f $IMAGE
-
-	echo "$LOOP"
-}
-
-##
-# Create a sparse image, then create a loop device from it
-function create_loop2()
-{
 	local IMAGE="$1"
 	local LOOP
 
@@ -138,28 +112,6 @@ function create_image()
 	[ $? = 0 ] || return
 
 	echo "$IMAGE"
-}
-
-##
-# Create a small subset of a loop device
-function sub_loop()
-{
-	local LOOP
-	local START
-	local SIZE
-
-	[ -n "$3" ] || return
-	[ -z "$4" ] || return
-	[ -b "$1" ] || return
-
-	LOOP="$1"
-	START="$2"
-	SIZE="$3"
-
-	START=$((START*1048576))
-	SIZE=$((SIZE*1048576))
-
-	losetup --show -f $LOOP --offset $START --sizelimit $SIZE
 }
 
 
