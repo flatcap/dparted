@@ -415,7 +415,7 @@ long DPContainer::get_block_size (void)
  */
 std::string DPContainer::get_device_name (void)
 {
-	//log_debug ("i am %s\n", typeid(*this).name());
+	//log_debug ("i am %s\n", typeid (*this).name());
 	if (device.length() > 0)
 		return device;
 	else if (parent)

@@ -128,17 +128,17 @@ std::string get_size (long long size)
 /**
  * iprintf - indented printf
  */
-__attribute__((format(printf, 2, 3)))
-int iprintf(int indent, const char *format, ...)
+__attribute__ ((format (printf, 2, 3)))
+int iprintf (int indent, const char *format, ...)
 {
 	const char *space = "                                                                ";
 	va_list ap;
 	int result = 0;
 
 	result = printf ("%.*s", indent, space);
-	va_start(ap, format);
-	result += vfprintf(stdout, format, ap);
-	va_end(ap);
+	va_start (ap, format);
+	result += vfprintf (stdout, format, ap);
+	va_end (ap);
 	return result;
 }
 
@@ -348,7 +348,7 @@ std::string read_file_line (const std::string &filename)
 {
 	std::ifstream in (filename.c_str());
 
-	std::string line ((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+	std::string line ((std::istreambuf_iterator<char> (in)), std::istreambuf_iterator<char>());
 
 	size_t pos = line.find_first_of ("\r\n");
 	if (pos != std::string::npos)

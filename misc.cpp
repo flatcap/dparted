@@ -68,7 +68,7 @@ static bool is_luks (unsigned char *buffer, int bufsize)
 		return false;
 #if 0
 	log_info ("LUKS:\n");
-	log_info ("\tversion:     %d\n", *(short int*)(buffer+6));
+	log_info ("\tversion:     %d\n", *(short int*) (buffer+6));
 	log_info ("\tcipher name: %s\n", buffer+8);
 	log_info ("\tcipher mode: %s\n", buffer+40);
 	log_info ("\thash spec:   %s\n", buffer+72);

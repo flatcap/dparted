@@ -12,15 +12,15 @@ TreeView::TreeView()
 	Gtk::TreeView::Column *col = NULL;
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Partition"));
-	col->pack_start(m_Columns.col_partition,  true);
-	col->pack_start(m_Columns.col_icon1,      false);
-	col->pack_start(m_Columns.col_icon2,      false);
-	append_column(*col);
+	col->pack_start (m_Columns.col_partition,  true);
+	col->pack_start (m_Columns.col_icon1,      false);
+	col->pack_start (m_Columns.col_icon2,      false);
+	append_column (*col);
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Filesystem"));
-	col->pack_start(m_Columns.col_colour,     false);
-	col->pack_start(m_Columns.col_filesystem, true);
-	append_column(*col);
+	col->pack_start (m_Columns.col_colour,     false);
+	col->pack_start (m_Columns.col_filesystem, true);
+	append_column (*col);
 
 	append_column ("Mount",      m_Columns.col_mount);
 	append_column ("Label",      m_Columns.col_label);
@@ -41,19 +41,19 @@ TreeView::TreeView()
 
 #if 1
 	//Fill popup menu:
-	Gtk::MenuItem *item = Gtk::manage(new Gtk::MenuItem("_Edit", true));
-	item->signal_activate().connect( sigc::mem_fun(*this, &TreeView::on_menu_file_popup_generic) );
-	m_Menu_Popup.append(*item);
+	Gtk::MenuItem *item = Gtk::manage (new Gtk::MenuItem ("_Edit", true));
+	item->signal_activate().connect (sigc::mem_fun (*this, &TreeView::on_menu_file_popup_generic));
+	m_Menu_Popup.append (*item);
 
-	item = Gtk::manage(new Gtk::MenuItem("_Process", true));
-	item->signal_activate().connect( sigc::mem_fun(*this, &TreeView::on_menu_file_popup_generic) );
-	m_Menu_Popup.append(*item);
+	item = Gtk::manage (new Gtk::MenuItem ("_Process", true));
+	item->signal_activate().connect (sigc::mem_fun (*this, &TreeView::on_menu_file_popup_generic));
+	m_Menu_Popup.append (*item);
 
-	item = Gtk::manage(new Gtk::MenuItem("_Remove", true));
-	item->signal_activate().connect( sigc::mem_fun(*this, &TreeView::on_menu_file_popup_generic) );
-	m_Menu_Popup.append(*item);
+	item = Gtk::manage (new Gtk::MenuItem ("_Remove", true));
+	item->signal_activate().connect (sigc::mem_fun (*this, &TreeView::on_menu_file_popup_generic));
+	m_Menu_Popup.append (*item);
 
-	m_Menu_Popup.accelerate(*this);
+	m_Menu_Popup.accelerate (*this);
 	m_Menu_Popup.show_all();
 
 	set_has_tooltip (true);
@@ -82,18 +82,18 @@ bool TreeView::on_popup_menu (void)
 /**
  * on_button_press_event
  */
-bool TreeView::on_button_press_event(GdkEventButton *event)
+bool TreeView::on_button_press_event (GdkEventButton *event)
 {
 	bool return_value = false;
 
 	//Call base class, to allow normal handling,
 	//such as allowing the row to be selected by the right-click:
-	return_value = Gtk::TreeView::on_button_press_event(event);
+	return_value = Gtk::TreeView::on_button_press_event (event);
 
 	//Then do our custom stuff:
-	if( (event->type == GDK_BUTTON_PRESS) && (event->button == 3) )
+	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3))
 	{
-		m_Menu_Popup.popup(event->button, event->time);
+		m_Menu_Popup.popup (event->button, event->time);
 	}
 
 	return return_value;
@@ -107,10 +107,10 @@ void TreeView::on_menu_file_popup_generic()
 	std::cout << "A popup menu item was selected.\n";
 
 	Glib::RefPtr<Gtk::TreeView::Selection> refSelection = get_selection();
-	if(refSelection)
+	if (refSelection)
 	{
 		Gtk::TreeModel::iterator iter = refSelection->get_selected();
-		if(iter)
+		if (iter)
 		{
 			std::cout << "selected something\n";
 		}
@@ -189,8 +189,8 @@ void TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeView
 		std::cout << "Row activated: Name=" << row[m_Columns.col_name] << ", Type=" << row[m_Columns.col_type] << "\n";
 
 		c = row[m_Columns.col_container];
-		std::cout << typeid(row[m_Columns.col_container]).name() << "\n";
-		std::cout << typeid(c).name() << "\n";
+		std::cout << typeid (row[m_Columns.col_container]).name() << "\n";
+		std::cout << typeid (c).name() << "\n";
 		std::cout << "Name=" << c->name << "\n";
 	}
 #endif

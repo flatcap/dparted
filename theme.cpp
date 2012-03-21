@@ -184,7 +184,7 @@ Glib::RefPtr<Gdk::Pixbuf> Theme::get_icon (const std::string &name)
 	Gdk::RGBA bg;
 
 	fg = style->get_color (Gtk::STATE_FLAG_NORMAL);
-	bg = style->get_background_color(Gtk::STATE_FLAG_NORMAL);
+	bg = style->get_background_color (Gtk::STATE_FLAG_NORMAL);
 
 	std::cout << "fg = " << fg.get_red() << "," << fg.get_green() << "," << fg.get_blue() << "\n";
 	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << "\n";

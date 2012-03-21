@@ -127,16 +127,16 @@ void DParted::init_menubar (void)
 
 
 	//Choices menu, to demonstrate Radio items
-	m_refActionGroup->add (Gtk::Action::create ("ChoicesMenu", "Choices") );
+	m_refActionGroup->add (Gtk::Action::create ("ChoicesMenu", "Choices"));
 	Gtk::RadioAction::Group group_userlevel;
 	m_refChoiceOne = Gtk::RadioAction::create (group_userlevel, "ChoiceOne", "One");
-	m_refActionGroup->add (m_refChoiceOne, sigc::mem_fun (*this, &DParted::on_menu_choices_one) );
+	m_refActionGroup->add (m_refChoiceOne, sigc::mem_fun (*this, &DParted::on_menu_choices_one));
 	m_refChoiceTwo = Gtk::RadioAction::create (group_userlevel, "ChoiceTwo", "Two");
-	m_refActionGroup->add (m_refChoiceTwo, sigc::mem_fun (*this, &DParted::on_menu_choices_two) );
+	m_refActionGroup->add (m_refChoiceTwo, sigc::mem_fun (*this, &DParted::on_menu_choices_two));
 
 	//Help menu:
-	m_refActionGroup->add (Gtk::Action::create ("HelpMenu", "Help") );
-	m_refActionGroup->add (Gtk::Action::create ("HelpAbout", Gtk::Stock::HELP), sigc::mem_fun (*this, &DParted::on_menu_others) );
+	m_refActionGroup->add (Gtk::Action::create ("HelpMenu", "Help"));
+	m_refActionGroup->add (Gtk::Action::create ("HelpAbout", Gtk::Stock::HELP), sigc::mem_fun (*this, &DParted::on_menu_others));
 
 	m_refUIManager = Gtk::UIManager::create();
 	m_refUIManager->insert_action_group (m_refActionGroup);

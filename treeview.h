@@ -17,7 +17,7 @@ public:
 protected:
 	// Override Signal handler:
 	// Alternatively, use signal_button_press_event().connect_notify()
-	virtual bool on_button_press_event(GdkEventButton *ev);
+	virtual bool on_button_press_event (GdkEventButton *ev);
 
 	//Signal handler for popup menu items:
 	void on_menu_file_popup_generic();
@@ -30,19 +30,19 @@ protected:
 	public:
 		ModelColumns()
 		{
-			add(col_partition);
-			add(col_filesystem);
-			add(col_mount);
-			add(col_label);
-			add(col_size);
-			add(col_used);
-			add(col_unused);
-			add(col_flags);
+			add (col_partition);
+			add (col_filesystem);
+			add (col_mount);
+			add (col_label);
+			add (col_size);
+			add (col_used);
+			add (col_unused);
+			add (col_flags);
 
-			add(col_container);
-			add(col_icon1);
-			add(col_icon2);
-			add(col_colour);
+			add (col_container);
+			add (col_icon1);
+			add (col_icon2);
+			add (col_colour);
 		}
 
 		Gtk::TreeModelColumn<Glib::ustring>              col_partition;
@@ -63,7 +63,7 @@ protected:
 	ModelColumns m_Columns;
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
 
-	void on_row_activated(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column);
+	void on_row_activated (const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column);
 	bool on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip> &tooltip);
 	bool on_popup_menu (void);
 

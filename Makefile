@@ -65,14 +65,14 @@ tags:	$(SRC) $(HDR)
 # Execute command, saving output to a TMP file
 #	g++ -g -Wall `pkg-config glibmm-2.4 lvm2app --cflags` -c gpt.cpp -o .obj/gpt.o
 # $? = 0 && TMP file empty
-# 	echo "CC	gpt.c"
+#	echo "CC	gpt.c"
 # ?$ = 0 && TMP file non-empty
-# 	echo "CC	gpt.c"
-# 	cat TMP file
+#	echo "CC	gpt.c"
+#	cat TMP file
 # ?$ = 1
-# 	echo "CC	gpt.c"
-# 	cat TMP file
-# 	stop compilation
+#	echo "CC	gpt.c"
+#	cat TMP file
+#	stop compilation
 
 quiet_cmd_CC	= CC	$<
       cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@ && (												\

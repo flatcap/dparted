@@ -50,9 +50,9 @@ DPDrawingArea::DPDrawingArea() :
 
 #if 0
 	sigc::slot<bool> my_slot = sigc::bind (sigc::mem_fun (*this, &DPDrawingArea::on_timeout), 0);
-	sigc::connection conn = Glib::signal_timeout().connect(my_slot, 800); // ms
+	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 800); // ms
 #endif
-	//std::cout << "GType name: " << G_OBJECT_TYPE_NAME(gobj()) << "\n";
+	//std::cout << "GType name: " << G_OBJECT_TYPE_NAME (gobj()) << "\n";
 
 	theme = new Theme();
 }
@@ -69,7 +69,7 @@ DPDrawingArea::~DPDrawingArea()
 /**
  * on_timeout
  */
-bool DPDrawingArea::on_timeout(int timer_number)
+bool DPDrawingArea::on_timeout (int timer_number)
 {
 	std::cout << "timer" << "\n";
 	get_window()->invalidate (false); //RAR everything for now
@@ -191,12 +191,12 @@ void DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const st
 		return;
 	}
 
-	Gdk::Cairo::set_source_pixbuf(cr, pb, shape.x, shape.y);
+	Gdk::Cairo::set_source_pixbuf (cr, pb, shape.x, shape.y);
 	shape.w = pb->get_width();
 	shape.h = pb->get_height();
 	//log_info ("icon %d,%d\n", shape.w, shape.h);
 
-	cr->rectangle(shape.x, shape.y, shape.w, shape.h);
+	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
 	cr->fill();
 
 	if (below) {
@@ -226,8 +226,8 @@ void DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPConta
 	std::string labels = get_size (m_c->bytes_size);
 
 	Pango::FontDescription font;
-	Glib::RefPtr<Pango::Layout> layoutd = Pango::Layout::create(cr);
-	Glib::RefPtr<Pango::Layout> layouts = Pango::Layout::create(cr);
+	Glib::RefPtr<Pango::Layout> layoutd = Pango::Layout::create (cr);
+	Glib::RefPtr<Pango::Layout> layouts = Pango::Layout::create (cr);
 
 	int xd = 0, yd = 0, wd = 0, hd = 0;
 	int xs = 0, ys = 0, ws = 0, hs = 0;
@@ -246,11 +246,11 @@ void DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPConta
 	font.set_size (8 * Pango::SCALE);		//THEME - ratio of block_label_font_size
 	layouts->set_font_description (font);
 
-	layoutd->set_markup(labeld);
-	layouts->set_markup(labels);
+	layoutd->set_markup (labeld);
+	layouts->set_markup (labels);
 
-	layoutd->get_pixel_size(wd, hd);
-	layouts->get_pixel_size(ws, hs);
+	layoutd->get_pixel_size (wd, hd);
+	layouts->get_pixel_size (ws, hs);
 
 	xd = (below.w - wd) / 2; if (xd < 0) xd = 0;
 	xs = (below.w - ws) / 2; if (xs < 0) xs = 0;
@@ -266,13 +266,13 @@ void DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPConta
 	cr->move_to (xd+0, yd-2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 
 	cr->move_to (xd, yd);
-	cr->set_source_rgba(0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
 	layoutd->update_from_cairo_context (cr);
 	layoutd->show_in_cairo_context (cr);
 
 	// Draw size label
 	cr->move_to (xs, ys);
-	cr->set_source_rgba(0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
 	layouts->update_from_cairo_context (cr);
 	layouts->show_in_cairo_context (cr);
 
@@ -361,15 +361,15 @@ void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context> &cr, const G
 	cr->set_source_rgba (colour.get_red(), colour.get_green(), colour.get_blue(), colour.get_alpha());
 
 	cr->set_line_width (r);					// Thick top bar
-	cr->move_to (x, y+(r/2));
+	cr->move_to (x, y+ (r/2));
 	cr->rel_line_to (w, 0);
 	cr->stroke();
 
 	cr->set_line_width (2);					// Thin side bars
 	cr->move_to (x+1, y+r);
-	cr->rel_line_to (0, h-(2*r));
+	cr->rel_line_to (0, h - (2*r));
 	cr->move_to (x+w-1, y+r);
-	cr->rel_line_to (0, h-(2*r));
+	cr->rel_line_to (0, h - (2*r));
 	cr->stroke();
 
 	cr->set_line_width (4);					// Thin bottom bar
@@ -421,12 +421,12 @@ void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context> &cr, cons
 	cr->stroke();
 
 	cr->set_line_width (t);					// Thick side bar
-	cr->move_to (x+(t/2), y+r);
+	cr->move_to (x + (t/2), y+r);
 	cr->rel_line_to (0, h-r);
 	cr->stroke();
 
 	cr->move_to (x+t, y+r);					// Curvy inner corners
-	cr->arc (x+t+r, y+(2*r), r, ARC_W, ARC_N);
+	cr->arc (x+t+r, y + (2*r), r, ARC_W, ARC_N);
 	cr->fill();
 	cr->move_to (x+t, y+h-2);
 	cr->arc (x+t+r, y+h-10, r, ARC_S, ARC_W);
@@ -500,7 +500,7 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context> &cr,
 	if ((width_fs - width_usage) > 1) {
 		cr->set_source_rgba (1, 1, 1, 1);
 		cr->move_to (x+width_usage, y+r);			// Curvy corners
-		cr->arc (x+width_usage-r, y+(2*r), r, ARC_N, ARC_E);
+		cr->arc (x+width_usage-r, y + (2*r), r, ARC_N, ARC_E);
 		cr->fill();
 		cr->move_to (x+width_usage, y+h-2);
 		cr->arc (x+width_usage-r, y+h-2-r, r, ARC_E, ARC_S);
@@ -581,7 +581,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 
 		int offset = x + (child->parent_offset / bytes_per_pixel);
 		if (fs) {
-			//ASSERT(fs);
+			//ASSERT (fs);
 
 			std::string label1;
 			std::string label2;
@@ -613,7 +613,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 			Pango::FontDescription font;
 			font.set_family ("Liberation Sans");
 
-			Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
+			Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
 			layout->set_font_description (font);
 
 			layout->set_text (label1 + "\n" + label2);
@@ -644,7 +644,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 			Pango::FontDescription font;
 			font.set_family ("Liberation Sans");
 
-			Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create(cr);
+			Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
 			layout->set_font_description (font);
 
 			layout->set_text ("Unknown\n" + get_size (child->bytes_size));

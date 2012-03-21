@@ -113,7 +113,7 @@ bool Disk::probe (const std::string &name, int fd, struct stat &st, DPContainer 
 	fd = open (parent->device.c_str(), O_RDONLY | O_CLOEXEC);
 	struct hd_geometry geometry;
 
-	ioctl(fd, HDIO_GETGEO, &geometry);
+	ioctl (fd, HDIO_GETGEO, &geometry);
 	log_debug ("heads     = %d\n", geometry.heads);
 	log_debug ("sectors   = %d\n", geometry.sectors);
 	log_debug ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
