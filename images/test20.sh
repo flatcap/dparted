@@ -1,7 +1,6 @@
 #!/bin/bash
 
 IMAGE_SIZE="5G"
-IMAGE_DIR="."
 
 source common.sh
 
@@ -9,15 +8,19 @@ source common.sh
 # 20 disk, msdos table, empty
 function test_20()
 {
+	local IMAGE
 	local LOOP
 
 	echo -n "$FUNCNAME: "
 
-	LOOP="$(create_loop $FUNCNAME)"
-	[ -n "$LOOP" ] || error || return
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	msdos_init "$LOOP"
-	[ $? == 0 ] || error || return
+	msdos_init "$IMAGE"
+	[ $? = 0 ] || error || return
+
+	LOOP="$(create_loop2 $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	ok "$LOOP"
 }
@@ -26,18 +29,23 @@ function test_20()
 # 21 disk, msdos table, partition, empty
 function test_21()
 {
+	local IMAGE
 	local LOOP
 
 	echo -n "$FUNCNAME: "
 
-	LOOP="$(create_loop $FUNCNAME)"
-	[ -n "$LOOP" ] || error || return
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	msdos_init "$LOOP"
-	[ $? == 0 ] || error || return
+	msdos_init "$IMAGE"
+	[ $? = 0 ] || error || return
 
-	msdos_create $LOOP primary 1 500
-	[ $? == 0 ] || error || return
+	msdos_create $IMAGE primary 1 500	# partition 1
+	[ $? = 0 ] || error || return
+
+	LOOP="$(create_loop2 $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+	[ -b "${LOOP}p1" ] || error || return
 
 	ok "$LOOP"
 }
@@ -46,28 +54,25 @@ function test_21()
 # 22 disk, msdos table, partition, unknown
 function test_22()
 {
+	local IMAGE
 	local LOOP
-	local SUB
 
 	echo -n "$FUNCNAME: "
 
-	LOOP="$(create_loop $FUNCNAME)"
-	[ -n "$LOOP" ] || error || return
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	msdos_init "$LOOP"
-	[ $? == 0 ] || error || return
+	msdos_init "$IMAGE"
+	[ $? = 0 ] || error || return
 
-	msdos_create $LOOP primary 1 500
-	[ $? == 0 ] || error || return
+	msdos_create $IMAGE primary 1 500	# partition 1
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 1 500)"
-	[ $? == 0 ] || error || return
+	LOOP="$(create_loop2 $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+	[ -b "${LOOP}p1" ] || error || return
 
-	dd if=/dev/urandom bs=32K count=1 of="$SUB" 2> /dev/null
-
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
+	dd if=/dev/urandom bs=32K count=1 of="${LOOP}p1" 2> /dev/null
 
 	ok "$LOOP"
 }
@@ -76,30 +81,26 @@ function test_22()
 # 23 disk, msdos table, partition, filesystem
 function test_23()
 {
+	local IMAGE
 	local LOOP
-	local SUB
 
 	echo -n "$FUNCNAME: "
 
-	LOOP="$(create_loop $FUNCNAME)"
-	[ -n "$LOOP" ] || error || return
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	msdos_init "$LOOP"
-	[ $? == 0 ] || error || return
+	msdos_init "$IMAGE"
+	[ $? = 0 ] || error || return
 
-	msdos_create $LOOP primary 1 500
-	[ $? == 0 ] || error || return
+	msdos_create $IMAGE primary 1 500	# partition 1
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 1 500)"
-	[ $? == 0 ] || error || return
-	#XXX check SUB is non-empty, and a block device too
+	LOOP="$(create_loop2 $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+	[ -b "${LOOP}p1" ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
-
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p1"		# filesystem 1
+	[ $? = 0 ] || error || return
 
 	ok "$LOOP"
 }
@@ -109,78 +110,62 @@ function test_23()
 # (include empty space)
 function test_24()
 {
+	local IMAGE
 	local LOOP
-	local SUB
 
 	echo -n "$FUNCNAME: "
 
-	LOOP="$(create_loop $FUNCNAME)"
-	[ -n "$LOOP" ] || error || return
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	msdos_init "$LOOP"
-	[ $? == 0 ] || error || return
-# FS1
-	msdos_create $LOOP primary 1 500
-	[ $? == 0 ] || error || return
+	msdos_init "$IMAGE"
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 1 500)"
-	[ $? == 0 ] || error || return
+	msdos_create $IMAGE primary 1 500	# partition 1
+	[ $? = 0 ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
+	msdos_create $IMAGE primary 600 500	# partition 2
+	[ $? = 0 ] || error || return
 
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
-# FS2
-	msdos_create $LOOP primary 600 500
-	[ $? == 0 ] || error || return
+	msdos_create $IMAGE primary 2000 1000	# partition 3
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 600 500)"
-	[ $? == 0 ] || error || return
+	msdos_create $IMAGE primary 3500 200	# partition 4
+	[ $? = 0 ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
+	LOOP="$(create_loop2 $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+	[ -b "${LOOP}p1" ] || error || return
+	[ -b "${LOOP}p2" ] || error || return
+	[ -b "${LOOP}p3" ] || error || return
+	[ -b "${LOOP}p4" ] || error || return
 
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
-# FS3
-	msdos_create $LOOP primary 2000 1000
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p1"		# filesystem 1
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 2000 1000)"
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p2"		# filesystem 2
+	[ $? = 0 ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p3"		# filesystem 3
+	[ $? = 0 ] || error || return
 
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
-# FS4
-	msdos_create $LOOP primary 3500 200
-	[ $? == 0 ] || error || return
-
-	SUB="$(sub_loop $LOOP 3500 200)"
-	[ $? == 0 ] || error || return
-
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
-
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p4"		# filesystem 4
+	[ $? = 0 ] || error || return
 
 	ok "$LOOP"
 }
 
 
-cleanup
-
-test_20
-test_21
-test_22
-test_23
-test_24
+if [ $# = 0 ]; then
+	cleanup
+	test_20
+	test_21
+	test_22
+	test_23
+	test_24
+elif [ $# = 1 -a $1 = "-d" ]; then
+	cleanup
+else
+	usage
+fi
 

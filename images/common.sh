@@ -39,50 +39,105 @@ function error()
 }
 
 
-##
-# remove loops and images from previous runs
+function usage()
+{
+	echo "Usage:"
+	echo "    ${0##*/} [-d]"
+	echo
+	grep --color=none "^# .. disk.*" $0
+	echo
+	false
+}
+
 function cleanup()
 {
-	lvremove -f /dev/mapper/test_* > /dev/null 2>&1
-	local LOOPS="$(losetup -a | cut -d: -f1 | tac)"
-	if [ -n "$LOOPS" ]; then
-		for i in $LOOPS; do
-			sync
-			losetup -d $i
-		done
-	fi
+	local i
+	local OUR_LOOPS
+	local LOSETUP
+	local LOOP
+	local FILE
 
-	rm -f test_*.img
+	OUR_LOOPS="$(grep -wo 'test_[0-9][0-9]' $0 | sort -u)"
+	[ -n "$OUR_LOOPS" ] || return
+
+	vgremove -f $OUR_LOOPS > /dev/null 2>&1
+
+	for i in $OUR_LOOPS; do
+		LOSETUP=$(losetup -a | grep "/$i.img")
+		[ -n "$LOSETUP" ] || continue
+
+		LOOP=$(sed 's/:.*//' <<< "$LOSETUP")
+		if [ -b $LOOP ]; then
+			losetup -d $LOOP
+		fi
+		FILE=$(sed 's/.*(\(.*\))/\1/' <<< "$LOSETUP")
+		if [ -f $FILE ]; then
+			rm -f $FILE
+		fi
+	done
 }
+
 
 ##
 # Create a sparse image, then create a loop device from it
 function create_loop()
 {
 	local FUNC="$1"
-	local INDEX
 	local LOOP
 	local IMAGE
 
-	[ -z "$1"    ] && return
-	[ -z "$2"    ] || return
+	[ $# = 1 ] || return
 
-	INDEX=${FUNC##*_}
-	LOOP="/dev/loop$INDEX"
-	IMAGE="$FUNC.img"
-
-	[ -b "$LOOP"       ] || return
-	[ -d "$IMAGE_DIR"  ] || return
 	[ -n "$IMAGE_SIZE" ] || return
+
+	IMAGE="$FUNC.img"
+	[ ! -f "$IMAGE" ] || return
 
 	truncate -s "$IMAGE_SIZE" "$IMAGE"
 	[ $? = 0 ] || return
 
-	losetup "$LOOP" "$IMAGE"
+	LOOP=$(losetup --show -f "$IMAGE")
 	[ $? = 0 ] || return
 
-	rm -f "$IMAGE"
+	#rm -f $IMAGE
+
 	echo "$LOOP"
+}
+
+##
+# Create a sparse image, then create a loop device from it
+function create_loop2()
+{
+	local IMAGE="$1"
+	local LOOP
+
+	[ $# = 1 ] || return
+
+	LOOP=$(losetup --show -f "$IMAGE")
+	[ $? = 0 ] || return
+
+	rm -f $IMAGE
+
+	echo "$LOOP"
+}
+
+##
+# Create a sparse image
+function create_image()
+{
+	local IMAGE="$1.img"
+
+	[ $# = 1 ] || return
+
+	[ -n "$IMAGE_SIZE" ] || return
+
+	rm -f "$IMAGE"
+	[ ! -f "$IMAGE" ] || return
+
+	truncate -s "$IMAGE_SIZE" "$IMAGE"
+	[ $? = 0 ] || return
+
+	echo "$IMAGE"
 }
 
 ##
@@ -110,25 +165,11 @@ function sub_loop()
 
 function msdos_init()
 {
-	[ -n "$1" ] || return
-	[ -z "$2" ] || return
-	[ -b "$1" ] || return
+	[ $# = 1 ] || return
+	[ -b "$1" -o -f "$1" ] || return
 
 	cat <<-EOF | parted $1 > /dev/null
 		mklabel msdos
-		quit
-	EOF
-}
-
-function msdos_print()
-{
-	[ -n "$1" ] || return
-	[ -z "$2" ] || return
-	[ -b "$1" ] || return
-
-	cat <<-EOF | parted $1
-		unit s
-		print free
 		quit
 	EOF
 }
@@ -141,9 +182,8 @@ function msdos_create()
 	local SIZE
 	local END
 
-	[ -n "$4" ] || return
-	[ -z "$5" ] || return
-	[ -b "$1" ] || return
+	[ $# = 4 ] || return
+	[ -b "$1" -o -f "$1" ] || return
 
 	LOOP="$1"
 	TYPE="$2"
@@ -163,25 +203,11 @@ function msdos_create()
 
 function gpt_init()
 {
-	[ -n "$1" ] || return
-	[ -z "$2" ] || return
-	[ -b "$1" ] || return
+	[ $# = 1 ] || return
+	[ -b "$1" -o -f "$1" ] || return
 
 	cat <<-EOF | parted $1 > /dev/null
 		mklabel gpt
-		quit
-	EOF
-}
-
-function gpt_print()
-{
-	[ -n "$1" ] || return
-	[ -z "$2" ] || return
-	[ -b "$1" ] || return
-
-	cat <<-EOF | parted $1
-		unit s
-		print free
 		quit
 	EOF
 }
@@ -193,9 +219,8 @@ function gpt_create()
 	local SIZE
 	local END
 
-	[ -n "$3" ] || return
-	[ -z "$4" ] || return
-	[ -b "$1" ] || return
+	[ $# = 3 ] || return
+	[ -b "$1" -o -f "$1" ] || return
 
 	LOOP="$1"
 	START="$2"

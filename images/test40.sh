@@ -1,7 +1,6 @@
 #!/bin/bash
 
 IMAGE_SIZE="5G"
-IMAGE_DIR="."
 
 source common.sh
 
@@ -9,15 +8,19 @@ source common.sh
 # 40 disk, protective table, partition, gpt table, empty
 function test_40()
 {
+	local IMAGE
 	local LOOP
 
 	echo -n "$FUNCNAME: "
 
-	LOOP="$(create_loop $FUNCNAME)"
-	[ -n "$LOOP" ] || error || return
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	gpt_init "$LOOP"
-	[ $? == 0 ] || error || return
+	gpt_init "$IMAGE"
+	[ $? = 0 ] || error || return
+
+	LOOP="$(create_loop2 $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
 	ok "$LOOP"
 }
@@ -26,18 +29,23 @@ function test_40()
 # 41 disk, protective table, partition, gpt table, partition, empty
 function test_41()
 {
+	local IMAGE
 	local LOOP
 
 	echo -n "$FUNCNAME: "
 
-	LOOP="$(create_loop $FUNCNAME)"
-	[ -n "$LOOP" ] || error || return
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	gpt_init "$LOOP"
-	[ $? == 0 ] || error || return
+	gpt_init "$IMAGE"
+	[ $? = 0 ] || error || return
 
-	gpt_create $LOOP 1 500
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 1 500			# partition 1
+	[ $? = 0 ] || error || return
+
+	LOOP="$(create_loop2 $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+	[ -b "${LOOP}p1" ] || error || return
 
 	ok "$LOOP"
 }
@@ -46,27 +54,25 @@ function test_41()
 # 42 disk, protective table, partition, gpt table, partition, unknown
 function test_42()
 {
+	local IMAGE
 	local LOOP
 
 	echo -n "$FUNCNAME: "
 
-	LOOP="$(create_loop $FUNCNAME)"
-	[ -n "$LOOP" ] || error || return
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	gpt_init "$LOOP"
-	[ $? == 0 ] || error || return
+	gpt_init "$IMAGE"
+	[ $? = 0 ] || error || return
 
-	gpt_create $LOOP 1 500
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 1 500			# partition 1
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 1 500)"
-	[ $? == 0 ] || error || return
+	LOOP="$(create_loop2 $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+	[ -b "${LOOP}p1" ] || error || return
 
-	dd if=/dev/urandom bs=32K count=1 of="$SUB" 2> /dev/null
-
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
+	dd if=/dev/urandom bs=32K count=1 of="${LOOP}p1" 2> /dev/null
 
 	ok "$LOOP"
 }
@@ -75,28 +81,26 @@ function test_42()
 # 43 disk, protective table, partition, gpt table, partition, filesystem
 function test_43()
 {
+	local IMAGE
 	local LOOP
 
 	echo -n "$FUNCNAME: "
 
-	LOOP="$(create_loop $FUNCNAME)"
-	[ -n "$LOOP" ] || error || return
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	gpt_init "$LOOP"
-	[ $? == 0 ] || error || return
+	gpt_init "$IMAGE"
+	[ $? = 0 ] || error || return
 
-	gpt_create $LOOP 1 500
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 1 500			# partition 1
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 1 500)"
-	[ $? == 0 ] || error || return
+	LOOP="$(create_loop2 $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+	[ -b "${LOOP}p1" ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
-
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p1"		# filesystem 1
+	[ $? = 0 ] || error || return
 
 	ok "$LOOP"
 }
@@ -106,129 +110,90 @@ function test_43()
 # (include empty space)
 function test_44()
 {
+	local IMAGE
 	local LOOP
 
 	echo -n "$FUNCNAME: "
 
-	LOOP="$(create_loop $FUNCNAME)"
-	[ -n "$LOOP" ] || error || return
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-	gpt_init "$LOOP"
-	[ $? == 0 ] || error || return
-# FS1
-	gpt_create $LOOP 600 200
-	[ $? == 0 ] || error || return
+	gpt_init "$IMAGE"
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 600 200)"
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 600 200		# partition 1
+	[ $? = 0 ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 1000 499		# partition 2
+	[ $? = 0 ] || error || return
 
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
-# FS2
-	gpt_create $LOOP 1000 499
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 1500 500		# partition 3
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 1000 499)"
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 2500 199		# partition 4
+	[ $? = 0 ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 2700 200		# partition 5
+	[ $? = 0 ] || error || return
 
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
-# FS3
-	gpt_create $LOOP 1500 500
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 3000 199		# partition 6
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 1500 500)"
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 3200 400		# partition 7
+	[ $? = 0 ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
+	gpt_create $IMAGE 3800 200		# partition 8
+	[ $? = 0 ] || error || return
 
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
-# FS4
-	gpt_create $LOOP 2500 199
-	[ $? == 0 ] || error || return
+	LOOP="$(create_loop2 $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+	[ -b "${LOOP}p1" ] || error || return
+	[ -b "${LOOP}p2" ] || error || return
+	[ -b "${LOOP}p3" ] || error || return
+	[ -b "${LOOP}p4" ] || error || return
+	[ -b "${LOOP}p5" ] || error || return
+	[ -b "${LOOP}p6" ] || error || return
+	[ -b "${LOOP}p7" ] || error || return
+	[ -b "${LOOP}p8" ] || error || return
 
-	SUB="$(sub_loop $LOOP 2500 199)"
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p1"		# filesystem 1
+	[ $? = 0 ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p2"		# filesystem 2
+	[ $? = 0 ] || error || return
 
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
-# FS5
-	gpt_create $LOOP 2700 200
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p3"		# filesystem 3
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 2700 200)"
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p4"		# filesystem 4
+	[ $? = 0 ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p5"		# filesystem 5
+	[ $? = 0 ] || error || return
 
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
-# FS6
-	gpt_create $LOOP 3000 199
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p6"		# filesystem 6
+	[ $? = 0 ] || error || return
 
-	SUB="$(sub_loop $LOOP 3000 199)"
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p7"		# filesystem 7
+	[ $? = 0 ] || error || return
 
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
-
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
-# FS7
-	gpt_create $LOOP 3200 400
-	[ $? == 0 ] || error || return
-
-	SUB="$(sub_loop $LOOP 3200 400)"
-	[ $? == 0 ] || error || return
-
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
-
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
-# FS8
-	gpt_create $LOOP 3800 200
-	[ $? == 0 ] || error || return
-
-	SUB="$(sub_loop $LOOP 3800 200)"
-	[ $? == 0 ] || error || return
-
-	mke2fs -t ext4 -q "$SUB"
-	[ $? == 0 ] || error || return
-
-	sync
-	losetup -d $SUB
-	[ $? == 0 ] || error || return
+	mke2fs -t ext4 -q "${LOOP}p8"		# filesystem 8
+	[ $? = 0 ] || error || return
 
 	ok "$LOOP"
 }
 
 
-cleanup
-
-test_40
-test_41
-test_42
-test_43
-test_44
+if [ $# = 0 ]; then
+	cleanup
+	test_40
+	test_41
+	test_42
+	test_43
+	test_44
+elif [ $# = 1 -a $1 = "-d" ]; then
+	cleanup
+else
+	usage
+fi
 
