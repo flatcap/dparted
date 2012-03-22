@@ -4,7 +4,9 @@ IMAGE_SIZE="5G"
 
 source common.sh
 
-function test_fs()
+##
+# 00 create one of each type of filesystem
+function test_00()
 {
 	local IMAGE
 	local LOOP
@@ -86,10 +88,97 @@ function test_fs()
 	ok "$LOOP"
 }
 
+##
+# 01 shuffled linear lvm volume
+function test_01()
+{
+	local IMAGE
+	local LOOP
+	local GROUP=$FUNCNAME
+	local INDEX=${FUNCNAME##*_}
+	local VOLUME="simple$INDEX"
+
+	echo -n "$FUNCNAME: "
+
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
+
+	LOOP="$(create_loop $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+
+	pvcreate "$LOOP" > /dev/null 2>&1
+	[ $? = 0 ] || error || return
+
+	vgcreate $GROUP "$LOOP" > /dev/null
+	[ $? = 0 ] || error || return
+
+	lvcreate --size 52m --name $VOLUME $GROUP > /dev/null
+	lvcreate --size 52m --name junk1   $GROUP > /dev/null
+	lvcreate --size 52m --name junk2   $GROUP > /dev/null
+	lvcreate --size 40m --name junk3   $GROUP > /dev/null
+
+	lvremove -f /dev/mapper/$GROUP-junk2		> /dev/null
+	lvextend --size +52m /dev/mapper/$GROUP-$VOLUME	> /dev/null
+	lvremove -f /dev/mapper/$GROUP-junk1		> /dev/null
+	lvextend --size +52m /dev/mapper/$GROUP-$VOLUME	> /dev/null
+	lvremove -f /dev/mapper/$GROUP-junk3		> /dev/null
+	lvextend --size +40m /dev/mapper/$GROUP-$VOLUME	> /dev/null
+
+	mke2fs -t ext4 -q -L "jigsaw" /dev/mapper/$GROUP-$VOLUME
+
+	#lvs --all -o lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count $VOLUME
+
+	populate_ext4 /dev/mapper/$GROUP-$VOLUME 100M
+
+	ok "$LOOP"
+}
+
+##
+# 02 creeat raid10 (mirroed striped) volume
+function test_02()
+{
+	local IMAGE
+	local LOOP
+	local LOOP_LIST
+	local GROUP=$FUNCNAME
+	local INDEX=${FUNCNAME##*_}
+	local VOLUME="$INDEX"
+
+	echo -n "$FUNCNAME: "
+
+	for i in {1..8}; do
+		IMAGE="$(create_image ${FUNCNAME}$i)"
+		[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
+
+		LOOP="$(create_loop $IMAGE)"
+		[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+
+		pvcreate "$LOOP" > /dev/null 2>&1
+		[ $? = 0 ] || error || return
+
+		LOOP_LIST="$LOOP_LIST $LOOP"
+	done
+
+	vgcreate $GROUP $LOOP_LIST > /dev/null
+	[ $? = 0 ] || error || return
+
+	lvcreate $GROUP -i 2 -m 3 --name bob --size 320M > /dev/null
+	[ $? = 0 ] || error || return
+
+	mke2fs -t ext4 -q -L "$GROUP bob" /dev/mapper/$GROUP-bob
+	[ $? = 0 ] || error || return
+
+	#populate_ext4 /dev/mapper/$VOLUME-bob 250M
+
+	ok "$LOOP_LIST"
+}
+
 
 if [ $# = 0 ]; then
 	cleanup
-	test_fs
+	test_00
+	test_01
+	test_02
 elif [ $# = 1 -a $1 = "-d" ]; then
 	cleanup
 else
