@@ -1,0 +1,43 @@
+Block		Disk, Loop, File
+Table		Msdos, Gpt
+Partition	Primary, Extended
+Filesystem	Ext2, Ntfs, Fat
+Misc		Empty, Reserved, Unknown
+
+BM		10 disk, empty
+BP		11 disk, unknown
+BP		12 disk, filesystem
+
+BTM		20 disk, msdos table, empty
+BTPM		21 disk, msdos table, partition, empty
+BTPM		22 disk, msdos table, partition, unknown
+BTPF		23 disk, msdos table, partition, filesystem
+BT(PF)*4	24 disk, msdos table, (partition, filesystem) * 4
+
+BTTM		30 disk, msdos table, extended partition, empty
+BTTPM		31 disk, msdos table, extended partition, partition, empty
+BTTPM		32 disk, msdos table, extended partition, partition, unknown
+BTTPF		33 disk, msdos table, extended partition, partition, filesystem
+BTT(PF)*8	34 disk, msdos table, extended partition, (partition, filesystem) * 8
+
+BTTM		40 disk, protective table, partition, gpt table, empty
+BTTPM		41 disk, protective table, partition, gpt table, partition, empty
+BTTPM		42 disk, protective table, partition, gpt table, partition, unknown
+BTTPF		43 disk, protective table, partition, gpt table, partition, filesystem
+BTT(PF)*8	44 disk, protective table, partition, gpt table, (partition, filesystem) * 8
+
+BTM		50 disk, lvm table, empty
+BTM		51 disk, lvm table(vg), empty
+BTPM		52 disk, lvm table(vg), partition, empty
+BTPM		53 disk, lvm table(vg), partition, unknown
+BTPF		54 disk, lvm table(vg), partition, filesystem
+BT(PF)*8	55 disk, lvm table(vg), (partition, filesystem) * 8
+
+BTPTM		60 disk, msdos table, partition, lvm table, empty
+BTPTM		61 disk, msdos table, partition, lvm table(vg), empty
+BTPTPM		62 disk, msdos table, partition, lvm table(vg), partition, empty
+BTPTPM		63 disk, msdos table, partition, lvm table(vg), partition, unknown
+BTPTPF		64 disk, msdos table, partition, lvm table(vg), partition, filesystem
+BTPT(PF)*8	65 disk, msdos table, partition, lvm table(vg), (partition, filesystem) * 8
+BTTTPF		66 disk, msdos table, extended partition, lvm table(vg), partition, filesystem
+
