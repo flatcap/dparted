@@ -1149,3 +1149,8 @@ tests
 	multiple lvm volume groups on a single disk
 	(in different partitions)
 
+context menu
+	highlight parent
+	highlight siblings (other pieces of me)
+	highlight children
+
