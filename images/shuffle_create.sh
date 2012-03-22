@@ -1,37 +1,61 @@
 #!/bin/bash
 
-IMAGE3="disk3"
-VOLUME="shuffle"
+IMAGE_SIZE="5G"
 
 source common.sh
 
-rm -f $IMAGE3
+##
+# ?? shuffled linear lvm volume
+function test_shuffle()
+{
+	local IMAGE
+	local LOOP
+	local GROUP=$FUNCNAME
+	local INDEX=${FUNCNAME##*_}
+	local VOLUME="simple$INDEX"
 
-fallocate --length 200M $IMAGE3
+	echo -n "$FUNCNAME: "
 
-losetup /dev/loop3 $IMAGE3
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
-pvcreate /dev/loop3
+	LOOP="$(create_loop $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-vgcreate $VOLUME /dev/loop3
+	pvcreate "$LOOP" > /dev/null 2>&1
+	[ $? = 0 ] || error || return
 
-lvcreate --size 52m --name jigsaw $VOLUME
-lvcreate --size 52m --name junk1  $VOLUME
-lvcreate --size 52m --name junk2  $VOLUME
-lvcreate --size 40m --name junk3  $VOLUME
+	vgcreate $GROUP "$LOOP" > /dev/null
+	[ $? = 0 ] || error || return
 
-lvremove -f /dev/$VOLUME/junk2
-lvextend --size +52m /dev/$VOLUME/jigsaw
-lvremove -f /dev/$VOLUME/junk1
-lvextend --size +52m /dev/$VOLUME/jigsaw
-lvremove -f /dev/$VOLUME/junk3
-lvextend --size +40m /dev/$VOLUME/jigsaw
+	lvcreate --size 52m --name $VOLUME $GROUP > /dev/null
+	lvcreate --size 52m --name junk1   $GROUP > /dev/null
+	lvcreate --size 52m --name junk2   $GROUP > /dev/null
+	lvcreate --size 40m --name junk3   $GROUP > /dev/null
 
-mke2fs -t ext4 -L "$VOLUME jigsaw" /dev/$VOLUME/jigsaw
+	lvremove -f /dev/mapper/$GROUP-junk2		> /dev/null
+	lvextend --size +52m /dev/mapper/$GROUP-$VOLUME	> /dev/null
+	lvremove -f /dev/mapper/$GROUP-junk1		> /dev/null
+	lvextend --size +52m /dev/mapper/$GROUP-$VOLUME	> /dev/null
+	lvremove -f /dev/mapper/$GROUP-junk3		> /dev/null
+	lvextend --size +40m /dev/mapper/$GROUP-$VOLUME	> /dev/null
 
-lvs --all -o lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count $VOLUME
+	mke2fs -t ext4 -q -L "jigsaw" /dev/mapper/$GROUP-$VOLUME
 
-populate_ext4 /dev/$VOLUME/jigsaw 100M
+	#lvs --all -o lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count $VOLUME
 
-rm -f $IMAGE3
+	populate_ext4 /dev/mapper/$GROUP-$VOLUME 100M
+
+	ok "$LOOP"
+}
+
+
+if [ $# = 0 ]; then
+	cleanup
+	test_shuffle
+elif [ $# = 1 -a $1 = "-d" ]; then
+	cleanup
+else
+	usage
+fi
 
