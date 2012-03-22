@@ -1,19 +1,98 @@
 #!/bin/bash
 
-TYPES="ext2 ext3 ext4 btrfs ntfs reiserfs swap vfat xfs"
+IMAGE_SIZE="5G"
 
-for i in $TYPES; do
-	rm -f disk.$i
-	truncate -s 1G disk.$i
-done
+source common.sh
 
-mkfs.btrfs        -L "btrfs_label"    disk.btrfs
-mkfs.ext2     -F  -L "ext2_label"     disk.ext2
-mkfs.ext3     -F  -L "ext3_label"     disk.ext3
-mkfs.ext4     -F  -L "ext4_label"     disk.ext4
-mkfs.ntfs     -fF -L "ntfs_label"     disk.ntfs
-mkfs.reiserfs -ff -l "reiserfs_label" disk.reiserfs
-mkswap            -L "swap_label"     disk.swap
-mkfs.vfat         -n "vfat_label"     disk.vfat
-mkfs.xfs          -L "xfs_label"      disk.xfs
+function test_fs()
+{
+	local IMAGE
+	local LOOP
+
+	echo -n "$FUNCNAME: "
+
+	IMAGE="$(create_image $FUNCNAME)"
+	[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
+
+	gpt_init "$IMAGE"
+	[ $? = 0 ] || error || return
+
+	gpt_create $IMAGE 1 498			# partition 1
+	[ $? = 0 ] || error || return
+
+	gpt_create $IMAGE 500 499		# partition 2
+	[ $? = 0 ] || error || return
+
+	gpt_create $IMAGE 1000 499		# partition 3
+	[ $? = 0 ] || error || return
+
+	gpt_create $IMAGE 1500 499		# partition 4
+	[ $? = 0 ] || error || return
+
+	gpt_create $IMAGE 2000 499		# partition 5
+	[ $? = 0 ] || error || return
+
+	gpt_create $IMAGE 2500 499		# partition 6
+	[ $? = 0 ] || error || return
+
+	gpt_create $IMAGE 3000 499		# partition 7
+	[ $? = 0 ] || error || return
+
+	gpt_create $IMAGE 3500 499		# partition 8
+	[ $? = 0 ] || error || return
+
+	gpt_create $IMAGE 4000 499		# partition 9
+	[ $? = 0 ] || error || return
+
+	LOOP="$(create_loop $IMAGE)"
+	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
+	[ -b "${LOOP}p1" ] || error || return
+	[ -b "${LOOP}p2" ] || error || return
+	[ -b "${LOOP}p3" ] || error || return
+	[ -b "${LOOP}p4" ] || error || return
+	[ -b "${LOOP}p5" ] || error || return
+	[ -b "${LOOP}p6" ] || error || return
+	[ -b "${LOOP}p7" ] || error || return
+	[ -b "${LOOP}p8" ] || error || return
+	[ -b "${LOOP}p9" ] || error || return
+
+	#mkfs.btrfs        -L "btrfs_label"    ${LOOP}p1		# filesystem 1
+	#[ $? = 0 ] || error || return
+
+	mkfs.ext2     -F  -L "ext2_label"     ${LOOP}p2		# filesystem 2
+	[ $? = 0 ] || error || return
+
+	mkfs.ext3     -F  -L "ext3_label"     ${LOOP}p3		# filesystem 3
+	[ $? = 0 ] || error || return
+
+	mkfs.ext4     -F  -L "ext4_label"     ${LOOP}p4		# filesystem 4
+	[ $? = 0 ] || error || return
+
+	mkfs.ntfs     -fF -L "ntfs_label"     ${LOOP}p5		# filesystem 5
+	[ $? = 0 ] || error || return
+
+	mkfs.reiserfs -ff -l "reiserfs_label" ${LOOP}p6		# filesystem 6
+	[ $? = 0 ] || error || return
+
+	mkswap            -L "swap_label"     ${LOOP}p7		# filesystem 7
+	[ $? = 0 ] || error || return
+
+	mkfs.vfat         -n "vfat_label"     ${LOOP}p8		# filesystem 8
+	[ $? = 0 ] || error || return
+
+	mkfs.xfs          -L "xfs_label"      ${LOOP}p9		# filesystem 9
+	[ $? = 0 ] || error || return
+
+	ok "$LOOP"
+}
+
+
+if [ $# = 0 ]; then
+	cleanup
+	test_fs
+elif [ $# = 1 -a $1 = "-d" ]; then
+	cleanup
+else
+	usage
+fi
 
