@@ -90,7 +90,7 @@ int main (int argc, char *argv[])
 	disks.name = "container";	//XXX dummy
 
 	Disk::find_devices (disks);
-	Loop::find_devices (disks);
+	//Loop::find_devices (disks);
 
 	unsigned char *buffer = NULL;
 	int bufsize = 32768;	//RAR 4096;
@@ -131,7 +131,7 @@ int main (int argc, char *argv[])
 		}
 	}
 
-	//RAR VolumeGroup::find_devices (disks);
+	VolumeGroup::find_devices (disks);
 
 	while ((item = probe_queue.front())) {
 #if 0
