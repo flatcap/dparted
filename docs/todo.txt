@@ -1138,3 +1138,14 @@ grep test_22 -l /sys/block/loop*/loop/backing_file
 /sys/block/loop0/loop/backing_file
 find which loop device has a file
 
+draw a scale on the disk gui
+especially for the non-linear scaling
+
+view menu: key detailing colours and icons
+
+advanced menu option to view an unknown partition in a hex viewer
+
+tests
+	multiple lvm volume groups on a single disk
+	(in different partitions)
+
