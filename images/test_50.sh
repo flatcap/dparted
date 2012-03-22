@@ -31,6 +31,7 @@ function test_51()
 {
 	local IMAGE
 	local LOOP
+	local GROUP=$FUNCNAME
 
 	echo -n "$FUNCNAME: "
 
@@ -43,7 +44,7 @@ function test_51()
 	pvcreate "$LOOP" > /dev/null 2>&1
 	[ $? = 0 ] || error || return
 
-	vgcreate $FUNCNAME "$LOOP" > /dev/null
+	vgcreate $GROUP "$LOOP" > /dev/null
 	[ $? = 0 ] || error || return
 
 	ok "$LOOP"
