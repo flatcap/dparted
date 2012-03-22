@@ -952,22 +952,8 @@ when working (performing disk actions)
 highlight the current partition (red)?
 
 vim cpp <leader> + ?
-	c ctor
-		first occurrence of "^\(\i\+\)::\1\s*("
-	d dtor
-		first occurrence of "^\(\i\+\)::\~\1\s*("
-	i include
-		last occurrence of "#include"
-		stop searching of "^{$" found
 	m make
 		use makeprg or shellpipe to duplicate output to other window
-	h swap c/cc/cpp/h
-		use filename and syntax to guess what file to find
-		:function! SomeCheck()
-		:   if filereadable("SpecificFile")
-		:       echo "SpecificFile exists"
-		:   endif
-		:endfunction
 	first time, find the place and mark it
 	second time jump to the mark
 	open fold
