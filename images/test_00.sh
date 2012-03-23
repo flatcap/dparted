@@ -61,13 +61,13 @@ function test_00()
 	#mkfs.btrfs        -L "btrfs_label"    ${LOOP}p1		# filesystem 1
 	#[ $? = 0 ] || error || return
 
-	mkfs.ext2     -F  -L "ext2_label"     ${LOOP}p2		# filesystem 2
+	mkfs.ext2  -q -F  -L "ext2_label"     ${LOOP}p2		# filesystem 2
 	[ $? = 0 ] || error || return
 
-	mkfs.ext3     -F  -L "ext3_label"     ${LOOP}p3		# filesystem 3
+	mkfs.ext3 -q  -F  -L "ext3_label"     ${LOOP}p3		# filesystem 3
 	[ $? = 0 ] || error || return
 
-	mkfs.ext4     -F  -L "ext4_label"     ${LOOP}p4		# filesystem 4
+	mkfs.ext4 -q  -F  -L "ext4_label"     ${LOOP}p4		# filesystem 4
 	[ $? = 0 ] || error || return
 
 	mkfs.ntfs     -fF -L "ntfs_label"     ${LOOP}p5		# filesystem 5
