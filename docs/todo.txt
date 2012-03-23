@@ -1140,3 +1140,14 @@ context menu
 	highlight siblings (other pieces of me)
 	highlight children
 
+"No Volume groups found"
+if pvs returns nothing, don't search for volumes groups or volumes
+
+for redundant volumes have flags on the group object to determine which device to read from
+first, last, random, etc
+
+in disk gui only drop "/dev/" not everything up to "/"
+therefore
+	/dev/sda1 -> sda1
+	/dev/mapper/bob -> mapper/bob
+
