@@ -1,35 +1,39 @@
 digraph G
 {
-	graph [ rankdir="RL", bgcolor="#002200", color=white ];
-	node  [ shape=record, style=filled, fillcolor="#bbbbbb", color=darkgreen ];
-	edge  [ color="#cccccc", penwidth=2.0 ];
+	graph [ rankdir="RL" ];
+	node  [ shape=record, style=filled ];
+	edge  [ penwidth=2.0 ];
+
+	graph [ bgcolor="#002200", color=white ];
+	node  [ fillcolor="#bbbbbb", color=darkgreen ];
+	edge  [ color="#cccccc" ];
 
 	Container [ fillcolor="#ffffff" ];
 
 	Block [ fillcolor="#aaffaa" ];
 	Disk  [ fillcolor="#aaffaa" ];
-	File  [ fillcolor="#aaffaa" ];
 	Loop  [ fillcolor="#aaffaa" ];
+	File  [ fillcolor="#aaffaa" ];
 
 	Table    [ fillcolor="#ffbbbb" ];
-	Gpt      [ fillcolor="#ffbbbb" ];
 	Msdos    [ fillcolor="#ffbbbb" ];
 	Extended [ fillcolor="#ffbbbb" ];
+	Gpt      [ fillcolor="#ffbbbb" ];
+	Lvm      [ fillcolor="#ffbbbb" ];
 
 	Partition [ fillcolor="#ffffdd" ];
-
-	Whole       [ fillcolor="#ccccff" ];
-	Volume      [ fillcolor="#ccccff" ];
-	VolumeGroup [ fillcolor="#ccccff" ];
-	Linear      [ fillcolor="#ccccff" ];
-	Mirror      [ fillcolor="#ccccff" ];
-	Stripe      [ fillcolor="#ccccff" ];
-	Segment     [ fillcolor="#ccccff" ];
 
 	Filesystem [ fillcolor="#bbffff" ];
 	Ext4       [ fillcolor="#bbffff" ];
 	Btrfs      [ fillcolor="#bbffff" ];
 	Ntfs       [ fillcolor="#bbffff" ];
+
+	Whole  [ fillcolor="#ccccff" ];
+	Group  [ fillcolor="#ccccff" ];
+	Volume [ fillcolor="#ccccff" ];
+	Linear [ fillcolor="#ccccff" ];
+	Mirror [ fillcolor="#ccccff" ];
+	Stripe [ fillcolor="#ccccff" ];
 
 	Block       -> Container;
 	Disk        -> Block;
@@ -37,22 +41,20 @@ digraph G
 	File        -> Block;
 	Filesystem  -> Container;
 	Gpt         -> Table;
+	Lvm         -> Table;
 	Linear      -> Volume;
 	Loop        -> Block;
 	Mirror      -> Volume;
 	Msdos       -> Table;
 	Partition   -> Container;
-	Segment     -> Container;
 	Stripe      -> Volume;
 	Table       -> Container;
-	VolumeGroup -> Whole;
+	Group       -> Whole;
 	Volume      -> Whole;
 	Whole       -> Container;
 
 	Ext4        -> Filesystem;
 	Btrfs       -> Filesystem;
 	Ntfs        -> Filesystem;
-
-	Whole       -> Segment [ constraint=false, style=dotted, dir=none, minlen=1 ];
 }
 

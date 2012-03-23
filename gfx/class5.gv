@@ -1,0 +1,86 @@
+digraph G
+{
+	graph [ rankdir="TB" ];
+	node  [ shape=record, style=filled ];
+	edge  [ penwidth=2.0 ];
+
+	graph [ bgcolor="#002200", color=white ];
+	node  [ fillcolor="#bbbbbb", color=darkgreen ];
+	edge  [ color="#cccccc" ];
+
+	Loop1 [ label="loop\nloop0" fillcolor="#aaffaa" ];
+	Loop2 [ label="loop\nloop1" fillcolor="#aaffaa" ];
+	Loop3 [ label="loop\nloop2" fillcolor="#aaffaa" ];
+	Loop4 [ label="loop\nloop3" fillcolor="#aaffaa" ];
+
+	Table1 [ label="Table\nvg_bob", fillcolor="#ffbbbb" ];
+	Table2 [ label="Table\nvg_bob", fillcolor="#ffbbbb" ];
+	Table3 [ label="Table\nvg_bob", fillcolor="#ffbbbb" ];
+	Table4 [ label="Table\nvg_bob", fillcolor="#ffbbbb" ];
+
+	Part1 [ label="Part\nwide", fillcolor="#ffffdd" ];
+	Part2 [ label="Part\nnarr", fillcolor="#ffffdd" ];
+	Part3 [ label="Part\nwide", fillcolor="#ffffdd" ];
+	Part4 [ label="Part\nnarr", fillcolor="#ffffdd" ];
+	Part5 [ label="Part\nwide", fillcolor="#ffffdd" ];
+	Part6 [ label="Part\nnarr", fillcolor="#ffffdd" ];
+	Part7 [ label="Part\nwide", fillcolor="#ffffdd" ];
+	Part8 [ label="Part\nnarr", fillcolor="#ffffdd" ];
+
+	Fs1 [ label="FS\nA", fillcolor="#bbffff" ];
+	Fs2 [ label="FS\nB", fillcolor="#bbffff" ];
+	Fs3 [ label="FS\nC", fillcolor="#bbffff" ];
+	Fs4 [ label="FS\nD", fillcolor="#bbffff" ];
+	Fs5 [ label="FS\nE", fillcolor="#bbffff" ];
+	Fs6 [ label="FS\nF", fillcolor="#bbffff" ];
+	Fs7 [ label="FS\nG", fillcolor="#bbffff" ];
+	Fs8 [ label="FS\nH", fillcolor="#bbffff" ];
+
+	Group	[ label="VolumeGroup\nvg_bob", fillcolor="#ccccff" ];
+	Volume1 [ label="Stripe\nwide" fillcolor="#ccccff" ];
+	Volume2 [ label="Stripe\nnarrow" fillcolor="#ccccff" ];
+
+	Linear1 [ label="Linear\n[A]" fillcolor="#ccccff" ];
+	Linear2 [ label="Linear\n[C]" fillcolor="#ccccff" ];
+	Linear3 [ label="Linear\n[E]" fillcolor="#ccccff" ];
+	Linear4 [ label="Linear\n[G]" fillcolor="#ccccff" ];
+	Linear5 [ label="Linear\n[B,F]" fillcolor="#ccccff" ];
+	Linear6 [ label="Linear\n[D,H]" fillcolor="#ccccff" ];
+
+	Loop1	-> Table1;
+	Loop2	-> Table2;
+	Loop3	-> Table3;
+	Loop4	-> Table4;
+
+	Table1	-> Part1;
+	Table1	-> Part2;
+	Table2	-> Part3;
+	Table2	-> Part4;
+	Table3	-> Part5;
+	Table3	-> Part6;
+	Table4	-> Part7;
+	Table4	-> Part8;
+
+	Part1	-> Fs1;
+	Part2	-> Fs2;
+	Part3	-> Fs3;
+	Part4	-> Fs4;
+	Part5	-> Fs5;
+	Part6	-> Fs6;
+	Part7	-> Fs7;
+	Part8	-> Fs8;
+
+	Group		-> Volume1;
+	Group		-> Volume2;
+
+	Volume1		-> Linear1;
+	Volume1		-> Linear2;
+	Volume1		-> Linear3;
+	Volume1		-> Linear4;
+
+	Volume2		-> Linear5;
+	Volume2		-> Linear6;
+
+	{ rank=same Group Table1 Table2 Table3 Table4 }
+}
+
