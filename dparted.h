@@ -21,9 +21,11 @@
 
 #include <gtkmm/grid.h>
 #include <gtkmm/menubar.h>
+#include <gtkmm/radioaction.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/statusbar.h>
 #include <gtkmm/toolbar.h>
+#include <gtkmm/uimanager.h>
 #include <gtkmm/window.h>
 
 #include "drawingarea.h"

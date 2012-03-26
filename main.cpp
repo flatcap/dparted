@@ -86,7 +86,7 @@ int main (int argc, char *argv[])
 
 	disks.name = "container";	//XXX dummy
 
-	//Disk::find_devices (disks);
+	Disk::find_devices (disks);
 	Loop::find_devices (disks);
 
 	unsigned char *buffer = NULL;

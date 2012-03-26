@@ -19,8 +19,8 @@
 #ifndef _TREEVIEW_H_
 #define _TREEVIEW_H_
 
-#include <gtkmm.h>
 #include <gtkmm/treeview.h>
+#include <gtkmm/treestore.h>
 
 #include "container.h"
 
