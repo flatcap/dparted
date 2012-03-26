@@ -18,8 +18,8 @@
 
 #include <sstream>
 
-#include "volume.h"
 #include "log.h"
+#include "volume.h"
 
 /**
  * Volume

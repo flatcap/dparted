@@ -16,8 +16,8 @@
  */
 
 
+#include <cstdlib>
 #include <iostream>
-#include <stdlib.h>
 
 #include "treeview.h"
 

@@ -19,14 +19,12 @@
 #ifndef _DPARTED_H_
 #define _DPARTED_H_
 
-#include <gtkmm/window.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/menubar.h>
-#include <gtkmm/toolbar.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/statusbar.h>
-
-#include <gtkmm.h>
+#include <gtkmm/toolbar.h>
+#include <gtkmm/window.h>
 
 #include "drawingarea.h"
 #include "treeview.h"

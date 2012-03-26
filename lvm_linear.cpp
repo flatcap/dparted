@@ -16,9 +16,9 @@
  */
 
 
-#include "lvm_linear.h"
-
 #include <sstream>
+
+#include "lvm_linear.h"
 
 /**
  * LVMLinear

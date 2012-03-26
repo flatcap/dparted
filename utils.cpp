@@ -16,19 +16,18 @@
  */
 
 
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdarg.h>
-
-#include <vector>
-#include <string>
-#include <iostream>
+#include <cmath>
+#include <cstdarg>
+#include <cstdlib>
+#include <cstring>
 #include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 
-#include "utils.h"
-#include "stringnum.h"
 #include "log.h"
+#include "stringnum.h"
+#include "utils.h"
 
 /**
  * execute_command

@@ -16,13 +16,13 @@
  */
 
 
-#include <gdkmm/rgba.h>
 #include <gdkmm/pixbuf.h>
+#include <gdkmm/rgba.h>
 
 #include <map>
 
-#include "theme.h"
 #include "log.h"
+#include "theme.h"
 
 /**
  * Theme

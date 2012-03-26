@@ -16,11 +16,11 @@
  */
 
 
-#include <string>
 #include <sstream>
+#include <string>
 
-#include "partition.h"
 #include "log.h"
+#include "partition.h"
 
 /**
  * Partition

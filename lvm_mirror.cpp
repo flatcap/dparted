@@ -16,9 +16,9 @@
  */
 
 
-#include "lvm_mirror.h"
-
 #include <sstream>
+
+#include "lvm_mirror.h"
 
 /**
  * LVMMirror

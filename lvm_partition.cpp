@@ -16,9 +16,9 @@
  */
 
 
-#include "lvm_partition.h"
-
 #include <sstream>
+
+#include "lvm_partition.h"
 
 /**
  * LVMPartition

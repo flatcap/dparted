@@ -16,17 +16,16 @@
  */
 
 
-#include <stdlib.h>
-
-#include <string>
+#include <cstdlib>
 #include <sstream>
+#include <string>
 
 #include "filesystem.h"
-#include "partition.h"
-#include "utils.h"
 #include "identify.h"
-#include "stringnum.h"
 #include "log.h"
+#include "partition.h"
+#include "stringnum.h"
+#include "utils.h"
 
 /**
  * Filesystem

@@ -16,10 +16,10 @@
  */
 
 
-#include "lvm_table.h"
-#include "log.h"
-
 #include <sstream>
+
+#include "log.h"
+#include "lvm_table.h"
 
 /**
  * LVMTable

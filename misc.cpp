@@ -16,15 +16,14 @@
  */
 
 
-#include <string.h>
-
+#include <cstring>
 #include <sstream>
 
+#include "log.h"
+#include "main.h"
 #include "misc.h"
 #include "partition.h"
 #include "utils.h"
-#include "main.h"
-#include "log.h"
 
 /**
  * Misc

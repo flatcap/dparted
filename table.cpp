@@ -18,11 +18,11 @@
 
 #include <string>
 
-#include "table.h"
-#include "identify.h"
 #include "gpt.h"
-#include "msdos.h"
+#include "identify.h"
 #include "log.h"
+#include "msdos.h"
+#include "table.h"
 
 /**
  * Table

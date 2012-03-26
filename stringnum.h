@@ -19,8 +19,7 @@
 #ifndef _STRINGNUM_H
 #define _STRINGNUM_H
 
-#include <stdlib.h>
-
+#include <cstdlib>
 #include <string>
 
 #include "container.h"

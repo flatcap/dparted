@@ -16,15 +16,14 @@
  */
 
 
-#include <string.h>
-
+#include <cstring>
 #include <sstream>
 
 #include "gpt.h"
+#include "log.h"
+#include "main.h"
 #include "partition.h"
 #include "utils.h"
-#include "main.h"
-#include "log.h"
 
 /**
  * Gpt

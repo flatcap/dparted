@@ -18,17 +18,17 @@
 
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include <cstdio>
-#include <string>
 #include <sstream>
+#include <string>
 
+#include "log.h"
 #include "loop.h"
 #include "main.h"
 #include "utils.h"
-#include "log.h"
 
 /**
  * Loop

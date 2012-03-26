@@ -19,8 +19,8 @@
 #ifndef _DISK_H_
 #define _DISK_H_
 
-#include <string>
 #include <map>
+#include <string>
 
 #include "block.h"
 

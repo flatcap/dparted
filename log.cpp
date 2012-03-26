@@ -16,10 +16,9 @@
  */
 
 
-#include <string.h>
-#include <stdarg.h>
-
+#include <cstdarg>
 #include <cstdio>
+#include <cstring>
 
 #include "log.h"
 

@@ -16,24 +16,23 @@
  */
 
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <linux/major.h>
-#include <linux/kdev_t.h>
-
-#include <linux/fs.h>
 #include <fcntl.h>
+#include <linux/fs.h>
+#include <linux/kdev_t.h>
+#include <linux/major.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <string>
 
 #include "block.h"
 #include "disk.h"
 #include "file.h"
+#include "log.h"
 #include "loop.h"
 #include "main.h"
-#include "log.h"
 
 /**
  * Block

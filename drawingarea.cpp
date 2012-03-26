@@ -16,23 +16,23 @@
  */
 
 
+#include <gtkmm.h>
+#include <unistd.h>
+
+#include <cmath>
+#include <cstdlib>
 #include <iostream>
 
-#include <gtkmm.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <math.h>
-
-#include "drawingarea.h"
-#include "container.h"
 #include "block.h"
-#include "table.h"
-#include "partition.h"
-#include "utils.h"
+#include "container.h"
+#include "drawingarea.h"
 #include "filesystem.h"
-#include "theme.h"
-#include "whole.h"
 #include "log.h"
+#include "partition.h"
+#include "table.h"
+#include "theme.h"
+#include "utils.h"
+#include "whole.h"
 
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
 const double ARC_E = 0;

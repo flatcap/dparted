@@ -23,13 +23,13 @@
 #include <sys/types.h>
 
 #include <cstdio>
-#include <string>
 #include <sstream>
+#include <string>
 
 #include "disk.h"
-#include "utils.h"
-#include "main.h"
 #include "log.h"
+#include "main.h"
+#include "utils.h"
 
 /**
  * Disk

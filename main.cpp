@@ -16,29 +16,26 @@
  */
 
 
-#include <stdlib.h>
-#include <sys/types.h>
 #include <fcntl.h>
+#include <gtkmm.h>
+#include <sys/types.h>
 
+#include <cstdlib>
 #include <queue>
 #include <string>
 #include <vector>
 
-#include <gtkmm.h>
-
 #include "container.h"
 #include "disk.h"
+#include "dparted.h"
 #include "filesystem.h"
+#include "log.h"
 #include "loop.h"
-#include "table.h"
-#include "volume.h"
 #include "lvm_group.h"
 #include "misc.h"
-
-#include "log.h"
+#include "table.h"
 #include "utils.h"
-
-#include "dparted.h"
+#include "volume.h"
 
 std::queue<DPContainer*> probe_queue;
 

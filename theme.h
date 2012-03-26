@@ -19,8 +19,8 @@
 #ifndef _THEME_H_
 #define _THEME_H_
 
-#include <gdkmm/rgba.h>
 #include <gdkmm/pixbuf.h>
+#include <gdkmm/rgba.h>
 
 #include <map>
 

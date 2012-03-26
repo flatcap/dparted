@@ -17,10 +17,10 @@
 
 
 #include <list>
-#include <string>
 #include <sstream>
+#include <string>
 
-#include "main.h"
+#include "log.h"
 #include "lvm_group.h"
 #include "lvm_linear.h"
 #include "lvm_mirror.h"
@@ -28,9 +28,8 @@
 #include "lvm_stripe.h"
 #include "lvm_table.h"
 #include "lvm_volume.h"
-
+#include "main.h"
 #include "utils.h"
-#include "log.h"
 
 //RAR lazy
 std::map<std::string, LVMGroup*> vg_lookup;

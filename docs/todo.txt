@@ -1153,46 +1153,8 @@ therefore
 
 #includes
 check I need them all
-replace with c++ versions if possible
 include bare minimum gdk/gtk for speed
-	#include <cstdio>
-	#include <fstream>
-	#include <iostream>
-	#include <list>
-	#include <map>
-	#include <queue>
-	#include <sstream>
-	#include <string>
-	#include <typeinfo>
-	#include <vector>
-
-	#include <gdkmm/pixbuf.h>
-	#include <gdkmm/rgba.h>
-	#include <gtkmm.h>
-	#include <gtkmm/drawingarea.h>
-	#include <gtkmm/grid.h>
-	#include <gtkmm/menubar.h>
-	#include <gtkmm/scrolledwindow.h>
-	#include <gtkmm/statusbar.h>
-	#include <gtkmm/toolbar.h>
-	#include <gtkmm/treeview.h>
-	#include <gtkmm/window.h>
-
-	#include <linux/fs.h>
-	#include <linux/hdreg.h>
-	#include <linux/kdev_t.h>
-	#include <linux/major.h>
-
-	#include <math.h>		cmath
-	#include <stdarg.h>		cstdarg
-	#include <stdlib.h>		cstdlib
-	#include <string.h>		cstring
-
-	#include <fcntl.h>
-	#include <sys/ioctl.h>
-	#include <sys/stat.h>
-	#include <sys/types.h>
-	#include <unistd.h>
+eliminate #include <gtkmm.h>
 
 junk makefile: updating src doesn't invalidate bin
 

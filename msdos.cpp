@@ -18,20 +18,20 @@
 
 #include <fcntl.h>
 #include <linux/fs.h>
+#include <linux/hdreg.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <linux/hdreg.h>
 
-#include <string>
 #include <sstream>
+#include <string>
 
-#include "msdos.h"
-#include "utils.h"
 #include "extended.h"
-#include "partition.h"
-#include "main.h"
 #include "log.h"
+#include "main.h"
+#include "msdos.h"
+#include "partition.h"
+#include "utils.h"
 
 /**
  * Msdos

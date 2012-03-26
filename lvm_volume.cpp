@@ -16,9 +16,9 @@
  */
 
 
-#include "lvm_volume.h"
-
 #include <sstream>
+
+#include "lvm_volume.h"
 
 /**
  * LVMVolume

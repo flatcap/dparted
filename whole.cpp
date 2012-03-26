@@ -16,11 +16,11 @@
  */
 
 
-#include <string>
 #include <sstream>
+#include <string>
 
-#include "whole.h"
 #include "log.h"
+#include "whole.h"
 
 /**
  * Whole

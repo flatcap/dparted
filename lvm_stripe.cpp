@@ -16,9 +16,9 @@
  */
 
 
-#include "lvm_stripe.h"
-
 #include <sstream>
+
+#include "lvm_stripe.h"
 
 /**
  * LVMStripe

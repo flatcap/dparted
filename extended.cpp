@@ -19,14 +19,14 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <string>
 #include <sstream>
+#include <string>
 
 #include "extended.h"
+#include "log.h"
+#include "main.h"
 #include "partition.h"
 #include "utils.h"
-#include "main.h"
-#include "log.h"
 
 /**
  * Extended

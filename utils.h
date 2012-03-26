@@ -19,9 +19,9 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 #include "stringnum.h"
 
