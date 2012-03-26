@@ -13,10 +13,10 @@ digraph G
 	Loop3 [ label="loop\nloop2" fillcolor="#aaffaa" ];
 	Loop4 [ label="loop\nloop3" fillcolor="#aaffaa" ];
 
-	Table1 [ label="Table\nvg_bob", fillcolor="#ffbbbb" ];
-	Table2 [ label="Table\nvg_bob", fillcolor="#ffbbbb" ];
-	Table3 [ label="Table\nvg_bob", fillcolor="#ffbbbb" ];
-	Table4 [ label="Table\nvg_bob", fillcolor="#ffbbbb" ];
+	Table1 [ label="Table\nbob", fillcolor="#ffbbbb" ];
+	Table2 [ label="Table\nbob", fillcolor="#ffbbbb" ];
+	Table3 [ label="Table\nbob", fillcolor="#ffbbbb" ];
+	Table4 [ label="Table\nbob", fillcolor="#ffbbbb" ];
 
 	Part1 [ label="Part\nwide", fillcolor="#ffffdd" ];
 	Part2 [ label="Part\nnarr", fillcolor="#ffffdd" ];
@@ -36,7 +36,7 @@ digraph G
 	Fs7 [ label="FS\nG", fillcolor="#bbffff" ];
 	Fs8 [ label="FS\nH", fillcolor="#bbffff" ];
 
-	Group	[ label="VolumeGroup\nvg_bob", fillcolor="#ccccff" ];
+	Group	[ label="VolumeGroup\nbob", fillcolor="#ccccff" ];
 	Volume1 [ label="Stripe\nwide" fillcolor="#ccccff" ];
 	Volume2 [ label="Stripe\nnarrow" fillcolor="#ccccff" ];
 
