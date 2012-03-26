@@ -1158,3 +1158,6 @@ eliminate #include <gtkmm.h>
 
 junk makefile: updating src doesn't invalidate bin
 
+change the log functions into a log object?
+dtor would close the log
+
