@@ -32,7 +32,7 @@
 #include "loop.h"
 #include "table.h"
 #include "volume.h"
-#include "volumegroup.h"
+#include "lvm_group.h"
 #include "misc.h"
 
 #include "log.h"
@@ -89,8 +89,8 @@ int main (int argc, char *argv[])
 
 	disks.name = "container";	//XXX dummy
 
-	Disk::find_devices (disks);
-	//Loop::find_devices (disks);
+	//Disk::find_devices (disks);
+	Loop::find_devices (disks);
 
 	unsigned char *buffer = NULL;
 	int bufsize = 32768;	//RAR 4096;
@@ -131,7 +131,7 @@ int main (int argc, char *argv[])
 		}
 	}
 
-	VolumeGroup::find_devices (disks);
+	LVMGroup::find_devices (disks);
 
 	while ((item = probe_queue.front())) {
 #if 0
@@ -172,14 +172,13 @@ int main (int argc, char *argv[])
 
 	unsigned int i;
 	for (i = 0; i < disks.children.size(); i++) {
+		//std::cout << disks.children[i] << "\n";
 		dot += disks.children[i]->dump_dot();
 	}
 	dot += "\n};";
 
-	printf ("%s\n", dot.c_str());
-#endif
-
-#if 1
+	std::cout << dot << std::endl;
+#else
 	Gtk::Main kit (argc, argv);
 
 	DParted d;

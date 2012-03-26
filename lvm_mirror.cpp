@@ -16,31 +16,43 @@
  */
 
 
-#ifndef _LINEAR_H_
-#define _LINEAR_H_
+#include "lvm_mirror.h"
 
-#include <string>
-#include <vector>
+#include <sstream>
 
-#include "volume.h"
-
-class Linear : public Volume
+/**
+ * LVMMirror
+ */
+LVMMirror::LVMMirror (void)
 {
-public:
-	Linear (void);
-	virtual ~Linear();
+	type.push_back ("lvm_mirror");
+}
 
-	virtual std::string dump_dot (void);
+/**
+ * ~LVMMirror
+ */
+LVMMirror::~LVMMirror()
+{
+}
 
-protected:
-	//XXX need custom AddChild()
-	// children sum to this.bytes_size
-	// num of children
-	//	seg_count - LVM2_SEG_COUNT
 
-private:
+/**
+ * dump_dot
+ */
+std::string LVMMirror::dump_dot (void)
+{
+	std::ostringstream output;
 
-};
+	output << dump_table_header ("LVMMirror", "pink");
 
-#endif /* _LINEAR_H_ */
+	// no specfics for now
+
+	output << LVMVolume::dump_dot();
+
+	output << dump_table_footer();
+	output << dump_dot_children();
+
+	return output.str();
+}
+
 

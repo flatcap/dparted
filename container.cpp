@@ -40,6 +40,7 @@ DPContainer::DPContainer (void) :
 	block_size (0),
 	bytes_size (0),
 	bytes_used (0),
+	whole (NULL),
 	parent (NULL),
 	fd (NULL)
 {
@@ -73,6 +74,13 @@ std::string DPContainer::dump_dot (void)
 	if (!uuid_short.empty()) {
 		uuid_short = uuid.substr (0, 6) + "...";
 	}
+
+#if 0
+	log_debug ("container: %lu types\n", type.size());
+	for (unsigned int i = 0; i < type.size(); i++) {
+		log_debug ("\t%s\n", type[i].c_str());
+	}
+#endif
 
 	//output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>DPContainer</b></font></td></tr>\n";
 
@@ -109,9 +117,10 @@ std::string DPContainer::dump_dot_children (void)
 
 	// now iterate through all the children
 	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
+		//std::cout << (*i) << "\n";
 		s << "\n";
 		s << (*i)->dump_dot();
-		s << "obj_" << this << " -> obj_" << (*i) << ";\n";
+		s << "obj_" << (void*) this << " -> obj_" << (void*) (*i) << ";\n";
 		s << "\n";
 	}
 
@@ -244,8 +253,8 @@ std::string DPContainer::dump_table_header (const char *name, const char *colour
 {
 	std::ostringstream output;
 
-	output << "obj_" << this <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"" << colour << "\" colspan=\"3\"><font color=\"#000000\"><b>" << name << "</b></font> (" << this << ")</td></tr>\n";
+	output << "obj_" << (void*) this <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
+	output << "<tr><td align=\"left\" bgcolor=\"" << colour << "\" colspan=\"3\"><font color=\"#000000\"><b>" << name << "</b></font> (" << (void*) this << ")</td></tr>\n";
 
 	return output.str();
 }

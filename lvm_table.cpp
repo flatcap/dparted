@@ -16,45 +16,44 @@
  */
 
 
-#include <string>
-#include <sstream>
-
-#include "linear.h"
-#include "utils.h"
+#include "lvm_table.h"
 #include "log.h"
 
+#include <sstream>
+
 /**
- * Linear
+ * LVMTable
  */
-Linear::Linear (void)
+LVMTable::LVMTable (void)
 {
-	type.push_back ("linear");
-	//log_debug ("ctor linear (%p)\n", this);
+	type.push_back ("lvm_table");
 }
 
 /**
- * ~Linear
+ * ~LVMTable
  */
-Linear::~Linear()
+LVMTable::~LVMTable()
 {
-	//log_debug ("dtor linear (%p)\n", this);
 }
 
 
 /**
  * dump_dot
  */
-std::string Linear::dump_dot (void)
+std::string LVMTable::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Linear", "purple");
+	output << dump_table_header ("LVMTable", "pink");
 
-	output << Whole::dump_dot();
+	// no specfics for now
+
+	output << Table::dump_dot();
 
 	output << dump_table_footer();
 	output << dump_dot_children();
 
 	return output.str();
 }
+
 

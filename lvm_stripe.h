@@ -16,33 +16,24 @@
  */
 
 
-#ifndef _MIRROR_H_
-#define _MIRROR_H_
+#ifndef _LVMSTRIPE_H_
+#define _LVMSTRIPE_H_
 
-#include <string>
-#include <vector>
+#include "lvm_volume.h"
 
-#include "volume.h"
-
-class Mirror : public Volume
+class LVMStripe : public LVMVolume
 {
 public:
-	Mirror (void);
-	virtual ~Mirror();
+	LVMStripe (void);
+	virtual ~LVMStripe();
 
 	virtual std::string dump_dot (void);
 
 protected:
-	//XXX need custom AddChild()
-	// children are this.bytes_size
-	// num of children
-	//	stripes - LVM2_STRIPES
-	// num of segments = 0
-	// Linear *log_file;
 
 private:
 
 };
 
-#endif /* _MIRROR_H_ */
+#endif // _LVMSTRIPE_H_
 

@@ -16,24 +16,22 @@
  */
 
 
-#include <string>
+#include "lvm_linear.h"
+
 #include <sstream>
 
-#include "whole.h"
-#include "log.h"
-
 /**
- * Whole
+ * LVMLinear
  */
-Whole::Whole (void)
+LVMLinear::LVMLinear (void)
 {
-	type.push_back ("whole");
+	type.push_back ("lvm_linear");
 }
 
 /**
- * ~Whole
+ * ~LVMLinear
  */
-Whole::~Whole()
+LVMLinear::~LVMLinear()
 {
 }
 
@@ -41,42 +39,20 @@ Whole::~Whole()
 /**
  * dump_dot
  */
-std::string Whole::dump_dot (void)
+std::string LVMLinear::dump_dot (void)
 {
 	std::ostringstream output;
-	unsigned int count = segments.size();
 
-	output << DPContainer::dump_dot();
+	output << dump_table_header ("LVMLinear", "pink");
 
-	if (count > 0) {
-		output << dump_row ("segments", count);
-		for (std::vector<DPContainer*>::iterator i = segments.begin(); i != segments.end(); i++) {
-			output << dump_row ("", (*i));
-		}
-	}
+	// no specfics for now
+
+	output << LVMVolume::dump_dot();
+
+	output << dump_table_footer();
+	output << dump_dot_children();
 
 	return output.str();
 }
 
-/**
- * add_segment
- */
-void Whole::add_segment (DPContainer *seg)
-{
-	bool inserted = false;
-
-	for (std::vector<DPContainer*>::iterator i = segments.begin(); i != segments.end(); i++) {
-		if ((*i)->parent_offset > seg->parent_offset) {
-			segments.insert (i, seg);
-			inserted = true;
-			break;
-		}
-	}
-
-	if (!inserted) {
-		segments.push_back (seg);
-	}
-
-	seg->whole = this;
-}
 

@@ -16,45 +16,24 @@
  */
 
 
-#include <string>
-#include <sstream>
+#ifndef _LVMLINEAR_H_
+#define _LVMLINEAR_H_
 
-#include "stripe.h"
-#include "utils.h"
-#include "log.h"
+#include "lvm_volume.h"
 
-/**
- * Stripe
- */
-Stripe::Stripe (void)
+class LVMLinear : public LVMVolume
 {
-	type.push_back ("stripe");
-	//log_debug ("ctor stripe (%p)\n", this);
-}
+public:
+	LVMLinear (void);
+	virtual ~LVMLinear();
 
-/**
- * ~Stripe
- */
-Stripe::~Stripe()
-{
-	//log_debug ("dtor stripe (%p)\n", this);
-}
+	virtual std::string dump_dot (void);
 
+protected:
 
-/**
- * dump_dot
- */
-std::string Stripe::dump_dot (void)
-{
-	std::ostringstream output;
+private:
 
-	output << dump_table_header ("Stripe", "purple");
+};
 
-	output << Whole::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
-
-	return output.str();
-}
+#endif // _LVMLINEAR_H_
 

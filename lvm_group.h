@@ -16,45 +16,38 @@
  */
 
 
-#include <sstream>
+#ifndef _LVMGROUP_H_
+#define _LVMGROUP_H_
 
-#include "volume.h"
-#include "log.h"
+#include "whole.h"
 
-/**
- * Volume
- */
-Volume::Volume (void)
+class LVMGroup : public Whole
 {
-	type.push_back ("volume");
-}
+public:
+	LVMGroup (void);
+	virtual ~LVMGroup();
 
-/**
- * ~Volume
- */
-Volume::~Volume()
-{
-}
+	virtual std::string dump_dot (void);
 
+	static void find_devices (DPContainer &list);
 
-/**
- * dump_dot
- */
-std::string Volume::dump_dot (void)
-{
-	std::ostringstream output;
+	long		pv_count;	//XXX put this in seg_count in Whole
+	long		lv_count;	//XXX this matches children.size()
+	std::string	vg_attr;
+	long long	vg_extent_count;
+	long long	vg_free_count;
+	long		vg_seqno;
 
-	output << dump_table_header ("Volume", "pink");
-	log_error ("volume::dump_dot\n");
+	//virtual void add_segment (DPContainer *seg);
 
-	// no specfics for now
+	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
+	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
 
-	output << Whole::dump_dot();
+protected:
 
-	output << dump_table_footer();
-	output << dump_dot_children();
+private:
 
-	return output.str();
-}
+};
 
+#endif // _LVMGROUP_H_
 

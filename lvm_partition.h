@@ -16,45 +16,24 @@
  */
 
 
-#include <sstream>
+#ifndef _LVMPARTITION_H_
+#define _LVMPARTITION_H_
 
-#include "volume.h"
-#include "log.h"
+#include "partition.h"
 
-/**
- * Volume
- */
-Volume::Volume (void)
+class LVMPartition : public Partition
 {
-	type.push_back ("volume");
-}
+public:
+	LVMPartition (void);
+	virtual ~LVMPartition();
 
-/**
- * ~Volume
- */
-Volume::~Volume()
-{
-}
+	virtual std::string dump_dot (void);
 
+protected:
 
-/**
- * dump_dot
- */
-std::string Volume::dump_dot (void)
-{
-	std::ostringstream output;
+private:
 
-	output << dump_table_header ("Volume", "pink");
-	log_error ("volume::dump_dot\n");
+};
 
-	// no specfics for now
-
-	output << Whole::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
-
-	return output.str();
-}
-
+#endif // _LVMPARTITION_H_
 

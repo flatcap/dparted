@@ -156,7 +156,7 @@ std::string Extended::dump_dot (void)
 	output << dump_table_footer();
 	output << dump_dot_children();
 
-	output << "{ rank=same obj_" << this << " obj_" << parent << " }\n";
+	output << "{ rank=same obj_" << (void*) this << " obj_" << parent << " }\n";
 
 	return output.str();
 }

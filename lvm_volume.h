@@ -16,38 +16,29 @@
  */
 
 
-#ifndef _VOLUMEGROUP_H_
-#define _VOLUMEGROUP_H_
+#ifndef _LVMVOLUME_H_
+#define _LVMVOLUME_H_
 
-#include <string>
+#include "volume.h"
 
-#include "whole.h"
-
-class VolumeGroup : public Whole
+class LVMVolume : public Volume
 {
 public:
-	VolumeGroup (void);
-	virtual ~VolumeGroup();
+	LVMVolume (void);
+	virtual ~LVMVolume();
 
 	virtual std::string dump_dot (void);
 
-	static void find_devices (DPContainer &list);
+	std::string	lv_attr;
+	long		kernel_major;
+	long		kernel_minor;
 
-	long		pv_count;	//XXX put this in seg_count in Whole
-	long		lv_count;	//XXX this matches children.size()
-	std::string	vg_attr;
-	long long	vg_extent_count;
-	long long	vg_free_count;
-	long		vg_seqno;
-
-	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
-	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
-
+	virtual int read_data (long long offset, long long size, unsigned char *buffer);
 protected:
 
 private:
 
 };
 
-#endif /* _VOLUMEGROUP_H_ */
+#endif // _LVMVOLUME_H_
 

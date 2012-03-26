@@ -16,45 +16,43 @@
  */
 
 
-#include <string>
+#include "lvm_partition.h"
+
 #include <sstream>
 
-#include "mirror.h"
-#include "utils.h"
-#include "log.h"
-
 /**
- * Mirror
+ * LVMPartition
  */
-Mirror::Mirror (void)
+LVMPartition::LVMPartition (void)
 {
-	type.push_back ("mirror");
-	//log_debug ("ctor mirror (%p)\n", this);
+	type.push_back ("lvm_partition");
 }
 
 /**
- * ~Mirror
+ * ~LVMPartition
  */
-Mirror::~Mirror()
+LVMPartition::~LVMPartition()
 {
-	//log_debug ("dtor mirror (%p)\n", this);
 }
 
 
 /**
  * dump_dot
  */
-std::string Mirror::dump_dot (void)
+std::string LVMPartition::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Mirror", "purple");
+	output << dump_table_header ("LVMPartition", "#d0dd80");
 
-	output << Whole::dump_dot();
+	// no specfics for now
+
+	output << DPContainer::dump_dot();
 
 	output << dump_table_footer();
 	output << dump_dot_children();
 
 	return output.str();
 }
+
 

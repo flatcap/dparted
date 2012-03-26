@@ -19,8 +19,6 @@
 #ifndef _VOLUME_H_
 #define _VOLUME_H_
 
-#include <string>
-
 #include "whole.h"
 
 class Volume : public Whole
@@ -31,16 +29,11 @@ public:
 
 	virtual std::string dump_dot (void);
 
-	std::string	lv_attr;
-	long		kernel_major;
-	long		kernel_minor;
-
-	virtual int read_data (long long offset, long long size, unsigned char *buffer);
 protected:
 
 private:
 
 };
 
-#endif /* _VOLUME_H_ */
+#endif // _VOLUME_H_
 

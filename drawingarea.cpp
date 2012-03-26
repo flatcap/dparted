@@ -31,7 +31,6 @@
 #include "utils.h"
 #include "filesystem.h"
 #include "theme.h"
-#include "segment.h"
 #include "whole.h"
 #include "log.h"
 

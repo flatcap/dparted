@@ -24,8 +24,6 @@
 
 #include "container.h"
 
-class Segment;
-
 class Whole : public DPContainer
 {
 public:
@@ -34,10 +32,10 @@ public:
 
 	virtual std::string dump_dot (void);
 
-	virtual void add_segment (Segment *seg);
+	virtual void add_segment (DPContainer *seg);
 
 	// seg_count - LVM2_SEG_COUNT
-	std::vector<Segment*> segments;
+	std::vector<DPContainer*> segments;
 
 protected:
 

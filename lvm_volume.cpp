@@ -16,26 +16,22 @@
  */
 
 
-#include <string>
+#include "lvm_volume.h"
+
 #include <sstream>
 
-#include "segment.h"
-#include "container.h"
-#include "log.h"
-
 /**
- * Segment
+ * LVMVolume
  */
-Segment::Segment (void) :
-	whole (NULL)
+LVMVolume::LVMVolume (void)
 {
-	type.push_back ("segment");
+	type.push_back ("lvm_volume");
 }
 
 /**
- * ~Segment
+ * ~LVMVolume
  */
-Segment::~Segment()
+LVMVolume::~LVMVolume()
 {
 }
 
@@ -43,25 +39,35 @@ Segment::~Segment()
 /**
  * dump_dot
  */
-std::string Segment::dump_dot (void)
+std::string LVMVolume::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Segment", "magenta");
+	output << dump_table_header ("LVMVolume", "pink");
 
-	output << DPContainer::dump_dot();
+	// no specfics for now
 
-	output << dump_row ("whole", whole);
+	//output << Volume::dump_dot(); //RAR skip a generation
+	output << Whole::dump_dot();
 
 	output << dump_table_footer();
-
-#if 0
-	if (whole) //XXX only want to do this for the volume group segment
-		output << "{ rank=same obj_" << this << " obj_" << whole << " }\n";
-#endif
-
 	output << dump_dot_children();
 
 	return output.str();
+}
+
+
+/**
+ * read_data
+ */
+int LVMVolume::read_data (long long offset, long long size, unsigned char *buffer)
+{
+	//log_error ("%s\n", __PRETTY_FUNCTION__);
+	//log_error ("%s - %s\n", name.c_str(), device.c_str());
+	if (fd < 0) {
+		open_device();
+	}
+
+	return Whole::read_data (offset, size, buffer);
 }
 

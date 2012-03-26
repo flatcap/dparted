@@ -16,31 +16,24 @@
  */
 
 
-#ifndef _STRIPE_H_
-#define _STRIPE_H_
+#ifndef _LVMTABLE_H_
+#define _LVMTABLE_H_
 
-#include <string>
+#include "table.h"
 
-#include "volume.h"
-
-class Stripe : public Volume
+class LVMTable : public Table
 {
 public:
-	Stripe (void);
-	virtual ~Stripe();
+	LVMTable (void);
+	virtual ~LVMTable();
 
 	virtual std::string dump_dot (void);
 
 protected:
-	//XXX need custom AddChild()
-	// children sum to this.bytes_size
-	// num of children
-	//	stripes - LVM2_STRIPES
-	// num of segments = 0
 
 private:
 
 };
 
-#endif /* _STRIPE_H_ */
+#endif // _LVMTABLE_H_
 

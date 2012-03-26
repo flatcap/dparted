@@ -16,30 +16,43 @@
  */
 
 
-#ifndef _SEGMENT_H_
-#define _SEGMENT_H_
+#include "lvm_stripe.h"
 
-#include <string>
+#include <sstream>
 
-#include "container.h"
-
-class Whole;
-
-class Segment : public DPContainer
+/**
+ * LVMStripe
+ */
+LVMStripe::LVMStripe (void)
 {
-public:
-	Segment (void);
-	virtual ~Segment();
+	type.push_back ("lvm_stripe");
+}
 
-	virtual std::string dump_dot (void);
+/**
+ * ~LVMStripe
+ */
+LVMStripe::~LVMStripe()
+{
+}
 
-	Whole *whole;
 
-protected:
+/**
+ * dump_dot
+ */
+std::string LVMStripe::dump_dot (void)
+{
+	std::ostringstream output;
 
-private:
+	output << dump_table_header ("LVMStripe", "pink");
 
-};
+	// no specfics for now
 
-#endif /* _SEGMENT_H_ */
+	output << Whole::dump_dot();	// skip a few generations
+
+	output << dump_table_footer();
+	output << dump_dot_children();
+
+	return output.str();
+}
+
 

@@ -103,7 +103,7 @@ void DParted::set_data (DPContainer *c)
 
 	int count = 0;
 	for (std::vector<DPContainer*>::iterator i = c->children.begin(); i != c->children.end(); i++) {
-		if ((*i)->is_a ("volumegroup"))
+		if ((*i)->is_a ("lvm_group"))
 			continue; //RAR for now ignore vg
 		//std::cout << (*i)->type << "\n";
 		DPDrawingArea *da = manage (new DPDrawingArea());

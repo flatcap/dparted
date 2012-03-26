@@ -20,40 +20,41 @@
 #include <string>
 #include <sstream>
 
-#include "linear.h"
 #include "main.h"
-#include "mirror.h"
-#include "segment.h"
-#include "stripe.h"
-#include "volumegroup.h"
-#include "volume.h"
+#include "lvm_group.h"
+#include "lvm_linear.h"
+#include "lvm_mirror.h"
+#include "lvm_partition.h"
+#include "lvm_stripe.h"
+#include "lvm_table.h"
+#include "lvm_volume.h"
 
 #include "utils.h"
 #include "log.h"
 
 //RAR lazy
-std::map<std::string, VolumeGroup*> vg_lookup;
-std::map<std::string, Volume*> vol_lookup;
-std::map<std::string, Segment*> vg_seg_lookup;
-std::map<std::string, Segment*> vol_seg_lookup;
+std::map<std::string, LVMGroup*> vg_lookup;
+std::map<std::string, LVMVolume*> vol_lookup;
+std::map<std::string, DPContainer*> vg_seg_lookup;
+std::map<std::string, DPContainer*> vol_seg_lookup;
 
 /**
- * VolumeGroup
+ * LVMGroup
  */
-VolumeGroup::VolumeGroup (void) :
+LVMGroup::LVMGroup (void) :
 	pv_count (0),
 	lv_count (0),
 	vg_extent_count (0),
 	vg_free_count (0),
 	vg_seqno (0)
 {
-	type.push_back ("volumegroup");
+	type.push_back ("lvm_group");
 }
 
 /**
- * ~VolumeGroup
+ * ~LVMGroup
  */
-VolumeGroup::~VolumeGroup()
+LVMGroup::~LVMGroup()
 {
 }
 
@@ -63,10 +64,10 @@ VolumeGroup::~VolumeGroup()
  */
 void dump_vol (void)
 {
-	std::map<std::string,Volume*>::iterator i;
+	std::map<std::string,LVMVolume*>::iterator i;
 	log_debug ("Volumes map (vol_lookup):\n");
 	for (i = vol_lookup.begin(); i != vol_lookup.end(); i++) {
-		Volume *v = (*i).second;
+		LVMVolume *v = (*i).second;
 		log_debug ("\t%s => %s\n", (*i).first.c_str(), v->name.c_str());
 	}
 	log_debug ("\n");
@@ -77,10 +78,10 @@ void dump_vol (void)
  */
 void dump_vol_seg (void)
 {
-	std::map<std::string,Segment*>::iterator i;
+	std::map<std::string,DPContainer*>::iterator i;
 	log_debug ("Volume Segments map (vol_seg_lookup):\n");
 	for (i = vol_seg_lookup.begin(); i != vol_seg_lookup.end(); i++) {
-		Segment *s = (*i).second;
+		DPContainer *s = (*i).second;
 		log_debug ("\t%s => %s\n", (*i).first.c_str(), s->name.c_str());
 	}
 	log_debug ("\n");
@@ -91,11 +92,11 @@ void dump_vol_seg (void)
  */
 void dump_vol_group (void)
 {
-	std::map<std::string,VolumeGroup*>::iterator i;
+	std::map<std::string,LVMGroup*>::iterator i;
 
 	log_debug ("Volume Group map (vg_lookup):\n");
 	for (i = vg_lookup.begin(); i != vg_lookup.end(); i++) {
-		VolumeGroup *vg = (*i).second;
+		LVMGroup *vg = (*i).second;
 		log_debug ("\t%s => %s\n", (*i).first.c_str(), vg->name.c_str());
 	}
 	log_debug ("\n");
@@ -106,11 +107,11 @@ void dump_vol_group (void)
  */
 void dump_vol_group_seg (void)
 {
-	std::map<std::string,Segment*>::iterator i;
+	std::map<std::string,DPContainer*>::iterator i;
 
 	log_debug ("Volume Group Segments map (vg_seg_lookup):\n");
 	for (i = vg_seg_lookup.begin(); i != vg_seg_lookup.end(); i++) {
-		Segment *s = (*i).second;
+		DPContainer *s = (*i).second;
 		log_debug ("\t%s => %s\n", (*i).first.c_str(), s->name.c_str());
 	}
 	log_debug ("\n");
@@ -134,7 +135,7 @@ void fd_probe_children (DPContainer *item)
 }
 
 /**
- * fd_vgs - Create the VolumeGroup objects
+ * fd_vgs - Create the LVMGroup objects
  */
 void fd_vgs (DPContainer &disks)
 {
@@ -142,7 +143,7 @@ void fd_vgs (DPContainer &disks)
 	std::vector<std::string> output;
 	std::string error;
 	std::map<std::string,StringNum> tags;
-	VolumeGroup *vg = NULL;
+	LVMGroup *vg = NULL;
 	unsigned int i;
 
 	/*
@@ -171,10 +172,10 @@ void fd_vgs (DPContainer &disks)
 
 		vg = vg_lookup[vg_uuid];
 		if (vg == NULL) {
-			vg = new VolumeGroup;
+			vg = new LVMGroup;
 			vg->parent = &disks;
 			//vg->device = "/dev/dm-0"; //RAR what?
-			// VolumeGroup doesn't have a dedicated device, so it would have to delegate to the vg segment
+			// LVMGroup doesn't have a dedicated device, so it would have to delegate to the vg segment
 
 			vg->name		= tags["LVM2_VG_NAME"];
 			vg->pv_count		= tags["LVM2_PV_COUNT"];
@@ -199,9 +200,8 @@ void fd_vgs (DPContainer &disks)
 		DPContainer *cont = disks.find_device (pv_name);
 		//log_debug ("cont for %s = %p\n", pv_name.c_str(), cont);
 
-		Segment *vg_seg = new Segment;
+		LVMTable *vg_seg = new LVMTable;
 		vg_seg->bytes_size = cont->bytes_size;
-		//RAR vg_seg->type.push_back ("vg segment");
 		vg_seg->block_size = vg->block_size;
 		vg_seg->uuid = vg_uuid;
 		vg_seg->name = vg->name;
@@ -246,7 +246,7 @@ void fd_vgs (DPContainer &disks)
 }
 
 /**
- * fd_pvs - Attach all the Segments (VolumeGroup and Volumes)
+ * fd_pvs - Attach all the Segments (LVMGroup and Volumes)
  */
 void fd_pvs (DPContainer &disks)
 {
@@ -296,14 +296,14 @@ void fd_pvs (DPContainer &disks)
 		//log_debug ("\tseg_id = %s\n", seg_id.c_str());
 
 		//log_debug ("lookup uuid %s\n", vg_uuid.c_str());
-		VolumeGroup *vg = vg_lookup[vg_uuid];
+		LVMGroup *vg = vg_lookup[vg_uuid];
 		//log_debug ("vg extent size = %ld\n", vg->block_size);
 
-		Segment *vg_seg = vg_seg_lookup[dev];	//XXX this should exist
+		DPContainer *vg_seg = vg_seg_lookup[dev];	//XXX this should exist
 		if (!vg_seg)
 			continue;			//XXX error?
 
-		Segment *vol_seg = new Segment;
+		LVMPartition *vol_seg = new LVMPartition;
 		vol_seg->name = lv_name;
 		vol_seg->uuid = lv_uuid;
 		//vol_seg->type = lv_type;			// linear, striped, etc
@@ -390,14 +390,14 @@ void fd_lvs (DPContainer &disks)
 		std::string vol_id = vg_name + ":" + lv_name;
 		//log_info ("\t%s\n", vol_id.c_str());
 
-		Volume *v = vol_lookup[vol_id];
+		LVMVolume *v = vol_lookup[vol_id];
 		if (v == NULL) {
 			if (lv_type == "linear") {
-				v = new Linear;
+				v = new LVMLinear;
 			} else if (lv_type == "striped") {
-				v = new Stripe;
+				v = new LVMStripe;
 			} else if (lv_type == "mirror") {
-				v = new Mirror;
+				v = new LVMMirror;
 			} else {
 				log_error ("UNKNOWN type %s\n", lv_type.c_str());
 				continue;
@@ -419,11 +419,11 @@ void fd_lvs (DPContainer &disks)
 			std::string dep = (*it_dev);
 			//log_debug ("\t\t%s\n", dep.c_str());
 
-			std::map<std::string, Segment*>::iterator it_vol_seg;
+			std::map<std::string, DPContainer*>::iterator it_vol_seg;
 			it_vol_seg = vol_seg_lookup.find (dep);
 			if (it_vol_seg != vol_seg_lookup.end()) {
 				//RAR connect up stuff
-				Segment *s_dep = (*it_vol_seg).second;
+				DPContainer *s_dep = (*it_vol_seg).second;
 				v->add_segment (s_dep);
 				vol_seg_lookup.erase (it_vol_seg);
 				continue;
@@ -434,10 +434,10 @@ void fd_lvs (DPContainer &disks)
 			if (pos != std::string::npos) {
 				dep = dep.substr (0, pos);
 			}
-			std::map<std::string, Volume*>::iterator it_vol;
+			std::map<std::string, LVMVolume*>::iterator it_vol;
 			it_vol = vol_lookup.find (dep);
 			if (it_vol != vol_lookup.end()) {
-				Volume *v_dep = (*it_vol).second;
+				LVMVolume *v_dep = (*it_vol).second;
 				//RAR connect up stuff
 				v->add_child (v_dep);
 				vol_lookup.erase (it_vol);
@@ -452,7 +452,7 @@ void fd_lvs (DPContainer &disks)
 	//dump_vol();
 
 	//transfer volumes to disks
-	std::map<std::string, Volume*>::iterator it_vol;
+	std::map<std::string, LVMVolume*>::iterator it_vol;
 	for (it_vol = vol_lookup.begin(); it_vol != vol_lookup.end(); it_vol++) {
 		DPContainer *c = (*it_vol).second;
 		//log_debug ("volume %s (%s)\n", c->name.c_str(), c->parent->name.c_str());
@@ -464,7 +464,7 @@ void fd_lvs (DPContainer &disks)
 /**
  * find_devices
  */
-void VolumeGroup::find_devices (DPContainer &disks)
+void LVMGroup::find_devices (DPContainer &disks)
 {
 	fd_vgs (disks);
 	fd_pvs (disks);
@@ -475,11 +475,11 @@ void VolumeGroup::find_devices (DPContainer &disks)
 /**
  * dump_dot
  */
-std::string VolumeGroup::dump_dot (void)
+std::string LVMGroup::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("VolumeGroup", "#008080");
+	output << dump_table_header ("LVMGroup", "#008080");
 
 	output << Whole::dump_dot();
 

@@ -31,6 +31,8 @@ enum ContainerType
 	CONT_RESERVED		// Empty space that isn't usable
 };
 
+class Whole;
+
 class DPContainer
 {
 public:
@@ -73,6 +75,8 @@ public:
 	long		 block_size;
 	long long	 bytes_size;
 	long long	 bytes_used;
+
+	Whole		*whole;
 
 	DPContainer	*parent;
 	std::vector<DPContainer*> children;
