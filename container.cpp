@@ -35,7 +35,6 @@
  * DPContainer
  */
 DPContainer::DPContainer (void) :
-	cont_type (CONT_NORMAL),
 	parent_offset (0),
 	block_size (0),
 	bytes_size (0),

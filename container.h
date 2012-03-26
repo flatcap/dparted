@@ -24,13 +24,6 @@
 #include <string>
 #include <vector>
 
-enum ContainerType
-{
-	CONT_NORMAL,		// Ordinary container
-	CONT_METADATA,		// Accounting data
-	CONT_RESERVED		// Empty space that isn't usable
-};
-
 class Whole;
 
 class DPContainer
@@ -63,8 +56,6 @@ public:
 	virtual int read_data (long long offset, long long size, unsigned char *buffer);
 
 	virtual bool is_a (const std::string &type);
-
-	enum ContainerType cont_type;
 
 	std::string	 name;
 	std::string	 uuid;
