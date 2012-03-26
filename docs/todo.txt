@@ -1194,3 +1194,5 @@ include bare minimum gdk/gtk for speed
 	#include <sys/types.h>
 	#include <unistd.h>
 
+junk makefile: updating src doesn't invalidate bin
+
