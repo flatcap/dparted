@@ -1161,3 +1161,11 @@ junk makefile: updating src doesn't invalidate bin
 change the log functions into a log object?
 dtor would close the log
 
+to find the lvm volumes I only need
+	vgs + lvs
+pvs doesn't get me any info that I can't get from these two
+
+lvm tests with missing devices
+	enough devices for recovery
+	not enough devices for recovery
+
