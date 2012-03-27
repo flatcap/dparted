@@ -28,7 +28,7 @@
 Partition::Partition (void) :
 	ptype (0)
 {
-	type.push_back ("partition");
+	declare ("partition", "yellow");
 }
 
 /**
@@ -46,14 +46,9 @@ std::string Partition::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Partition", "#d0dd80");
-
-	// no specfics for now
+	// no specifics for now
 
 	output << DPContainer::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
 
 	return output.str();
 }

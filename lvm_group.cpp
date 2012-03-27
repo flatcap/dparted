@@ -47,7 +47,7 @@ LVMGroup::LVMGroup (void) :
 	vg_free_count (0),
 	vg_seqno (0)
 {
-	type.push_back ("lvm_group");
+	declare ("lvm_group");
 }
 
 /**
@@ -478,8 +478,6 @@ std::string LVMGroup::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("LVMGroup", "#008080");
-
 	output << Whole::dump_dot();
 
 	output << dump_row ("pv_count",        pv_count);
@@ -488,9 +486,6 @@ std::string LVMGroup::dump_dot (void)
 	output << dump_row ("vg_extent_count", vg_extent_count);
 	output << dump_row ("vg_free_count",   vg_free_count);
 	output << dump_row ("vg_seqno",        vg_seqno);
-
-	output << dump_table_footer();
-	output << dump_dot_children();
 
 	return output.str();
 }

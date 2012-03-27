@@ -25,7 +25,7 @@
  */
 LVMPartition::LVMPartition (void)
 {
-	type.push_back ("lvm_partition");
+	declare ("lvm_partition");
 }
 
 /**
@@ -43,14 +43,9 @@ std::string LVMPartition::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("LVMPartition", "#d0dd80");
+	// no specifics for now
 
-	// no specfics for now
-
-	output << DPContainer::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
+	output << Partition::dump_dot();
 
 	return output.str();
 }

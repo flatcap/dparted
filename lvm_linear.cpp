@@ -25,7 +25,7 @@
  */
 LVMLinear::LVMLinear (void)
 {
-	type.push_back ("lvm_linear");
+	declare ("lvm_linear");
 }
 
 /**
@@ -43,14 +43,9 @@ std::string LVMLinear::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("LVMLinear", "pink");
-
-	// no specfics for now
+	// no specifics for now
 
 	output << LVMVolume::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
 
 	return output.str();
 }

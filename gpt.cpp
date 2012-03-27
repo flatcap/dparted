@@ -30,7 +30,7 @@
  */
 Gpt::Gpt (void)
 {
-	type.push_back ("gpt");
+	declare ("gpt");
 }
 
 /**
@@ -113,14 +113,9 @@ std::string Gpt::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Gpt", "yellow");
-
-	// no specfics for now
+	// no specifics for now
 
 	output << Table::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
 
 	return output.str();
 }

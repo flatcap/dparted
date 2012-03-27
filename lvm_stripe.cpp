@@ -25,7 +25,7 @@
  */
 LVMStripe::LVMStripe (void)
 {
-	type.push_back ("lvm_stripe");
+	declare ("lvm_stripe");
 }
 
 /**
@@ -43,14 +43,9 @@ std::string LVMStripe::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("LVMStripe", "pink");
+	// no specifics for now
 
-	// no specfics for now
-
-	output << Whole::dump_dot();	// skip a few generations
-
-	output << dump_table_footer();
-	output << dump_dot_children();
+	output << LVMVolume::dump_dot();
 
 	return output.str();
 }

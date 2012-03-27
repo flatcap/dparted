@@ -32,8 +32,12 @@ public:
 	DPContainer (void);
 	virtual ~DPContainer();
 
+	void * operator new    (size_t s);
+	void   operator delete (void *ptr);
+
+	static std::string dump_objects (void);
+
 	virtual std::string dump_dot (void);
-	virtual std::string dump_dot_children (void);
 
 	virtual void add_child    (DPContainer *child);
 	virtual void delete_child (DPContainer *child);
@@ -75,6 +79,8 @@ public:
 	friend std::ostream & operator<< (std::ostream &stream, const DPContainer &c);
 	friend std::ostream & operator<< (std::ostream &stream, const DPContainer *c);
 
+	std::vector<std::string> type;
+
 protected:
 	std::string dump_row (const char *name, long long value);
 	std::string dump_row (const char *name, long value);
@@ -84,13 +90,10 @@ protected:
 	std::string dump_row (const char *name, std::string &value);
 	std::string dump_row (const char *name, void *value);
 
-	std::string dump_table_header (const char *name, const char *colour);
-	std::string dump_table_footer (void);
+	void declare (const char *name, const char *colour = NULL);
 
 	FILE		*fd;
-
-	std::vector<std::string> type;
-
+	std::string	 dot_colour;
 private:
 
 };

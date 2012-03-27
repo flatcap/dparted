@@ -38,7 +38,7 @@
  */
 Msdos::Msdos (void)
 {
-	type.push_back ("msdos");
+	declare ("msdos");
 }
 
 /**
@@ -187,15 +187,11 @@ std::string Msdos::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Msdos", "yellow");
-
-	// no specfics for now
+	// no specifics for now
 
 	output << Table::dump_dot();
 
-	output << dump_table_footer();
-	output << dump_dot_children();
-
 	return output.str();
 }
+
 

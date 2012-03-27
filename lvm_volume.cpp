@@ -25,7 +25,7 @@
  */
 LVMVolume::LVMVolume (void)
 {
-	type.push_back ("lvm_volume");
+	declare ("lvm_volume");
 }
 
 /**
@@ -43,15 +43,9 @@ std::string LVMVolume::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("LVMVolume", "pink");
+	// no specifics for now
 
-	// no specfics for now
-
-	//output << Volume::dump_dot(); //RAR skip a generation
-	output << Whole::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
+	output << Volume::dump_dot();
 
 	return output.str();
 }

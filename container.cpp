@@ -23,6 +23,7 @@
 
 #include <cstdio>
 #include <iostream>
+#include <set>
 #include <sstream>
 #include <string>
 #include <typeinfo>
@@ -30,6 +31,8 @@
 #include "container.h"
 #include "log.h"
 #include "utils.h"
+
+std::set<DPContainer*> obj_set;
 
 /**
  * DPContainer
@@ -43,7 +46,7 @@ DPContainer::DPContainer (void) :
 	parent (NULL),
 	fd (NULL)
 {
-	type.push_back ("container");
+	declare ("container");
 }
 
 /**
@@ -62,26 +65,84 @@ DPContainer::~DPContainer()
 
 
 /**
+ * operator new
+ */
+void * DPContainer::operator new (size_t s)
+{
+	DPContainer *b = (DPContainer*) malloc (s);
+
+	//log_info ("new object %p\n", (void*) b);
+	obj_set.insert (b);
+
+	return b;
+}
+
+/**
+ * operator delete
+ */
+void DPContainer::operator delete (void *ptr)
+{
+	DPContainer *b = (DPContainer *) (ptr);
+	//log_info ("deleted object %p\n", ptr);
+	obj_set.erase (b);
+	free (ptr);
+}
+
+/**
+ * dump_objects
+ */
+std::string DPContainer::dump_objects (void)
+{
+	std::set<DPContainer*>::iterator is;
+	std::vector<DPContainer*>::iterator ic;
+	std::ostringstream dot;
+	DPContainer *c = NULL;
+
+	dot << "digraph disks {\n";
+	dot << "graph [ rankdir = \"TB\", bgcolor = grey ];\n";
+	dot << "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
+
+	for (is = obj_set.begin(); is != obj_set.end(); is++) {
+		c = (*is);
+		//printf ("%s\n", c->name.c_str());
+
+		if (c->name.empty()) {
+			c->name = "UNKNOWN";
+		}
+		if (c->dot_colour.empty()) {
+			log_error ("empty colour on %s\n", c->name.c_str());
+			c->dot_colour = "white";
+		}
+
+		dot << "obj_" << (void*) c <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
+		dot << "<tr><td align=\"left\" bgcolor=\"" << c->dot_colour << "\" colspan=\"3\"><font color=\"#000000\"><b>" << c->name << "</b></font> (" << (void*) c << ")</td></tr>\n";
+
+		dot << c->dump_dot();
+
+		dot << "</table>>];\n";
+
+		for (ic = c->children.begin(); ic != c->children.end(); ic++) {
+			dot << "obj_" << (void*) c << " -> obj_" << (void*) (*ic) << ";\n";
+		}
+	}
+
+	dot << "\n};";
+
+	return dot.str();
+}
+
+
+/**
  * dump_dot
  */
 std::string DPContainer::dump_dot (void)
 {
 	std::ostringstream output;
 	std::string uuid_short = uuid;
-	//unsigned int count = children.size();
 
 	if (!uuid_short.empty()) {
 		uuid_short = uuid.substr (0, 6) + "...";
 	}
-
-#if 0
-	log_debug ("container: %lu types\n", type.size());
-	for (unsigned int i = 0; i < type.size(); i++) {
-		log_debug ("\t%s\n", type[i].c_str());
-	}
-#endif
-
-	//output << "<tr><td align=\"left\" bgcolor=\"#88cccc\" colspan=\"3\"><font color=\"#000000\"><b>DPContainer</b></font></td></tr>\n";
 
 	//output << dump_row ("type",          type);
 	output << dump_row ("name",          name);
@@ -95,35 +156,7 @@ std::string DPContainer::dump_dot (void)
 	output << dump_row ("bytes_free",    bytes_size - bytes_used);
 	//output << dump_row ("parent",        parent);
 
-#if 0
-	if (count > 0) {
-		output << dump_row ("children",      count);
-		for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
-			output << dump_row ("", (*i));
-		}
-	}
-#endif
-
 	return output.str();
-}
-
-/**
- * dump_dot_children
- */
-std::string DPContainer::dump_dot_children (void)
-{
-	std::ostringstream s;
-
-	// now iterate through all the children
-	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
-		//std::cout << (*i) << "\n";
-		s << "\n";
-		s << (*i)->dump_dot();
-		s << "obj_" << (void*) this << " -> obj_" << (void*) (*i) << ";\n";
-		s << "\n";
-	}
-
-	return s.str();
 }
 
 
@@ -242,32 +275,6 @@ std::string DPContainer::dump_row (const char *name, void *value)
 	s << "</tr>\n";
 
 	return s.str();
-}
-
-
-/**
- * dump_table_header
- */
-std::string DPContainer::dump_table_header (const char *name, const char *colour)
-{
-	std::ostringstream output;
-
-	output << "obj_" << (void*) this <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"" << colour << "\" colspan=\"3\"><font color=\"#000000\"><b>" << name << "</b></font> (" << (void*) this << ")</td></tr>\n";
-
-	return output.str();
-}
-
-/**
- * dump_table_footer
- */
-std::string DPContainer::dump_table_footer (void)
-{
-	std::ostringstream output;
-
-	output << "</table>>];\n";
-
-	return output.str();
 }
 
 
@@ -564,5 +571,17 @@ bool DPContainer::is_a (const std::string &t)
 	}
 
 	return false;
+}
+
+/**
+ * declare
+ */
+void DPContainer::declare (const char *n, const char *colour)
+{
+	type.push_back (n);
+	name = n;
+	if (colour) {
+		dot_colour = colour;
+	}
 }
 

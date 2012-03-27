@@ -30,7 +30,7 @@
  */
 Misc::Misc (void)
 {
-	type.push_back ("misc");
+	declare ("misc", "orange");
 }
 
 /**
@@ -137,14 +137,9 @@ std::string Misc::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Misc", "yellow");
-
-	// no specfics for now
+	// no specifics for now
 
 	output << DPContainer::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
 
 	return output.str();
 }

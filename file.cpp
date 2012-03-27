@@ -34,8 +34,7 @@
  */
 File::File (void)
 {
-	name = "file";
-	type.push_back ("file");
+	declare ("file");
 }
 
 /**
@@ -91,14 +90,9 @@ std::string File::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("File", "#00ff88");
-
-	// no specfics for now
+	// no specifics for now
 
 	output << Block::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
 
 	return output.str();
 }

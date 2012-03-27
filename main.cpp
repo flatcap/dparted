@@ -162,19 +162,7 @@ int main (int argc, char *argv[])
 	}
 
 #if 0
-	std::string dot;
-	dot += "digraph disks {\n";
-	dot += "graph [ rankdir = \"TB\", bgcolor = grey ];\n";
-	dot += "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
-
-	unsigned int i;
-	for (i = 0; i < disks.children.size(); i++) {
-		//std::cout << disks.children[i] << "\n";
-		dot += disks.children[i]->dump_dot();
-	}
-	dot += "\n};";
-
-	std::cout << dot << std::endl;
+	std::cout << DPContainer::dump_objects();
 #else
 	Gtk::Main kit (argc, argv);
 

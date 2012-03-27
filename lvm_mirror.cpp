@@ -25,7 +25,7 @@
  */
 LVMMirror::LVMMirror (void)
 {
-	type.push_back ("lvm_mirror");
+	declare ("lvm_mirror");
 }
 
 /**
@@ -43,14 +43,9 @@ std::string LVMMirror::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("LVMMirror", "pink");
-
-	// no specfics for now
+	// no specifics for now
 
 	output << LVMVolume::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
 
 	return output.str();
 }

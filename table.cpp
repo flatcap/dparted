@@ -16,6 +16,7 @@
  */
 
 
+#include <sstream>
 #include <string>
 
 #include "gpt.h"
@@ -29,7 +30,7 @@
  */
 Table::Table (void)
 {
-	type.push_back ("table");
+	declare ("table", "red");
 }
 
 /**
@@ -48,4 +49,20 @@ bool Table::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 	return (Gpt::probe (parent, buffer, bufsize) ||
 		Msdos::probe (parent, buffer, bufsize));
 }
+
+
+/**
+ * dump_dot
+ */
+std::string Table::dump_dot (void)
+{
+	std::ostringstream output;
+
+	// no specifics for now
+
+	output << DPContainer::dump_dot();
+
+	return output.str();
+}
+
 

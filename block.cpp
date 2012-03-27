@@ -25,6 +25,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <sstream>
 #include <string>
 
 #include "block.h"
@@ -39,7 +40,7 @@
  */
 Block::Block (void)
 {
-	type.push_back ("block");
+	declare ("block", "green");
 }
 
 /**
@@ -123,3 +124,16 @@ bool Block::probe (const std::string &name, DPContainer &list)
 }
 
 #endif
+
+/**
+ * dump_dot
+ */
+std::string Block::dump_dot (void)
+{
+	std::ostringstream output;
+
+	output << DPContainer::dump_dot();
+
+	return output.str();
+}
+

@@ -32,7 +32,7 @@
  */
 Filesystem::Filesystem (void)
 {
-	type.push_back ("filesystem");
+	declare ("filesystem", "cyan");
 }
 
 /**
@@ -199,13 +199,9 @@ std::string Filesystem::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Filesystem", "cyan");
-
 	output << DPContainer::dump_dot();
 
 	output << dump_row ("label", label);
-
-	output << dump_table_footer();
 
 	return output.str();
 }

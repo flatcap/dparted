@@ -26,7 +26,7 @@
  */
 Volume::Volume (void)
 {
-	type.push_back ("volume");
+	declare ("volume");
 }
 
 /**
@@ -44,15 +44,9 @@ std::string Volume::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Volume", "pink");
-	log_error ("volume::dump_dot\n");
-
-	// no specfics for now
+	// no specifics for now
 
 	output << Whole::dump_dot();
-
-	output << dump_table_footer();
-	output << dump_dot_children();
 
 	return output.str();
 }

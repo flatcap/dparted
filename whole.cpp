@@ -27,7 +27,7 @@
  */
 Whole::Whole (void)
 {
-	type.push_back ("whole");
+	declare ("whole", "purple");
 }
 
 /**

@@ -33,7 +33,7 @@
  */
 Extended::Extended (void)
 {
-	type.push_back ("extended");
+	declare ("extended");
 }
 
 /**
@@ -147,16 +147,11 @@ std::string Extended::dump_dot (void)
 {
 	std::ostringstream output;
 
-	output << dump_table_header ("Extended", "yellow");
+	// no specifics for now
 
-	// no specfics for now
+	output << Msdos::dump_dot();
 
-	output << DPContainer::dump_dot(); //RAR skip a level for now
-
-	output << dump_table_footer();
-	output << dump_dot_children();
-
-	output << "{ rank=same obj_" << (void*) this << " obj_" << parent << " }\n";
+	//RAR how? output << "{ rank=same obj_" << (void*) this << " obj_" << parent << " }\n";
 
 	return output.str();
 }
