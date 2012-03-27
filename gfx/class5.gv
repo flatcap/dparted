@@ -18,14 +18,14 @@ digraph G
 	Table3 [ label="Table\nbob", fillcolor="#ffbbbb" ];
 	Table4 [ label="Table\nbob", fillcolor="#ffbbbb" ];
 
-	Part1 [ label="Part\nwide", fillcolor="#ffffdd" ];
-	Part2 [ label="Part\nnarr", fillcolor="#ffffdd" ];
-	Part3 [ label="Part\nwide", fillcolor="#ffffdd" ];
-	Part4 [ label="Part\nnarr", fillcolor="#ffffdd" ];
-	Part5 [ label="Part\nwide", fillcolor="#ffffdd" ];
-	Part6 [ label="Part\nnarr", fillcolor="#ffffdd" ];
-	Part7 [ label="Part\nwide", fillcolor="#ffffdd" ];
-	Part8 [ label="Part\nnarr", fillcolor="#ffffdd" ];
+	Part1 [ label="Part\nwide [A]", fillcolor="#ffffdd" ];
+	Part2 [ label="Part\nnarr [B]", fillcolor="#ffffdd" ];
+	Part3 [ label="Part\nwide [C]", fillcolor="#ffffdd" ];
+	Part4 [ label="Part\nnarr [D]", fillcolor="#ffffdd" ];
+	Part5 [ label="Part\nwide [E]", fillcolor="#ffffdd" ];
+	Part6 [ label="Part\nnarr [F]", fillcolor="#ffffdd" ];
+	Part7 [ label="Part\nwide [G]", fillcolor="#ffffdd" ];
+	Part8 [ label="Part\nnarr [H]", fillcolor="#ffffdd" ];
 
 	Fs1 [ label="FS\nwide", fillcolor="#bbffff" ];
 	Fs2 [ label="FS\nnarr", fillcolor="#bbffff" ];
