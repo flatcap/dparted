@@ -99,8 +99,9 @@ std::string DPContainer::dump_objects (void)
 	DPContainer *c = NULL;
 
 	dot << "digraph disks {\n";
-	dot << "graph [ rankdir = \"TB\", bgcolor = grey ];\n";
-	dot << "node [ shape = record, color = black, fillcolor = lightcyan, style = filled ];\n";
+	dot << "graph [ rankdir=\"TB\", color=\"white\",bgcolor=\"#000000\" ];\n";
+	dot << "node [ shape=\"record\", color=\"black\", fillcolor=\"lightcyan\", style=\"filled\" ];\n";
+	dot << "edge [ penwidth=3.0,color=\"#cccccc\" ];\n";
 
 	for (is = obj_set.begin(); is != obj_set.end(); is++) {
 		c = (*is);
@@ -114,8 +115,8 @@ std::string DPContainer::dump_objects (void)
 			c->dot_colour = "white";
 		}
 
-		dot << "obj_" << (void*) c <<" [label=<<table cellspacing=\"0\" border=\"0\">\n";
-		dot << "<tr><td align=\"left\" bgcolor=\"" << c->dot_colour << "\" colspan=\"3\"><font color=\"#000000\"><b>" << c->name << "</b></font> (" << (void*) c << ")</td></tr>\n";
+		dot << "obj_" << (void*) c <<" [fillcolor=\"" << c->dot_colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")</td></tr>\n";
 
 		dot << c->dump_dot();
 

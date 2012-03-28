@@ -27,7 +27,7 @@
  */
 Whole::Whole (void)
 {
-	declare ("whole", "purple");
+	declare ("whole", "#ccccff");
 }
 
 /**

@@ -86,7 +86,7 @@ int main (int argc, char *argv[])
 
 	disks.name = "container";	//XXX dummy
 
-	Disk::find_devices (disks);
+	//Disk::find_devices (disks);
 	Loop::find_devices (disks);
 
 	unsigned char *buffer = NULL;
@@ -161,7 +161,7 @@ int main (int argc, char *argv[])
 		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());
 	}
 
-#if 0
+#if 1
 	std::cout << DPContainer::dump_objects();
 #else
 	Gtk::Main kit (argc, argv);

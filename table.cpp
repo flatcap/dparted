@@ -30,7 +30,7 @@
  */
 Table::Table (void)
 {
-	declare ("table", "red");
+	declare ("table", "#ffbbbb");
 }
 
 /**

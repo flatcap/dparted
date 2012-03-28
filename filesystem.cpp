@@ -32,7 +32,7 @@
  */
 Filesystem::Filesystem (void)
 {
-	declare ("filesystem", "cyan");
+	declare ("filesystem", "#bbffff");
 }
 
 /**

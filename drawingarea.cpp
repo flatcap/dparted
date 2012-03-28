@@ -364,7 +364,7 @@ void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const R
  */
 void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context> &cr, const Gdk::RGBA &colour, const Rect &shape, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
 {
-	const int r = 8;					// Radius
+	const int r  = 8;					// Radius
 	const int &x = shape.x;
 	const int &y = shape.y;
 	const int &w = shape.w;

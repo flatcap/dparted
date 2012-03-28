@@ -28,7 +28,7 @@
 Partition::Partition (void) :
 	ptype (0)
 {
-	declare ("partition", "yellow");
+	declare ("partition", "#ffffdd");
 }
 
 /**
