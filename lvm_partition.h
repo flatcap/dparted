@@ -16,8 +16,8 @@
  */
 
 
-#ifndef _LVMPARTITION_H_
-#define _LVMPARTITION_H_
+#ifndef _LVM_PARTITION_H_
+#define _LVM_PARTITION_H_
 
 #include "partition.h"
 
@@ -35,5 +35,5 @@ private:
 
 };
 
-#endif // _LVMPARTITION_H_
+#endif // _LVM_PARTITION_H_
 

@@ -16,8 +16,8 @@
  */
 
 
-#ifndef _LVMGROUP_H_
-#define _LVMGROUP_H_
+#ifndef _LVM_GROUP_H_
+#define _LVM_GROUP_H_
 
 #include "whole.h"
 
@@ -49,5 +49,5 @@ private:
 
 };
 
-#endif // _LVMGROUP_H_
+#endif // _LVM_GROUP_H_
 

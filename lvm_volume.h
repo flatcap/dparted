@@ -16,8 +16,8 @@
  */
 
 
-#ifndef _LVMVOLUME_H_
-#define _LVMVOLUME_H_
+#ifndef _LVM_VOLUME_H_
+#define _LVM_VOLUME_H_
 
 #include "volume.h"
 
@@ -40,5 +40,5 @@ private:
 
 };
 
-#endif // _LVMVOLUME_H_
+#endif // _LVM_VOLUME_H_
 

@@ -16,8 +16,8 @@
  */
 
 
-#ifndef _LVMTABLE_H_
-#define _LVMTABLE_H_
+#ifndef _LVM_TABLE_H_
+#define _LVM_TABLE_H_
 
 #include "table.h"
 
@@ -35,5 +35,5 @@ private:
 
 };
 
-#endif // _LVMTABLE_H_
+#endif // _LVM_TABLE_H_
 

@@ -16,8 +16,8 @@
  */
 
 
-#ifndef _LVMLINEAR_H_
-#define _LVMLINEAR_H_
+#ifndef _LVM_LINEAR_H_
+#define _LVM_LINEAR_H_
 
 #include "lvm_volume.h"
 
@@ -35,5 +35,5 @@ private:
 
 };
 
-#endif // _LVMLINEAR_H_
+#endif // _LVM_LINEAR_H_
 

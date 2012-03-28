@@ -16,8 +16,8 @@
  */
 
 
-#ifndef _LVMSTRIPE_H_
-#define _LVMSTRIPE_H_
+#ifndef _LVM_STRIPE_H_
+#define _LVM_STRIPE_H_
 
 #include "lvm_volume.h"
 
@@ -35,5 +35,5 @@ private:
 
 };
 
-#endif // _LVMSTRIPE_H_
+#endif // _LVM_STRIPE_H_
 

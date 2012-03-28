@@ -16,8 +16,8 @@
  */
 
 
-#ifndef _LVMMIRROR_H_
-#define _LVMMIRROR_H_
+#ifndef _LVM_MIRROR_H_
+#define _LVM_MIRROR_H_
 
 #include "lvm_volume.h"
 
@@ -35,5 +35,5 @@ private:
 
 };
 
-#endif // _LVMMIRROR_H_
+#endif // _LVM_MIRROR_H_
 
