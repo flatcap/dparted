@@ -16,7 +16,9 @@
  */
 
 
+#include <iterator>
 #include <list>
+#include <map>
 #include <sstream>
 #include <string>
 
@@ -32,8 +34,8 @@
 #include "utils.h"
 
 //RAR lazy
-std::map<std::string, LVMGroup*> vg_lookup;
-std::map<std::string, LVMVolume*> vol_lookup;
+std::map<std::string, LVMGroup*>    vg_lookup;
+std::map<std::string, LVMVolume*>   vol_lookup;
 std::map<std::string, DPContainer*> vg_seg_lookup;
 std::map<std::string, DPContainer*> vol_seg_lookup;
 
@@ -57,63 +59,20 @@ LVMGroup::~LVMGroup()
 {
 }
 
-
 /**
- * dump_vol
+ * dump_map
  */
-void dump_vol (void)
+template<typename T>
+void dump_map (const char *title, const T &m)
 {
-	std::map<std::string,LVMVolume*>::iterator i;
-	log_debug ("Volumes map (vol_lookup):\n");
-	for (i = vol_lookup.begin(); i != vol_lookup.end(); i++) {
-		LVMVolume *v = (*i).second;
-		log_debug ("\t%s => %s\n", (*i).first.c_str(), v->name.c_str());
+	typename T::const_iterator i;
+
+	log_debug ("%s:\n", title);
+	for (i = m.begin(); i != m.end(); i++) {
+		DPContainer *c = dynamic_cast<DPContainer*>((*i).second);
+
+		log_debug ("\t%s => %s\n", (*i).first.c_str(), c->name.c_str());
 	}
-	log_debug ("\n");
-}
-
-/**
- * dump_vol_seg
- */
-void dump_vol_seg (void)
-{
-	std::map<std::string,DPContainer*>::iterator i;
-	log_debug ("Volume Segments map (vol_seg_lookup):\n");
-	for (i = vol_seg_lookup.begin(); i != vol_seg_lookup.end(); i++) {
-		DPContainer *s = (*i).second;
-		log_debug ("\t%s => %s\n", (*i).first.c_str(), s->name.c_str());
-	}
-	log_debug ("\n");
-}
-
-/**
- * dump_vol_group
- */
-void dump_vol_group (void)
-{
-	std::map<std::string,LVMGroup*>::iterator i;
-
-	log_debug ("Volume Group map (vg_lookup):\n");
-	for (i = vg_lookup.begin(); i != vg_lookup.end(); i++) {
-		LVMGroup *vg = (*i).second;
-		log_debug ("\t%s => %s\n", (*i).first.c_str(), vg->name.c_str());
-	}
-	log_debug ("\n");
-}
-
-/**
- * dump_vol_group_seg
- */
-void dump_vol_group_seg (void)
-{
-	std::map<std::string,DPContainer*>::iterator i;
-
-	log_debug ("Volume Group Segments map (vg_seg_lookup):\n");
-	for (i = vg_seg_lookup.begin(); i != vg_seg_lookup.end(); i++) {
-		DPContainer *s = (*i).second;
-		log_debug ("\t%s => %s\n", (*i).first.c_str(), s->name.c_str());
-	}
-	log_debug ("\n");
 }
 
 
@@ -240,8 +199,8 @@ void fd_vgs (DPContainer &disks)
 	}
 	//log_debug ("\n");
 
-	//dump_vol_group();
-	//dump_vol_group_seg();
+	//dump_map ("Volume Group map (vg_lookup)", vg_lookup);
+	//dump_map ("Volume Group Segments map (vg_seg_lookup)", vg_seg_lookup);
 }
 
 /**
@@ -323,7 +282,7 @@ void fd_pvs (DPContainer &disks)
 	}
 	//log_debug ("\n");
 
-	//dump_vol_seg();
+	//dump_map ("Volume Segments map (vol_seg_lookup)", vol_seg_lookup);
 }
 
 /**
@@ -447,8 +406,8 @@ void fd_lvs (DPContainer &disks)
 		}
 	}
 
-	//dump_vol_seg();
-	//dump_vol();
+	//dump_map ("Volume Segments map (vol_seg_lookup)", vol_seg_lookup);
+	//dump_map ("Volumes map (vol_lookup)", vol_lookup);
 
 	//transfer volumes to disks
 	std::map<std::string, LVMVolume*>::iterator it_vol;
