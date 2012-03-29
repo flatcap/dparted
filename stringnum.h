@@ -22,8 +22,6 @@
 #include <cstdlib>
 #include <string>
 
-#include "container.h"
-
 class StringNum : public std::string
 {
 public:
