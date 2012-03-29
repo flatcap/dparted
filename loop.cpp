@@ -192,9 +192,9 @@ std::string Loop::dump_dot (void)
 {
 	std::ostringstream output;
 
-	// no specifics for now
-
 	output << Block::dump_dot();
+
+	// no specifics for now
 
 	return output.str();
 }

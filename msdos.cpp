@@ -187,9 +187,9 @@ std::string Msdos::dump_dot (void)
 {
 	std::ostringstream output;
 
-	// no specifics for now
-
 	output << Table::dump_dot();
+
+	// no specifics for now
 
 	return output.str();
 }

@@ -134,6 +134,8 @@ std::string Block::dump_dot (void)
 
 	output << DPContainer::dump_dot();
 
+	// no specifics for now
+
 	return output.str();
 }
 

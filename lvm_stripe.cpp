@@ -43,9 +43,9 @@ std::string LVMStripe::dump_dot (void)
 {
 	std::ostringstream output;
 
-	// no specifics for now
-
 	output << LVMVolume::dump_dot();
+
+	// no specifics for now
 
 	return output.str();
 }

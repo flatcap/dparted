@@ -147,9 +147,9 @@ std::string Extended::dump_dot (void)
 {
 	std::ostringstream output;
 
-	// no specifics for now
-
 	output << Msdos::dump_dot();
+
+	// no specifics for now
 
 	//RAR how? output << "{ rank=same obj_" << (void*) this << " obj_" << parent << " }\n";
 

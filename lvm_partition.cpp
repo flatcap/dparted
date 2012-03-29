@@ -43,9 +43,9 @@ std::string LVMPartition::dump_dot (void)
 {
 	std::ostringstream output;
 
-	// no specifics for now
-
 	output << Partition::dump_dot();
+
+	// no specifics for now
 
 	return output.str();
 }
