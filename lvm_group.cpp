@@ -34,10 +34,10 @@
 #include "utils.h"
 
 //RAR lazy
-std::map<std::string, LVMGroup*>    vg_lookup;
-std::map<std::string, LVMVolume*>   vol_lookup;
-std::map<std::string, DPContainer*> vg_seg_lookup;
-std::map<std::string, DPContainer*> vol_seg_lookup;
+std::map<std::string, LVMGroup*>     vg_lookup;
+std::map<std::string, LVMVolume*>    vol_lookup;
+std::map<std::string, LVMTable*>     vg_seg_lookup;
+std::map<std::string, LVMPartition*> vol_seg_lookup;
 
 /**
  * LVMGroup
@@ -131,7 +131,7 @@ void fd_vgs (DPContainer &disks)
 		vg = vg_lookup[vg_uuid];
 		if (vg == NULL) {
 			vg = new LVMGroup;
-			vg->parent = &disks;
+			vg->parent = &disks;	//RAR not nec (done in add_child)
 			//vg->device = "/dev/dm-0"; //RAR what?
 			// LVMGroup doesn't have a dedicated device, so it would have to delegate to the vg segment
 
@@ -166,7 +166,7 @@ void fd_vgs (DPContainer &disks)
 
 		//log_debug ("vg block size = %ld\n", vg->block_size);
 
-		cont->add_child (vg_seg);
+		cont->add_child (vg_seg);	//RAR this could be left to find_devices, there don't need disks fn param
 
 		//log_debug ("lookup uuid %s\n", vg_uuid.c_str());
 		vg->add_segment (vg_seg);
@@ -206,7 +206,7 @@ void fd_vgs (DPContainer &disks)
 /**
  * fd_pvs - Attach all the Segments (LVMGroup and Volumes)
  */
-void fd_pvs (DPContainer &disks)
+void fd_pvs (DPContainer &disks)	//RAR disks unused
 {
 	std::string command;
 	std::vector<std::string> output;
@@ -257,7 +257,7 @@ void fd_pvs (DPContainer &disks)
 		LVMGroup *vg = vg_lookup[vg_uuid];
 		//log_debug ("vg extent size = %ld\n", vg->block_size);
 
-		DPContainer *vg_seg = vg_seg_lookup[dev];	//XXX this should exist
+		LVMTable *vg_seg = vg_seg_lookup[dev];	//XXX this should exist
 		if (!vg_seg)
 			continue;			//XXX error?
 
@@ -377,7 +377,7 @@ void fd_lvs (DPContainer &disks)
 			std::string dep = (*it_dev);
 			//log_debug ("\t\t%s\n", dep.c_str());
 
-			std::map<std::string, DPContainer*>::iterator it_vol_seg;
+			std::map<std::string, LVMPartition*>::iterator it_vol_seg;
 			it_vol_seg = vol_seg_lookup.find (dep);
 			if (it_vol_seg != vol_seg_lookup.end()) {
 				//RAR connect up stuff
@@ -412,10 +412,45 @@ void fd_lvs (DPContainer &disks)
 	//transfer volumes to disks
 	std::map<std::string, LVMVolume*>::iterator it_vol;
 	for (it_vol = vol_lookup.begin(); it_vol != vol_lookup.end(); it_vol++) {
-		DPContainer *c = (*it_vol).second;
-		//log_debug ("volume %s (%s)\n", c->name.c_str(), c->parent->name.c_str());
-		c->parent->add_child (c);
-		fd_probe_children (c);
+		LVMVolume *v = (*it_vol).second;
+		//log_debug ("volume %s (%s)\n", v->name.c_str(), v->parent->name.c_str());
+		v->parent->add_child (v);	//RAR add myself to MY parent
+		fd_probe_children (v);
+	}
+}
+
+
+/**
+ * fd_fs
+ */
+void fd_fs (void)
+{
+	// find the all the volumes
+	// identify the filesystems
+	// create filesystem objects under the matching partition
+
+	std::map<std::string, LVMVolume*>::iterator it_vol;
+
+	for (it_vol = vol_lookup.begin(); it_vol != vol_lookup.end(); it_vol++) {
+		//log_error ("marker\n");
+		LVMVolume *v = (*it_vol).second;
+
+		DPContainer *item = probe (v);
+		if (item) {
+			//std::cout << item << std::endl;
+		} else {
+			log_debug ("no match\n");
+		}
+
+		log_debug ("volume %s (%s)\n", v->name.c_str(), v->parent->name.c_str());
+
+		std::vector<DPContainer*>::iterator it_seg;
+
+		for (it_seg = v->segments.begin(); it_seg != v->segments.end(); it_seg++) {
+			LVMPartition *p = dynamic_cast<LVMPartition*>(*it_seg);
+			log_debug ("\t%s (%s) - %p\n", p->name.c_str(), p->parent->name.c_str(), p);
+			p->add_child (item);
+		}
 	}
 }
 
@@ -427,6 +462,15 @@ void LVMGroup::find_devices (DPContainer &disks)
 	fd_vgs (disks);
 	fd_pvs (disks);
 	fd_lvs (disks);
+
+#if 0
+	dump_map ("1", vg_lookup);
+	dump_map ("2", vol_lookup);
+	dump_map ("3", vg_seg_lookup);
+	dump_map ("4", vol_seg_lookup);
+#endif
+
+	fd_fs ();
 }
 
 
@@ -448,4 +492,5 @@ std::string LVMGroup::dump_dot (void)
 
 	return output.str();
 }
+
 

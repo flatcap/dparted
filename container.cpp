@@ -102,10 +102,13 @@ std::string DPContainer::dump_objects (void)
 	dot << "graph [ rankdir=\"TB\", color=\"white\",bgcolor=\"#000000\" ];\n";
 	dot << "node [ shape=\"record\", color=\"black\", fillcolor=\"lightcyan\", style=\"filled\" ];\n";
 	dot << "edge [ penwidth=3.0,color=\"#cccccc\" ];\n";
+	dot << "\n";
 
 	for (is = obj_set.begin(); is != obj_set.end(); is++) {
 		c = (*is);
 		//printf ("%s\n", c->name.c_str());
+		dot << "\n";
+		dot << "// " << c << "\n";
 
 		if (c->name.empty()) {
 			c->name = "UNKNOWN";
@@ -128,6 +131,7 @@ std::string DPContainer::dump_objects (void)
 	}
 
 	dot << "\n};";
+	dot << "\n";
 
 	return dot.str();
 }
@@ -155,6 +159,7 @@ std::string DPContainer::dump_dot (void)
 	output << dump_row ("bytes_size",    bytes_size);
 	output << dump_row ("bytes_used",    bytes_used);
 	output << dump_row ("bytes_free",    bytes_size - bytes_used);
+	output << dump_row ("whole",         whole);
 	//output << dump_row ("parent",        parent);
 
 	return output.str();
@@ -520,13 +525,14 @@ int DPContainer::read_data (long long offset, long long size, unsigned char *buf
 	if (current < 0) {
 		log_error ("seek to %lld failed on %s (%p)\n", offset, device.c_str(), fd);
 		perror ("seek");
-		return 1;
+		return -1;
 	}
 
 	if ((current + size) > bytes_size)
 		return -1;
 
 	bytes = fread (buffer, size, 1, fd);
+	bytes *= size;
 	std::string s = get_size (current);
 	//log_info ("READ: device %s (%p), offset %lld (%s), size %lld = %lld\n", device.c_str(), fd, current, s.c_str(), size, bytes);
 

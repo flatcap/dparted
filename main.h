@@ -22,6 +22,7 @@
 class DPContainer;
 
 void queue_add_probe (DPContainer *item);
+DPContainer * probe (DPContainer *parent);
 
 #endif // _MAIN_H_
 

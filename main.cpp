@@ -74,6 +74,37 @@ unsigned int mounts_get_list (DPContainer &mounts)
 	return mounts.children.size();
 }
 
+
+/**
+ * probe
+ */
+DPContainer * probe (DPContainer *parent)
+{
+	const int bufsize = 66560;
+	std::vector<unsigned char> buffer (bufsize, 0);
+
+	DPContainer *item = NULL;
+
+	log_debug ("parent (%s) read_data\n", parent->name.c_str());
+	std::cout << parent << std::endl;
+	parent->open_device();
+	log_debug ("parent is %lld bytes long\n", parent->bytes_size);
+	int r = parent->read_data (0, bufsize, &buffer[0]);
+
+	log_debug ("read %d bytes\n", r);
+
+	if ((item = Filesystem::probe (parent, &buffer[0], bufsize)))
+		return item;
+
+	if ((item = Table::probe (item, &buffer[0], bufsize)))
+		return item;
+
+	if ((item = Misc::probe (item, &buffer[0], bufsize)))
+		return item;
+
+	return NULL;
+}
+
 /**
  * main
  */
@@ -171,7 +202,7 @@ int main (int argc, char *argv[])
 		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());
 	}
 
-#if 1
+#if 0
 	std::cout << DPContainer::dump_objects();
 #else
 	Gtk::Main kit (argc, argv);
@@ -183,6 +214,7 @@ int main (int argc, char *argv[])
 #endif
 
 	log_close();
+	exit (1);	//RAR until everythings refcounted
 	return 0;
 }
 
