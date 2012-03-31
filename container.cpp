@@ -143,6 +143,24 @@ std::string DPContainer::dump_objects (void)
 	return dot.str();
 }
 
+/**
+ * dump_leaks
+ */
+void DPContainer::dump_leaks (void)
+{
+	std::set<DPContainer*>::iterator is;
+	DPContainer *c = NULL;
+
+	if (obj_set.size() == 0)
+		return;
+
+	log_debug ("Leaks (%lu):\n", obj_set.size());
+	for (is = obj_set.begin(); is != obj_set.end(); is++) {
+		c = (*is);
+		log_debug ("\t0x%p - %s, %s, %d\n", c, c->name.c_str(), c->device.c_str(), c->ref_count);
+	}
+}
+
 
 /**
  * dump_dot

@@ -105,13 +105,14 @@ DPContainer * probe (DPContainer *parent)
  */
 int main (int argc, char *argv[])
 {
+	{
 	DPContainer disks;
 	DPContainer *item = NULL;
 	unsigned int j;
 
 	log_init ("/dev/stderr");
 
-	//Disk::find_devices (disks);
+	Disk::find_devices (disks);
 	Loop::find_devices (disks);
 
 	for (j = 0; j < disks.children.size(); j++) {
@@ -142,7 +143,7 @@ int main (int argc, char *argv[])
 		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());
 	}
 
-#if 1
+#if 0
 	std::cout << DPContainer::dump_objects();
 #else
 	Gtk::Main kit (argc, argv);
@@ -153,6 +154,8 @@ int main (int argc, char *argv[])
 	Gtk::Main::run (d);
 #endif
 
+	}
+	DPContainer::dump_leaks();
 	log_close();
 	return 0;
 }

@@ -36,6 +36,7 @@ public:
 	void   operator delete (void *ptr);
 
 	static std::string dump_objects (void);
+	static void dump_leaks (void);
 
 	virtual std::string dump_dot (void);
 

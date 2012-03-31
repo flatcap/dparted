@@ -75,11 +75,17 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 		return NULL;
 
 	for (loop = 0; loop < 50; loop++) {
-		//log_debug ("table_offset = %lld\n", table_offset);
-		parent->read_data (table_offset, bufsize, buffer);
+		std::string s = get_size (table_offset);
+		//log_debug ("table_offset = %lld (%s)\n", table_offset, s.c_str());
+		/*FILE *f =*/ parent->open_device();
+		/*int r =*/ parent->read_data (table_offset, bufsize, buffer);
+		//log_debug ("f = %p, r = %d\n", f, r);
+
+		//dump_hex (buffer, bufsize);
 
 		if (*(unsigned short int *) (buffer+510) != 0xAA55) {
-			log_debug ("not an extended partition\n");
+			//log_debug ("not an extended partition\n");
+			//log_debug ("%s (%s), %lld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
 			return NULL;
 		}
 
