@@ -2,21 +2,21 @@ CC	= g++
 RM	= rm -fr
 MKDIR	= mkdir -p
 
-SRC	= block.cpp container.cpp disk.cpp extended.cpp log.cpp \
-	  file.cpp filesystem.cpp gpt.cpp identify.cpp loop.cpp \
-	  main.cpp msdos.cpp partition.cpp table.cpp \
-	  utils.cpp  volume.cpp whole.cpp misc.cpp \
-	  lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp
+# Library
+SRC	= block.cpp container.cpp disk.cpp extended.cpp file.cpp \
+	  filesystem.cpp gpt.cpp identify.cpp log.cpp loop.cpp lvm_group.cpp \
+	  lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_stripe.cpp \
+	  lvm_table.cpp lvm_volume.cpp main.cpp misc.cpp msdos.cpp \
+	  partition.cpp table.cpp utils.cpp volume.cpp whole.cpp
 
+HDR	= block.h container.h disk.h extended.h file.h filesystem.h \
+	  gpt.h identify.h log.h loop.h lvm_group.h lvm_linear.h lvm_mirror.h \
+	  lvm_partition.h lvm_stripe.h lvm_table.h lvm_volume.h misc.h msdos.h \
+	  partition.h stringnum.h table.h utils.h volume.h whole.h
+
+# GUI
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp
-
-HDR	= block.h container.h disk.h extended.h file.h log.h \
-	  filesystem.h gpt.h identify.h loop.h msdos.h \
-	  partition.h table.h stringnum.h utils.h \
-	  volume.h whole.h misc.h \
-	  lvm_group.h lvm_linear.h lvm_mirror.h lvm_partition.h lvm_stripe.h lvm_table.h lvm_volume.h
-
-HDR	+= dparted.h drawingarea.h treeview.h theme.h
+HDR	+= dparted.h drawingarea.h treeview.h theme.h main.h
 
 OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
@@ -104,7 +104,7 @@ $(DEPDIR) $(OBJDIR):
 
 # ----------------------------------------------------------------------------
 
-clean:
+clean:	force
 	$(RM) $(OUT) $(OBJ)
 
 distclean: clean
@@ -113,4 +113,7 @@ distclean: clean
 force:
 
 -include $(SRC:%.cpp=$(DEPDIR)/%.d)
+
+wc:	force
+	@wc -l $(SRC) $(HDR)
 
