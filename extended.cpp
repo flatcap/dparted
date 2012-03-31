@@ -70,8 +70,6 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 	ext->device = parent->device;
 	ext->parent_offset = offset;
 
-	//parent->add_child (ext);
-
 	buffer = (unsigned char*) malloc (bufsize);
 	if (!buffer)
 		return NULL;

@@ -44,10 +44,17 @@ Table::~Table()
 /**
  * probe
  */
-bool Table::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer * Table::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
-	return (Gpt::probe (parent, buffer, bufsize) ||
-		Msdos::probe (parent, buffer, bufsize));
+	DPContainer *c = NULL;
+
+	if ((c = Gpt::probe (parent, buffer, bufsize)))
+		return c;
+
+	if ((c = Msdos::probe (parent, buffer, bufsize)))
+		return c;
+
+	return NULL;
 }
 
 

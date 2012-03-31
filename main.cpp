@@ -115,15 +115,20 @@ int main (int argc, char *argv[])
 
 		item->read_data (0, bufsize, buffer);
 
-		if (Filesystem::probe (item, buffer, bufsize)) {
+		DPContainer *found = NULL;
+
+		if ((found = Filesystem::probe (item, buffer, bufsize))) {
+			item->add_child (found);
 			continue;
 		}
 
-		if (Table::probe (item, buffer, bufsize)) {
+		if ((found = Table::probe (item, buffer, bufsize))) {
+			item->add_child (found);
 			continue;
 		}
 
-		if (Misc::probe (item, buffer, bufsize)) {
+		if ((found = Misc::probe (item, buffer, bufsize))) {
+			item->add_child (found);
 			continue;
 		}
 	}
@@ -144,15 +149,20 @@ int main (int argc, char *argv[])
 
 		item->read_data (0, bufsize, buffer);
 
-		if (Filesystem::probe (item, buffer, bufsize)) {
+		DPContainer *found = NULL;
+
+		if ((found = Filesystem::probe (item, buffer, bufsize))) {
+			item->add_child (found);
 			continue;
 		}
 
-		if (Table::probe (item, buffer, bufsize)) {
+		if ((found = Table::probe (item, buffer, bufsize))) {
+			item->add_child (found);
 			continue;
 		}
 
-		if (Misc::probe (item, buffer, bufsize)) {
+		if ((found = Misc::probe (item, buffer, bufsize))) {
+			item->add_child (found);
 			continue;
 		}
 	}

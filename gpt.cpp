@@ -44,7 +44,7 @@ Gpt::~Gpt()
 /**
  * probe
  */
-bool Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	Gpt *g = NULL;
 
@@ -60,8 +60,6 @@ bool Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 	g->parent_offset = 0;
 	g->block_size = 0;
 	g->uuid = read_uuid (buffer+568);
-
-	parent->add_child (g);
 
 	int i;
 	int j;
@@ -102,7 +100,7 @@ bool Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 		queue_add_probe (p);
 	}
 
-	return (g != NULL);
+	return g;
 }
 
 

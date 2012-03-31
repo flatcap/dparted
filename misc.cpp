@@ -100,7 +100,7 @@ static bool is_random (unsigned char *buffer, int bufsize)
 /**
  * probe
  */
-bool Misc::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer * Misc::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//log_info ("%s\n", __PRETTY_FUNCTION__);
 	Misc *m = NULL;
@@ -123,10 +123,9 @@ bool Misc::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 		m->bytes_size = parent->bytes_size;
 		m->bytes_used = 0;
 		m->parent_offset = 0;
-		parent->add_child (m);
 	}
 
-	return (m != NULL);
+	return m;
 }
 
 

@@ -147,7 +147,7 @@ long long Filesystem::ext2_get_usage (void)
 /**
  * probe
  */
-bool Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer * Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	Filesystem *f = NULL;
 	std::string name;
@@ -183,12 +183,10 @@ bool Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 		}
 		//log_info ("%s: size = %lld, used = %lld\n", f->name.c_str(), f->bytes_size, f->bytes_used);
 
-		parent->add_child (f);
-
 		f->bytes_used = (rand()%90) * f->bytes_size / 100; //RAR
 	}
 
-	return (f != NULL);
+	return f;
 }
 
 

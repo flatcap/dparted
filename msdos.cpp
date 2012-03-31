@@ -112,7 +112,7 @@ unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long long of
 /**
  * probe
  */
-bool Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	Msdos *m = NULL;
 	unsigned int i;
@@ -129,8 +129,6 @@ bool Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 	m->bytes_size = parent->bytes_size;
 	m->device = parent->device;
 	m->parent_offset = 0;
-
-	parent->add_child (m);
 
 	std::vector<struct partition> vp;
 	count = m->read_table (buffer, bufsize, 0, vp);
@@ -176,7 +174,7 @@ bool Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 		m->add_child (c);
 	}
 
-	return (m != NULL);
+	return m;
 }
 
 
