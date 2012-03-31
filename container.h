@@ -61,6 +61,9 @@ public:
 
 	virtual bool is_a (const std::string &type);
 
+	void ref (void);
+	void unref (void);
+
 	std::string	 name;
 	std::string	 uuid;
 
@@ -94,6 +97,8 @@ protected:
 
 	FILE		*fd;
 	std::string	 dot_colour;
+
+	int		 ref_count;
 private:
 
 };

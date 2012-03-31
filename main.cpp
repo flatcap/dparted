@@ -142,7 +142,7 @@ int main (int argc, char *argv[])
 		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());
 	}
 
-#if 0
+#if 1
 	std::cout << DPContainer::dump_objects();
 #else
 	Gtk::Main kit (argc, argv);
@@ -154,7 +154,6 @@ int main (int argc, char *argv[])
 #endif
 
 	log_close();
-	exit (1);	//RAR until everything's refcounted
 	return 0;
 }
 

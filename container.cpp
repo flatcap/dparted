@@ -44,7 +44,8 @@ DPContainer::DPContainer (void) :
 	bytes_used (0),
 	whole (NULL),
 	parent (NULL),
-	fd (NULL)
+	fd (NULL),
+	ref_count (0)
 {
 	declare ("container");
 }
@@ -55,7 +56,7 @@ DPContainer::DPContainer (void) :
 DPContainer::~DPContainer()
 {
 	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
-		delete *i;
+		(*i)->unref();
 	}
 
 	if (fd) {
@@ -82,9 +83,15 @@ void * DPContainer::operator new (size_t s)
  */
 void DPContainer::operator delete (void *ptr)
 {
-	DPContainer *b = (DPContainer *) (ptr);
+	if (!ptr)
+		return;
+
+	DPContainer *c = (DPContainer *) (ptr);
+	if (c->ref_count != 0)
+		log_error ("REF COUNT = %d\n", c->ref_count);
+
 	//log_info ("deleted object %p\n", ptr);
-	obj_set.erase (b);
+	obj_set.erase (c);
 	free (ptr);
 }
 
@@ -119,7 +126,7 @@ std::string DPContainer::dump_objects (void)
 		}
 
 		dot << "obj_" << (void*) c <<" [fillcolor=\"" << c->dot_colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")</td></tr>\n";
+		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << "</b></font></td></tr>\n";
 
 		dot << c->dump_dot();
 
@@ -321,6 +328,7 @@ void DPContainer::add_child (DPContainer *child)
 
 	//log_debug ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
 
+	child->ref();
 	child->parent = this;
 }
 
@@ -590,5 +598,24 @@ void DPContainer::declare (const char *n, const char *colour)
 	if (colour) {
 		dot_colour = colour;
 	}
+}
+
+
+/**
+ * ref
+ */
+void DPContainer::ref (void)
+{
+	ref_count++;
+}
+
+/**
+ * unref
+ */
+void DPContainer::unref (void)
+{
+	ref_count--;
+	if (ref_count == 0)
+		delete this;
 }
 
