@@ -1173,4 +1173,5 @@ list everything that could throw an exception and put in handlers
 
 only autowrite and autohide for files in my work directory (and below)
 
+speed up build by only compiling gui src with gtkmm, etc
 
