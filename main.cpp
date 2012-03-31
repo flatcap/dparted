@@ -81,25 +81,20 @@ unsigned int mounts_get_list (DPContainer &mounts)
 DPContainer * probe (DPContainer *parent)
 {
 	const int bufsize = 66560;
-	std::vector<unsigned char> buffer (bufsize, 0);
+	std::vector<unsigned char> buffer (bufsize);
 
 	DPContainer *item = NULL;
 
-	log_debug ("parent (%s) read_data\n", parent->name.c_str());
-	std::cout << parent << std::endl;
 	parent->open_device();
-	log_debug ("parent is %lld bytes long\n", parent->bytes_size);
-	int r = parent->read_data (0, bufsize, &buffer[0]);
-
-	log_debug ("read %d bytes\n", r);
+	parent->read_data (0, bufsize, &buffer[0]);	// check read num
 
 	if ((item = Filesystem::probe (parent, &buffer[0], bufsize)))
 		return item;
 
-	if ((item = Table::probe (item, &buffer[0], bufsize)))
+	if ((item = Table::probe (parent, &buffer[0], bufsize)))
 		return item;
 
-	if ((item = Misc::probe (item, &buffer[0], bufsize)))
+	if ((item = Misc::probe (parent, &buffer[0], bufsize)))
 		return item;
 
 	return NULL;
@@ -112,90 +107,35 @@ int main (int argc, char *argv[])
 {
 	DPContainer disks;
 	DPContainer *item = NULL;
+	unsigned int j;
 
 	log_init ("/dev/stderr");
 
-	disks.name = "container";	//XXX dummy
-
 	//Disk::find_devices (disks);
 	Loop::find_devices (disks);
-
-	unsigned char *buffer = NULL;
-	int bufsize = 32768;	//RAR 4096;
-	unsigned int j;
 
 	for (j = 0; j < disks.children.size(); j++) {
 		queue_add_probe (disks.children[j]);
 	}
 
-	buffer = (unsigned char*) malloc (bufsize);
-	if (!buffer)
-		return 1;
-
 	while ((item = probe_queue.front())) {
-#if 0
-		log_debug ("queued item: '%s'\n", item->name.c_str());
-		std::string s1 = get_size (item->parent_offset);
-		std::string s2 = get_size (item->bytes_size);
-		log_debug ("\tdevice     = %s\n",        item->device.c_str());
-		log_debug ("\toffset     = %lld (%s)\n", item->parent_offset, s1.c_str());
-		log_debug ("\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
-		log_debug ("\n");
-#endif
 		probe_queue.pop();
 
-		item->read_data (0, bufsize, buffer);
-
-		DPContainer *found = NULL;
-
-		if ((found = Filesystem::probe (item, buffer, bufsize))) {
+		DPContainer *found = probe (item);
+		if (found) {
 			item->add_child (found);
-			continue;
-		}
-
-		if ((found = Table::probe (item, buffer, bufsize))) {
-			item->add_child (found);
-			continue;
-		}
-
-		if ((found = Misc::probe (item, buffer, bufsize))) {
-			item->add_child (found);
-			continue;
-		}
+		} //RAR else what?
 	}
 
 	LVMGroup::find_devices (disks);
 
 	while ((item = probe_queue.front())) {
-#if 0
-		log_debug ("queued item: '%s'\n", item->name.c_str());
-		std::string s1 = get_size (item->parent_offset);
-		std::string s2 = get_size (item->bytes_size);
-		log_debug ("\tdevice     = %s\n",        item->device.c_str());
-		log_debug ("\toffset     = %lld (%s)\n", item->parent_offset, s1.c_str());
-		log_debug ("\ttotal size = %lld (%s)\n", item->bytes_size, s2.c_str());
-		log_debug ("\n");
-#endif
 		probe_queue.pop();
 
-		item->read_data (0, bufsize, buffer);
-
-		DPContainer *found = NULL;
-
-		if ((found = Filesystem::probe (item, buffer, bufsize))) {
+		DPContainer *found = probe (item);
+		if (found) {
 			item->add_child (found);
-			continue;
-		}
-
-		if ((found = Table::probe (item, buffer, bufsize))) {
-			item->add_child (found);
-			continue;
-		}
-
-		if ((found = Misc::probe (item, buffer, bufsize))) {
-			item->add_child (found);
-			continue;
-		}
+		} //RAR else what?
 	}
 
 	if (probe_queue.size() > 0) {
@@ -214,7 +154,7 @@ int main (int argc, char *argv[])
 #endif
 
 	log_close();
-	exit (1);	//RAR until everythings refcounted
+	exit (1);	//RAR until everything's refcounted
 	return 0;
 }
 
