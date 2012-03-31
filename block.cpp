@@ -53,9 +53,9 @@ Block::~Block()
 
 #if 0
 /**
- * probe
+ * find_devices_old
  */
-bool Block::probe (const std::string &name, DPContainer &list)
+bool Block::find_devices_old (const std::string &name, DPContainer &list)
 {
 	struct stat st;
 	int res = -1;
@@ -77,18 +77,18 @@ bool Block::probe (const std::string &name, DPContainer &list)
 	}
 
 	if (S_ISREG (st.st_mode)) {
-		File::probe (name, fd, st, list);
+		File::find_devices_old (name, fd, st, list);
 	} else if (S_ISBLK (st.st_mode)) {
 		//log_debug ("%s block\n", name.c_str());
 		//log_debug ("\tdevice id = 0x%lx\n", st.st_rdev);
 		if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
 			//log_debug ("\tloop\n");
 			//item = new Loop;
-			Loop::probe (name, fd, st, list);
+			Loop::find_devices_old (name, fd, st, list);
 		} else if (MAJOR (st.st_rdev) == SCSI_DISK0_MAJOR) {
 			//log_debug ("\tdisk\n");
 			//item = new Disk;
-			Disk::probe (name, fd, st, list);
+			Disk::find_devices_old (name, fd, st, list);
 		} else {
 			// exists, but I can't deal with it
 			log_debug ("Unknown block device 0x%lx\n", st.st_rdev);
@@ -98,7 +98,7 @@ bool Block::probe (const std::string &name, DPContainer &list)
 		return false;
 	}
 
-	//item->probe (name, st);
+	//item->find_devices_old (name, st);
 
 	//log_debug ("fd = %d\n", fd);
 	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); //XXX replace with ftell (user, not root)

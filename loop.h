@@ -31,7 +31,6 @@ public:
 	Loop (void);
 	virtual ~Loop();
 
-	//static bool probe (const std::string &name, int fd, struct stat &st, DPContainer &list);
 	static unsigned int find_devices (DPContainer &list);
 
 	virtual std::string dump_dot (void);

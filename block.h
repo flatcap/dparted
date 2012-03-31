@@ -29,10 +29,7 @@ public:
 	Block (void);
 	virtual ~Block();
 
-	static bool probe (const std::string &name, DPContainer &list);
-
 protected:
-	//virtual bool probe (const std::string &name, const struct stat &st);
 	virtual std::string dump_dot (void);
 
 private:

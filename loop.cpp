@@ -48,9 +48,9 @@ Loop::~Loop()
 
 #if 0
 /**
- * probe
+ * find_devices_old
  */
-bool Loop::probe (const std::string &name, int fd, struct stat &st, DPContainer &list)
+bool Loop::find_devices_old (const std::string &name, int fd, struct stat &st, DPContainer &list)
 {
 	Loop *l = NULL;
 	long long seek;

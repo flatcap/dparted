@@ -58,9 +58,9 @@ Disk::~Disk()
 
 #if 0
 /**
- * probe
+ * find_devices_old
  */
-bool Disk::probe (const std::string &name, int fd, struct stat &st, DPContainer &list)
+bool Disk::find_devices_old (const std::string &name, int fd, struct stat &st, DPContainer &list)
 {
 	// for /dev/sda look at
 	//	/sys/block/sda/size

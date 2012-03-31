@@ -47,9 +47,9 @@ File::~File()
 
 #if 0
 /**
- * probe
+ * find_devices
  */
-bool File::probe (const std::string &name, int fd, struct stat &st, DPContainer &list)
+bool File::find_devices (const std::string &name, int fd, struct stat &st, DPContainer &list)
 {
 	File *f = NULL;
 

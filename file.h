@@ -29,8 +29,6 @@ public:
 	File (void);
 	virtual ~File();
 
-	//static bool probe (const std::string &name, int fd, struct stat &st, DPContainer &list);
-
 	virtual std::string dump_dot (void);
 
 protected:
