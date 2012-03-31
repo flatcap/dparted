@@ -1169,3 +1169,8 @@ lvm tests with missing devices
 	enough devices for recovery
 	not enough devices for recovery
 
+list everything that could throw an exception and put in handlers
+
+only autowrite and autohide for files in my work directory (and below)
+
+
