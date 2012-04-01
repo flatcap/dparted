@@ -128,16 +128,17 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 				//c->parent_offset = table_offset + vp[i].start;
 				//c->device = parent->device;
 
-				char num = '5' + loop;
 				c->parent_offset = table_offset + vp[i].start - ext->parent_offset;
-				c->device = parent->device;
 
+				std::ostringstream part_name;
+				part_name << parent->device;
 				char last = parent->device[parent->device.length()-1];
 				if (isdigit (last)) {
-					c->device += 'p';
+					part_name << 'p';
 				}
+				part_name << (loop+5);
 
-				c->device += num;
+				c->device = part_name.str();
 
 				ext->add_child (c);
 				queue_add_probe (c);

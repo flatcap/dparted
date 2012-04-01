@@ -151,7 +151,14 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 #endif
 		DPContainer *c = NULL;
 
-		char num = '1' + i;
+		std::ostringstream part_name;
+		part_name << m->device;
+		char last = m->device[m->device.length()-1];
+		if (isdigit (last)) {
+			part_name << 'p';
+		}
+		part_name << (i+1);
+
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 			//log_debug ("vp[i].start = %lld\n", vp[i].start);
 			c = Extended::probe (m, vp[i].start, vp[i].size);
@@ -159,7 +166,7 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 				continue;
 
 			c->parent_offset = vp[i].start;
-			c->device = m->device + num;
+			c->device = part_name.str();
 		} else {
 			Partition *p = new Partition;
 			p->ptype = vp[i].type;
@@ -168,14 +175,7 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 			c->bytes_size = vp[i].size;
 
 			c->parent_offset = vp[i].start;
-			c->device = m->device;
-
-			char last = m->device[m->device.length()-1];
-			if (isdigit (last)) {
-				c->device += 'p';
-			}
-
-			c->device += num;
+			c->device = part_name.str();
 
 			queue_add_probe (c);
 		}
