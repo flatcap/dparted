@@ -112,7 +112,7 @@ int main (int argc, char *argv[])
 
 	log_init ("/dev/stderr");
 
-	Disk::find_devices (disks);
+	//Disk::find_devices (disks);
 	Loop::find_devices (disks);
 
 	for (j = 0; j < disks.children.size(); j++) {

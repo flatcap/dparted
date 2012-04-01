@@ -16,6 +16,7 @@
  */
 
 
+#include <ctype.h>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -129,7 +130,14 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 
 				char num = '5' + loop;
 				c->parent_offset = table_offset + vp[i].start - ext->parent_offset;
-				c->device = parent->device + num;
+				c->device = parent->device;
+
+				char last = parent->device[parent->device.length()-1];
+				if (isdigit (last)) {
+					c->device += 'p';
+				}
+
+				c->device += num;
 
 				ext->add_child (c);
 				queue_add_probe (c);

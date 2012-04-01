@@ -16,6 +16,7 @@
  */
 
 
+#include <ctype.h>
 #include <fcntl.h>
 #include <linux/fs.h>
 #include <linux/hdreg.h>
@@ -167,7 +168,14 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 			c->bytes_size = vp[i].size;
 
 			c->parent_offset = vp[i].start;
-			c->device = m->device + num;
+			c->device = m->device;
+
+			char last = m->device[m->device.length()-1];
+			if (isdigit (last)) {
+				c->device += 'p';
+			}
+
+			c->device += num;
 
 			queue_add_probe (c);
 		}
