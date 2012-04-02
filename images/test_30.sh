@@ -76,14 +76,14 @@ function test_32()
 	msdos_create $IMAGE extended 500 3500	# extended partition
 	[ $? = 0 ] || error || return
 
-	msdos_create $IMAGE logical 1000 1500	# logical partition 1
+	msdos_create $IMAGE logical 1000 1500	# logical partition 5
 	[ $? = 0 ] || error || return
 
 	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
-	[ -b "${LOOP}p1" ] || error || return
+	[ -b "${LOOP}p5" ] || error || return
 
-	dd if=/dev/urandom bs=32K count=1 of="${LOOP}p1" 2> /dev/null
+	dd if=/dev/urandom bs=32K count=1 of="${LOOP}p5" 2> /dev/null
 
 	ok "$LOOP"
 }
