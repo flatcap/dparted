@@ -571,7 +571,7 @@ int DPContainer::read_data (long long offset, long long size, unsigned char *buf
  */
 std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
 {
-	stream << c.name << ", " << c.type.back() << ", " << c.device << ", " << c.children.size();
+	stream << c.name << ", " << c.type.back() << ", " << c.device << "(off " << c.parent_offset << "), " << c.children.size();
 	return stream;
 }
 

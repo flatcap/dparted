@@ -24,6 +24,7 @@
 #include "main.h"
 #include "partition.h"
 #include "utils.h"
+#include "filesystem.h"
 
 /**
  * Gpt
@@ -49,7 +50,7 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 	Gpt *g = NULL;
 
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	// XXX replace with strict identify function (static)
-		return false;
+		return NULL;
 
 	g = new Gpt;
 
@@ -60,21 +61,43 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 	g->parent_offset = 0;
 	g->block_size = 0;
 	g->uuid = read_uuid (buffer+568);
+	g->open_device();
+
+	//std::cout << g << "\n";
 
 	int i;
 	int j;
 	Partition *p = NULL;
-	buffer += 1024;
-
+	buffer += 1024;	//bufsize -= 1024; for range checking
+#if 0
+	p = new Partition;
+	p->bytes_size = g->bytes_size / 2;
+	p->parent_offset = g->bytes_size / 4;
+	g->add_child (p);
+	Filesystem *fs = new Filesystem;
+	fs->bytes_size = p->bytes_size;
+	fs->parent_offset = 0;
+	p->add_child (fs);
+	return g;
+#endif
 	for (i = 0; i < 128; i++, buffer += 128) {
 		if (*(long long*) (buffer+32) == 0)
 			break;
 
+		//log_debug ("new Partition %d\n", i);
 		p = new Partition;
 		p->bytes_used = 0;
-		p->device = g->device;
 		p->uuid = read_uuid (buffer+16);
 		//p->part_type_uuid = read_guid (buffer+0);
+
+		std::ostringstream part_name;
+		part_name << g->device;
+		char last = g->device[g->device.length()-1];
+		if (isdigit (last)) {
+			part_name << 'p';
+		}
+		part_name << (i+1);
+		p->device = part_name.str();
 
 		long long start  = *(long long*) (buffer+32);
 		long long finish = *(long long*) (buffer+40);
@@ -82,11 +105,12 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 		p->parent_offset = start * 512;
 		p->bytes_size = (finish - start + 1) * 512;
 
+		p->name.clear();
 		if (buffer[56]) {
 			for (j = 0; j < 32; j += 2) {
 				if (buffer[56+j] == 0)
 					break;
-				p->name += buffer[56+j];
+				p->name += buffer[56+j];	// put this in a "label" member
 			}
 		}
 
@@ -97,7 +121,7 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 		//log_debug ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
 
 		g->add_child (p);
-		queue_add_probe (p);
+		queue_add_probe (p);//QWQ
 	}
 
 	return g;

@@ -84,7 +84,8 @@ void fd_probe_children (DPContainer *item)
 	// recurse through children and add_probe()
 	if (item->children.size() == 0) {
 		//log_info ("PROBE: %s\n", item->name.c_str());
-		queue_add_probe (item);
+		if (!item->is_a ("volume"))	//RAR tmp
+			queue_add_probe (item);
 	}
 
 	for (unsigned int i = 0; i < item->children.size(); i++) {
@@ -442,13 +443,13 @@ void fd_fs (void)
 			log_debug ("no match\n");
 		}
 
-		log_debug ("volume %s (%s)\n", v->name.c_str(), v->parent->name.c_str());
+		//log_debug ("volume %s (%s)\n", v->name.c_str(), v->parent->name.c_str());
 
 		std::vector<DPContainer*>::iterator it_seg;
 
 		for (it_seg = v->segments.begin(); it_seg != v->segments.end(); it_seg++) {
 			LVMPartition *p = dynamic_cast<LVMPartition*>(*it_seg);
-			log_debug ("\t%s (%s) - %p\n", p->name.c_str(), p->parent->name.c_str(), p);
+			//log_debug ("\t%s (%s) - %p\n", p->name.c_str(), p->parent->name.c_str(), p);
 			p->add_child (item);
 		}
 	}

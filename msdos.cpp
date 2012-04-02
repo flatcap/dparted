@@ -120,7 +120,7 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 	int count = 0;
 
 	if (*(unsigned short int *) (buffer+510) != 0xAA55)
-		return false;
+		return NULL;
 
 	// and some other quick checks
 
@@ -136,7 +136,7 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 
 	if ((count < 0) || (vp.size() > 4)) {
 		log_debug ("partition table is corrupt\n");	// bugger
-		return false;
+		return NULL;
 	}
 
 	for (i = 0; i < vp.size(); i++) {

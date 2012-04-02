@@ -22,6 +22,7 @@
 #include <iostream>
 
 #include "dparted.h"
+#include "log.h"
 
 /**
  * Dparted
@@ -74,14 +75,6 @@ DParted::DParted () :
 
 	show_all();
 
-#if 1
-	int width = 0;
-	int height = 0;
-	get_size (width, height);
-	//move (1920+1440 - width, 900 - height);
-	move (1920, 0);
-#endif
-
 #if 0
 	Glib::RefPtr<Gtk::Settings> s = get_settings();
 	s->property_gtk_tooltip_timeout() = 3000;
@@ -119,6 +112,17 @@ void DParted::set_data (DPContainer *c)
 
 	//std::cout << m_c->children.size() << " children\n";
 	set_size_request (1439, 77*count+4); //RAR
+
+#if 1
+	int width = 0;
+	int height = 0;
+	get_size (width, height);
+	//log_info ("width = %d, height = %d\n", width, height);
+	//move (1920, 900 - height);
+	move (1920, 0);
+	//move (480, 1080-height);
+#endif
+
 }
 
 /**

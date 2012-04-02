@@ -88,14 +88,17 @@ DPContainer * probe (DPContainer *parent)
 	parent->open_device();
 	parent->read_data (0, bufsize, &buffer[0]);	// check read num
 
-	if ((item = Filesystem::probe (parent, &buffer[0], bufsize)))
+	if ((item = Filesystem::probe (parent, &buffer[0], bufsize))) {
 		return item;
+	}
 
-	if ((item = Table::probe (parent, &buffer[0], bufsize)))
+	if ((item = Table::probe (parent, &buffer[0], bufsize))) {
 		return item;
+	}
 
-	if ((item = Misc::probe (parent, &buffer[0], bufsize)))
+	if ((item = Misc::probe (parent, &buffer[0], bufsize))) {
 		return item;
+	}
 
 	return NULL;
 }
@@ -122,12 +125,16 @@ int main (int argc, char *argv[])
 	while ((item = probe_queue.front())) {
 		probe_queue.pop();
 
+		//std::cout << "Item: " << item << "\n";
+		//log_debug ("queue has %lu items\n", probe_queue.size());
 		DPContainer *found = probe (item);
 		if (found) {
 			item->add_child (found);
 		} //RAR else what?
+		//log_debug ("queue has %lu items\n", probe_queue.size());
 	}
 
+#if 1
 	LVMGroup::find_devices (disks);
 
 	while ((item = probe_queue.front())) {
@@ -142,6 +149,7 @@ int main (int argc, char *argv[])
 	if (probe_queue.size() > 0) {
 		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());
 	}
+#endif
 
 #if 0
 	std::cout << DPContainer::dump_objects();
@@ -156,6 +164,7 @@ int main (int argc, char *argv[])
 
 	}
 	DPContainer::dump_leaks();
+	log_info ("done\n");
 	log_close();
 	return 0;
 }

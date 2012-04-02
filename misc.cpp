@@ -93,7 +93,7 @@ static bool is_random (unsigned char *buffer, int bufsize)
 
 	//log_debug ("data mean = %0.6f\n", mean);
 
-	return ((mean > 127) && (mean < 128));
+	return ((mean > 125) && (mean < 130));
 }
 
 

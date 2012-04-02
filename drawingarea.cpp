@@ -28,6 +28,7 @@
 #include "drawingarea.h"
 #include "filesystem.h"
 #include "log.h"
+#include "misc.h"
 #include "partition.h"
 #include "table.h"
 #include "theme.h"
@@ -135,13 +136,18 @@ bool DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
 
 /**
  * get_table
+ * Am I a table?
+ * Am I a wrapper for a table?
  */
-DPContainer * DPDrawingArea::get_table (DPContainer *c)
+Table * DPDrawingArea::get_table (DPContainer *c)
 {
 	DPContainer *child = NULL;
 
 	if (!c)
 		return NULL;
+
+	if (c->is_a ("table"))
+		return dynamic_cast<Table*> (c);
 
 	if (c->children.size() != 1)
 		return NULL;
@@ -151,11 +157,7 @@ DPContainer * DPDrawingArea::get_table (DPContainer *c)
 		return NULL;
 
 	if (child->is_a ("table"))
-		return child;
-
-	if (child->is_a ("segment")) {
-		log_error ("%s: segment\n", __PRETTY_FUNCTION__);
-	}
+		return dynamic_cast<Table*> (child);
 
 	return NULL;
 }
@@ -163,13 +165,46 @@ DPContainer * DPDrawingArea::get_table (DPContainer *c)
 /**
  * get_protective
  */
-DPContainer * DPDrawingArea::get_protective (DPContainer *c)
+Table * DPDrawingArea::get_protective (DPContainer *c)
 {
+	DPContainer *child = NULL;
+
+	std::cout << "1: " << c << "\n";
+	if (!c)
+		return NULL;
+
+	if (!c->is_a ("table"))
+		return NULL;
+
+	if (c->children.size() != 1)
+		return NULL;
+
+	child = c->children[0];
+	std::cout << "2: " << child << "\n";
+	if (!child)
+		return NULL;
+
+	if (!child->is_a ("partition"))
+		return NULL;
+
+	if (child->children.size() != 1)
+		return NULL;
+
+	child = child->children[0];
+	std::cout << "3: " << child << "\n";
+	if (!child)
+		return NULL;
+
+	if (child->is_a ("table"))
+		return dynamic_cast<Table*> (child);
+
 	return NULL;
 }
 
 /**
  * get_filesystem
+ * Am I a filesystem?
+ * Am I a wrapper for a filesystem?
  */
 Filesystem * DPDrawingArea::get_filesystem (DPContainer *c)
 {
@@ -177,6 +212,9 @@ Filesystem * DPDrawingArea::get_filesystem (DPContainer *c)
 
 	if (!c)
 		return NULL;
+
+	if (c->is_a ("filesystem"))
+		return dynamic_cast<Filesystem*> (c);
 
 	if (c->children.size() != 1)
 		return NULL;
@@ -187,6 +225,29 @@ Filesystem * DPDrawingArea::get_filesystem (DPContainer *c)
 
 	if (child->is_a ("filesystem"))
 		return dynamic_cast<Filesystem*> (child);
+
+	return NULL;
+}
+
+/**
+ * get_misc
+ */
+Misc * DPDrawingArea::get_misc (DPContainer *c)
+{
+	DPContainer *child = NULL;
+
+	if (!c)
+		return NULL;
+
+	if (c->children.size() != 1)
+		return NULL;
+
+	child = c->children[0];
+	if (!child)
+		return NULL;
+
+	if (child->is_a ("misc"))
+		return dynamic_cast<Misc*> (child);
 
 	return NULL;
 }
@@ -576,6 +637,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 	const int &h = shape.h;
 	Rect inside;
 
+	//log_debug ("%s\n", __PRETTY_FUNCTION__);
 	if (right)
 		*right = shape;
 
@@ -588,16 +650,20 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 	long bytes_per_pixel = c->bytes_size / w;
 
 	int num = c->children.size();
+	//std::cout << "draw_container: " << c << "\n";
 	for (int i = 0; i < num; i++) {
 		DPContainer *child = c->children[i];
-		Filesystem  *fs    = get_filesystem (child);
+
+		//std::cout << "child: " << child << "\n";
 
 		int child_width = (child->bytes_size / bytes_per_pixel);
 		int child_usage = (child->bytes_used / bytes_per_pixel);
 
 		int offset = x + (child->parent_offset / bytes_per_pixel);
+
+		Filesystem *fs = get_filesystem (child);
 		if (fs) {
-			//ASSERT (fs);
+			//std::cout << "fs: " << fs << "\n";
 
 			std::string label1;
 			std::string label2;
@@ -642,20 +708,53 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 			continue;
 		}
 
-		if (child->is_a ("table")) {
+		Table *table = get_table (child);
+		if (table) {
+			log_debug ("TABLE\n");
+			std::cout << table << "\n";
+			DPContainer *protect = get_protective (table);
+			std::string name;
+			log_info ("protect = %p\n", protect);
+			if (protect) {
+				name = protect->name;
+			} else {
+				name = table->name;
+			}
+
 			Rect tab;
 			Rect inside;
 			Rect right_t;
+			Rect below;
 
 			Rect rect = { offset, y, child_width-GAP, h };
 			draw_tabframe (cr, "extended", rect, &tab, &inside, &right_t);
 
+			if (protect) {
+				draw_icon (cr, "shield", tab, &below);
+				tab = below;
+				child = protect;
+			} else {
+				child = table;
+			}
 			draw_icon (cr, "table", tab);
+
 			draw_container (cr, child, inside);
-		} else {
-			//log_debug ("Other: %s (%s)\n", child->name.c_str(), __PRETTY_FUNCTION__);
+			continue;
+		}
+
+		Misc *m = get_misc (child);
+		if (!m && (child->is_a ("misc"))) {
+			m = dynamic_cast<Misc*> (child);	// don't need this, it's in get_misc
+		}
+
+		if (m) {
+			//log_debug ("Other: %s (%s)\n", m->name.c_str(), __PRETTY_FUNCTION__);
 			Rect rect = { offset, y, child_width-GAP, h };
-			draw_partition (cr, "unknown", child_width-GAP, child_width-GAP, 0, rect, &inside);
+			if (m->name == "empty") {
+				draw_border (cr, rect, &inside);
+			} else {
+				draw_partition (cr, "unknown", child_width-GAP, child_width-GAP, 0, rect, &inside);
+			}
 
 			Pango::FontDescription font;
 			font.set_family ("Liberation Sans");
@@ -663,14 +762,18 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 			Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
 			layout->set_font_description (font);
 
-			layout->set_text ("Unknown\n" + get_size (child->bytes_size));
+			layout->set_text (m->name + "\n" + get_size (child->bytes_size));
 			cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
 			cr->move_to (inside.x + 2, inside.y + 2);
 			layout->set_width (Pango::SCALE * (child_width - GAP - 8));
 			layout->set_ellipsize (Pango::ELLIPSIZE_END);
 			layout->update_from_cairo_context (cr);
 			layout->show_in_cairo_context (cr);
+			continue;
 		}
+
+		std::string s = get_size (child->bytes_size);
+		log_error ("unknown type %s, %s, %s\n", child->name.c_str(), child->device.c_str(), s.c_str());
 	}
 
 	if (right) {
@@ -684,6 +787,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
  */
 bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 {
+	//log_debug ("%s\n", __PRETTY_FUNCTION__);
 	if (!m_c)
 		return true;
 
@@ -703,10 +807,14 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 	draw_block (cr, item, space, &right);
 	space = right;
 
-	DPContainer *table = get_table (item);
+	//std::cout << item << "\n";
+	Table *table = get_table (item);
 	if (table) {
-		DPContainer *protect = get_protective (item);
+		log_debug ("TABLE\n");
+		std::cout << table << "\n";
+		DPContainer *protect = get_protective (table);
 		std::string name;
+		log_info ("protect = %p\n", protect);
 		if (protect) {
 			name = protect->name;
 		} else {
@@ -715,10 +823,14 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 		draw_partition (cr, name, 27, 27, 0, space, &inside, &right); // 27 -> width of icon + GAP, 0  -> usage (yellow)
 		if (protect) {
+			//log_info ("protect\n");
 			draw_icon (cr, "shield", inside, &below);
+			//std::cout << item << "\n";
 			inside = below;
 			item = protect;
+			//std::cout << item << "\n";
 		} else {
+			//log_info ("item = table (%s)\n", table->name.c_str());
 			item = table;
 		}
 		draw_icon (cr, "table", inside, &below);

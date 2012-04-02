@@ -23,6 +23,8 @@
 
 class DPContainer;
 class Filesystem;
+class Misc;
+class Table;
 class Theme;
 
 typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
@@ -65,9 +67,10 @@ private:
 	void draw_grid      (const Cairo::RefPtr<Cairo::Context> &cr);
 	void draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 
-	DPContainer * get_table      (DPContainer *c);
-	DPContainer * get_protective (DPContainer *c);
+	Table *       get_table      (DPContainer *c);
+	Table *       get_protective (DPContainer *c);
 	Filesystem *  get_filesystem (DPContainer *c);
+	Misc *        get_misc       (DPContainer *c);
 
 	std::deque<Range> vRange;
 
