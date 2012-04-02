@@ -1175,3 +1175,13 @@ only autowrite and autohide for files in my work directory (and below)
 
 speed up build by only compiling gui src with gtkmm, etc
 
+add a log_debug (DPContainer *) and ref to dump the object
+
+replace 0x%02x with %#02x
+
+factor out partition naming function
+
+replace
+	buffer = (unsigned char*) malloc (bufsize);
+with vector<unsigned char>
+
