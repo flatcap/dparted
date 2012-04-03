@@ -1187,3 +1187,5 @@ with vector<unsigned char>
 
 only double-click (un)fold on source files
 
+white curvy corners should get their colour from the theme too
+
