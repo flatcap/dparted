@@ -1185,3 +1185,5 @@ replace
 	buffer = (unsigned char*) malloc (bufsize);
 with vector<unsigned char>
 
+only double-click (un)fold on source files
+
