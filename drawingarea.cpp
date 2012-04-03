@@ -169,7 +169,7 @@ Table * DPDrawingArea::get_protective (DPContainer *c)
 {
 	DPContainer *child = NULL;
 
-	std::cout << "1: " << c << "\n";
+	//std::cout << "1: " << c << "\n";
 	if (!c)
 		return NULL;
 
@@ -180,7 +180,7 @@ Table * DPDrawingArea::get_protective (DPContainer *c)
 		return NULL;
 
 	child = c->children[0];
-	std::cout << "2: " << child << "\n";
+	//std::cout << "2: " << child << "\n";
 	if (!child)
 		return NULL;
 
@@ -191,7 +191,7 @@ Table * DPDrawingArea::get_protective (DPContainer *c)
 		return NULL;
 
 	child = child->children[0];
-	std::cout << "3: " << child << "\n";
+	//std::cout << "3: " << child << "\n";
 	if (!child)
 		return NULL;
 
@@ -710,11 +710,11 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 
 		Table *table = get_table (child);
 		if (table) {
-			log_debug ("TABLE\n");
-			std::cout << table << "\n";
+			//log_debug ("TABLE\n");
+			//std::cout << table << "\n";
 			DPContainer *protect = get_protective (table);
 			std::string name;
-			log_info ("protect = %p\n", protect);
+			//log_info ("protect = %p\n", protect);
 			if (protect) {
 				name = protect->name;
 			} else {
@@ -791,8 +791,6 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 	if (!m_c)
 		return true;
 
-	draw_grid (cr);
-
 	DPContainer *item = m_c;
 
 	vRange.clear();
@@ -810,11 +808,11 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 	//std::cout << item << "\n";
 	Table *table = get_table (item);
 	if (table) {
-		log_debug ("TABLE\n");
-		std::cout << table << "\n";
+		//log_debug ("TABLE\n");
+		//std::cout << table << "\n";
 		DPContainer *protect = get_protective (table);
 		std::string name;
-		log_info ("protect = %p\n", protect);
+		//log_info ("protect = %p\n", protect);
 		if (protect) {
 			name = protect->name;
 		} else {
@@ -837,6 +835,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 		space = right;
 	}
+
+	draw_grid_linear (cr, space, m_c->bytes_size);
 
 	draw_container (cr, item, space);
 
@@ -989,6 +989,66 @@ void DPDrawingArea::draw_grid (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	cr->restore();
 }
+
+/**
+ * draw_grid_linear
+ */
+void DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long long max_size)
+{
+	space.w -= 2;
+
+	const int &x = space.x;
+	const int &w = space.w;
+	const int &h = space.h;
+
+	double bytes_per_pixel = max_size / w;
+
+	int lower = floor (log2 (40.0 * max_size / w));
+	int major = floor (log2 (256.0 * max_size / w));
+	int minor = major - 1;
+
+	major = 1 << (major - lower);
+	minor = 1 << (minor - lower);
+
+	cr->save();
+
+	cr->set_antialias (Cairo::ANTIALIAS_NONE);
+	cr->set_source_rgba (1, 0, 0, 0.2);
+	cr->set_line_width (1);
+	cr->rectangle (0.5+x, 0.5, w-1, h-1);
+	cr->stroke();
+
+	double spacing = pow (2, lower) / bytes_per_pixel;
+
+	int count = (w / spacing) + 1;
+
+	for (int i = 0; i <= count; i++) {
+		if ((i % major) == 0) {
+			cr->set_line_width (3);
+			cr->set_source_rgba (0.3, 0.3, 0.8, 0.7);
+		} else if ((i % minor) == 0) {
+			cr->set_line_width (2);
+			cr->set_source_rgba (0.5, 0.5, 0.5, 0.6);	//XXX theme
+		} else {
+			cr->set_line_width (1);
+			cr->set_source_rgba (0.3, 0.3, 0.3, 0.5);
+		}
+
+		cr->move_to ((int) (spacing*i) + 0.5 + x, 0);
+		cr->rel_line_to (0, h);
+		cr->stroke();
+	}
+
+	cr->restore();
+}
+
+/**
+ * draw_grid_log
+ */
+void DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long long max_size)
+{
+}
+
 
 /**
  * draw_highlight

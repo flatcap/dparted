@@ -164,7 +164,7 @@ int main (int argc, char *argv[])
 
 	}
 	DPContainer::dump_leaks();
-	log_info ("done\n");
+	log_info ("done\n"); //XXX move to log_close
 	log_close();
 	return 0;
 }

@@ -127,6 +127,7 @@ Gdk::RGBA Theme::get_colour (const std::string &name)
 		c = (*it).second;
 	}
 
+	//c.set_alpha (0.3);
 	return c;
 }
 
