@@ -1208,4 +1208,5 @@ with matching
 		%age file usage (fallocate)
 
 adapt draw_grid_linear et al to fit into a partition frame
+partition_clone program to save a sparse image of the same
 
