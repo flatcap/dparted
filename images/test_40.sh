@@ -40,7 +40,7 @@ function test_41()
 	gpt_init "$IMAGE"
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 1 500			# partition 1
+	gpt_create $IMAGE 1 1023		# partition 1
 	[ $? = 0 ] || error || return
 
 	LOOP="$(create_loop $IMAGE)"
@@ -65,7 +65,7 @@ function test_42()
 	gpt_init "$IMAGE"
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 1 500			# partition 1
+	gpt_create $IMAGE 1 1023		# partition 1
 	[ $? = 0 ] || error || return
 
 	LOOP="$(create_loop $IMAGE)"
@@ -92,7 +92,7 @@ function test_43()
 	gpt_init "$IMAGE"
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 1 500			# partition 1
+	gpt_create $IMAGE 1 1023		# partition 1
 	[ $? = 0 ] || error || return
 
 	LOOP="$(create_loop $IMAGE)"
@@ -121,28 +121,28 @@ function test_44()
 	gpt_init "$IMAGE"
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 600 200		# partition 1
+	gpt_create $IMAGE 1 1023		# partition 1
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 1000 499		# partition 2
+	gpt_create $IMAGE 1200 512		# partition 2
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 1500 500		# partition 3
+	gpt_create $IMAGE 1800 512		# partition 3
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 2500 199		# partition 4
+	gpt_create $IMAGE 2500 768		# partition 4
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 2700 200		# partition 5
+	gpt_create $IMAGE 3300 400		# partition 5
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 3000 199		# partition 6
+	gpt_create $IMAGE 3900 199		# partition 6
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 3200 400		# partition 7
+	gpt_create $IMAGE 4300 150		# partition 7
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 3800 200		# partition 8
+	gpt_create $IMAGE 4500 400		# partition 8
 	[ $? = 0 ] || error || return
 
 	LOOP="$(create_loop $IMAGE)"

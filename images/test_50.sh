@@ -171,14 +171,14 @@ function test_55()
 	[ $? = 0 ] || error || return
 
 	VOLUME="simple$INDEX.1"
-	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null	# filesystem 1
+	lvcreate --size 400m --name $VOLUME $GROUP > /dev/null	# filesystem 1
 	[ $? = 0 ] || error || return
 
 	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
 	[ $? = 0 ] || error || return
 
 	VOLUME="gap$INDEX.1"
-	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null	# gap 1
+	lvcreate --size 400m --name $VOLUME $GROUP > /dev/null	# gap 1
 	[ $? = 0 ] || error || return
 
 	VOLUME="simple$INDEX.2"
@@ -196,7 +196,7 @@ function test_55()
 	[ $? = 0 ] || error || return
 
 	VOLUME="gap$INDEX.2"
-	lvcreate --size 500m --name $VOLUME $GROUP > /dev/null	# gap 2
+	lvcreate --size 300m --name $VOLUME $GROUP > /dev/null	# gap 2
 	[ $? = 0 ] || error || return
 
 	VOLUME="simple$INDEX.4"
@@ -207,18 +207,18 @@ function test_55()
 	[ $? = 0 ] || error || return
 
 	VOLUME="simple$INDEX.5"
-	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null	# filesystem 5
+	lvcreate --size 600m --name $VOLUME $GROUP > /dev/null	# filesystem 5
 	[ $? = 0 ] || error || return
 
 	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
 	[ $? = 0 ] || error || return
 
 	VOLUME="gap$INDEX.3"
-	lvcreate --size 100m --name $VOLUME $GROUP > /dev/null	# gap 3
+	lvcreate --size 600m --name $VOLUME $GROUP > /dev/null	# gap 3
 	[ $? = 0 ] || error || return
 
 	VOLUME="simple$INDEX.6"
-	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null	# filesystem 6
+	lvcreate --size 400m --name $VOLUME $GROUP > /dev/null	# filesystem 6
 	[ $? = 0 ] || error || return
 
 	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"
@@ -232,11 +232,11 @@ function test_55()
 	[ $? = 0 ] || error || return
 
 	VOLUME="gap$INDEX.4"
-	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null	# gap 4
+	lvcreate --size 300m --name $VOLUME $GROUP > /dev/null	# gap 4
 	[ $? = 0 ] || error || return
 
 	VOLUME="simple$INDEX.8"
-	lvcreate --size 200m --name $VOLUME $GROUP > /dev/null	# filesystem 8
+	lvcreate --size 400m --name $VOLUME $GROUP > /dev/null	# filesystem 8
 	[ $? = 0 ] || error || return
 
 	mke2fs -t ext4 -q "/dev/mapper/$GROUP-$VOLUME"

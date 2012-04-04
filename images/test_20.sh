@@ -40,7 +40,7 @@ function test_21()
 	msdos_init "$IMAGE"
 	[ $? = 0 ] || error || return
 
-	msdos_create $IMAGE primary 1 500	# partition 1
+	msdos_create $IMAGE primary 1 1023	# partition 1
 	[ $? = 0 ] || error || return
 
 	LOOP="$(create_loop $IMAGE)"
@@ -65,7 +65,7 @@ function test_22()
 	msdos_init "$IMAGE"
 	[ $? = 0 ] || error || return
 
-	msdos_create $IMAGE primary 1 500	# partition 1
+	msdos_create $IMAGE primary 1 1023	# partition 1
 	[ $? = 0 ] || error || return
 
 	LOOP="$(create_loop $IMAGE)"
@@ -92,7 +92,7 @@ function test_23()
 	msdos_init "$IMAGE"
 	[ $? = 0 ] || error || return
 
-	msdos_create $IMAGE primary 1 500	# partition 1
+	msdos_create $IMAGE primary 1 1023	# partition 1
 	[ $? = 0 ] || error || return
 
 	LOOP="$(create_loop $IMAGE)"
@@ -121,16 +121,16 @@ function test_24()
 	msdos_init "$IMAGE"
 	[ $? = 0 ] || error || return
 
-	msdos_create $IMAGE primary 1 500	# partition 1
+	msdos_create $IMAGE primary 1 1023	# partition 1
 	[ $? = 0 ] || error || return
 
-	msdos_create $IMAGE primary 600 500	# partition 2
+	msdos_create $IMAGE primary 1024 512	# partition 2
 	[ $? = 0 ] || error || return
 
-	msdos_create $IMAGE primary 2000 1000	# partition 3
+	msdos_create $IMAGE primary 2048 1024	# partition 3
 	[ $? = 0 ] || error || return
 
-	msdos_create $IMAGE primary 3500 200	# partition 4
+	msdos_create $IMAGE primary 3584 512	# partition 4
 	[ $? = 0 ] || error || return
 
 	LOOP="$(create_loop $IMAGE)"
