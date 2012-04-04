@@ -1189,3 +1189,23 @@ only double-click (un)fold on source files
 
 white curvy corners should get their colour from the theme too
 
+LogQuell object
+	when instantiated it prevents [some/all] logging
+	when it is destroyed, logging is returned to normal
+how do you conditionally create an object without hassle or leakage?
+
+script to turn existing partition table into a image_build script
+e.g.
+	copy_table.sh /dev/sda
+creates
+	sda_image.sh
+builds
+	/dev/loop0
+with matching
+		partition table
+		partition layout
+		filesystems
+		%age file usage (fallocate)
+
+adapt draw_grid_linear et al to fit into a partition frame
+
