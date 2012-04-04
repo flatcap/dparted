@@ -637,6 +637,9 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 	const int &h = shape.h;
 	Rect inside;
 
+	if (!c)
+		return;
+
 	//log_debug ("%s\n", __PRETTY_FUNCTION__);
 	if (right)
 		*right = shape;
@@ -793,6 +796,9 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	DPContainer *item = m_c;
 
+	//if (item->device != "/dev/loop3") return true;
+	//std::cout << std::endl;
+
 	vRange.clear();
 
 	Gtk::Allocation allocation = get_allocation();
@@ -805,38 +811,41 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 	draw_block (cr, item, space, &right);
 	space = right;
 
-	//std::cout << item << "\n";
 	Table *table = get_table (item);
-	if (table) {
-		//log_debug ("TABLE\n");
-		//std::cout << table << "\n";
-		DPContainer *protect = get_protective (table);
-		std::string name;
-		//log_info ("protect = %p\n", protect);
-		if (protect) {
-			name = protect->name;
-		} else {
-			name = table->name;
-		}
+	DPContainer *protect = get_protective (table);
+	DPContainer *partition = protect ? protect->parent : NULL;
 
-		draw_partition (cr, name, 27, 27, 0, space, &inside, &right); // 27 -> width of icon + GAP, 0  -> usage (yellow)
+#if 0
+	std::cout << "item: "      << item      << "\n";
+	std::cout << "table: "     << table     << "\n";
+	std::cout << "protect: "   << protect   << "\n";
+	std::cout << "partition: " << partition << "\n";
+#endif
+
+	// block (table)
+	// block (table, shield)
+	if (table) {
+		draw_partition (cr, "red", 27, 27, 0, space, &inside, &right); // 27 -> width of icon + GAP, 0  -> usage (yellow)
+		draw_icon (cr, "table", inside, &below);
 		if (protect) {
-			//log_info ("protect\n");
-			draw_icon (cr, "shield", inside, &below);
-			//std::cout << item << "\n";
+			draw_icon (cr, "shield", below);
 			inside = below;
 			item = protect;
-			//std::cout << item << "\n";
-		} else {
-			//log_info ("item = table (%s)\n", table->name.c_str());
-			item = table;
 		}
-		draw_icon (cr, "table", inside, &below);
-
 		space = right;
 	}
 
 	draw_grid_linear (cr, space, m_c->bytes_size);
+
+	if (partition) {
+		//reduce space and delegate
+		long bytes_per_pixel = table->bytes_size / space.w;
+		space.x = partition->parent_offset / bytes_per_pixel;
+		space.w = partition->bytes_size    / bytes_per_pixel;
+		item = partition;
+	} else if (table) {
+		item = table;
+	}
 
 	draw_container (cr, item, space);
 
