@@ -1210,3 +1210,9 @@ with matching
 adapt draw_grid_linear et al to fit into a partition frame
 partition_clone program to save a sparse image of the same
 
+dparted --test
+lots of sample disks to play with
+non-destructive, but persistant (across runs) -- save to config file, etc
+reset menu item
+[X] extra realism -- take ages to perform moves!
+
