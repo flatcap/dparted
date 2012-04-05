@@ -366,3 +366,13 @@ void dump_hex (unsigned char *buffer, int bufsize)
 	}
 }
 
+/**
+ * align
+ */
+long long align (long long num, long long round)
+{
+	if (round == 0)
+		return num;
+	return ((num + round - 1) / round * round);
+}
+

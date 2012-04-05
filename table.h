@@ -33,6 +33,7 @@ public:
 
 	virtual std::string dump_dot (void);
 protected:
+	long long fill_space (void);
 
 private:
 

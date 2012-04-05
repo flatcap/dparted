@@ -39,6 +39,7 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 std::string read_file_line (const std::string &filename);
 std::string read_uuid (unsigned char *buffer);
 void dump_hex (unsigned char *buffer, int bufsize);
+long long align (long long num, long long round);
 
 #endif // _UTILS_H_
 

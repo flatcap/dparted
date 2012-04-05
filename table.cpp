@@ -22,6 +22,7 @@
 #include "gpt.h"
 #include "identify.h"
 #include "log.h"
+#include "misc.h"
 #include "msdos.h"
 #include "table.h"
 
@@ -56,6 +57,84 @@ DPContainer * Table::probe (DPContainer *parent, unsigned char *buffer, int bufs
 
 	return NULL;
 }
+
+/**
+ * fill_space
+ */
+long long Table::fill_space (void)
+{
+	// iterate through the children and add a Misc for all the unallocated regions
+	// the size of these fillers must be >= alignment size
+
+	std::vector<DPContainer*> vm;
+	std::vector<DPContainer*>::iterator i;
+#if 0
+	std::string s1;
+	std::string s2;
+	log_debug ("fill space\n");
+#endif
+
+	long long upto = 0;
+
+	for (i = children.begin(); i != children.end(); i++) {
+		DPContainer *c = (*i);
+
+		if (upto == c->parent_offset) {
+			upto += c->bytes_size;
+#if 0
+			s1 = get_size (c->parent_offset);
+			s2 = get_size (c->parent_offset + c->bytes_size);
+			log_debug ("\tpartition %12lld -> %12lld    %8s -> %8s\n", c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str(), s2.c_str());
+#endif
+		} else {
+#if 0
+			s1 = get_size (upto);
+			s2 = get_size (c->parent_offset);
+			log_debug ("\tspace     %12lld -> %12lld    %8s -> %8s\n", upto, c->parent_offset, s1.c_str(), s2.c_str());
+			s1 = get_size (c->parent_offset);
+			s2 = get_size (c->parent_offset + c->bytes_size);
+			log_debug ("\tpartition %12lld -> %12lld    %8s -> %8s\n", c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str(), s2.c_str());
+#endif
+			Misc *m = new Misc();
+			m->name = "unallocated";
+			m->parent_offset = upto;
+			m->bytes_size = (c->parent_offset - upto);
+			m->bytes_used = 0;
+
+			vm.push_back (m);
+
+			upto = c->parent_offset + c->bytes_size;
+		}
+	}
+
+	//log_debug ("upto = %lld, size = %lld\n", upto, bytes_size);
+	if (upto < bytes_size) {
+		Misc *m = new Misc();
+		m->name = "unallocated";
+		m->parent_offset = upto;
+		m->bytes_size = (bytes_size - upto);
+		m->bytes_used = 0;
+		vm.push_back (m);
+	}
+
+#if 1
+	for (i = vm.begin(); i != vm.end(); i++) {
+		add_child (*i);			// add_free()
+	}
+#endif
+
+#if 0
+	log_debug ("\nrecap\n");
+	for (i = children.begin(); i != children.end(); i++) {
+		DPContainer *c = (*i);
+		s1 = get_size (c->bytes_size);
+		log_debug ("\t%-12s %12lld -> %12lld  %9s\n", c->name.c_str(), c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str());
+	}
+#endif
+
+	return 0;
+}
+
 
 
 /**

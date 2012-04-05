@@ -34,7 +34,6 @@ public:
 	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
 
 protected:
-	long long fill_space (void);
 
 private:
 
