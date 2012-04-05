@@ -1233,3 +1233,8 @@ change objects to be "filled" with a space object
 if add_child is called the space is either replaced
 or split around the child
 
+container public function get_children (enum TYPES)
+	child
+	space
+	reserved
+
