@@ -539,6 +539,7 @@ tooltip showing contents:
 	"Fedora 16"
 	"Dir1\nDir2\nDir3\n..."
 must be mirrored by a properties menu option (for accessiblility)
+factor out into libos
 
 flags
 	general container flags
@@ -1219,4 +1220,12 @@ reset menu item
 [X] extra realism -- take ages to perform moves!
 
 todo directory, split up this file
+
+factor out gpt,msdos,etc code into
+	libgpt
+	libmsdos
+	etc
+
+drawingarea -- need custom cases for small partitions
+(down as small as 1px wide?)
 
