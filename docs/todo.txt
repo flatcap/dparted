@@ -1229,3 +1229,7 @@ factor out gpt,msdos,etc code into
 drawingarea -- need custom cases for small partitions
 (down as small as 1px wide?)
 
+change objects to be "filled" with a space object
+if add_child is called the space is either replaced
+or split around the child
+
