@@ -22,6 +22,7 @@
 #include "gpt.h"
 #include "log.h"
 #include "main.h"
+#include "misc.h"
 #include "partition.h"
 #include "utils.h"
 #include "filesystem.h"
@@ -43,6 +44,84 @@ Gpt::~Gpt()
 
 
 /**
+ * align
+ */
+long long align (long long num, long long round)
+{
+	if (round == 0)
+		return num;
+	return ((num + round - 1) / round * round);
+}
+
+/**
+ * fill_space
+ */
+long long Gpt::fill_space (void)
+{
+	// iterate through the children and add a Misc for all the unallocated regions
+	// the size of these fillers must be >= alignment size
+
+	std::vector<DPContainer*> vm;
+	std::vector<DPContainer*>::iterator i;
+#if 0
+	std::string s1;
+	std::string s2;
+	log_debug ("fill space\n");
+#endif
+
+	long long upto = 0;
+
+	for (i = children.begin(); i != children.end(); i++) {
+		DPContainer *c = (*i);
+
+		if (upto == c->parent_offset) {
+			upto += c->bytes_size;
+#if 0
+			s1 = get_size (c->parent_offset);
+			s2 = get_size (c->parent_offset + c->bytes_size);
+			log_debug ("\tpartition %12lld -> %12lld    %8s -> %8s\n", c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str(), s2.c_str());
+#endif
+		} else {
+#if 0
+			s1 = get_size (upto);
+			s2 = get_size (c->parent_offset);
+			log_debug ("\tspace     %12lld -> %12lld    %8s -> %8s\n", upto, c->parent_offset, s1.c_str(), s2.c_str());
+			s1 = get_size (c->parent_offset);
+			s2 = get_size (c->parent_offset + c->bytes_size);
+			log_debug ("\tpartition %12lld -> %12lld    %8s -> %8s\n", c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str(), s2.c_str());
+#endif
+			Misc *m = new Misc();
+			m->name = "unallocated";
+			m->parent_offset = upto;
+			m->bytes_size = (c->parent_offset - upto);
+			m->bytes_used = 0;
+
+			vm.push_back (m);
+
+			upto = c->parent_offset + c->bytes_size;
+		}
+	}
+
+#if 1
+	for (i = vm.begin(); i != vm.end(); i++) {
+		add_child (*i);			// add_free()
+	}
+#endif
+
+#if 0
+	log_debug ("\nrecap\n");
+	for (i = children.begin(); i != children.end(); i++) {
+		DPContainer *c = (*i);
+		s1 = get_size (c->bytes_size);
+		log_debug ("\t%-12s %12lld -> %12lld  %9s\n", c->name.c_str(), c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str());
+	}
+#endif
+
+	return 0;
+}
+
+
+/**
  * probe
  */
 DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
@@ -51,6 +130,15 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	// XXX replace with strict identify function (static)
 		return NULL;
+
+	// LBA		Description
+	// ---------------------------------
+	// 0		proetective mbr
+	// 1		primary gpt header
+	// 2-33		128 gpt entries
+	// ...
+	// -33		128 gpt entries
+	// -1		secondary gpt header
 
 	g = new Gpt;
 
@@ -62,6 +150,31 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 	g->block_size = 0;
 	g->uuid = read_uuid (buffer+568);
 	g->open_device();
+
+	// Assumption: 1MiB alignment (for now)
+	// Should reserved bits be allocated after actual partitions?
+	// Should we allow Misc to overlap real partitions?
+	// Then once a non-aligned partition is deleted
+	// it would be replaced by an aligned partition.
+
+#if 1
+	Misc *res1 = new Misc();
+	res1->name          = "reserved";
+	res1->bytes_size    = 512 * 34;		//align (512 * 34, 1024*1024);
+	res1->bytes_used    = res1->bytes_size;
+	res1->parent_offset = 0;					// Start of the partition
+	g->add_child (res1);		// change to add_reserved?
+
+	Misc *res2 = new Misc();
+	res2->name          = "reserved";
+	res2->bytes_size    = 512 * 33;		//align (512 * 33, 1024*1024);
+	res2->bytes_used    = res2->bytes_size;
+	res2->parent_offset = g->bytes_size - res2->bytes_size;		// End of the partition
+	g->add_child (res2);
+#endif
+
+	//log_debug ("res1 = %lld\n", res1->bytes_size);
+	//log_debug ("res2 = %lld\n", res2->bytes_size);
 
 	//std::cout << g << "\n";
 
@@ -114,15 +227,18 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 			}
 		}
 
+#if 0
 		std::string s = get_size (p->bytes_size);
-		//log_debug ("\t\tlabel  = %s\n",   p->name.c_str());
-		//log_debug ("\t\t\tstart  = %lld\n", *(long long*) (buffer+32) * 512);
-		//log_debug ("\t\t\tfinish = %lld\n", *(long long*) (buffer+40) * 512);
-		//log_debug ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
-
+		log_debug ("\t\tlabel  = %s\n",   p->name.c_str());
+		log_debug ("\t\t\tstart  = %lld\n", *(long long*) (buffer+32) * 512);
+		log_debug ("\t\t\tfinish = %lld\n", *(long long*) (buffer+40) * 512);
+		log_debug ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
+#endif
 		g->add_child (p);
-		queue_add_probe (p);//QWQ
+		queue_add_probe (p);
 	}
+
+	g->fill_space();		// optional
 
 	return g;
 }
