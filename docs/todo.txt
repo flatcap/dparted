@@ -481,6 +481,7 @@ build
 		etc
 
 test case of 100 disks/devices/images
+kernel can probably handle 255
 
 Container::add_child
 	if bytes_size/bytes_used is < 0 don't alter them
@@ -1216,4 +1217,6 @@ lots of sample disks to play with
 non-destructive, but persistant (across runs) -- save to config file, etc
 reset menu item
 [X] extra realism -- take ages to perform moves!
+
+todo directory, split up this file
 
