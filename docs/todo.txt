@@ -1101,6 +1101,7 @@ theme change the names to
 	fs_ext2
 	table_msdos
 	table_gpt
+if "table_X" doesn't exist, use "table", etc
 
 changing the theme to "default" could re-call init_colours, etc
 send a signal afterwards to alert plugins
