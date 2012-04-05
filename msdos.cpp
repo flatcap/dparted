@@ -30,6 +30,7 @@
 #include "extended.h"
 #include "log.h"
 #include "main.h"
+#include "misc.h"
 #include "msdos.h"
 #include "partition.h"
 #include "utils.h"
@@ -136,8 +137,16 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 
 	if ((count < 0) || (vp.size() > 4)) {
 		log_debug ("partition table is corrupt\n");	// bugger
+		m->unref();
 		return NULL;
 	}
+
+	Misc *res1 = new Misc();
+	res1->name          = "reserved";
+	res1->bytes_size    = 512;		//align (512, 1024*1024);
+	res1->bytes_used    = res1->bytes_size;
+	res1->parent_offset = 0;					// Start of the partition
+	m->add_child (res1);		// change to add_reserved?
 
 	for (i = 0; i < vp.size(); i++) {
 #if 0
@@ -181,6 +190,8 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 		}
 		m->add_child (c);
 	}
+
+	m->fill_space();		// optional
 
 	return m;
 }

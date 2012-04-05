@@ -26,6 +26,7 @@
 #include "extended.h"
 #include "log.h"
 #include "main.h"
+#include "misc.h"
 #include "partition.h"
 #include "utils.h"
 
@@ -74,6 +75,13 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 	buffer = (unsigned char*) malloc (bufsize);
 	if (!buffer)
 		return NULL;
+
+	Misc *res1 = new Misc();
+	res1->name          = "reserved";
+	res1->bytes_size    = 512;		//align (512, 1024*1024);
+	res1->bytes_used    = res1->bytes_size;
+	res1->parent_offset = 0;					// Start of the partition
+	ext->add_child (res1);		// change to add_reserved?
 
 	for (loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
 		std::string s = get_size (table_offset);
@@ -147,6 +155,8 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 		if (vp.size() == 1)
 			break;
 	}
+
+	ext->fill_space();		// optional
 
 	free (buffer);
 	return ext;
