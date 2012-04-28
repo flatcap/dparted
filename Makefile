@@ -18,15 +18,19 @@ HDR	= block.h container.h disk.h extended.h file.h filesystem.h \
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp
 HDR	+= dparted.h drawingarea.h treeview.h theme.h main.h
 
-OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
-
 DEPDIR	= .dep
 OBJDIR	= .obj
+
+OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
 OUT	= main
 
 CFLAGS	= -g -Wall
 CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
+CFLAGS	+= -pg -fprofile-arcs -ftest-coverage -fno-omit-frame-pointer
+CFLAGS	+= -fno-inline-functions -fno-inline-functions-called-once -fno-optimize-sibling-calls
+
+LDFLAGS	= -pg -fprofile-arcs
 
 PACKAGES = gtkmm-3.0
 
@@ -88,11 +92,11 @@ $(OBJDIR)/%.o: %.cpp
 
 # ----------------------------------------------------------------------------
 
-quiet_cmd_LN	= LN	$@
-      cmd_LN	= $(CC) -o $@ $(OBJ) $(LDFLAGS)
+quiet_cmd_LD	= LD	$@
+      cmd_LD	= $(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 main: $(OBJ)
-	$(call cmd,LN)
+	$(call cmd,LD)
 
 # ----------------------------------------------------------------------------
 

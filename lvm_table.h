@@ -29,7 +29,10 @@ public:
 
 	virtual std::string dump_dot (void);
 
+	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
+
 protected:
+	// my volume
 
 private:
 

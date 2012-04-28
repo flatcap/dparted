@@ -134,7 +134,7 @@ int main (int argc, char *argv[])
 		//log_debug ("queue has %lu items\n", probe_queue.size());
 	}
 
-#if 0
+#if 1
 	LVMGroup::find_devices (disks);
 
 	while ((item = probe_queue.front())) {

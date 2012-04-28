@@ -17,9 +17,11 @@
 
 
 #include <sstream>
+#include <cstring>
 
 #include "log.h"
 #include "lvm_table.h"
+#include "utils.h"
 
 /**
  * LVMTable
@@ -34,6 +36,52 @@ LVMTable::LVMTable (void)
  */
 LVMTable::~LVMTable()
 {
+}
+
+
+/**
+ * read_uuid_string
+ */
+std::string read_uuid_string (unsigned char *buffer)
+{
+	char text[33];
+	std::string dashes;
+
+	memcpy (text, buffer, sizeof (text) - 1);
+	text[sizeof (text) - 1] = 0;
+
+	dashes = text;
+
+	dashes = dashes.substr(0,6) + "-" +
+		 dashes.substr(6,4) + "-" +
+		 dashes.substr(10,4) + "-" +
+		 dashes.substr(14,4) + "-" +
+		 dashes.substr(18,4) + "-" +
+		 dashes.substr(22,4) + "-" +
+		 dashes.substr(26,6);
+	return dashes;
+}
+
+/**
+ * probe
+ */
+DPContainer * LVMTable::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+{
+	LVMTable *t = NULL;
+
+	if (strncmp ((const char*) buffer+512, "LABELONE", 8))
+		return NULL;
+
+	if (strncmp ((const char*) buffer+536, "LVM2 001", 8))
+		return NULL;
+
+	t = new LVMTable();
+
+	t->uuid = read_uuid_string (buffer+544);
+
+	//log_info ("table: %s\n", t->uuid.c_str());
+
+	return t;
 }
 
 

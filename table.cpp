@@ -25,6 +25,7 @@
 #include "misc.h"
 #include "msdos.h"
 #include "table.h"
+#include "lvm_table.h"
 
 /**
  * Table
@@ -53,6 +54,9 @@ DPContainer * Table::probe (DPContainer *parent, unsigned char *buffer, int bufs
 		return c;
 
 	if ((c = Msdos::probe (parent, buffer, bufsize)))
+		return c;
+
+	if ((c = LVMTable::probe (parent, buffer, bufsize)))
 		return c;
 
 	return NULL;

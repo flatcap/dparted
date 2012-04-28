@@ -755,7 +755,9 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 			if ((child_width-GAP) < 10)
 				continue;
 			Rect rect = { offset, y, child_width-GAP, h };
-			if (m->name == "empty") {
+			if (m->name == "unallocated") {
+				draw_partition (cr, "unallocated", child_width-GAP, child_width-GAP, 0, rect, &inside);
+			} else if (m->name == "empty") {
 				draw_border (cr, rect, &inside);
 			} else {
 				draw_partition (cr, "unknown", child_width-GAP, child_width-GAP, 0, rect, &inside);

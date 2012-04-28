@@ -159,6 +159,14 @@ void fd_vgs (DPContainer &disks)
 		DPContainer *cont = disks.find_device (pv_name);
 		//log_debug ("cont for %s = %p\n", pv_name.c_str(), cont);
 
+		{
+			log_info ("find: %s\n", vg_uuid.c_str());
+			DPContainer *table = disks.find_device (vg_uuid);
+			if (table) {
+				log_info ("table already exists: %s\n", vg_uuid.c_str());
+			}
+		}
+
 		LVMTable *vg_seg = new LVMTable;
 		vg_seg->bytes_size = cont->bytes_size;
 		vg_seg->block_size = vg->block_size;
