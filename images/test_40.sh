@@ -92,7 +92,7 @@ function test_43()
 	gpt_init "$IMAGE"
 	[ $? = 0 ] || error || return
 
-	gpt_create $IMAGE 1 1023		# partition 1
+	gpt_create $IMAGE 1024 1023		# partition 1
 	[ $? = 0 ] || error || return
 
 	LOOP="$(create_loop $IMAGE)"
