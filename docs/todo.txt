@@ -1243,3 +1243,5 @@ test case 12.5 a filesystem that doesn't fill the disk
 vgsplit	split volume group into separate vg's
 vgmerge join two vg's into one
 
+pvmove [device] -> shift data off device if possible
+
