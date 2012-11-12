@@ -18,6 +18,7 @@
 
 #include <fcntl.h>
 #include <gtkmm.h>
+#include "gtkmm/main.h"
 #include <sys/types.h>
 
 #include <cstdlib>
@@ -154,12 +155,12 @@ int main (int argc, char *argv[])
 #if 0
 	std::cout << DPContainer::dump_objects();
 #else
-	Gtk::Main kit (argc, argv);
+	Glib::RefPtr<Gtk::Application> kit = Gtk::Application::create(argc, argv, "DParted");
 
 	DParted d;
 	d.set_data (&disks);
 
-	Gtk::Main::run (d);
+	kit->run (d);
 #endif
 
 	}
