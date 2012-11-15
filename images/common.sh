@@ -190,4 +190,14 @@ function gpt_create()
 	EOF
 }
 
+function gpt_print()
+{
+	[ $# = 1 ] || return
+	[ -b "$1" -o -f "$1" ] || return
+
+	cat <<-EOF | parted $1
+		print
+		quit
+	EOF
+}
 
