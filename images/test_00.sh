@@ -5,7 +5,7 @@ IMAGE_SIZE="5G"
 source common.sh
 
 ##
-# 00 create one of each type of filesystem
+# 00 disk, create one of each type of filesystem
 function test_00()
 {
 	local IMAGE
@@ -89,7 +89,7 @@ function test_00()
 }
 
 ##
-# 01 shuffled linear lvm volume
+# 01 disk, shuffled linear lvm volume
 function test_01()
 {
 	local IMAGE
@@ -134,7 +134,7 @@ function test_01()
 }
 
 ##
-# 02 create raid10 (mirroed striped) volume
+# 02 disk, create raid10 (mirroed striped) volume
 function test_02()
 {
 	local IMAGE
