@@ -9,6 +9,7 @@
 
 # generated deps
 /.dep
+/.obj
 
 # other repos
 /junk
