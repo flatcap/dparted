@@ -1248,3 +1248,6 @@ pvmove [device] -> shift data off device if possible
 
 test for luks device containing lvm (std fedora install)
 
+cope with sparse partition tables
+	/dev/sda{1,2,4] exist sda3 is missing
+
