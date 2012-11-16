@@ -4,14 +4,7 @@
 # useful stuff
 /watcher*
 
-# generated docs
-/html
-
 # generated deps
 /.dep
 /.obj
-
-# other repos
-/junk
-/empty
-/gui
+gmon.out
