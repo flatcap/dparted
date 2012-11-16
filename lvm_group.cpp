@@ -480,7 +480,7 @@ void LVMGroup::find_devices (DPContainer &disks)
 	dump_map ("4", vol_seg_lookup);
 #endif
 
-	fd_fs ();
+	fd_fs();
 }
 
 

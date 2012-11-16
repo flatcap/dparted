@@ -111,7 +111,7 @@ void DParted::set_data (DPContainer *c)
 	}
 
 	//std::cout << m_c->children.size() << " children\n";
-	set_size_request (1439, 77*count+4); //RAR
+	set_size_request (1362, 77*count+6); //RAR
 
 #if 1
 	int width = 0;
@@ -119,7 +119,7 @@ void DParted::set_data (DPContainer *c)
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
 	//move (1920, 900 - height);
-	move (1920, 0);
+	move (0, 0);
 	//move (480, 1080-height);
 #endif
 
