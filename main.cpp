@@ -155,7 +155,7 @@ int main (int argc, char *argv[])
 #if 0
 	std::cout << DPContainer::dump_objects();
 #else
-	Glib::RefPtr<Gtk::Application> kit = Gtk::Application::create(argc, argv, "DParted");
+	Glib::RefPtr<Gtk::Application> kit = Gtk::Application::create(argc, argv, "org.flatcap.dparted");
 
 	DParted d;
 	d.set_data (&disks);
