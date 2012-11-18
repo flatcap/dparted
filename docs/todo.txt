@@ -1269,3 +1269,5 @@ ENVIRONMENT VARIABLES
               The volume group name that is assumed for any reference to a logical volume that doesn't specify  a  path.
               Not set by default.
 
+log_command -- for external commands and their output
+
