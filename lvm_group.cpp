@@ -34,10 +34,15 @@
 #include "utils.h"
 
 //RAR lazy
-std::map<std::string, LVMGroup*>     vg_lookup;
-std::map<std::string, LVMVolume*>    vol_lookup;
-std::map<std::string, LVMTable*>     vg_seg_lookup;
-std::map<std::string, LVMPartition*> vol_seg_lookup;
+
+std::map<std::string, LVMGroup*>     vg_lookup;		// UUID            -> LVMGroup		(purple)
+							// I9a0Vj...       -> tmpvol
+std::map<std::string, LVMVolume*>    vol_lookup;	// device          -> LVMTable		(pink)
+							// /dev/loop0      -> tmpvol
+std::map<std::string, LVMTable*>     vg_seg_lookup;	// VG_NAME:LV_NAME -> LVMVolume		(purple)
+							// tmpvol:stripe2  -> stripe2
+std::map<std::string, LVMPartition*> vol_seg_lookup;	// device(offset)  -> LVMPartition	(yellow)
+							// /dev/loop0(0)   -> stripe2
 
 /**
  * LVMGroup
