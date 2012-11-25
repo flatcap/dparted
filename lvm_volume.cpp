@@ -23,7 +23,9 @@
 /**
  * LVMVolume
  */
-LVMVolume::LVMVolume (void)
+LVMVolume::LVMVolume (void) :
+	kernel_major (-1),
+	kernel_minor (-1)
 {
 	declare ("lvm_volume");
 }
