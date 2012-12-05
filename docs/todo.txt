@@ -8,7 +8,7 @@ disk display:
 	linear
 	logorithmic
 
-partition display with a disk:
+partition display within a disk:
 	linear
 	logorithmic
 
@@ -1284,4 +1284,11 @@ code to spawn dot and display to show object diagrams live
 
 rename VG to pool
 add snapshot to object hierarchy (esp for btrfs)
+
+test everything on a 32-bit machine/vm too
+
+images/scripts
+	on success, print a list of partitions on each loop device
+	only cleanup OUR work
+	use cronic to mask working
 
