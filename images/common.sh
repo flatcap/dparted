@@ -44,7 +44,7 @@ function usage()
 	echo "Usage:"
 	echo "    ${0##*/} [-d]"
 	echo
-	grep --color=none "^# .. disk.*" $0
+	grep --color=none "^# [0-9][0-9] " $0
 	echo
 	false
 }
@@ -87,11 +87,12 @@ function create_loop()
 
 	[ $# = 1 ] || return
 
-	LOOP=$(losetup --show -f "$IMAGE")
+	LOOP=$(losetup --show -f -P "$IMAGE")
 	[ $? = 0 ] || return
 
-	rm -f $IMAGE
+	rm -f "$IMAGE"
 
+	reread_partition_table "$LOOP" > /dev/null
 	echo "$LOOP"
 }
 
