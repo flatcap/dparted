@@ -134,7 +134,7 @@ function test_01()
 }
 
 ##
-# 02 disk, create raid10 (mirroed striped) volume
+# 02 disk, create raid10 (mirrored striped) volume
 function test_02()
 {
 	local IMAGE
