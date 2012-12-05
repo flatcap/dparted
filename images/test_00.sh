@@ -61,28 +61,28 @@ function test_00()
 	#mkfs.btrfs        -L "btrfs_label"    ${LOOP}p1		# filesystem 1
 	#[ $? = 0 ] || error || return
 
-	mkfs.ext2  -q -F  -L "ext2_label"     ${LOOP}p2		# filesystem 2
+	mkfs.ext2  -q -F  -L "ext2_label"     ${LOOP}p2  &> /dev/null		# filesystem 2
 	[ $? = 0 ] || error || return
 
-	mkfs.ext3 -q  -F  -L "ext3_label"     ${LOOP}p3		# filesystem 3
+	mkfs.ext3 -q  -F  -L "ext3_label"     ${LOOP}p3  &> /dev/null		# filesystem 3
 	[ $? = 0 ] || error || return
 
-	mkfs.ext4 -q  -F  -L "ext4_label"     ${LOOP}p4		# filesystem 4
+	mkfs.ext4 -q  -F  -L "ext4_label"     ${LOOP}p4  &> /dev/null		# filesystem 4
 	[ $? = 0 ] || error || return
 
-	mkfs.ntfs     -fF -L "ntfs_label"     ${LOOP}p5		# filesystem 5
+	mkfs.ntfs -q  -fF -L "ntfs_label"     ${LOOP}p5  &> /dev/null		# filesystem 5
 	[ $? = 0 ] || error || return
 
-	mkfs.reiserfs -ff -l "reiserfs_label" ${LOOP}p6		# filesystem 6
+	mkfs.reiserfs -q -ff -l "reiserfs_label" ${LOOP}p6  &> /dev/null		# filesystem 6
 	[ $? = 0 ] || error || return
 
-	mkswap            -L "swap_label"     ${LOOP}p7		# filesystem 7
+	mkswap            -L "swap_label"     ${LOOP}p7  &> /dev/null		# filesystem 7
 	[ $? = 0 ] || error || return
 
-	mkfs.vfat         -n "vfat_label"     ${LOOP}p8		# filesystem 8
+	mkfs.vfat         -n "vfat_label"     ${LOOP}p8  &> /dev/null		# filesystem 8
 	[ $? = 0 ] || error || return
 
-	mkfs.xfs          -L "xfs_label"      ${LOOP}p9		# filesystem 9
+	mkfs.xfs          -L "xfs_label"      ${LOOP}p9  &> /dev/null		# filesystem 9
 	[ $? = 0 ] || error || return
 
 	ok "$LOOP"
@@ -170,7 +170,7 @@ function test_02()
 
 	#populate_ext4 /dev/mapper/$VOLUME-bob 250M
 
-	ok "$LOOP_LIST"
+	ok $LOOP_LIST
 }
 
 
