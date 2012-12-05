@@ -141,8 +141,6 @@ function test_02()
 	local LOOP
 	local LOOP_LIST
 	local GROUP=$FUNCNAME
-	local INDEX=${FUNCNAME##*_}
-	local VOLUME="$INDEX"
 
 	echo -n "$FUNCNAME: "
 
@@ -167,8 +165,6 @@ function test_02()
 
 	mke2fs -t ext4 -q -L "$GROUP bob" /dev/mapper/$GROUP-bob
 	[ $? = 0 ] || error || return
-
-	#populate_ext4 /dev/mapper/$VOLUME-bob 250M
 
 	ok $LOOP_LIST
 }
