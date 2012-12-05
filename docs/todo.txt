@@ -1271,3 +1271,17 @@ ENVIRONMENT VARIABLES
 
 log_command -- for external commands and their output
 
+use cases as help items
+	create some space to share with windows
+	make my home directory bigger
+	simple steps to follow
+
+What's this button
+	click on item of interest
+	displays full breakdown of what, where, etc
+
+code to spawn dot and display to show object diagrams live
+
+rename VG to pool
+add snapshot to object hierarchy (esp for btrfs)
+
