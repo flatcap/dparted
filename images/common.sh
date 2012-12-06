@@ -60,7 +60,7 @@ function cleanup()
 	OUR_LOOPS="$(grep -wo 'test_[0-9][0-9]' $0 | sort -u)"
 	[ -n "$OUR_LOOPS" ] || return
 
-	vgremove -f $OUR_LOOPS > /dev/null 2>&1
+	vgremove -f $OUR_LOOPS &> /dev/null
 
 	for i in $OUR_LOOPS; do
 		LOSETUP=$(losetup -a | grep "/$i.img")

@@ -22,7 +22,7 @@ function test_80()
 		LOOP="$(create_loop $IMAGE)"
 		[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-		pvcreate "$LOOP" > /dev/null 2>&1
+		pvcreate "$LOOP" &> /dev/null
 		[ $? = 0 ] || error || return
 
 		LOOP_LIST="$LOOP_LIST $LOOP"
@@ -53,14 +53,14 @@ function test_80()
 
 	#lvs --all -o lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count $VOLUME
 
-	populate_ext4 /dev/$VOLUME/stripe2 320M > /dev/null;			[ $? = 0 ] || error || return # 80% of 400
-	populate_ext4 /dev/$VOLUME/root     70M > /dev/null;			[ $? = 0 ] || error || return # 35% of 200
-	populate      /dev/$VOLUME/mirror3 150  > /dev/null;			[ $? = 0 ] || error || return # 75% of 200
-	populate_ext4 /dev/$VOLUME/home    150M > /dev/null;			[ $? = 0 ] || error || return # 50% of 300
-	populate      /dev/$VOLUME/stripe3 240  > /dev/null;			[ $? = 0 ] || error || return # 60% of 400
-	populate      /dev/$VOLUME/tv      220  > /dev/null;			[ $? = 0 ] || error || return # 55% of 400
-	populate_ext4 /dev/$VOLUME/mirror2  20M > /dev/null;			[ $? = 0 ] || error || return # 10% of 200
-	populate_ext4 /dev/$VOLUME/data    240M > /dev/null;			[ $? = 0 ] || error || return # 80% of 300
+	populate_ext4 /dev/$VOLUME/stripe2 320M &> /dev/null;			[ $? = 0 ] || error || return # 80% of 400
+	populate_ext4 /dev/$VOLUME/root     70M &> /dev/null;			[ $? = 0 ] || error || return # 35% of 200
+	populate      /dev/$VOLUME/mirror3 150  &> /dev/null;			[ $? = 0 ] || error || return # 75% of 200
+	populate_ext4 /dev/$VOLUME/home    150M &> /dev/null;			[ $? = 0 ] || error || return # 50% of 300
+	populate      /dev/$VOLUME/stripe3 240  &> /dev/null;			[ $? = 0 ] || error || return # 60% of 400
+	populate      /dev/$VOLUME/tv      220  &> /dev/null;			[ $? = 0 ] || error || return # 55% of 400
+	populate_ext4 /dev/$VOLUME/mirror2  20M &> /dev/null;			[ $? = 0 ] || error || return # 10% of 200
+	populate_ext4 /dev/$VOLUME/data    240M &> /dev/null;			[ $? = 0 ] || error || return # 80% of 300
 
 	ok $LOOP_LIST
 }

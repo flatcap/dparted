@@ -26,7 +26,7 @@ function test_60()
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
-	pvcreate "${LOOP}p1" > /dev/null 2>&1
+	pvcreate "${LOOP}p1" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	ok "$LOOP"
@@ -55,7 +55,7 @@ function test_61()
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
-	pvcreate "${LOOP}p1" > /dev/null 2>&1
+	pvcreate "${LOOP}p1" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "${LOOP}p1" > /dev/null
@@ -89,7 +89,7 @@ function test_62()
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
-	pvcreate "${LOOP}p1" > /dev/null 2>&1
+	pvcreate "${LOOP}p1" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "${LOOP}p1" > /dev/null
@@ -126,7 +126,7 @@ function test_63()
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
-	pvcreate "${LOOP}p1" > /dev/null 2>&1
+	pvcreate "${LOOP}p1" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "${LOOP}p1" > /dev/null
@@ -165,7 +165,7 @@ function test_64()
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
-	pvcreate "${LOOP}p1" > /dev/null 2>&1
+	pvcreate "${LOOP}p1" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "${LOOP}p1" > /dev/null
@@ -206,7 +206,7 @@ function test_65()
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 	[ -b "${LOOP}p1" ] || error || return
 
-	pvcreate "${LOOP}p1" > /dev/null 2>&1
+	pvcreate "${LOOP}p1" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "${LOOP}p1" > /dev/null
@@ -319,7 +319,7 @@ function test_66()
 	[ -b "${LOOP}p1" ] || error || return
 	[ -b "${LOOP}p5" ] || error || return
 
-	pvcreate "${LOOP}p5" > /dev/null 2>&1
+	pvcreate "${LOOP}p5" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "${LOOP}p5" > /dev/null

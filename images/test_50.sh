@@ -19,7 +19,7 @@ function test_50()
 	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-	pvcreate "$LOOP" > /dev/null 2>&1
+	pvcreate "$LOOP" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	ok "$LOOP"
@@ -41,7 +41,7 @@ function test_51()
 	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-	pvcreate "$LOOP" > /dev/null 2>&1
+	pvcreate "$LOOP" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "$LOOP" > /dev/null
@@ -68,7 +68,7 @@ function test_52()
 	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-	pvcreate "$LOOP" > /dev/null 2>&1
+	pvcreate "$LOOP" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "$LOOP" > /dev/null
@@ -98,7 +98,7 @@ function test_53()
 	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-	pvcreate "$LOOP" > /dev/null 2>&1
+	pvcreate "$LOOP" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "$LOOP" > /dev/null
@@ -130,7 +130,7 @@ function test_54()
 	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-	pvcreate "$LOOP" > /dev/null 2>&1
+	pvcreate "$LOOP" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "$LOOP" > /dev/null
@@ -164,7 +164,7 @@ function test_55()
 	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-	pvcreate "$LOOP" > /dev/null 2>&1
+	pvcreate "$LOOP" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "$LOOP" > /dev/null

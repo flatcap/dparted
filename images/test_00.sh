@@ -106,7 +106,7 @@ function test_01()
 	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-	pvcreate "$LOOP" > /dev/null 2>&1
+	pvcreate "$LOOP" &> /dev/null
 	[ $? = 0 ] || error || return
 
 	vgcreate $GROUP "$LOOP" > /dev/null
@@ -151,7 +151,7 @@ function test_02()
 		LOOP="$(create_loop $IMAGE)"
 		[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-		pvcreate "$LOOP" > /dev/null 2>&1
+		pvcreate "$LOOP" &> /dev/null
 		[ $? = 0 ] || error || return
 
 		LOOP_LIST="$LOOP_LIST $LOOP"

@@ -2,7 +2,7 @@
 
 source common.sh
 
-lvremove -f /dev/mapper/test_* > /dev/null 2>&1
+lvremove -f /dev/mapper/test_* &> /dev/null
 LOOPS="$(losetup -a | cut -d: -f1)"
 if [ -n "$LOOPS" ]; then
 	for i in $LOOPS; do
