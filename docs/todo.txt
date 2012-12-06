@@ -1292,3 +1292,10 @@ images/scripts
 	only cleanup OUR work
 	use cronic to mask working
 
+lvcreate for mirrors -- especially the test script
+	Specifying the optional argument --nosync will cause the creation of the mirror to skip the initial resynchronization.
+	Any  data written afterwards will be mirrored, but the original contents will not be copied.  This is useful for skip‐
+	ping a potentially long and resource intensive initial sync of an empty device.
+
+what happens if there's a loop device called "filename (deleted)"
+
