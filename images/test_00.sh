@@ -160,7 +160,7 @@ function test_02()
 	vgcreate $GROUP $LOOP_LIST > /dev/null
 	[ $? = 0 ] || error || return
 
-	lvcreate $GROUP -i 2 -m 3 --name bob --size 320M > /dev/null
+	lvcreate $GROUP -i 2 -m 3 --name bob --size 2040M > /dev/null
 	[ $? = 0 ] || error || return
 
 	mke2fs -t ext4 -q -L "$GROUP bob" /dev/mapper/$GROUP-bob
