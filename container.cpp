@@ -113,7 +113,7 @@ std::string DPContainer::dump_objects (void)
 
 	for (is = obj_set.begin(); is != obj_set.end(); is++) {
 		c = (*is);
-		if (c->dot_colour == "#ccccff") continue;
+		//if (c->dot_colour == "#ccccff") continue;
 		//printf ("%s\n", c->name.c_str());
 		dot << "\n";
 		dot << "// " << c << "\n";

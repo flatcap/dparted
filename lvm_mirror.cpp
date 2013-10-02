@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "lvm_mirror.h"
+#include "log.h"
 
 /**
  * LVMMirror
@@ -32,6 +33,55 @@ LVMMirror::LVMMirror (void)
  * ~LVMMirror
  */
 LVMMirror::~LVMMirror()
+{
+}
+
+
+/**
+ * add_child
+ */
+void LVMMirror::add_child (DPContainer *child)
+{
+	/* Check:
+	 *	available space
+	 *	alignment type
+	 *	size (restrictions)
+	 *	valid type within this parent
+	 */
+#if 0
+	if (children.size() > 0) {
+		DPContainer *last = children.back();
+
+		last->next = child;
+		child->prev = last;
+	}
+#endif
+	bytes_used += child->bytes_size;
+
+	bool inserted = false;
+
+	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
+		if ((*i)->parent_offset > child->parent_offset) {
+			children.insert (i, child);
+			inserted = true;
+			break;
+		}
+	}
+
+	if (!inserted) {
+		children.push_back (child);
+	}
+
+	//log_debug ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
+
+	child->ref();
+	child->parent = this;
+}
+
+/**
+ * delete_child
+ */
+void LVMMirror::delete_child (DPContainer *child)
 {
 }
 

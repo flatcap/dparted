@@ -53,9 +53,9 @@ protected:
 
 	Gtk::ScrolledWindow	scrolledwindow;
 
-	Glib::RefPtr<Gtk::UIManager> m_refUIManager;
-	Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup;
-	Glib::RefPtr<Gtk::RadioAction> m_refChoiceOne, m_refChoiceTwo;
+	//YYY Glib::RefPtr<Gtk::UIManager> m_refUIManager;
+	//YYY Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup;
+	//YYY Glib::RefPtr<Gtk::RadioAction> m_refChoiceOne, m_refChoiceTwo;
 
 	//Signal handlers:
 	void on_menu_file_new_generic();

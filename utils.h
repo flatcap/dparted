@@ -25,6 +25,7 @@
 
 #include "stringnum.h"
 
+unsigned int execute_command2 (const std::string &command, std::string &input);
 unsigned int execute_command (const std::string &command, std::vector<std::string> &output);
 unsigned int execute_command (const std::string &command, std::string &output);
 std::string get_size (long long size);

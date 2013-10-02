@@ -78,8 +78,11 @@ bool Loop::find_devices_old (const std::string &name, int fd, struct stat &st, D
 unsigned int Loop::find_devices (DPContainer &list)
 {
 
-	// /dev/loop0: [0831]:4457032 (/home/flatcap/work/partitions/images/disk0)
-	std::string command = "losetup -a";
+	/* Example output
+	 * /dev/loop0: [0831]:4457032 (/home/flatcap/work/partitions/images/disk0)
+	 * /dev/loop2: [64771]:9962036 (/home/units/work/partitions/images/disk2 (deleted))
+	 */
+	std::string command = "losetup -a | grep test_6";
 	std::vector <std::string> output;
 	std::string error;
 	unsigned int count;
@@ -136,8 +139,8 @@ unsigned int Loop::find_devices (DPContainer &list)
 
 		scan = sscanf (part.c_str(), "%ld", &inode);
 		if (scan != 1) {
-			log_debug ("scan failed2\n");
-			continue;
+			//log_debug ("scan failed2\n");
+			//continue;
 		}
 		//log_debug ("\tinode: %ld\n", inode);
 

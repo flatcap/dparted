@@ -130,6 +130,7 @@ void DParted::set_data (DPContainer *c)
  */
 void DParted::init_menubar (void)
 {
+#if 0 //YYY
 	//Create actions for menus and toolbars:
 	m_refActionGroup = Gtk::ActionGroup::create();
 
@@ -208,6 +209,7 @@ void DParted::init_menubar (void)
 	{
 		std::cerr << "building menus failed: " << ex.what();
 	}
+#endif
 }
 
 #if 0
@@ -256,6 +258,7 @@ void DParted::on_menu_others()
  */
 void DParted::on_menu_choices_one()
 {
+#if 0 //YYY
 	Glib::ustring message;
 	if (m_refChoiceOne->get_active())
 		message = "Choice 1 was selected.";
@@ -263,6 +266,7 @@ void DParted::on_menu_choices_one()
 		message = "Choice 1 was deselected";
 
 	std::cout << message << "\n";
+#endif
 }
 
 /**
@@ -270,6 +274,7 @@ void DParted::on_menu_choices_one()
  */
 void DParted::on_menu_choices_two()
 {
+#if 0 //YYY
 	Glib::ustring message;
 	if (m_refChoiceTwo->get_active())
 		message = "Choice 2 was selected.";
@@ -277,6 +282,7 @@ void DParted::on_menu_choices_two()
 		message = "Choice 2 was deselected";
 
 	std::cout << message << "\n";
+#endif
 }
 
 

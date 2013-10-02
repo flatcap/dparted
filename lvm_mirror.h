@@ -29,6 +29,9 @@ public:
 
 	virtual std::string dump_dot (void);
 
+	virtual void add_child    (DPContainer *child);
+	virtual void delete_child (DPContainer *child);
+
 protected:
 
 private:
