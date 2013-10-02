@@ -1,0 +1,354 @@
+digraph disks {
+graph [ rankdir="TB", color="white",bgcolor="#000000" ];
+node [ shape="record", color="black", fillcolor="lightcyan", style="filled" ];
+edge [ penwidth=3.0,color="#cccccc" ];
+
+
+// lvm_table, lvm_table, (off 0), 0
+obj_0x22341d0 [fillcolor="#ffbbbb",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>lvm_table</b></font> (0x22341d0)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">lvm_table</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">3EpD2Q...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+</table>>];
+
+// lvm_table, lvm_table, (off 0), 0
+obj_0x2234450 [fillcolor="#ffbbbb",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>lvm_table</b></font> (0x2234450)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">lvm_table</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">W6bd7m...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+</table>>];
+
+// loop, loop, /dev/loop0(off 0), 2
+obj_0x22344f0 [fillcolor="#aaffaa",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>loop</b></font> (0x22344f0)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">loop</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left">/dev/loop0</td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0x2234670</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">1 GiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">1 GiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+</table>>];
+obj_0x22344f0 -> obj_0x22341d0;
+obj_0x22344f0 -> obj_0x2236110;
+
+// loop, loop, /dev/loop1(off 0), 2
+obj_0x2234910 [fillcolor="#aaffaa",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>loop</b></font> (0x2234910)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">loop</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left">/dev/loop1</td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0x2234b10</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">1 GiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">1 GiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+</table>>];
+obj_0x2234910 -> obj_0x2234450;
+obj_0x2234910 -> obj_0x2236420;
+
+// loop, loop, /dev/loop2(off 0), 2
+obj_0x2234db0 [fillcolor="#aaffaa",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>loop</b></font> (0x2234db0)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">loop</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left">/dev/loop2</td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0x2234f90</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">1 GiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">1 GiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+</table>>];
+obj_0x2234db0 -> obj_0x2245a80;
+obj_0x2234db0 -> obj_0x22366a0;
+
+// ext2, filesystem, (off 0), 0
+obj_0x2235b80 [fillcolor="#bbffff",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>ext2</b></font> (0x2235b80)<font color="#ff0000" point-size="20"><b> : 0</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">ext2</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">146 MiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">54 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">label</td><td>=</td><td align="left"></td></tr>
+</table>>];
+
+// tmpvol, lvm_group, (off 0), 2
+obj_0x2235f00 [fillcolor="#ccccff",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>tmpvol</b></font> (0x2235f00)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">tmpvol</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">I9a0Vj...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">2.99 GiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">600 MiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">2.4 GiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">segments</td><td>=</td><td align="left">3</td></tr>
+<tr><td align="left"></td><td>=</td><td align="left">0x2236110</td></tr>
+<tr><td align="left"></td><td>=</td><td align="left">0x2236420</td></tr>
+<tr><td align="left"></td><td>=</td><td align="left">0x22366a0</td></tr>
+<tr><td align="left">pv_count</td><td>=</td><td align="left">3</td></tr>
+<tr><td align="left">lv_count</td><td>=</td><td align="left">2</td></tr>
+<tr><td align="left">vg_attr</td><td>=</td><td align="left">wz--n-</td></tr>
+<tr><td align="left">vg_extent_count</td><td>=</td><td align="left">0.747 KiB</td></tr>
+<tr><td align="left">vg_free_count</td><td>=</td><td align="left">564   B</td></tr>
+<tr><td align="left">vg_seqno</td><td>=</td><td align="left">19</td></tr>
+</table>>];
+obj_0x2235f00 -> obj_0x2239170;
+obj_0x2235f00 -> obj_0x22383f0;
+
+// tmpvol, lvm_table, (off 0), 2
+obj_0x2236110 [fillcolor="#ffbbbb",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>tmpvol</b></font> (0x2236110)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">tmpvol</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">I9a0Vj...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">1 GiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">400 MiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">624 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0x2235f00</td></tr>
+</table>>];
+obj_0x2236110 -> obj_0x22458d0;
+obj_0x2236110 -> obj_0x2237330;
+
+// tmpvol, lvm_table, (off 0), 2
+obj_0x2236420 [fillcolor="#ffbbbb",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>tmpvol</b></font> (0x2236420)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">tmpvol</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">I9a0Vj...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">1 GiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">204 MiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">0.801 GiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0x2235f00</td></tr>
+</table>>];
+obj_0x2236420 -> obj_0x22374f0;
+obj_0x2236420 -> obj_0x2237750;
+
+// tmpvol, lvm_table, (off 0), 1
+obj_0x22366a0 [fillcolor="#ffbbbb",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>tmpvol</b></font> (0x22366a0)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">tmpvol</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">I9a0Vj...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">1 GiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">0.805 GiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0x2235f00</td></tr>
+</table>>];
+obj_0x22366a0 -> obj_0x2237b10;
+
+// mirror2_mimage_0, lvm_partition, (off 788529152), 0
+obj_0x2237330 [fillcolor="#ffffdd",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>mirror2_mimage_0</b></font> (0x2237330)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">mirror2_mimage_0</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">ck8rHS...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0.734 GiB</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0x22389b0</td></tr>
+</table>>];
+
+// stripe2, lvm_partition, (off 0), 1
+obj_0x22374f0 [fillcolor="#ffffdd",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>stripe2</b></font> (0x22374f0)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">stripe2</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">ClAmaT...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">400 MiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">-200 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0x22383f0</td></tr>
+</table>>];
+obj_0x22374f0 -> obj_0x2237f40;
+
+// mirror2_mlog, lvm_partition, (off 893386752), 0
+obj_0x2237750 [fillcolor="#ffffdd",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>mirror2_mlog</b></font> (0x2237750)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">mirror2_mlog</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">JB49Im...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0.832 GiB</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">4 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">4 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0x2238680</td></tr>
+</table>>];
+
+// mirror2_mimage_1, lvm_partition, (off 738197504), 0
+obj_0x2237b10 [fillcolor="#ffffdd",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>mirror2_mimage_1</b></font> (0x2237b10)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">mirror2_mimage_1</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">5bbEYu...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">704 MiB</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0x2238d80</td></tr>
+</table>>];
+
+// ext2, filesystem, (off 0), 0
+obj_0x2237f40 [fillcolor="#bbffff",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>ext2</b></font> (0x2237f40)<font color="#ff0000" point-size="20"><b> : 2</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">ext2</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">400 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">64 MiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">336 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">label</td><td>=</td><td align="left"></td></tr>
+</table>>];
+
+// stripe2, lvm_stripe, /dev/mapper/tmpvol-stripe2(off 0), 0
+obj_0x22383f0 [fillcolor="#ccccff",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>stripe2</b></font> (0x22383f0)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">stripe2</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">ClAmaT...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left">/dev/mapper/tmpvol-stripe2</td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0x2237d00</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">400 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">400 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">segments</td><td>=</td><td align="left">2</td></tr>
+<tr><td align="left"></td><td>=</td><td align="left">0x22458d0</td></tr>
+<tr><td align="left"></td><td>=</td><td align="left">0x22374f0</td></tr>
+</table>>];
+
+// mirror2_mlog, lvm_linear, /dev/mapper/tmpvol-mirror2_mlog(off 0), 0
+obj_0x2238680 [fillcolor="#ccccff",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>mirror2_mlog</b></font> (0x2238680)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">mirror2_mlog</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">JB49Im...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left">/dev/mapper/tmpvol-mirror2_mlog</td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">4 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">4 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">segments</td><td>=</td><td align="left">1</td></tr>
+<tr><td align="left"></td><td>=</td><td align="left">0x2237750</td></tr>
+</table>>];
+
+// mirror2_mimage_0, lvm_linear, /dev/mapper/tmpvol-mirror2_mimage_0(off 0), 0
+obj_0x22389b0 [fillcolor="#ccccff",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>mirror2_mimage_0</b></font> (0x22389b0)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">mirror2_mimage_0</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">ck8rHS...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left">/dev/mapper/tmpvol-mirror2_mimage_0</td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">segments</td><td>=</td><td align="left">1</td></tr>
+<tr><td align="left"></td><td>=</td><td align="left">0x2237330</td></tr>
+</table>>];
+
+// mirror2_mimage_1, lvm_linear, /dev/mapper/tmpvol-mirror2_mimage_1(off 0), 0
+obj_0x2238d80 [fillcolor="#ccccff",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>mirror2_mimage_1</b></font> (0x2238d80)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">mirror2_mimage_1</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">5bbEYu...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left">/dev/mapper/tmpvol-mirror2_mimage_1</td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">segments</td><td>=</td><td align="left">1</td></tr>
+<tr><td align="left"></td><td>=</td><td align="left">0x2237b10</td></tr>
+</table>>];
+
+// mirror2, lvm_mirror, /dev/mapper/tmpvol-mirror2(off 0), 3
+obj_0x2239170 [fillcolor="#ccccff",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>mirror2</b></font> (0x2239170)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">mirror2</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">ZDmGHU...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left">/dev/mapper/tmpvol-mirror2</td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0x2238110</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">404 MiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">-204 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+</table>>];
+obj_0x2239170 -> obj_0x22389b0;
+obj_0x2239170 -> obj_0x2238d80;
+obj_0x2239170 -> obj_0x2238680;
+
+// stripe2, lvm_partition, (off 0), 1
+obj_0x22458d0 [fillcolor="#ffffdd",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>stripe2</b></font> (0x22458d0)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">stripe2</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">ClAmaT...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">200 MiB</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">400 MiB</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">-200 MiB</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0x22383f0</td></tr>
+</table>>];
+obj_0x22458d0 -> obj_0x2237f40;
+
+// lvm_table, lvm_table, (off 0), 0
+obj_0x2245a80 [fillcolor="#ffbbbb",label=<<table cellspacing="0" border="0">
+<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>lvm_table</b></font> (0x2245a80)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
+<tr><td align="left">name</td><td>=</td><td align="left">lvm_table</td></tr>
+<tr><td align="left">uuid</td><td>=</td><td align="left">4C4p4R...</td></tr>
+<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
+<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
+<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_size</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
+<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
+</table>>];
+
+};

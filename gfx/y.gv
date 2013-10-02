@@ -1,0 +1,13 @@
+digraph G
+{
+	graph [ rankdir="TB" ];
+	node  [ shape=record, style=filled ];
+	edge  [ penwidth=2.0 ];
+
+	graph [ bgcolor="#002200", color=white ];
+	node  [ fillcolor="#bbbbbb", color=darkgreen ];
+	edge  [ color="#cccccc" ];
+
+	Part1     [ label="Partition", fillcolor="#ffffdd" ];
+}
+
