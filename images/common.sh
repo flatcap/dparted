@@ -90,9 +90,10 @@ function create_loop()
 	LOOP=$(losetup --show -f -P "$IMAGE")
 	[ $? = 0 ] || return
 
-	rm -f "$IMAGE"
+	#rm -f "$IMAGE"
+	#[ ! -f "$IMAGE" ] || return
 
-	reread_partition_table "$LOOP" > /dev/null
+	~flatcap/bin/reread_partition_table "$LOOP" > /dev/null
 	echo "$LOOP"
 }
 
@@ -100,14 +101,14 @@ function create_loop()
 # Create a sparse image
 function create_image()
 {
-	local IMAGE="$1.img"
+	local IMAGE="/mnt/space/test/$1.img"
 
 	[ $# = 1 ] || return
 
 	[ -n "$IMAGE_SIZE" ] || return
 
-	rm -f "$IMAGE"
-	[ ! -f "$IMAGE" ] || return
+	#rm -f "$IMAGE"
+	#[ ! -f "$IMAGE" ] || return
 
 	truncate -s "$IMAGE_SIZE" "$IMAGE"
 	[ $? = 0 ] || return
