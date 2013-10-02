@@ -113,6 +113,7 @@ clean:	force
 
 distclean: clean
 	$(RM) $(DEPDIR) $(OBJDIR) tags html
+	$(RM) lvm/{cache,lock,backup,archive}
 
 force:
 
