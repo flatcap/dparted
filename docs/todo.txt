@@ -1299,3 +1299,9 @@ lvcreate for mirrors -- especially the test script
 
 what happens if there's a loop device called "filename (deleted)"
 
+offer to save the user's disk config info
+tell them what they need to recover from a disaster
+what commands they need to rescue stuff using, say, knoppix
+
+look at http://disktype.sourceforge.net/ and gpart (recovery)
+
