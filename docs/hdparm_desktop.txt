@@ -1,0 +1,72 @@
+[#]~# hdparm -i /dev/sda
+
+/dev/sda:
+
+ Model=WDC WD5000AAVS-00ZTB0, FwRev=01.01B01, SerialNo=WD-WCASU4948693
+ Config={ HardSect NotMFM HdSw>15uSec SpinMotCtl Fixed DTR>5Mbs FmtGapReq }
+ RawCHS=16383/16/63, TrkSize=0, SectSize=0, ECCbytes=50
+ BuffType=unknown, BuffSize=8192kB, MaxMultSect=16, MultSect=16
+ CurCHS=16383/16/63, CurSects=16514064, LBA=yes, LBAsects=976773168
+ IORDY=on/off, tPIO={min:120,w/IORDY:120}, tDMA={min:120,rec:120}
+ PIO modes:  pio0 pio3 pio4 
+ DMA modes:  mdma0 mdma1 mdma2 
+ UDMA modes: udma0 udma1 udma2 udma3 udma4 udma5 *udma6 
+ AdvancedPM=no WriteCache=enabled
+ Drive conforms to: Unspecified:  ATA/ATAPI-1,2,3,4,5,6,7
+
+ * signifies the current active mode
+
+[#]~# hdparm -i /dev/sdb
+
+/dev/sdb:
+
+ Model=SAMSUNG HD103SJ, FwRev=1AJ10001, SerialNo=S246J9AB707393
+ Config={ Fixed }
+ RawCHS=16383/16/63, TrkSize=0, SectSize=0, ECCbytes=4
+ BuffType=unknown, BuffSize=unknown, MaxMultSect=16, MultSect=16
+ CurCHS=16383/16/63, CurSects=16514064, LBA=yes, LBAsects=1953525168
+ IORDY=on/off, tPIO={min:120,w/IORDY:120}, tDMA={min:120,rec:120}
+ PIO modes:  pio0 pio1 pio2 pio3 pio4 
+ DMA modes:  mdma0 mdma1 mdma2 
+ UDMA modes: udma0 udma1 udma2 udma3 udma4 udma5 *udma6 
+ AdvancedPM=yes: disabled (255) WriteCache=enabled
+ Drive conforms to: unknown:  ATA/ATAPI-0,1,2,3,4,5,6,7
+
+ * signifies the current active mode
+
+[#]~# hdparm -i /dev/sdc
+
+/dev/sdc:
+
+ Model=MAXTOR STM3320820A, FwRev=3.AAE, SerialNo=9QF49N9A
+ Config={ HardSect NotMFM HdSw>15uSec Fixed DTR>10Mbs RotSpdTol>.5% }
+ RawCHS=16383/16/63, TrkSize=0, SectSize=0, ECCbytes=4
+ BuffType=unknown, BuffSize=8192kB, MaxMultSect=16, MultSect=16
+ CurCHS=16383/16/63, CurSects=16514064, LBA=yes, LBAsects=625142448
+ IORDY=on/off, tPIO={min:240,w/IORDY:120}, tDMA={min:120,rec:120}
+ PIO modes:  pio0 pio1 pio2 pio3 pio4 
+ DMA modes:  mdma0 mdma1 mdma2 
+ UDMA modes: udma0 udma1 *udma2 udma3 udma4 udma5 
+ AdvancedPM=no WriteCache=enabled
+ Drive conforms to: Unspecified:  ATA/ATAPI-1,2,3,4,5,6,7
+
+ * signifies the current active mode
+
+[#]~# hdparm -i /dev/sdd
+
+/dev/sdd:
+
+ Model=Maxtor 6B200P0, FwRev=BAH41B10, SerialNo=B40JZ6MH
+ Config={ Fixed }
+ RawCHS=16383/16/63, TrkSize=0, SectSize=0, ECCbytes=57
+ BuffType=DualPortCache, BuffSize=8192kB, MaxMultSect=16, MultSect=16
+ CurCHS=16383/16/63, CurSects=16514064, LBA=yes, LBAsects=398297088
+ IORDY=on/off, tPIO={min:120,w/IORDY:120}, tDMA={min:120,rec:120}
+ PIO modes:  pio0 pio1 pio2 pio3 pio4 
+ DMA modes:  mdma0 mdma1 mdma2 
+ UDMA modes: udma0 udma1 *udma2 udma3 udma4 udma5 udma6 
+ AdvancedPM=yes: disabled (255) WriteCache=enabled
+ Drive conforms to: ATA/ATAPI-7 T13 1532D revision 0:  ATA/ATAPI-1,2,3,4,5,6,7
+
+ * signifies the current active mode
+
