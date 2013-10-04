@@ -44,10 +44,16 @@ LVMVolume::~LVMVolume()
 std::string LVMVolume::dump_dot (void)
 {
 	std::ostringstream output;
+	unsigned int count = tables.size();
 
 	output << Volume::dump_dot();
 
-	// no specifics for now
+	if (count > 0) {
+		output << dump_row ("tables", count);
+		for (std::vector<LVMTable*>::iterator i = tables.begin(); i != tables.end(); i++) {
+			output << dump_row ("", (*i));
+		}
+	}
 
 	return output.str();
 }

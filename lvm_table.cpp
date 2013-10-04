@@ -76,6 +76,7 @@ DPContainer * LVMTable::probe (DPContainer *parent, unsigned char *buffer, int b
 		return NULL;
 
 	t = new LVMTable();
+	//log_debug ("new LVMTable (%p)\n", t);
 
 	t->uuid = read_uuid_string (buffer+544);
 

@@ -82,7 +82,7 @@ unsigned int Loop::find_devices (DPContainer &list)
 	 * /dev/loop0: [0831]:4457032 (/home/flatcap/work/partitions/images/disk0)
 	 * /dev/loop2: [64771]:9962036 (/home/units/work/partitions/images/disk2 (deleted))
 	 */
-	std::string command = "losetup -a | grep test_6";
+	std::string command = "losetup -a";	//XXX losetup -n -O NAME,BACK-FILE etc
 	std::vector <std::string> output;
 	std::string error;
 	unsigned int count;
@@ -165,6 +165,7 @@ unsigned int Loop::find_devices (DPContainer &list)
 		//log_debug ("\n");
 
 		Loop *l = new Loop;
+		//log_debug ("new Loop (%p)\n", l);
 		l->device = device;
 		l->parent_offset = 0;
 		l->kernel_major = kernel_major;

@@ -131,6 +131,7 @@ int main (int argc, char *argv[])
 		DPContainer *found = probe (item);
 		if (found) {
 			item->add_child (found);
+			//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", item, item->type.back().c_str(), item->name.c_str(), found, found->type.back().c_str(), found->name.c_str());
 		} //RAR else what?
 		//log_debug ("queue has %lu items\n", probe_queue.size());
 	}
@@ -144,6 +145,7 @@ int main (int argc, char *argv[])
 		DPContainer *found = probe (item);
 		if (found) {
 			item->add_child (found);
+			//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", item, item->type.back().c_str(), item->name.c_str(), found, found->type.back().c_str(), found->name.c_str());
 		} //RAR else what?
 	}
 
@@ -152,8 +154,8 @@ int main (int argc, char *argv[])
 	}
 #endif
 
-#if 0
-	//std::cout << DPContainer::dump_objects();
+#if 1
+	//{ std::string input = DPContainer::dump_objects(); std::string command = "dot -Tpng | display -resize 50% - &"; execute_command2 (command, input); }
 #else
 	Glib::RefPtr<Gtk::Application> kit = Gtk::Application::create(argc, argv, "org.flatcap.dparted");
 
@@ -165,7 +167,7 @@ int main (int argc, char *argv[])
 
 	}
 	DPContainer::dump_leaks();
-	log_info ("done\n"); //XXX move to log_close
+	//log_info ("done\n"); //XXX move to log_close
 	log_close();
 	return 0;
 }

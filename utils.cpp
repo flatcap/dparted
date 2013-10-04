@@ -35,13 +35,11 @@
 unsigned int execute_command2 (const std::string &command, std::string &input)
 {
 	FILE *file = NULL;
-	//char *ptr = NULL;
-	//size_t n = 0;
 	int count = 0;
 
 	//XXX log command and output
 
-	log_debug ("running command: %s\n", command.c_str());
+	//log_debug ("running command: %s\n", command.c_str());
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "w");
 	if (file == NULL) {
@@ -50,7 +48,7 @@ unsigned int execute_command2 (const std::string &command, std::string &input)
 	}
 
 	count = fprintf (file, "%s\n", input.c_str());
-	log_debug ("wrote %d bytes to command %s\n", count, input.c_str());
+	//log_debug ("wrote %d bytes to command %s\n", count, command.c_str());
 
 	if (pclose (file) == -1) {
 		log_error ("pclose failed");	//XXX log_perror
@@ -74,7 +72,7 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 
 	//XXX log command and output
 
-	log_debug ("running command: %s\n", command.c_str());
+	//log_debug ("running command: %s\n", command.c_str());
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "r");
 	if (file == NULL) {
@@ -82,7 +80,7 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 		return -1;
 	}
 
-	log_debug ("output:\n");
+	//log_debug ("output:\n");
 	do {
 		ptr = NULL;
 		n = 0;
@@ -91,7 +89,7 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 			if (ptr[count-1] == '\n')
 				ptr[count-1] = 0;
 			output.push_back (ptr);
-			log_debug ("\t%s\n", ptr);
+			//log_debug ("\t%s\n", ptr);
 		}
 		free (ptr);
 	} while (count > 0);

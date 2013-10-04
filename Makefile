@@ -25,7 +25,8 @@ OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
 OUT	= main
 
-CFLAGS	= -g -Wall
+CFLAGS	+= -std=c++11
+CFLAGS	+= -g -Wall
 CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
 CFLAGS	+= -pg -fprofile-arcs -ftest-coverage -fno-omit-frame-pointer
 CFLAGS	+= -fno-inline-functions -fno-inline-functions-called-once -fno-optimize-sibling-calls
@@ -95,7 +96,7 @@ $(OBJDIR)/%.o: %.cpp
 quiet_cmd_LD	= LD	$@
       cmd_LD	= $(CC) -o $@ $(OBJ) $(LDFLAGS)
 
-main: $(OBJ)
+main:	$(OBJ)
 	$(call cmd,LD)
 
 # ----------------------------------------------------------------------------
@@ -113,7 +114,6 @@ clean:	force
 
 distclean: clean
 	$(RM) $(DEPDIR) $(OBJDIR) tags html
-	$(RM) lvm/{cache,lock,backup,archive}
 
 force:
 

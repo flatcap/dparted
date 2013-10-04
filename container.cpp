@@ -138,7 +138,7 @@ std::string DPContainer::dump_objects (void)
 		}
 	}
 
-	dot << "\n};";
+	dot << "\n}";
 	dot << "\n";
 
 	return dot.str();
@@ -175,7 +175,7 @@ std::string DPContainer::dump_dot (void)
 		uuid_short = uuid.substr (0, 6) + "...";
 	}
 
-	//output << dump_row ("type",          type);
+	output << dump_row ("type",          type.back());
 	output << dump_row ("name",          name);
 	output << dump_row ("uuid",          uuid_short); //RAR temp
 	output << dump_row ("device",        device);
