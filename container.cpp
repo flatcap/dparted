@@ -44,7 +44,7 @@ DPContainer::DPContainer (void) :
 	bytes_used (0),
 	whole (NULL),
 	parent (NULL),
-	fd (NULL),
+	fd (NULL),		//XXX WHAT?
 	ref_count (0)
 {
 	declare ("container");
@@ -59,7 +59,7 @@ DPContainer::~DPContainer()
 		(*i)->unref();
 	}
 
-	if (fd) {
+	if (fd) {		//XXX what? >=0 is valid
 		fclose (fd);
 	}
 }
