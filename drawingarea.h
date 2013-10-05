@@ -24,6 +24,7 @@
 class DPContainer;
 class Filesystem;
 class Misc;
+class Partition;
 class Table;
 class Theme;
 
@@ -71,6 +72,7 @@ private:
 	void draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 
 	Table *       get_table      (DPContainer *c);
+	Partition *   get_partition  (DPContainer *c);
 	Table *       get_protective (DPContainer *c);
 	Filesystem *  get_filesystem (DPContainer *c);
 	Misc *        get_misc       (DPContainer *c);

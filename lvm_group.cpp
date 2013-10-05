@@ -482,7 +482,7 @@ void fd_fs (void)
 	std::map<std::string, LVMVolume*>::iterator it_vol;
 
 	for (it_vol = vol_lookup.begin(); it_vol != vol_lookup.end(); it_vol++) {
-		log_error ("marker\n");
+		//log_error ("marker\n");
 		LVMVolume *v = (*it_vol).second;
 
 		DPContainer *item = probe (v);
@@ -492,7 +492,7 @@ void fd_fs (void)
 			log_debug ("no match\n");
 		}
 
-		log_debug ("volume %s (%s)\n", v->name.c_str(), v->parent->name.c_str());
+		//log_debug ("volume %s (%s)\n", v->name.c_str(), v->parent->name.c_str());
 
 		v->add_child (item);
 		//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", v, v->type.back().c_str(), v->name.c_str(), item, item->type.back().c_str(), item->name.c_str());
@@ -520,7 +520,6 @@ void LVMGroup::find_devices (DPContainer &disks)
 	//log_debug ("%s\nlvs\n", "_________________________________________________________________________________________________________________________\n");
 	fd_lvs (disks);
 	//log_debug ("%s\ndump\n", "_________________________________________________________________________________________________________________________\n");
-	{ std::string input = DPContainer::dump_objects(); std::string command = "dot -Tpng | display -resize 50% - &"; execute_command2 (command, input); }
 
 #if 0
 	dump_map ("vg_lookup",      vg_lookup);
@@ -529,7 +528,7 @@ void LVMGroup::find_devices (DPContainer &disks)
 	dump_map ("vol_seg_lookup", vol_seg_lookup);
 #endif
 
-	//fd_fs();
+	fd_fs();
 }
 
 

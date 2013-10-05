@@ -163,6 +163,21 @@ Table * DPDrawingArea::get_table (DPContainer *c)
 }
 
 /**
+ * get_part
+ * Am I a partition?
+ */
+Partition * DPDrawingArea::get_partition (DPContainer *c)
+{
+	if (!c)
+		return NULL;
+
+	if (c->is_a ("partition"))
+		return dynamic_cast<Partition*> (c);
+
+	return NULL;
+}
+
+/**
  * get_protective
  */
 Table * DPDrawingArea::get_protective (DPContainer *c)
@@ -653,11 +668,11 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 	long bytes_per_pixel = c->bytes_size / w;
 
 	int num = c->children.size();
-	//std::cout << "draw_container: " << c << "\n";
+	std::cout << "draw_container: " << c << "\n";
 	for (int i = 0; i < num; i++) {
 		DPContainer *child = c->children[i];
 
-		//std::cout << "child: " << child << "\n";
+		std::cout << "child: " << child << "\n";
 
 		int child_width = (child->bytes_size / bytes_per_pixel);
 		int child_usage = (child->bytes_used / bytes_per_pixel);
@@ -666,7 +681,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 
 		Filesystem *fs = get_filesystem (child);
 		if (fs) {
-			//std::cout << "fs: " << fs << "\n";
+			std::cout << "fs: " << fs << "\n";
 
 			std::string label1;
 			std::string label2;
@@ -745,6 +760,25 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 			continue;
 		}
 
+		Partition *part = get_partition (child);
+		if (part) {
+			//log_debug ("PARTITION\n");
+			//std::cout << part << "\n";
+
+			Rect tab;
+			Rect inside;
+			Rect right_t;
+			//Rect below;
+
+			Rect rect = { offset, y, child_width-GAP, h };
+			draw_tabframe (cr, "extended", rect, &tab, &inside, &right_t);
+
+			draw_icon (cr, "table", tab);
+
+			draw_container (cr, part, inside);
+			continue;
+		}
+
 		Misc *m = get_misc (child);
 		if (!m && (child->is_a ("misc"))) {
 			m = dynamic_cast<Misc*> (child);	// don't need this, it's in get_misc
@@ -780,7 +814,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 		}
 
 		std::string s = get_size (child->bytes_size);
-		log_error ("unknown type %s, %s, %s\n", child->name.c_str(), child->device.c_str(), s.c_str());
+		//log_error ("unknown type %s, %s, %s\n", child->name.c_str(), child->device.c_str(), s.c_str());
 	}
 
 	if (right) {
