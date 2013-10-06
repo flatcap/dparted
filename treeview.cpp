@@ -110,8 +110,7 @@ bool TreeView::on_button_press_event (GdkEventButton *event)
 	return_value = Gtk::TreeView::on_button_press_event (event);
 
 	//Then do our custom stuff:
-	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3))
-	{
+	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
 		m_Menu_Popup.popup (event->button, event->time);
 	}
 

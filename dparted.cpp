@@ -201,12 +201,9 @@ void DParted::init_menubar (void)
 		"	</toolbar>"
 		"</ui>";
 
-	try
-	{
+	try {
 		m_refUIManager->add_ui_from_string (ui_info);
-	}
-	catch (const Glib::Error& ex)
-	{
+	} catch (const Glib::Error& ex) {
 		std::cerr << "building menus failed: " << ex.what();
 	}
 #endif
