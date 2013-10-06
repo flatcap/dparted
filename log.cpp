@@ -72,7 +72,7 @@ int log_error (const char *format, ...)
 		return 0;
 
 	va_start (args, format);
-	fprintf (file, "\e[31m");
+	fprintf (file, "\e[01;31m");
 	retval = log (format, args);
 	fprintf (file, "\e[0m");
 	va_end (args);
