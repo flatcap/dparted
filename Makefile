@@ -28,10 +28,10 @@ OUT	= main
 CFLAGS	+= -std=c++11
 CFLAGS	+= -g -Wall
 CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
-CFLAGS	+= -pg -fprofile-arcs -ftest-coverage -fno-omit-frame-pointer
-CFLAGS	+= -fno-inline-functions -fno-inline-functions-called-once -fno-optimize-sibling-calls
+#CFLAGS	+= -pg -fprofile-arcs -ftest-coverage
+#CFLAGS	+= -fno-omit-frame-pointer -fno-inline-functions -fno-inline-functions-called-once -fno-optimize-sibling-calls
 
-LDFLAGS	= -pg -fprofile-arcs
+#LDFLAGS	+= -pg -fprofile-arcs
 
 PACKAGES = gtkmm-3.0
 
