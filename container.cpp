@@ -21,6 +21,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <iterator>
 #include <cstdio>
 #include <iostream>
 #include <set>
@@ -462,8 +463,6 @@ DPContainer * DPContainer::find_device (const std::string &dev)
  */
 DPContainer * DPContainer::find_uuid (const std::string &uuid)
 {
-	std::vector<DPContainer*>::iterator i;
-
 	for (auto i : children) {
 		if (i->uuid == uuid) {
 			return i;
@@ -478,8 +477,6 @@ DPContainer * DPContainer::find_uuid (const std::string &uuid)
  */
 DPContainer * DPContainer::find_name (const std::string &name)
 {
-	std::vector<DPContainer*>::iterator i;
-
 	for (auto i : children) {
 		if (i->name == name) {
 			return i;

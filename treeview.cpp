@@ -126,11 +126,9 @@ void TreeView::on_menu_file_popup_generic()
 	std::cout << "A popup menu item was selected.\n";
 
 	Glib::RefPtr<Gtk::TreeView::Selection> refSelection = get_selection();
-	if (refSelection)
-	{
+	if (refSelection) {
 		Gtk::TreeModel::iterator iter = refSelection->get_selected();
-		if (iter)
-		{
+		if (iter) {
 			std::cout << "selected something\n";
 		}
 	}
@@ -199,8 +197,7 @@ void TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeView
 	std::cout << "Path: " << path.to_string() << "\n";
 
 	Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter (path);
-	if (iter)
-	{
+	if (iter) {
 		DPContainer *c = NULL;
 		Gtk::TreeModel::Row row = *iter;
 		std::cout << "Row activated: Name=" << row[m_Columns.col_name] << ", Type=" << row[m_Columns.col_type] << "\n";
