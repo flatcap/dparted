@@ -108,14 +108,13 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 unsigned int execute_command (const std::string &command, std::string &output)
 {
 	std::vector<std::string> v;
-	std::vector<std::string>::iterator it;
 	int count;
 
 	count = execute_command (command, v);
 
 	output.clear();
-	for (it = v.begin(); it != v.end(); it++) {
-		output += (*it);
+	for (auto it : v) {
+		output += it;
 	}
 
 	return count;
@@ -292,11 +291,7 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 
 #if 0
 	log_debug ("vector:\n");
-	std::vector<std::string>::iterator it2;
-	for (it2 = parts.begin(); it2 != parts.end(); it2++) {
-
-		std::string value = (*it2);
-
+	for (auto value : parts) {
 		log_debug ("\t>>%s<<\n", value.c_str());
 	}
 	log_debug ("\n");
@@ -319,12 +314,11 @@ unsigned int parse_tagged_line (const std::string &line, const char *separators,
 	if (clear_map)
 		tags.clear();
 
-	std::vector<std::string>::iterator it;
-	for (it = list.begin(); it != list.end(); it++) {
-		middle = (*it).find ('=');				// XXX check it succeeds
+	for (auto it : list) {
+		middle = it.find ('=');				// XXX check it succeeds
 
-		std::string name  = (*it).substr (0, middle);
-		std::string value = (*it).substr (middle + 1);
+		std::string name  = it.substr (0, middle);
+		std::string value = it.substr (middle + 1);
 
 		// trim quotes XXX
 		unsigned int len = value.length();
@@ -339,11 +333,10 @@ unsigned int parse_tagged_line (const std::string &line, const char *separators,
 
 #if 0
 	log_debug ("map:\n");
-	std::map<std::string,StringNum>::iterator it2;
-	for (it2 = tags.begin(); it2 != tags.end(); it2++) {
+	for (auto it2 : tags) {
 
-		std::string name  = (*it2).first;
-		std::string value = (*it2).second;
+		std::string name  = it2.first;
+		std::string value = it2.second;
 
 		log_debug ("\t%s -> %s\n", name.c_str(), value.c_str());
 	}
@@ -387,9 +380,7 @@ std::string read_uuid (unsigned char *buffer)
  */
 void dump_hex (unsigned char *buffer, int bufsize)
 {
-	int i;
-
-	for (i = 0; i < bufsize; i += 16) {
+	for (int i = 0; i < bufsize; i += 16) {
 		log_debug ("%06x  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
 			i,
 			buffer[i +  0], buffer[i +  1], buffer[i +  2], buffer[i +  3], buffer[i +  4], buffer[i +  5], buffer[i +  6], buffer[i +  7],

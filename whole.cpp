@@ -50,8 +50,8 @@ std::string Whole::dump_dot (void)
 
 	if (count > 0) {
 		output << dump_row ("segments", count);
-		for (std::vector<DPContainer*>::iterator i = segments.begin(); i != segments.end(); i++) {
-			output << dump_row ("", (*i));
+		for (auto i : segments) {
+			output << dump_row ("", i);
 		}
 	}
 
@@ -65,7 +65,7 @@ void Whole::add_segment (DPContainer *seg)
 {
 	bool inserted = false;
 
-	for (std::vector<DPContainer*>::iterator i = segments.begin(); i != segments.end(); i++) {
+	for (auto i = segments.begin(); i != segments.end(); i++) {
 		if ((*i)->parent_offset > seg->parent_offset) {
 			segments.insert (i, seg);
 			inserted = true;

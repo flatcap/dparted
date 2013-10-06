@@ -71,13 +71,11 @@ LVMGroup::~LVMGroup()
 template<typename T>
 void dump_map (const char *title, const T &m)
 {
-	typename T::const_iterator i;
-
 	log_debug ("%s:\n", title);
-	for (i = m.begin(); i != m.end(); i++) {
-		DPContainer *c = dynamic_cast<DPContainer*>((*i).second);
+	for (auto i : m) {
+		DPContainer *c = dynamic_cast<DPContainer*>(i.second);
 
-		log_debug ("\t%s => %s [%s] (%p)\n", (*i).first.c_str(), c->name.c_str(), c->type.back().c_str(), c);
+		log_debug ("\t%s => %s [%s] (%p)\n", i.first.c_str(), c->name.c_str(), c->type.back().c_str(), c);
 	}
 }
 
@@ -94,8 +92,8 @@ void fd_probe_children (DPContainer *item)
 			queue_add_probe (item);
 	}
 
-	for (unsigned int i = 0; i < item->children.size(); i++) {
-		fd_probe_children (item->children[i]);
+	for (auto child : item->children) {
+		fd_probe_children (child);
 	}
 }
 
@@ -109,7 +107,6 @@ void fd_vgs (DPContainer &disks)
 	std::string error;
 	std::map<std::string,StringNum> tags;
 	LVMGroup *vg = NULL;
-	unsigned int i;
 
 	/*
 	 * LVM2_VG_NAME=shuffle
@@ -129,8 +126,8 @@ void fd_vgs (DPContainer &disks)
 	command = "sudo vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno,pv_name,pv_uuid";
 	execute_command (command, output);
 
-	for (i = 0; i < output.size(); i++) {
-		parse_tagged_line ((output[i]), "\t", tags);
+	for (auto line : output) {
+		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		std::string pv_name = tags["LVM2_PV_NAME"];
@@ -233,7 +230,6 @@ void fd_pvs (DPContainer &disks)	//RAR disks unused
 	std::string command;
 	std::vector<std::string> output;
 	std::string error;
-	unsigned int i;
 	std::map<std::string,StringNum> tags;
 
 	/*
@@ -251,9 +247,9 @@ void fd_pvs (DPContainer &disks)	//RAR disks unused
 	command = "sudo pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options pv_name,pv_uuid,lv_name,lv_uuid,lv_attr,vg_uuid,vg_name,segtype,pvseg_start,pvseg_size";
 	execute_command (command, output);
 
-	for (i = 0; i < output.size(); i++) {
-		//log_debug ("OUT: %s\n", output[i].c_str());
-		parse_tagged_line ((output[i]), "\t", tags);
+	for (auto line : output) {
+		//log_debug ("OUT: %s\n", line.c_str());
+		parse_tagged_line (line, "\t", tags);
 
 		std::string lv_type = tags["LVM2_SEGTYPE"];
 		if (lv_type == "free")				//XXX could process this and add it to the VGSeg's empty list
@@ -322,7 +318,6 @@ void fd_lvs (DPContainer &disks)
 	std::string command;
 	std::vector<std::string> output;
 	std::string error;
-	unsigned int i;
 	std::map<std::string,StringNum> tags;
 
 	/*
@@ -349,9 +344,9 @@ void fd_lvs (DPContainer &disks)
 	execute_command (command, output);
 
 	//log_debug ("Volumes:\n");
-	for (i = 0; i < output.size(); i++) {
-		//log_debug ("OUT: %s\n", output[i].c_str());
-		parse_tagged_line ((output[i]), "\t", tags);
+	for (auto line : output) {
+		//log_debug ("OUT: %s\n", line.c_str());
+		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];	//log_debug ("vg_uuid = %s\n", vg_uuid.c_str());
 		std::string vg_name = tags["LVM2_VG_NAME"];	//log_debug ("vg_name = %s\n", vg_name.c_str());
@@ -411,9 +406,7 @@ void fd_lvs (DPContainer &disks)
 			vol_lookup[vol_id] = v;
 		}
 
-		std::vector<std::string>::iterator it_dev;
-		for (it_dev = device_list.begin(); it_dev != device_list.end(); it_dev++) {
-			std::string dep = (*it_dev);
+		for (auto dep : device_list) {
 			//log_debug ("\t\t%s\n", dep.c_str());
 
 			std::map<std::string, DPContainer*>::iterator it_vol_seg;
@@ -435,7 +428,7 @@ void fd_lvs (DPContainer &disks)
 				continue;
 			}
 
-			dep = vg_name + ":" + (*it_dev);
+			dep = vg_name + ":" + dep;
 			size_t pos = dep.find ('(');
 			if (pos != std::string::npos) {
 				dep = dep.substr (0, pos);
@@ -459,9 +452,8 @@ void fd_lvs (DPContainer &disks)
 	//dump_map ("Volumes map (vol_lookup)", vol_lookup);
 
 	//transfer volumes to disks
-	std::map<std::string, LVMVolume*>::iterator it_vol;
-	for (it_vol = vol_lookup.begin(); it_vol != vol_lookup.end(); it_vol++) {
-		LVMVolume *v = (*it_vol).second;
+	for (auto it_vol : vol_lookup) {
+		LVMVolume *v = it_vol.second;
 		//log_debug ("volume %s (%s)\n", v->name.c_str(), v->parent->name.c_str());
 		v->parent->add_child (v);	//RAR add myself to MY parent
 		//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", v->parent, v->parent->type.back().c_str(), v->parent->name.c_str(), v, v->type.back().c_str(), v->name.c_str());
@@ -479,11 +471,9 @@ void fd_fs (void)
 	// identify the filesystems
 	// create filesystem objects under the matching partition
 
-	std::map<std::string, LVMVolume*>::iterator it_vol;
-
-	for (it_vol = vol_lookup.begin(); it_vol != vol_lookup.end(); it_vol++) {
+	for (auto it_vol : vol_lookup) {
 		//log_error ("marker\n");
-		LVMVolume *v = (*it_vol).second;
+		LVMVolume *v = it_vol.second;
 
 		DPContainer *item = probe (v);
 		if (item) {
@@ -498,9 +488,8 @@ void fd_fs (void)
 		//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", v, v->type.back().c_str(), v->name.c_str(), item, item->type.back().c_str(), item->name.c_str());
 
 		/*
-		std::vector<DPContainer*>::iterator it_seg;
-		for (it_seg = v->segments.begin(); it_seg != v->segments.end(); it_seg++) {
-			LVMPartition *p = dynamic_cast<LVMPartition*>(*it_seg);
+		for (auto it_seg : v->segments) {
+			LVMPartition *p = dynamic_cast<LVMPartition*>(it_seg);
 			log_debug ("\t%s (%s) - %p\n", p->name.c_str(), p->parent->name.c_str(), p);
 			p->add_child (item);
 		}

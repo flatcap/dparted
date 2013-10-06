@@ -157,10 +157,8 @@ Glib::RefPtr<Gdk::Pixbuf> get_color_as_pixbuf (int width, int height)
 void TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 {
 	Gtk::TreeModel::Row row;
-	std::vector<DPContainer*>::iterator i;
 
-	for (i = c->children.begin(); i != c->children.end(); i++) {
-		DPContainer *x = (*i);
+	for (auto x : c->children) {
 		if (x->is_a ("group"))
 			continue; //RAR for now ignore vg
 		//std::cout << "name: " << x->name << "\n";

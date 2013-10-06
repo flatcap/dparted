@@ -55,8 +55,8 @@ DPContainer::DPContainer (void) :
  */
 DPContainer::~DPContainer()
 {
-	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
-		(*i)->unref();
+	for (auto i : children) {
+		i->unref();
 	}
 
 	if (fd) {		//XXX what? >=0 is valid
@@ -100,10 +100,7 @@ void DPContainer::operator delete (void *ptr)
  */
 std::string DPContainer::dump_objects (void)
 {
-	std::set<DPContainer*>::iterator is;
-	std::vector<DPContainer*>::iterator ic;
 	std::ostringstream dot;
-	DPContainer *c = NULL;
 
 	dot << "digraph disks {\n";
 	dot << "graph [ rankdir=\"TB\", color=\"white\",bgcolor=\"#000000\" ];\n";
@@ -111,8 +108,7 @@ std::string DPContainer::dump_objects (void)
 	dot << "edge [ penwidth=3.0,color=\"#cccccc\" ];\n";
 	dot << "\n";
 
-	for (is = obj_set.begin(); is != obj_set.end(); is++) {
-		c = (*is);
+	for (auto c : obj_set) {
 		//if (c->dot_colour == "#ccccff") continue;
 		//printf ("%s\n", c->name.c_str());
 		dot << "\n";
@@ -133,8 +129,8 @@ std::string DPContainer::dump_objects (void)
 
 		dot << "</table>>];\n";
 
-		for (ic = c->children.begin(); ic != c->children.end(); ic++) {
-			dot << "obj_" << (void*) c << " -> obj_" << (void*) (*ic) << ";\n";
+		for (auto ic : c->children) {
+			dot << "obj_" << (void*) c << " -> obj_" << (void*) ic << ";\n";
 		}
 	}
 
@@ -149,15 +145,11 @@ std::string DPContainer::dump_objects (void)
  */
 void DPContainer::dump_leaks (void)
 {
-	std::set<DPContainer*>::iterator is;
-	DPContainer *c = NULL;
-
 	if (obj_set.size() == 0)
 		return;
 
 	log_debug ("Leaks (%lu):\n", obj_set.size());
-	for (is = obj_set.begin(); is != obj_set.end(); is++) {
-		c = (*is);
+	for (auto c : obj_set) {
 		log_debug ("\t0x%p - %s, %s, %d\n", c, c->name.c_str(), c->device.c_str(), c->ref_count);
 	}
 }
@@ -333,7 +325,7 @@ void DPContainer::add_child (DPContainer *child)
 
 	bool inserted = false;
 
-	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
+	for (auto i = children.begin(); i != children.end(); i++) {
 		if ((*i)->parent_offset > child->parent_offset) {
 			children.insert (i, child);
 			inserted = true;
@@ -453,11 +445,11 @@ DPContainer * DPContainer::find_device (const std::string &dev)
 	if (dev == device)
 		return this;
 
-	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
-		//log_debug ("child %p (%s)\n", (*i), (*i)->device.c_str());
-		match = (*i)->find_device (dev);
+	for (auto i : children) {
+		//log_debug ("child %p (%s)\n", i, i->device.c_str());
+		match = i->find_device (dev);
 		if (match) {
-			//log_debug ("MATCHES! %s (%s)\n", match->type.c_str(), match->name.c_str());
+			//log_debug ("MATCHES! %s (%s)\n", match->type.back().c_str(), match->name.c_str());
 			break;
 		}
 	}
@@ -472,9 +464,9 @@ DPContainer * DPContainer::find_uuid (const std::string &uuid)
 {
 	std::vector<DPContainer*>::iterator i;
 
-	for (i = children.begin(); i != children.end(); i++) {
-		if ((*i)->uuid == uuid) {
-			return (*i);
+	for (auto i : children) {
+		if (i->uuid == uuid) {
+			return i;
 		}
 	}
 
@@ -488,9 +480,9 @@ DPContainer * DPContainer::find_name (const std::string &name)
 {
 	std::vector<DPContainer*>::iterator i;
 
-	for (i = children.begin(); i != children.end(); i++) {
-		if ((*i)->name == name) {
-			return (*i);
+	for (auto i : children) {
+		if (i->name == name) {
+			return i;
 		}
 	}
 
@@ -596,9 +588,7 @@ bool DPContainer::is_a (const std::string &t)
 	//std::cout << "my type = " << type.back() << ", compare to " << t << "\n";
 
 	// Start with the most derived type
-	std::vector<std::string>::reverse_iterator it;
-
-	for (it = type.rbegin(); it != type.rend(); it++) {
+	for (auto it = type.rbegin(); it != type.rend(); it++) {
 		if ((*it) == t) {
 			return true;
 		}

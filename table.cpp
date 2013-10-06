@@ -26,6 +26,7 @@
 #include "msdos.h"
 #include "table.h"
 #include "lvm_table.h"
+#include "utils.h"
 
 /**
  * Table
@@ -71,7 +72,6 @@ long long Table::fill_space (void)
 	// the size of these fillers must be >= alignment size
 
 	std::vector<DPContainer*> vm;
-	std::vector<DPContainer*>::iterator i;
 #if 0
 	std::string s1;
 	std::string s2;
@@ -80,9 +80,7 @@ long long Table::fill_space (void)
 
 	long long upto = 0;
 
-	for (i = children.begin(); i != children.end(); i++) {
-		DPContainer *c = (*i);
-
+	for (auto c : children) {
 		if (upto == c->parent_offset) {
 			upto += c->bytes_size;
 #if 0
@@ -122,16 +120,15 @@ long long Table::fill_space (void)
 	}
 
 #if 1
-	for (i = vm.begin(); i != vm.end(); i++) {
-		add_child (*i);			// add_free()
+	for (auto i : vm) {
+		add_child (i);			// add_free()
 	}
 #endif
 
 #if 0
 	log_debug ("\nrecap\n");
-	for (i = children.begin(); i != children.end(); i++) {
-		DPContainer *c = (*i);
-		s1 = get_size (c->bytes_size);
+	for (auto c : children) {
+		std::string s1 = get_size (c->bytes_size);
 		log_debug ("\t%-12s %12lld -> %12lld  %9s\n", c->name.c_str(), c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str());
 	}
 #endif

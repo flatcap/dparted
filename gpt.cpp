@@ -100,8 +100,6 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 
 	//std::cout << g << "\n";
 
-	int i;
-	int j;
 	Partition *p = NULL;
 	buffer += 1024;	//bufsize -= 1024; for range checking
 #if 0
@@ -115,7 +113,7 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 	p->add_child (fs);
 	return g;
 #endif
-	for (i = 0; i < 128; i++, buffer += 128) {
+	for (int i = 0; i < 128; i++, buffer += 128) {
 		if (*(long long*) (buffer+32) == 0)
 			break;
 
@@ -142,7 +140,7 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 
 		p->name.clear();
 		if (buffer[56]) {
-			for (j = 0; j < 32; j += 2) {
+			for (int j = 0; j < 32; j += 2) {
 				if (buffer[56+j] == 0)
 					break;
 				p->name += buffer[56+j];	// put this in a "label" member

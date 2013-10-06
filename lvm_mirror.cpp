@@ -60,7 +60,7 @@ void LVMMirror::add_child (DPContainer *child)
 
 	bool inserted = false;
 
-	for (std::vector<DPContainer*>::iterator i = children.begin(); i != children.end(); i++) {
+	for (auto i = children.begin(); i != children.end(); i++) {
 		if ((*i)->parent_offset > child->parent_offset) {
 			children.insert (i, child);
 			inserted = true;

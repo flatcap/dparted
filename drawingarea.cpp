@@ -116,8 +116,7 @@ bool DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
 
 	bool b = false;
 #if 0
-	std::deque<Range>::iterator it;
-	for (it = vRange.begin(); it != vRange.end(); it++) {
+	for (auto it = vRange.begin(); it != vRange.end(); it++) {
 		b = ((sel_x >= (*it).x) && (sel_x < ((*it).x + (*it).w)) &&
 		     (sel_y >= (*it).y) && (sel_y < ((*it).y + (*it).h)));
 		if (b) {
@@ -667,11 +666,8 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 
 	long bytes_per_pixel = c->bytes_size / w;
 
-	int num = c->children.size();
 	std::cout << "draw_container: " << c << "\n";
-	for (int i = 0; i < num; i++) {
-		DPContainer *child = c->children[i];
-
+	for (auto child : c->children) {
 		std::cout << "child: " << child << "\n";
 
 		int child_width = (child->bytes_size / bytes_per_pixel);
@@ -936,8 +932,7 @@ bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 	sel_y = event->y;
 
 #if 0
-	std::deque<Range>::iterator it;
-	for (it = vRange.begin(); it != vRange.end(); it++) {
+	for (auto it = vRange.begin(); it != vRange.end(); it++) {
 		bool b = ((event->x >= (*it).x) && (event->x < ((*it).x + (*it).w)) &&
 			  (event->y >= (*it).y) && (event->y < ((*it).y + (*it).h)));
 		if (b) log_error ("Range: %d,%d %d,%d %p\n", (*it).x, (*it).y, (*it).w, (*it).h, (*it).p);

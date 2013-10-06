@@ -98,9 +98,8 @@ bool Msdos::read_partition (unsigned char *buffer, int index, struct partition *
 unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long long offset, std::vector<struct partition> &vp)
 {
 	struct partition part;
-	int i;
 
-	for (i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (!read_partition (buffer, i, &part))	// could flag Msdos object as invalid
 			continue;		// RAR or return -1
 
@@ -117,7 +116,6 @@ unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long long of
 DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	Msdos *m = NULL;
-	unsigned int i;
 	int count = 0;
 
 	if (*(unsigned short int *) (buffer+510) != 0xAA55)
@@ -148,7 +146,7 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 	res1->parent_offset = 0;					// Start of the partition
 	m->add_child (res1);		// change to add_reserved?
 
-	for (i = 0; i < vp.size(); i++) {
+	for (unsigned int i = 0; i < vp.size(); i++) {
 #if 0
 		std::string s1 = get_size (vp[i].start);
 		std::string s2 = get_size (vp[i].size);

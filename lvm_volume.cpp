@@ -50,8 +50,8 @@ std::string LVMVolume::dump_dot (void)
 
 	if (count > 0) {
 		output << dump_row ("tables", count);
-		for (std::vector<LVMTable*>::iterator i = tables.begin(); i != tables.end(); i++) {
-			output << dump_row ("", (*i));
+		for (auto i : tables) {
+			output << dump_row ("", i);
 		}
 	}
 

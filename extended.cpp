@@ -57,7 +57,6 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 	int bufsize = 512;
 	//off_t seek = 0;
 	//ssize_t count = 0;
-	int loop = 0;
 	long long table_offset = offset;
 
 	// create extended
@@ -83,7 +82,7 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 	res1->parent_offset = 0;					// Start of the partition
 	ext->add_child (res1);		// change to add_reserved?
 
-	for (loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
+	for (int loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
 		std::string s = get_size (table_offset);
 		//log_debug ("table_offset = %lld (%s)\n", table_offset, s.c_str());
 		/*FILE *f =*/ parent->open_device();
@@ -101,7 +100,6 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 		//log_debug ("extended partition\n");
 
 		int num = 0;
-		unsigned int i;
 		std::vector<struct partition> vp;
 		num = ext->read_table (buffer, bufsize, 0, vp);
 		//log_debug ("num = %d\n", num);
@@ -112,31 +110,31 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 			return NULL;
 		}
 
-		for (i = 0; i < vp.size(); i++) {
+		for (auto &part : vp) {
 #if 0
-			if ((vp[i].type != 5) || (vp[i].type != 5)) {
-				std::string s1 = get_size (vp[i].start);
-				std::string s2 = get_size (vp[i].size);
+			if ((part.type != 5) || (part.type != 5)) {
+				std::string s1 = get_size (part.start);
+				std::string s2 = get_size (part.size);
 
-				log_debug ("\tpartition %d (0x%02x)\n", i+1, vp[i].type);
-				log_debug ("\t\tstart = %lld (%s)\n", vp[i].start, s1.c_str());
-				log_debug ("\t\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
+				log_debug ("\tpartition (0x%02x)\n", part.type);
+				log_debug ("\t\tstart = %lld (%s)\n", part.start, s1.c_str());
+				log_debug ("\t\tsize  = %lld (%s)\n", part.size,  s2.c_str());
 				log_debug ("\n");
 			}
 #endif
 			DPContainer *c = NULL;
 
-			if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
-				table_offset = offset + vp[i].start;
+			if ((part.type == 0x05) || (part.type == 0x0F)) {
+				table_offset = offset + part.start;
 			} else {
 				c = new Partition;
 				c->name = "partition";
-				c->bytes_size = vp[i].size;
+				c->bytes_size = part.size;
 
-				//c->parent_offset = table_offset + vp[i].start;
+				//c->parent_offset = table_offset + part.start;
 				//c->device = parent->device;
 
-				c->parent_offset = table_offset + vp[i].start - ext->parent_offset;
+				c->parent_offset = table_offset + part.start - ext->parent_offset;
 
 				std::ostringstream part_name;
 				part_name << parent->device;

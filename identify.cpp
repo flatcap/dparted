@@ -86,9 +86,7 @@ int identify_swap (unsigned char *buffer, int bufsize)
  */
 int identify_vfat (unsigned char *buffer, int bufsize)
 {
-	int i;
-
-	for (i = 3; i < 11; i++) {
+	for (int i = 3; i < 11; i++) {
 		if ((buffer[i] > 0) && (buffer[i] < ' '))
 			return 0;
 		if (buffer[i] > 126)

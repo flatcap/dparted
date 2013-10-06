@@ -62,12 +62,11 @@ unsigned int mounts_get_list (DPContainer &mounts)
 	std::string command;
 	std::vector<std::string> output;
 	std::string error;
-	unsigned int i;
 
 	command = "grep '^/dev' /proc/mounts";
 	execute_command (command, output);
 
-	for (i = 0; i < output.size(); i++) {
+	for (unsigned int i = 0; i < output.size(); i++) {
 		std::string line = output[i];
 		log_debug ("line%d:\n%s\n\n", i, line.c_str());
 	}
@@ -112,15 +111,14 @@ int main (int argc, char *argv[])
 	{
 	DPContainer disks;
 	DPContainer *item = NULL;
-	unsigned int j;
 
 	log_init ("/dev/stderr");
 
 	//Disk::find_devices (disks);
 	Loop::find_devices (disks);
 
-	for (j = 0; j < disks.children.size(); j++) {
-		queue_add_probe (disks.children[j]);
+	for (auto child : disks.children) {
+		queue_add_probe (child);
 	}
 
 	while ((item = probe_queue.front())) {

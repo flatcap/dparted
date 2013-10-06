@@ -142,7 +142,6 @@ unsigned int Disk::find_devices (DPContainer &list)
 	int kernel_major = -1;
 	int kernel_minor = -1;
 	long long size;
-	unsigned int i;
 	std::string part;
 	int scan;
 	std::map<std::string,StringNum> tags;
@@ -150,8 +149,8 @@ unsigned int Disk::find_devices (DPContainer &list)
 
 	//log_debug ("%d lines\n", count);
 
-	for (i = 0; i < count; i++) {
-		parse_tagged_line ((output[i]), " ", tags);
+	for (auto line : output) {
+		parse_tagged_line (line, " ", tags);
 
 		type = tags["TYPE"];
 		if (type != "disk")

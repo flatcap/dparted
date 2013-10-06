@@ -85,10 +85,8 @@ unsigned int Loop::find_devices (DPContainer &list)
 	std::string command = "losetup -a";	//XXX losetup -n -O NAME,BACK-FILE etc
 	std::vector <std::string> output;
 	std::string error;
-	unsigned int count;
 
-	count = execute_command (command, output);
-	if (count < 0)
+	if (execute_command (command, output) < 0)
 		return 0;
 
 	//log_debug ("%s\n", output.c_str());
@@ -99,24 +97,23 @@ unsigned int Loop::find_devices (DPContainer &list)
 	int kernel_minor = -1;
 	long inode;
 	size_t pos;
-	unsigned int i;
 	std::string part;
 	int scan;
 	int added = 0;
 
-	//log_debug ("%d lines\n", count);
+	//log_debug ("%d lines\n", output.size());
 
-	for (i = 0; i < count; i++) {
-		//log_debug ("line = >>%s<<\n", output[i].c_str());
-		pos = output[i].find (": [");
+	for (auto line : output) {
+		//log_debug ("line = >>%s<<\n", line.c_str());
+		pos = line.find (": [");
 		if (pos == std::string::npos) {
 			log_debug ("corrupt line1\n");
 			continue;
 		}
-		device = output[i].substr (0, pos);
+		device = line.substr (0, pos);
 		//log_debug ("%s\n", device.c_str());
 
-		part = output[i].substr (pos + 3, 4);
+		part = line.substr (pos + 3, 4);
 		//log_debug ("%s\n", part.c_str());
 		scan = sscanf (part.c_str(), "%02x%02x", &kernel_major, &kernel_minor);
 		if (scan != 2) {
@@ -126,7 +123,7 @@ unsigned int Loop::find_devices (DPContainer &list)
 		//log_debug ("\tmajor: %d\n", kernel_major);
 		//log_debug ("\tminor: %d\n", kernel_minor);
 
-		part = output[i].substr (pos + 9);
+		part = line.substr (pos + 9);
 
 		pos = part.find (" (");
 		if (pos == std::string::npos) {
@@ -144,13 +141,13 @@ unsigned int Loop::find_devices (DPContainer &list)
 		}
 		//log_debug ("\tinode: %ld\n", inode);
 
-		pos = output[i].find (" (");
+		pos = line.find (" (");
 		if (pos == std::string::npos) {
 			log_debug ("corrupt line3\n");
 			continue;
 		}
 
-		part = output[i].substr (pos + 2);
+		part = line.substr (pos + 2);
 		//log_debug ("part = %s\n", part.c_str());
 
 		pos = part.length();

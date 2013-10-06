@@ -98,15 +98,15 @@ void DParted::set_data (DPContainer *c)
 	treeview.init_treeview (m_c);
 
 	int count = 0;
-	for (std::vector<DPContainer*>::iterator i = c->children.begin(); i != c->children.end(); i++) {
-		if ((*i)->is_a ("lvm_group"))
+	for (auto i : c->children) {
+		if (i->is_a ("lvm_group"))
 			continue; //RAR for now ignore vg
-		//std::cout << (*i)->type << "\n";
+		//std::cout << i->type << "\n";
 		DPDrawingArea *da = manage (new DPDrawingArea());
 		da_grid.add (*da);
 		da_grid.show_all();
-		//std::cout << (*i)->device << "\n";
-		da->set_data (*i);
+		//std::cout << i->device << "\n";
+		da->set_data (i);
 		count++;
 	}
 
