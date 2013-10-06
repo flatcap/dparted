@@ -479,7 +479,8 @@ void fd_fs (void)
 		if (item) {
 			//std::cout << item << std::endl;
 		} else {
-			log_debug ("no match\n");
+			log_debug ("no match for %s\n", v->device.c_str());
+			return;
 		}
 
 		//log_debug ("volume %s (%s)\n", v->name.c_str(), v->parent->name.c_str());

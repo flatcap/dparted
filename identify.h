@@ -23,6 +23,7 @@ int identify_btrfs    (unsigned char *buffer, int bufsize);
 int identify_ext2     (unsigned char *buffer, int bufsize);
 int identify_gpt      (unsigned char *buffer, int bufsize);
 int identify_lvm      (unsigned char *buffer, int bufsize);
+int identify_lvm_mlog (unsigned char *buffer, int bufsize);
 int identify_msdos    (unsigned char *buffer, int bufsize);
 int identify_ntfs     (unsigned char *buffer, int bufsize);
 int identify_reiserfs (unsigned char *buffer, int bufsize);

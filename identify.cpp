@@ -117,3 +117,11 @@ int identify_lvm (unsigned char *buffer, int bufsize)
 	return (strncmp ((char*) buffer+536, "LVM2 001", 8) == 0);
 }
 
+/**
+ * identify_lvm_mlog
+ */
+int identify_lvm_mlog (unsigned char *buffer, int bufsize)
+{
+	return (strncmp ((char*) buffer+0, "rRiM", 4) == 0);
+}
+
