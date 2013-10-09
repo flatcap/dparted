@@ -31,14 +31,16 @@ DParted::DParted () :
 	m_c (NULL)
 {
 	set_title ("DParted");
+	set_size_request (1024, 600);
 #if 0
-	set_default_size (1439, 389);
 	set_default_size (1439, 800); //RAR 1439, 800
 #endif
 
 	add (scrolledwindow);
 
 	scrolledwindow.add (grid);
+	scrolledwindow.set_hexpand (true);
+	scrolledwindow.set_vexpand (true);
 
 	init_menubar();
 	//init_toolbar();
@@ -111,7 +113,7 @@ void DParted::set_data (DPContainer *c)
 	}
 
 	//std::cout << m_c->children.size() << " children\n";
-	set_size_request (1362, 77*count+6); //RAR
+	//set_size_request (1362, 77*count+6); //RAR
 
 #if 1
 	int width = 0;
