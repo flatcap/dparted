@@ -1,0 +1,16 @@
+# create file
+#	make file
+#	populate file
+
+# connect file
+#	losetup
+#	partprobe
+#	vgchange -ay
+
+# disconnect file
+#	vgchange -an
+#	losetup -D
+
+# destroy
+#	delete file
+

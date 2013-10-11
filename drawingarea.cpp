@@ -133,6 +133,7 @@ bool DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
 }
 
 
+//XXX move these to respective classes?
 /**
  * get_table
  * Am I a table?

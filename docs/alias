@@ -1,0 +1,11 @@
+
+alias suuid='sed -e "s/^  //" -e "s/\([A-Za-z0-9]\{6\}\)\(-[A-Za-z0-9]\{4\}\)\{5\}-[A-Za-z0-9]\{6\}/\1 /g" -e "s/\(UUID \)                               /\1/g"'
+
+echo
+vgs --unquoted --units=b --nosuffix --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno,pv_name | suuid
+echo
+pvs --unquoted --units=b --nosuffix --options pv_name,pv_uuid,lv_name,lv_attr,vg_uuid,vg_name,segtype,pvseg_start,pvseg_size | suuid | grep -vw "free"
+echo
+lvs --unquoted --units=b --nosuffix --all --sort lv_kernel_minor --options vg_uuid,vg_name,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start_pe,seg_pe_ranges,devices | suuid
+echo
+
