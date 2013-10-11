@@ -110,7 +110,7 @@ $(DEPDIR) $(OBJDIR):
 # ----------------------------------------------------------------------------
 
 clean:	force
-	$(RM) $(OUT) $(OBJ)
+	$(RM) $(OUT) $(OBJ) gmon.out
 
 distclean: clean
 	$(RM) $(DEPDIR) $(OBJDIR) tags html
