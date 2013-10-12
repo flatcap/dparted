@@ -3,20 +3,22 @@ RM	= rm -fr
 MKDIR	= mkdir -p
 
 # Library
-SRC	= block.cpp container.cpp disk.cpp extended.cpp file.cpp \
+SRC	= manager.cpp block.cpp container.cpp disk.cpp extended.cpp file.cpp \
 	  filesystem.cpp gpt.cpp identify.cpp log.cpp loop.cpp lvm_group.cpp \
 	  lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_stripe.cpp \
 	  lvm_table.cpp lvm_volume.cpp main.cpp misc.cpp msdos.cpp \
-	  partition.cpp table.cpp utils.cpp volume.cpp whole.cpp
+	  partition.cpp table.cpp utils.cpp volume.cpp whole.cpp probe.cpp \
+	  probeloop.cpp
 
-HDR	= block.h container.h disk.h extended.h file.h filesystem.h \
+HDR	= manager.h block.h container.h disk.h extended.h file.h filesystem.h \
 	  gpt.h identify.h log.h loop.h lvm_group.h lvm_linear.h lvm_mirror.h \
 	  lvm_partition.h lvm_stripe.h lvm_table.h lvm_volume.h misc.h msdos.h \
-	  partition.h stringnum.h table.h utils.h volume.h whole.h
+	  partition.h stringnum.h table.h utils.h volume.h whole.h probe.h \
+	  probeloop.h main.h
 
 # GUI
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp
-HDR	+= dparted.h drawingarea.h treeview.h theme.h main.h
+HDR	+= dparted.h drawingarea.h treeview.h theme.h
 
 DEPDIR	= .dep
 OBJDIR	= .obj

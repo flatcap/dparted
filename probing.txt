@@ -1,0 +1,26 @@
+probing
+
+devices
+	disk
+	loop device
+	vm images
+
+partitions
+	dos
+	gpt
+	ldm
+
+volumes
+	lvm
+	btrfs
+	md
+	partition
+
+filesystems
+	encryption
+	ext2,3,4
+	xfs
+	btrfs
+	ntfs
+	...
+
