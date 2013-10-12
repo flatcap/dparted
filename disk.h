@@ -23,6 +23,9 @@
 
 #include "block.h"
 
+/**
+ * class Disk
+ */
 class Disk : public Block
 {
 public:

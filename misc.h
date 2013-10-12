@@ -22,6 +22,9 @@
 
 #include "container.h"
 
+/**
+ * class Misc
+ */
 class Misc : public DPContainer
 {
 public:

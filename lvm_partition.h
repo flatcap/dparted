@@ -20,6 +20,9 @@
 
 #include "partition.h"
 
+/**
+ * class LVMPartition
+ */
 class LVMPartition : public Partition
 {
 public:

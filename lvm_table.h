@@ -20,6 +20,9 @@
 
 #include "table.h"
 
+/**
+ * class LVMTable
+ */
 class LVMTable : public Table
 {
 public:

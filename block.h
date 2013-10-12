@@ -22,6 +22,9 @@
 
 #include "container.h"
 
+/**
+ * class Block
+ */
 class Block : public DPContainer
 {
 public:

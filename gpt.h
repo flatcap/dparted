@@ -22,6 +22,9 @@
 
 #include "table.h"
 
+/**
+ * class Gpt
+ */
 class Gpt : public Table
 {
 public:

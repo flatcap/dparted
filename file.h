@@ -22,6 +22,9 @@
 
 #include "block.h"
 
+/**
+ * class File
+ */
 class File : public Block
 {
 public:

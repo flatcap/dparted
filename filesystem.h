@@ -22,6 +22,9 @@
 
 #include "container.h"
 
+/**
+ * class Filesystem
+ */
 class Filesystem : public DPContainer
 {
 public:

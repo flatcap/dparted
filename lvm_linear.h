@@ -20,6 +20,9 @@
 
 #include "lvm_volume.h"
 
+/**
+ * class LVMLinear
+ */
 class LVMLinear : public LVMVolume
 {
 public:

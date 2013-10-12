@@ -22,6 +22,9 @@
 
 #include "container.h"
 
+/**
+ * class Table
+ */
 class Table : public DPContainer
 {
 public:

@@ -32,6 +32,9 @@
 
 class DPContainer;
 
+/**
+ * class DParted
+ */
 class DParted : public Gtk::Window
 {
 public:

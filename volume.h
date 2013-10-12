@@ -20,6 +20,9 @@
 
 #include "whole.h"
 
+/**
+ * class Volume
+ */
 class Volume : public Whole
 {
 public:

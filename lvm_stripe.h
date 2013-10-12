@@ -20,6 +20,9 @@
 
 #include "lvm_volume.h"
 
+/**
+ * class LVMStripe
+ */
 class LVMStripe : public LVMVolume
 {
 public:

@@ -22,6 +22,9 @@
 
 #include "container.h"
 
+/**
+ * class Partition
+ */
 class Partition : public DPContainer
 {
 public:

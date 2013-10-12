@@ -23,6 +23,9 @@
 
 #include "container.h"
 
+/**
+ * class Whole
+ */
 class Whole : public DPContainer
 {
 public:

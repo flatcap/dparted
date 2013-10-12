@@ -22,6 +22,9 @@
 
 #include "msdos.h"
 
+/**
+ * class Extended
+ */
 class Extended : public Msdos
 {
 public:

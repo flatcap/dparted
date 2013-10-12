@@ -20,6 +20,9 @@
 
 #include <string>
 
+/**
+ * class Probe
+ */
 class Probe
 {
 public:

@@ -28,6 +28,9 @@ struct partition {
 	int type;
 };
 
+/**
+ * class Msdos
+ */
 class Msdos : public Table
 {
 public:

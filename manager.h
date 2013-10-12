@@ -20,6 +20,9 @@
 
 class DPContainer;
 
+/**
+ * class Manager
+ */
 class Manager
 {
 public:

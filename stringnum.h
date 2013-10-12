@@ -21,6 +21,9 @@
 #include <cstdlib>
 #include <string>
 
+/**
+ * class StringNum
+ */
 class StringNum : public std::string
 {
 public:

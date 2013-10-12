@@ -20,6 +20,9 @@
 
 #include "lvm_volume.h"
 
+/**
+ * class LVMMirror
+ */
 class LVMMirror : public LVMVolume
 {
 public:

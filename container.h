@@ -25,6 +25,9 @@
 
 class Whole;
 
+/**
+ * class DPContainer
+ */
 class DPContainer
 {
 public:

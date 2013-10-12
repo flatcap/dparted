@@ -30,6 +30,9 @@ class Theme;
 typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
 typedef struct { Rect r; DPContainer *p; } Range;
 
+/**
+ * class DPDrawingArea
+ */
 class DPDrawingArea : public Gtk::DrawingArea
 {
 public:

@@ -23,6 +23,9 @@
 
 #include <map>
 
+/**
+ * class Theme
+ */
 class Theme
 {
 public:

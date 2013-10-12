@@ -20,6 +20,9 @@
 
 #include "whole.h"
 
+/**
+ * class LVMGroup
+ */
 class LVMGroup : public Whole
 {
 public:

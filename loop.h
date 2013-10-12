@@ -22,6 +22,9 @@
 
 #include "block.h"
 
+/**
+ * class Loop
+ */
 class Loop : public Block
 {
 public:

@@ -22,6 +22,9 @@
 
 class LVMTable;
 
+/**
+ * class LVMVolume
+ */
 class LVMVolume : public Volume
 {
 public:
