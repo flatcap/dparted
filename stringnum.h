@@ -15,7 +15,6 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #ifndef _STRINGNUM_H
 #define _STRINGNUM_H
 

@@ -15,7 +15,6 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #ifndef _EXTENDED_H
 #define _EXTENDED_H
 
