@@ -45,5 +45,6 @@ private:
 
 };
 
-#endif /* _WHOLE_H_ */
+
+#endif // _WHOLE_H_
 

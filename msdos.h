@@ -50,5 +50,6 @@ private:
 
 };
 
-#endif /* _MSDOS_H */
+
+#endif // _MSDOS_H
 

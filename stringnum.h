@@ -51,5 +51,6 @@ public:
 	}
 };
 
-#endif /* _STRINGNUM_H */
+
+#endif // _STRINGNUM_H
 

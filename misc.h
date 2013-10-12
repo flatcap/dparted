@@ -41,5 +41,6 @@ private:
 
 };
 
-#endif /* _MISC_H */
+
+#endif // _MISC_H
 

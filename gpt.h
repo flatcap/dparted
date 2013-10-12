@@ -41,5 +41,6 @@ private:
 
 };
 
-#endif /* _GPT_H */
+
+#endif // _GPT_H
 

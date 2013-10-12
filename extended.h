@@ -41,5 +41,6 @@ private:
 
 };
 
-#endif /* _EXTENDED_H */
+
+#endif // _EXTENDED_H
 

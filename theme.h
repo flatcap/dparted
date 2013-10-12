@@ -50,5 +50,6 @@ private:
 
 };
 
-#endif /* _THEME_H_ */
+
+#endif // _THEME_H_
 
