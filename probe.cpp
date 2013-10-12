@@ -56,3 +56,22 @@ void
 Probe::discover (void)
 {
 }
+
+/**
+ * get_name
+ */
+std::string
+Probe::get_name (void)
+{
+	return name;
+}
+
+/**
+ * get_description
+ */
+std::string
+Probe::get_description (void)
+{
+	return description;
+}
+

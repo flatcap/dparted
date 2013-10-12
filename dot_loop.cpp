@@ -16,45 +16,22 @@
  */
 
 
-#ifndef _LOOP_H_
-#define _LOOP_H_
-
+#include <sstream>
 #include <string>
 
-#include "block.h"
+//#include "block.h"
 
-class Loop : public Block
+/**
+ * dot_loop
+ */
+std::string dot_loop (void)
 {
-public:
-	Loop (void);
-	virtual ~Loop();
+	std::ostringstream output;
 
-	// Backing file
-	std::string	file_name;
-	long		file_inode;
-	int		file_major;
-	int		file_minor;
+	//XXX output << Block::dump_dot();
 
-	// Loop device
-	std::string	loop_file;
-	int		loop_major;
-	int		loop_minor;
-	int		sizelimit;
+	// no specifics for now
 
-	// Loop settings
-	long		offset;
-	long		size_limit;
-	bool		autoclear;
-	bool		partscan;
-	bool		read_only;
-	bool		deleted;
-
-	// XXX Doesn't need to be a friend since everything's public
-	friend class ProbeLoop;
-protected:
-private:
-
-};
-
-#endif // _LOOP_H_
+	return output.str();
+}
 

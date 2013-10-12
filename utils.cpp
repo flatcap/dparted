@@ -301,6 +301,53 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 }
 
 /**
+ * explode
+ */
+unsigned int explode_n (const char *separators, const std::string &input, std::vector<std::string> &parts, int max)
+{
+	size_t start = 0;
+	size_t end   = 0;
+
+	if (!separators)
+		return 0;
+
+	parts.clear();
+
+	//printf ("input      = '%s'\n", input.c_str());
+	//printf ("separators = '%s'\n", separators);
+
+	start = input.find_first_not_of (separators, start);
+	end   = input.find_first_of     (separators, start);
+	//printf ("start = %ld, end = %ld\n", start, end);
+
+	while (end != std::string::npos) {
+		parts.push_back (input.substr (start, end - start));
+
+		start = input.find_first_not_of (separators, end+1);
+		end   = input.find_first_of     (separators, start);
+		//printf ("start = %ld, end = %ld\n", start, end);
+
+		max--;
+		if (max < 2)
+			break;
+	}
+
+	if (start != input.size()) {
+		parts.push_back (input.substr (start));
+	}
+
+#if 0
+	log_debug ("vector:\n");
+	for (auto value : parts) {
+		log_debug ("\t>>%s<<\n", value.c_str());
+	}
+	log_debug ("\n");
+#endif
+
+	return parts.size();
+}
+
+/**
  * parse_tagged_line
  */
 unsigned int parse_tagged_line (const std::string &line, const char *separators, std::map<std::string,StringNum> &tags, bool clear_map /* = true */)

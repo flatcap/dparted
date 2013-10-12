@@ -19,10 +19,19 @@
 #ifndef _PROBE_LOOP_H_
 #define _PROBE_LOOP_H_
 
+#include <map>
+
 #include "probe.h"
 
+class Loop;
+struct compare;
+
+/**
+ * class ProbeLoop
+ */
 class ProbeLoop : public Probe
 {
+public:
 	ProbeLoop();
 	virtual ~ProbeLoop();
 
@@ -30,8 +39,12 @@ class ProbeLoop : public Probe
 	        void shutdown   (void);
 	virtual void discover   (void);
 
+	//XXX bool prerequisites (void);
+
 protected:
+	std::map<Loop*,compare> children;
 };
+
 
 #endif // _PROBE_LOOP_H_
 

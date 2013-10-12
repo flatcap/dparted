@@ -23,6 +23,7 @@
 #include "container.h"
 #include "manager.h"
 #include "utils.h"
+#include "log.h"
 
 #include "table.h"
 #include "misc.h"
@@ -30,6 +31,8 @@
 #include "filesystem.h"
 #include "loop.h"
 #include "lvm_group.h"
+
+#include "probe_loop.h"
 
 std::queue<DPContainer*> probe_queue;
 
@@ -117,6 +120,12 @@ DPContainer * probe (DPContainer *parent)
  */
 int main (int argc, char *argv[])
 {
+	ProbeLoop pl;
+	log_init ("/dev/stdout");
+
+	pl.discover();
+
+#if 0
 	typedef unsigned int (*find_devices) (DPContainer &list);
 
 	find_devices l = Loop::find_devices;	// XXX static, so we get away with this
@@ -170,6 +179,7 @@ int main (int argc, char *argv[])
 
 	}
 	DPContainer::dump_leaks();
+#endif
 	return 0;
 }
 

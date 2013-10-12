@@ -85,6 +85,7 @@ public:
 
 	std::vector<std::string> type;
 
+	FILE		*fd;
 protected:
 	std::string dump_row (const char *name, long long value);
 	std::string dump_row (const char *name, long value);
@@ -96,7 +97,6 @@ protected:
 
 	void declare (const char *name, const char *colour = NULL);
 
-	FILE		*fd;
 	std::string	 dot_colour;
 
 	int		 ref_count;
