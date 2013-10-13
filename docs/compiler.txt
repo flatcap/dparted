@@ -1,0 +1,117 @@
+-fstrict-enums
+-Wreorder
+-Woverloaded-virtual
+
+-Wpedantic
+-pedantic
+
+-Wall
+	-Waddress   
+	-Warray-bounds (only with -O2)  
+	-Wc++11-compat  
+	-Wchar-subscripts  
+	-Wcomment  
+	-Wenum-compare
+	-Wformat   
+	-Wmaybe-uninitialized 
+	-Wnonnull  
+	-Wparentheses  
+	-Wpointer-sign  
+	-Wreorder   
+	-Wreturn-type  
+	-Wsequence-point  
+	-Wsign-compare
+	-Wstrict-aliasing  
+	-Wstrict-overflow=1  
+	-Wswitch  
+	-Wtrigraphs  
+	-Wuninitialized  
+	-Wunknown-pragmas  
+	-Wunused-function  
+	-Wunused-label     
+	-Wunused-value     
+	-Wunused-variable  
+	-Wvolatile-register-var 
+
+-Wextra
+	-Wclobbered  
+	-Wempty-body  
+	-Wignored-qualifiers 
+	-Wmissing-field-initializers  
+	-Woverride-init  
+	-Wsign-compare  
+	-Wtype-limits  
+	-Wuninitialized  
+	-Wunused-parameter
+	-Wunused-but-set-parameter
+
+nonnull function attribute
+
+-Wswitch-default
+-Wswitch-enum
+-Wfloat-equal
+-Wshadow
+-Wuseless-cast
+-Wzero-as-null-pointer-constant
+
+-Wstack-protector
+-fstack-protector
+
+-fno-inline
+-fno-omit-frame-pointer
+
+
+void* my_calloc(size_t, size_t) __attribute__((alloc_size(1,2)))
+void my_realloc(void*, size_t) __attribute__((alloc_size(2)))
+
+__attribute__(constructor)
+__attribute__(destructor)
+called before/after main()
+init object counting
+init logging?
+
+extern void *
+my_memcpy (void *dest, const void *src, size_t len)
+__attribute__((nonnull (1, 2)));
+
+nothrow
+    The nothrow attribute is used to inform the compiler that a function cannot throw an exception.
+    
+pure
+    Many functions have no effects except the return value and their return value depends only on the parameters and/or global variables.
+    
+warn_unused_result
+    The warn_unused_result attribute causes a warning to be emitted if a caller of the function with this attribute does not use its return value. 
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
