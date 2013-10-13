@@ -40,5 +40,6 @@ private:
 
 };
 
+
 #endif // _LVM_MIRROR_H_
 

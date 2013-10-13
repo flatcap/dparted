@@ -18,12 +18,21 @@
 #ifndef _PROBE_LOOP_H_
 #define _PROBE_LOOP_H_
 
-#include <map>
+#include <set>
 
 #include "probe.h"
+#include "loop.h"
 
-class Loop;
-struct compare;
+/**
+ * functor compare
+ */
+struct compare {
+	bool operator() (Loop *a, Loop *b)
+	{
+		return ((a->loop_major*256+a->loop_minor) < (b->loop_major*256+b->loop_minor));
+	}
+};
+
 
 /**
  * class ProbeLoop
@@ -41,7 +50,7 @@ public:
 	//XXX bool prerequisites (void);
 
 protected:
-	std::map<Loop*,compare> children;
+	std::set<Loop*,compare> children;
 };
 
 

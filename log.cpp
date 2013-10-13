@@ -71,9 +71,9 @@ int log_error (const char *format, ...)
 		return 0;
 
 	va_start (args, format);
-	fprintf (file, "\e[01;31m");
+	fprintf (file, "\033[01;31m");
 	retval = log (format, args);
-	fprintf (file, "\e[0m");
+	fprintf (file, "\033[0m");
 	va_end (args);
 
 	return retval;
@@ -110,7 +110,7 @@ bool log_init (const char *name)
 	//log_info ("log init: %s\n", name);
 
 	if (strncmp (name, "/dev/pts/", 9) == 0) {
-		fprintf (file, "\ec");			// reset
+		fprintf (file, "\033c");		// reset
 	}
 
 	return (file != NULL);

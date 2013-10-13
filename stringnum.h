@@ -27,6 +27,7 @@
 class StringNum : public std::string
 {
 public:
+	//XXX do I need c'tor, d'tor, operator= ?
 	StringNum() : std::string()
 	{
 	}

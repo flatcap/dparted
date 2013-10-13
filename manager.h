@@ -35,5 +35,6 @@ protected:
 private:
 };
 
+
 #endif // _MANAGER_H_
 

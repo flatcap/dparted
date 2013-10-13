@@ -87,5 +87,6 @@ private:
 	bool mouse_close;
 };
 
+
 #endif // _DRAWINGAREA_
 

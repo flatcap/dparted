@@ -150,7 +150,7 @@ void DPContainer::dump_leaks (void)
 
 	log_debug ("Leaks (%lu):\n", obj_set.size());
 	for (auto c : obj_set) {
-		log_debug ("\t0x%p - %s, %s, %d\n", c, c->name.c_str(), c->device.c_str(), c->ref_count);
+		log_debug ("\t0x%p - %s, %s, %d\n", (void*) c, c->name.c_str(), c->device.c_str(), c->ref_count);
 	}
 }
 
@@ -538,7 +538,7 @@ int DPContainer::read_data (long long offset, long long size, unsigned char *buf
 	}
 
 	if (current < 0) {
-		log_error ("seek to %lld failed on %s (%p)\n", offset, device.c_str(), fd);
+		log_error ("seek to %lld failed on %s (%p)\n", offset, device.c_str(), (void*) fd);
 		perror ("seek");
 		return -1;
 	}

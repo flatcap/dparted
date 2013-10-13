@@ -27,7 +27,7 @@ OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
 OUT	= main
 
-CFLAGS	+= -std=c++11
+CFLAGS	+= -std=c++11 -pedantic
 CFLAGS	+= -g -Wall
 CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
 #CFLAGS	+= -pg -fprofile-arcs -ftest-coverage

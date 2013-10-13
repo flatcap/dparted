@@ -77,5 +77,6 @@ private:
 #endif
 };
 
+
 #endif // _DPARTED_H_
 

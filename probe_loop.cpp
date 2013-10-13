@@ -45,17 +45,6 @@ ProbeLoop::~ProbeLoop()
 
 
 /**
- * functor compare
- */
-struct compare {
-	bool operator() (Loop *a, Loop *b)
-	{
-		return (a->name.compare (b->name) < 0);
-	}
-};
-
-
-/**
  * shutdown
  */
 void ProbeLoop::shutdown (void)
@@ -97,7 +86,7 @@ ProbeLoop::discover (void)
 	 */
 
 
-	std::string command = "losetup --noheadings --output name,autoclear,back-ino,back-maj:min,maj:min,offset,partscan,ro,sizelimit,back-file | sort -R";
+	std::string command = "losetup --noheadings --output name,autoclear,back-ino,back-maj:min,maj:min,offset,partscan,ro,sizelimit,back-file";
 	std::vector <std::string> output;
 
 	if (execute_command (command, output) < 0) {
@@ -139,10 +128,7 @@ ProbeLoop::discover (void)
 		l->bytes_size = seek;
 #endif
 
-		//XXX list.add_child (l);
-		//added++;
+		children.insert (l);
 	}
-
-	return;
 }
 
