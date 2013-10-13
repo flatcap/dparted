@@ -38,27 +38,6 @@ LVMVolume::~LVMVolume()
 
 
 /**
- * dump_dot
- */
-std::string LVMVolume::dump_dot (void)
-{
-	std::ostringstream output;
-	unsigned int count = tables.size();
-
-	output << Volume::dump_dot();
-
-	if (count > 0) {
-		output << dump_row ("tables", count);
-		for (auto i : tables) {
-			output << dump_row ("", i);
-		}
-	}
-
-	return output.str();
-}
-
-
-/**
  * read_data
  */
 int LVMVolume::read_data (long long offset, long long size, unsigned char *buffer)

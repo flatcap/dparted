@@ -85,18 +85,3 @@ DPContainer * LVMTable::probe (DPContainer *parent, unsigned char *buffer, int b
 }
 
 
-/**
- * dump_dot
- */
-std::string LVMTable::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << Table::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}
-
-

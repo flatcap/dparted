@@ -163,16 +163,3 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 }
 
 
-/**
- * dump_dot
- */
-std::string Gpt::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << Table::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}

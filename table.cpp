@@ -135,20 +135,3 @@ long long Table::fill_space (void)
 	return 0;
 }
 
-
-
-/**
- * dump_dot
- */
-std::string Table::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << DPContainer::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}
-
-

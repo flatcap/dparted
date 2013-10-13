@@ -33,7 +33,6 @@ public:
 
 	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
 
-	virtual std::string dump_dot (void);
 protected:
 	long long fill_space (void);
 

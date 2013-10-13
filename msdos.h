@@ -39,8 +39,6 @@ public:
 
 	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
 
-	virtual std::string dump_dot (void);
-
 protected:
 	virtual bool read_partition (unsigned char *buffer, int index, struct partition *part);
 	virtual unsigned int read_table (unsigned char *buffer, int bufsize, long long offset, std::vector<struct partition> &vp);

@@ -38,16 +38,3 @@ Partition::~Partition()
 }
 
 
-/**
- * dump_dot
- */
-std::string Partition::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << DPContainer::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}

@@ -194,18 +194,4 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 }
 
 
-/**
- * dump_dot
- */
-std::string Msdos::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << Table::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}
-
 

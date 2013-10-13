@@ -29,8 +29,6 @@ public:
 	Volume (void);
 	virtual ~Volume();
 
-	virtual std::string dump_dot (void);
-
 protected:
 
 private:

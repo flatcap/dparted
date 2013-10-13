@@ -33,8 +33,6 @@ public:
 
 	static Extended * probe (DPContainer *parent, long long offset, long long size);
 
-	virtual std::string dump_dot (void);
-
 protected:
 
 private:

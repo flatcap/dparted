@@ -32,8 +32,6 @@ public:
 	Whole (void);
 	virtual ~Whole();
 
-	virtual std::string dump_dot (void);
-
 	virtual void add_segment (DPContainer *seg);
 
 	// seg_count - LVM2_SEG_COUNT

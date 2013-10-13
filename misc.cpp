@@ -128,16 +128,3 @@ DPContainer * Misc::probe (DPContainer *parent, unsigned char *buffer, int bufsi
 }
 
 
-/**
- * dump_dot
- */
-std::string Misc::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << DPContainer::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}

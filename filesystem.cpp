@@ -189,16 +189,3 @@ DPContainer * Filesystem::probe (DPContainer *parent, unsigned char *buffer, int
 }
 
 
-/**
- * dump_dot
- */
-std::string Filesystem::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << DPContainer::dump_dot();
-
-	output << dump_row ("label", label);
-
-	return output.str();
-}

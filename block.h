@@ -32,8 +32,6 @@ public:
 	virtual ~Block();
 
 protected:
-	virtual std::string dump_dot (void);
-
 private:
 
 };

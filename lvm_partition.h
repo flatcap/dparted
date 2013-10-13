@@ -29,8 +29,6 @@ public:
 	LVMPartition (void);
 	virtual ~LVMPartition();
 
-	virtual std::string dump_dot (void);
-
 protected:
 
 private:

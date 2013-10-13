@@ -32,8 +32,6 @@ public:
 	Disk (void);
 	virtual ~Disk();
 
-	virtual std::string dump_dot (void);
-
 	virtual long          get_block_size (void);
 	//virtual std::string   get_device_name (void);
 	//virtual long long     get_parent_offset (void);
@@ -57,11 +55,14 @@ public:
 	int		host;
 	int		did;
 
-	static unsigned int find_devices (DPContainer &list);
-
-protected:
 	int kernel_major;
 	int kernel_minor;
+
+	static unsigned int find_devices (DPContainer &list);
+
+	friend class ProbeDisk;
+
+protected:
 	std::string mounts;	//XXX vector
 
 private:

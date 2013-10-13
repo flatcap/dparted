@@ -124,17 +124,3 @@ bool Block::find_devices_old (const std::string &name, DPContainer &list)
 
 #endif
 
-/**
- * dump_dot
- */
-std::string Block::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << DPContainer::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}
-

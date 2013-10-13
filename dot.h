@@ -15,22 +15,12 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <sstream>
+#ifndef _DOT_H_
+#define _DOT_H_
+
 #include <string>
 
-//#include "block.h"
+std::string dump_dot (void);
 
-/**
- * dot_loop
- */
-std::string dot_loop (void)
-{
-	std::ostringstream output;
-
-	//XXX output << Block::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}
+#endif // _DOT_H_
 

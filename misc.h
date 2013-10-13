@@ -31,8 +31,6 @@ public:
 	Misc (void);
 	virtual ~Misc();
 
-	virtual std::string dump_dot (void);
-
 	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
 
 protected:

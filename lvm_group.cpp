@@ -521,23 +521,3 @@ void LVMGroup::find_devices (DPContainer &disks)
 }
 
 
-/**
- * dump_dot
- */
-std::string LVMGroup::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << Whole::dump_dot();
-
-	output << dump_row ("pv_count",        pv_count);
-	output << dump_row ("lv_count",        lv_count);
-	output << dump_row ("vg_attr",         vg_attr);
-	output << dump_row ("vg_extent_count", vg_extent_count);
-	output << dump_row ("vg_free_count",   vg_free_count);
-	output << dump_row ("vg_seqno",        vg_seqno);
-
-	return output.str();
-}
-
-

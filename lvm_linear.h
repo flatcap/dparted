@@ -29,8 +29,6 @@ public:
 	LVMLinear (void);
 	virtual ~LVMLinear();
 
-	virtual std::string dump_dot (void);
-
 protected:
 
 private:

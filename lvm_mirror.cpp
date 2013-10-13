@@ -85,18 +85,3 @@ void LVMMirror::delete_child (DPContainer *child)
 }
 
 
-/**
- * dump_dot
- */
-std::string LVMMirror::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << LVMVolume::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}
-
-

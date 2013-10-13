@@ -38,26 +38,6 @@ Whole::~Whole()
 
 
 /**
- * dump_dot
- */
-std::string Whole::dump_dot (void)
-{
-	std::ostringstream output;
-	unsigned int count = segments.size();
-
-	output << DPContainer::dump_dot();
-
-	if (count > 0) {
-		output << dump_row ("segments", count);
-		for (auto i : segments) {
-			output << dump_row ("", i);
-		}
-	}
-
-	return output.str();
-}
-
-/**
  * add_segment
  */
 void Whole::add_segment (DPContainer *seg)

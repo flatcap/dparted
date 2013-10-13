@@ -40,8 +40,6 @@ public:
 	static std::string dump_objects (void);
 	static void dump_leaks (void);
 
-	virtual std::string dump_dot (void);
-
 	virtual void add_child    (DPContainer *child);
 	virtual void delete_child (DPContainer *child);
 	virtual void move_child   (DPContainer *child, long long offset, long long size);
@@ -89,14 +87,6 @@ public:
 
 	FILE		*fd;
 protected:
-	std::string dump_row (const char *name, long long value);
-	std::string dump_row (const char *name, long value);
-	std::string dump_row (const char *name, int value);
-	std::string dump_row (const char *name, unsigned int value);
-	std::string dump_row (const char *name, bool value);
-	std::string dump_row (const char *name, std::string &value);
-	std::string dump_row (const char *name, void *value);
-
 	void declare (const char *name, const char *colour = NULL);
 
 	std::string	 dot_colour;

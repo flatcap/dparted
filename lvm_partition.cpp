@@ -34,19 +34,3 @@ LVMPartition::~LVMPartition()
 {
 }
 
-
-/**
- * dump_dot
- */
-std::string LVMPartition::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << Partition::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}
-
-

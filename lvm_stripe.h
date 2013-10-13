@@ -29,8 +29,6 @@ public:
 	LVMStripe (void);
 	virtual ~LVMStripe();
 
-	virtual std::string dump_dot (void);
-
 protected:
 
 private:

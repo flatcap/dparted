@@ -31,8 +31,6 @@ public:
 	File (void);
 	virtual ~File();
 
-	virtual std::string dump_dot (void);
-
 protected:
 
 private:

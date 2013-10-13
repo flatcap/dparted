@@ -160,18 +160,3 @@ Extended * Extended::probe (DPContainer *parent, long long offset, long long siz
 }
 
 
-/**
- * dump_dot
- */
-std::string Extended::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << Msdos::dump_dot();
-
-	// no specifics for now
-
-	//RAR how? output << "{ rank=same obj_" << (void*) this << " obj_" << parent << " }\n";
-
-	return output.str();
-}

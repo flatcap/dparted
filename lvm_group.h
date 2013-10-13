@@ -29,8 +29,6 @@ public:
 	LVMGroup (void);
 	virtual ~LVMGroup();
 
-	virtual std::string dump_dot (void);
-
 	static void find_devices (DPContainer &list);
 
 	long		pv_count;	//XXX put this in seg_count in Whole

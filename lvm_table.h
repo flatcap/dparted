@@ -29,8 +29,6 @@ public:
 	LVMTable (void);
 	virtual ~LVMTable();
 
-	virtual std::string dump_dot (void);
-
 	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
 
 protected:

@@ -130,5 +130,9 @@ ProbeLoop::discover (void)
 
 		children.insert (l);
 	}
+
+	for (auto c : children) {
+		printf ("%s\n", c->device.c_str());
+	}
 }
 

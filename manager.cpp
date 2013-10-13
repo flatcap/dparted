@@ -32,6 +32,7 @@
 #include "lvm_group.h"
 
 #include "probe_loop.h"
+#include "probe_disk.h"
 
 std::queue<DPContainer*> probe_queue;
 
@@ -119,10 +120,24 @@ DPContainer * probe (DPContainer *parent)
  */
 int main (int argc, char *argv[])
 {
-	ProbeLoop pl;
 	log_init ("/dev/stdout");
 
+	ProbeLoop pl;
 	pl.discover();
+
+	ProbeDisk pd;
+	pd.discover();
+
+#if 0
+	Extended::probe   (DPContainer *parent, long long offset, long long size)
+	Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+	Gpt::probe        (DPContainer *parent, unsigned char *buffer, int bufsize)
+	LVMTable::probe   (DPContainer *parent, unsigned char *buffer, int bufsize)
+	Misc::probe       (DPContainer *parent, unsigned char *buffer, int bufsize)
+	Msdos::probe      (DPContainer *parent, unsigned char *buffer, int bufsize)
+	Table::probe      (DPContainer *parent, unsigned char *buffer, int bufsize)
+#endif
+
 
 #if 0
 	typedef unsigned int (*find_devices) (DPContainer &list);

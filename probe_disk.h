@@ -15,33 +15,44 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _FILESYSTEM_H
-#define _FILESYSTEM_H
+#ifndef _PROBE_DISK_H_
+#define _PROBE_DISK_H_
 
-#include <string>
+#include <set>
 
-#include "container.h"
+#include "probe.h"
+#include "disk.h"
 
 /**
- * class Filesystem
+ * functor compare
  */
-class Filesystem : public DPContainer
-{
-public:
-	Filesystem (void);
-	virtual ~Filesystem();
-
-	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
-
-	std::string	label;
-
-protected:
-
-private:
-	long long ext2_get_usage (void);
-
+struct compare_d {
+	bool operator() (Disk *a, Disk *b)
+	{
+		return ((a->kernel_major*256+a->kernel_minor) < (b->kernel_major*256+b->kernel_minor));
+	}
 };
 
 
-#endif // _FILESYSTEM_H
+/**
+ * class ProbeDisk
+ */
+class ProbeDisk : public Probe
+{
+public:
+	ProbeDisk();
+	virtual ~ProbeDisk();
+
+	static  void initialise (void);
+	        void shutdown   (void);
+	virtual void discover   (void);
+
+	//XXX bool prerequisites (void);
+
+protected:
+	std::set<Disk*,compare_d> children;
+};
+
+
+#endif // _PROBE_DISK_H_
 

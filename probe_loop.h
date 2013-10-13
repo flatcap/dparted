@@ -26,7 +26,7 @@
 /**
  * functor compare
  */
-struct compare {
+struct compare_l {
 	bool operator() (Loop *a, Loop *b)
 	{
 		return ((a->loop_major*256+a->loop_minor) < (b->loop_major*256+b->loop_minor));
@@ -50,7 +50,7 @@ public:
 	//XXX bool prerequisites (void);
 
 protected:
-	std::set<Loop*,compare> children;
+	std::set<Loop*,compare_l> children;
 };
 
 

@@ -152,8 +152,6 @@ int main (int argc, char *argv[])
 #endif
 
 #if 0
-	{ std::string input = DPContainer::dump_objects(); std::string command = "dot -Tpng | display -resize 50% - &"; execute_command2 (command, input); }
-#else
 	Glib::RefPtr<Gtk::Application> kit = Gtk::Application::create(argc, argv, "org.flatcap.dparted");
 
 	DParted d;

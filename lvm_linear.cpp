@@ -34,19 +34,3 @@ LVMLinear::~LVMLinear()
 {
 }
 
-
-/**
- * dump_dot
- */
-std::string LVMLinear::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << LVMVolume::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}
-
-

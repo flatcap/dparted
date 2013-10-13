@@ -35,19 +35,3 @@ Volume::~Volume()
 {
 }
 
-
-/**
- * dump_dot
- */
-std::string Volume::dump_dot (void)
-{
-	std::ostringstream output;
-
-	output << Whole::dump_dot();
-
-	// no specifics for now
-
-	return output.str();
-}
-
-

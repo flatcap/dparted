@@ -82,17 +82,3 @@ bool File::find_devices (const std::string &name, int fd, struct stat &st, DPCon
 
 #endif
 
-/**
- * dump_dot
- */
-std::string File::dump_dot (void)
-{
-	std::ostringstream output;
-
-	// no specifics for now
-
-	output << Block::dump_dot();
-
-	return output.str();
-}
-
