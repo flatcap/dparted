@@ -118,6 +118,17 @@ ProbeLoop::discover (void)
 		tmp = -1; sscanf (parts[ 9].c_str(), "%d", &tmp); l->read_only  = (tmp == 1);
 		tmp = -1; sscanf (parts[10].c_str(), "%d", &tmp); l->sizelimit  = tmp;
 
+		std::size_t len = l->file_name.size();
+		if ((len > 10) && (l->file_name.substr (len-10) == " (deleted)")) {
+			l->file_name.erase(len-10);
+			l->deleted = true;
+			printf ("%s is deleted\n", l->device.c_str());
+		}
+
+		//XXX tmp
+		l->kernel_major = l->loop_major;
+		l->kernel_minor = l->loop_minor;
+
 #if 0
 		l->open_device();
 
@@ -136,15 +147,4 @@ ProbeLoop::discover (void)
 	}
 }
 
-
-std::vector<DPContainer*> ProbeLoop::get_children (void)
-{
-	std::vector<DPContainer*> v;
-
-	for (auto c : children) {
-		v.push_back (c);
-	}
-
-	return v;
-}
 

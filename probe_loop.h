@@ -24,17 +24,6 @@
 #include "loop.h"
 
 /**
- * functor compare
- */
-struct compare_l {
-	bool operator() (Loop *a, Loop *b)
-	{
-		return ((a->loop_major*256+a->loop_minor) < (b->loop_major*256+b->loop_minor));
-	}
-};
-
-
-/**
  * class ProbeLoop
  */
 class ProbeLoop : public Probe
@@ -49,10 +38,7 @@ public:
 
 	//XXX bool prerequisites (void);
 
-	std::vector<DPContainer*> get_children (void);
-
 protected:
-	std::set<Loop*,compare_l> children;
 };
 
 

@@ -83,7 +83,7 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 	do {
 		ptr = NULL;
 		n = 0;
-		count = getline (&ptr, &n, file);
+		count = getline (&ptr, &n, file);		//XXX std::getline, istream::getline
 		if (count > 0) {
 			if (ptr[count-1] == '\n')
 				ptr[count-1] = 0;

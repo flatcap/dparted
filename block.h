@@ -31,6 +31,9 @@ public:
 	Block (void);
 	virtual ~Block();
 
+	int kernel_major;	//XXX rename device major
+	int kernel_minor;
+
 protected:
 private:
 

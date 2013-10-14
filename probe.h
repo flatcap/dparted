@@ -19,6 +19,26 @@
 #define _PROBE_H_
 
 #include <string>
+#include <vector>
+#include <set>
+
+#include "disk.h"
+
+class DPContainer;
+
+/**
+ * functor compare
+ */
+struct compare_d {
+	bool operator() (DPContainer *a, DPContainer *b)
+	{
+		Block *d1 = dynamic_cast<Block*> (a);
+		Block *d2 = dynamic_cast<Block*> (b);
+
+		return ((d1->kernel_major*256+d1->kernel_minor) < (d2->kernel_major*256+d2->kernel_minor));
+	}
+};
+
 
 /**
  * class Probe
@@ -36,9 +56,13 @@ public:
 	std::string get_name        (void);
 	std::string get_description (void);
 
+	std::vector<DPContainer*> get_children (void);
+
 protected:
 	std::string name;
 	std::string description;
+
+	std::set<DPContainer *,compare_d> children;
 };
 
 

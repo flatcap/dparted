@@ -23,16 +23,6 @@
 #include "probe.h"
 #include "disk.h"
 
-/**
- * functor compare
- */
-struct compare_d {
-	bool operator() (Disk *a, Disk *b)
-	{
-		return ((a->kernel_major*256+a->kernel_minor) < (b->kernel_major*256+b->kernel_minor));
-	}
-};
-
 
 /**
  * class ProbeDisk
@@ -49,10 +39,7 @@ public:
 
 	//XXX bool prerequisites (void);
 
-	std::vector<DPContainer*> get_children (void);
-
 protected:
-	std::set<Disk*,compare_d> children;
 };
 
 

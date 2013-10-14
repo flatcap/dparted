@@ -55,9 +55,6 @@ public:
 	int		host;
 	int		did;
 
-	int kernel_major;
-	int kernel_minor;
-
 	static unsigned int find_devices (DPContainer &list);
 
 	friend class ProbeDisk;
