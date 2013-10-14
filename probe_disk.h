@@ -49,6 +49,8 @@ public:
 
 	//XXX bool prerequisites (void);
 
+	std::vector<DPContainer*> get_children (void);
+
 protected:
 	std::set<Disk*,compare_d> children;
 };

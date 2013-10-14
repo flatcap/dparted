@@ -42,10 +42,63 @@
 
 #include "utils.h"
 
+#if 0
 /**
- * dot_row
+ * dot_row (bool)
  */
-/*static*/ std::string
+static std::string
+dot_row (const char *name, bool value)
+{
+	std::ostringstream s;
+
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << (value ? "true" : "false") << "</td>";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+/**
+ * dot_row (int)
+ */
+static std::string
+dot_row (const char *name, int value)
+{
+	std::ostringstream s;
+
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << value << "</td>";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+#endif
+/**
+ * dot_row (long)
+ */
+static std::string
+dot_row (const char *name, long value)
+{
+	std::ostringstream s;
+
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << value << "</td>";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+/**
+ * dot_row (long long)
+ */
+static std::string
 dot_row (const char *name, long long value)
 {
 	std::ostringstream s;
@@ -65,77 +118,9 @@ dot_row (const char *name, long long value)
 }
 
 /**
- * dot_row
+ * dot_row (std::string)
  */
-/*static*/ std::string
-dot_row (const char *name, long value)
-{
-	std::ostringstream s;
-
-	s << "<tr>";
-	s << "<td align=\"left\">" << name << "</td>";
-	s << "<td>=</td>";
-	s << "<td align=\"left\">" << value << "</td>";
-	s << "</tr>\n";
-
-	return s.str();
-}
-
-/**
- * dot_row
- */
-/*static*/ std::string
-dot_row (const char *name, int value)
-{
-	std::ostringstream s;
-
-	s << "<tr>";
-	s << "<td align=\"left\">" << name << "</td>";
-	s << "<td>=</td>";
-	s << "<td align=\"left\">" << value << "</td>";
-	s << "</tr>\n";
-
-	return s.str();
-}
-
-/**
- * dot_row
- */
-/*static*/ std::string
-dot_row (const char *name, unsigned int value)
-{
-	std::ostringstream s;
-
-	s << "<tr>";
-	s << "<td align=\"left\">" << name << "</td>";
-	s << "<td>=</td>";
-	s << "<td align=\"left\">" << value << "</td>";
-	s << "</tr>\n";
-
-	return s.str();
-}
-
-/**
- * dot_row
- */
-/*static*/ std::string
-dot_row (const char *name, bool value)
-{
-	std::ostringstream s;
-
-	s << "<tr>";
-	s << "<td align=\"left\">" << name << "</td>";
-	s << "<td>=</td>";
-	s << "<td align=\"left\">" << (value ? "true" : "false") << "</td>";
-	s << "</tr>\n";
-
-	return s.str();
-}
-
-/**
- * dot_row
- */
-/*static*/ std::string
+static std::string
 dot_row (const char *name, std::string &value)
 {
 	std::ostringstream s;
@@ -150,9 +135,26 @@ dot_row (const char *name, std::string &value)
 }
 
 /**
- * dot_row
+ * dot_row (unsigned int)
  */
-/*static*/ std::string
+static std::string
+dot_row (const char *name, unsigned int value)
+{
+	std::ostringstream s;
+
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << value << "</td>";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+/**
+ * dot_row (void *)
+ */
+static std::string
 dot_row (const char *name, void *value)
 {
 	std::ostringstream s;
@@ -170,7 +172,7 @@ dot_row (const char *name, void *value)
 /**
  * dot_container
  */
-/*static*/ std::string
+static std::string
 dot_container (DPContainer *c)
 {
 	std::ostringstream output;
@@ -200,7 +202,7 @@ dot_container (DPContainer *c)
 /**
  * dot_block
  */
-/*static*/ std::string
+static std::string
 dot_block (Block *b)
 {
 	std::ostringstream output;
@@ -215,7 +217,7 @@ dot_block (Block *b)
 /**
  * dot_disk
  */
-/*static*/ std::string
+static std::string
 dot_disk (Disk *d)
 {
 	std::ostringstream output;
@@ -238,7 +240,7 @@ dot_disk (Disk *d)
 /**
  * dot_loop
  */
-/*static*/ std::string
+static std::string
 dot_loop (Loop *l)
 {
 	std::ostringstream output;
@@ -254,7 +256,7 @@ dot_loop (Loop *l)
 /**
  * dot_table
  */
-/*static*/ std::string
+static std::string
 dot_table (Table *t)
 {
 	std::ostringstream output;
@@ -269,7 +271,7 @@ dot_table (Table *t)
 /**
  * dot_msdos
  */
-/*static*/ std::string
+static std::string
 dot_msdos (Msdos *m)
 {
 	std::ostringstream output;
@@ -284,7 +286,7 @@ dot_msdos (Msdos *m)
 /**
  * dot_extended
  */
-/*static*/ std::string
+static std::string
 dot_extended (Extended *e)
 {
 	std::ostringstream output;
@@ -301,7 +303,7 @@ dot_extended (Extended *e)
 /**
  * dot_gpt
  */
-/*static*/ std::string
+static std::string
 dot_gpt (Gpt *g)
 {
 	std::ostringstream output;
@@ -316,7 +318,7 @@ dot_gpt (Gpt *g)
 /**
  * dot_lvm_table
  */
-/*static*/ std::string
+static std::string
 dot_lvm_table (LVMTable *t)
 {
 	std::ostringstream output;
@@ -332,7 +334,7 @@ dot_lvm_table (LVMTable *t)
 /**
  * dot_whole
  */
-/*static*/ std::string
+static std::string
 dot_whole (Whole *w)
 {
 	std::ostringstream output;
@@ -353,7 +355,7 @@ dot_whole (Whole *w)
 /**
  * dot_volume
  */
-/*static*/ std::string
+static std::string
 dot_volume (Volume *v)
 {
 	std::ostringstream output;
@@ -368,7 +370,7 @@ dot_volume (Volume *v)
 /**
  * dot_lvm_group
  */
-/*static*/ std::string
+static std::string
 dot_lvm_group (LVMGroup *g)
 {
 	std::ostringstream output;
@@ -388,7 +390,7 @@ dot_lvm_group (LVMGroup *g)
 /**
  * dot_lvm_volume
  */
-/*static*/ std::string
+static std::string
 dot_lvm_volume (LVMVolume *v)
 {
 	std::ostringstream output;
@@ -410,7 +412,7 @@ dot_lvm_volume (LVMVolume *v)
 /**
  * dot_lvm_linear
  */
-/*static*/ std::string
+static std::string
 dot_lvm_linear (LVMLinear *l)
 {
 	std::ostringstream output;
@@ -425,7 +427,7 @@ dot_lvm_linear (LVMLinear *l)
 /**
  * dot_lvm_mirror
  */
-/*static*/ std::string
+static std::string
 dot_lvm_mirror (LVMMirror *m)
 {
 	std::ostringstream output;
@@ -440,7 +442,7 @@ dot_lvm_mirror (LVMMirror *m)
 /**
  * dot_lvm_stripe
  */
-/*static*/ std::string
+static std::string
 dot_lvm_stripe (LVMStripe *s)
 {
 	std::ostringstream output;
@@ -456,7 +458,7 @@ dot_lvm_stripe (LVMStripe *s)
 /**
  * dot_partition
  */
-/*static*/ std::string
+static std::string
 dot_partition (Partition *p)
 {
 	std::ostringstream output;
@@ -471,7 +473,7 @@ dot_partition (Partition *p)
 /**
  * dot_lvm_partition
  */
-/*static*/ std::string
+static std::string
 dot_lvm_partition (LVMPartition *p)
 {
 	std::ostringstream output;
@@ -487,7 +489,7 @@ dot_lvm_partition (LVMPartition *p)
 /**
  * dot_file
  */
-/*static*/ std::string
+static std::string
 dot_file (File *f)
 {
 	std::ostringstream output;
@@ -502,7 +504,7 @@ dot_file (File *f)
 /**
  * dot_filesystem
  */
-/*static*/ std::string
+static std::string
 dot_filesystem (Filesystem *f)
 {
 	std::ostringstream output;
@@ -517,7 +519,7 @@ dot_filesystem (Filesystem *f)
 /**
  * dot_misc
  */
-/*static*/ std::string
+static std::string
 dot_misc (Misc *m)
 {
 	std::ostringstream output;
@@ -534,7 +536,7 @@ dot_misc (Misc *m)
  * dump_dot
  */
 std::string
-dump_dot (DPContainer *c)
+dump_dot (std::vector <DPContainer*> v)
 {
 	std::ostringstream dot;
 
@@ -544,8 +546,7 @@ dump_dot (DPContainer *c)
 	dot << "edge [ penwidth=3.0,color=\"#cccccc\" ];\n";
 	dot << "\n";
 
-#if 0
-	for (auto c : obj_set) {
+	for (auto c : v) {
 		//if (c->dot_colour == "#ccccff") continue;
 		//printf ("%s\n", c->name.c_str());
 		dot << "\n";
@@ -555,14 +556,35 @@ dump_dot (DPContainer *c)
 			c->name = "UNKNOWN";
 		}
 		if (c->dot_colour.empty()) {
-			log_error ("empty colour on %s\n", c->name.c_str());
+			//log_error ("empty colour on %s\n", c->name.c_str());
 			c->dot_colour = "white";
 		}
 
 		dot << "obj_" << (void*) c <<" [fillcolor=\"" << c->dot_colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << "</b></font></td></tr>\n";
 
-		dot << c->dump_dot();
+		std::string type = c->type.back();
+		     if (type == "Block")        { dot << dot_block         (dynamic_cast<Block        *> (c)); }
+		else if (type == "Container")    { dot << dot_container     (dynamic_cast<DPContainer  *> (c)); }
+		else if (type == "Disk")         { dot << dot_disk          (dynamic_cast<Disk         *> (c)); }
+		else if (type == "Extended")     { dot << dot_extended      (dynamic_cast<Extended     *> (c)); }
+		else if (type == "File")         { dot << dot_file          (dynamic_cast<File         *> (c)); }
+		else if (type == "Filesystem")   { dot << dot_filesystem    (dynamic_cast<Filesystem   *> (c)); }
+		else if (type == "Gpt")          { dot << dot_gpt           (dynamic_cast<Gpt          *> (c)); }
+		else if (type == "Loop")         { dot << dot_loop          (dynamic_cast<Loop         *> (c)); }
+		else if (type == "LVMGroup")     { dot << dot_lvm_group     (dynamic_cast<LVMGroup     *> (c)); }
+		else if (type == "LVMLinear")    { dot << dot_lvm_linear    (dynamic_cast<LVMLinear    *> (c)); }
+		else if (type == "LVMMirror")    { dot << dot_lvm_mirror    (dynamic_cast<LVMMirror    *> (c)); }
+		else if (type == "LVMPartition") { dot << dot_lvm_partition (dynamic_cast<LVMPartition *> (c)); }
+		else if (type == "LVMStripe")    { dot << dot_lvm_stripe    (dynamic_cast<LVMStripe    *> (c)); }
+		else if (type == "LVMTable")     { dot << dot_lvm_table     (dynamic_cast<LVMTable     *> (c)); }
+		else if (type == "LVMVolume")    { dot << dot_lvm_volume    (dynamic_cast<LVMVolume    *> (c)); }
+		else if (type == "Misc")         { dot << dot_misc          (dynamic_cast<Misc         *> (c)); }
+		else if (type == "Msdos")        { dot << dot_msdos         (dynamic_cast<Msdos        *> (c)); }
+		else if (type == "Partition")    { dot << dot_partition     (dynamic_cast<Partition    *> (c)); }
+		else if (type == "Table")        { dot << dot_table         (dynamic_cast<Table        *> (c)); }
+		else if (type == "Volume")       { dot << dot_volume        (dynamic_cast<Volume       *> (c)); }
+		else if (type == "Whole")        { dot << dot_whole         (dynamic_cast<Whole        *> (c)); }
 
 		dot << "</table>>];\n";
 
@@ -570,11 +592,22 @@ dump_dot (DPContainer *c)
 			dot << "obj_" << (void*) c << " -> obj_" << (void*) ic << ";\n";
 		}
 	}
-#endif
 
 	dot << "\n}";
 	dot << "\n";
 
 	return dot.str();
 }
+
+/**
+ * display_dot
+ */
+void
+display_dot (std::vector <DPContainer*> v)
+{
+	std::string input = dump_dot(v);
+
+	execute_command2 ("dot -Tpng | display -resize 50% - &", input);
+}
+
 

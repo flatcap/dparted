@@ -19,8 +19,12 @@
 #define _DOT_H_
 
 #include <string>
+#include <vector>
 
-std::string dump_dot (void);
+class DPContainer;
+
+std::string dump_dot    (std::vector<DPContainer*> v);
+void        display_dot (std::vector<DPContainer*> v);
 
 #endif // _DOT_H_
 

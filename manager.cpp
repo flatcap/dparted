@@ -34,6 +34,8 @@
 #include "probe_loop.h"
 #include "probe_disk.h"
 
+#include "dot.h"
+
 std::queue<DPContainer*> probe_queue;
 
 /**
@@ -128,6 +130,8 @@ int main (int argc, char *argv[])
 	ProbeDisk pd;
 	pd.discover();
 
+	display_dot (pl.get_children());
+
 #if 0
 	Extended::probe   (DPContainer *parent, long long offset, long long size)
 	Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
@@ -189,7 +193,7 @@ int main (int argc, char *argv[])
 			printf ("Queue still contains work (%lu items)\n", probe_queue.size());
 		}
 
-		{ std::string input = DPContainer::dump_objects(); execute_command2 ("dot -Tpng | display -resize 50% - &", input); }
+		//dump_dot();
 
 	}
 	DPContainer::dump_leaks();

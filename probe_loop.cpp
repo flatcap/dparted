@@ -136,3 +136,15 @@ ProbeLoop::discover (void)
 	}
 }
 
+
+std::vector<DPContainer*> ProbeLoop::get_children (void)
+{
+	std::vector<DPContainer*> v;
+
+	for (auto c : children) {
+		v.push_back (c);
+	}
+
+	return v;
+}
+
