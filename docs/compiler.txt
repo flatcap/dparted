@@ -6,42 +6,42 @@
 -pedantic
 
 -Wall
-	-Waddress   
-	-Warray-bounds (only with -O2)  
-	-Wc++11-compat  
-	-Wchar-subscripts  
-	-Wcomment  
+	-Waddress
+	-Warray-bounds (only with -O2)
+	-Wc++11-compat
+	-Wchar-subscripts
+	-Wcomment
 	-Wenum-compare
-	-Wformat   
-	-Wmaybe-uninitialized 
-	-Wnonnull  
-	-Wparentheses  
-	-Wpointer-sign  
-	-Wreorder   
-	-Wreturn-type  
-	-Wsequence-point  
+	-Wformat
+	-Wmaybe-uninitialized
+	-Wnonnull
+	-Wparentheses
+	-Wpointer-sign
+	-Wreorder
+	-Wreturn-type
+	-Wsequence-point
 	-Wsign-compare
-	-Wstrict-aliasing  
-	-Wstrict-overflow=1  
-	-Wswitch  
-	-Wtrigraphs  
-	-Wuninitialized  
-	-Wunknown-pragmas  
-	-Wunused-function  
-	-Wunused-label     
-	-Wunused-value     
-	-Wunused-variable  
-	-Wvolatile-register-var 
+	-Wstrict-aliasing
+	-Wstrict-overflow=1
+	-Wswitch
+	-Wtrigraphs
+	-Wuninitialized
+	-Wunknown-pragmas
+	-Wunused-function
+	-Wunused-label
+	-Wunused-value
+	-Wunused-variable
+	-Wvolatile-register-var
 
 -Wextra
-	-Wclobbered  
-	-Wempty-body  
-	-Wignored-qualifiers 
-	-Wmissing-field-initializers  
-	-Woverride-init  
-	-Wsign-compare  
-	-Wtype-limits  
-	-Wuninitialized  
+	-Wclobbered
+	-Wempty-body
+	-Wignored-qualifiers
+	-Wmissing-field-initializers
+	-Woverride-init
+	-Wsign-compare
+	-Wtype-limits
+	-Wuninitialized
 	-Wunused-parameter
 	-Wunused-but-set-parameter
 
@@ -76,42 +76,9 @@ __attribute__((nonnull (1, 2)));
 
 nothrow
     The nothrow attribute is used to inform the compiler that a function cannot throw an exception.
-    
+
 pure
     Many functions have no effects except the return value and their return value depends only on the parameters and/or global variables.
-    
+
 warn_unused_result
-    The warn_unused_result attribute causes a warning to be emitted if a caller of the function with this attribute does not use its return value. 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    The warn_unused_result attribute causes a warning to be emitted if a caller of the function with this attribute does not use its return value.
