@@ -14,7 +14,7 @@ HDR	= manager.h block.h container.h disk.h extended.h file.h filesystem.h \
 	  gpt.h identify.h log.h loop.h lvm_group.h lvm_linear.h lvm_mirror.h \
 	  lvm_partition.h lvm_stripe.h lvm_table.h lvm_volume.h misc.h msdos.h \
 	  partition.h stringnum.h table.h utils.h volume.h whole.h probe.h \
-	  probe_loop.h main.h probe_disk.h dot.h leak.h
+	  probe_loop.h main.h probe_disk.h dot.h leak.h log_trace.h
 
 # GUI
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp

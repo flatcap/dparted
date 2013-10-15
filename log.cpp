@@ -100,6 +100,28 @@ int log_info (const char *format, ...)
 	return retval;
 }
 
+/**
+ * log_trace
+ */
+__attribute__ ((format (printf, 1, 2)))
+int log_trace (const char *format, ...)
+{
+	va_list args;
+	int retval;
+
+	if (!file)
+		return 0;
+
+	va_start (args, format);
+	fprintf (file, "\033[38;5;22m");
+	retval = log (format, args);
+	fprintf (file, "\033[0m");
+	va_end (args);
+	fflush (file);
+
+	return retval;
+}
+
 
 /**
  * log_init

@@ -20,6 +20,7 @@
 
 #include "utils.h"
 #include "log.h"
+#include "log_trace.h"
 
 static ProbeDisk *prober = NULL;
 
@@ -57,6 +58,8 @@ void ProbeDisk::shutdown (void)
 void
 ProbeDisk::discover (void)
 {
+	//LOG_TRACE;
+
 	children.clear();	// XXX scan and update existing Disk objects
 
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""

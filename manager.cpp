@@ -34,6 +34,7 @@
 #include "probe_loop.h"
 #include "probe_disk.h"
 
+#include "log_trace.h"
 #include "dot.h"
 
 std::queue<DPContainer*> probe_queue;
