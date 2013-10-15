@@ -31,8 +31,7 @@
 #include "container.h"
 #include "log.h"
 #include "utils.h"
-
-std::set<DPContainer*> obj_set;
+#include "leak.h"
 
 /**
  * DPContainer
@@ -68,14 +67,13 @@ DPContainer::~DPContainer()
 /**
  * operator new
  */
-void * DPContainer::operator new (size_t s)
+void * DPContainer::operator new (size_t size)
 {
-	DPContainer *b = (DPContainer*) malloc (s);
+	DPContainer *c = (DPContainer*) malloc (size);
 
-	//log_info ("new object %p\n", (void*) b);
-	obj_set.insert (b);
+	//log_info ("new object %p\n", (void*) c);
 
-	return b;
+	return object_track (c);
 }
 
 /**
@@ -91,24 +89,9 @@ void DPContainer::operator delete (void *ptr)
 		log_error ("REF COUNT = %d\n", c->ref_count);
 
 	//log_info ("deleted object %p\n", ptr);
-	obj_set.erase (c);
+	object_untrack (c);
 	free (ptr);
 }
-
-/**
- * dump_leaks
- */
-void DPContainer::dump_leaks (void)
-{
-	if (obj_set.size() == 0)
-		return;
-
-	log_debug ("Leaks (%lu):\n", obj_set.size());
-	for (auto c : obj_set) {
-		log_debug ("\t0x%p - %s, %s, %d\n", (void*) c, c->name.c_str(), c->device.c_str(), c->ref_count);
-	}
-}
-
 
 /**
  * add_child

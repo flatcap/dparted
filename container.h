@@ -37,7 +37,6 @@ public:
 	void * operator new    (size_t s);
 	void   operator delete (void *ptr);
 
-	static std::string dump_objects (void);
 	static void dump_leaks (void);
 
 	virtual void add_child    (DPContainer *child);
@@ -62,7 +61,7 @@ public:
 
 	virtual bool is_a (const std::string &type);
 
-	void ref (void);
+	void ref   (void);
 	void unref (void);
 
 	std::string	 name;

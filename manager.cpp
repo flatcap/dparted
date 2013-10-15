@@ -130,7 +130,7 @@ int main (int argc, char *argv[])
 	ProbeDisk pd;
 	pd.discover();
 
-	display_dot (pl.get_children());
+	//display_dot (pl.get_children());
 
 #if 0
 	Extended::probe   (DPContainer *parent, long long offset, long long size)
@@ -196,7 +196,6 @@ int main (int argc, char *argv[])
 		//dump_dot();
 
 	}
-	DPContainer::dump_leaks();
 #endif
 	return 0;
 }
