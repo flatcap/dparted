@@ -26,6 +26,7 @@
 #include "table.h"
 #include "lvm_table.h"
 #include "utils.h"
+#include "log_trace.h"
 
 /**
  * Table
@@ -48,6 +49,7 @@ Table::~Table()
  */
 DPContainer * Table::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
+	LOG_TRACE;
 	DPContainer *c = NULL;
 
 	if ((c = Gpt::probe (parent, buffer, bufsize)))

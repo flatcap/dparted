@@ -27,6 +27,7 @@
 #include "file.h"
 #include "log.h"
 #include "main.h"
+#include "log_trace.h"
 
 /**
  * File

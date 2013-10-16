@@ -41,6 +41,7 @@
 #include "whole.h"
 
 #include "utils.h"
+#include "log_trace.h"
 
 #if 0
 /**
@@ -261,7 +262,7 @@ dot_table (Table *t)
 {
 	std::ostringstream output;
 
-	output << dot_container(dynamic_cast<Block *> (t));
+	output << dot_container(dynamic_cast<DPContainer *> (t));
 
 	// no specifics for now
 
@@ -533,18 +534,12 @@ dot_misc (Misc *m)
 
 
 /**
- * dump_dot
+ * dump_dot_inner
  */
-std::string
-dump_dot (std::vector <DPContainer*> v)
+static std::string
+dump_dot_inner (std::vector <DPContainer*> v)
 {
 	std::ostringstream dot;
-
-	dot << "digraph disks {\n";
-	dot << "graph [ rankdir=\"TB\", color=\"white\",bgcolor=\"#000000\" ];\n";
-	dot << "node [ shape=\"record\", color=\"black\", fillcolor=\"lightcyan\", style=\"filled\" ];\n";
-	dot << "edge [ penwidth=3.0,color=\"#cccccc\" ];\n";
-	dot << "\n";
 
 	for (auto c : v) {
 		//if (c->dot_colour == "#ccccff") continue;
@@ -560,38 +555,59 @@ dump_dot (std::vector <DPContainer*> v)
 			c->dot_colour = "white";
 		}
 
-		dot << "obj_" << (void*) c <<" [fillcolor=\"" << c->dot_colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+		dot << "obj_" << (void*) c << " [fillcolor=\"" << c->dot_colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << "</b></font></td></tr>\n";
 
 		std::string type = c->type.back();
-		     if (type == "Block")        { dot << dot_block         (dynamic_cast<Block        *> (c)); }
-		else if (type == "Container")    { dot << dot_container     (dynamic_cast<DPContainer  *> (c)); }
-		else if (type == "Disk")         { dot << dot_disk          (dynamic_cast<Disk         *> (c)); }
-		else if (type == "Extended")     { dot << dot_extended      (dynamic_cast<Extended     *> (c)); }
-		else if (type == "File")         { dot << dot_file          (dynamic_cast<File         *> (c)); }
-		else if (type == "Filesystem")   { dot << dot_filesystem    (dynamic_cast<Filesystem   *> (c)); }
-		else if (type == "Gpt")          { dot << dot_gpt           (dynamic_cast<Gpt          *> (c)); }
-		else if (type == "Loop")         { dot << dot_loop          (dynamic_cast<Loop         *> (c)); }
-		else if (type == "LVMGroup")     { dot << dot_lvm_group     (dynamic_cast<LVMGroup     *> (c)); }
-		else if (type == "LVMLinear")    { dot << dot_lvm_linear    (dynamic_cast<LVMLinear    *> (c)); }
-		else if (type == "LVMMirror")    { dot << dot_lvm_mirror    (dynamic_cast<LVMMirror    *> (c)); }
-		else if (type == "LVMPartition") { dot << dot_lvm_partition (dynamic_cast<LVMPartition *> (c)); }
-		else if (type == "LVMStripe")    { dot << dot_lvm_stripe    (dynamic_cast<LVMStripe    *> (c)); }
-		else if (type == "LVMTable")     { dot << dot_lvm_table     (dynamic_cast<LVMTable     *> (c)); }
-		else if (type == "LVMVolume")    { dot << dot_lvm_volume    (dynamic_cast<LVMVolume    *> (c)); }
-		else if (type == "Misc")         { dot << dot_misc          (dynamic_cast<Misc         *> (c)); }
-		else if (type == "Msdos")        { dot << dot_msdos         (dynamic_cast<Msdos        *> (c)); }
-		else if (type == "Partition")    { dot << dot_partition     (dynamic_cast<Partition    *> (c)); }
-		else if (type == "Table")        { dot << dot_table         (dynamic_cast<Table        *> (c)); }
-		else if (type == "Volume")       { dot << dot_volume        (dynamic_cast<Volume       *> (c)); }
-		else if (type == "Whole")        { dot << dot_whole         (dynamic_cast<Whole        *> (c)); }
+		     if (type == "block")        { dot << dot_block         (dynamic_cast<Block        *> (c)); }
+		else if (type == "container")    { dot << dot_container     (dynamic_cast<DPContainer  *> (c)); }
+		else if (type == "disk")         { dot << dot_disk          (dynamic_cast<Disk         *> (c)); }
+		else if (type == "extended")     { dot << dot_extended      (dynamic_cast<Extended     *> (c)); }
+		else if (type == "file")         { dot << dot_file          (dynamic_cast<File         *> (c)); }
+		else if (type == "filesystem")   { dot << dot_filesystem    (dynamic_cast<Filesystem   *> (c)); }
+		else if (type == "gpt")          { dot << dot_gpt           (dynamic_cast<Gpt          *> (c)); }
+		else if (type == "loop")         { dot << dot_loop          (dynamic_cast<Loop         *> (c)); }
+		else if (type == "lvmgroup")     { dot << dot_lvm_group     (dynamic_cast<LVMGroup     *> (c)); }
+		else if (type == "lvmlinear")    { dot << dot_lvm_linear    (dynamic_cast<LVMLinear    *> (c)); }
+		else if (type == "lvmmirror")    { dot << dot_lvm_mirror    (dynamic_cast<LVMMirror    *> (c)); }
+		else if (type == "lvmpartition") { dot << dot_lvm_partition (dynamic_cast<LVMPartition *> (c)); }
+		else if (type == "lvmstripe")    { dot << dot_lvm_stripe    (dynamic_cast<LVMStripe    *> (c)); }
+		else if (type == "lvmtable")     { dot << dot_lvm_table     (dynamic_cast<LVMTable     *> (c)); }
+		else if (type == "lvmvolume")    { dot << dot_lvm_volume    (dynamic_cast<LVMVolume    *> (c)); }
+		else if (type == "misc")         { dot << dot_misc          (dynamic_cast<Misc         *> (c)); }
+		else if (type == "msdos")        { dot << dot_msdos         (dynamic_cast<Msdos        *> (c)); }
+		else if (type == "partition")    { dot << dot_partition     (dynamic_cast<Partition    *> (c)); }
+		else if (type == "table")        { dot << dot_table         (dynamic_cast<Table        *> (c)); }
+		else if (type == "volume")       { dot << dot_volume        (dynamic_cast<Volume       *> (c)); }
+		else if (type == "whole")        { dot << dot_whole         (dynamic_cast<Whole        *> (c)); }
 
 		dot << "</table>>];\n";
 
-		for (auto ic : c->children) {
-			dot << "obj_" << (void*) c << " -> obj_" << (void*) ic << ";\n";
+		if (c->parent) {
+			dot << "obj_" << (void*) c->parent << " -> obj_" << (void*) c << ";\n";
 		}
+
+		dot << dump_dot_inner (c->children);
 	}
+
+	return dot.str();
+}
+
+/**
+ * dump_dot
+ */
+std::string
+dump_dot (std::vector <DPContainer*> v)
+{
+	std::ostringstream dot;
+
+	dot << "digraph disks {\n";
+	dot << "graph [ rankdir=\"TB\", color=\"white\",bgcolor=\"#000000\" ];\n";
+	dot << "node [ shape=\"record\", color=\"black\", fillcolor=\"lightcyan\", style=\"filled\" ];\n";
+	dot << "edge [ penwidth=3.0,color=\"#cccccc\" ];\n";
+	dot << "\n";
+
+	dot << dump_dot_inner (v);
 
 	dot << "\n}";
 	dot << "\n";

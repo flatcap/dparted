@@ -20,6 +20,8 @@
 
 int identify_btrfs    (unsigned char *buffer, int bufsize);
 int identify_ext2     (unsigned char *buffer, int bufsize);
+int identify_ext3     (unsigned char *buffer, int bufsize);
+int identify_ext4     (unsigned char *buffer, int bufsize);
 int identify_gpt      (unsigned char *buffer, int bufsize);
 int identify_lvm      (unsigned char *buffer, int bufsize);
 int identify_lvm_mlog (unsigned char *buffer, int bufsize);

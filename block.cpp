@@ -33,6 +33,7 @@
 #include "log.h"
 #include "loop.h"
 #include "main.h"
+#include "log_trace.h"
 
 /**
  * Block

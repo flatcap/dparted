@@ -20,6 +20,7 @@
 
 #include "log.h"
 #include "whole.h"
+#include "log_trace.h"
 
 /**
  * Whole

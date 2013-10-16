@@ -18,12 +18,14 @@
 #include <string>
 #include <vector>
 #include <cstring>
+#include <queue>
 
 #include "probe_loop.h"
 #include "loop.h"
 
 #include "utils.h"
 #include "log.h"
+#include "log_trace.h"
 
 static ProbeLoop *prober = NULL;
 
@@ -59,7 +61,7 @@ void ProbeLoop::shutdown (void)
  * discover
  */
 void
-ProbeLoop::discover (void)
+ProbeLoop::discover (std::queue<DPContainer*> &probe_queue)
 {
 	children.clear();	// XXX scan and update existing Loop objects
 
@@ -129,7 +131,7 @@ ProbeLoop::discover (void)
 		l->kernel_major = l->loop_major;
 		l->kernel_minor = l->loop_minor;
 
-#if 0
+#if 1
 		l->open_device();
 
 		// move to container::find_size or utils
@@ -139,12 +141,17 @@ ProbeLoop::discover (void)
 		l->bytes_size = seek;
 #endif
 
-		children.insert (l);
+		children.insert (l);	// We keep a list
+		probe_queue.push (l);	// We need to probe
+
+		break;	//RAR tmp
 	}
 
+#if 0
 	for (auto c : children) {
 		printf ("%s\n", c->device.c_str());
 	}
+#endif
 }
 
 

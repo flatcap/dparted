@@ -31,6 +31,7 @@
 #include "lvm_volume.h"
 #include "main.h"
 #include "utils.h"
+#include "log_trace.h"
 
 //RAR lazy
 

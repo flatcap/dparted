@@ -19,6 +19,7 @@
 
 #include "lvm_mirror.h"
 #include "log.h"
+#include "log_trace.h"
 
 /**
  * LVMMirror

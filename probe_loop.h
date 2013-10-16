@@ -18,10 +18,12 @@
 #ifndef _PROBE_LOOP_H_
 #define _PROBE_LOOP_H_
 
-#include <set>
+#include <queue>
 
 #include "probe.h"
 #include "loop.h"
+
+class DPContainer;
 
 /**
  * class ProbeLoop
@@ -34,7 +36,7 @@ public:
 
 	static  void initialise (void);
 	        void shutdown   (void);
-	virtual void discover   (void);
+	virtual void discover   (std::queue<DPContainer*> &probe_queue);
 
 	//XXX bool prerequisites (void);
 

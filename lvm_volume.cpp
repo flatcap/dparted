@@ -18,6 +18,7 @@
 #include <sstream>
 
 #include "lvm_volume.h"
+#include "log_trace.h"
 
 /**
  * LVMVolume

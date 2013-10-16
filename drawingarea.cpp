@@ -33,6 +33,7 @@
 #include "theme.h"
 #include "utils.h"
 #include "whole.h"
+#include "log_trace.h"
 
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
 const double ARC_E = 0;

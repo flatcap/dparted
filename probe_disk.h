@@ -18,11 +18,12 @@
 #ifndef _PROBE_DISK_H_
 #define _PROBE_DISK_H_
 
-#include <set>
+#include <queue>
 
 #include "probe.h"
 #include "disk.h"
 
+class DPContainer;
 
 /**
  * class ProbeDisk
@@ -35,7 +36,7 @@ public:
 
 	static  void initialise (void);
 	        void shutdown   (void);
-	virtual void discover   (void);
+	virtual void discover   (std::queue<DPContainer*> &probe_queue);
 
 	//XXX bool prerequisites (void);
 

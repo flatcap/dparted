@@ -18,6 +18,7 @@
 #include <sstream>
 
 #include "lvm_partition.h"
+#include "log_trace.h"
 
 /**
  * LVMPartition

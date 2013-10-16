@@ -58,8 +58,8 @@ function test_00()
 	[ -b "${LOOP}p8" ] || error || return
 	[ -b "${LOOP}p9" ] || error || return
 
-	#mkfs.btrfs        -L "btrfs_label"    ${LOOP}p1		# filesystem 1
-	#[ $? = 0 ] || error || return
+	mkfs.btrfs        -L "btrfs_label"    ${LOOP}p1		# filesystem 1
+	[ $? = 0 ] || error || return
 
 	mkfs.ext2  -q -F  -L "ext2_label"     ${LOOP}p2  &> /dev/null		# filesystem 2
 	[ $? = 0 ] || error || return

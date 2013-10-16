@@ -18,6 +18,7 @@
 #include <cstring>
 
 #include "log.h"
+#include "log_trace.h"
 
 /**
  * identify_btrfs
@@ -32,7 +33,37 @@ int identify_btrfs (unsigned char *buffer, int bufsize)
  */
 int identify_ext2 (unsigned char *buffer, int bufsize)
 {
-	return (*(unsigned short int *) (buffer+1080) == 0xEF53);
+	bool b1 = (*(unsigned short int *) (buffer+1080) == 0xEF53);	// Magic
+	bool b2 = !(*(unsigned int *) (buffer + 0x45C) & 0x0000004);	// Journal
+
+	return (b1 && b2);
+}
+
+/**
+ * identify_ext3
+ */
+int identify_ext3 (unsigned char *buffer, int bufsize)
+{
+	bool b1 = (*(unsigned short int *) (buffer+1080) == 0xEF53);	// Magic
+	bool b2 = (*(unsigned int *) (buffer + 0x45C) & 0x0000004);	// Journal
+	bool b3 = (*(unsigned int *) (buffer + 0x460) < 0x0000040);
+	bool b4 = (*(unsigned int *) (buffer + 0x464) < 0x0000008);
+
+	return (b1 && b2 && b3 && b4);
+}
+
+/**
+ * identify_ext4
+ */
+int identify_ext4 (unsigned char *buffer, int bufsize)
+{
+	bool b1 = (*(unsigned short int *) (buffer+1080) == 0xEF53);	// Magic
+	bool b2 = (*(unsigned int *) (buffer + 0x45C) & 0x0000004);	// Journal
+	bool b3 = (*(unsigned int *) (buffer + 0x460) < 0x0000040);
+	bool b4 = (*(unsigned int *) (buffer + 0x460) > 0x000003f);
+	bool b5 = (*(unsigned int *) (buffer + 0x464) > 0x0000007);
+
+	return (b1 && b2 && ((b3 && b5) || b4));
 }
 
 /**

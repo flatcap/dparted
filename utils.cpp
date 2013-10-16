@@ -27,6 +27,7 @@
 #include "log.h"
 #include "stringnum.h"
 #include "utils.h"
+#include "log_trace.h"
 
 /**
  * execute_command2

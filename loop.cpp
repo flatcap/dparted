@@ -16,6 +16,7 @@
  */
 
 #include "loop.h"
+#include "log_trace.h"
 
 /**
  * Loop

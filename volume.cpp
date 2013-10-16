@@ -19,6 +19,7 @@
 
 #include "log.h"
 #include "volume.h"
+#include "log_trace.h"
 
 /**
  * Volume

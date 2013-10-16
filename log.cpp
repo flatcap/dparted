@@ -20,6 +20,7 @@
 #include <cstring>
 
 #include "log.h"
+#include "log_trace.h"
 
 //static unsigned int log_level = ~0;
 static FILE *file = NULL;
@@ -113,7 +114,7 @@ int log_trace (const char *format, ...)
 		return 0;
 
 	va_start (args, format);
-	fprintf (file, "\033[38;5;22m");
+	fprintf (file, "\033[38;5;70m");
 	retval = log (format, args);
 	fprintf (file, "\033[0m");
 	va_end (args);

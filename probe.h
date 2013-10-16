@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <queue>
 
 #include "disk.h"
 
@@ -51,7 +52,7 @@ public:
 
 	static  void initialise (void);
 	        void shutdown   (void);
-	virtual void discover   (void);
+	virtual void discover   (std::queue<DPContainer*> &probe_queue);
 
 	std::string get_name        (void);
 	std::string get_description (void);

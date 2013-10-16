@@ -25,6 +25,7 @@
 #include "partition.h"
 #include "utils.h"
 #include "filesystem.h"
+#include "log_trace.h"
 
 /**
  * Gpt
@@ -47,6 +48,7 @@ Gpt::~Gpt()
  */
 DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
+	LOG_TRACE;
 	Gpt *g = NULL;
 
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	// XXX replace with strict identify function (static)
@@ -61,7 +63,7 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 	// -33		128 gpt entries
 	// -1		secondary gpt header
 
-	g = new Gpt;
+	g = new Gpt();
 
 	g->name = "gpt";
 	g->bytes_size = parent->bytes_size;
@@ -72,13 +74,15 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 	g->uuid = read_uuid (buffer+568);
 	g->open_device();
 
+	parent->add_child (g); //RAR new
+
 	// Assumption: 1MiB alignment (for now)
 	// Should reserved bits be allocated after actual partitions?
 	// Should we allow Misc to overlap real partitions?
 	// Then once a non-aligned partition is deleted
 	// it would be replaced by an aligned partition.
 
-#if 1
+#if 0
 	Misc *res1 = new Misc();
 	res1->name          = "reserved";
 	res1->bytes_size    = 512 * 34;		//align (512 * 34, 1024*1024);
@@ -157,7 +161,9 @@ DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsiz
 		queue_add_probe (p);
 	}
 
+#if 0
 	g->fill_space();		// optional
+#endif
 
 	return g;
 }

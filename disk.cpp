@@ -29,6 +29,7 @@
 #include "log.h"
 #include "main.h"
 #include "utils.h"
+#include "log_trace.h"
 
 /**
  * Disk

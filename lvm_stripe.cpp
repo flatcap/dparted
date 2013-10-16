@@ -18,6 +18,7 @@
 #include <sstream>
 
 #include "lvm_stripe.h"
+#include "log_trace.h"
 
 /**
  * LVMStripe

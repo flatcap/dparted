@@ -20,6 +20,7 @@
 
 #include "container.h"
 #include "log.h"
+#include "log_trace.h"
 
 std::unordered_set<DPContainer*> obj_set;
 

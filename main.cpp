@@ -36,6 +36,7 @@
 #include "table.h"
 #include "utils.h"
 #include "volume.h"
+#include "log_trace.h"
 
 #if 0
 std::queue<DPContainer*> probe_queue;

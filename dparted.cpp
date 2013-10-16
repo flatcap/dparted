@@ -22,6 +22,7 @@
 
 #include "dparted.h"
 #include "log.h"
+#include "log_trace.h"
 
 /**
  * Dparted

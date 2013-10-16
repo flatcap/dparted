@@ -33,6 +33,7 @@
 #include "msdos.h"
 #include "partition.h"
 #include "utils.h"
+#include "log_trace.h"
 
 /**
  * Msdos
@@ -114,6 +115,7 @@ unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long long of
  */
 DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
+	LOG_TRACE;
 	Msdos *m = NULL;
 	int count = 0;
 
@@ -128,6 +130,8 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 	m->bytes_size = parent->bytes_size;
 	m->device = parent->device;
 	m->parent_offset = 0;
+
+	parent->add_child (m);	//RAR new
 
 	std::vector<struct partition> vp;
 	count = m->read_table (buffer, bufsize, 0, vp);
@@ -192,6 +196,5 @@ DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufs
 
 	return m;
 }
-
 
 

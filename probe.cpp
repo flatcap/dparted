@@ -16,6 +16,7 @@
  */
 
 #include "probe.h"
+#include "log_trace.h"
 
 /**
  * Probe
@@ -52,7 +53,7 @@ Probe::shutdown (void)
  * discover
  */
 void
-Probe::discover (void)
+Probe::discover (std::queue<DPContainer*> &probe_queue)
 {
 }
 

@@ -15,11 +15,17 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string>
+#include <vector>
+#include <cstring>
+#include <queue>
+
 #include "probe_disk.h"
 #include "disk.h"
 
 #include "utils.h"
 #include "log.h"
+#include "log_trace.h"
 #include "log_trace.h"
 
 static ProbeDisk *prober = NULL;
@@ -56,7 +62,7 @@ void ProbeDisk::shutdown (void)
  * discover
  */
 void
-ProbeDisk::discover (void)
+ProbeDisk::discover (std::queue<DPContainer*> &probe_queue)
 {
 	//LOG_TRACE;
 
@@ -128,11 +134,14 @@ ProbeDisk::discover (void)
 
 		d->open_device();
 
-		children.insert (d);
+		children.insert (d);	// We keep a list
+		probe_queue.push (d);	// We need to probe
 	}
 
+#if 0
 	for (auto c : children) {
 		printf ("%s\n", c->device.c_str());
 	}
+#endif
 }
 

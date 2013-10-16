@@ -20,6 +20,7 @@
 
 #include "log.h"
 #include "partition.h"
+#include "log_trace.h"
 
 /**
  * Partition

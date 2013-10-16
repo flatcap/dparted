@@ -18,6 +18,7 @@
 #include <sstream>
 
 #include "lvm_linear.h"
+#include "log_trace.h"
 
 /**
  * LVMLinear

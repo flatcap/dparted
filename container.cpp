@@ -32,6 +32,7 @@
 #include "log.h"
 #include "utils.h"
 #include "leak.h"
+#include "log_trace.h"
 
 /**
  * DPContainer
@@ -128,7 +129,7 @@ void DPContainer::add_child (DPContainer *child)
 		children.push_back (child);
 	}
 
-	//log_debug ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
+	log_debug ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
 
 	child->ref();
 	child->parent = this;
@@ -298,7 +299,7 @@ FILE * DPContainer::open_device (void)
 		log_error ("failed to open device %s\n", device.c_str());
 	}
 
-	//log_info ("OPEN %s = %p\n", device.c_str(), fd);
+	log_info ("OPEN %s = %p\n", device.c_str(), (void*) fd);
 	return fd;
 }
 
@@ -340,7 +341,7 @@ int DPContainer::read_data (long long offset, long long size, unsigned char *buf
 	bytes = fread (buffer, size, 1, fd);
 	bytes *= size;
 	std::string s = get_size (current);
-	//log_info ("READ: device %s (%p), offset %lld (%s), size %lld = %lld\n", device.c_str(), fd, current, s.c_str(), size, bytes);
+	log_info ("READ: device %s (%p), offset %lld (%s), size %lld = %lld\n", device.c_str(), (void*) fd, current, s.c_str(), size, bytes);
 
 	return bytes;
 }
@@ -351,7 +352,7 @@ int DPContainer::read_data (long long offset, long long size, unsigned char *buf
  */
 std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
 {
-	stream << c.name << ", " << c.type.back() << ", " << c.device << "(off " << c.parent_offset << "), " << c.children.size();
+	stream << c.type.back() << ", " << c.name << ", " << c.device << "(off " << c.parent_offset << "), " << c.children.size();
 	return stream;
 }
 

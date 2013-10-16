@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "treeview.h"
+#include "log_trace.h"
 
 /**
  * TreeView

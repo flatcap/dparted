@@ -25,6 +25,7 @@
 #include "partition.h"
 #include "stringnum.h"
 #include "utils.h"
+#include "log_trace.h"
 
 /**
  * Filesystem
@@ -148,6 +149,7 @@ long long Filesystem::ext2_get_usage (void)
  */
 DPContainer * Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
+	LOG_TRACE;
 	Filesystem *f = NULL;
 	std::string name;
 
@@ -155,6 +157,10 @@ DPContainer * Filesystem::probe (DPContainer *parent, unsigned char *buffer, int
 		name = "btrfs";
 	} else if (identify_ext2 (buffer, bufsize)) {
 		name = "ext2";
+	} else if (identify_ext3 (buffer, bufsize)) {
+		name = "ext3";
+	} else if (identify_ext4 (buffer, bufsize)) {
+		name = "ext4";
 	} else if (identify_ntfs (buffer, bufsize)) {
 		name = "ntfs";
 	} else if (identify_reiserfs (buffer, bufsize)) {
@@ -183,6 +189,8 @@ DPContainer * Filesystem::probe (DPContainer *parent, unsigned char *buffer, int
 		//log_info ("%s: size = %lld, used = %lld\n", f->name.c_str(), f->bytes_size, f->bytes_used);
 
 		f->bytes_used = (rand()%90) * f->bytes_size / 100; //RAR
+
+		parent->add_child (f);	//RAR new
 	}
 
 	return f;

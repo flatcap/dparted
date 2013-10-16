@@ -28,6 +28,7 @@
 #include "misc.h"
 #include "partition.h"
 #include "utils.h"
+#include "log_trace.h"
 
 /**
  * Extended
@@ -50,6 +51,7 @@ Extended::~Extended()
  */
 Extended * Extended::probe (DPContainer *parent, long long offset, long long size)
 {
+	LOG_TRACE;
 	Extended *ext = NULL;
 
 	unsigned char *buffer = NULL;
