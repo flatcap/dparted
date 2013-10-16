@@ -26,7 +26,7 @@
 
 unsigned int execute_command2 (const std::string &command, std::string &input);
 unsigned int execute_command (const std::string &command, std::vector<std::string> &output);
-unsigned int execute_command (const std::string &command, std::string &output);
+unsigned int execute_command3 (const std::string &command, std::string &output);
 std::string get_size (long long size);
 long long extract_number (const std::string &text, unsigned int &start);
 std::string extract_quoted_string (const std::string &text, unsigned int &index);

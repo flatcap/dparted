@@ -59,7 +59,7 @@ long long Filesystem::ext2_get_usage (void)
 		//log_debug ("create loop device\n");
 		build << "losetup /dev/loop16 " << device << " -o " << parent_offset;
 		command = build.str();
-		execute_command (command, output);
+		execute_command3 (command, output);
 		//log_debug ("command = %s\n", command.c_str());
 		//execute_command ("losetup /dev/loop16 ", output);
 		dev = "/dev/loop16";
@@ -72,7 +72,7 @@ long long Filesystem::ext2_get_usage (void)
 	command = "tune2fs -l " + dev;
 	//log_debug ("command = %s\n", command.c_str());
 
-	execute_command (command, output);
+	execute_command3 (command, output);
 	//log_debug ("result = \n%s\n", output.c_str());
 
 	//interpret results
@@ -134,7 +134,7 @@ long long Filesystem::ext2_get_usage (void)
 
 	if (parent_offset != 0) {
 		command = "losetup -d /dev/loop16";
-		execute_command (command, output);
+		execute_command3 (command, output);
 		//log_debug ("dismantle loop device\n");
 		//log_debug ("command = %s\n", command.c_str());
 		//log_debug ("\n");

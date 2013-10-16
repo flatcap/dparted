@@ -26,7 +26,6 @@
 #include "utils.h"
 #include "log.h"
 #include "log_trace.h"
-#include "log_trace.h"
 
 static ProbeDisk *prober = NULL;
 
@@ -35,8 +34,8 @@ static ProbeDisk *prober = NULL;
  */
 ProbeDisk::ProbeDisk()
 {
-	name = "loop",
-	description = "Diskback devices";
+	name = "disk",
+	description = "Disks";
 }
 
 /**
@@ -143,5 +142,15 @@ ProbeDisk::discover (std::queue<DPContainer*> &probe_queue)
 		printf ("%s\n", c->device.c_str());
 	}
 #endif
+}
+
+
+/**
+ * identify
+ */
+void
+ProbeDisk::identify (const char *name, int fd, struct stat &st)
+{
+	//LOG_TRACE;
 }
 

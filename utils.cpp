@@ -94,7 +94,15 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 		free (ptr);
 	} while (count > 0);
 
-	if (pclose (file) == -1) {
+	/*
+	   XXX correct way to check return code
+	int ret = pclose(fd);
+	if(WIFEXITED(ret))
+		  printf("%d\n", WEXITSTATUS(ret));
+	*/
+	int retcode = pclose (file);
+	log_info ("command %s returned %d\n", command.c_str(), retcode);
+	if (retcode == -1) {
 		log_error ("pclose failed");	//XXX log_perror
 		return -1;
 	}
@@ -103,9 +111,9 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 }
 
 /**
- * execute_command
+ * execute_command3
  */
-unsigned int execute_command (const std::string &command, std::string &output)
+unsigned int execute_command3 (const std::string &command, std::string &output)
 {
 	std::vector<std::string> v;
 	int count;

@@ -38,6 +38,8 @@ public:
 	        void shutdown   (void);
 	virtual void discover   (std::queue<DPContainer*> &probe_queue);
 
+	virtual void identify   (const char *name, int fd, struct stat &st);
+
 	//XXX bool prerequisites (void);
 
 protected:

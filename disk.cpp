@@ -125,6 +125,7 @@ bool Disk::find_devices_old (const std::string &name, int fd, struct stat &st, D
 unsigned int Disk::find_devices (DPContainer &list)
 {
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
+	//XXX use LOOP_MAJOR
 	std::string command = "lsblk -b -P -e 7";
 	std::vector<std::string> output;
 	std::string error;

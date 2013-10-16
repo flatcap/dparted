@@ -20,12 +20,16 @@
 #include <cstring>
 #include <queue>
 
+#include <sys/types.h>
+#include <unistd.h>
+
 #include "probe_loop.h"
 #include "loop.h"
 
 #include "utils.h"
 #include "log.h"
 #include "log_trace.h"
+#include "main.h"
 
 static ProbeLoop *prober = NULL;
 
@@ -154,4 +158,65 @@ ProbeLoop::discover (std::queue<DPContainer*> &probe_queue)
 #endif
 }
 
+
+/**
+ * test
+ */
+void
+ProbeLoop::test (std::vector<std::string> list, std::queue<DPContainer*> &probe_queue)
+{
+	for (auto device : list) {
+		printf ("loop? %s\n", device.c_str());
+	}
+}
+
+#if 0
+/**
+ * find_devices_old
+ */
+bool
+ProbeLoop::find_devices_old (const std::string &name, int fd, struct stat &st)
+{
+	Loop *l = NULL;
+	long long seek;
+
+	seek = lseek (fd, 0, SEEK_END);
+
+	l = new Loop;
+
+	l->device        = name;
+	l->parent_offset = 0;
+	l->bytes_size    = seek;
+	l->bytes_used    = 0;
+
+	//XXX children.insert (l);
+	queue_add_probe (l);	// queue the container for action
+
+	return true;
+}
+
+#endif
+/**
+ * identify
+ */
+void
+ProbeLoop::identify (const char *name, int fd, struct stat &st)
+{
+	//LOG_TRACE;
+
+	Loop *l = NULL;
+	long long seek;
+
+	seek = lseek (fd, 0, SEEK_END);
+
+	l = new Loop;
+
+	l->device        = name;
+	l->parent_offset = 0;
+	l->bytes_size    = seek;
+	l->bytes_used    = 0;
+
+	children.insert (l);
+	queue_add_probe (l);	// queue the container for action
+}
 

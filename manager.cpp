@@ -19,6 +19,15 @@
 #include <queue>
 #include <string>
 
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <linux/major.h>
+#include <linux/fs.h>
+#include <linux/kdev_t.h>
+#include <sys/ioctl.h>
+
 #include "container.h"
 #include "manager.h"
 #include "utils.h"
@@ -26,13 +35,12 @@
 
 #include "table.h"
 #include "misc.h"
-#include "disk.h"
 #include "filesystem.h"
-#include "loop.h"
 #include "lvm_group.h"
 
 #include "probe_loop.h"
 #include "probe_disk.h"
+#include "probe_file.h"
 
 #include "log_trace.h"
 #include "dot.h"
@@ -113,11 +121,9 @@ DPContainer * probe (DPContainer *parent)
 		return item;
 	}
 
-#if 0
 	if ((item = Misc::probe (parent, &buffer[0], bufsize))) {
 		return item;
 	}
-#endif
 
 	return NULL;
 }
@@ -129,14 +135,49 @@ int main (int argc, char *argv[])
 {
 	log_init ("/dev/stdout");
 
+	// Create the probes
 	ProbeLoop pl;
-	pl.discover (probe_queue);
-
-#if 0
 	ProbeDisk pd;
-	pd.discover (probe_queue);
-#endif
+	ProbeFile pf;
 
+	if (argc > 1) {
+		for (int i = 1; i < argc; i++) {
+			struct stat st;
+			int res = -1;
+			int fd = -1;
+
+			fd = open (argv[i], O_RDONLY | O_CLOEXEC);
+			if (fd < 0) {
+				log_debug ("can't open file %s\n", argv[i]);
+				continue;
+			}
+
+			res = fstat (fd, &st);
+			if (res < 0) {
+				log_debug ("stat on %s failed\n", argv[i]);
+				close (fd);
+				continue;
+			}
+
+			if (S_ISREG (st.st_mode) || S_ISDIR (st.st_mode)) {
+				pf.identify (argv[i], fd, st);
+			} else if (S_ISBLK (st.st_mode)) {
+				if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
+					pl.identify (argv[i], fd, st);
+				} else {
+					pd.identify (argv[i], fd, st);
+				}
+			} else {
+				log_error ("can't probe something else\n");
+			}
+			close (fd);
+		}
+	} else {
+		//pl.discover (probe_queue);
+		pd.discover (probe_queue);
+	}
+
+	// Process the probe_queue
 	DPContainer *item = NULL;
 	//XXX deque?
 	while ((item = probe_queue.front())) {
@@ -152,7 +193,13 @@ int main (int argc, char *argv[])
 		}
 	}
 
-	display_dot (pl.get_children());
+	printf ("pd = %ld\n", pd.get_children().size());
+	printf ("pf = %ld\n", pf.get_children().size());
+	printf ("pl = %ld\n", pl.get_children().size());
+
+	if (pl.get_children().size() > 0) {
+		display_dot (pl.get_children());
+	}
 
 	return 0;
 }
