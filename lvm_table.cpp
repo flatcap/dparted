@@ -22,6 +22,7 @@
 #include "lvm_table.h"
 #include "utils.h"
 #include "log_trace.h"
+#include "main.h"
 
 /**
  * LVMTable
@@ -67,7 +68,7 @@ std::string read_uuid_string (unsigned char *buffer)
  */
 DPContainer * LVMTable::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	LVMTable *t = NULL;
 
 	if (strncmp ((const char*) buffer+512, "LABELONE", 8))
@@ -81,7 +82,10 @@ DPContainer * LVMTable::probe (DPContainer *parent, unsigned char *buffer, int b
 
 	t->uuid = read_uuid_string (buffer+544);
 
-	//log_info ("table: %s\n", t->uuid.c_str());
+	log_info ("table: %s\n", t->uuid.c_str());
+
+	parent->add_child (t);
+	queue_add_probe (t);
 
 	return t;
 }

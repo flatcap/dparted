@@ -177,6 +177,8 @@ int main (int argc, char *argv[])
 		pd.discover (probe_queue);
 	}
 
+	//XXX LVMGroup::find_devices (disks);
+
 	// Process the probe_queue
 	DPContainer *item = NULL;
 	//XXX deque?
@@ -193,9 +195,11 @@ int main (int argc, char *argv[])
 		}
 	}
 
+#if 0
 	printf ("pd = %ld\n", pd.get_children().size());
 	printf ("pf = %ld\n", pf.get_children().size());
 	printf ("pl = %ld\n", pl.get_children().size());
+#endif
 
 	if (pl.get_children().size() > 0) {
 		display_dot (pl.get_children());

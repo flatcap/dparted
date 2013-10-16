@@ -27,8 +27,6 @@
 #include "log.h"
 #include "log_trace.h"
 
-static ProbeDisk *prober = NULL;
-
 /**
  * ProbeDisk
  */
@@ -51,10 +49,6 @@ ProbeDisk::~ProbeDisk()
  */
 void ProbeDisk::shutdown (void)
 {
-	if (prober) {
-		delete prober;
-		prober = NULL;
-	}
 }
 
 /**
@@ -153,4 +147,5 @@ ProbeDisk::identify (const char *name, int fd, struct stat &st)
 {
 	//LOG_TRACE;
 }
+
 
