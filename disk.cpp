@@ -204,24 +204,6 @@ long Disk::get_block_size (void)
 	return 0;
 }
 
-#if 0
-/**
- * get_device_name
- */
-std::string Disk::get_device_name (void)
-{
-	return device;
-}
-
-/**
- * get_parent_offset
- */
-long long Disk::get_parent_offset (void)
-{
-	return 0;
-}
-
-#endif
 /**
  * get_device_space
  */
@@ -247,4 +229,94 @@ DPContainer * Disk::find_device (const std::string &dev)
 
 	return NULL;
 }
+
+
+/**
+ * discover
+ */
+void
+Disk::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
+{
+	//LOG_TRACE;
+
+	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
+	std::string command = "lsblk -b -P -e 7";
+	std::vector<std::string> output;
+	std::string error;
+	unsigned int count;
+
+	count = execute_command (command, output);
+	if (count < 0)
+		return;
+
+#if 0
+	for (auto line : output) {
+		log_debug ("%s\n", line.c_str());
+	}
+#endif
+
+	std::string device;
+	std::string type;
+	std::string mount;
+	int kernel_major = -1;
+	int kernel_minor = -1;
+	long long size;
+	std::string part;
+	int scan;
+	std::map<std::string,StringNum> tags;
+
+	//log_debug ("%d lines\n", count);
+
+	for (auto line : output) {
+		parse_tagged_line (line, " ", tags);
+
+		type = tags["TYPE"];
+		if (type != "disk")
+			continue;
+
+		device = tags["NAME"];
+		//log_debug ("%s\n", device.c_str());
+
+		std::string majmin = tags["MAJ:MIN"];
+		scan = sscanf (majmin.c_str(), "%d:%d", &kernel_major, &kernel_minor);
+		if (scan != 2) {
+			log_debug ("scan failed1\n");
+			continue;
+		}
+
+		size = tags["SIZE"];
+		mount = tags["MOUNTPOINT"];
+
+#if 0
+		log_debug ("\tmajor: %d\n", kernel_major);
+		log_debug ("\tminor: %d\n", kernel_minor);
+		log_debug ("\tsize:  %lld\n", size);
+		log_debug ("\tmount: %s\n", mount.c_str());
+		log_debug ("\n");
+#endif
+
+		Disk *d = new Disk;
+		d->device = "/dev/" + device;
+		d->parent_offset = 0;
+		d->kernel_major = kernel_major;
+		d->kernel_minor = kernel_minor;
+		d->mounts = mount;
+		d->bytes_size = size;
+
+		d->open_device();
+
+		top_level.add_child (d);
+		probe_queue.push (d);	// We need to probe
+	}
+}
+
+/**
+ * identify
+ */
+void
+Disk::identify (DPContainer &top_level, const char *name, int fd, struct stat &st)
+{
+	//LOG_TRACE;
+}
+
 

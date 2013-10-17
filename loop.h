@@ -19,6 +19,7 @@
 #define _LOOP_H_
 
 #include <string>
+#include <queue>
 
 #include "block.h"
 
@@ -51,8 +52,9 @@ public:
 	bool		read_only;
 	bool		deleted;
 
-	// XXX Doesn't need to be a friend since everything's public
-	friend class ProbeLoop;
+	static void discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue);
+	static void identify (DPContainer &top_level, const char *name, int fd, struct stat &st);
+
 protected:
 private:
 

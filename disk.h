@@ -20,6 +20,7 @@
 
 #include <map>
 #include <string>
+#include <queue>
 
 #include "block.h"
 
@@ -33,8 +34,6 @@ public:
 	virtual ~Disk();
 
 	virtual long          get_block_size (void);
-	//virtual std::string   get_device_name (void);
-	//virtual long long     get_parent_offset (void);
 	virtual unsigned int  get_device_space (std::map<long long, long long> &spaces);
 
 	virtual DPContainer * find_device (const std::string &dev);
@@ -59,9 +58,12 @@ public:
 
 	friend class ProbeDisk;
 
-protected:
 	std::string mounts;	//XXX vector
 
+	static void discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue);
+	static void identify (DPContainer &top_level, const char *name, int fd, struct stat &st);
+
+protected:
 private:
 
 };

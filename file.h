@@ -19,6 +19,7 @@
 #define _FILE_H_
 
 #include <string>
+#include <queue>
 
 #include "block.h"
 
@@ -30,6 +31,9 @@ class File : public Block
 public:
 	File (void);
 	virtual ~File();
+
+	static void discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue);
+	static void identify (DPContainer &top_level, const char *name, int fd, struct stat &st);
 
 protected:
 

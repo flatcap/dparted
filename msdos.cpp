@@ -171,7 +171,7 @@ DPContainer * Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigne
 
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 			//log_debug ("vp[i].start = %lld\n", vp[i].start);
-			c = Extended::probe (m, vp[i].start, vp[i].size);
+			c = Extended::probe (top_level, m, vp[i].start, vp[i].size);
 			if (!c)
 				continue;
 

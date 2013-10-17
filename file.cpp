@@ -83,3 +83,37 @@ bool File::find_devices (const std::string &name, int fd, struct stat &st, DPCon
 
 #endif
 
+/**
+ * discover
+ */
+void
+File::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
+{
+	//LOG_TRACE;
+
+	// Config
+	//	[files]
+	//	dir = ~/vm
+	//	file = /tmp/test.img
+	//	suffix = img
+
+	// iterate through config
+	//	file => add that file
+	//	dir  => add dir/*.img
+}
+
+/**
+ * identify
+ */
+void
+File::identify (DPContainer &top_level, const char *name, int fd, struct stat &st)
+{
+	//LOG_TRACE;
+
+	/* dir:
+	 *	Search for files: *.img
+	 * file:
+	 *	We create, and manage, a loop device for this file
+	 */
+}
+

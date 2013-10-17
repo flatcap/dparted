@@ -49,7 +49,7 @@ Extended::~Extended()
 /**
  * probe
  */
-Extended * Extended::probe (DPContainer *parent, long long offset, long long size)
+Extended * Extended::probe (DPContainer &top_level, DPContainer *parent, long long offset, long long size)
 {
 	//LOG_TRACE;
 	Extended *ext = NULL;

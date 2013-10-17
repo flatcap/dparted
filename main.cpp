@@ -25,6 +25,10 @@
 #include <string>
 #include <vector>
 
+#include <linux/major.h>
+#include <linux/fs.h>
+#include <linux/kdev_t.h>
+
 #include "container.h"
 #include "disk.h"
 #include "dparted.h"
@@ -37,8 +41,9 @@
 #include "utils.h"
 #include "volume.h"
 #include "log_trace.h"
+#include "dot.h"
+#include "file.h"
 
-#if 0
 std::queue<DPContainer*> probe_queue;
 
 /**
@@ -51,10 +56,11 @@ void queue_add_probe (DPContainer *item)
 
 	probe_queue.push (item);
 	std::string s = get_size (item->parent_offset);
-	//log_debug ("QUEUE: %s %s - %lld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
-	//log_info ("QUEUE has %lu items\n", probe_queue.size());
+	//printf ("QUEUE: %s %s : %lld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
+	//printf ("QUEUE has %lu items\n", probe_queue.size());
 }
 
+#if 0
 /**
  * mounts_get_list
  */
@@ -69,18 +75,21 @@ unsigned int mounts_get_list (DPContainer &mounts)
 
 	for (unsigned int i = 0; i < output.size(); i++) {
 		std::string line = output[i];
-		log_debug ("line%d:\n%s\n\n", i, line.c_str());
+		printf ("line%d:\n%s\n\n", i, line.c_str());
 	}
 
 	return mounts.children.size();
 }
 
+#endif
+
 /**
  * probe
  */
-DPContainer * probe (DPContainer *parent)
+DPContainer * probe (DPContainer &top_level, DPContainer *parent)
 {
-	const int bufsize = 66560;
+	//LOG_TRACE;
+	const int bufsize = 66560;		//XXX round up to page size (69632)
 	std::vector<unsigned char> buffer (bufsize);
 
 	DPContainer *item = NULL;
@@ -88,15 +97,15 @@ DPContainer * probe (DPContainer *parent)
 	parent->open_device();
 	parent->read_data (0, bufsize, &buffer[0]);	// check read num
 
-	if ((item = Filesystem::probe (parent, &buffer[0], bufsize))) {
+	if ((item = Filesystem::probe (top_level, parent, &buffer[0], bufsize))) {
 		return item;
 	}
 
-	if ((item = Table::probe (parent, &buffer[0], bufsize))) {
+	if ((item = Table::probe (top_level, parent, &buffer[0], bufsize))) {
 		return item;
 	}
 
-	if ((item = Misc::probe (parent, &buffer[0], bufsize))) {
+	if ((item = Misc::probe (top_level, parent, &buffer[0], bufsize))) {
 		return item;
 	}
 
@@ -108,64 +117,75 @@ DPContainer * probe (DPContainer *parent)
  */
 int main (int argc, char *argv[])
 {
-	{
-	DPContainer disks;
-	DPContainer *item = NULL;
+	log_init ("/dev/stdout");
 
-	log_init ("/dev/stderr");
+	DPContainer top_level;
+	top_level.name = "dummy";
 
-	//Disk::find_devices (disks);
-	Loop::find_devices (disks);
+	if (argc > 1) {
+		for (int i = 1; i < argc; i++) {
+			struct stat st;
+			int res = -1;
+			int fd = -1;
 
-	for (auto child : disks.children) {
-		queue_add_probe (child);
+			fd = open (argv[i], O_RDONLY | O_CLOEXEC);
+			if (fd < 0) {
+				log_debug ("can't open file %s\n", argv[i]);
+				continue;
+			}
+
+			res = fstat (fd, &st);
+			if (res < 0) {
+				log_debug ("stat on %s failed\n", argv[i]);
+				close (fd);
+				continue;
+			}
+
+			if (S_ISREG (st.st_mode) || S_ISDIR (st.st_mode)) {
+				File::identify (top_level, argv[i], fd, st);
+			} else if (S_ISBLK (st.st_mode)) {
+				if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
+					Loop::identify (top_level, argv[i], fd, st);
+				} else {
+					Disk::identify (top_level, argv[i], fd, st);
+				}
+			} else {
+				log_error ("can't probe something else\n");
+			}
+			close (fd);
+		}
+	} else {
+		//Loop::discover (top_level, probe_queue);
+		Disk::discover (top_level, probe_queue);
 	}
 
+	//XXX LVMGroup::find_devices (disks);
+
+	// Process the probe_queue
+	DPContainer *item = NULL;
+	//XXX deque?
 	while ((item = probe_queue.front())) {
 		probe_queue.pop();
 
 		//std::cout << "Item: " << item << "\n";
-		//log_debug ("queue has %lu items\n", probe_queue.size());
-		DPContainer *found = probe (item);
+
+		DPContainer *found = probe (top_level, item);
 		if (found) {
-			item->add_child (found);
-			//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", item, item->type.back().c_str(), item->name.c_str(), found, found->type.back().c_str(), found->name.c_str());
-		} //RAR else what?
-		//log_debug ("queue has %lu items\n", probe_queue.size());
+			//item->add_child (found);
+			//std::cout << "\tFound: " << found << "\n";
+			//probe_queue.push (found);
+		}
 	}
 
 #if 1
-	LVMGroup::find_devices (disks);
-
-	while ((item = probe_queue.front())) {
-		probe_queue.pop();
-
-		DPContainer *found = probe (item);
-		if (found) {
-			item->add_child (found);
-			//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", item, item->type.back().c_str(), item->name.c_str(), found, found->type.back().c_str(), found->name.c_str());
-		} //RAR else what?
-	}
-
-	if (probe_queue.size() > 0) {
-		log_error ("Queue still contains work (%lu items)\n", probe_queue.size());
+	for (auto c : top_level.children) {
+		std::vector<DPContainer*> dummy;
+		dummy.push_back(c);
+		display_dot (dummy);
 	}
 #endif
 
-#if 0
-	Glib::RefPtr<Gtk::Application> kit = Gtk::Application::create(argc, argv, "org.flatcap.dparted");
-
-	DParted d;
-	d.set_data (&disks);
-
-	kit->run (d);
-#endif
-
-	}
-	//log_info ("done\n"); //XXX move to log_close
-	log_close();
 	return 0;
 }
 
-#endif
 

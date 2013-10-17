@@ -108,7 +108,6 @@ DPContainer * LVMTable::probe (DPContainer &top_level, DPContainer *parent, unsi
 #endif
 
 	parent->add_child (t);
-	//queue_add_probe (t);
 
 	LVMGroup::discover (top_level, t);
 
