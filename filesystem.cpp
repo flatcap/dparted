@@ -147,9 +147,9 @@ long long Filesystem::ext2_get_usage (void)
 /**
  * probe
  */
-DPContainer * Filesystem::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer * Filesystem::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	Filesystem *f = NULL;
 	std::string name;
 

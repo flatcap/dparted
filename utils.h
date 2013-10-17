@@ -40,6 +40,7 @@ unsigned int explode_n (const char *separators, const std::string &input, std::v
 std::string read_file_line (const std::string &filename);
 std::string read_uuid (unsigned char *buffer);
 void dump_hex (unsigned char *buffer, int bufsize);
+void dump_hex2 (void *buf, int start, int length);
 long long align (long long num, long long round);
 
 #endif // _UTILS_H_

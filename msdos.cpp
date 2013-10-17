@@ -113,9 +113,9 @@ unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long long of
 /**
  * probe
  */
-DPContainer * Msdos::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer * Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	Msdos *m = NULL;
 	int count = 0;
 

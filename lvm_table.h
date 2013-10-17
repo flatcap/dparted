@@ -18,6 +18,8 @@
 #ifndef _LVM_TABLE_H_
 #define _LVM_TABLE_H_
 
+#include <string>
+
 #include "table.h"
 
 /**
@@ -29,10 +31,11 @@ public:
 	LVMTable (void);
 	virtual ~LVMTable();
 
-	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
+	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
 
-protected:
 	// my volume
+	std::string vol_name;
+protected:
 
 private:
 

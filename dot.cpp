@@ -559,27 +559,27 @@ dump_dot_inner (std::vector <DPContainer*> v)
 		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << "</b></font></td></tr>\n";
 
 		std::string type = c->type.back();
-		     if (type == "block")        { dot << dot_block         (dynamic_cast<Block        *> (c)); }
-		else if (type == "container")    { dot << dot_container     (dynamic_cast<DPContainer  *> (c)); }
-		else if (type == "disk")         { dot << dot_disk          (dynamic_cast<Disk         *> (c)); }
-		else if (type == "extended")     { dot << dot_extended      (dynamic_cast<Extended     *> (c)); }
-		else if (type == "file")         { dot << dot_file          (dynamic_cast<File         *> (c)); }
-		else if (type == "filesystem")   { dot << dot_filesystem    (dynamic_cast<Filesystem   *> (c)); }
-		else if (type == "gpt")          { dot << dot_gpt           (dynamic_cast<Gpt          *> (c)); }
-		else if (type == "loop")         { dot << dot_loop          (dynamic_cast<Loop         *> (c)); }
-		else if (type == "lvmgroup")     { dot << dot_lvm_group     (dynamic_cast<LVMGroup     *> (c)); }
-		else if (type == "lvmlinear")    { dot << dot_lvm_linear    (dynamic_cast<LVMLinear    *> (c)); }
-		else if (type == "lvmmirror")    { dot << dot_lvm_mirror    (dynamic_cast<LVMMirror    *> (c)); }
-		else if (type == "lvmpartition") { dot << dot_lvm_partition (dynamic_cast<LVMPartition *> (c)); }
-		else if (type == "lvmstripe")    { dot << dot_lvm_stripe    (dynamic_cast<LVMStripe    *> (c)); }
-		else if (type == "lvmtable")     { dot << dot_lvm_table     (dynamic_cast<LVMTable     *> (c)); }
-		else if (type == "lvmvolume")    { dot << dot_lvm_volume    (dynamic_cast<LVMVolume    *> (c)); }
-		else if (type == "misc")         { dot << dot_misc          (dynamic_cast<Misc         *> (c)); }
-		else if (type == "msdos")        { dot << dot_msdos         (dynamic_cast<Msdos        *> (c)); }
-		else if (type == "partition")    { dot << dot_partition     (dynamic_cast<Partition    *> (c)); }
-		else if (type == "table")        { dot << dot_table         (dynamic_cast<Table        *> (c)); }
-		else if (type == "volume")       { dot << dot_volume        (dynamic_cast<Volume       *> (c)); }
-		else if (type == "whole")        { dot << dot_whole         (dynamic_cast<Whole        *> (c)); }
+		     if (type == "block")         { dot << dot_block         (dynamic_cast<Block        *> (c)); }
+		else if (type == "container")     { dot << dot_container     (dynamic_cast<DPContainer  *> (c)); }
+		else if (type == "disk")          { dot << dot_disk          (dynamic_cast<Disk         *> (c)); }
+		else if (type == "extended")      { dot << dot_extended      (dynamic_cast<Extended     *> (c)); }
+		else if (type == "file")          { dot << dot_file          (dynamic_cast<File         *> (c)); }
+		else if (type == "filesystem")    { dot << dot_filesystem    (dynamic_cast<Filesystem   *> (c)); }
+		else if (type == "gpt")           { dot << dot_gpt           (dynamic_cast<Gpt          *> (c)); }
+		else if (type == "loop")          { dot << dot_loop          (dynamic_cast<Loop         *> (c)); }
+		else if (type == "lvm_group")     { dot << dot_lvm_group     (dynamic_cast<LVMGroup     *> (c)); }
+		else if (type == "lvm_linear")    { dot << dot_lvm_linear    (dynamic_cast<LVMLinear    *> (c)); }
+		else if (type == "lvm_mirror")    { dot << dot_lvm_mirror    (dynamic_cast<LVMMirror    *> (c)); }
+		else if (type == "lvm_partition") { dot << dot_lvm_partition (dynamic_cast<LVMPartition *> (c)); }
+		else if (type == "lvm_stripe")    { dot << dot_lvm_stripe    (dynamic_cast<LVMStripe    *> (c)); }
+		else if (type == "lvm_table")     { dot << dot_lvm_table     (dynamic_cast<LVMTable     *> (c)); }
+		else if (type == "lvm_volume")    { dot << dot_lvm_volume    (dynamic_cast<LVMVolume    *> (c)); }
+		else if (type == "misc")          { dot << dot_misc          (dynamic_cast<Misc         *> (c)); }
+		else if (type == "msdos")         { dot << dot_msdos         (dynamic_cast<Msdos        *> (c)); }
+		else if (type == "partition")     { dot << dot_partition     (dynamic_cast<Partition    *> (c)); }
+		else if (type == "table")         { dot << dot_table         (dynamic_cast<Table        *> (c)); }
+		else if (type == "volume")        { dot << dot_volume        (dynamic_cast<Volume       *> (c)); }
+		else if (type == "whole")         { dot << dot_whole         (dynamic_cast<Whole        *> (c)); }
 
 		dot << "</table>>];\n";
 

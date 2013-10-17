@@ -23,6 +23,7 @@
 #include "utils.h"
 #include "log_trace.h"
 #include "main.h"
+#include "lvm_group.h"
 
 /**
  * LVMTable
@@ -66,9 +67,9 @@ std::string read_uuid_string (unsigned char *buffer)
 /**
  * probe
  */
-DPContainer * LVMTable::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer * LVMTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	LVMTable *t = NULL;
 
 	if (strncmp ((const char*) buffer+512, "LABELONE", 8))
@@ -82,10 +83,34 @@ DPContainer * LVMTable::probe (DPContainer *parent, unsigned char *buffer, int b
 
 	t->uuid = read_uuid_string (buffer+544);
 
-	log_info ("table: %s\n", t->uuid.c_str());
+	//log_info ("table: %s\n", t->uuid.c_str());
+
+	const int bufsize2 = 4096;
+	std::vector<unsigned char> buffer2 (bufsize2);
+
+	parent->open_device();
+	parent->read_data (4608, bufsize2, &buffer2[0]);	// check read num
+
+	//dump_hex2 (&buffer2[0], 0, bufsize2);
+
+	auto iter = buffer2.begin();
+	for (;; iter++) {
+		if (*iter == ' ')
+			break;
+	}
+
+	std::string v(buffer2.begin(), iter);
+	//log_error ("vol name = '%s'\n", v.c_str());
+	t->vol_name = v;
+#if 0
+	std::string config (buffer2.begin(), buffer2.end());
+	printf ("config = \n%s\n", buffer2.data());
+#endif
 
 	parent->add_child (t);
-	queue_add_probe (t);
+	//queue_add_probe (t);
+
+	LVMGroup::discover (top_level, t);
 
 	return t;
 }

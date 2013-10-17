@@ -37,7 +37,7 @@ public:
 	Msdos (void);
 	virtual ~Msdos();
 
-	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
+	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
 
 protected:
 	virtual bool read_partition (unsigned char *buffer, int index, struct partition *part);

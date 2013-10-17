@@ -51,8 +51,7 @@ std::queue<DPContainer*> probe_queue;
 /**
  * Manager
  */
-Manager::Manager () :
-	m_c (NULL)
+Manager::Manager()
 {
 }
 
@@ -74,7 +73,7 @@ void queue_add_probe (DPContainer *item)
 
 	probe_queue.push (item);
 	std::string s = get_size (item->parent_offset);
-	printf ("QUEUE: %s %s - %lld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
+	//printf ("QUEUE: %s %s : %lld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
 	//printf ("QUEUE has %lu items\n", probe_queue.size());
 }
 
@@ -102,9 +101,9 @@ unsigned int mounts_get_list (DPContainer &mounts)
 /**
  * probe
  */
-DPContainer * probe (DPContainer *parent)
+DPContainer * probe (DPContainer &top_level, DPContainer *parent)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	const int bufsize = 66560;		//XXX round up to page size (69632)
 	std::vector<unsigned char> buffer (bufsize);
 
@@ -113,15 +112,15 @@ DPContainer * probe (DPContainer *parent)
 	parent->open_device();
 	parent->read_data (0, bufsize, &buffer[0]);	// check read num
 
-	if ((item = Filesystem::probe (parent, &buffer[0], bufsize))) {
+	if ((item = Filesystem::probe (top_level, parent, &buffer[0], bufsize))) {
 		return item;
 	}
 
-	if ((item = Table::probe (parent, &buffer[0], bufsize))) {
+	if ((item = Table::probe (top_level, parent, &buffer[0], bufsize))) {
 		return item;
 	}
 
-	if ((item = Misc::probe (parent, &buffer[0], bufsize))) {
+	if ((item = Misc::probe (top_level, parent, &buffer[0], bufsize))) {
 		return item;
 	}
 
@@ -134,6 +133,9 @@ DPContainer * probe (DPContainer *parent)
 int main (int argc, char *argv[])
 {
 	log_init ("/dev/stdout");
+
+	DPContainer top_level;
+	top_level.name = "dummy";
 
 	// Create the probes
 	ProbeLoop pl;
@@ -160,12 +162,12 @@ int main (int argc, char *argv[])
 			}
 
 			if (S_ISREG (st.st_mode) || S_ISDIR (st.st_mode)) {
-				pf.identify (argv[i], fd, st);
+				pf.identify (top_level, argv[i], fd, st);
 			} else if (S_ISBLK (st.st_mode)) {
 				if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
-					pl.identify (argv[i], fd, st);
+					pl.identify (top_level, argv[i], fd, st);
 				} else {
-					pd.identify (argv[i], fd, st);
+					pd.identify (top_level, argv[i], fd, st);
 				}
 			} else {
 				log_error ("can't probe something else\n");
@@ -173,8 +175,8 @@ int main (int argc, char *argv[])
 			close (fd);
 		}
 	} else {
-		//pl.discover (probe_queue);
-		pd.discover (probe_queue);
+		//pl.discover (top_level, probe_queue);
+		pd.discover (top_level, probe_queue);
 	}
 
 	//XXX LVMGroup::find_devices (disks);
@@ -185,25 +187,23 @@ int main (int argc, char *argv[])
 	while ((item = probe_queue.front())) {
 		probe_queue.pop();
 
-		std::cout << "Item: " << item << "\n";
+		//std::cout << "Item: " << item << "\n";
 
-		DPContainer *found = probe (item);
+		DPContainer *found = probe (top_level, item);
 		if (found) {
 			//item->add_child (found);
-			std::cout << "\tFound: " << found << "\n";
+			//std::cout << "\tFound: " << found << "\n";
 			//probe_queue.push (found);
 		}
 	}
 
-#if 0
-	printf ("pd = %ld\n", pd.get_children().size());
-	printf ("pf = %ld\n", pf.get_children().size());
-	printf ("pl = %ld\n", pl.get_children().size());
-#endif
-
-	if (pl.get_children().size() > 0) {
-		display_dot (pl.get_children());
+#if 1
+	for (auto c : top_level.children) {
+		std::vector<DPContainer*> dummy;
+		dummy.push_back(c);
+		display_dot (dummy);
 	}
+#endif
 
 	return 0;
 }

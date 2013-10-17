@@ -20,6 +20,8 @@
 
 #include "whole.h"
 
+class LVMTable;
+
 /**
  * class LVMGroup
  */
@@ -43,6 +45,7 @@ public:
 	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
 	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
 
+	static void discover (DPContainer &top_level, LVMTable *t);
 protected:
 
 private:

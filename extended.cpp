@@ -51,7 +51,7 @@ Extended::~Extended()
  */
 Extended * Extended::probe (DPContainer *parent, long long offset, long long size)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	Extended *ext = NULL;
 
 	unsigned char *buffer = NULL;

@@ -31,7 +31,7 @@ public:
 	Misc (void);
 	virtual ~Misc();
 
-	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
+	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
 
 protected:
 

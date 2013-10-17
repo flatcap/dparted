@@ -46,9 +46,9 @@ Gpt::~Gpt()
 /**
  * probe
  */
-DPContainer * Gpt::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	Gpt *g = NULL;
 
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	// XXX replace with strict identify function (static)

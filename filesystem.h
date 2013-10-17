@@ -31,7 +31,7 @@ public:
 	Filesystem (void);
 	virtual ~Filesystem();
 
-	static DPContainer * probe (DPContainer *parent, unsigned char *buffer, int bufsize);
+	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
 
 	std::string	label;
 

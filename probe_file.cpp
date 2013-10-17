@@ -62,11 +62,9 @@ void ProbeFile::shutdown (void)
  * discover
  */
 void
-ProbeFile::discover (std::queue<DPContainer*> &probe_queue)
+ProbeFile::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 {
 	//LOG_TRACE;
-
-	children.clear();	// XXX scan and update existing File objects
 
 	// Config
 	//	[files]
@@ -83,7 +81,7 @@ ProbeFile::discover (std::queue<DPContainer*> &probe_queue)
  * identify
  */
 void
-ProbeFile::identify (const char *name, int fd, struct stat &st)
+ProbeFile::identify (DPContainer &top_level, const char *name, int fd, struct stat &st)
 {
 	//LOG_TRACE;
 

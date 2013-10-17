@@ -36,9 +36,9 @@ public:
 
 	static  void initialise (void);
 	        void shutdown   (void);
-	virtual void discover   (std::queue<DPContainer*> &probe_queue);
+	virtual void discover   (DPContainer &top_level, std::queue<DPContainer*> &probe_queue);
 
-	virtual void identify   (const char *name, int fd, struct stat &st);
+	virtual void identify   (DPContainer &top_level, const char *name, int fd, struct stat &st);
 
 	//XXX bool prerequisites (void);
 

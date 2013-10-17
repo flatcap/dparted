@@ -75,19 +75,4 @@ Probe::get_description (void)
 	return description;
 }
 
-/**
- * get_children
- */
-std::vector<DPContainer*>
-Probe::get_children (void)
-{
-	std::vector<DPContainer*> v;
-
-	for (auto c : children) {
-		v.push_back (c);
-	}
-
-	return v;
-}
-
 

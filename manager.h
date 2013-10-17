@@ -30,8 +30,6 @@ public:
 	virtual ~Manager();
 
 protected:
-	DPContainer *m_c;
-
 private:
 };
 

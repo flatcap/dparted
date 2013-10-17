@@ -65,10 +65,8 @@ void ProbeLoop::shutdown (void)
  * discover
  */
 void
-ProbeLoop::discover (std::queue<DPContainer*> &probe_queue)
+ProbeLoop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 {
-	children.clear();	// XXX scan and update existing Loop objects
-
 	/* Limitations of using "losetup" output:
 	 *	Filename begins, or ends, with whitespace
 	 *	Filename ends " (deleted)"
@@ -145,17 +143,9 @@ ProbeLoop::discover (std::queue<DPContainer*> &probe_queue)
 		l->bytes_size = seek;
 #endif
 
-		children.insert (l);	// We keep a list
+		top_level.add_child (l);
 		probe_queue.push (l);	// We need to probe
-
-		break;	//RAR tmp
 	}
-
-#if 0
-	for (auto c : children) {
-		printf ("%s\n", c->device.c_str());
-	}
-#endif
 }
 
 
@@ -170,37 +160,11 @@ ProbeLoop::test (std::vector<std::string> list, std::queue<DPContainer*> &probe_
 	}
 }
 
-#if 0
-/**
- * find_devices_old
- */
-bool
-ProbeLoop::find_devices_old (const std::string &name, int fd, struct stat &st)
-{
-	Loop *l = NULL;
-	long long seek;
-
-	seek = lseek (fd, 0, SEEK_END);
-
-	l = new Loop;
-
-	l->device        = name;
-	l->parent_offset = 0;
-	l->bytes_size    = seek;
-	l->bytes_used    = 0;
-
-	//XXX children.insert (l);
-	queue_add_probe (l);	// queue the container for action
-
-	return true;
-}
-
-#endif
 /**
  * identify
  */
 void
-ProbeLoop::identify (const char *name, int fd, struct stat &st)
+ProbeLoop::identify (DPContainer &top_level, const char *name, int fd, struct stat &st)
 {
 	//LOG_TRACE;
 
@@ -216,7 +180,7 @@ ProbeLoop::identify (const char *name, int fd, struct stat &st)
 	l->bytes_size    = seek;
 	l->bytes_used    = 0;
 
-	children.insert (l);
+	top_level.add_child (l);
 	queue_add_probe (l);	// queue the container for action
 }
 

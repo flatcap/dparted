@@ -47,18 +47,18 @@ Table::~Table()
 /**
  * probe
  */
-DPContainer * Table::probe (DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer * Table::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	DPContainer *c = NULL;
 
-	if ((c = Gpt::probe (parent, buffer, bufsize)))
+	if ((c = Gpt::probe (top_level, parent, buffer, bufsize)))
 		return c;
 
-	if ((c = Msdos::probe (parent, buffer, bufsize)))
+	if ((c = Msdos::probe (top_level, parent, buffer, bufsize)))
 		return c;
 
-	if ((c = LVMTable::probe (parent, buffer, bufsize)))
+	if ((c = LVMTable::probe (top_level, parent, buffer, bufsize)))
 		return c;
 
 	return NULL;

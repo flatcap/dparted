@@ -76,7 +76,7 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "r");
 	if (file == NULL) {
-		log_error ("popen failed");	//XXX log_perror
+		//log_error ("popen failed");	//XXX log_perror
 		return -1;
 	}
 
@@ -101,9 +101,9 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 		  printf("%d\n", WEXITSTATUS(ret));
 	*/
 	int retcode = pclose (file);
-	log_info ("command %s returned %d\n", command.c_str(), retcode);
+	//log_info ("command %s returned %d\n", command.c_str(), retcode);
 	if (retcode == -1) {
-		log_error ("pclose failed");	//XXX log_perror
+		//log_error ("pclose failed");	//XXX log_perror
 		return -1;
 	}
 
@@ -440,6 +440,62 @@ void dump_hex (unsigned char *buffer, int bufsize)
 			i,
 			buffer[i +  0], buffer[i +  1], buffer[i +  2], buffer[i +  3], buffer[i +  4], buffer[i +  5], buffer[i +  6], buffer[i +  7],
 			buffer[i +  8], buffer[i +  9], buffer[i + 10], buffer[i + 11], buffer[i + 12], buffer[i + 13], buffer[i + 14], buffer[i + 15]);
+	}
+}
+
+/**
+ * dump_hex2
+ */
+void dump_hex2 (void *buf, int start, int length)
+{
+	int off, i, s, e;
+	unsigned char *mem = (unsigned char*) buf;
+
+#if 0
+	unsigned char last[16];
+	int same = 0;
+#endif
+	s =  start                & ~15;	// round down
+	e = (start + length + 15) & ~15;	// round up
+
+	for (off = s; off < e; off += 16) {
+#if 0
+		if (memcmp ((char*)buf+off, last, sizeof (last)) == 0) {
+			if (!same) {
+				printf ("	        ...\n");
+				same = 1;
+			}
+			if ((off + 16) < e)
+				continue;
+		} else {
+			same = 0;
+			memcpy (last, (char*)buf+off, sizeof (last));
+		}
+#endif
+
+		if (off == s)
+			printf("	%6.6x ", start);
+		else
+			printf("	%6.6x ", off);
+
+		for (i = 0; i < 16; i++) {
+			if (i == 8)
+				printf(" -");
+			if (((off+i) >= start) && ((off+i) < (start+length)))
+				printf(" %02X", mem[off+i]);
+			else
+				printf("   ");
+		}
+		printf("  ");
+		for (i = 0; i < 16; i++) {
+			if (((off+i) < start) || ((off+i) >= (start+length)))
+				printf(" ");
+			else if (isprint(mem[off + i]))
+				printf("%c", mem[off + i]);
+			else
+				printf(".");
+		}
+		printf("\n");
 	}
 }
 

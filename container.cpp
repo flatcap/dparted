@@ -45,7 +45,7 @@ DPContainer::DPContainer (void) :
 	whole (NULL),
 	parent (NULL),
 	fd (NULL),		//XXX WHAT?
-	ref_count (0)
+	ref_count (1)
 {
 	declare ("container");
 }
@@ -129,7 +129,7 @@ void DPContainer::add_child (DPContainer *child)
 		children.push_back (child);
 	}
 
-	log_debug ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
+	//log_debug ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
 
 	child->ref();
 	child->parent = this;
@@ -299,7 +299,7 @@ FILE * DPContainer::open_device (void)
 		log_error ("failed to open device %s\n", device.c_str());
 	}
 
-	log_info ("OPEN %s = %p\n", device.c_str(), (void*) fd);
+	//log_info ("OPEN %s = %p\n", device.c_str(), (void*) fd);
 	return fd;
 }
 
@@ -341,7 +341,7 @@ int DPContainer::read_data (long long offset, long long size, unsigned char *buf
 	bytes = fread (buffer, size, 1, fd);
 	bytes *= size;
 	std::string s = get_size (current);
-	log_info ("READ: device %s (%p), offset %lld (%s), size %lld = %lld\n", device.c_str(), (void*) fd, current, s.c_str(), size, bytes);
+	//log_info ("READ: device %s (%p), offset %lld (%s), size %lld = %lld\n", device.c_str(), (void*) fd, current, s.c_str(), size, bytes);
 
 	return bytes;
 }

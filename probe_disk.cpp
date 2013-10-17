@@ -55,11 +55,9 @@ void ProbeDisk::shutdown (void)
  * discover
  */
 void
-ProbeDisk::discover (std::queue<DPContainer*> &probe_queue)
+ProbeDisk::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 {
 	//LOG_TRACE;
-
-	children.clear();	// XXX scan and update existing Disk objects
 
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
 	std::string command = "lsblk -b -P -e 7";
@@ -127,15 +125,9 @@ ProbeDisk::discover (std::queue<DPContainer*> &probe_queue)
 
 		d->open_device();
 
-		children.insert (d);	// We keep a list
+		top_level.add_child (d);
 		probe_queue.push (d);	// We need to probe
 	}
-
-#if 0
-	for (auto c : children) {
-		printf ("%s\n", c->device.c_str());
-	}
-#endif
 }
 
 
@@ -143,7 +135,7 @@ ProbeDisk::discover (std::queue<DPContainer*> &probe_queue)
  * identify
  */
 void
-ProbeDisk::identify (const char *name, int fd, struct stat &st)
+ProbeDisk::identify (DPContainer &top_level, const char *name, int fd, struct stat &st)
 {
 	//LOG_TRACE;
 }
