@@ -388,13 +388,10 @@ bool DPContainer::is_a (const std::string &t)
 /**
  * declare
  */
-void DPContainer::declare (const char *n, const char *colour)
+void DPContainer::declare (const char *n)
 {
 	type.push_back (n);
 	name = n;
-	if (colour) {
-		dot_colour = colour;
-	}
 }
 
 

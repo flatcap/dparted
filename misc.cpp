@@ -30,7 +30,7 @@
  */
 Misc::Misc (void)
 {
-	declare ("misc", "orange");
+	declare ("misc");
 }
 
 /**

@@ -43,6 +43,23 @@
 #include "utils.h"
 #include "log_trace.h"
 
+/**
+ * get_colour
+ */
+static std::string
+get_colour (DPContainer *c)
+{
+	if (c->is_a ("block"))      return "#aaffaa";
+	if (c->is_a ("filesystem")) return "#bbffff";
+	if (c->is_a ("table"))      return "#ffbbbb";
+	if (c->is_a ("partition"))  return "#ffffdd";
+	if (c->is_a ("whole"))      return "#ccccff";
+	if (c->is_a ("misc"))       return "orange";
+
+	return "white";
+}
+
+
 #if 0
 /**
  * dot_row (bool)
@@ -550,12 +567,9 @@ dump_dot_inner (std::vector <DPContainer*> v)
 		if (c->name.empty()) {
 			c->name = "UNKNOWN";
 		}
-		if (c->dot_colour.empty()) {
-			//log_error ("empty colour on %s\n", c->name.c_str());
-			c->dot_colour = "white";
-		}
 
-		dot << "obj_" << (void*) c << " [fillcolor=\"" << c->dot_colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+		std::string colour = get_colour (c);
+		dot << "obj_" << (void*) c << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << "</b></font></td></tr>\n";
 
 		std::string type = c->type.back();

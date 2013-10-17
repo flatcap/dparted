@@ -40,7 +40,7 @@
  */
 Block::Block (void)
 {
-	declare ("block", "#aaffaa");
+	declare ("block");
 }
 
 /**

@@ -85,12 +85,10 @@ public:
 	std::vector<std::string> type;
 
 	FILE		*fd;
-	std::string	 dot_colour;
 	int		 ref_count;
 
 protected:
-	void declare (const char *name, const char *colour = NULL);
-
+	void declare (const char *name);
 private:
 
 };

@@ -33,7 +33,7 @@
  */
 Table::Table (void)
 {
-	declare ("table", "#ffbbbb");
+	declare ("table");
 }
 
 /**
