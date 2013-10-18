@@ -20,6 +20,7 @@
 #include "gtkmm/main.h"
 #include <sys/types.h>
 
+#include <iostream>
 #include <cstdlib>
 #include <queue>
 #include <string>
@@ -159,8 +160,6 @@ int main (int argc, char *argv[])
 		Disk::discover (top_level, probe_queue);
 	}
 
-	//XXX LVMGroup::find_devices (disks);
-
 	// Process the probe_queue
 	DPContainer *item = NULL;
 	//XXX deque?
@@ -176,6 +175,12 @@ int main (int argc, char *argv[])
 			//probe_queue.push (found);
 		}
 	}
+
+#if 1
+	printf ("------------------------------------------------------------\n");
+	top_level.dump_objects();
+	printf ("------------------------------------------------------------\n");
+#endif
 
 #if 1
 	for (auto c : top_level.children) {

@@ -64,7 +64,7 @@ static bool is_luks (unsigned char *buffer, int bufsize)
 
 	if (strncmp ((const char *) buffer, signature, strlen (signature)))
 		return false;
-#if 0
+#if 1
 	log_info ("LUKS:\n");
 	log_info ("\tversion:     %d\n", *(short int*) (buffer+6));
 	log_info ("\tcipher name: %s\n", buffer+8);
@@ -106,18 +106,20 @@ DPContainer * Misc::probe (DPContainer &top_level, DPContainer *parent, unsigned
 	Misc *m = NULL;
 
 	if (is_empty (buffer, bufsize)) {
-		//log_error ("probe empty\n");
+		log_error ("probe empty\n");
 		m = new Misc;
 		m->name = "zero";
 	} else if (is_luks (buffer, bufsize)) {
-		//log_error ("probe luks\n");
+		log_error ("probe luks\n");
 		m = new Misc;
 		m->name = "luks";
 	} else if (is_random (buffer, bufsize)) {
-		//log_error ("probe random\n");
+		log_error ("probe random\n");
 		m = new Misc;
 		m->name = "random";
 	}
+
+	parent->add_child (m);
 
 	if (m) {
 		m->bytes_size = parent->bytes_size;

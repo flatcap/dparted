@@ -56,8 +56,6 @@ public:
 
 	static unsigned int find_devices (DPContainer &list);
 
-	friend class ProbeDisk;
-
 	std::string mounts;	//XXX vector
 
 	static void discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue);

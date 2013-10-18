@@ -87,6 +87,8 @@ public:
 	FILE		*fd;
 	int		 ref_count;
 
+	void dump_objects (int indent = 0);
+
 protected:
 	void declare (const char *name);
 private:

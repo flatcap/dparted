@@ -35,6 +35,7 @@ public:
 
 	// my volume
 	std::string vol_name;
+
 protected:
 
 private:

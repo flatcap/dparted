@@ -22,6 +22,9 @@
 
 #include "table.h"
 
+/**
+ * struct partition
+ */
 struct partition {
 	long long start;
 	long long size;

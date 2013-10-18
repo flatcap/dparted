@@ -88,7 +88,7 @@ void fd_probe_children (DPContainer *item)
 	// recurse through children and add_probe()
 	if (item->children.size() == 0) {
 		//log_info ("PROBE: %s\n", item->name.c_str());
-		if (!item->is_a ("volume"))	//RAR tmp
+		//if (!item->is_a ("volume"))	//RAR tmp
 			queue_add_probe (item);
 	}
 
@@ -103,7 +103,7 @@ void fd_probe_children (DPContainer *item)
 std::vector<std::string>
 fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 
 	std::vector<std::string> devices;
 	std::string command;
@@ -180,6 +180,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 			//log_info ("table already exists: %s\n", pv_uuid.c_str());
 		} else {
 			log_error ("table didn't already exist: %s\n", pv_uuid.c_str());
+			log_debug ("%s\n\n", line.c_str());
 			vg_seg = new LVMTable;
 			//log_debug ("new LVMTable (%p)\n", vg_seg);
 			cont->add_child (vg_seg);	//RAR this could be left to find_devices, there don't need top_level fn param
@@ -237,7 +238,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
  */
 void fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vector<std::string>())
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 
 	std::string command;
 	std::vector<std::string> output;
@@ -330,7 +331,7 @@ void fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vec
  */
 void fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 
 	std::string command;
 	std::vector<std::string> output;
@@ -549,7 +550,7 @@ void LVMGroup::find_devices (DPContainer &disks)
 void
 LVMGroup::discover (DPContainer &top_level, LVMTable *t)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 
 	std::string vol_name = t->vol_name;
 	std::vector<std::string> devices;

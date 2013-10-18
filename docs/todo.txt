@@ -189,6 +189,7 @@ useful tools
 	lsblk
 	findmnt
 	blockdev
+	dmsetup
 
 blockdev --getsize /dev/sda
 976773168				# size in 512 byte blocks
