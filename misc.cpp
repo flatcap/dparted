@@ -102,7 +102,7 @@ static bool is_random (unsigned char *buffer, int bufsize)
  */
 DPContainer * Misc::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	Misc *m = NULL;
 
 	if (is_empty (buffer, bufsize)) {

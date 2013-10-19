@@ -129,7 +129,7 @@ void DPContainer::add_child (DPContainer *child)
 		children.push_back (child);
 	}
 
-	//log_debug ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
+	//log_debug ("insert: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
 	child->ref();
 	child->parent = this;

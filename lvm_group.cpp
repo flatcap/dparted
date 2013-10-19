@@ -103,7 +103,7 @@ void fd_probe_children (DPContainer *item)
 std::vector<std::string>
 fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	std::vector<std::string> devices;
 	std::string command;
@@ -171,13 +171,13 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		//log_debug ("\t%s\n", seg_id.c_str());
 
 		DPContainer *cont = top_level.find_device (pv_name);
-		//log_debug ("cont for %s = %p\n", pv_name.c_str(), cont);
+		log_debug ("cont for %s = %p\n", pv_name.c_str(), (void*) cont);
 
 		LVMTable *vg_seg = NULL;
-		//log_info ("find: %s\n", pv_uuid.c_str());
+		log_info ("find: %s\n", pv_uuid.c_str());
 		vg_seg = dynamic_cast<LVMTable*> (cont->find_uuid (pv_uuid));
 		if (vg_seg) {
-			//log_info ("table already exists: %s\n", pv_uuid.c_str());
+			log_info ("table already exists: %s\n", pv_uuid.c_str());
 		} else {
 			log_error ("table didn't already exist: %s\n", pv_uuid.c_str());
 			log_debug ("%s\n\n", line.c_str());
@@ -550,7 +550,7 @@ void LVMGroup::find_devices (DPContainer &disks)
 void
 LVMGroup::discover (DPContainer &top_level, LVMTable *t)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	std::string vol_name = t->vol_name;
 	std::vector<std::string> devices;

@@ -156,7 +156,7 @@ int main (int argc, char *argv[])
 			close (fd);
 		}
 	} else {
-		//Loop::discover (top_level, probe_queue);
+		Loop::discover (top_level, probe_queue);
 		Disk::discover (top_level, probe_queue);
 	}
 
@@ -182,7 +182,7 @@ int main (int argc, char *argv[])
 	printf ("------------------------------------------------------------\n");
 #endif
 
-#if 1
+#if 0
 	for (auto c : top_level.children) {
 		std::vector<DPContainer*> dummy;
 		dummy.push_back(c);
