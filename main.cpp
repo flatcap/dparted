@@ -182,11 +182,15 @@ int main (int argc, char *argv[])
 	printf ("------------------------------------------------------------\n");
 #endif
 
-#if 0
-	for (auto c : top_level.children) {
-		std::vector<DPContainer*> dummy;
-		dummy.push_back(c);
-		display_dot (dummy);
+#if 1
+	if (argc != 1) {
+		display_dot (top_level.children);
+	} else {
+		for (auto c : top_level.children) {
+			std::vector<DPContainer*> dummy;
+			dummy.push_back(c);
+			display_dot (dummy);
+		}
 	}
 #endif
 

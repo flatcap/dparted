@@ -597,8 +597,8 @@ dump_dot_inner (std::vector <DPContainer*> v)
 
 		dot << "</table>>];\n";
 
-		if (c->parent) {
-			dot << "obj_" << (void*) c->parent << " -> obj_" << (void*) c << ";\n";
+		for (auto c2 : c->children) {
+			dot << "obj_" << (void*) c << " -> obj_" << (void*) c2 << ";\n";
 		}
 
 		dot << dump_dot_inner (c->children);
