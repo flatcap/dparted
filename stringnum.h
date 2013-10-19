@@ -20,6 +20,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <inttypes.h>
 
 /**
  * class StringNum
@@ -36,9 +37,27 @@ public:
 	{
 	}
 
+	StringNum (const std::string &str) : std::string (str)
+	{
+	}
+
+	virtual ~StringNum()
+	{
+	}
+
 	const std::string operator= (const std::string &value)
 	{
 		return std::string::operator= (value);
+	}
+
+	operator bool()
+	{
+		return (strtol (c_str(), NULL, 10) != 0);
+	}
+
+	operator int()
+	{
+		return strtoimax (c_str(), NULL, 10);
 	}
 
 	operator long()
@@ -46,6 +65,7 @@ public:
 		return strtol (c_str(), NULL, 10);
 	}
 
+	//XXX both long and long long are 64 bits
 	operator long long()
 	{
 		return strtoll (c_str(), NULL, 10);

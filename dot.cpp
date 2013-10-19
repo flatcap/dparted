@@ -78,6 +78,7 @@ dot_row (const char *name, bool value)
 	return s.str();
 }
 
+#endif
 /**
  * dot_row (int)
  */
@@ -95,7 +96,6 @@ dot_row (const char *name, int value)
 	return s.str();
 }
 
-#endif
 /**
  * dot_row (long)
  */
@@ -125,7 +125,7 @@ dot_row (const char *name, long long value)
 	s << "<tr>";
 	s << "<td align=\"left\">" << name << "</td>";
 	s << "<td>=</td>";
-#if 1
+#if 0
 	s << "<td align=\"left\">" << str << "</td>";
 #else
 	s << "<td align=\"left\">" << value << " (" << str << ")</td>";
@@ -140,6 +140,23 @@ dot_row (const char *name, long long value)
  */
 static std::string
 dot_row (const char *name, std::string &value)
+{
+	std::ostringstream s;
+
+	s << "<tr>";
+	s << "<td align=\"left\">" << name << "</td>";
+	s << "<td>=</td>";
+	s << "<td align=\"left\">" << value << "</td>";
+	s << "</tr>\n";
+
+	return s.str();
+}
+
+/**
+ * dot_row (char *)
+ */
+static std::string
+dot_row (const char *name, const char *value)
 {
 	std::ostringstream s;
 
@@ -180,7 +197,11 @@ dot_row (const char *name, void *value)
 	s << "<tr>";
 	s << "<td align=\"left\">" << name << "</td>";
 	s << "<td>=</td>";
-	s << "<td align=\"left\">" << value << "</td>";
+	if (value) {
+		s << "<td align=\"left\">" << value << "</td>";
+	} else {
+		s << "<td align=\"left\">NULL</td>";
+	}
 	s << "</tr>\n";
 
 	return s.str();
@@ -196,21 +217,24 @@ dot_container (DPContainer *c)
 	std::ostringstream output;
 	std::string uuid_short = c->uuid;
 
-	if (!uuid_short.empty()) {
+	if (uuid_short.size() > 8) {
 		uuid_short = c->uuid.substr (0, 6) + "...";
 	}
 
 	output << dot_row ("type",          c->type.back());
-	output << dot_row ("name",          c->name);
+	//output << dot_row ("name",          c->name);
 	output << dot_row ("uuid",          uuid_short); //RAR temp
-	output << dot_row ("device",        c->device);
+	if (c->device.empty())
+		output << dot_row ("device", "[inherit]");
+	else
+		output << dot_row ("device", c->device);
 	output << dot_row ("file desc",     c->fd);
 	output << dot_row ("parent_offset", c->parent_offset);
-	//output << dot_row ("block_size",    c->block_size);
+	output << dot_row ("block_size",    c->block_size);
 	output << dot_row ("bytes_size",    c->bytes_size);
 	output << dot_row ("bytes_used",    c->bytes_used);
 	output << dot_row ("bytes_free",    c->bytes_size - c->bytes_used);
-	output << dot_row ("whole",         c->whole);
+	output << dot_row ("whole",         c->whole);		//XXX what's this doing here?
 	//output << dot_row ("parent",        c->parent);
 
 	return output.str();
@@ -265,7 +289,36 @@ dot_loop (Loop *l)
 
 	output << dot_block(dynamic_cast<Block *> (l));
 
-	// no specifics for now
+	std::string flags;
+	if (l->autoclear)	flags += ", autoclear";
+	if (l->partscan)	flags += ", partscan";
+	if (l->deleted)		flags += ", deleted";
+	if (l->read_only)	flags += ", read only";
+	if (flags.empty()) {
+		flags = "n/a";
+	} else {
+		flags = flags.substr(2);
+	}
+
+	// Backing file
+	output << dot_row ("file_name",		l->file_name);
+	output << dot_row ("file_inode",	l->file_inode);
+	output << dot_row ("file_major",	l->file_major);
+	output << dot_row ("file_minor",	l->file_minor);
+
+	// Loop device
+	output << dot_row ("loop_major",	l->loop_major);
+	output << dot_row ("loop_minor",	l->loop_minor);
+	output << dot_row ("offset",		l->offset);
+	output << dot_row ("sizelimit",		l->sizelimit);
+
+	output << dot_row ("flags",		flags);
+#if 1
+	output << dot_row ("autoclear",		l->autoclear);
+	output << dot_row ("partscan",		l->partscan);
+	output << dot_row ("read_only",		l->read_only);
+	output << dot_row ("deleted",		l->deleted);
+#endif
 
 	return output.str();
 }
@@ -498,7 +551,30 @@ dot_lvm_partition (LVMPartition *p)
 
 	output << dot_partition(dynamic_cast<Partition *> (p));
 
-	// no specifics for now
+	output << dot_row ("dev_size",		p->dev_size);
+	output << dot_row ("pe_start",		p->pe_start);
+	output << dot_row ("pv_attr",		p->pv_attr);
+	output << dot_row ("pv_count",		p->pv_count);
+	output << dot_row ("pv_free",		p->pv_free);
+	output << dot_row ("pv_name",		p->pv_name);
+	output << dot_row ("pv_pe_alloc",	p->pv_pe_alloc);
+	output << dot_row ("pv_pe_count",	p->pv_pe_count);
+	output << dot_row ("pv_size",		p->pv_size);
+	output << dot_row ("pv_used",		p->pv_used);
+	output << dot_row ("pv_uuid",		p->pv_uuid);
+
+	output << dot_row ("pvseg_size",	p->pvseg_size);
+	output << dot_row ("pvseg_start",	p->pvseg_start);
+
+	output << dot_row ("lv_name",		p->lv_name);
+	output << dot_row ("lv_type",		p->lv_type);
+	output << dot_row ("lv_uuid",		p->lv_uuid);
+	output << dot_row ("segtype",		p->segtype);
+
+	output << dot_row ("vg_extent",		p->vg_extent);
+	output << dot_row ("vg_name",		p->vg_name);
+	output << dot_row ("vg_seqno",		p->vg_seqno);
+	output << dot_row ("vg_uuid",		p->vg_uuid);
 
 	return output.str();
 }
@@ -637,7 +713,7 @@ display_dot (std::vector <DPContainer*> v)
 {
 	std::string input = dump_dot(v);
 
-	execute_command2 ("dot -Tpng | display -resize 50% - &", input);
+	execute_command2 ("dot -Tpng | display -resize 60% - &", input);
 }
 
 

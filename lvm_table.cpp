@@ -26,7 +26,7 @@
 #include "lvm_group.h"
 #include "lvm_partition.h"
 
-#include "variant.h"
+#include "utils.h"
 
 /**
  * LVMTable
@@ -134,8 +134,8 @@ void fd_pvs (DPContainer *parent)
 		vol_seg->pvseg_start	= tags["LVM2_PVSEG_START"];
 
 		vol_seg->lv_name	= tags["LVM2_LV_NAME"];
-		vol_seg->lv_type	= tags["LVM2_LV_UUID"];
-		vol_seg->lv_uuid	= tags["LVM2_SEGTYPE"];
+		vol_seg->lv_type	= tags["LVM2_SEGTYPE"];
+		vol_seg->lv_uuid	= tags["LVM2_LV_UUID"];
 
 		vol_seg->vg_extent	= tags["LVM2_VG_EXTENT_SIZE"];
 		vol_seg->vg_name	= tags["LVM2_VG_NAME"];
@@ -147,6 +147,7 @@ void fd_pvs (DPContainer *parent)
 
 		vol_seg->bytes_size	 = vol_seg->pvseg_size;
 		vol_seg->bytes_size	*= vol_seg->vg_extent;
+		vol_seg->bytes_used	 = vol_seg->bytes_size;
 		vol_seg->parent_offset	 = vol_seg->pvseg_start;
 		vol_seg->parent_offset	*= vol_seg->vg_extent;
 
@@ -208,6 +209,13 @@ DPContainer * LVMTable::probe (DPContainer &top_level, DPContainer *parent, unsi
 
 	parent->open_device();
 	parent->read_data (4608, bufsize2, &buffer2[0]);	// check read num
+
+	char *ptr = (char*) &buffer[0];
+	//dump_hex2 (ptr, 0, 600);
+	t->bytes_size = *(uint64_t*) (ptr+576);
+	t->parent_offset = 0;		//XXX what about if we're in a partition?
+	t->bytes_used = 1048576*4;	//XXX pv metadata	XXX plus any slack space at the end (3MiB) check pv_pe_count
+	//printf ("size of %s = %lld\n", t->uuid.c_str(), t->bytes_size);
 
 	//dump_hex2 (&buffer2[0], 0, bufsize2);
 

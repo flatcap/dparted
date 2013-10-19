@@ -142,7 +142,7 @@ unsigned int Disk::find_devices (DPContainer &list)
 	std::string mount;
 	int kernel_major = -1;
 	int kernel_minor = -1;
-	long long size;
+	long size;
 	std::string part;
 	int scan;
 	std::map<std::string,StringNum> tags;

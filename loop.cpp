@@ -15,19 +15,80 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
+#include <sstream>
 
 #include "loop.h"
 #include "log_trace.h"
 #include "utils.h"
 #include "main.h"
+#include "stringnum.h"
 
 /**
- * Loop
+ * Loop (void)
  */
-Loop::Loop (void)
+Loop::Loop (void) :
+	file_inode(0),
+	file_major(0),
+	file_minor(0),
+	loop_major(0),
+	loop_minor(0),
+	offset(0),
+	sizelimit(0),
+	autoclear(false),
+	partscan(false),
+	read_only(false),
+	deleted(false)
 {
 	declare ("loop");
+}
+
+/**
+ * Loop (std::string)
+ */
+Loop::Loop (const std::string losetup) :
+	Loop()
+{
+	std::vector<std::string> parts;
+
+	explode_n (" :", losetup, parts, 12);
+
+#if 0
+	printf ("parts:\n");
+	for (auto i : parts) {
+		std::cout << "\t" << i << std::endl;
+	}
+	printf ("\n");
+#endif
+
+	//XXX validate all input, else throw()
+
+	device     = parts[0];
+	file_name  = parts[11];
+
+	autoclear  = StringNum (parts[ 1]);
+	file_inode = StringNum (parts[ 2]);
+	file_major = StringNum (parts[ 3]);
+	file_minor = StringNum (parts[ 4]);
+	loop_major = StringNum (parts[ 5]);
+	loop_minor = StringNum (parts[ 6]);
+	offset     = StringNum (parts[ 7]);
+	partscan   = StringNum (parts[ 8]);
+	read_only  = StringNum (parts[ 9]);
+	sizelimit  = StringNum (parts[10]);
+
+	std::size_t len = file_name.size();
+	if ((len > 10) && (file_name.substr (len-10) == " (deleted)")) {
+		file_name.erase(len-10);
+		deleted = true;
+		printf ("%s is deleted\n", device.c_str());
+	}
+
+	//XXX tmp
+	kernel_major = loop_major;
+	kernel_minor = loop_minor;
 }
 
 /**
@@ -39,10 +100,9 @@ Loop::~Loop()
 
 
 /**
- * discover
+ * losetup
  */
-void
-Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
+bool Loop::losetup (std::vector <std::string> &output, std::string device)
 {
 	/* Limitations of using "losetup" output:
 	 *	Filename begins, or ends, with whitespace
@@ -68,57 +128,40 @@ Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 
 
 	std::string command = "losetup --noheadings --output name,autoclear,back-ino,back-maj:min,maj:min,offset,partscan,ro,sizelimit,back-file";
-	std::vector <std::string> output;
 
-	if (execute_command (command, output) < 0) {
-		//XXX distinguish between zero loop devices and an error
-		return;
+	if (!device.empty()) {
+		command += " " + device;
 	}
 
-	std::vector<std::string> parts;
-	int tmp;
+	output.clear();
+	if (execute_command (command, output) < 0) {
+		//XXX distinguish between zero loop devices and an error
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * discover
+ */
+void
+Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
+{
+	std::vector <std::string> output;
+
+	losetup (output);		//XXX retval
 
 	for (auto line : output) {
-		explode_n (" :", line, parts, 12);
+		Loop *l = new Loop (line);
 
-		//XXX validate all input, before creating Loop
-		Loop *l = new Loop();
-
-		l->device    = parts[0];
-		l->file_name = parts[11];
-
-		// XXX utils StringNum
-		tmp = -1; sscanf (parts[ 1].c_str(), "%d", &tmp); l->autoclear  = (tmp == 1);
-		tmp = -1; sscanf (parts[ 2].c_str(), "%d", &tmp); l->file_inode = tmp;
-		tmp = -1; sscanf (parts[ 3].c_str(), "%d", &tmp); l->file_major = tmp;
-		tmp = -1; sscanf (parts[ 4].c_str(), "%d", &tmp); l->file_minor = tmp;
-		tmp = -1; sscanf (parts[ 5].c_str(), "%d", &tmp); l->loop_major = tmp;
-		tmp = -1; sscanf (parts[ 6].c_str(), "%d", &tmp); l->loop_minor = tmp;
-		tmp = -1; sscanf (parts[ 7].c_str(), "%d", &tmp); l->offset     = tmp;
-		tmp = -1; sscanf (parts[ 8].c_str(), "%d", &tmp); l->partscan   = (tmp == 1);
-		tmp = -1; sscanf (parts[ 9].c_str(), "%d", &tmp); l->read_only  = (tmp == 1);
-		tmp = -1; sscanf (parts[10].c_str(), "%d", &tmp); l->sizelimit  = tmp;
-
-		std::size_t len = l->file_name.size();
-		if ((len > 10) && (l->file_name.substr (len-10) == " (deleted)")) {
-			l->file_name.erase(len-10);
-			l->deleted = true;
-			printf ("%s is deleted\n", l->device.c_str());
-		}
-
-		//XXX tmp
-		l->kernel_major = l->loop_major;
-		l->kernel_minor = l->loop_minor;
-
-#if 1
 		l->open_device();
 
 		// move to container::find_size or utils
-		long long seek;
+		off_t size;
 		fseek (l->fd, 0, SEEK_END);
-		seek = ftell (l->fd);
-		l->bytes_size = seek;
-#endif
+		size = ftell (l->fd);
+		l->bytes_size = size;
 
 		top_level.add_child (l);
 		probe_queue.push (l);	// We need to probe
@@ -134,16 +177,35 @@ Loop::identify (DPContainer &top_level, const char *name, int fd, struct stat &s
 	//LOG_TRACE;
 
 	Loop *l = NULL;
-	long long seek;
+	off_t size;
 
-	seek = lseek (fd, 0, SEEK_END);
+	std::vector <std::string> output;
 
-	l = new Loop;
+	losetup (output, name);		//XXX retval, exactly one reply
+
+	//std::cout << output[0] << std::endl;
+
+	l = new Loop (output[0]);
+
+	size = lseek (fd, 0, SEEK_END);
 
 	l->device        = name;
 	l->parent_offset = 0;
-	l->bytes_size    = seek;
+	l->bytes_size    = size;
 	l->bytes_used    = 0;
+
+	size_t i = l->device.find_last_of ('/');
+	if (i == std::string::npos) {
+		l->name = l->device;
+	} else {
+		l->name = l->device.substr(i+1);
+	}
+
+	l->block_size = 512;	//XXX granularity, or blocksize of backing-file fs/disk?
+
+	std::stringstream ss;
+	ss << "[" << l->loop_major << ":" << l->loop_minor << "]";
+	l->uuid = ss.str();
 
 	top_level.add_child (l);
 	queue_add_probe (l);	// queue the container for action

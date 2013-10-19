@@ -30,6 +30,7 @@ class Loop : public Block
 {
 public:
 	Loop (void);
+	Loop (const std::string losetup);
 	virtual ~Loop();
 
 	// Backing file
@@ -39,19 +40,16 @@ public:
 	int		file_minor;
 
 	// Loop device
-	std::string	loop_file;
 	int		loop_major;
 	int		loop_minor;
-	int		sizelimit;
-
-	// Loop settings
 	long		offset;
-	long		size_limit;
+	long		sizelimit;
 	bool		autoclear;
 	bool		partscan;
 	bool		read_only;
 	bool		deleted;
 
+	static bool losetup  (std::vector <std::string> &output, std::string device = std::string());
 	static void discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue);
 	static void identify (DPContainer &top_level, const char *name, int fd, struct stat &st);
 
