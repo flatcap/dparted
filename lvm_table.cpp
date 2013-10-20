@@ -219,19 +219,21 @@ DPContainer * LVMTable::probe (DPContainer &top_level, DPContainer *parent, unsi
 
 	//dump_hex2 (&buffer2[0], 0, bufsize2);
 
-	auto iter = buffer2.begin();
-	for (;; iter++) {
-		if (*iter == ' ')
-			break;
-	}
+	if (buffer2[0]) {
+		auto iter = buffer2.begin();
+		for (;; iter++) {
+			if (*iter == ' ')
+				break;
+		}
 
-	std::string v(buffer2.begin(), iter);
-	//log_error ("vol name = '%s'\n", v.c_str());
-	t->vol_name = v;
+		std::string v(buffer2.begin(), iter);
+		//log_error ("vol name = '%s'\n", v.c_str());
+		t->vol_name = v;
 #if 0
-	std::string config (buffer2.begin(), buffer2.end());
-	printf ("config = \n%s\n", buffer2.data());
+		std::string config (buffer2.begin(), buffer2.end());
+		printf ("config = \n%s\n", buffer2.data());
 #endif
+	}
 
 	parent->add_child (t);
 

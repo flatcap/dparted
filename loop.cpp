@@ -83,7 +83,7 @@ Loop::Loop (const std::string losetup) :
 	if ((len > 10) && (file_name.substr (len-10) == " (deleted)")) {
 		file_name.erase(len-10);
 		deleted = true;
-		printf ("%s is deleted\n", device.c_str());
+		//printf ("%s is deleted\n", device.c_str());
 	}
 
 	//XXX tmp
