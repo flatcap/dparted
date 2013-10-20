@@ -396,7 +396,9 @@ dot_lvm_table (LVMTable *t)
 
 	output << dot_table(dynamic_cast<Table *> (t));
 
-	// no specifics for now
+	output << dot_row ("vol_name", t->vol_name);
+	output << dot_row ("seq_num",  t->seq_num);
+	//output << dot_row ("config",   t->config);
 
 	return output.str();
 }

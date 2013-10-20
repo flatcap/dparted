@@ -35,9 +35,11 @@ public:
 
 	// my volume
 	std::string vol_name;
+	std::string config;
+
+	int seq_num;
 
 protected:
-
 private:
 
 };

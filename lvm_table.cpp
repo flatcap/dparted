@@ -25,13 +25,15 @@
 #include "main.h"
 #include "lvm_group.h"
 #include "lvm_partition.h"
+#include "lvm2.h"
 
 #include "utils.h"
 
 /**
  * LVMTable
  */
-LVMTable::LVMTable (void)
+LVMTable::LVMTable (void) :
+	seq_num(0)
 {
 	declare ("lvm_table");
 }
@@ -47,28 +49,25 @@ LVMTable::~LVMTable()
 /**
  * read_uuid_string
  */
-std::string read_uuid_string (unsigned char *buffer)
+std::string read_uuid_string (char *buffer)
 {
-	char text[33];
-	std::string dashes;
+	if (!buffer)
+		return "";
 
-	memcpy (text, buffer, sizeof (text) - 1);
-	text[sizeof (text) - 1] = 0;
+	std::string uuid ((char*) buffer, 32);
 
-	dashes = text;
+	uuid.insert (26, 1, '-');
+	uuid.insert (22, 1, '-');
+	uuid.insert (18, 1, '-');
+	uuid.insert (14, 1, '-');
+	uuid.insert (10, 1, '-');
+	uuid.insert ( 6, 1, '-');
 
-	dashes = dashes.substr(0,6) + "-" +
-		 dashes.substr(6,4) + "-" +
-		 dashes.substr(10,4) + "-" +
-		 dashes.substr(14,4) + "-" +
-		 dashes.substr(18,4) + "-" +
-		 dashes.substr(22,4) + "-" +
-		 dashes.substr(26,6);
-	return dashes;
+	return uuid;
 }
 
 /**
- * fd_pvs - Attach all the Segments (LVMGroup and Volumes)
+ * fd_pvs
  */
 void fd_pvs (DPContainer *parent)
 {
@@ -183,57 +182,213 @@ void fd_pvs (DPContainer *parent)
 	//log_debug ("\n");
 }
 
+
+/**
+ * get_label_header
+ */
+static struct label_header *
+get_label_header (unsigned char *buffer)
+{
+	struct label_header *lh = (struct label_header *) buffer;
+
+	if (!lh)
+		return NULL;
+
+	if (strncmp ((char*) lh->id, "LABELONE", 8))
+		return NULL;
+
+	if (strncmp ((char*) lh->type, "LVM2 001", 8))
+		return NULL;
+
+	//XXX validate crc, range check offset
+	return lh;
+}
+
+/**
+ * get_pv_header
+ */
+static struct pv_header *
+get_pv_header (unsigned char *buffer)
+{
+	struct pv_header *ph = (struct pv_header *) buffer;
+
+	if (!ph)
+		return NULL;
+
+	//XXX validate chars in uuid, disk_areas
+	return ph;
+}
+
+/**
+ * get_mda_header
+ */
+static struct mda_header *
+get_mda_header (unsigned char *buffer)
+{
+	struct mda_header *mh = (struct mda_header *) buffer;
+
+	if (!mh)
+		return NULL;
+
+	if (strncmp ((char*) mh->magic, FMTT_MAGIC, 16))
+		return NULL;
+
+	if (mh->version != FMTT_VERSION)
+		return NULL;
+
+	//XXX validate checksum
+	return mh;
+}
+
+/**
+ * get_seq_num (const std::string &config)
+ */
+static int
+get_seq_num (const std::string &config)
+{
+	size_t index = config.find ("seqno = ");
+	size_t end   = config.find ('\n', index);
+
+	if (index == std::string::npos)
+		return 0;
+
+	//printf ("index = %ld, end = %ld, count = %ld\n", index, end, end-index-8);
+
+	StringNum sn (config.substr (index+8, end-index-7));
+	//printf ("num = %.5s\n", sn.c_str());
+
+	return sn;
+}
+
+
+#if 0
+/**
+ * format_config
+ */
+static void
+format_config (std::string &config)
+{
+	size_t index = 0;
+	size_t first;
+	std::string indent;
+
+	for (int i = 0; i < 1000; i++) {
+		first = config.find_first_of ("[]{}\n", index);
+		if (first == std::string::npos)
+			break;
+		//printf ("first = %lu '%c'\n", first, config[first] == '\n' ? '@' : config[first]);
+
+		switch (config[first]) {
+			case '[':
+			case '{':
+				indent += "\t";
+				break;
+			case ']':
+			case '}':
+				indent = indent.substr(1);
+				if (config[first-1] == '\t') {
+					config.erase(first-1, 1);
+					first--;
+				}
+				break;
+			case '\n':
+				if (config[first+1] != '\n') {
+					config.insert (first+1, indent);
+					first += indent.size();
+				}
+				break;
+		}
+
+		index = first + 1;
+	}
+}
+
+#endif
 /**
  * probe
  */
-DPContainer * LVMTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer *
+LVMTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
 	LVMTable *t = NULL;
 
-	if (strncmp ((const char*) buffer+512, "LABELONE", 8))
+	//XXX check bufsize gives us all the data we need
+
+	struct label_header *lh = get_label_header (buffer+512);
+	if (!lh)
 		return NULL;
 
-	if (strncmp ((const char*) buffer+536, "LVM2 001", 8))
+	//printf ("'%.8s', %lu, 0x%8x, %u, '%.8s'\n", lh->id, lh->sector_xl, lh->crc_xl, lh->offset_xl, lh->type);
+
+	struct pv_header *ph = get_pv_header (buffer + 512 + lh->offset_xl);
+	if (!ph)
 		return NULL;
+
+	std::string pv_uuid = read_uuid_string ((char*) ph->pv_uuid);
+
+	//printf ("%s, %lu (%s)\n", pv_uuid.c_str(), ph->device_size_xl, get_size (ph->device_size_xl).c_str());
+
+#if 0
+	printf ("Disk locations:\n");
+	int i;
+	for (i = 0; i < 8; i++) {
+		if (ph->disk_areas_xl[i].offset == 0)
+			break;
+		printf ("\t%lu, %lu\n", ph->disk_areas_xl[i].offset, ph->disk_areas_xl[i].size);
+	}
+#endif
+
+#if 0
+	printf ("Metadata locations:\n");
+	for (i++; i < 8; i++) {
+		if (ph->disk_areas_xl[i].offset == 0)
+			break;
+		printf ("\t%lu, %lu (%lu)\n", ph->disk_areas_xl[i].offset, ph->disk_areas_xl[i].size, ph->disk_areas_xl[i].offset + ph->disk_areas_xl[i].size);
+	}
+#endif
+
+	//XXX 4096 from metadata location
+	struct mda_header *mh = get_mda_header (buffer + 4096);
+	if (!mh)
+		return NULL;
+
+	//printf ("0x%08x, '%.16s', %u, %lu, %lu\n", mh->checksum_xl, mh->magic, mh->version, mh->start, mh->size);
+
+#if 0
+	printf ("Metadata:\n");
+	for (i = 0; i < 4; i++) {
+		if (mh->raw_locns[i].offset == 0)
+			break;
+		printf ("\t%lu (0x%lx), %lu, 0x%08x, %u\n", mh->raw_locns[i].offset, mh->raw_locns[i].offset, mh->raw_locns[i].size, mh->raw_locns[i].checksum, mh->raw_locns[i].flags);
+	}
+#endif
+
+	int offset = mh->raw_locns[0].offset;
+	int size   = mh->raw_locns[0].size;
+
+	if ((offset+size) > bufsize)
+		return NULL;
+
+	std::string config ((char*) (buffer+4096+offset), size-1);
+
+	int seq_num = get_seq_num (config);
+	//printf ("seq num = %d\n", seq_num);
+
+#if 0
+	printf ("Config (0x%0x):\n", 4096+offset);
+	format_config (config);
+	std::cout << "\n" << config << "\n";
+#endif
 
 	t = new LVMTable();
 	//log_debug ("new LVMTable (%p)\n", t);
 
-	t->uuid = read_uuid_string (buffer+544);
-
-	//log_info ("table: %s\n", t->uuid.c_str());
-
-	const int bufsize2 = 4096;
-	std::vector<unsigned char> buffer2 (bufsize2);
-
-	parent->open_device();
-	parent->read_data (4608, bufsize2, &buffer2[0]);	// check read num
-
-	char *ptr = (char*) &buffer[0];
-	//dump_hex2 (ptr, 0, 600);
-	t->bytes_size = *(uint64_t*) (ptr+576);
+	t->bytes_size = ph->device_size_xl;
 	t->parent_offset = 0;		//XXX what about if we're in a partition?
-	t->bytes_used = 1048576*4;	//XXX pv metadata	XXX plus any slack space at the end (3MiB) check pv_pe_count
-	//printf ("size of %s = %lld\n", t->uuid.c_str(), t->bytes_size);
-
-	//dump_hex2 (&buffer2[0], 0, bufsize2);
-
-	if (buffer2[0]) {
-		auto iter = buffer2.begin();
-		for (;; iter++) {
-			if (*iter == ' ')
-				break;
-		}
-
-		std::string v(buffer2.begin(), iter);
-		//log_error ("vol name = '%s'\n", v.c_str());
-		t->vol_name = v;
-#if 0
-		std::string config (buffer2.begin(), buffer2.end());
-		printf ("config = \n%s\n", buffer2.data());
-#endif
-	}
+	t->bytes_used = 0;
+	t->config = config;
+	t->seq_num = seq_num;
 
 	parent->add_child (t);
 

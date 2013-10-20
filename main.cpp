@@ -182,7 +182,7 @@ int main (int argc, char *argv[])
 	printf ("------------------------------------------------------------\n");
 #endif
 
-#if 0
+#if 1
 	if (argc != 1) {
 		display_dot (top_level.children);
 	} else {
