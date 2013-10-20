@@ -241,7 +241,7 @@ get_mda_header (unsigned char *buffer)
 }
 
 /**
- * get_seq_num (const std::string &config)
+ * get_seq_num
  */
 static int
 get_seq_num (const std::string &config)
@@ -258,6 +258,20 @@ get_seq_num (const std::string &config)
 	//printf ("num = %.5s\n", sn.c_str());
 
 	return sn;
+}
+
+/**
+ * get_vol_name
+ */
+static std::string
+get_vol_name (const std::string &config)
+{
+	size_t end = config.find (" {\n");
+
+	if (end == std::string::npos)
+		return "";
+
+	return config.substr (0, end);
 }
 
 
@@ -375,6 +389,8 @@ LVMTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	int seq_num = get_seq_num (config);
 	//printf ("seq num = %d\n", seq_num);
 
+	std::string vol_name = get_vol_name (config);
+
 #if 0
 	printf ("Config (0x%0x):\n", 4096+offset);
 	format_config (config);
@@ -389,6 +405,7 @@ LVMTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	t->bytes_used = 0;
 	t->config = config;
 	t->seq_num = seq_num;
+	t->vol_name = vol_name;
 
 	parent->add_child (t);
 
