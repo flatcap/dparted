@@ -124,7 +124,7 @@ DPContainer * Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigne
 
 	// and some other quick checks
 
-	m = new Msdos;
+	m = new Msdos();
 
 	m->name = "msdos";
 	m->bytes_size = parent->bytes_size;
@@ -178,7 +178,7 @@ DPContainer * Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigne
 			c->parent_offset = vp[i].start;
 			c->device = part_name.str();
 		} else {
-			Partition *p = new Partition;
+			Partition *p = new Partition();
 			p->ptype = vp[i].type;
 			c = p;
 			c->name = "partition";

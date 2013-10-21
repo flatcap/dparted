@@ -44,7 +44,7 @@ DPContainer::DPContainer (void) :
 	bytes_used (0),
 	whole (NULL),
 	parent (NULL),
-	fd (NULL),		//XXX WHAT?
+	fd (NULL),
 	ref_count (1)
 {
 	declare ("container");

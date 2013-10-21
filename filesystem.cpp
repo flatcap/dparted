@@ -175,7 +175,7 @@ DPContainer * Filesystem::probe (DPContainer &top_level, DPContainer *parent, un
 
 	//log_debug ("NAME = %s\n", name.c_str());
 	if (!name.empty()) {
-		f = new Filesystem;
+		f = new Filesystem();
 		f->name = name;
 		//f->device = parent->device;
 		f->parent_offset = 0;

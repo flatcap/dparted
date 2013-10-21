@@ -106,11 +106,11 @@ DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned 
 	Partition *p = NULL;
 	buffer += 1024;	//bufsize -= 1024; for range checking
 #if 0
-	p = new Partition;
+	p = new Partition();
 	p->bytes_size = g->bytes_size / 2;
 	p->parent_offset = g->bytes_size / 4;
 	g->add_child (p);
-	Filesystem *fs = new Filesystem;
+	Filesystem *fs = new Filesystem();
 	fs->bytes_size = p->bytes_size;
 	fs->parent_offset = 0;
 	p->add_child (fs);
@@ -121,7 +121,7 @@ DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned 
 			break;
 
 		//log_debug ("new Partition %d\n", i);
-		p = new Partition;
+		p = new Partition();
 		p->bytes_used = 0;
 		p->uuid = read_uuid (buffer+16);
 		//p->part_type_uuid = read_guid (buffer+0);

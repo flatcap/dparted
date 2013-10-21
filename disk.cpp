@@ -32,7 +32,7 @@
 #include "log_trace.h"
 
 /**
- * Disk
+ * Disk (void)
  */
 Disk::Disk (void) :
 	read_only (false),
@@ -80,7 +80,7 @@ bool Disk::find_devices_old (const std::string &name, int fd, struct stat &st, D
 	//log_debug ("%s: %s\n", __FUNCTION__, model.c_str());
 	Disk *d = NULL;
 
-	d = new Disk;
+	d = new Disk();
 
 	//log_debug ("fd = %d\n", fd);
 	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); //XXX replace with ftell (user, not root)
@@ -178,7 +178,7 @@ unsigned int Disk::find_devices (DPContainer &list)
 		log_debug ("\n");
 #endif
 
-		Disk *d = new Disk;
+		Disk *d = new Disk();
 		d->device = "/dev/" + device;
 		d->parent_offset = 0;
 		d->kernel_major = kernel_major;

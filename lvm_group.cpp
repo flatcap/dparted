@@ -143,7 +143,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 
 		vg = vg_lookup[vg_uuid];
 		if (vg == NULL) {
-			vg = new LvmGroup;
+			vg = new LvmGroup();
 			//log_debug ("new LvmGroup (%p)\n", vg);
 			vg->parent = &top_level;	//RAR not nec (done in add_child)
 			//vg->device = "/dev/dm-0"; //RAR what?
@@ -181,7 +181,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		} else {
 			log_error ("table didn't already exist: %s\n", pv_uuid.c_str());
 			log_debug ("%s\n\n", line.c_str());
-			vg_seg = new LvmTable;
+			vg_seg = new LvmTable();
 			//log_debug ("new LvmTable (%p)\n", vg_seg);
 			cont->add_child (vg_seg);	//RAR this could be left to find_devices, there don't need top_level fn param
 			//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", cont, cont->type.back().c_str(), cont->name.c_str(), vg_seg, vg_seg->type.back().c_str(), vg_seg->name.c_str());
@@ -204,7 +204,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		//log_debug ("pv_name = %s\n", pv_name.c_str());
 		vg_seg_lookup[pv_name] = vg_seg;
 #if 0
-		Partition *reserved1 = new Partition;
+		Partition *reserved1 = new Partition();
 		//XXX type = metadata/reserved
 		// get size from LVM2_PE_START
 		reserved1->bytes_size = 1048576;
@@ -215,7 +215,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 #endif
 		//RAR need to calculate this from vg_seg size and vg block size
 #if 0
-		Partition *reserved2 = new Partition;
+		Partition *reserved2 = new Partition();
 		//XXX type = metadata/reserved
 		// get size from LVM2_PV_PE_ALLOC_COUNT and LVM2_PE_START
 		reserved2->bytes_size = 3145728;
@@ -299,7 +299,7 @@ void fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vec
 		if (!vg_seg)
 			continue;			//XXX error?
 
-		LvmPartition *vol_seg = new LvmPartition;
+		LvmPartition *vol_seg = new LvmPartition();
 		//log_debug ("new LvmPartition (%p)\n", vol_seg);
 		vol_seg->name = lv_name;
 		vol_seg->uuid = lv_uuid;
@@ -396,17 +396,17 @@ void fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
 		LvmVolume *v = vol_lookup[vol_id];
 		if (v == NULL) {
 			if (lv_type == "linear") {
-				v = new LvmLinear;
+				v = new LvmLinear();
 				//log_debug ("new LvmLinear (%p)\n", v);
 				std::string seg_id = lv_name + "(0)"; // parent offset
 				vol_seg_lookup[seg_id] = v;
 			} else if (lv_type == "striped") {
-				v = new LvmStripe;
+				v = new LvmStripe();
 				//log_debug ("new LvmStripe (%p)\n", v);
 				std::string seg_id = lv_name + "(0)"; // parent offset
 				vol_seg_lookup[seg_id] = v;
 			} else if (lv_type == "mirror") {
-				v = new LvmMirror;
+				v = new LvmMirror();
 				//log_debug ("new LvmMirror (%p)\n", v);
 				std::string seg_id = lv_name + "(0)"; // parent offset
 				vol_seg_lookup[seg_id] = v;

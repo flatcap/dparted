@@ -53,7 +53,7 @@ bool File::find_devices (const std::string &name, int fd, struct stat &st, DPCon
 {
 	File *f = NULL;
 
-	f = new File;
+	f = new File();
 #if 0
 	log_debug ("dev     = 0x%04lx\n", st.st_dev);
 	log_debug ("ino     = %ld\n",     st.st_ino);

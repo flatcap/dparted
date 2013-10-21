@@ -65,7 +65,7 @@ Extended * Extended::probe (DPContainer &top_level, DPContainer *parent, long of
 	// create partitions
 	// add to extended
 
-	ext = new Extended;
+	ext = new Extended();
 
 	ext->name = "extended";
 	ext->bytes_size = size;
@@ -128,7 +128,7 @@ Extended * Extended::probe (DPContainer &top_level, DPContainer *parent, long of
 			if ((part.type == 0x05) || (part.type == 0x0F)) {
 				table_offset = offset + part.start;
 			} else {
-				c = new Partition;
+				c = new Partition();
 				c->name = "partition";
 				c->bytes_size = part.size;
 
