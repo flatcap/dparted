@@ -35,7 +35,7 @@ public:
 	long		kernel_major;
 	long		kernel_minor;
 
-	virtual int read_data (long long offset, long long size, unsigned char *buffer);
+	virtual int read_data (long offset, long size, unsigned char *buffer);
 
 	std::vector<LvmTable*> tables;
 

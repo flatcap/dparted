@@ -145,7 +145,7 @@ void DPContainer::delete_child (DPContainer *child)
 /**
  * move_child
  */
-void DPContainer::move_child (DPContainer *child, long long offset, long long size)
+void DPContainer::move_child (DPContainer *child, long offset, long size)
 {
 }
 
@@ -181,7 +181,7 @@ std::string DPContainer::get_device_name (void)
 /**
  * get_parent_offset
  */
-long long DPContainer::get_parent_offset (void)
+long DPContainer::get_parent_offset (void)
 {
 	return parent_offset;
 }
@@ -189,7 +189,7 @@ long long DPContainer::get_parent_offset (void)
 /**
  * get_device_space
  */
-unsigned int DPContainer::get_device_space (std::map<long long, long long> &spaces)
+unsigned int DPContainer::get_device_space (std::map<long, long> &spaces)
 {
 	spaces.clear();
 
@@ -203,7 +203,7 @@ unsigned int DPContainer::get_device_space (std::map<long long, long long> &spac
 /**
  * get_size_total
  */
-long long DPContainer::get_size_total (void)
+long DPContainer::get_size_total (void)
 {
 	return bytes_size;
 }
@@ -211,7 +211,7 @@ long long DPContainer::get_size_total (void)
 /**
  * get_size_used
  */
-long long DPContainer::get_size_used (void)
+long DPContainer::get_size_used (void)
 {
 	return bytes_used;
 }
@@ -219,7 +219,7 @@ long long DPContainer::get_size_used (void)
 /**
  * get_size_free
  */
-long long DPContainer::get_size_free (void)
+long DPContainer::get_size_free (void)
 {
 	return bytes_size - bytes_used;
 }
@@ -306,11 +306,11 @@ FILE * DPContainer::open_device (void)
 /**
  * read_data
  */
-int DPContainer::read_data (long long offset, long long size, unsigned char *buffer)
+int DPContainer::read_data (long offset, long size, unsigned char *buffer)
 {
 	// if offset >= 0, seek there
-	long long current = -1;
-	long long bytes = 0;
+	long current = -1;
+	long bytes = 0;
 
 	if (!buffer)
 		return -1;
@@ -330,7 +330,7 @@ int DPContainer::read_data (long long offset, long long size, unsigned char *buf
 	}
 
 	if (current < 0) {
-		log_error ("seek to %lld failed on %s (%p)\n", offset, device.c_str(), (void*) fd);
+		log_error ("seek to %ld failed on %s (%p)\n", offset, device.c_str(), (void*) fd);
 		perror ("seek");
 		return -1;
 	}

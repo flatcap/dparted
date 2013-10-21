@@ -27,12 +27,12 @@
 unsigned int execute_command2 (const std::string &command, std::string &input);
 unsigned int execute_command (const std::string &command, std::vector<std::string> &output);
 unsigned int execute_command3 (const std::string &command, std::string &output);
-std::string get_size (long long size);
-long long extract_number (const std::string &text, unsigned int &start);
+std::string get_size (long size);
+long extract_number (const std::string &text, unsigned int &start);
 std::string extract_quoted_string (const std::string &text, unsigned int &index);
 std::string extract_bare_string (const std::string &text, unsigned int &index);
 long extract_quoted_long (const std::string &text, unsigned int &index);
-long long extract_quoted_long_long (const std::string &text, unsigned int &index);
+long extract_quoted_long_long (const std::string &text, unsigned int &index);
 int extract_dev_range (const std::string &text, std::string &device, int &start, int &finish, int element = 0);
 unsigned int parse_tagged_line (const std::string &line, const char *separators, std::map<std::string,StringNum> &tags, bool clear_map = true);
 unsigned int explode (const char *separators, const std::string &input, std::vector<std::string> &parts);
@@ -41,7 +41,7 @@ std::string read_file_line (const std::string &filename);
 std::string read_uuid (unsigned char *buffer);
 void dump_hex (unsigned char *buffer, int bufsize);
 void dump_hex2 (void *buf, int start, int length);
-long long align (long long num, long long round);
+long align (long num, long round);
 
 #endif // _UTILS_H_
 

@@ -49,7 +49,7 @@ Extended::~Extended()
 /**
  * probe
  */
-Extended * Extended::probe (DPContainer &top_level, DPContainer *parent, long long offset, long long size)
+Extended * Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long size)
 {
 	//LOG_TRACE;
 	Extended *ext = NULL;
@@ -58,7 +58,7 @@ Extended * Extended::probe (DPContainer &top_level, DPContainer *parent, long lo
 	int bufsize = 512;
 	//off_t seek = 0;
 	//ssize_t count = 0;
-	long long table_offset = offset;
+	long table_offset = offset;
 
 	// create extended
 	// add to parent

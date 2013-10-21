@@ -117,7 +117,7 @@ DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned 
 	return g;
 #endif
 	for (int i = 0; i < 128; i++, buffer += 128) {
-		if (*(long long*) (buffer+32) == 0)
+		if (*(long*) (buffer+32) == 0)
 			break;
 
 		//log_debug ("new Partition %d\n", i);
@@ -135,8 +135,8 @@ DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned 
 		part_name << (i+1);
 		p->device = part_name.str();
 
-		long long start  = *(long long*) (buffer+32);
-		long long finish = *(long long*) (buffer+40);
+		long start  = *(long*) (buffer+32);
+		long finish = *(long*) (buffer+40);
 
 		p->parent_offset = start * 512;
 		p->bytes_size = (finish - start + 1) * 512;
@@ -153,8 +153,8 @@ DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned 
 #if 0
 		std::string s = get_size (p->bytes_size);
 		log_debug ("\t\tlabel  = %s\n",   p->name.c_str());
-		log_debug ("\t\t\tstart  = %lld\n", *(long long*) (buffer+32) * 512);
-		log_debug ("\t\t\tfinish = %lld\n", *(long long*) (buffer+40) * 512);
+		log_debug ("\t\t\tstart  = %lld\n", *(long*) (buffer+32) * 512);
+		log_debug ("\t\t\tfinish = %lld\n", *(long*) (buffer+40) * 512);
 		log_debug ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
 #endif
 		g->add_child (p);

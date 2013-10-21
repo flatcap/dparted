@@ -68,8 +68,8 @@ private:
 	void draw_block     (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect &space, Rect *right = NULL);
 
 	void draw_grid        (const Cairo::RefPtr<Cairo::Context> &cr);
-	void draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long long max_size);
-	void draw_grid_log    (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long long max_size);
+	void draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size);
+	void draw_grid_log    (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size);
 
 	void draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 

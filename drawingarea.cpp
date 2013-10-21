@@ -1036,7 +1036,7 @@ void DPDrawingArea::draw_grid (const Cairo::RefPtr<Cairo::Context> &cr)
 /**
  * draw_grid_linear
  */
-void DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long long max_size)
+void DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
 {
 	space.w -= 2;
 
@@ -1088,7 +1088,7 @@ void DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, R
 /**
  * draw_grid_log
  */
-void DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long long max_size)
+void DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
 {
 }
 

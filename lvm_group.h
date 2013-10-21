@@ -36,8 +36,8 @@ public:
 	long		pv_count;	//XXX put this in seg_count in Whole
 	long		lv_count;	//XXX this matches children.size()
 	std::string	vg_attr;
-	long long	vg_extent_count;
-	long long	vg_free_count;
+	long	vg_extent_count;
+	long	vg_free_count;
 	long		vg_seqno;
 
 	//virtual void add_segment (DPContainer *seg);

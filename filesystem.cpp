@@ -46,14 +46,14 @@ Filesystem::~Filesystem()
 /**
  * ext2_get_usage
  */
-long long Filesystem::ext2_get_usage (void)
+long Filesystem::ext2_get_usage (void)
 {
 	std::ostringstream build;
 	std::string dev = device;
 	std::string command;
 	std::string output;
 	long block_size = 512;
-	long long bfree = 0;
+	long bfree = 0;
 
 	if (parent_offset != 0) {
 		//log_debug ("create loop device\n");
@@ -127,7 +127,7 @@ long long Filesystem::ext2_get_usage (void)
 
 		tmp = output.substr (pos1, pos2 - pos1);
 		StringNum s (tmp.c_str());
-		bfree = (long long) s * block_size;
+		bfree = (long) s * block_size;
 		//log_debug ("\tfree blocks = %s\n", tmp.c_str());
 		//log_debug ("\tbytes free = %lld\n", bfree);
 	}
@@ -181,7 +181,7 @@ DPContainer * Filesystem::probe (DPContainer &top_level, DPContainer *parent, un
 		f->parent_offset = 0;
 		f->bytes_size = parent->bytes_size;
 		if (name == "ext2") {
-			long long bfree = f->ext2_get_usage();
+			long bfree = f->ext2_get_usage();
 			f->bytes_used = f->bytes_size - bfree;
 		} else {
 			f->bytes_used = parent->bytes_size;

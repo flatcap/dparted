@@ -64,12 +64,6 @@ public:
 	{
 		return strtol (c_str(), NULL, 10);
 	}
-
-	//XXX both long and long long are 64 bits
-	operator long long()
-	{
-		return strtoll (c_str(), NULL, 10);
-	}
 };
 
 

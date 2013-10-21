@@ -95,7 +95,7 @@ bool Msdos::read_partition (unsigned char *buffer, int index, struct partition *
 /**
  * read_table
  */
-unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long long offset, std::vector<struct partition> &vp)
+unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long offset, std::vector<struct partition> &vp)
 {
 	struct partition part;
 

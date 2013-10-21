@@ -41,23 +41,23 @@ public:
 
 	virtual void add_child    (DPContainer *child);
 	virtual void delete_child (DPContainer *child);
-	virtual void move_child   (DPContainer *child, long long offset, long long size);
+	virtual void move_child   (DPContainer *child, long offset, long size);
 
 	virtual long          get_block_size (void);
 	virtual std::string   get_device_name (void);
-	virtual long long     get_parent_offset (void);
-	virtual unsigned int  get_device_space (std::map<long long, long long> &spaces);
+	virtual long     get_parent_offset (void);
+	virtual unsigned int  get_device_space (std::map<long, long> &spaces);
 
-	virtual long long get_size_total (void);
-	virtual long long get_size_used (void);
-	virtual long long get_size_free (void);
+	virtual long get_size_total (void);
+	virtual long get_size_used (void);
+	virtual long get_size_free (void);
 
 	virtual DPContainer * find_device (const std::string &dev);
 	virtual DPContainer * find_uuid   (const std::string &uuid);
 	virtual DPContainer * find_name   (const std::string &name);
 
 	virtual FILE * open_device (void);
-	virtual int read_data (long long offset, long long size, unsigned char *buffer);
+	virtual int read_data (long offset, long size, unsigned char *buffer);
 
 	virtual bool is_a (const std::string &type);
 
@@ -68,11 +68,11 @@ public:
 	std::string	 uuid;
 
 	std::string	 device;
-	long long	 parent_offset;
+	long	 parent_offset;
 
 	long		 block_size;
-	long long	 bytes_size;
-	long long	 bytes_used;
+	long	 bytes_size;
+	long	 bytes_used;
 
 	Whole		*whole;
 

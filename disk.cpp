@@ -68,7 +68,7 @@ bool Disk::find_devices_old (const std::string &name, int fd, struct stat &st, D
 	//	/sys/block/sda/device/model
 
 	int res;
-	long long file_size_in_bytes;
+	long file_size_in_bytes;
 
 #if 0
 	std::string readonly = read_file_line ("/sys/block/sda/ro");
@@ -207,7 +207,7 @@ long Disk::get_block_size (void)
 /**
  * get_device_space
  */
-unsigned int Disk::get_device_space (std::map<long long, long long> &spaces)
+unsigned int Disk::get_device_space (std::map<long, long> &spaces)
 {
 	return 0;
 }
@@ -260,7 +260,7 @@ Disk::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 	std::string mount;
 	int kernel_major = -1;
 	int kernel_minor = -1;
-	long long size;
+	long size;
 	std::string part;
 	int scan;
 	std::map<std::string,StringNum> tags;

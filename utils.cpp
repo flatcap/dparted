@@ -131,7 +131,7 @@ unsigned int execute_command3 (const std::string &command, std::string &output)
 /**
  * get_size
  */
-std::string get_size (long long size)
+std::string get_size (long size)
 {
 	char buffer[64];
 	double power = log2 ((double) llabs (size)) + 0.5;
@@ -164,7 +164,7 @@ std::string get_size (long long size)
 /**
  * extract_number
  */
-long long extract_number (const std::string &text, unsigned int &index)
+long extract_number (const std::string &text, unsigned int &index)
 {
 	const char *digits = "0123456789";
 	unsigned int first = text.find_first_of     (digits, index);
@@ -233,7 +233,7 @@ long extract_quoted_long (const std::string &text, unsigned int &index)
 /**
  * extract_quoted_long_long
  */
-long long extract_quoted_long_long (const std::string &text, unsigned int &index)
+long extract_quoted_long_long (const std::string &text, unsigned int &index)
 {
 	unsigned int start  = -1;
 	unsigned int finish = -1;
@@ -502,7 +502,7 @@ void dump_hex2 (void *buf, int start, int length)
 /**
  * align
  */
-long long align (long long num, long long round)
+long align (long num, long round)
 {
 	if (round == 0)
 		return num;

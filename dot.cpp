@@ -104,23 +104,6 @@ static std::string
 dot_row (const char *name, long value)
 {
 	std::ostringstream s;
-
-	s << "<tr>";
-	s << "<td align=\"left\">" << name << "</td>";
-	s << "<td>=</td>";
-	s << "<td align=\"left\">" << value << "</td>";
-	s << "</tr>\n";
-
-	return s.str();
-}
-
-/**
- * dot_row (long long)
- */
-static std::string
-dot_row (const char *name, long long value)
-{
-	std::ostringstream s;
 	std::string str = get_size (value);
 
 	s << "<tr>";

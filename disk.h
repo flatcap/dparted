@@ -34,7 +34,7 @@ public:
 	virtual ~Disk();
 
 	virtual long          get_block_size (void);
-	virtual unsigned int  get_device_space (std::map<long long, long long> &spaces);
+	virtual unsigned int  get_device_space (std::map<long, long> &spaces);
 
 	virtual DPContainer * find_device (const std::string &dev);
 
@@ -43,7 +43,7 @@ public:
 	//int		type;
 	//long		sector_size;
 	//long		phys_sector_size;
-	//long long	length;
+	//long	length;
 	bool		read_only;
 	int		hw_cylinders;
 	int		hw_heads;

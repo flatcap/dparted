@@ -71,7 +71,7 @@ DPContainer * Table::probe (DPContainer &top_level, DPContainer *parent, unsigne
 /**
  * fill_space
  */
-long long Table::fill_space (void)
+long Table::fill_space (void)
 {
 	// iterate through the children and add a Misc for all the unallocated regions
 	// the size of these fillers must be >= alignment size
@@ -83,7 +83,7 @@ long long Table::fill_space (void)
 	log_debug ("fill space\n");
 #endif
 
-	long long upto = 0;
+	long upto = 0;
 
 	for (auto c : children) {
 		if (upto == c->parent_offset) {
