@@ -25,6 +25,7 @@
 #include "msdos.h"
 #include "table.h"
 #include "lvm_table.h"
+#include "md_table.h"
 #include "utils.h"
 #include "log_trace.h"
 
@@ -59,6 +60,9 @@ DPContainer * Table::probe (DPContainer &top_level, DPContainer *parent, unsigne
 		return c;
 
 	if ((c = LVMTable::probe (top_level, parent, buffer, bufsize)))
+		return c;
+
+	if ((c = MdTable::probe (top_level, parent, buffer, bufsize)))
 		return c;
 
 	return NULL;

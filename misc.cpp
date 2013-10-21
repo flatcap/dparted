@@ -102,19 +102,19 @@ static bool is_random (unsigned char *buffer, int bufsize)
  */
 DPContainer * Misc::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	Misc *m = NULL;
 
 	if (is_empty (buffer, bufsize)) {
-		//log_error ("probe empty\n");
+		log_error ("probe empty\n");
 		m = new Misc;
 		m->name = "zero";
 	} else if (is_luks (buffer, bufsize)) {
-		//`log_error ("probe luks\n");
+		log_error ("probe luks\n");
 		m = new Misc;
 		m->name = "luks";
 	} else if (is_random (buffer, bufsize)) {
-		//log_error ("probe random\n");
+		log_error ("probe random\n");
 		m = new Misc;
 		m->name = "random";
 	}

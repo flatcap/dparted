@@ -33,6 +33,7 @@
 #include "lvm_stripe.h"
 #include "lvm_table.h"
 #include "lvm_volume.h"
+#include "md_table.h"
 #include "misc.h"
 #include "msdos.h"
 #include "partition.h"
@@ -387,6 +388,30 @@ dot_gpt (Gpt *g)
 }
 
 /**
+ * dot_md_table
+ */
+static std::string
+dot_md_table (MdTable *t)
+{
+	std::ostringstream output;
+
+	output << dot_table(dynamic_cast<Table *> (t));
+
+	output << dot_row ("vol_uuid",    t->vol_uuid);
+	output << dot_row ("vol_name",    t->vol_name);
+	output << dot_row ("raid_type",   t->raid_type);
+	output << dot_row ("raid_layout", t->raid_layout);
+	output << dot_row ("raid_disks",  t->raid_disks);
+	output << dot_row ("chunk_size",  t->chunk_size);
+	output << dot_row ("chunks_used", t->chunks_used);
+	output << dot_row ("dev_uuid",    t->dev_uuid);
+	output << dot_row ("data_offset", t->data_offset);
+	output << dot_row ("data_size",   t->data_size);
+
+	return output.str();
+}
+
+/**
  * dot_lvm_table
  */
 static std::string
@@ -666,6 +691,7 @@ dump_dot_inner (std::vector <DPContainer*> v)
 		else if (type == "lvm_stripe")    { dot << dot_lvm_stripe    (dynamic_cast<LVMStripe    *> (c)); }
 		else if (type == "lvm_table")     { dot << dot_lvm_table     (dynamic_cast<LVMTable     *> (c)); }
 		else if (type == "lvm_volume")    { dot << dot_lvm_volume    (dynamic_cast<LVMVolume    *> (c)); }
+		else if (type == "md_table")      { dot << dot_md_table      (dynamic_cast<MdTable      *> (c)); }
 		else if (type == "misc")          { dot << dot_misc          (dynamic_cast<Misc         *> (c)); }
 		else if (type == "msdos")         { dot << dot_msdos         (dynamic_cast<Msdos        *> (c)); }
 		else if (type == "partition")     { dot << dot_partition     (dynamic_cast<Partition    *> (c)); }

@@ -8,13 +8,13 @@ SRC	= block.cpp container.cpp disk.cpp extended.cpp file.cpp \
 	  lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_stripe.cpp \
 	  lvm_table.cpp lvm_volume.cpp main.cpp misc.cpp msdos.cpp \
 	  partition.cpp table.cpp utils.cpp volume.cpp whole.cpp \
-	  dot.cpp leak.cpp 
+	  dot.cpp leak.cpp md_table.cpp
 
 HDR	= block.h container.h disk.h extended.h file.h filesystem.h \
 	  gpt.h identify.h log.h loop.h lvm_group.h lvm_linear.h lvm_mirror.h \
 	  lvm_partition.h lvm_stripe.h lvm_table.h lvm_volume.h misc.h msdos.h \
 	  partition.h stringnum.h table.h utils.h volume.h whole.h \
-	  main.h dot.h leak.h log_trace.h
+	  main.h dot.h leak.h log_trace.h md_table.h
 
 # GUI
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp
