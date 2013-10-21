@@ -739,6 +739,9 @@ dump_dot (std::vector <DPContainer*> v)
 void
 display_dot (std::vector <DPContainer*> v)
 {
+	if (v.size() == 0)
+		return;
+
 	std::string input = dump_dot(v);
 
 	execute_command2 ("dot -Tpng | display -resize 60% - &", input);
