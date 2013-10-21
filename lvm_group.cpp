@@ -35,19 +35,19 @@
 
 //RAR lazy
 
-std::map<std::string, LVMGroup*>     vg_lookup;		// UUID            -> LVMGroup		(purple)
+std::map<std::string, LvmGroup*>     vg_lookup;		// UUID            -> LvmGroup		(purple)
 							// I9a0Vj...       -> tmpvol
-std::map<std::string, LVMVolume*>    vol_lookup;	// VG_NAME:LV_NAME -> LVMVolume		(purple)
+std::map<std::string, LvmVolume*>    vol_lookup;	// VG_NAME:LV_NAME -> LvmVolume		(purple)
 							// tmpvol:stripe2  -> stripe2
-std::map<std::string, LVMTable*>     vg_seg_lookup;	// device          -> LVMTable		(pink)
+std::map<std::string, LvmTable*>     vg_seg_lookup;	// device          -> LvmTable		(pink)
 							// /dev/loop0      -> tmpvol
-std::map<std::string, DPContainer*>  vol_seg_lookup;	// device(offset)  -> LVMPartition	(yellow)
+std::map<std::string, DPContainer*>  vol_seg_lookup;	// device(offset)  -> LvmPartition	(yellow)
 							// /dev/loop0(0)   -> stripe2
 
 /**
- * LVMGroup
+ * LvmGroup
  */
-LVMGroup::LVMGroup (void) :
+LvmGroup::LvmGroup (void) :
 	pv_count (0),
 	lv_count (0),
 	vg_extent_count (0),
@@ -58,9 +58,9 @@ LVMGroup::LVMGroup (void) :
 }
 
 /**
- * ~LVMGroup
+ * ~LvmGroup
  */
-LVMGroup::~LVMGroup()
+LvmGroup::~LvmGroup()
 {
 }
 
@@ -98,7 +98,7 @@ void fd_probe_children (DPContainer *item)
 }
 
 /**
- * fd_vgs - Create the LVMGroup objects
+ * fd_vgs - Create the LvmGroup objects
  */
 std::vector<std::string>
 fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
@@ -110,7 +110,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 	std::vector<std::string> output;
 	std::string error;
 	std::map<std::string,StringNum> tags;
-	LVMGroup *vg = NULL;
+	LvmGroup *vg = NULL;
 
 	/*
 	 * LVM2_VG_NAME=shuffle
@@ -143,11 +143,11 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 
 		vg = vg_lookup[vg_uuid];
 		if (vg == NULL) {
-			vg = new LVMGroup;
-			//log_debug ("new LVMGroup (%p)\n", vg);
+			vg = new LvmGroup;
+			//log_debug ("new LvmGroup (%p)\n", vg);
 			vg->parent = &top_level;	//RAR not nec (done in add_child)
 			//vg->device = "/dev/dm-0"; //RAR what?
-			// LVMGroup doesn't have a dedicated device, so it would have to delegate to the vg segment
+			// LvmGroup doesn't have a dedicated device, so it would have to delegate to the vg segment
 
 			vg->name		= tags["LVM2_VG_NAME"];
 			vg->pv_count		= tags["LVM2_PV_COUNT"];
@@ -173,16 +173,16 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		DPContainer *cont = top_level.find_device (pv_name);
 		log_debug ("cont for %s = %p\n", pv_name.c_str(), (void*) cont);
 
-		LVMTable *vg_seg = NULL;
+		LvmTable *vg_seg = NULL;
 		log_info ("find: %s\n", pv_uuid.c_str());
-		vg_seg = dynamic_cast<LVMTable*> (cont->find_uuid (pv_uuid));
+		vg_seg = dynamic_cast<LvmTable*> (cont->find_uuid (pv_uuid));
 		if (vg_seg) {
 			log_info ("table already exists: %s\n", pv_uuid.c_str());
 		} else {
 			log_error ("table didn't already exist: %s\n", pv_uuid.c_str());
 			log_debug ("%s\n\n", line.c_str());
-			vg_seg = new LVMTable;
-			//log_debug ("new LVMTable (%p)\n", vg_seg);
+			vg_seg = new LvmTable;
+			//log_debug ("new LvmTable (%p)\n", vg_seg);
 			cont->add_child (vg_seg);	//RAR this could be left to find_devices, there don't need top_level fn param
 			//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", cont, cont->type.back().c_str(), cont->name.c_str(), vg_seg, vg_seg->type.back().c_str(), vg_seg->name.c_str());
 		}
@@ -234,7 +234,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 }
 
 /**
- * fd_pvs - Attach all the Segments (LVMGroup and Volumes)
+ * fd_pvs - Attach all the Segments (LvmGroup and Volumes)
  */
 void fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vector<std::string>())
 {
@@ -292,15 +292,15 @@ void fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vec
 		//log_debug ("\tseg_id = %s\n", seg_id.c_str());
 
 		//log_debug ("lookup uuid %s\n", vg_uuid.c_str());
-		LVMGroup *vg = vg_lookup[vg_uuid];
+		LvmGroup *vg = vg_lookup[vg_uuid];
 		//log_debug ("vg extent size = %ld\n", vg->block_size);
 
-		LVMTable *vg_seg = vg_seg_lookup[dev];	//XXX this should exist
+		LvmTable *vg_seg = vg_seg_lookup[dev];	//XXX this should exist
 		if (!vg_seg)
 			continue;			//XXX error?
 
-		LVMPartition *vol_seg = new LVMPartition;
-		//log_debug ("new LVMPartition (%p)\n", vol_seg);
+		LvmPartition *vol_seg = new LvmPartition;
+		//log_debug ("new LvmPartition (%p)\n", vol_seg);
 		vol_seg->name = lv_name;
 		vol_seg->uuid = lv_uuid;
 		//vol_seg->type = lv_type;			// linear, striped, etc
@@ -393,21 +393,21 @@ void fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
 		std::string vol_id = vg_name + ":" + lv_name;
 		//log_info ("\t%s\n", vol_id.c_str());
 
-		LVMVolume *v = vol_lookup[vol_id];
+		LvmVolume *v = vol_lookup[vol_id];
 		if (v == NULL) {
 			if (lv_type == "linear") {
-				v = new LVMLinear;
-				//log_debug ("new LVMLinear (%p)\n", v);
+				v = new LvmLinear;
+				//log_debug ("new LvmLinear (%p)\n", v);
 				std::string seg_id = lv_name + "(0)"; // parent offset
 				vol_seg_lookup[seg_id] = v;
 			} else if (lv_type == "striped") {
-				v = new LVMStripe;
-				//log_debug ("new LVMStripe (%p)\n", v);
+				v = new LvmStripe;
+				//log_debug ("new LvmStripe (%p)\n", v);
 				std::string seg_id = lv_name + "(0)"; // parent offset
 				vol_seg_lookup[seg_id] = v;
 			} else if (lv_type == "mirror") {
-				v = new LVMMirror;
-				//log_debug ("new LVMMirror (%p)\n", v);
+				v = new LvmMirror;
+				//log_debug ("new LvmMirror (%p)\n", v);
 				std::string seg_id = lv_name + "(0)"; // parent offset
 				vol_seg_lookup[seg_id] = v;
 			} else {
@@ -453,10 +453,10 @@ void fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
 			if (pos != std::string::npos) {
 				dep = dep.substr (0, pos);
 			}
-			std::map<std::string, LVMVolume*>::iterator it_vol;
+			std::map<std::string, LvmVolume*>::iterator it_vol;
 			it_vol = vol_lookup.find (dep);
 			if (it_vol != vol_lookup.end()) {
-				LVMVolume *v_dep = (*it_vol).second;
+				LvmVolume *v_dep = (*it_vol).second;
 				//RAR connect up stuff
 				v->add_child (v_dep);
 				//log_debug ("add_child %p [%s/%s]-> %p [%s/%s]\n", v, v->type.back().c_str(), v->name.c_str(), v_dep, v_dep->type.back().c_str(), v_dep->name.c_str());
@@ -473,7 +473,7 @@ void fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
 
 	//transfer volumes to disks
 	for (auto it_vol : vol_lookup) {
-		LVMVolume *v = it_vol.second;
+		LvmVolume *v = it_vol.second;
 		//log_debug ("volume %s (%s)\n", v->name.c_str(), v->parent->name.c_str());
 		v->parent->add_child (v);	//RAR add myself to MY parent
 		//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", v->parent, v->parent->type.back().c_str(), v->parent->name.c_str(), v, v->type.back().c_str(), v->name.c_str());
@@ -494,7 +494,7 @@ void fd_fs (void)
 
 	for (auto it_vol : vol_lookup) {
 		//log_error ("marker\n");
-		LVMVolume *v = it_vol.second;
+		LvmVolume *v = it_vol.second;
 
 		DPContainer *item = probe (v);
 		if (item) {
@@ -511,7 +511,7 @@ void fd_fs (void)
 
 #if 0
 		for (auto it_seg : v->segments) {
-			LVMPartition *p = dynamic_cast<LVMPartition*>(it_seg);
+			LvmPartition *p = dynamic_cast<LvmPartition*>(it_seg);
 			log_debug ("\t%s (%s) - %p\n", p->name.c_str(), p->parent->name.c_str(), p);
 			p->add_child (item);
 		}
@@ -523,7 +523,7 @@ void fd_fs (void)
 /**
  * find_devices
  */
-void LVMGroup::find_devices (DPContainer &disks)
+void LvmGroup::find_devices (DPContainer &disks)
 {
 	//log_debug ("%s\nvgs\n", "_________________________________________________________________________________________________________________________\n");
 	fd_vgs (disks);
@@ -548,7 +548,7 @@ void LVMGroup::find_devices (DPContainer &disks)
  * discover
  */
 void
-LVMGroup::discover (DPContainer &top_level, LVMTable *t)
+LvmGroup::discover (DPContainer &top_level, LvmTable *t)
 {
 	LOG_TRACE;
 

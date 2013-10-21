@@ -21,13 +21,13 @@
 #include "lvm_volume.h"
 
 /**
- * class LVMMirror
+ * class LvmMirror
  */
-class LVMMirror : public LVMVolume
+class LvmMirror : public LvmVolume
 {
 public:
-	LVMMirror (void);
-	virtual ~LVMMirror();
+	LvmMirror (void);
+	virtual ~LvmMirror();
 
 	virtual void add_child    (DPContainer *child);
 	virtual void delete_child (DPContainer *child);

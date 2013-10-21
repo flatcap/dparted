@@ -21,13 +21,13 @@
 #include "lvm_volume.h"
 
 /**
- * class LVMStripe
+ * class LvmStripe
  */
-class LVMStripe : public LVMVolume
+class LvmStripe : public LvmVolume
 {
 public:
-	LVMStripe (void);
-	virtual ~LVMStripe();
+	LvmStripe (void);
+	virtual ~LvmStripe();
 
 protected:
 

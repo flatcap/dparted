@@ -59,7 +59,7 @@ DPContainer * Table::probe (DPContainer &top_level, DPContainer *parent, unsigne
 	if ((c = Msdos::probe (top_level, parent, buffer, bufsize)))
 		return c;
 
-	if ((c = LVMTable::probe (top_level, parent, buffer, bufsize)))
+	if ((c = LvmTable::probe (top_level, parent, buffer, bufsize)))
 		return c;
 
 	if ((c = MdTable::probe (top_level, parent, buffer, bufsize)))

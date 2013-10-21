@@ -21,17 +21,17 @@
 #include "log_trace.h"
 
 /**
- * LVMStripe
+ * LvmStripe
  */
-LVMStripe::LVMStripe (void)
+LvmStripe::LvmStripe (void)
 {
 	declare ("lvm_stripe");
 }
 
 /**
- * ~LVMStripe
+ * ~LvmStripe
  */
-LVMStripe::~LVMStripe()
+LvmStripe::~LvmStripe()
 {
 }
 

@@ -21,13 +21,13 @@
 #include "lvm_volume.h"
 
 /**
- * class LVMLinear
+ * class LvmLinear
  */
-class LVMLinear : public LVMVolume
+class LvmLinear : public LvmVolume
 {
 public:
-	LVMLinear (void);
-	virtual ~LVMLinear();
+	LvmLinear (void);
+	virtual ~LvmLinear();
 
 protected:
 

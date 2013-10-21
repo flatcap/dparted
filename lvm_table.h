@@ -23,13 +23,13 @@
 #include "table.h"
 
 /**
- * class LVMTable
+ * class LvmTable
  */
-class LVMTable : public Table
+class LvmTable : public Table
 {
 public:
-	LVMTable (void);
-	virtual ~LVMTable();
+	LvmTable (void);
+	virtual ~LvmTable();
 
 	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
 

@@ -415,7 +415,7 @@ dot_md_table (MdTable *t)
  * dot_lvm_table
  */
 static std::string
-dot_lvm_table (LVMTable *t)
+dot_lvm_table (LvmTable *t)
 {
 	std::ostringstream output;
 
@@ -469,7 +469,7 @@ dot_volume (Volume *v)
  * dot_lvm_group
  */
 static std::string
-dot_lvm_group (LVMGroup *g)
+dot_lvm_group (LvmGroup *g)
 {
 	std::ostringstream output;
 
@@ -489,7 +489,7 @@ dot_lvm_group (LVMGroup *g)
  * dot_lvm_volume
  */
 static std::string
-dot_lvm_volume (LVMVolume *v)
+dot_lvm_volume (LvmVolume *v)
 {
 	std::ostringstream output;
 	unsigned int count = v->tables.size();
@@ -511,11 +511,11 @@ dot_lvm_volume (LVMVolume *v)
  * dot_lvm_linear
  */
 static std::string
-dot_lvm_linear (LVMLinear *l)
+dot_lvm_linear (LvmLinear *l)
 {
 	std::ostringstream output;
 
-	output << dot_lvm_volume(dynamic_cast<LVMVolume *> (l));
+	output << dot_lvm_volume(dynamic_cast<LvmVolume *> (l));
 
 	// no specifics for now
 
@@ -526,11 +526,11 @@ dot_lvm_linear (LVMLinear *l)
  * dot_lvm_mirror
  */
 static std::string
-dot_lvm_mirror (LVMMirror *m)
+dot_lvm_mirror (LvmMirror *m)
 {
 	std::ostringstream output;
 
-	output << dot_lvm_volume(dynamic_cast<LVMVolume *> (m));
+	output << dot_lvm_volume(dynamic_cast<LvmVolume *> (m));
 
 	// no specifics for now
 
@@ -541,11 +541,11 @@ dot_lvm_mirror (LVMMirror *m)
  * dot_lvm_stripe
  */
 static std::string
-dot_lvm_stripe (LVMStripe *s)
+dot_lvm_stripe (LvmStripe *s)
 {
 	std::ostringstream output;
 
-	output << dot_lvm_volume(dynamic_cast<LVMVolume *> (s));
+	output << dot_lvm_volume(dynamic_cast<LvmVolume *> (s));
 
 	// no specifics for now
 
@@ -572,7 +572,7 @@ dot_partition (Partition *p)
  * dot_lvm_partition
  */
 static std::string
-dot_lvm_partition (LVMPartition *p)
+dot_lvm_partition (LvmPartition *p)
 {
 	std::ostringstream output;
 
@@ -684,13 +684,13 @@ dump_dot_inner (std::vector <DPContainer*> v)
 		else if (type == "filesystem")    { dot << dot_filesystem    (dynamic_cast<Filesystem   *> (c)); }
 		else if (type == "gpt")           { dot << dot_gpt           (dynamic_cast<Gpt          *> (c)); }
 		else if (type == "loop")          { dot << dot_loop          (dynamic_cast<Loop         *> (c)); }
-		else if (type == "lvm_group")     { dot << dot_lvm_group     (dynamic_cast<LVMGroup     *> (c)); }
-		else if (type == "lvm_linear")    { dot << dot_lvm_linear    (dynamic_cast<LVMLinear    *> (c)); }
-		else if (type == "lvm_mirror")    { dot << dot_lvm_mirror    (dynamic_cast<LVMMirror    *> (c)); }
-		else if (type == "lvm_partition") { dot << dot_lvm_partition (dynamic_cast<LVMPartition *> (c)); }
-		else if (type == "lvm_stripe")    { dot << dot_lvm_stripe    (dynamic_cast<LVMStripe    *> (c)); }
-		else if (type == "lvm_table")     { dot << dot_lvm_table     (dynamic_cast<LVMTable     *> (c)); }
-		else if (type == "lvm_volume")    { dot << dot_lvm_volume    (dynamic_cast<LVMVolume    *> (c)); }
+		else if (type == "lvm_group")     { dot << dot_lvm_group     (dynamic_cast<LvmGroup     *> (c)); }
+		else if (type == "lvm_linear")    { dot << dot_lvm_linear    (dynamic_cast<LvmLinear    *> (c)); }
+		else if (type == "lvm_mirror")    { dot << dot_lvm_mirror    (dynamic_cast<LvmMirror    *> (c)); }
+		else if (type == "lvm_partition") { dot << dot_lvm_partition (dynamic_cast<LvmPartition *> (c)); }
+		else if (type == "lvm_stripe")    { dot << dot_lvm_stripe    (dynamic_cast<LvmStripe    *> (c)); }
+		else if (type == "lvm_table")     { dot << dot_lvm_table     (dynamic_cast<LvmTable     *> (c)); }
+		else if (type == "lvm_volume")    { dot << dot_lvm_volume    (dynamic_cast<LvmVolume    *> (c)); }
 		else if (type == "md_table")      { dot << dot_md_table      (dynamic_cast<MdTable      *> (c)); }
 		else if (type == "misc")          { dot << dot_misc          (dynamic_cast<Misc         *> (c)); }
 		else if (type == "msdos")         { dot << dot_msdos         (dynamic_cast<Msdos        *> (c)); }

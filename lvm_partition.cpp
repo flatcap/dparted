@@ -21,17 +21,17 @@
 #include "log_trace.h"
 
 /**
- * LVMPartition
+ * LvmPartition
  */
-LVMPartition::LVMPartition (void)
+LvmPartition::LvmPartition (void)
 {
 	declare ("lvm_partition");
 }
 
 /**
- * ~LVMPartition
+ * ~LvmPartition
  */
-LVMPartition::~LVMPartition()
+LvmPartition::~LvmPartition()
 {
 }
 

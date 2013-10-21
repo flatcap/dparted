@@ -21,17 +21,17 @@
 #include "log_trace.h"
 
 /**
- * LVMLinear
+ * LvmLinear
  */
-LVMLinear::LVMLinear (void)
+LvmLinear::LvmLinear (void)
 {
 	declare ("lvm_linear");
 }
 
 /**
- * ~LVMLinear
+ * ~LvmLinear
  */
-LVMLinear::~LVMLinear()
+LvmLinear::~LvmLinear()
 {
 }
 

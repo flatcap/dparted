@@ -20,16 +20,16 @@
 
 #include "whole.h"
 
-class LVMTable;
+class LvmTable;
 
 /**
- * class LVMGroup
+ * class LvmGroup
  */
-class LVMGroup : public Whole
+class LvmGroup : public Whole
 {
 public:
-	LVMGroup (void);
-	virtual ~LVMGroup();
+	LvmGroup (void);
+	virtual ~LvmGroup();
 
 	static void find_devices (DPContainer &list);
 
@@ -45,7 +45,7 @@ public:
 	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
 	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
 
-	static void discover (DPContainer &top_level, LVMTable *t);
+	static void discover (DPContainer &top_level, LvmTable *t);
 protected:
 
 private:

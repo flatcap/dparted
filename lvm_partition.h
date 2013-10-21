@@ -21,13 +21,13 @@
 #include "partition.h"
 
 /**
- * class LVMPartition
+ * class LvmPartition
  */
-class LVMPartition : public Partition
+class LvmPartition : public Partition
 {
 public:
-	LVMPartition (void);
-	virtual ~LVMPartition();
+	LvmPartition (void);
+	virtual ~LvmPartition();
 
 	long		dev_size;	// 5368709120
 	long		pe_start;	// 1048576

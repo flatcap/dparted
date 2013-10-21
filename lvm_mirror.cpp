@@ -22,17 +22,17 @@
 #include "log_trace.h"
 
 /**
- * LVMMirror
+ * LvmMirror
  */
-LVMMirror::LVMMirror (void)
+LvmMirror::LvmMirror (void)
 {
 	declare ("lvm_mirror");
 }
 
 /**
- * ~LVMMirror
+ * ~LvmMirror
  */
-LVMMirror::~LVMMirror()
+LvmMirror::~LvmMirror()
 {
 }
 
@@ -40,7 +40,7 @@ LVMMirror::~LVMMirror()
 /**
  * add_child
  */
-void LVMMirror::add_child (DPContainer *child)
+void LvmMirror::add_child (DPContainer *child)
 {
 	/* Check:
 	 *	available space
@@ -81,7 +81,7 @@ void LVMMirror::add_child (DPContainer *child)
 /**
  * delete_child
  */
-void LVMMirror::delete_child (DPContainer *child)
+void LvmMirror::delete_child (DPContainer *child)
 {
 }
 

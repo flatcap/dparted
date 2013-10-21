@@ -21,9 +21,9 @@
 #include "log_trace.h"
 
 /**
- * LVMVolume
+ * LvmVolume
  */
-LVMVolume::LVMVolume (void) :
+LvmVolume::LvmVolume (void) :
 	kernel_major (-1),
 	kernel_minor (-1)
 {
@@ -31,9 +31,9 @@ LVMVolume::LVMVolume (void) :
 }
 
 /**
- * ~LVMVolume
+ * ~LvmVolume
  */
-LVMVolume::~LVMVolume()
+LvmVolume::~LvmVolume()
 {
 }
 
@@ -41,7 +41,7 @@ LVMVolume::~LVMVolume()
 /**
  * read_data
  */
-int LVMVolume::read_data (long long offset, long long size, unsigned char *buffer)
+int LvmVolume::read_data (long long offset, long long size, unsigned char *buffer)
 {
 	//log_error ("%s\n", __PRETTY_FUNCTION__);
 	//log_error ("%s - %s\n", name.c_str(), device.c_str());

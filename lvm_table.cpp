@@ -30,18 +30,18 @@
 #include "utils.h"
 
 /**
- * LVMTable
+ * LvmTable
  */
-LVMTable::LVMTable (void) :
+LvmTable::LvmTable (void) :
 	seq_num(0)
 {
 	declare ("lvm_table");
 }
 
 /**
- * ~LVMTable
+ * ~LvmTable
  */
-LVMTable::~LVMTable()
+LvmTable::~LvmTable()
 {
 }
 
@@ -114,8 +114,8 @@ void fd_pvs (DPContainer *parent)
 		if (lv_type == "free")				//XXX could process this and add it to the VGSeg's empty list
 			continue;
 
-		LVMPartition *vol_seg = new LVMPartition;
-		//log_debug ("new LVMPartition (%p)\n", vol_seg);
+		LvmPartition *vol_seg = new LvmPartition;
+		//log_debug ("new LvmPartition (%p)\n", vol_seg);
 
 		vol_seg->dev_size	= tags["LVM2_DEV_SIZE"];
 		vol_seg->pe_start	= tags["LVM2_PE_START"];
@@ -156,10 +156,10 @@ void fd_pvs (DPContainer *parent)
 		//log_debug ("\tseg_id = %s\n", seg_id.c_str());
 
 		//log_debug ("lookup uuid %s\n", vg_uuid.c_str());
-		LVMGroup *vg = vg_lookup[vg_uuid];
+		LvmGroup *vg = vg_lookup[vg_uuid];
 		//log_debug ("vg extent size = %ld\n", vg->block_size);
 
-		LVMTable *vg_seg = vg_seg_lookup[dev];	//XXX this should exist
+		LvmTable *vg_seg = vg_seg_lookup[dev];	//XXX this should exist
 		if (!vg_seg)
 			continue;			//XXX error?
 #endif
@@ -322,10 +322,10 @@ format_config (std::string &config)
  * probe
  */
 DPContainer *
-LVMTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
-	LVMTable *t = NULL;
+	LvmTable *t = NULL;
 
 	//XXX check bufsize gives us all the data we need
 
@@ -397,8 +397,8 @@ LVMTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	std::cout << "\n" << config << "\n";
 #endif
 
-	t = new LVMTable();
-	//log_debug ("new LVMTable (%p)\n", t);
+	t = new LvmTable();
+	//log_debug ("new LvmTable (%p)\n", t);
 
 	t->bytes_size = ph->device_size_xl;
 	t->parent_offset = 0;		//XXX what about if we're in a partition?

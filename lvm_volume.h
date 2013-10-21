@@ -20,16 +20,16 @@
 
 #include "volume.h"
 
-class LVMTable;
+class LvmTable;
 
 /**
- * class LVMVolume
+ * class LvmVolume
  */
-class LVMVolume : public Volume
+class LvmVolume : public Volume
 {
 public:
-	LVMVolume (void);
-	virtual ~LVMVolume();
+	LvmVolume (void);
+	virtual ~LvmVolume();
 
 	std::string	lv_attr;
 	long		kernel_major;
@@ -37,7 +37,7 @@ public:
 
 	virtual int read_data (long long offset, long long size, unsigned char *buffer);
 
-	std::vector<LVMTable*> tables;
+	std::vector<LvmTable*> tables;
 
 protected:
 private:
