@@ -25,7 +25,7 @@
 #include <gtkmm/statusbar.h>
 #include <gtkmm/toolbar.h>
 #include <gtkmm/uimanager.h>
-#include <gtkmm/window.h>
+#include "gtkmm/applicationwindow.h"
 
 #include "drawingarea.h"
 #include "treeview.h"
@@ -35,7 +35,7 @@ class DPContainer;
 /**
  * class DParted
  */
-class DParted : public Gtk::Window
+class DParted : public Gtk::ApplicationWindow
 {
 public:
 	DParted();

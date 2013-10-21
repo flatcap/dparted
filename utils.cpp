@@ -72,7 +72,7 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 
 	//XXX log command and output
 
-	log_debug ("running command: %s\n", command.c_str());
+	//log_debug ("running command: %s\n", command.c_str());
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "r");
 	if (file == NULL) {

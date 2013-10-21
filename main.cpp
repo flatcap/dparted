@@ -44,6 +44,7 @@
 #include "log_trace.h"
 #include "dot.h"
 #include "file.h"
+#include "app.h"
 
 std::queue<DPContainer*> probe_queue;
 
@@ -156,8 +157,8 @@ int main (int argc, char *argv[])
 			close (fd);
 		}
 	} else {
-		//Loop::discover (top_level, probe_queue);
-		Disk::discover (top_level, probe_queue);
+		Loop::discover (top_level, probe_queue);
+		//Disk::discover (top_level, probe_queue);
 	}
 
 	// Process the probe_queue
@@ -193,8 +194,9 @@ int main (int argc, char *argv[])
 		}
 	}
 #endif
+	App app (&top_level);
 
-	return 0;
+	return app.run (argc, argv);
 }
 
 

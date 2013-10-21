@@ -75,7 +75,9 @@ DParted::DParted () :
 	grid.add (da_grid);
 	//RAR grid.add (treeview);
 
-	show_all();
+	set_default_icon_name ("dparted");
+
+	show_all_children();
 
 #if 0
 	Glib::RefPtr<Gtk::Settings> s = get_settings();
