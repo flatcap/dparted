@@ -291,12 +291,11 @@ FILE * DPContainer::open_device (void)
 		if (parent) {
 			fd = parent->open_device();
 		}
-		return fd;
-	}
-
-	fd = fopen (device.c_str(), "re");	// read, close on exec
-	if (fd == NULL) {
-		log_error ("failed to open device %s\n", device.c_str());
+	} else {
+		fd = fopen (device.c_str(), "re");	// read, close on exec
+		if (fd == NULL) {
+			log_error ("failed to open device %s\n", device.c_str());
+		}
 	}
 
 	//log_info ("OPEN %s = %p\n", device.c_str(), (void*) fd);
@@ -352,7 +351,27 @@ int DPContainer::read_data (long offset, long size, unsigned char *buffer)
  */
 std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
 {
-	stream << c.type.back() << ", " << c.name << ", " << c.device << "(off " << c.parent_offset << "), " << c.children.size();
+#if 0
+	if (c.type.back() == "filesystem")
+		return stream;
+#endif
+
+	//long bytes_free = c.bytes_size - c.bytes_used;
+
+	std::string uuid = c.uuid;
+
+	if (uuid.size() > 8) {
+		size_t index = uuid.find_first_of (":-. ");
+		uuid = "U:" + uuid.substr (0, index) + "...";
+	}
+
+	stream << "[" << c.type.back() << "]:" << c.name << "(" << uuid << "), " << c.device << "(" << c.fd << ")," <<
+		//" S:" << c.bytes_size    << //"(" << get_size(c.bytes_size)    << "), " <<
+		//" U:" << c.bytes_used    << //"(" << get_size(c.bytes_used)    << "), " <<
+		//" F:" <<   bytes_free    << //"(" << get_size(  bytes_free)    << "), " <<
+		" P:" << c.parent_offset ;//<< //"(" << get_size(c.parent_offset) << "), " <<
+		//" rc: " << c.ref_count;
+
 	return stream;
 }
 
@@ -421,7 +440,11 @@ void
 DPContainer::dump_objects (int indent)
 {
 	printf ("%*s", 8*indent, "");
-	std::cout << this << std::endl;
+	if (name == "dummy") {
+		indent--;
+	} else {
+		std::cout << this << std::endl;
+	}
 
 	for (auto c : children) {
 		c->dump_objects (indent+1);

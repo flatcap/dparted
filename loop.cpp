@@ -86,6 +86,10 @@ Loop::Loop (const std::string losetup) :
 		//printf ("%s is deleted\n", device.c_str());
 	}
 
+	std::stringstream ss;
+	ss << "[" << kernel_major << ":" << kernel_minor << "]";
+	uuid = ss.str();
+
 	//XXX tmp
 	kernel_major = loop_major;
 	kernel_minor = loop_minor;
@@ -150,7 +154,8 @@ Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 {
 	std::vector <std::string> output;
 
-	losetup (output);		//XXX retval
+	if (!losetup (output))
+		return;
 
 	for (auto line : output) {
 		Loop *l = new Loop (line);

@@ -112,6 +112,7 @@ MdTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buff
 	t = new MdTable();
 
 	t->bytes_size		= data_offset + data_size;
+	t->uuid			= dev_uuid;
 	t->vol_uuid		= vol_uuid;
 	t->vol_name		= vol_name;
 	t->raid_type		= raid_type;
@@ -119,7 +120,6 @@ MdTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buff
 	t->raid_disks		= raid_disks;
 	t->chunk_size		= chunk_size;
 	t->chunks_used		= chunks_used;
-	t->dev_uuid		= dev_uuid;
 	t->data_offset		= data_offset;
 	t->data_size		= data_size;
 

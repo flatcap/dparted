@@ -31,6 +31,7 @@ class Disk : public Block
 {
 public:
 	Disk (void);
+	Disk (const std::string &lsblk);
 	virtual ~Disk();
 
 	virtual long          get_block_size (void);
@@ -58,6 +59,7 @@ public:
 
 	std::string mounts;	//XXX vector
 
+	static bool lsblk    (std::vector <std::string> &output, std::string device = std::string());
 	static void discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue);
 	static void identify (DPContainer &top_level, const char *name, int fd, struct stat &st);
 

@@ -387,7 +387,6 @@ dot_md_table (MdTable *t)
 	output << dot_row ("raid_disks",  t->raid_disks);
 	output << dot_row ("chunk_size",  t->chunk_size);
 	output << dot_row ("chunks_used", t->chunks_used);
-	output << dot_row ("dev_uuid",    t->dev_uuid);
 	output << dot_row ("data_offset", t->data_offset);
 	output << dot_row ("data_size",   t->data_size);
 

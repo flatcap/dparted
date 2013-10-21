@@ -40,7 +40,6 @@ public:
 	int		raid_disks;
 	int		chunk_size;
 	long		chunks_used;
-	std::string	dev_uuid;
 	long		data_offset;
 	long		data_size;
 

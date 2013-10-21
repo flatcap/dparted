@@ -410,6 +410,7 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	t->config = config;
 	t->seq_num = seq_num;
 	t->vol_name = vol_name;
+	t->uuid = pv_uuid;
 
 	parent->add_child (t);
 

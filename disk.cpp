@@ -49,6 +49,34 @@ Disk::Disk (void) :
 }
 
 /**
+ * Disk (std::string)
+ */
+Disk::Disk (const std::string &lsblk) :
+	Disk()
+{
+	std::map<std::string,StringNum> tags;
+	int scan;
+
+	parse_tagged_line (lsblk, " ", tags);
+
+	if (tags["TYPE"] != "disk")
+		throw "not a disk";
+
+	name = tags["NAME"];
+	device = "/dev/" + name;
+	//log_debug ("%s\n", device.c_str());
+
+	std::string majmin = tags["MAJ:MIN"];
+	scan = sscanf (majmin.c_str(), "%d:%d", &kernel_major, &kernel_minor);
+	if (scan != 2) {
+		log_debug ("scan failed1\n");
+	}
+
+	bytes_size = tags["SIZE"];
+	mounts = tags["MOUNTPOINT"];
+}
+
+/**
  * ~Disk
  */
 Disk::~Disk()
@@ -232,6 +260,31 @@ DPContainer * Disk::find_device (const std::string &dev)
 
 
 /**
+ * lsblk
+ */
+bool Disk::lsblk (std::vector <std::string> &output, std::string device)
+{
+	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
+	std::string command = "sudo lsblk -b -P ";
+
+	if (device.empty()) {
+		command += "-e 7";	//XXX LOOP_MAJOR
+	} else {
+		command += device;
+	}
+
+	command += " | grep 'TYPE=\"disk\"'";
+
+	output.clear();
+	if (execute_command (command, output) < 0) {
+		//XXX distinguish between zero loop devices and an error
+		return false;
+	}
+
+	return true;
+}
+
+/**
  * discover
  */
 void
@@ -239,71 +292,15 @@ Disk::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 {
 	//LOG_TRACE;
 
-	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
-	std::string command = "lsblk -b -P -e 7";
 	std::vector<std::string> output;
-	std::string error;
-	unsigned int count;
 
-	count = execute_command (command, output);
-	if (count < 0)
+	if (!lsblk (output))
 		return;
-
-#if 0
-	for (auto line : output) {
-		log_debug ("%s\n", line.c_str());
-	}
-#endif
-
-	std::string device;
-	std::string type;
-	std::string mount;
-	int kernel_major = -1;
-	int kernel_minor = -1;
-	long size;
-	std::string part;
-	int scan;
-	std::map<std::string,StringNum> tags;
 
 	//log_debug ("%d lines\n", count);
 
 	for (auto line : output) {
-		parse_tagged_line (line, " ", tags);
-
-		type = tags["TYPE"];
-		if (type != "disk")
-			continue;
-
-		device = tags["NAME"];
-		//log_debug ("%s\n", device.c_str());
-
-		std::string majmin = tags["MAJ:MIN"];
-		scan = sscanf (majmin.c_str(), "%d:%d", &kernel_major, &kernel_minor);
-		if (scan != 2) {
-			log_debug ("scan failed1\n");
-			continue;
-		}
-
-		size = tags["SIZE"];
-		mount = tags["MOUNTPOINT"];
-
-#if 0
-		log_debug ("\tmajor: %d\n", kernel_major);
-		log_debug ("\tminor: %d\n", kernel_minor);
-		log_debug ("\tsize:  %lld\n", size);
-		log_debug ("\tmount: %s\n", mount.c_str());
-		log_debug ("\n");
-#endif
-
-		Disk *d = new Disk;
-		d->device = "/dev/" + device;
-		d->parent_offset = 0;
-		d->kernel_major = kernel_major;
-		d->kernel_minor = kernel_minor;
-		d->mounts = mount;
-		d->bytes_size = size;
-
-		d->open_device();
+		Disk *d = new Disk (line);
 
 		top_level.add_child (d);
 		probe_queue.push (d);	// We need to probe
@@ -317,6 +314,15 @@ void
 Disk::identify (DPContainer &top_level, const char *name, int fd, struct stat &st)
 {
 	//LOG_TRACE;
+	std::vector<std::string> output;
+
+	if (!lsblk (output, name))
+		return;
+
+	Disk *d = new Disk (output[0]);
+
+	top_level.add_child (d);
+	queue_add_probe (d);	// queue the container for action
 }
 
 

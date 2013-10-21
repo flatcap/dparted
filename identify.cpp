@@ -33,7 +33,7 @@ int identify_btrfs (unsigned char *buffer, int bufsize)
  */
 int identify_ext2 (unsigned char *buffer, int bufsize)
 {
-	bool b1 = (*(unsigned short int *) (buffer+1080) == 0xEF53);	// Magic
+	bool b1 = (*(unsigned short int *) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = !(*(unsigned int *) (buffer + 0x45C) & 0x0000004);	// Journal
 
 	return (b1 && b2);
@@ -44,7 +44,7 @@ int identify_ext2 (unsigned char *buffer, int bufsize)
  */
 int identify_ext3 (unsigned char *buffer, int bufsize)
 {
-	bool b1 = (*(unsigned short int *) (buffer+1080) == 0xEF53);	// Magic
+	bool b1 = (*(unsigned short int *) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = (*(unsigned int *) (buffer + 0x45C) & 0x0000004);	// Journal
 	bool b3 = (*(unsigned int *) (buffer + 0x460) < 0x0000040);
 	bool b4 = (*(unsigned int *) (buffer + 0x464) < 0x0000008);
@@ -57,7 +57,7 @@ int identify_ext3 (unsigned char *buffer, int bufsize)
  */
 int identify_ext4 (unsigned char *buffer, int bufsize)
 {
-	bool b1 = (*(unsigned short int *) (buffer+1080) == 0xEF53);	// Magic
+	bool b1 = (*(unsigned short int *) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = (*(unsigned int *) (buffer + 0x45C) & 0x0000004);	// Journal
 	bool b3 = (*(unsigned int *) (buffer + 0x460) < 0x0000040);
 	bool b4 = (*(unsigned int *) (buffer + 0x460) > 0x000003f);

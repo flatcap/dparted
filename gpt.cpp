@@ -56,7 +56,7 @@ DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned 
 
 	// LBA		Description
 	// ---------------------------------
-	// 0		proetective mbr
+	// 0		protective mbr
 	// 1		primary gpt header
 	// 2-33		128 gpt entries
 	// ...
@@ -68,11 +68,9 @@ DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned 
 	g->name = "gpt";
 	g->bytes_size = parent->bytes_size;
 	g->bytes_used = 0;
-	g->device = parent->device;
 	g->parent_offset = 0;
 	g->block_size = 0;
 	g->uuid = read_uuid (buffer+568);
-	g->open_device();
 
 	parent->add_child (g); //RAR new
 
@@ -127,9 +125,9 @@ DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned 
 		//p->part_type_uuid = read_guid (buffer+0);
 
 		std::ostringstream part_name;
-		part_name << g->device;
-		char last = g->device[g->device.length()-1];
-		if (isdigit (last)) {
+		std::string device = g->get_device_name();
+		part_name << device;
+		if (isdigit (device.back())) {
 			part_name << 'p';
 		}
 		part_name << (i+1);

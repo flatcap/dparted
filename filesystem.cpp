@@ -145,6 +145,30 @@ long Filesystem::ext2_get_usage (void)
 
 
 /**
+ * get_ext4
+ */
+static Filesystem *
+get_ext4 (unsigned char *buffer, int bufsize)
+{
+	Filesystem *f = NULL;
+
+	if (!identify_ext4 (buffer, bufsize))
+		return NULL;
+
+	std::string uuid     = read_uuid (buffer + 0x468);
+	std::string vol_name = (char*) (buffer+0x478);
+
+	f = new Filesystem();
+
+	f->name = "ext4";
+	f->uuid = uuid;
+	f->label = vol_name;
+
+	return f;
+}
+
+
+/**
  * probe
  */
 DPContainer * Filesystem::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
@@ -152,6 +176,13 @@ DPContainer * Filesystem::probe (DPContainer &top_level, DPContainer *parent, un
 	//LOG_TRACE;
 	Filesystem *f = NULL;
 	std::string name;
+
+	f = get_ext4 (buffer, bufsize);
+	if (f) {
+		parent->add_child (f);	//RAR new
+
+		return f;
+	}
 
 	if (identify_btrfs (buffer, bufsize)) {
 		name = "btrfs";

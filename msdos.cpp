@@ -186,6 +186,7 @@ DPContainer * Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigne
 
 			c->parent_offset = vp[i].start;
 			c->device = part_name.str();
+			printf ("DEVICE = %s\n", c->device.c_str());
 
 			queue_add_probe (c);
 		}
