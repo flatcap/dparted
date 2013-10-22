@@ -57,8 +57,10 @@ function test_12()
 	LOOP="$(create_loop $IMAGE)"
 	[ -n "$LOOP" -a -b "$LOOP" ] || error || return
 
-	mke2fs -t ext4 -q "$LOOP"
+	mke2fs -t ext4 -q -L "stuff" "$LOOP"
 	[ $? = 0 ] || error || return
+
+	populate_ext4 "$LOOP" 3G
 
 	ok "$LOOP"
 }

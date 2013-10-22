@@ -6,6 +6,7 @@ function populate_ext4()
 
 	mount $dev $dir
 	fallocate --length $size $dir/filler
+	sync
 	umount $dir
 	rmdir $dir
 }
