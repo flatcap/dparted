@@ -41,8 +41,8 @@ void get_ext_common (Filesystem *f, unsigned char *buffer, int bufsize)
 	int block_size = *(int *) (buffer + 0x418);
 	block_size = (1 << (block_size+10));		// 2^(10+ value at 0x18)
 
-	int blocks_total = *(int *) (buffer + 0x404);
-	int blocks_free  = *(int *) (buffer + 0x40C);
+	long blocks_total = *(int *) (buffer + 0x404);
+	long blocks_free  = *(int *) (buffer + 0x40C);
 
 	f->block_size = block_size;
 	f->bytes_size = blocks_total * block_size;
@@ -50,6 +50,7 @@ void get_ext_common (Filesystem *f, unsigned char *buffer, int bufsize)
 
 #if 0
 	printf ("%s\n", f->name.c_str());
+	printf ("\tblock = %d\n", block_size);
 	printf ("\tsize = %ld\n",      f->bytes_size);
 	printf ("\tused = %ld (%ld)\n", f->bytes_used, (f->bytes_used*100/f->bytes_size));
 #endif
