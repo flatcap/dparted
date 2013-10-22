@@ -23,7 +23,7 @@
 /**
  * identify_btrfs
  */
-int identify_btrfs (unsigned char *buffer, int bufsize)
+bool identify_btrfs (unsigned char *buffer, int bufsize)
 {
 	return (strncmp ((char*) buffer+65600, "_BHRfS_M", 8) == 0);
 }
@@ -31,7 +31,7 @@ int identify_btrfs (unsigned char *buffer, int bufsize)
 /**
  * identify_ext2
  */
-int identify_ext2 (unsigned char *buffer, int bufsize)
+bool identify_ext2 (unsigned char *buffer, int bufsize)
 {
 	bool b1 = (*(unsigned short int *) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = !(*(unsigned int *) (buffer + 0x45C) & 0x0000004);	// Journal
@@ -42,7 +42,7 @@ int identify_ext2 (unsigned char *buffer, int bufsize)
 /**
  * identify_ext3
  */
-int identify_ext3 (unsigned char *buffer, int bufsize)
+bool identify_ext3 (unsigned char *buffer, int bufsize)
 {
 	bool b1 = (*(unsigned short int *) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = (*(unsigned int *) (buffer + 0x45C) & 0x0000004);	// Journal
@@ -55,7 +55,7 @@ int identify_ext3 (unsigned char *buffer, int bufsize)
 /**
  * identify_ext4
  */
-int identify_ext4 (unsigned char *buffer, int bufsize)
+bool identify_ext4 (unsigned char *buffer, int bufsize)
 {
 	bool b1 = (*(unsigned short int *) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = (*(unsigned int *) (buffer + 0x45C) & 0x0000004);	// Journal
@@ -69,7 +69,7 @@ int identify_ext4 (unsigned char *buffer, int bufsize)
 /**
  * identify_gpt
  */
-int identify_gpt (unsigned char *buffer, int bufsize)
+bool identify_gpt (unsigned char *buffer, int bufsize)
 {
 	return (strncmp ((char*) buffer+512, "EFI PART", 8) == 0);
 }
@@ -77,7 +77,7 @@ int identify_gpt (unsigned char *buffer, int bufsize)
 /**
  * identify_msdos
  */
-int identify_msdos (unsigned char *buffer, int bufsize)
+bool identify_msdos (unsigned char *buffer, int bufsize)
 {
 	return (*(unsigned short int *) (buffer+510) == 0xAA55);
 }
@@ -85,7 +85,7 @@ int identify_msdos (unsigned char *buffer, int bufsize)
 /**
  * identify_ntfs
  */
-int identify_ntfs (unsigned char *buffer, int bufsize)
+bool identify_ntfs (unsigned char *buffer, int bufsize)
 {
 	return (strncmp ((char*) buffer+3, "NTFS    ", 8) == 0);
 }
@@ -93,7 +93,7 @@ int identify_ntfs (unsigned char *buffer, int bufsize)
 /**
  * identify_reiserfs
  */
-int identify_reiserfs (unsigned char *buffer, int bufsize)
+bool identify_reiserfs (unsigned char *buffer, int bufsize)
 {
 	return (!strncmp ((char*) buffer+65588, "ReIsErFs",  8) ||
 		!strncmp ((char*) buffer+65588, "ReIsEr2Fs", 8) ||
@@ -103,7 +103,7 @@ int identify_reiserfs (unsigned char *buffer, int bufsize)
 /**
  * identify_swap
  */
-int identify_swap (unsigned char *buffer, int bufsize)
+bool identify_swap (unsigned char *buffer, int bufsize)
 {
 	return (!strncmp ((char*) buffer+4086, "SWAPSPACE2",           10) ||
 		!strncmp ((char*) buffer+4086, "SWAP-SPACE",           10) ||
@@ -114,7 +114,7 @@ int identify_swap (unsigned char *buffer, int bufsize)
 /**
  * identify_vfat
  */
-int identify_vfat (unsigned char *buffer, int bufsize)
+bool identify_vfat (unsigned char *buffer, int bufsize)
 {
 	for (int i = 3; i < 11; i++) {
 		if ((buffer[i] > 0) && (buffer[i] < ' '))
@@ -134,7 +134,7 @@ int identify_vfat (unsigned char *buffer, int bufsize)
 /**
  * identify_xfs
  */
-int identify_xfs (unsigned char *buffer, int bufsize)
+bool identify_xfs (unsigned char *buffer, int bufsize)
 {
 	return (strncmp ((char*) buffer, "XFSB", 4) == 0);
 }
@@ -142,7 +142,7 @@ int identify_xfs (unsigned char *buffer, int bufsize)
 /**
  * identify_lvm
  */
-int identify_lvm (unsigned char *buffer, int bufsize)
+bool identify_lvm (unsigned char *buffer, int bufsize)
 {
 	return (strncmp ((char*) buffer+536, "LVM2 001", 8) == 0);
 }
@@ -150,7 +150,7 @@ int identify_lvm (unsigned char *buffer, int bufsize)
 /**
  * identify_lvm_mlog
  */
-int identify_lvm_mlog (unsigned char *buffer, int bufsize)
+bool identify_lvm_mlog (unsigned char *buffer, int bufsize)
 {
 	return (strncmp ((char*) buffer+0, "rRiM", 4) == 0);
 }

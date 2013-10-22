@@ -18,19 +18,19 @@
 #ifndef _IDENTIFY_H_
 #define _IDENTIFY_H_
 
-int identify_btrfs    (unsigned char *buffer, int bufsize);
-int identify_ext2     (unsigned char *buffer, int bufsize);
-int identify_ext3     (unsigned char *buffer, int bufsize);
-int identify_ext4     (unsigned char *buffer, int bufsize);
-int identify_gpt      (unsigned char *buffer, int bufsize);
-int identify_lvm      (unsigned char *buffer, int bufsize);
-int identify_lvm_mlog (unsigned char *buffer, int bufsize);
-int identify_msdos    (unsigned char *buffer, int bufsize);
-int identify_ntfs     (unsigned char *buffer, int bufsize);
-int identify_reiserfs (unsigned char *buffer, int bufsize);
-int identify_swap     (unsigned char *buffer, int bufsize);
-int identify_vfat     (unsigned char *buffer, int bufsize);
-int identify_xfs      (unsigned char *buffer, int bufsize);
+bool identify_btrfs    (unsigned char *buffer, int bufsize);
+bool identify_ext2     (unsigned char *buffer, int bufsize);
+bool identify_ext3     (unsigned char *buffer, int bufsize);
+bool identify_ext4     (unsigned char *buffer, int bufsize);
+bool identify_gpt      (unsigned char *buffer, int bufsize);
+bool identify_lvm      (unsigned char *buffer, int bufsize);
+bool identify_lvm_mlog (unsigned char *buffer, int bufsize);
+bool identify_msdos    (unsigned char *buffer, int bufsize);
+bool identify_ntfs     (unsigned char *buffer, int bufsize);
+bool identify_reiserfs (unsigned char *buffer, int bufsize);
+bool identify_swap     (unsigned char *buffer, int bufsize);
+bool identify_vfat     (unsigned char *buffer, int bufsize);
+bool identify_xfs      (unsigned char *buffer, int bufsize);
 
 #endif // _IDENTIFY_H_
 

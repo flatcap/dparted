@@ -68,11 +68,11 @@ public:
 	std::string	 uuid;
 
 	std::string	 device;
-	long	 parent_offset;
+	long		 parent_offset;
 
 	long		 block_size;
-	long	 bytes_size;
-	long	 bytes_used;
+	long		 bytes_size;
+	long		 bytes_used;
 
 	Whole		*whole;
 

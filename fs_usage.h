@@ -15,43 +15,21 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _LVM_GROUP_H_
-#define _LVM_GROUP_H_
 
-#include "whole.h"
+#ifndef _FS_USAGE_H_
+#define _FS_USAGE_H_
 
-class LvmTable;
+class Filesystem;
 
-/**
- * class LvmGroup
- */
-class LvmGroup : public Whole
-{
-public:
-	LvmGroup (void);
-	virtual ~LvmGroup();
+bool get_btrfs_usage    (Filesystem *f);
+bool get_ext2_usage     (Filesystem *f);
+bool get_ext3_usage     (Filesystem *f);
+bool get_ext4_usage     (Filesystem *f);
+bool get_ntfs_usage     (Filesystem *f);
+bool get_reiserfs_usage (Filesystem *f);
+bool get_swap_usage     (Filesystem *f);
+bool get_vfat_usage     (Filesystem *f);
+bool get_xfs_usage      (Filesystem *f);
 
-	static void find_devices (DPContainer &list);
-
-	long		pv_count;	//XXX put this in seg_count in Whole
-	long		lv_count;	//XXX this matches children.size()
-	std::string	vg_attr;
-	long		vg_extent_count;
-	long		vg_free_count;
-	long		vg_seqno;
-
-	//virtual void add_segment (DPContainer *seg);
-
-	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
-	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
-
-	static void discover (DPContainer &top_level);
-protected:
-
-private:
-
-};
-
-
-#endif // _LVM_GROUP_H_
+#endif // _FS_USAGE_H_
 

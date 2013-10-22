@@ -34,7 +34,7 @@
  * App
  */
 App::App (DPContainer *top_level) :
-	Gtk::Application("org.flatcap.test.area", Gio::APPLICATION_FLAGS_NONE),
+	Gtk::Application("org.flatcap.test.area", Gio::APPLICATION_HANDLES_OPEN),
 	top_level (top_level)
 {
 	//printf ("App::App\n");

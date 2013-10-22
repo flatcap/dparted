@@ -341,7 +341,7 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 
 	std::string pv_uuid = read_uuid_string ((char*) ph->pv_uuid);
 
-	//printf ("%s, %lu (%s)\n", pv_uuid.c_str(), ph->device_size_xl, get_size (ph->device_size_xl).c_str());
+	//log_info ("%s, %lu (%s)\n", pv_uuid.c_str(), ph->device_size_xl, get_size (ph->device_size_xl).c_str());
 
 #if 0
 	printf ("Disk locations:\n");

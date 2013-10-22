@@ -39,6 +39,8 @@ unsigned int explode (const char *separators, const std::string &input, std::vec
 unsigned int explode_n (const char *separators, const std::string &input, std::vector<std::string> &parts, int max);
 std::string read_file_line (const std::string &filename);
 std::string read_uuid (unsigned char *buffer);
+std::string read_uuid2 (unsigned char *buffer);
+std::string read_uuid3 (unsigned char *buffer);
 void dump_hex (unsigned char *buffer, int bufsize);
 void dump_hex2 (void *buf, int start, int length);
 long align (long num, long round);

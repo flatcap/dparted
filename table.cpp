@@ -19,7 +19,6 @@
 #include <string>
 
 #include "gpt.h"
-#include "identify.h"
 #include "log.h"
 #include "misc.h"
 #include "msdos.h"

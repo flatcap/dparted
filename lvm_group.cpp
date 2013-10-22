@@ -103,7 +103,7 @@ void fd_probe_children (DPContainer *item)
 std::vector<std::string>
 fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 
 	std::vector<std::string> devices;
 	std::string command;
@@ -133,7 +133,8 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 	execute_command (command, output);
 
 	for (auto line : output) {
-		parse_tagged_line (line, "\t", tags);
+		//printf ("\n");
+		//parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		std::string pv_name = tags["LVM2_PV_NAME"];
@@ -144,7 +145,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		vg = vg_lookup[vg_uuid];
 		if (vg == NULL) {
 			vg = new LvmGroup();
-			//log_debug ("new LvmGroup (%p)\n", vg);
+			//log_debug ("new LvmGroup (%p) %s\n", (void*)vg, tags["LVM2_VG_NAME"].c_str());
 			vg->parent = &top_level;	//RAR not nec (done in add_child)
 			//vg->device = "/dev/dm-0"; //RAR what?
 			// LvmGroup doesn't have a dedicated device, so it would have to delegate to the vg segment
@@ -171,16 +172,16 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		//log_debug ("\t%s\n", seg_id.c_str());
 
 		DPContainer *cont = top_level.find_device (pv_name);
-		log_debug ("cont for %s = %p\n", pv_name.c_str(), (void*) cont);
+		//log_debug ("cont for %s = %p\n", pv_name.c_str(), (void*) cont);
 
 		LvmTable *vg_seg = NULL;
-		log_info ("find: %s\n", pv_uuid.c_str());
+		//log_info ("find: %s\n", pv_uuid.c_str());
 		vg_seg = dynamic_cast<LvmTable*> (cont->find_uuid (pv_uuid));
 		if (vg_seg) {
-			log_info ("table already exists: %s\n", pv_uuid.c_str());
+			//log_info ("table already exists: %s\n", pv_uuid.c_str());
 		} else {
-			log_error ("table didn't already exist: %s\n", pv_uuid.c_str());
-			log_debug ("%s\n\n", line.c_str());
+			//log_info ("table didn't already exist: %s\n", pv_uuid.c_str());
+			//log_debug ("%s\n\n", line.c_str());
 			vg_seg = new LvmTable();
 			//log_debug ("new LvmTable (%p)\n", vg_seg);
 			cont->add_child (vg_seg);	//RAR this could be left to find_devices, there don't need top_level fn param
@@ -434,8 +435,8 @@ void fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
 			if (it_vol_seg != vol_seg_lookup.end()) {
 				//log_debug ("found it (%s)\n", lv_name.c_str());
 			} else {
-				log_debug ("vol_seg_lookup: looking for %s: ", dep.c_str());
-				log_debug ("didn't find it (%s)\n", lv_name.c_str());
+				//log_debug ("vol_seg_lookup: looking for %s: ", dep.c_str());
+				//log_debug ("didn't find it (%s)\n", lv_name.c_str());
 			}
 			if (it_vol_seg != vol_seg_lookup.end()) {
 				//RAR connect up stuff
@@ -464,7 +465,7 @@ void fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
 				continue;
 			}
 
-			log_error ("DEP: couldn't find %s\n", dep.c_str());
+			//log_error ("DEP: couldn't find %s\n", dep.c_str());
 		}
 	}
 
@@ -548,15 +549,14 @@ void LvmGroup::find_devices (DPContainer &disks)
  * discover
  */
 void
-LvmGroup::discover (DPContainer &top_level, LvmTable *t)
+LvmGroup::discover (DPContainer &top_level)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 
-	std::string vol_name = t->vol_name;
 	std::vector<std::string> devices;
 
-	devices = fd_vgs (top_level, vol_name);
+	devices = fd_vgs (top_level, "test_02");
 	fd_pvs (top_level, devices);
-	fd_lvs (top_level, vol_name);
+	fd_lvs (top_level, "test_02");
 }
 

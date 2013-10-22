@@ -20,7 +20,8 @@
 #include <string>
 
 #include "filesystem.h"
-#include "identify.h"
+#include "fs_identify.h"
+#include "fs_get.h"
 #include "log.h"
 #include "partition.h"
 #include "stringnum.h"
@@ -44,184 +45,31 @@ Filesystem::~Filesystem()
 
 
 /**
- * ext2_get_usage
- */
-long Filesystem::ext2_get_usage (void)
-{
-	std::ostringstream build;
-	std::string dev = device;
-	std::string command;
-	std::string output;
-	long block_size = 512;
-	long bfree = 0;
-
-	if (parent_offset != 0) {
-		//log_debug ("create loop device\n");
-		build << "losetup /dev/loop16 " << device << " -o " << parent_offset;
-		command = build.str();
-		execute_command3 (command, output);
-		//log_debug ("command = %s\n", command.c_str());
-		//execute_command ("losetup /dev/loop16 ", output);
-		dev = "/dev/loop16";
-	}
-
-	if (dev.empty())	//XXX shouldn't happen
-		return 0;
-
-	// do something
-	command = "tune2fs -l " + dev;
-	//log_debug ("command = %s\n", command.c_str());
-
-	execute_command3 (command, output);
-	//log_debug ("result = \n%s\n", output.c_str());
-
-	//interpret results
-	std::string tmp;
-	size_t pos1 = std::string::npos;
-	size_t pos2 = std::string::npos;
-
-	//log_debug ("volume:\n");
-
-	pos1 = output.find ("Filesystem volume name:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 23);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		//log_debug ("\tname = '%s'\n", tmp.c_str());
-	}
-
-	pos1 = output.find ("Filesystem UUID:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 16);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		//log_debug ("\tuuid = '%s'\n", tmp.c_str());
-	}
-
-	pos1 = output.find ("Block size:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 11);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		StringNum s (tmp.c_str());
-		block_size = s;
-		//log_debug ("\tblock size = %ld\n", block_size);
-	}
-
-	pos1 = output.find ("Block count:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 12);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		//log_debug ("\tblock count = %s\n", tmp.c_str());
-	}
-
-	pos1 = output.find ("Free blocks:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 12);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		StringNum s (tmp.c_str());
-		bfree = (long) s * block_size;
-		//log_debug ("\tfree blocks = %s\n", tmp.c_str());
-		//log_debug ("\tbytes free = %lld\n", bfree);
-	}
-
-	if (parent_offset != 0) {
-		command = "losetup -d /dev/loop16";
-		execute_command3 (command, output);
-		//log_debug ("dismantle loop device\n");
-		//log_debug ("command = %s\n", command.c_str());
-		//log_debug ("\n");
-	}
-
-	return bfree;
-}
-
-
-/**
- * get_ext4
- */
-static Filesystem *
-get_ext4 (unsigned char *buffer, int bufsize)
-{
-	Filesystem *f = NULL;
-
-	if (!identify_ext4 (buffer, bufsize))
-		return NULL;
-
-	std::string uuid     = read_uuid (buffer + 0x468);
-	std::string vol_name = (char*) (buffer+0x478);
-
-	f = new Filesystem();
-
-	f->name = "ext4";
-	f->uuid = uuid;
-	f->label = vol_name;
-
-	return f;
-}
-
-
-/**
  * probe
  */
 DPContainer * Filesystem::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
 	Filesystem *f = NULL;
-	std::string name;
 
-	f = get_ext4 (buffer, bufsize);
+	if (!parent)
+		return NULL;
+	if (!buffer)
+		return NULL;
+
+	//XXX reorder by likelihood
+	     if ((f = get_btrfs    (buffer, bufsize))) {}
+	else if ((f = get_ext2     (buffer, bufsize))) {}
+	else if ((f = get_ext3     (buffer, bufsize))) {}
+	else if ((f = get_ext4     (buffer, bufsize))) {}
+	else if ((f = get_ntfs     (buffer, bufsize))) {}
+	else if ((f = get_reiserfs (buffer, bufsize))) {}
+	else if ((f = get_swap     (buffer, bufsize))) {}
+	else if ((f = get_vfat     (buffer, bufsize))) {}
+	else if ((f = get_xfs      (buffer, bufsize))) {}
+
 	if (f) {
-		parent->add_child (f);	//RAR new
-
-		return f;
-	}
-
-	if (identify_btrfs (buffer, bufsize)) {
-		name = "btrfs";
-	} else if (identify_ext2 (buffer, bufsize)) {
-		name = "ext2";
-	} else if (identify_ext3 (buffer, bufsize)) {
-		name = "ext3";
-	} else if (identify_ext4 (buffer, bufsize)) {
-		name = "ext4";
-	} else if (identify_ntfs (buffer, bufsize)) {
-		name = "ntfs";
-	} else if (identify_reiserfs (buffer, bufsize)) {
-		name = "reiserfs";
-	} else if (identify_swap (buffer, bufsize)) {
-		name = "swap";
-	} else if (identify_vfat (buffer, bufsize)) {
-		name = "vfat";
-	} else if (identify_xfs (buffer, bufsize)) {
-		name = "xfs";
-	}
-
-	//log_debug ("NAME = %s\n", name.c_str());
-	if (!name.empty()) {
-		f = new Filesystem();
-		f->name = name;
-		//f->device = parent->device;
-		f->parent_offset = 0;
-		f->bytes_size = parent->bytes_size;
-		if (name == "ext2") {
-			long bfree = f->ext2_get_usage();
-			f->bytes_used = f->bytes_size - bfree;
-		} else {
-			f->bytes_used = parent->bytes_size;
-		}
-		//log_info ("%s: size = %lld, used = %lld\n", f->name.c_str(), f->bytes_size, f->bytes_used);
-
-		f->bytes_used = (rand()%90) * f->bytes_size / 100; //RAR
-
-		parent->add_child (f);	//RAR new
+		parent->add_child (f);
 	}
 
 	return f;

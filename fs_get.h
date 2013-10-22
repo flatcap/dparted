@@ -15,43 +15,21 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _LVM_GROUP_H_
-#define _LVM_GROUP_H_
 
-#include "whole.h"
+#ifndef _FS_GET_H_
+#define _FS_GET_H_
 
-class LvmTable;
+class Filesystem;
 
-/**
- * class LvmGroup
- */
-class LvmGroup : public Whole
-{
-public:
-	LvmGroup (void);
-	virtual ~LvmGroup();
+Filesystem * get_btrfs    (unsigned char *buffer, int bufsize);
+Filesystem * get_ext2     (unsigned char *buffer, int bufsize);
+Filesystem * get_ext3     (unsigned char *buffer, int bufsize);
+Filesystem * get_ext4     (unsigned char *buffer, int bufsize);
+Filesystem * get_ntfs     (unsigned char *buffer, int bufsize);
+Filesystem * get_reiserfs (unsigned char *buffer, int bufsize);
+Filesystem * get_swap     (unsigned char *buffer, int bufsize);
+Filesystem * get_vfat     (unsigned char *buffer, int bufsize);
+Filesystem * get_xfs      (unsigned char *buffer, int bufsize);
 
-	static void find_devices (DPContainer &list);
-
-	long		pv_count;	//XXX put this in seg_count in Whole
-	long		lv_count;	//XXX this matches children.size()
-	std::string	vg_attr;
-	long		vg_extent_count;
-	long		vg_free_count;
-	long		vg_seqno;
-
-	//virtual void add_segment (DPContainer *seg);
-
-	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
-	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
-
-	static void discover (DPContainer &top_level);
-protected:
-
-private:
-
-};
-
-
-#endif // _LVM_GROUP_H_
+#endif // _FS_GET_H_
 

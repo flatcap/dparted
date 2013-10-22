@@ -431,6 +431,32 @@ std::string read_uuid (unsigned char *buffer)
 }
 
 /**
+ * read_uuid2
+ */
+std::string read_uuid2 (unsigned char *buffer)
+{
+	char uuid[20];
+
+	snprintf (uuid, sizeof (uuid), "%02x%02x%02x%02x%02x%02x%02x%02x",
+		buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7]);
+
+	return uuid;
+}
+
+/**
+ * read_uuid3
+ */
+std::string read_uuid3 (unsigned char *buffer)
+{
+	char uuid[20];
+
+	snprintf (uuid, sizeof (uuid), "%02x%02x-%02x%02x",
+		buffer[0], buffer[1], buffer[2], buffer[3]);
+
+	return uuid;
+}
+
+/**
  * dump_hex
  */
 void dump_hex (unsigned char *buffer, int bufsize)

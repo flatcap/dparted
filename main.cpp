@@ -45,6 +45,7 @@
 #include "dot.h"
 #include "file.h"
 #include "app.h"
+#include "lvm_group.h"
 
 std::queue<DPContainer*> probe_queue;
 
@@ -91,7 +92,7 @@ unsigned int mounts_get_list (DPContainer &mounts)
 DPContainer * probe (DPContainer &top_level, DPContainer *parent)
 {
 	//LOG_TRACE;
-	const int bufsize = 66560;		//XXX round up to page size (69632)
+	const int bufsize = 256*1024;
 	std::vector<unsigned char> buffer (bufsize);
 
 	DPContainer *item = NULL;
@@ -177,7 +178,24 @@ int main (int argc, char *argv[])
 		}
 	}
 
-#if 1
+	//LvmGroup::discover (top_level);
+
+	// Process the probe_queue
+	//XXX deque?
+	while ((item = probe_queue.front())) {
+		probe_queue.pop();
+
+		//std::cout << "Item: " << item << "\n";
+
+		DPContainer *found = probe (top_level, item);
+		if (found) {
+			//item->add_child (found);
+			//std::cout << "\tFound: " << found << "\n";
+			//probe_queue.push (found);
+		}
+	}
+
+#if 0
 	printf ("------------------------------------------------------------\n");
 	top_level.dump_objects();
 	printf ("------------------------------------------------------------\n");
@@ -196,7 +214,7 @@ int main (int argc, char *argv[])
 #endif
 	App app (&top_level);
 
-	return app.run (argc, argv);
+	return app.run (1, argv);		//XXX argc
 }
 
 
