@@ -185,10 +185,10 @@ get_reiserfs (unsigned char *buffer, int bufsize)
 
 	short    int block_size   = *(short    int *) (buffer + 0x1002C);
 	unsigned int blocks_total = *(unsigned int *) (buffer + 0x10000);
-	unsigned int blocks_used  = *(unsigned int *) (buffer + 0x10004);
+	unsigned int blocks_free  = *(unsigned int *) (buffer + 0x10004);
 
 	f->bytes_size = (blocks_total * block_size);
-	f->bytes_used = (blocks_used  * block_size);
+	f->bytes_used = (blocks_total - blocks_free) * block_size;
 
 	//printf ("reiser: %s, %s, %ld, %ld\n", f->uuid.c_str(), f->label.c_str(), f->bytes_size, f->bytes_used);
 
