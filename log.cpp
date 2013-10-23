@@ -40,7 +40,7 @@ static int log (const char *format, va_list args)
 	int count = vsnprintf (buffer, sizeof (buffer), format, args);
 	//XXX check count against buffer size
 
-	std::cout << buffer;
+	std::cout << buffer << std::flush;
 
 	return count;
 }

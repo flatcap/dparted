@@ -43,7 +43,7 @@ unsigned int execute_command2 (const std::string &command, std::string &input)
 
 	//log_debug ("running command: %s\n", command.c_str());
 	// Execute command and save its output to stdout
-	file = popen (command.c_str(), "w");
+	file = popen (command.c_str(), "we");
 	if (file == NULL) {
 		log_error ("popen failed");	//XXX log_perror
 		return -1;

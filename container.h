@@ -53,8 +53,11 @@ public:
 	virtual long get_size_free (void);
 
 	virtual DPContainer * find_device (const std::string &dev);
-	virtual DPContainer * find_uuid   (const std::string &uuid);
 	virtual DPContainer * find_name   (const std::string &name);
+	virtual DPContainer * find_uuid   (const std::string &uuid);
+
+	//XXX virtual std::vector<DPContainer*> find_type (const std::string &type);
+	//XXX virtual std::vector<DPContainer*> find_incomplete (void);
 
 	virtual FILE * open_device (void);
 	virtual int read_data (long offset, long size, unsigned char *buffer);
@@ -86,6 +89,8 @@ public:
 
 	FILE		*fd;
 	int		 ref_count;
+
+	bool		 complete;
 
 	void dump_objects (int indent = 0);
 

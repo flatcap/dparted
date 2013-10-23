@@ -74,6 +74,8 @@ Disk::Disk (const std::string &lsblk) :
 
 	bytes_size = tags["SIZE"];
 	mounts = tags["MOUNTPOINT"];
+
+	complete = true;
 }
 
 /**
@@ -214,7 +216,9 @@ unsigned int Disk::find_devices (DPContainer &list)
 		d->mounts = mount;
 		d->bytes_size = size;
 
-		d->open_device();
+		d->complete = true;
+
+		//d->open_device();
 
 		list.add_child (d);
 		added++;

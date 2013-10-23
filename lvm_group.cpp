@@ -134,7 +134,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 
 	for (auto line : output) {
 		//log_info ("\n");
-		//parse_tagged_line (line, "\t", tags);
+		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		std::string pv_name = tags["LVM2_PV_NAME"];
@@ -145,7 +145,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		vg = vg_lookup[vg_uuid];
 		if (vg == NULL) {
 			vg = new LvmGroup();
-			log_debug ("new LvmGroup (%p) %s\n", (void*)vg, tags["LVM2_VG_NAME"].c_str());
+			//log_debug ("new LvmGroup (%p) %s\n", (void*)vg, tags["LVM2_VG_NAME"].c_str());
 			vg->parent = &top_level;	//RAR not nec (done in add_child)
 			//vg->device = "/dev/dm-0"; //RAR what?
 			// LvmGroup doesn't have a dedicated device, so it would have to delegate to the vg segment
@@ -180,7 +180,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		if (vg_seg) {
 			//log_info ("table already exists: %s\n", pv_uuid.c_str());
 		} else {
-			//log_info ("table didn't already exist: %s\n", pv_uuid.c_str());
+			log_info ("table didn't already exist: %s\n", pv_uuid.c_str());
 			//log_debug ("%s\n\n", line.c_str());
 			vg_seg = new LvmTable();
 			//log_debug ("new LvmTable (%p)\n", vg_seg);
@@ -198,7 +198,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		//log_debug ("lookup uuid %s\n", vg_uuid.c_str());
 		//log_debug ("vg_seg_lookup: %s -> %s\n", pv_name.c_str(), vg->name.c_str());
 		vg->add_segment (vg_seg);
-		//log_debug ("add_segment %p [%s/%s] -> %p [%s/%s]\n", vg, vg->type.back().c_str(), vg->name.c_str(), vg_seg, vg_seg->type.back().c_str(), vg_seg->name.c_str());
+		//log_debug ("add_segment %p [%s/%s] -> %p [%s/%s]\n", (void*) vg, vg->type.back().c_str(), vg->name.c_str(), (void*) vg_seg, vg_seg->type.back().c_str(), vg_seg->name.c_str());
 
 		//log_debug ("whole = %p\n", vg_seg->whole);
 
@@ -293,16 +293,18 @@ void fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vec
 		//log_debug ("\tseg_id = %s\n", seg_id.c_str());
 
 		//log_debug ("lookup uuid %s\n", vg_uuid.c_str());
-		LvmGroup *vg = vg_lookup[vg_uuid];
+		//LvmGroup *vg = vg_lookup[vg_uuid];
 		//log_debug ("vg extent size = %ld\n", vg->block_size);
 
 		LvmTable *vg_seg = vg_seg_lookup[dev];	//XXX this should exist
 		if (!vg_seg)
 			continue;			//XXX error?
 
+#if 0
 		LvmPartition *vol_seg = new LvmPartition();
 		//log_debug ("new LvmPartition (%p)\n", vol_seg);
 		vol_seg->name = lv_name;
+		//log_debug ("LvmPartition : %s\n", lv_name.c_str());
 		vol_seg->uuid = lv_uuid;
 		//vol_seg->type = lv_type;			// linear, striped, etc
 
@@ -319,6 +321,7 @@ void fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vec
 		//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", vg_seg, vg_seg->type.back().c_str(), vg_seg->name.c_str(), vol_seg, vol_seg->type.back().c_str(), vol_seg->name.c_str());
 		//log_debug ("vol_seg_lookup: %s -> %s\n", seg_id.c_str(), vol_seg->name.c_str());
 		vol_seg_lookup[seg_id] = vol_seg;
+#endif
 
 		//std::string vol_id = pv_name + "(" + start + ")";	//XXX dupe
 	}
@@ -556,9 +559,7 @@ LvmGroup::discover (DPContainer &top_level)
 	std::vector<std::string> devices;
 
 	devices = fd_vgs (top_level, "test_02");
-#if 0
 	fd_pvs (top_level, devices);
 	fd_lvs (top_level, "test_02");
-#endif
 }
 

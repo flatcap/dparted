@@ -45,7 +45,8 @@ DPContainer::DPContainer (void) :
 	whole (NULL),
 	parent (NULL),
 	fd (NULL),
-	ref_count (1)
+	ref_count (1),
+	complete (false)
 {
 	declare ("container");
 }
@@ -155,6 +156,7 @@ void DPContainer::move_child (DPContainer *child, long offset, long size)
  */
 long DPContainer::get_block_size (void)
 {
+	//XXX need to get the max of all parents
 	if (block_size > 0)
 		return block_size;
 
@@ -250,12 +252,12 @@ DPContainer * DPContainer::find_device (const std::string &dev)
 }
 
 /**
- * find_uuid
+ * find_name
  */
-DPContainer * DPContainer::find_uuid (const std::string &uuid)
+DPContainer * DPContainer::find_name (const std::string &name)
 {
 	for (auto i : children) {
-		if (i->uuid == uuid) {
+		if (i->name == name) {
 			return i;
 		}
 	}
@@ -264,12 +266,12 @@ DPContainer * DPContainer::find_uuid (const std::string &uuid)
 }
 
 /**
- * find_name
+ * find_uuid
  */
-DPContainer * DPContainer::find_name (const std::string &name)
+DPContainer * DPContainer::find_uuid (const std::string &uuid)
 {
 	for (auto i : children) {
-		if (i->name == name) {
+		if (i->uuid == uuid) {
 			return i;
 		}
 	}
@@ -356,7 +358,7 @@ std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
 		return stream;
 #endif
 
-	//long bytes_free = c.bytes_size - c.bytes_used;
+	long bytes_free = c.bytes_size - c.bytes_used;
 
 	std::string uuid = c.uuid;
 
@@ -368,16 +370,16 @@ std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
 	stream
 		<< "[" << c.type.back() << "]:"
 		<< c.name << "(" << uuid << "), "
-		<< c.device //<< "(" << c.fd << "),"
-		<< " S:" //<< c.bytes_size
+		<< c.device << "(" << c.fd << "),"
+		<< " S:" << c.bytes_size
 						<< "(" << get_size(c.bytes_size)    << "), "
-//		<< " U:" << c.bytes_used
-//						<< "(" << get_size(c.bytes_used)    << "), "
-//		<< " F:" <<   bytes_free
-//						<< "(" << get_size(  bytes_free)    << "), "
-		<< " P:" //<< c.parent_offset
+		<< " U:" << c.bytes_used
+						<< "(" << get_size(c.bytes_used)    << "), "
+		<< " F:" <<   bytes_free
+						<< "(" << get_size(  bytes_free)    << "), "
+		<< " P:" << c.parent_offset
 						<< "(" << get_size(c.parent_offset) << "), "
-		//<< " rc: " << c.ref_count
+		<< " rc: " << c.ref_count
 		;
 
 	return stream;

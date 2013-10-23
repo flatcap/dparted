@@ -39,6 +39,7 @@ public:
 
 	int seq_num;
 
+	int metadata_size;
 protected:
 private:
 

@@ -33,7 +33,8 @@
  * LvmTable
  */
 LvmTable::LvmTable (void) :
-	seq_num(0)
+	seq_num(0),
+	metadata_size(0)
 {
 	declare ("lvm_table");
 }
@@ -101,7 +102,7 @@ void fd_pvs (DPContainer *parent)
          * vg_uuid           - LVM2_VG_UUID           - Unique identifier.
 	 */
 
-	command = "sudo pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options dev_size,pe_start,pvseg_size,pvseg_start,pv_attr,pv_count,pv_free,pv_name,pv_pe_alloc_count,pv_pe_count,pv_size,pv_used,pv_uuid,segtype,vg_extent_size,vg_name,vg_seqno,vg_uuid,lv_uuid,lv_name";
+	command = "sudo pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options dev_size,pe_start,pvseg_size,pvseg_start,pv_attr,pv_count,pv_free,pv_name,pv_pe_alloc_count,pv_pe_count,pv_size,pv_used,pv_uuid,segtype,vg_extent_size,vg_name,vg_seqno,vg_uuid,lv_uuid,lv_name,lv_attr";
 	//log_error ("device = %s\n", parent->get_device_name().c_str());
 	command += " " + parent->get_device_name();
 	execute_command (command, output);
@@ -133,6 +134,7 @@ void fd_pvs (DPContainer *parent)
 		vol_seg->pvseg_start	= tags["LVM2_PVSEG_START"];
 
 		vol_seg->lv_name	= tags["LVM2_LV_NAME"];
+		vol_seg->lv_attr	= tags["LVM2_LV_ATTR"];
 		vol_seg->lv_type	= tags["LVM2_SEGTYPE"];
 		vol_seg->lv_uuid	= tags["LVM2_LV_UUID"];
 
@@ -141,7 +143,12 @@ void fd_pvs (DPContainer *parent)
 		vol_seg->vg_seqno	= tags["LVM2_VG_SEQNO"];
 		vol_seg->vg_uuid	= tags["LVM2_VG_UUID"];
 
+		if ((vol_seg->lv_attr[0] == 'i') || (vol_seg->lv_attr[0] == 'l')) {		// mirror image/log
+			vol_seg->lv_name = vol_seg->lv_name.substr (1, vol_seg->lv_name.length() - 2);	// Strip the []'s
+		}
+
 		vol_seg->name = vol_seg->lv_name;	//XXX container members
+		//log_debug ("LvmPartition : %s\n", vol_seg->lv_name.c_str());
 		vol_seg->uuid = vol_seg->lv_uuid;
 
 		vol_seg->bytes_size	 = vol_seg->pvseg_size;
@@ -149,6 +156,10 @@ void fd_pvs (DPContainer *parent)
 		vol_seg->bytes_used	 = vol_seg->bytes_size;
 		vol_seg->parent_offset	 = vol_seg->pvseg_start;
 		vol_seg->parent_offset	*= vol_seg->vg_extent;
+
+		LvmTable *t = dynamic_cast<LvmTable*>(parent);
+		vol_seg->parent_offset += t->metadata_size;
+		vol_seg->block_size     = vol_seg->vg_extent;
 
 #if 0
 		//std::string seg_id = vg_name + ":" + lv_name + ":" + pv_name + "(" + start + ")";
@@ -405,12 +416,16 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	//log_debug ("new LvmTable (%p)\n", t);
 
 	t->bytes_size = ph->device_size_xl;
-	t->parent_offset = 0;		//XXX what about if we're in a partition?
+	t->parent_offset = 0;
 	t->bytes_used = 0;
 	t->config = config;
 	t->seq_num = seq_num;
 	t->vol_name = vol_name;
 	t->uuid = pv_uuid;
+
+	t->metadata_size = 1048576;
+
+	t->complete = true;
 
 	parent->add_child (t);
 

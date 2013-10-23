@@ -68,6 +68,12 @@ Loop::Loop (const std::string losetup) :
 	device     = parts[0];
 	file_name  = parts[11];
 
+	name = device;
+	size_t index = name.find_last_of ('/');
+	if (index != std::string::npos) {
+		name = name.substr (index+1);
+	}
+
 	autoclear  = StringNum (parts[ 1]);
 	file_inode = StringNum (parts[ 2]);
 	file_major = StringNum (parts[ 3]);
@@ -89,10 +95,13 @@ Loop::Loop (const std::string losetup) :
 	//XXX tmp
 	kernel_major = loop_major;
 	kernel_minor = loop_minor;
+	block_size   = 512;	//XXX kernel limit, but fs block size is likely to be bigger
 
 	std::stringstream ss;
 	ss << "[" << kernel_major << ":" << kernel_minor << "]";
 	uuid = ss.str();
+
+	complete = true;
 }
 
 /**

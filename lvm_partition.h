@@ -46,8 +46,8 @@ public:
 
 	std::string	lv_name;	// myvol
 	std::string	lv_type;	// mirror
+	std::string	lv_attr;	// i
 	std::string	lv_uuid;	// FLYSmN-CXwZ-O01d-cpmX-ZUbc-c8gm-o11d90
-	std::string	segtype;	// free
 
 	long		vg_extent;	// 4194304
 	std::string	vg_name;	// test_02
