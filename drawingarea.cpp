@@ -655,7 +655,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 	if (!c)
 		return;
 
-	//log_debug ("%s\n", __PRETTY_FUNCTION__);
+	//LOG_TRACE;
 	if (right)
 		*right = shape;
 
@@ -782,7 +782,7 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 		}
 
 		if (m) {
-			//log_debug ("Other: %s (%s)\n", m->name.c_str(), __PRETTY_FUNCTION__);
+			//log_debug ("Other: %s\n", m->name.c_str());
 			if ((child_width-GAP) < 10)
 				continue;
 			Rect rect = { offset, y, child_width-GAP, h };

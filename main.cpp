@@ -59,8 +59,8 @@ void queue_add_probe (DPContainer *item)
 
 	probe_queue.push (item);
 	std::string s = get_size (item->parent_offset);
-	//printf ("QUEUE: %s %s : %lld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
-	//printf ("QUEUE has %lu items\n", probe_queue.size());
+	//log_info ("QUEUE: %s %s : %lld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
+	//log_info ("QUEUE has %lu items\n", probe_queue.size());
 }
 
 #if 0
@@ -78,7 +78,7 @@ unsigned int mounts_get_list (DPContainer &mounts)
 
 	for (unsigned int i = 0; i < output.size(); i++) {
 		std::string line = output[i];
-		printf ("line%d:\n%s\n\n", i, line.c_str());
+		log_info ("line%d:\n%s\n\n", i, line.c_str());
 	}
 
 	return mounts.children.size();
@@ -198,9 +198,9 @@ int main (int argc, char *argv[])
 #endif
 
 #if 1
-	printf ("------------------------------------------------------------\n");
+	log_info ("------------------------------------------------------------\n");
 	top_level.dump_objects();
-	printf ("------------------------------------------------------------\n");
+	log_info ("------------------------------------------------------------\n");
 #endif
 
 #if 0

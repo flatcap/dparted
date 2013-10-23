@@ -70,7 +70,7 @@ DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned 
 	g->bytes_used = 0;
 	g->parent_offset = 0;
 	g->block_size = 0;
-	g->uuid = read_uuid (buffer+568);
+	g->uuid = read_uuid1 (buffer+568);
 
 	parent->add_child (g); //RAR new
 
@@ -121,7 +121,7 @@ DPContainer * Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned 
 		//log_debug ("new Partition %d\n", i);
 		p = new Partition();
 		p->bytes_used = 0;
-		p->uuid = read_uuid (buffer+16);
+		p->uuid = read_uuid1 (buffer+16);
 		//p->part_type_uuid = read_guid (buffer+0);
 
 		std::ostringstream part_name;

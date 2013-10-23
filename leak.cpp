@@ -67,7 +67,7 @@ bool object_untrack (DPContainer *obj)
 __attribute__((constructor))
 void main_pre ()
 {
-	//printf ("%s\n", __PRETTY_FUNCTION__);
+	//LOG_TRACE;
 }
 
 /**
@@ -77,6 +77,6 @@ __attribute__((destructor))
 void main_post()
 {
 	dump_leaks();
-	//printf ("%s\n", __PRETTY_FUNCTION__);
+	//LOG_TRACE;
 }
 

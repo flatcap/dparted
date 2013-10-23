@@ -56,11 +56,11 @@ Loop::Loop (const std::string losetup) :
 	explode_n (" :", losetup, parts, 12);
 
 #if 0
-	printf ("parts:\n");
+	log_info ("parts:\n");
 	for (auto i : parts) {
 		std::cout << "\t" << i << std::endl;
 	}
-	printf ("\n");
+	log_info ("\n");
 #endif
 
 	//XXX validate all input, else throw()
@@ -83,7 +83,7 @@ Loop::Loop (const std::string losetup) :
 	if ((len > 10) && (file_name.substr (len-10) == " (deleted)")) {
 		file_name.erase(len-10);
 		deleted = true;
-		//printf ("%s is deleted\n", device.c_str());
+		//log_info ("%s is deleted\n", device.c_str());
 	}
 
 	//XXX tmp

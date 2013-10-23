@@ -43,7 +43,7 @@ LvmVolume::~LvmVolume()
  */
 int LvmVolume::read_data (long offset, long size, unsigned char *buffer)
 {
-	//log_error ("%s\n", __PRETTY_FUNCTION__);
+	//LOG_TRACE;
 	//log_error ("%s - %s\n", name.c_str(), device.c_str());
 	if (fd < 0) {
 		open_device();

@@ -252,10 +252,10 @@ get_seq_num (const std::string &config)
 	if (index == std::string::npos)
 		return 0;
 
-	//printf ("index = %ld, end = %ld, count = %ld\n", index, end, end-index-8);
+	//log_info ("index = %ld, end = %ld, count = %ld\n", index, end, end-index-8);
 
 	StringNum sn (config.substr (index+8, end-index-7));
-	//printf ("num = %.5s\n", sn.c_str());
+	//log_info ("num = %.5s\n", sn.c_str());
 
 	return sn;
 }
@@ -290,7 +290,7 @@ format_config (std::string &config)
 		first = config.find_first_of ("[]{}\n", index);
 		if (first == std::string::npos)
 			break;
-		//printf ("first = %lu '%c'\n", first, config[first] == '\n' ? '@' : config[first]);
+		//log_info ("first = %lu '%c'\n", first, config[first] == '\n' ? '@' : config[first]);
 
 		switch (config[first]) {
 			case '[':
@@ -333,7 +333,7 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	if (!lh)
 		return NULL;
 
-	//printf ("'%.8s', %lu, 0x%8x, %u, '%.8s'\n", lh->id, lh->sector_xl, lh->crc_xl, lh->offset_xl, lh->type);
+	//log_info ("'%.8s', %lu, 0x%8x, %u, '%.8s'\n", lh->id, lh->sector_xl, lh->crc_xl, lh->offset_xl, lh->type);
 
 	struct pv_header *ph = get_pv_header (buffer + 512 + lh->offset_xl);
 	if (!ph)
@@ -344,21 +344,21 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	//log_info ("%s, %lu (%s)\n", pv_uuid.c_str(), ph->device_size_xl, get_size (ph->device_size_xl).c_str());
 
 #if 0
-	printf ("Disk locations:\n");
+	log_info ("Disk locations:\n");
 	int i;
 	for (i = 0; i < 8; i++) {
 		if (ph->disk_areas_xl[i].offset == 0)
 			break;
-		printf ("\t%lu, %lu\n", ph->disk_areas_xl[i].offset, ph->disk_areas_xl[i].size);
+		log_info ("\t%lu, %lu\n", ph->disk_areas_xl[i].offset, ph->disk_areas_xl[i].size);
 	}
 #endif
 
 #if 0
-	printf ("Metadata locations:\n");
+	log_info ("Metadata locations:\n");
 	for (i++; i < 8; i++) {
 		if (ph->disk_areas_xl[i].offset == 0)
 			break;
-		printf ("\t%lu, %lu (%lu)\n", ph->disk_areas_xl[i].offset, ph->disk_areas_xl[i].size, ph->disk_areas_xl[i].offset + ph->disk_areas_xl[i].size);
+		log_info ("\t%lu, %lu (%lu)\n", ph->disk_areas_xl[i].offset, ph->disk_areas_xl[i].size, ph->disk_areas_xl[i].offset + ph->disk_areas_xl[i].size);
 	}
 #endif
 
@@ -367,14 +367,14 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	if (!mh)
 		return NULL;
 
-	//printf ("0x%08x, '%.16s', %u, %lu, %lu\n", mh->checksum_xl, mh->magic, mh->version, mh->start, mh->size);
+	//log_info ("0x%08x, '%.16s', %u, %lu, %lu\n", mh->checksum_xl, mh->magic, mh->version, mh->start, mh->size);
 
 #if 0
-	printf ("Metadata:\n");
+	log_info ("Metadata:\n");
 	for (i = 0; i < 4; i++) {
 		if (mh->raw_locns[i].offset == 0)
 			break;
-		printf ("\t%lu (0x%lx), %lu, 0x%08x, %u\n", mh->raw_locns[i].offset, mh->raw_locns[i].offset, mh->raw_locns[i].size, mh->raw_locns[i].checksum, mh->raw_locns[i].flags);
+		log_info ("\t%lu (0x%lx), %lu, 0x%08x, %u\n", mh->raw_locns[i].offset, mh->raw_locns[i].offset, mh->raw_locns[i].size, mh->raw_locns[i].checksum, mh->raw_locns[i].flags);
 	}
 #endif
 
@@ -392,10 +392,10 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 
 		seq_num = get_seq_num (config);
 
-		//printf ("seq num = %d\n", seq_num);
+		//log_info ("seq num = %d\n", seq_num);
 		vol_name = get_vol_name (config);
 #if 0
-		printf ("Config (0x%0x):\n", 4096+offset);
+		log_info ("Config (0x%0x):\n", 4096+offset);
 		format_config (config);
 		std::cout << "\n" << config << "\n";
 #endif

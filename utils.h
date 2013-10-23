@@ -38,7 +38,7 @@ unsigned int parse_tagged_line (const std::string &line, const char *separators,
 unsigned int explode (const char *separators, const std::string &input, std::vector<std::string> &parts);
 unsigned int explode_n (const char *separators, const std::string &input, std::vector<std::string> &parts, int max);
 std::string read_file_line (const std::string &filename);
-std::string read_uuid (unsigned char *buffer);
+std::string read_uuid1 (unsigned char *buffer);
 std::string read_uuid2 (unsigned char *buffer);
 std::string read_uuid3 (unsigned char *buffer);
 void dump_hex (unsigned char *buffer, int bufsize);

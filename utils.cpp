@@ -98,7 +98,7 @@ unsigned int execute_command (const std::string &command, std::vector<std::strin
 	   XXX correct way to check return code
 	int ret = pclose(fd);
 	if(WIFEXITED(ret))
-		  printf("%d\n", WEXITSTATUS(ret));
+		  log_info("%d\n", WEXITSTATUS(ret));
 	*/
 	int retcode = pclose (file);
 	//log_info ("command %s returned %d\n", command.c_str(), retcode);
@@ -321,19 +321,19 @@ unsigned int explode_n (const char *separators, const std::string &input, std::v
 
 	parts.clear();
 
-	//printf ("input      = '%s'\n", input.c_str());
-	//printf ("separators = '%s'\n", separators);
+	//log_info ("input      = '%s'\n", input.c_str());
+	//log_info ("separators = '%s'\n", separators);
 
 	start = input.find_first_not_of (separators, start);
 	end   = input.find_first_of     (separators, start);
-	//printf ("start = %ld, end = %ld\n", start, end);
+	//log_info ("start = %ld, end = %ld\n", start, end);
 
 	while (end != std::string::npos) {
 		parts.push_back (input.substr (start, end - start));
 
 		start = input.find_first_not_of (separators, end+1);
 		end   = input.find_first_of     (separators, start);
-		//printf ("start = %ld, end = %ld\n", start, end);
+		//log_info ("start = %ld, end = %ld\n", start, end);
 
 		max--;
 		if (max < 2)
@@ -418,9 +418,9 @@ std::string read_file_line (const std::string &filename)
 }
 
 /**
- * read_uuid
+ * read_uuid1
  */
-std::string read_uuid (unsigned char *buffer)
+std::string read_uuid1 (unsigned char *buffer)
 {
 	char uuid[40];
 
@@ -488,7 +488,7 @@ void dump_hex2 (void *buf, int start, int length)
 #if 0
 		if (memcmp ((char*)buf+off, last, sizeof (last)) == 0) {
 			if (!same) {
-				printf ("	        ...\n");
+				log_info ("	        ...\n");
 				same = 1;
 			}
 			if ((off + 16) < e)
@@ -500,28 +500,28 @@ void dump_hex2 (void *buf, int start, int length)
 #endif
 
 		if (off == s)
-			printf("	%6.6x ", start);
+			log_info("	%6.6x ", start);
 		else
-			printf("	%6.6x ", off);
+			log_info("	%6.6x ", off);
 
 		for (i = 0; i < 16; i++) {
 			if (i == 8)
-				printf(" -");
+				log_info(" -");
 			if (((off+i) >= start) && ((off+i) < (start+length)))
-				printf(" %02X", mem[off+i]);
+				log_info(" %02X", mem[off+i]);
 			else
-				printf("   ");
+				log_info("   ");
 		}
-		printf("  ");
+		log_info("  ");
 		for (i = 0; i < 16; i++) {
 			if (((off+i) < start) || ((off+i) >= (start+length)))
-				printf(" ");
+				log_info(" ");
 			else if (isprint(mem[off + i]))
-				printf("%c", mem[off + i]);
+				log_info("%c", mem[off + i]);
 			else
-				printf(".");
+				log_info(".");
 		}
-		printf("\n");
+		log_info("\n");
 	}
 }
 

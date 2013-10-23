@@ -29,6 +29,8 @@
 
 #include "app.h"
 #include "dparted.h"
+#include "log.h"
+#include "log_trace.h"
 
 /**
  * App
@@ -37,7 +39,7 @@ App::App (DPContainer *top_level) :
 	Gtk::Application("org.flatcap.test.area", Gio::APPLICATION_HANDLES_OPEN),
 	top_level (top_level)
 {
-	//printf ("App::App\n");
+	//LOG_TRACE;
 	Glib::set_application_name("dparted");
 }
 
@@ -46,7 +48,7 @@ App::App (DPContainer *top_level) :
  */
 App::~App()
 {
-	//printf ("App::~App\n");
+	//LOG_TRACE;
 }
 
 
@@ -56,7 +58,7 @@ App::~App()
 void
 App::on_startup (void)
 {
-	printf ("Entered: %s\n", __func__);
+	LOG_TRACE;
 	Gtk::Application::on_startup();
 
 	Glib::RefPtr<Gtk::IconTheme> theme = Gtk::IconTheme::get_default();
@@ -109,7 +111,7 @@ App::on_startup (void)
 void
 App::on_activate()
 {
-	printf ("Entered: %s\n", __func__);
+	LOG_TRACE;
 	Gtk::Application::on_activate();
 
 	for (auto win : Gtk::Application::get_windows()) {
@@ -129,7 +131,7 @@ App::on_activate()
 void
 App::on_window_added  (Gtk::Window *window)
 {
-	printf ("Entered: %s\n", __func__);
+	LOG_TRACE;
 	Gtk::Application::on_window_added (window);
 }
 
@@ -139,7 +141,7 @@ App::on_window_added  (Gtk::Window *window)
 void
 App::on_window_removed(Gtk::Window *window)
 {
-	printf ("Entered: %s\n", __func__);
+	LOG_TRACE;
 	Gtk::Application::on_window_removed (window);
 }
 
@@ -150,7 +152,7 @@ App::on_window_removed(Gtk::Window *window)
 void
 App::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
-	printf ("Entered: %s\n", __func__);
+	LOG_TRACE;
 	Gtk::Application::on_open (files, hint);
 }
 
@@ -160,7 +162,7 @@ App::on_open (const type_vec_files& files, const Glib::ustring& hint)
 int
 App::on_command_line(const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
 {
-	printf ("Entered: %s\n", __func__);
+	LOG_TRACE;
 	return Gtk::Application::on_command_line (command_line);
 }
 
@@ -171,7 +173,7 @@ App::on_command_line(const Glib::RefPtr<Gio::ApplicationCommandLine>& command_li
 void
 App::menu_preferences (void)
 {
-	printf ("%s\n", __func__);
+	LOG_TRACE;
 }
 
 /**
@@ -180,7 +182,7 @@ App::menu_preferences (void)
 void
 App::menu_help (void)
 {
-	printf ("%s\n", __func__);
+	LOG_TRACE;
 }
 
 /**

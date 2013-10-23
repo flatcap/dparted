@@ -105,7 +105,7 @@ bool Disk::find_devices_old (const std::string &name, int fd, struct stat &st, D
 	std::string vendor   = read_file_line ("/sys/block/sda/device/model");
 #endif
 
-	//log_debug ("%s: %s\n", __FUNCTION__, model.c_str());
+	//log_debug ("%s\n", model.c_str());
 	Disk *d = NULL;
 
 	d = new Disk();

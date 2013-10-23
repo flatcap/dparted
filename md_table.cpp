@@ -82,33 +82,33 @@ MdTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buff
 		return NULL;
 
 	std::string vol_uuid = read_uuid_string (buffer + 16);
-	//printf ("vol uuid = %s\n", vol_uuid.c_str());
+	//log_info ("vol uuid = %s\n", vol_uuid.c_str());
 
 	std::string vol_name ((char*)(buffer + 32));
-	//printf ("vol name = %s\n", vol_name.c_str());
+	//log_info ("vol name = %s\n", vol_name.c_str());
 
 	int raid_type   = buffer[72];
 	int raid_layout = buffer[76];
-	//printf ("raid type = %d (%d)\n", raid_type, raid_layout);
+	//log_info ("raid type = %d (%d)\n", raid_type, raid_layout);
 
 	int raid_disks = buffer[92];
-	//printf ("%d raid disks\n", raid_disks);
+	//log_info ("%d raid disks\n", raid_disks);
 
 	int chunk_size = *(int*)(buffer + 88);
-	//printf ("chunk size = %d\n", chunk_size);
+	//log_info ("chunk size = %d\n", chunk_size);
 
 	long chunks_used = *(long*)(buffer + 80);
-	//printf ("chunks used = %ld (%s)\n", chunks_used, get_size(chunk_size * chunks_used).c_str());
+	//log_info ("chunks used = %ld (%s)\n", chunks_used, get_size(chunk_size * chunks_used).c_str());
 
 	std::string dev_uuid = read_uuid_string (buffer + 168);
-	//printf ("dev uuid = %s\n", dev_uuid.c_str());
+	//log_info ("dev uuid = %s\n", dev_uuid.c_str());
 
 	long data_offset = *(long*)(buffer + 128) * 512;
 	long data_size   = *(long*)(buffer + 136) * 512;
 
-	//printf ("data offset/size = %ld (%s), %ld (%s)\n", data_offset, get_size (data_offset).c_str(), data_size, get_size (data_size).c_str());
+	//log_info ("data offset/size = %ld (%s), %ld (%s)\n", data_offset, get_size (data_offset).c_str(), data_size, get_size (data_size).c_str());
 
-	//printf ("mdtable\n");
+	//log_info ("mdtable\n");
 	t = new MdTable();
 
 	t->bytes_size		= data_offset + data_size;

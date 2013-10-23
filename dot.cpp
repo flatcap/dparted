@@ -645,7 +645,7 @@ dump_dot_inner (std::vector <DPContainer*> v)
 
 	for (auto c : v) {
 		//if (c->dot_colour == "#ccccff") continue;
-		//printf ("%s\n", c->name.c_str());
+		//log_info ("%s\n", c->name.c_str());
 		dot << "\n";
 		dot << "// " << c << "\n";
 

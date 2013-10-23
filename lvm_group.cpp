@@ -133,7 +133,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 	execute_command (command, output);
 
 	for (auto line : output) {
-		//printf ("\n");
+		//log_info ("\n");
 		//parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
@@ -145,7 +145,7 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		vg = vg_lookup[vg_uuid];
 		if (vg == NULL) {
 			vg = new LvmGroup();
-			//log_debug ("new LvmGroup (%p) %s\n", (void*)vg, tags["LVM2_VG_NAME"].c_str());
+			log_debug ("new LvmGroup (%p) %s\n", (void*)vg, tags["LVM2_VG_NAME"].c_str());
 			vg->parent = &top_level;	//RAR not nec (done in add_child)
 			//vg->device = "/dev/dm-0"; //RAR what?
 			// LvmGroup doesn't have a dedicated device, so it would have to delegate to the vg segment

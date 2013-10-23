@@ -35,7 +35,7 @@ void get_ext_common (Filesystem *f, unsigned char *buffer, int bufsize)
 	if (!buffer)
 		return;
 
-	f->uuid = read_uuid (buffer + 0x468);
+	f->uuid = read_uuid1 (buffer + 0x468);
 	f->label = (char*) (buffer+0x478);
 
 	int block_size = *(int *) (buffer + 0x418);
@@ -49,10 +49,10 @@ void get_ext_common (Filesystem *f, unsigned char *buffer, int bufsize)
 	f->bytes_used = (blocks_total - blocks_free) * block_size;
 
 #if 0
-	printf ("%s\n", f->name.c_str());
-	printf ("\tblock = %d\n", block_size);
-	printf ("\tsize = %ld\n",      f->bytes_size);
-	printf ("\tused = %ld (%ld)\n", f->bytes_used, (f->bytes_used*100/f->bytes_size));
+	log_info ("%s\n", f->name.c_str());
+	log_info ("\tblock = %d\n", block_size);
+	log_info ("\tsize = %ld\n",      f->bytes_size);
+	log_info ("\tused = %ld (%ld)\n", f->bytes_used, (f->bytes_used*100/f->bytes_size));
 #endif
 }
 
@@ -68,11 +68,11 @@ get_btrfs (unsigned char *buffer, int bufsize)
 	if (!identify_btrfs (buffer, bufsize))
 		return NULL;
 
-	//printf ("bufsize = %d, want %d\n", bufsize, 0x10140);
+	//log_info ("bufsize = %d, want %d\n", bufsize, 0x10140);
 	f = new Filesystem();
 
 	f->name = "btrfs";
-	f->uuid = read_uuid (buffer + 0x10020);
+	f->uuid = read_uuid1 (buffer + 0x10020);
 	f->label = (char*) (buffer+0x1012B);
 
 	f->bytes_size = *(long*) (buffer + 0x10070);
@@ -181,7 +181,7 @@ get_reiserfs (unsigned char *buffer, int bufsize)
 	f = new Filesystem();
 
 	f->name = "reiserfs";
-	f->uuid = read_uuid (buffer + 0x10054);
+	f->uuid = read_uuid1 (buffer + 0x10054);
 	f->label = (char*) (buffer+0x10064);
 
 	short    int block_size   = *(short    int *) (buffer + 0x1002C);
@@ -191,7 +191,7 @@ get_reiserfs (unsigned char *buffer, int bufsize)
 	f->bytes_size = (blocks_total * block_size);
 	f->bytes_used = (blocks_total - blocks_free) * block_size;
 
-	//printf ("reiser: %s, %s, %ld, %ld\n", f->uuid.c_str(), f->label.c_str(), f->bytes_size, f->bytes_used);
+	//log_info ("reiser: %s, %s, %ld, %ld\n", f->uuid.c_str(), f->label.c_str(), f->bytes_size, f->bytes_used);
 
 	get_reiserfs_usage (f);
 	return f;
@@ -208,7 +208,7 @@ get_swap (unsigned char *buffer, int bufsize)
 	if (!identify_swap (buffer, bufsize))
 		return NULL;
 
-	std::string uuid     = read_uuid (buffer + 0x40C);
+	std::string uuid     = read_uuid1 (buffer + 0x40C);
 	std::string vol_name = (char*) (buffer+0x41C);
 	long size = 0;
 
@@ -273,10 +273,10 @@ get_vfat (unsigned char *buffer, int bufsize)
 		}
 
 		f->bytes_used = f->bytes_size - (free_clust * 512 * sect_clust);
-		//printf ("size = %ld, used = %ld\n", f->bytes_size, f->bytes_used);
+		//log_info ("size = %ld, used = %ld\n", f->bytes_size, f->bytes_used);
 	}
 
-	//printf ("res = %d, sect/fat = %d\n", reserved, sect_fat);
+	//log_info ("res = %d, sect/fat = %d\n", reserved, sect_fat);
 #endif
 
 	get_vfat_usage (f);
@@ -297,7 +297,7 @@ get_xfs (unsigned char *buffer, int bufsize)
 	f = new Filesystem();
 
 	f->name = "xfs";
-	f->uuid = read_uuid (buffer + 0x20);
+	f->uuid = read_uuid1 (buffer + 0x20);
 	f->label = (char*) (buffer+0x6C);
 
 	int  block_size   = *(int  *) (buffer + 0x04);
