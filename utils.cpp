@@ -23,6 +23,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
+#include <iomanip>
 
 #include "log.h"
 #include "stringnum.h"
@@ -422,12 +424,17 @@ std::string read_file_line (const std::string &filename)
  */
 std::string read_uuid1 (unsigned char *buffer)
 {
-	char uuid[40];
+	std::stringstream ss;
 
-	snprintf (uuid, sizeof (uuid), "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
-		buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7], buffer[8], buffer[9], buffer[10], buffer[11], buffer[12], buffer[13], buffer[14], buffer[15]);
+	ss << std::setfill ('0') << std::hex;
 
-	return uuid;
+	for (int i = 0; i < 16; ++i) {
+		if ((i == 4) || (i == 6) || (i == 8) || (i == 10))
+			ss << "-";
+		ss << std::setw (2) << static_cast<unsigned>(buffer[i]);
+	}
+
+	return ss.str();
 }
 
 /**
@@ -435,12 +442,15 @@ std::string read_uuid1 (unsigned char *buffer)
  */
 std::string read_uuid2 (unsigned char *buffer)
 {
-	char uuid[20];
+	std::stringstream ss;
 
-	snprintf (uuid, sizeof (uuid), "%02x%02x%02x%02x%02x%02x%02x%02x",
-		buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7]);
+	ss << std::setfill ('0') << std::hex;
 
-	return uuid;
+	for (int i = 0; i < 8; ++i) {
+		ss << std::setw (2) << static_cast<unsigned>(buffer[i]);
+	}
+
+	return ss.str();
 }
 
 /**
@@ -448,13 +458,19 @@ std::string read_uuid2 (unsigned char *buffer)
  */
 std::string read_uuid3 (unsigned char *buffer)
 {
-	char uuid[20];
+	std::stringstream ss;
 
-	snprintf (uuid, sizeof (uuid), "%02x%02x-%02x%02x",
-		buffer[0], buffer[1], buffer[2], buffer[3]);
+	ss << std::setfill ('0') << std::hex;
 
-	return uuid;
+	for (int i = 0; i < 4; ++i) {
+		if (i == 2)
+			ss << "-";
+		ss << std::setw (2) << static_cast<unsigned>(buffer[i]);
+	}
+
+	return ss.str();
 }
+
 
 /**
  * dump_hex
