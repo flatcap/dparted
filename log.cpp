@@ -18,6 +18,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
+#include <iostream>
 
 #include "log.h"
 #include "log_trace.h"
@@ -31,10 +32,17 @@ static FILE *file = NULL;
 __attribute__ ((format (printf, 1, 0)))
 static int log (const char *format, va_list args)
 {
+	char buffer[1024];
+
 	if (!file)
 		return 0;
 
-	return vfprintf (file, format, args);
+	int count = vsnprintf (buffer, sizeof (buffer), format, args);
+	//XXX check count against buffer size
+
+	std::cout << buffer;
+
+	return count;
 }
 
 
@@ -72,9 +80,9 @@ int log_error (const char *format, ...)
 		return 0;
 
 	va_start (args, format);
-	fprintf (file, "\033[01;31m");
+	//fprintf (file, "\033[01;31m");
 	retval = log (format, args);
-	fprintf (file, "\033[0m");
+	//fprintf (file, "\033[0m");
 	va_end (args);
 
 	return retval;
@@ -114,9 +122,9 @@ int log_trace (const char *format, ...)
 		return 0;
 
 	va_start (args, format);
-	fprintf (file, "\033[38;5;70m");
+	//fprintf (file, "\033[38;5;70m");
 	retval = log (format, args);
-	fprintf (file, "\033[0m");
+	//fprintf (file, "\033[0m");
 	va_end (args);
 	fflush (file);
 
@@ -133,7 +141,7 @@ bool log_init (const char *name)
 	//log_info ("log init: %s\n", name);
 
 	if (strncmp (name, "/dev/pts/", 9) == 0) {
-		fprintf (file, "\033c");		// reset
+		//fprintf (file, "\033c");		// reset
 	}
 
 	return (file != NULL);

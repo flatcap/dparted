@@ -76,7 +76,7 @@ void main_pre ()
 __attribute__((destructor))
 void main_post()
 {
-	dump_leaks();
 	//LOG_TRACE;
+	dump_leaks();
 }
 
