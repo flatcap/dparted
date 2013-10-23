@@ -556,7 +556,9 @@ LvmGroup::discover (DPContainer &top_level)
 	std::vector<std::string> devices;
 
 	devices = fd_vgs (top_level, "test_02");
+#if 0
 	fd_pvs (top_level, devices);
 	fd_lvs (top_level, "test_02");
+#endif
 }
 

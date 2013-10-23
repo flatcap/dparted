@@ -86,13 +86,13 @@ Loop::Loop (const std::string losetup) :
 		//printf ("%s is deleted\n", device.c_str());
 	}
 
-	std::stringstream ss;
-	ss << "[" << kernel_major << ":" << kernel_minor << "]";
-	uuid = ss.str();
-
 	//XXX tmp
 	kernel_major = loop_major;
 	kernel_minor = loop_minor;
+
+	std::stringstream ss;
+	ss << "[" << kernel_major << ":" << kernel_minor << "]";
+	uuid = ss.str();
 }
 
 /**
@@ -162,7 +162,7 @@ Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 
 		l->open_device();
 
-		// move to container::find_size or utils
+		// move to container::find_size or utils (or block::)
 		off_t size;
 		fseek (l->fd, 0, SEEK_END);
 		size = ftell (l->fd);

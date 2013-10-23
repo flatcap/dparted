@@ -178,8 +178,9 @@ int main (int argc, char *argv[])
 		}
 	}
 
-	//LvmGroup::discover (top_level);
+	LvmGroup::discover (top_level);
 
+#if 0
 	// Process the probe_queue
 	//XXX deque?
 	while ((item = probe_queue.front())) {
@@ -194,8 +195,9 @@ int main (int argc, char *argv[])
 			//probe_queue.push (found);
 		}
 	}
+#endif
 
-#if 0
+#if 1
 	printf ("------------------------------------------------------------\n");
 	top_level.dump_objects();
 	printf ("------------------------------------------------------------\n");
@@ -212,9 +214,12 @@ int main (int argc, char *argv[])
 		}
 	}
 #endif
+	int retval = 0;
+#if 0
 	App app (&top_level);
-
-	return app.run (1, argv);		//XXX argc
+	retval =  app.run (1, argv);		//XXX argc
+#endif
+	return retval;
 }
 
 

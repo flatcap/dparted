@@ -362,7 +362,7 @@ std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
 
 	if (uuid.size() > 8) {
 		size_t index = uuid.find_first_of (":-. ");
-		uuid = "U:" + uuid.substr (0, index) + "...";
+		uuid = "U:" + uuid.substr (0, index);//RAR + "...";
 	}
 
 	stream << "[" << c.type.back() << "]:" << c.name << "(" << uuid << "), " << c.device << "(" << c.fd << ")," <<
