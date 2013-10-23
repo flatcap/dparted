@@ -365,12 +365,20 @@ std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
 		uuid = "U:" + uuid.substr (0, index);//RAR + "...";
 	}
 
-	stream << "[" << c.type.back() << "]:" << c.name << "(" << uuid << "), " << c.device << "(" << c.fd << ")," <<
-		//" S:" << c.bytes_size    << //"(" << get_size(c.bytes_size)    << "), " <<
-		//" U:" << c.bytes_used    << //"(" << get_size(c.bytes_used)    << "), " <<
-		//" F:" <<   bytes_free    << //"(" << get_size(  bytes_free)    << "), " <<
-		" P:" << c.parent_offset ;//<< //"(" << get_size(c.parent_offset) << "), " <<
-		//" rc: " << c.ref_count;
+	stream
+		<< "[" << c.type.back() << "]:"
+		<< c.name << "(" << uuid << "), "
+		<< c.device //<< "(" << c.fd << "),"
+		<< " S:" //<< c.bytes_size
+						<< "(" << get_size(c.bytes_size)    << "), "
+//		<< " U:" << c.bytes_used
+//						<< "(" << get_size(c.bytes_used)    << "), "
+//		<< " F:" <<   bytes_free
+//						<< "(" << get_size(  bytes_free)    << "), "
+		<< " P:" //<< c.parent_offset
+						<< "(" << get_size(c.parent_offset) << "), "
+		//<< " rc: " << c.ref_count
+		;
 
 	return stream;
 }
