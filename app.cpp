@@ -58,7 +58,7 @@ App::~App()
 void
 App::on_startup (void)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	Gtk::Application::on_startup();
 
 	Glib::RefPtr<Gtk::IconTheme> theme = Gtk::IconTheme::get_default();
@@ -111,7 +111,7 @@ App::on_startup (void)
 void
 App::on_activate()
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	Gtk::Application::on_activate();
 
 	for (auto win : Gtk::Application::get_windows()) {
@@ -131,7 +131,7 @@ App::on_activate()
 void
 App::on_window_added  (Gtk::Window *window)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	Gtk::Application::on_window_added (window);
 }
 
@@ -141,7 +141,7 @@ App::on_window_added  (Gtk::Window *window)
 void
 App::on_window_removed(Gtk::Window *window)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	Gtk::Application::on_window_removed (window);
 }
 
@@ -152,7 +152,7 @@ App::on_window_removed(Gtk::Window *window)
 void
 App::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	Gtk::Application::on_open (files, hint);
 }
 
@@ -162,7 +162,7 @@ App::on_open (const type_vec_files& files, const Glib::ustring& hint)
 int
 App::on_command_line(const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	return Gtk::Application::on_command_line (command_line);
 }
 
@@ -173,7 +173,7 @@ App::on_command_line(const Glib::RefPtr<Gio::ApplicationCommandLine>& command_li
 void
 App::menu_preferences (void)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 }
 
 /**
@@ -182,7 +182,7 @@ App::menu_preferences (void)
 void
 App::menu_help (void)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 }
 
 /**
