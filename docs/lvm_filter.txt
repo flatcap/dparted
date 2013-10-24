@@ -1,0 +1,1 @@
+pvs --config 'devices { filter = [ "a|/dev/loop1|", "r/.*/" ] } log { prefix="" }'

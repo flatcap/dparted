@@ -1,0 +1,30 @@
+mdadm --examine /dev/loop45
+
+/dev/loop45:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x0
+     Array UUID : de849e21:09ec346d:13340c39:51e8014d
+           Name : laptop.flatcap.org:0  (local to host laptop.flatcap.org)
+  Creation Time : Mon Sep 30 13:22:31 2013
+     Raid Level : raid5
+   Raid Devices : 3
+
+ Avail Dev Size : 10477568 (5.00 GiB 5.36 GB)
+     Array Size : 10476544 (9.99 GiB 10.73 GB)
+  Used Dev Size : 10476544 (5.00 GiB 5.36 GB)
+    Data Offset : 8192 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=8112 sectors, after=1024 sectors
+          State : clean
+    Device UUID : 63231f13:e7eeeed2:d0ea070e:9df0723a
+
+    Update Time : Mon Oct 21 01:02:58 2013
+       Checksum : 6fc591c1 - correct
+         Events : 24
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 0
+   Array State : AAA ('A' == active, '.' == missing, 'R' == replacing)
