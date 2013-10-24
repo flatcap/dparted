@@ -31,7 +31,12 @@ CFLAGS	+= -std=c++11 -pedantic
 CFLAGS	+= -g -Wall
 #CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
 #CFLAGS	+= -pg -fprofile-arcs -ftest-coverage
-#CFLAGS	+= -fno-omit-frame-pointer -fno-inline-functions -fno-inline-functions-called-once -fno-optimize-sibling-calls
+
+CFLAGS	+= -fno-omit-frame-pointer
+CFLAGS	+= -fno-inline-functions
+CFLAGS	+= -fno-inline-functions-called-once
+CFLAGS	+= -fno-optimize-sibling-calls
+CFLAGS	+= -O0
 
 #LDFLAGS	+= -pg -fprofile-arcs
 
