@@ -20,8 +20,6 @@
 
 #include "volume.h"
 
-class LvmTable;
-
 /**
  * class LvmVolume
  */
@@ -36,8 +34,6 @@ public:
 	long		kernel_minor;
 
 	virtual int read_data (long offset, long size, unsigned char *buffer);
-
-	std::vector<LvmTable*> tables;
 
 protected:
 private:

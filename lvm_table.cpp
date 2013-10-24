@@ -34,7 +34,8 @@
  */
 LvmTable::LvmTable (void) :
 	seq_num(0),
-	metadata_size(0)
+	metadata_size(0),
+	group (NULL)
 {
 	declare ("lvm_table");
 }

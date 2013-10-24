@@ -22,6 +22,8 @@
 
 #include "table.h"
 
+class LvmGroup;
+
 /**
  * class LvmTable
  */
@@ -40,7 +42,10 @@ public:
 	int seq_num;
 
 	int metadata_size;
+
+	LvmGroup *group;
 protected:
+
 private:
 
 };

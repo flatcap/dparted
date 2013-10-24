@@ -507,16 +507,10 @@ static std::string
 dot_lvm_volume (LvmVolume *v)
 {
 	std::stringstream output;
-	unsigned int count = v->tables.size();
 
 	output << dot_volume(dynamic_cast<Volume *> (v));
 
-	if (count > 0) {
-		output << dot_row ("tables", count);
-		for (auto i : v->tables) {
-			output << dot_row ("", i);
-		}
-	}
+	// no specifics for now
 
 	return output.str();
 }
