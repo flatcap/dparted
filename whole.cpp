@@ -41,7 +41,8 @@ Whole::~Whole()
 /**
  * add_segment
  */
-void Whole::add_segment (DPContainer *seg)
+void
+Whole::add_segment (DPContainer *seg)
 {
 	bool inserted = false;
 

@@ -21,7 +21,8 @@
 /**
  * ext2_get_usage
  */
-long Filesystem::ext2_get_usage (void)
+long
+Filesystem::ext2_get_usage (void)
 {
 	std::ostringstream build;
 	std::string dev = device;

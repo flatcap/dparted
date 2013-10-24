@@ -91,7 +91,8 @@ TreeView::~TreeView()
 /**
  * on_popup_menu
  */
-bool TreeView::on_popup_menu (void)
+bool
+TreeView::on_popup_menu (void)
 {
 	m_Menu_Popup.popup (0, 0);
 
@@ -101,7 +102,8 @@ bool TreeView::on_popup_menu (void)
 /**
  * on_button_press_event
  */
-bool TreeView::on_button_press_event (GdkEventButton *event)
+bool
+TreeView::on_button_press_event (GdkEventButton *event)
 {
 	bool return_value = false;
 
@@ -120,7 +122,8 @@ bool TreeView::on_button_press_event (GdkEventButton *event)
 /**
  * on_menu_file_popup_generic
  */
-void TreeView::on_menu_file_popup_generic()
+void
+TreeView::on_menu_file_popup_generic()
 {
 	std::cout << "A popup menu item was selected.\n";
 
@@ -137,7 +140,8 @@ void TreeView::on_menu_file_popup_generic()
 /**
  * get_color_as_pixbuf
  */
-Glib::RefPtr<Gdk::Pixbuf> get_color_as_pixbuf (int width, int height)
+Glib::RefPtr<Gdk::Pixbuf>
+get_color_as_pixbuf (int width, int height)
 {
 	Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create (Gdk::COLORSPACE_RGB, false, 8, width, height);
 
@@ -151,7 +155,8 @@ Glib::RefPtr<Gdk::Pixbuf> get_color_as_pixbuf (int width, int height)
 /**
  * tree_add_row
  */
-void TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
+void
+TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 {
 	Gtk::TreeModel::Row row;
 
@@ -182,7 +187,8 @@ void TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 /**
  * init_treeview
  */
-void TreeView::init_treeview (DPContainer *c)
+void
+TreeView::init_treeview (DPContainer *c)
 {
 	tree_add_row (c, NULL);
 }
@@ -190,7 +196,8 @@ void TreeView::init_treeview (DPContainer *c)
 /**
  * on_row_activated
  */
-void TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn *col)
+void
+TreeView::on_row_activated (const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *col)
 {
 #if 0
 	std::cout << "Path: " << path.to_string() << "\n";
@@ -212,7 +219,8 @@ void TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeView
 /**
  * on_query_tooltip
  */
-bool TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
+bool
+TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip> &tooltip)
 {
 #if 1
 	if (keyboard_tooltip)

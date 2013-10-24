@@ -69,9 +69,9 @@ protected:
 		Gtk::TreeModelColumn<Glib::ustring>              col_filesystem;
 		Gtk::TreeModelColumn<Glib::ustring>              col_mount;
 		Gtk::TreeModelColumn<Glib::ustring>              col_label;
-		Gtk::TreeModelColumn<long>                  col_size;
-		Gtk::TreeModelColumn<long>                  col_used;
-		Gtk::TreeModelColumn<long>                  col_unused;
+		Gtk::TreeModelColumn<long>                       col_size;
+		Gtk::TreeModelColumn<long>                       col_used;
+		Gtk::TreeModelColumn<long>                       col_unused;
 		Gtk::TreeModelColumn<Glib::ustring>              col_flags;
 
 		Gtk::TreeModelColumn<DPContainer*>               col_container;

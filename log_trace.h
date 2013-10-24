@@ -37,7 +37,7 @@
 class LogTrace
 {
 public:
-	LogTrace(const std::string & function, const std::string & file_name, int line_num) :
+	LogTrace(const std::string &function, const std::string &file_name, int line_num) :
 		m_function (function),
 		m_file_name (file_name),
 		m_line_num (line_num)

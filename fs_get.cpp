@@ -28,7 +28,8 @@
 /**
  * get_ext_common
  */
-void get_ext_common (Filesystem *f, unsigned char *buffer, int bufsize)
+void
+get_ext_common (Filesystem *f, unsigned char *buffer, int bufsize)
 {
 	if (!f)
 		return;

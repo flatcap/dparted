@@ -44,7 +44,8 @@ Theme::~Theme()
 /**
  * init_colours
  */
-void Theme::init_colours (void)
+void
+Theme::init_colours (void)
 {
 	// "yellow"		Colour name
 	// "#F80"		Hex triplet: 1 digit  for Red, Green, Blue
@@ -90,7 +91,8 @@ void Theme::init_colours (void)
 /**
  * add_colour
  */
-Gdk::RGBA Theme::add_colour (const std::string &name, const std::string &colour)
+Gdk::RGBA
+Theme::add_colour (const std::string &name, const std::string &colour)
 {
 	Gdk::RGBA &c = colours[name];
 
@@ -102,7 +104,8 @@ Gdk::RGBA Theme::add_colour (const std::string &name, const std::string &colour)
 /**
  * add_colour
  */
-Gdk::RGBA Theme::add_colour (const std::string &name, const Gdk::RGBA &colour)
+Gdk::RGBA
+Theme::add_colour (const std::string &name, const Gdk::RGBA &colour)
 {
 	Gdk::RGBA &c = colours[name];
 
@@ -114,7 +117,8 @@ Gdk::RGBA Theme::add_colour (const std::string &name, const Gdk::RGBA &colour)
 /**
  * get_colour
  */
-Gdk::RGBA Theme::get_colour (const std::string &name)
+Gdk::RGBA
+Theme::get_colour (const std::string &name)
 {
 	Gdk::RGBA c ("rgba(255,0,255,0.3)");	//XXX change default to white
 
@@ -135,7 +139,8 @@ Gdk::RGBA Theme::get_colour (const std::string &name)
 /**
  * init_icons
  */
-void Theme::init_icons (void)
+void
+Theme::init_icons (void)
 {
 	// We could load these on demand if it becomes slow.
 	add_icon ("table", "icons/table.png");
@@ -152,7 +157,8 @@ void Theme::init_icons (void)
 /**
  * add_icon
  */
-Glib::RefPtr<Gdk::Pixbuf> Theme::add_icon (const std::string &name, const std::string &filename)
+Glib::RefPtr<Gdk::Pixbuf>
+Theme::add_icon (const std::string &name, const std::string &filename)
 {
 	Glib::RefPtr<Gdk::Pixbuf> &pb = icons[name];
 
@@ -164,7 +170,8 @@ Glib::RefPtr<Gdk::Pixbuf> Theme::add_icon (const std::string &name, const std::s
 /**
  * get_icon
  */
-Glib::RefPtr<Gdk::Pixbuf> Theme::get_icon (const std::string &name)
+Glib::RefPtr<Gdk::Pixbuf>
+Theme::get_icon (const std::string &name)
 {
 	Glib::RefPtr<Gdk::Pixbuf> &pb = icons[name];
 

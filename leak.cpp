@@ -27,7 +27,8 @@ std::unordered_set<DPContainer*> obj_set;
 /**
  * dump_leaks
  */
-std::size_t dump_leaks (void)
+std::size_t
+dump_leaks (void)
 {
 	if (obj_set.size() == 0)
 		return 0;
@@ -43,7 +44,8 @@ std::size_t dump_leaks (void)
 /**
  * object_track
  */
-DPContainer * object_track (DPContainer *obj)
+DPContainer *
+object_track (DPContainer *obj)
 {
 	obj_set.insert (obj);
 	return obj;
@@ -52,7 +54,8 @@ DPContainer * object_track (DPContainer *obj)
 /**
  * object_untrack
  */
-bool object_untrack (DPContainer *obj)
+bool
+object_untrack (DPContainer *obj)
 {
 	//XXX check for presence
 	obj_set.erase (obj);
@@ -65,7 +68,8 @@ bool object_untrack (DPContainer *obj)
  * main_pre
  */
 __attribute__((constructor))
-void main_pre ()
+void
+main_pre (void)
 {
 	//LOG_TRACE;
 }
@@ -74,7 +78,8 @@ void main_pre ()
  * main_post
  */
 __attribute__((destructor))
-void main_post()
+void
+main_post (void)
 {
 	//LOG_TRACE;
 	dump_leaks();

@@ -47,7 +47,8 @@ Table::~Table()
 /**
  * probe
  */
-DPContainer * Table::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer *
+Table::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
 	DPContainer *c = NULL;
@@ -70,7 +71,8 @@ DPContainer * Table::probe (DPContainer &top_level, DPContainer *parent, unsigne
 /**
  * fill_space
  */
-long Table::fill_space (void)
+long
+Table::fill_space (void)
 {
 	// iterate through the children and add a Misc for all the unallocated regions
 	// the size of these fillers must be >= alignment size

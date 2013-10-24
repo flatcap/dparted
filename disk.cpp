@@ -90,7 +90,8 @@ Disk::~Disk()
 /**
  * find_devices_old
  */
-bool Disk::find_devices_old (const std::string &name, int fd, struct stat &st, DPContainer &list)
+bool
+Disk::find_devices_old (const std::string &name, int fd, struct stat &st, DPContainer &list)
 {
 	// for /dev/sda look at
 	//	/sys/block/sda/size
@@ -152,7 +153,8 @@ bool Disk::find_devices_old (const std::string &name, int fd, struct stat &st, D
 /**
  * find_devices
  */
-unsigned int Disk::find_devices (DPContainer &list)
+unsigned int
+Disk::find_devices (DPContainer &list)
 {
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
 	//XXX use LOOP_MAJOR
@@ -231,7 +233,8 @@ unsigned int Disk::find_devices (DPContainer &list)
 /**
  * get_block_size
  */
-long Disk::get_block_size (void)
+long
+Disk::get_block_size (void)
 {
 	return 0;
 }
@@ -239,7 +242,8 @@ long Disk::get_block_size (void)
 /**
  * get_device_space
  */
-unsigned int Disk::get_device_space (std::map<long, long> &spaces)
+unsigned int
+Disk::get_device_space (std::map<long, long> &spaces)
 {
 	return 0;
 }
@@ -248,7 +252,8 @@ unsigned int Disk::get_device_space (std::map<long, long> &spaces)
 /**
  * find_device
  */
-DPContainer * Disk::find_device (const std::string &dev)
+DPContainer *
+Disk::find_device (const std::string &dev)
 {
 	// does it sound like one of my children?  /dev/sdaX, /dev/sdaXX
 	unsigned int dev_len = device.length();
@@ -266,7 +271,8 @@ DPContainer * Disk::find_device (const std::string &dev)
 /**
  * lsblk
  */
-bool Disk::lsblk (std::vector <std::string> &output, std::string device)
+bool
+Disk::lsblk (std::vector <std::string> &output, std::string device)
 {
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
 	std::string command = "sudo lsblk -b -P ";

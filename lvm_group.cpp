@@ -68,8 +68,8 @@ LvmGroup::~LvmGroup()
 /**
  * dump_map
  */
-template<typename T>
-void dump_map (const char *title, const T &m)
+template<typename T> void
+dump_map (const char *title, const T &m)
 {
 	log_debug ("%s:\n", title);
 	for (auto i : m) {
@@ -83,7 +83,8 @@ void dump_map (const char *title, const T &m)
 /**
  * fd_probe_children
  */
-void fd_probe_children (DPContainer *item)
+void
+fd_probe_children (DPContainer *item)
 {
 	// recurse through children and add_probe()
 	if (item->children.size() == 0) {
@@ -237,7 +238,8 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 /**
  * fd_pvs - Attach all the Segments (LvmGroup and Volumes)
  */
-void fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vector<std::string>())
+void
+fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vector<std::string>())
 {
 	//LOG_TRACE;
 
@@ -333,7 +335,8 @@ void fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vec
 /**
  * fd_lvs - Build the Volumes from the Segments
  */
-void fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
+void
+fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
 {
 	//LOG_TRACE;
 
@@ -490,7 +493,8 @@ void fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
 /**
  * fd_fs
  */
-void fd_fs (void)
+void
+fd_fs (void)
 {
 	// find the all the volumes
 	// identify the filesystems
@@ -527,7 +531,8 @@ void fd_fs (void)
 /**
  * find_devices
  */
-void LvmGroup::find_devices (DPContainer &disks)
+void
+LvmGroup::find_devices (DPContainer &disks)
 {
 	//log_debug ("%s\nvgs\n", "_________________________________________________________________________________________________________________________\n");
 	fd_vgs (disks);

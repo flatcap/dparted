@@ -47,7 +47,8 @@ Filesystem::~Filesystem()
 /**
  * probe
  */
-DPContainer * Filesystem::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer *
+Filesystem::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
 	Filesystem *f = NULL;

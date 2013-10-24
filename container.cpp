@@ -69,7 +69,8 @@ DPContainer::~DPContainer()
 /**
  * operator new
  */
-void * DPContainer::operator new (size_t size)
+void *
+DPContainer::operator new (size_t size)
 {
 	DPContainer *c = (DPContainer*) malloc (size);
 
@@ -81,7 +82,8 @@ void * DPContainer::operator new (size_t size)
 /**
  * operator delete
  */
-void DPContainer::operator delete (void *ptr)
+void
+DPContainer::operator delete (void *ptr)
 {
 	if (!ptr)
 		return;
@@ -98,7 +100,8 @@ void DPContainer::operator delete (void *ptr)
 /**
  * add_child
  */
-void DPContainer::add_child (DPContainer *child)
+void
+DPContainer::add_child (DPContainer *child)
 {
 	/* Check:
 	 *	available space
@@ -139,14 +142,16 @@ void DPContainer::add_child (DPContainer *child)
 /**
  * delete_child
  */
-void DPContainer::delete_child (DPContainer *child)
+void
+DPContainer::delete_child (DPContainer *child)
 {
 }
 
 /**
  * move_child
  */
-void DPContainer::move_child (DPContainer *child, long offset, long size)
+void
+DPContainer::move_child (DPContainer *child, long offset, long size)
 {
 }
 
@@ -154,7 +159,8 @@ void DPContainer::move_child (DPContainer *child, long offset, long size)
 /**
  * get_block_size
  */
-long DPContainer::get_block_size (void)
+long
+DPContainer::get_block_size (void)
 {
 	//XXX need to get the max of all parents
 	if (block_size > 0)
@@ -169,7 +175,8 @@ long DPContainer::get_block_size (void)
 /**
  * get_device_name
  */
-std::string DPContainer::get_device_name (void)
+std::string
+DPContainer::get_device_name (void)
 {
 	//log_debug ("i am %s\n", typeid (*this).name());
 	if (device.length() > 0)
@@ -183,7 +190,8 @@ std::string DPContainer::get_device_name (void)
 /**
  * get_parent_offset
  */
-long DPContainer::get_parent_offset (void)
+long
+DPContainer::get_parent_offset (void)
 {
 	return parent_offset;
 }
@@ -191,7 +199,8 @@ long DPContainer::get_parent_offset (void)
 /**
  * get_device_space
  */
-unsigned int DPContainer::get_device_space (std::map<long, long> &spaces)
+unsigned int
+DPContainer::get_device_space (std::map<long, long> &spaces)
 {
 	spaces.clear();
 
@@ -205,7 +214,8 @@ unsigned int DPContainer::get_device_space (std::map<long, long> &spaces)
 /**
  * get_size_total
  */
-long DPContainer::get_size_total (void)
+long
+DPContainer::get_size_total (void)
 {
 	return bytes_size;
 }
@@ -213,7 +223,8 @@ long DPContainer::get_size_total (void)
 /**
  * get_size_used
  */
-long DPContainer::get_size_used (void)
+long
+DPContainer::get_size_used (void)
 {
 	return bytes_used;
 }
@@ -221,7 +232,8 @@ long DPContainer::get_size_used (void)
 /**
  * get_size_free
  */
-long DPContainer::get_size_free (void)
+long
+DPContainer::get_size_free (void)
 {
 	return bytes_size - bytes_used;
 }
@@ -230,7 +242,8 @@ long DPContainer::get_size_free (void)
 /**
  * find_device
  */
-DPContainer * DPContainer::find_device (const std::string &dev)
+DPContainer *
+DPContainer::find_device (const std::string &dev)
 {
 	DPContainer *match = NULL;
 
@@ -254,7 +267,8 @@ DPContainer * DPContainer::find_device (const std::string &dev)
 /**
  * find_name
  */
-DPContainer * DPContainer::find_name (const std::string &name)
+DPContainer *
+DPContainer::find_name (const std::string &name)
 {
 	for (auto i : children) {
 		if (i->name == name) {
@@ -268,7 +282,8 @@ DPContainer * DPContainer::find_name (const std::string &name)
 /**
  * find_uuid
  */
-DPContainer * DPContainer::find_uuid (const std::string &uuid)
+DPContainer *
+DPContainer::find_uuid (const std::string &uuid)
 {
 	for (auto i : children) {
 		if (i->uuid == uuid) {
@@ -283,7 +298,8 @@ DPContainer * DPContainer::find_uuid (const std::string &uuid)
 /**
  * open_device
  */
-FILE * DPContainer::open_device (void)
+FILE *
+DPContainer::open_device (void)
 {
 	// flags? ro, rw
 	if (fd)
@@ -307,7 +323,8 @@ FILE * DPContainer::open_device (void)
 /**
  * read_data
  */
-int DPContainer::read_data (long offset, long size, unsigned char *buffer)
+int
+DPContainer::read_data (long offset, long size, unsigned char *buffer)
 {
 	// if offset >= 0, seek there
 	long current = -1;
@@ -351,7 +368,8 @@ int DPContainer::read_data (long offset, long size, unsigned char *buffer)
 /**
  * operator<<
  */
-std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
+std::ostream &
+operator<< (std::ostream &stream, const DPContainer &c)
 {
 #if 0
 	if (c.type.back() == "filesystem")
@@ -388,7 +406,8 @@ std::ostream& operator<< (std::ostream &stream, const DPContainer &c)
 /**
  * operator<<
  */
-std::ostream& operator<< (std::ostream &stream, const DPContainer *c)
+std::ostream &
+operator<< (std::ostream &stream, const DPContainer *c)
 {
 	if (c)
 		return operator<< (stream, *c);
@@ -400,7 +419,8 @@ std::ostream& operator<< (std::ostream &stream, const DPContainer *c)
 /**
  * is_a
  */
-bool DPContainer::is_a (const std::string &t)
+bool
+DPContainer::is_a (const std::string &t)
 {
 	//std::cout << "my type = " << type.back() << ", compare to " << t << "\n";
 
@@ -417,7 +437,8 @@ bool DPContainer::is_a (const std::string &t)
 /**
  * declare
  */
-void DPContainer::declare (const char *n)
+void
+DPContainer::declare (const char *n)
 {
 	type.push_back (n);
 	name = n;
@@ -427,7 +448,8 @@ void DPContainer::declare (const char *n)
 /**
  * ref
  */
-void DPContainer::ref (void)
+void
+DPContainer::ref (void)
 {
 	ref_count++;
 }
@@ -435,7 +457,8 @@ void DPContainer::ref (void)
 /**
  * unref
  */
-void DPContainer::unref (void)
+void
+DPContainer::unref (void)
 {
 	ref_count--;
 	if (ref_count == 0)

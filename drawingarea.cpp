@@ -86,7 +86,8 @@ DPDrawingArea::~DPDrawingArea()
 /**
  * on_timeout
  */
-bool DPDrawingArea::on_timeout (int timer_number)
+bool
+DPDrawingArea::on_timeout (int timer_number)
 {
 	std::cout << "timer" << "\n";
 	get_window()->invalidate (false); //RAR everything for now
@@ -97,7 +98,8 @@ bool DPDrawingArea::on_timeout (int timer_number)
 /**
  * draw_rect
  */
-void DPDrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape)
+void
+DPDrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape)
 {
 	Gdk::RGBA c = theme->get_colour (colour);
 
@@ -109,7 +111,8 @@ void DPDrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context> &cr, const st
 /**
  * get_focus
  */
-bool DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
+bool
+DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
 {
 	if ((sel_x < 0) || (sel_y < 0))
 		return false;
@@ -139,7 +142,8 @@ bool DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
  * Am I a table?
  * Am I a wrapper for a table?
  */
-Table * DPDrawingArea::get_table (DPContainer *c)
+Table *
+DPDrawingArea::get_table (DPContainer *c)
 {
 	DPContainer *child = NULL;
 
@@ -166,7 +170,8 @@ Table * DPDrawingArea::get_table (DPContainer *c)
  * get_part
  * Am I a partition?
  */
-Partition * DPDrawingArea::get_partition (DPContainer *c)
+Partition *
+DPDrawingArea::get_partition (DPContainer *c)
 {
 	if (!c)
 		return NULL;
@@ -180,7 +185,8 @@ Partition * DPDrawingArea::get_partition (DPContainer *c)
 /**
  * get_protective
  */
-Table * DPDrawingArea::get_protective (DPContainer *c)
+Table *
+DPDrawingArea::get_protective (DPContainer *c)
 {
 	DPContainer *child = NULL;
 
@@ -221,7 +227,8 @@ Table * DPDrawingArea::get_protective (DPContainer *c)
  * Am I a filesystem?
  * Am I a wrapper for a filesystem?
  */
-Filesystem * DPDrawingArea::get_filesystem (DPContainer *c)
+Filesystem *
+DPDrawingArea::get_filesystem (DPContainer *c)
 {
 	DPContainer *child = NULL;
 
@@ -247,7 +254,8 @@ Filesystem * DPDrawingArea::get_filesystem (DPContainer *c)
 /**
  * get_misc
  */
-Misc * DPDrawingArea::get_misc (DPContainer *c)
+Misc *
+DPDrawingArea::get_misc (DPContainer *c)
 {
 	DPContainer *child = NULL;
 
@@ -271,7 +279,8 @@ Misc * DPDrawingArea::get_misc (DPContainer *c)
 /**
  * draw_icon
  */
-void DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below /*=NULL*/)
+void
+DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below /*=NULL*/)
 {
 	Glib::RefPtr<Gdk::Pixbuf> pb;
 
@@ -302,7 +311,8 @@ void DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const st
 /**
  * draw_block
  */
-void DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect &space, Rect *right /*=NULL*/)
+void
+DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect &space, Rect *right /*=NULL*/)
 {
 	// adjust the rect to match
 	std::string name;
@@ -377,7 +387,8 @@ void DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPConta
 /**
  * draw_border
  */
-void DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
+void
+DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
 {
 	const int &r = RADIUS;
 	const int &x = shape.x;
@@ -408,7 +419,8 @@ void DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const 
 /**
  * draw_focus
  */
-void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+void
+DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 {
 	std::vector<double> dashes;
 	dashes.push_back (5);
@@ -438,7 +450,8 @@ void DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const R
 /**
  * draw_frame
  */
-void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context> &cr, const Gdk::RGBA &colour, const Rect &shape, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
+void
+DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context> &cr, const Gdk::RGBA &colour, const Rect &shape, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
 {
 	const int r  = 8;					// Radius
 	const int &x = shape.x;
@@ -491,7 +504,8 @@ void DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context> &cr, const G
 /**
  * draw_tabframe
  */
-void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape, Rect *tab /*=NULL*/, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
+void
+DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape, Rect *tab /*=NULL*/, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
 {
 	const int &r = RADIUS;
 	const int &t = TAB_WIDTH;
@@ -563,10 +577,11 @@ void DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context> &cr, cons
 /**
  * draw_partition
  */
-void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context> &cr,
-				    const std::string &colour,
-				    int width_part, int width_fs, int width_usage,
-				    Rect shape, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
+void
+DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context> &cr,
+				const std::string &colour,
+				int width_part, int width_fs, int width_usage,
+				Rect shape, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
 {
 	const int r = RADIUS;
 	const int &x = shape.x;
@@ -644,7 +659,8 @@ void DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context> &cr,
 /**
  * draw_container
  */
-void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right /*=NULL*/)
+void
+DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right /*=NULL*/)
 {
 	const int &x = shape.x;
 	const int &y = shape.y;
@@ -823,7 +839,8 @@ void DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPC
 /**
  * on_draw
  */
-bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
+bool
+DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 {
 	//log_debug ("%s\n", __PRETTY_FUNCTION__);
 	if (!m_c)
@@ -891,7 +908,8 @@ bool DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 /**
  * on_mouse_motion
  */
-bool DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
+bool
+DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
 {
 	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")\n";
 
@@ -911,7 +929,8 @@ bool DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
 /**
  * on_mouse_leave
  */
-bool DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
+bool
+DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
 {
 #if 0
 	if (mouse_close) {
@@ -925,7 +944,8 @@ bool DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
 /**
  * on_mouse_click
  */
-bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
+bool
+DPDrawingArea::on_mouse_click (GdkEventButton *event)
 {
 	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
@@ -977,7 +997,8 @@ bool DPDrawingArea::on_mouse_click (GdkEventButton *event)
 /**
  * set_data
  */
-void DPDrawingArea::set_data (DPContainer *c)
+void
+DPDrawingArea::set_data (DPContainer *c)
 {
 	// check we've been given a block device
 
@@ -994,7 +1015,8 @@ void DPDrawingArea::set_data (DPContainer *c)
 /**
  * draw_grid
  */
-void DPDrawingArea::draw_grid (const Cairo::RefPtr<Cairo::Context> &cr)
+void
+DPDrawingArea::draw_grid (const Cairo::RefPtr<Cairo::Context> &cr)
 {
 	Gtk::Allocation allocation = get_allocation();
 	int width  = allocation.get_width();
@@ -1036,7 +1058,8 @@ void DPDrawingArea::draw_grid (const Cairo::RefPtr<Cairo::Context> &cr)
 /**
  * draw_grid_linear
  */
-void DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
+void
+DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
 {
 	space.w -= 2;
 
@@ -1088,7 +1111,8 @@ void DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, R
 /**
  * draw_grid_log
  */
-void DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
+void
+DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
 {
 }
 
@@ -1096,7 +1120,8 @@ void DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect
 /**
  * draw_highlight
  */
-void DPDrawingArea::draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+void
+DPDrawingArea::draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 {
 	cr->save();
 	draw_border (cr, shape);

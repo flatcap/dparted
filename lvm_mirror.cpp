@@ -40,7 +40,8 @@ LvmMirror::~LvmMirror()
 /**
  * add_child
  */
-void LvmMirror::add_child (DPContainer *child)
+void
+LvmMirror::add_child (DPContainer *child)
 {
 	/* Check:
 	 *	available space
@@ -81,7 +82,8 @@ void LvmMirror::add_child (DPContainer *child)
 /**
  * delete_child
  */
-void LvmMirror::delete_child (DPContainer *child)
+void
+LvmMirror::delete_child (DPContainer *child)
 {
 }
 

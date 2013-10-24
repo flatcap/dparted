@@ -52,7 +52,8 @@ std::queue<DPContainer*> probe_queue;
 /**
  * queue_add_probe
  */
-void queue_add_probe (DPContainer *item)
+void
+queue_add_probe (DPContainer *item)
 {
 	if (!item)
 		return;
@@ -67,7 +68,8 @@ void queue_add_probe (DPContainer *item)
 /**
  * mounts_get_list
  */
-unsigned int mounts_get_list (DPContainer &mounts)
+unsigned int
+mounts_get_list (DPContainer &mounts)
 {
 	std::string command;
 	std::vector<std::string> output;
@@ -89,7 +91,8 @@ unsigned int mounts_get_list (DPContainer &mounts)
 /**
  * probe
  */
-DPContainer * probe (DPContainer &top_level, DPContainer *parent)
+DPContainer *
+probe (DPContainer &top_level, DPContainer *parent)
 {
 	//LOG_TRACE;
 	const int bufsize = 256*1024;
@@ -118,7 +121,8 @@ DPContainer * probe (DPContainer &top_level, DPContainer *parent)
 /**
  * main
  */
-int main (int argc, char *argv[])
+int
+main (int argc, char *argv[])
 {
 	log_init ("/dev/stdout");
 

@@ -96,7 +96,8 @@ DParted::~DParted()
 /**
  * set_data
  */
-void DParted::set_data (DPContainer *c)
+void
+DParted::set_data (DPContainer *c)
 {
 	m_c = c;
 	treeview.init_treeview (m_c);
@@ -132,7 +133,8 @@ void DParted::set_data (DPContainer *c)
 /**
  * init_menubar
  */
-void DParted::init_menubar (void)
+void
+DParted::init_menubar (void)
 {
 #if 0 //YYY
 	//Create actions for menus and toolbars:
@@ -207,7 +209,7 @@ void DParted::init_menubar (void)
 
 	try {
 		m_refUIManager->add_ui_from_string (ui_info);
-	} catch (const Glib::Error& ex) {
+	} catch (const Glib::Error &ex) {
 		std::cerr << "building menus failed: " << ex.what();
 	}
 #endif
@@ -217,14 +219,16 @@ void DParted::init_menubar (void)
 /**
  * init_toolbar
  */
-void DParted::init_toolbar (void)
+void
+DParted::init_toolbar (void)
 {
 }
 
 /**
  * init_scrolledwindow
  */
-void DParted::init_scrolledwindow (void)
+void
+DParted::init_scrolledwindow (void)
 {
 }
 
@@ -233,7 +237,8 @@ void DParted::init_scrolledwindow (void)
 /**
  * on_menu_file_quit
  */
-void DParted::on_menu_file_quit()
+void
+DParted::on_menu_file_quit()
 {
 	hide(); //Closes the main window to stop the Gtk::Main::run().
 }
@@ -241,7 +246,8 @@ void DParted::on_menu_file_quit()
 /**
  * on_menu_file_new_generic
  */
-void DParted::on_menu_file_new_generic()
+void
+DParted::on_menu_file_new_generic()
 {
 	std::cout << "A File|New menu item was selected.\n";
 }
@@ -249,7 +255,8 @@ void DParted::on_menu_file_new_generic()
 /**
  * on_menu_others
  */
-void DParted::on_menu_others()
+void
+DParted::on_menu_others()
 {
 	std::cout << "A menu item was selected.\n";
 }
@@ -257,7 +264,8 @@ void DParted::on_menu_others()
 /**
  * on_menu_choices_one
  */
-void DParted::on_menu_choices_one()
+void
+DParted::on_menu_choices_one()
 {
 #if 0 //YYY
 	Glib::ustring message;
@@ -273,7 +281,8 @@ void DParted::on_menu_choices_one()
 /**
  * on_menu_choices_two
  */
-void DParted::on_menu_choices_two()
+void
+DParted::on_menu_choices_two()
 {
 #if 0 //YYY
 	Glib::ustring message;

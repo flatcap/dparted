@@ -115,7 +115,8 @@ Loop::~Loop()
 /**
  * losetup
  */
-bool Loop::losetup (std::vector <std::string> &output, std::string device)
+bool
+Loop::losetup (std::vector <std::string> &output, std::string device)
 {
 	/* Limitations of using "losetup" output:
 	 *	Filename begins, or ends, with whitespace

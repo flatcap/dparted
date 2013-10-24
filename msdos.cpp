@@ -54,7 +54,8 @@ Msdos::~Msdos()
 /**
  * read_chs
  */
-void Msdos::read_chs (unsigned char *buffer, int *cylinder, int *head, int *sector)
+void
+Msdos::read_chs (unsigned char *buffer, int *cylinder, int *head, int *sector)
 {
 	if (!buffer || !cylinder || !head || !sector)
 		return;
@@ -67,7 +68,8 @@ void Msdos::read_chs (unsigned char *buffer, int *cylinder, int *head, int *sect
 /**
  * read_partition
  */
-bool Msdos::read_partition (unsigned char *buffer, int index, struct partition *part)
+bool
+Msdos::read_partition (unsigned char *buffer, int index, struct partition *part)
 {
 	//XXX include this in read_table?
 	if (!buffer || !part)
@@ -95,7 +97,8 @@ bool Msdos::read_partition (unsigned char *buffer, int index, struct partition *
 /**
  * read_table
  */
-unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long offset, std::vector<struct partition> &vp)
+unsigned int
+Msdos::read_table (unsigned char *buffer, int bufsize, long offset, std::vector<struct partition> &vp)
 {
 	struct partition part;
 
@@ -113,7 +116,8 @@ unsigned int Msdos::read_table (unsigned char *buffer, int bufsize, long offset,
 /**
  * probe
  */
-DPContainer * Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer *
+Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
 	Msdos *m = NULL;

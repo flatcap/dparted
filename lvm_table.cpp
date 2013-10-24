@@ -50,7 +50,8 @@ LvmTable::~LvmTable()
 /**
  * read_uuid_string
  */
-std::string read_uuid_string (char *buffer)
+std::string
+read_uuid_string (char *buffer)
 {
 	if (!buffer)
 		return "";
@@ -70,7 +71,8 @@ std::string read_uuid_string (char *buffer)
 /**
  * fd_pvs
  */
-void fd_pvs (DPContainer *parent)
+void
+fd_pvs (DPContainer *parent)
 {
 	//LOG_TRACE;
 

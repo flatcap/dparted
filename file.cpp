@@ -49,7 +49,8 @@ File::~File()
 /**
  * find_devices
  */
-bool File::find_devices (const std::string &name, int fd, struct stat &st, DPContainer &list)
+bool
+File::find_devices (const std::string &name, int fd, struct stat &st, DPContainer &list)
 {
 	File *f = NULL;
 

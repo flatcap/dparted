@@ -44,7 +44,8 @@ Misc::~Misc()
 /**
  * is_empty
  */
-static bool is_empty (unsigned char *buffer, int bufsize)
+static bool
+is_empty (unsigned char *buffer, int bufsize)
 {
 	for (int i = 0; i < bufsize; i++) {
 		if (buffer[i]) {
@@ -58,7 +59,8 @@ static bool is_empty (unsigned char *buffer, int bufsize)
 /**
  * is_luks
  */
-static bool is_luks (unsigned char *buffer, int bufsize)
+static bool
+is_luks (unsigned char *buffer, int bufsize)
 {
 	const char *signature = "LUKS\xBA\xBE";
 
@@ -78,7 +80,8 @@ static bool is_luks (unsigned char *buffer, int bufsize)
 /**
  * is_random
  */
-static bool is_random (unsigned char *buffer, int bufsize)
+static bool
+is_random (unsigned char *buffer, int bufsize)
 {
 	double mean = 0;
 
@@ -100,7 +103,8 @@ static bool is_random (unsigned char *buffer, int bufsize)
 /**
  * probe
  */
-DPContainer * Misc::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+DPContainer *
+Misc::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
 	Misc *m = NULL;

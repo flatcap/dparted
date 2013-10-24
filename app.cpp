@@ -150,7 +150,7 @@ App::on_window_removed(Gtk::Window *window)
  * on_open
  */
 void
-App::on_open (const type_vec_files& files, const Glib::ustring& hint)
+App::on_open (const type_vec_files &files, const Glib::ustring &hint)
 {
 	//LOG_TRACE;
 	Gtk::Application::on_open (files, hint);
@@ -160,7 +160,7 @@ App::on_open (const type_vec_files& files, const Glib::ustring& hint)
  * on_command_line
  */
 int
-App::on_command_line(const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
+App::on_command_line(const Glib::RefPtr<Gio::ApplicationCommandLine> &command_line)
 {
 	//LOG_TRACE;
 	return Gtk::Application::on_command_line (command_line);

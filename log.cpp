@@ -30,7 +30,8 @@ static FILE *file = NULL;
  * log
  */
 __attribute__ ((format (printf, 1, 0)))
-static int log (const char *format, va_list args)
+static int
+log (const char *format, va_list args)
 {
 	char buffer[1024];
 
@@ -50,7 +51,8 @@ static int log (const char *format, va_list args)
  * log_debug
  */
 __attribute__ ((format (printf, 1, 2)))
-int log_debug (const char *format, ...)
+int
+log_debug (const char *format, ...)
 {
 	va_list args;
 	int retval;
@@ -71,7 +73,8 @@ int log_debug (const char *format, ...)
  * log_error
  */
 __attribute__ ((format (printf, 1, 2)))
-int log_error (const char *format, ...)
+int
+log_error (const char *format, ...)
 {
 	va_list args;
 	int retval;
@@ -92,7 +95,8 @@ int log_error (const char *format, ...)
  * log_info
  */
 __attribute__ ((format (printf, 1, 2)))
-int log_info (const char *format, ...)
+int
+log_info (const char *format, ...)
 {
 	va_list args;
 	int retval;
@@ -113,7 +117,8 @@ int log_info (const char *format, ...)
  * log_trace
  */
 __attribute__ ((format (printf, 1, 2)))
-int log_trace (const char *format, ...)
+int
+log_trace (const char *format, ...)
 {
 	va_list args;
 	int retval;
@@ -135,7 +140,8 @@ int log_trace (const char *format, ...)
 /**
  * log_init
  */
-bool log_init (const char *name)
+bool
+log_init (const char *name)
 {
 	file = fopen (name, "ae");	// append, close on exec
 	//log_info ("log init: %s\n", name);
@@ -150,7 +156,8 @@ bool log_init (const char *name)
 /**
  * log_close
  */
-void log_close (void)
+void
+log_close (void)
 {
 	if (!file)
 		return;
@@ -163,7 +170,8 @@ void log_close (void)
 /**
  * log_set_level
  */
-unsigned int log_set_level (unsigned int level)
+unsigned int
+log_set_level (unsigned int level)
 {
 	unsigned int old = log_level;
 	log_level = level;
@@ -173,7 +181,8 @@ unsigned int log_set_level (unsigned int level)
 /**
  * log_get_level
  */
-unsigned int log_get_level (void)
+unsigned int
+log_get_level (void)
 {
 	return log_level;
 }

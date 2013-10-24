@@ -40,7 +40,8 @@ MdTable::~MdTable()
 /**
  * read_uuid
  */
-std::string read_uuid_string (unsigned char *buffer)
+std::string
+read_uuid_string (unsigned char *buffer)
 {
 	char uuid[40];
 
@@ -54,7 +55,8 @@ std::string read_uuid_string (unsigned char *buffer)
 /**
  * is_mdtable
  */
-static bool is_mdtable (unsigned char *buffer)
+static bool
+is_mdtable (unsigned char *buffer)
 {
 	if (!buffer)
 		return false;

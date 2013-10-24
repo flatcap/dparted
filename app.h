@@ -20,8 +20,11 @@
 
 #include <gtkmm/application.h>
 
-#include "container.h"
+class DPContainer;
 
+/**
+ * class App
+ */
 class App : public Gtk::Application
 {
 public:
@@ -32,11 +35,11 @@ protected:
 	virtual void on_activate (void);
 	virtual void on_startup  (void);
 
-	virtual void on_window_added  (Gtk::Window *window);
-	virtual void on_window_removed(Gtk::Window *window);
+	virtual void on_window_added   (Gtk::Window *window);
+	virtual void on_window_removed (Gtk::Window *window);
 
-	virtual void on_open        (const type_vec_files& files, const Glib::ustring& hint);
-	virtual int  on_command_line(const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line);
+	virtual void on_open         (const type_vec_files &files, const Glib::ustring &hint);
+	virtual int  on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine> &command_line);
 
 	void menu_preferences (void);
 	void menu_help        (void);
