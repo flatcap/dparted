@@ -100,8 +100,6 @@ Loop::Loop (const std::string losetup) :
 	std::stringstream ss;
 	ss << "[" << kernel_major << ":" << kernel_minor << "]";
 	uuid = ss.str();
-
-	complete = true;
 }
 
 /**

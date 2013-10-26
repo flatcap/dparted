@@ -240,7 +240,8 @@ dot_container (DPContainer *c)
 	output << dot_row ("whole",         c->whole);		//XXX what's this doing here?
 	//output << dot_row ("parent",        c->parent);
 
-	output << dot_row ("complete",      c->complete);
+	if (c->missing)
+		output << dot_row ("missing", c->missing);
 
 	return output.str();
 }
@@ -436,8 +437,10 @@ dot_lvm_table (LvmTable *t)
 
 	output << dot_table(dynamic_cast<Table *> (t));
 
-	output << dot_row ("vol_name", t->vol_name);
-	output << dot_row ("seq_num",  t->seq_num);
+	output << dot_row ("vol_name",      t->vol_name);
+	output << dot_row ("seq_num",       t->seq_num);
+	output << dot_row ("metadata_size", t->metadata_size);
+	output << dot_row ("attr",          t->attr);
 	//output << dot_row ("config",   t->config);
 
 	return output.str();
@@ -493,8 +496,6 @@ dot_lvm_group (LvmGroup *g)
 	output << dot_row ("pv_count",        g->pv_count);
 	output << dot_row ("lv_count",        g->lv_count);
 	output << dot_row ("vg_attr",         g->vg_attr);
-	output << dot_row ("vg_extent_count", g->vg_extent_count);
-	output << dot_row ("vg_free_count",   g->vg_free_count);
 	output << dot_row ("vg_seqno",        g->vg_seqno);
 
 	return output.str();
@@ -587,6 +588,7 @@ dot_lvm_partition (LvmPartition *p)
 
 	output << dot_partition(dynamic_cast<Partition *> (p));
 
+#if 0
 	output << dot_row ("dev_size",		p->dev_size);
 	output << dot_row ("pe_start",		p->pe_start);
 	output << dot_row ("pv_attr",		p->pv_attr);
@@ -610,6 +612,7 @@ dot_lvm_partition (LvmPartition *p)
 	output << dot_row ("vg_name",		p->vg_name);
 	output << dot_row ("vg_seqno",		p->vg_seqno);
 	output << dot_row ("vg_uuid",		p->vg_uuid);
+#endif
 
 	return output.str();
 }
@@ -680,13 +683,13 @@ dump_dot_inner (std::vector <DPContainer*> v)
 		}
 
 		std::string colour = get_colour (c);
-		std::string incomplete;
-		if (!c->complete) {
-			incomplete = " INCOMPLETE";
+		std::string missing;
+		if (c->missing) {
+			missing = " MISSING";
 		}
 
 		dot << "obj_" << (void*) c << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << incomplete << "</b></font></td></tr>\n";
+		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << missing << "</b></font></td></tr>\n";
 
 		std::string type = c->type.back();
 		     if (type == "block")         { dot << dot_block         (dynamic_cast<Block        *> (c)); }

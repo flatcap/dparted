@@ -56,7 +56,7 @@ public:
 	virtual DPContainer * find_name   (const std::string &name);
 	virtual DPContainer * find_uuid   (const std::string &uuid);
 
-	//XXX virtual std::vector<DPContainer*> find_type (const std::string &type);
+	virtual void          find_type   (const std::string &type, std::vector<DPContainer*> &results);
 	//XXX virtual std::vector<DPContainer*> find_incomplete (void);
 
 	virtual FILE * open_device (void);
@@ -90,7 +90,7 @@ public:
 	FILE		*fd;
 	int		 ref_count;
 
-	bool		 complete;
+	bool		 missing;
 
 	void dump_objects (int indent = 0);
 

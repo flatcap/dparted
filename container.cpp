@@ -46,7 +46,7 @@ DPContainer::DPContainer (void) :
 	parent (NULL),
 	fd (NULL),
 	ref_count (1),
-	complete (false)
+	missing (false)
 {
 	declare ("container");
 }
@@ -268,30 +268,52 @@ DPContainer::find_device (const std::string &dev)
  * find_name
  */
 DPContainer *
-DPContainer::find_name (const std::string &name)
+DPContainer::find_name (const std::string &search)
 {
+	if (name == search)
+		return this;
+
+	DPContainer *item = NULL;
+
 	for (auto i : children) {
-		if (i->name == name) {
-			return i;
-		}
+		if ((item = i->find_name (search)))
+			break;
 	}
 
-	return NULL;
+	return item;
+}
+
+/**
+ * find_type
+ */
+void
+DPContainer::find_type (const std::string &type, std::vector<DPContainer*> &results)
+{
+	if (is_a (type))
+		results.push_back (this);
+
+	for (auto i : children) {
+		i->find_type (type, results);
+	}
 }
 
 /**
  * find_uuid
  */
 DPContainer *
-DPContainer::find_uuid (const std::string &uuid)
+DPContainer::find_uuid (const std::string &search)
 {
+	if (uuid == search)
+		return this;
+
+	DPContainer *item = NULL;
+
 	for (auto i : children) {
-		if (i->uuid == uuid) {
-			return i;
-		}
+		if ((item = i->find_uuid (search)))
+			break;
 	}
 
-	return NULL;
+	return item;
 }
 
 
@@ -388,16 +410,16 @@ operator<< (std::ostream &stream, const DPContainer &c)
 	stream
 		<< "[" << c.type.back() << "]:"
 		<< c.name << "(" << uuid << "), "
-		<< c.device << "(" << c.fd << "),"
-		<< " S:" << c.bytes_size
+		//<< c.device << "(" << c.fd << "),"
+		<< " S:" //<< c.bytes_size
 						<< "(" << get_size(c.bytes_size)    << "), "
-		<< " U:" << c.bytes_used
+		<< " U:" //<< c.bytes_used
 						<< "(" << get_size(c.bytes_used)    << "), "
-		<< " F:" <<   bytes_free
+		<< " F:" //<<   bytes_free
 						<< "(" << get_size(  bytes_free)    << "), "
-		<< " P:" << c.parent_offset
+		<< " P:" //<< c.parent_offset
 						<< "(" << get_size(c.parent_offset) << "), "
-		<< " rc: " << c.ref_count
+		//<< " rc: " << c.ref_count
 		;
 
 	return stream;

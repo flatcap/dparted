@@ -29,6 +29,7 @@ public:
 	LvmPartition (void);
 	virtual ~LvmPartition();
 
+#if 0
 	long		dev_size;	// 5368709120
 	long		pe_start;	// 1048576
 	std::string	pv_attr;	// a--
@@ -53,6 +54,7 @@ public:
 	std::string	vg_name;	// test_02
 	long		vg_seqno;	// 3
 	std::string	vg_uuid;	// xtV5An-Ua5C-iCba-JEpw-AlP0-7isO-iZCeXn
+#endif
 
 protected:
 private:

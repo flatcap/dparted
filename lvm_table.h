@@ -38,6 +38,7 @@ public:
 	// my volume
 	std::string vol_name;
 	std::string config;
+	std::string attr;
 
 	int seq_num;
 

@@ -20,6 +20,7 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <algorithm>
 
 #include "log.h"
 #include "lvm_group.h"
@@ -35,13 +36,13 @@
 
 //RAR lazy
 
-std::map<std::string, LvmGroup*>     vg_lookup;		// UUID            -> LvmGroup		(purple)
+std::map<std::string, LvmGroup*>     vg_lookup;		// UUID            -> LvmGroup
 							// I9a0Vj...       -> tmpvol
-std::map<std::string, LvmVolume*>    vol_lookup;	// VG_NAME:LV_NAME -> LvmVolume		(purple)
+std::map<std::string, LvmVolume*>    vol_lookup;	// VG_NAME:LV_NAME -> LvmVolume
 							// tmpvol:stripe2  -> stripe2
-std::map<std::string, LvmTable*>     vg_seg_lookup;	// device          -> LvmTable		(pink)
+std::map<std::string, LvmTable*>     vg_seg_lookup;	// device          -> LvmTable
 							// /dev/loop0      -> tmpvol
-std::map<std::string, DPContainer*>  vol_seg_lookup;	// device(offset)  -> LvmPartition	(yellow)
+std::map<std::string, DPContainer*>  vol_seg_lookup;	// device(offset)  -> LvmPartition
 							// /dev/loop0(0)   -> stripe2
 
 /**
@@ -50,8 +51,6 @@ std::map<std::string, DPContainer*>  vol_seg_lookup;	// device(offset)  -> LvmPa
 LvmGroup::LvmGroup (void) :
 	pv_count (0),
 	lv_count (0),
-	vg_extent_count (0),
-	vg_free_count (0),
 	vg_seqno (0)
 {
 	declare ("lvm_group");
@@ -65,6 +64,7 @@ LvmGroup::~LvmGroup()
 }
 
 
+#if 0
 /**
  * dump_map
  */
@@ -79,6 +79,7 @@ dump_map (const char *title, const T &m)
 	}
 }
 
+#endif
 
 /**
  * fd_probe_children
@@ -98,15 +99,15 @@ fd_probe_children (DPContainer *item)
 	}
 }
 
+#if 0
 /**
  * fd_vgs - Create the LvmGroup objects
  */
-std::vector<std::string>
+void
 fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 {
 	//LOG_TRACE;
 
-	std::vector<std::string> devices;
 	std::string command;
 	std::vector<std::string> output;
 	std::string error;
@@ -140,8 +141,6 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		std::string pv_name = tags["LVM2_PV_NAME"];
 		std::string pv_uuid = tags["LVM2_PV_UUID"];
-
-		devices.push_back (pv_name);
 
 		vg = vg_lookup[vg_uuid];
 		if (vg == NULL) {
@@ -231,8 +230,6 @@ fd_vgs (DPContainer &top_level, const std::string &vol_name = std::string())
 
 	//dump_map ("Volume Group map (vg_lookup)", vg_lookup);
 	//dump_map ("Volume Group Segments map (vg_seg_lookup)", vg_seg_lookup);
-
-	return devices;
 }
 
 /**
@@ -331,7 +328,6 @@ fd_pvs (DPContainer &top_level, std::vector<std::string> devices = std::vector<s
 
 	//dump_map ("Volume Segments map (vol_seg_lookup)", vol_seg_lookup);
 }
-
 /**
  * fd_lvs - Build the Volumes from the Segments
  */
@@ -488,6 +484,323 @@ fd_lvs (DPContainer &top_level, std::string vol_name = std::string())
 	}
 }
 
+/**
+ * fd_pvs2
+ */
+void
+fd_pvs2 (DPContainer *top_level, std::vector<DPContainer*> &tables)
+{
+	//LOG_TRACE;
+
+	std::string command;
+	std::vector<std::string> output;
+	std::string error;
+	std::map<std::string,StringNum> tags;
+
+	/* Output fields from the 'pvs' command:
+         * dev_size          - LVM2_DEV_SIZE          - Size of underlying device in current units.
+         * lv_name           - LVM2_LV_NAME           - Name.  LVs created for internal use are enclosed in brackets.
+         * lv_uuid           - LVM2_LV_UUID           - Unique identifier.
+         * pe_start          - LVM2_PE_START          - Offset to the start of data on the underlying device.
+         * pvseg_size        - LVM2_PVSEG_SIZE        - Number of extents in segment.
+         * pvseg_start       - LVM2_PVSEG_START       - Physical Extent number of start of segment.
+         * pv_attr           - LVM2_PV_ATTR           - Various attributes - see man page.
+         * pv_count          - LVM2_PV_COUNT          - Number of PVs.
+         * pv_free           - LVM2_PV_FREE           - Total amount of unallocated space in current units.
+         * pv_name           - LVM2_PV_NAME           - Name.
+         * pv_pe_alloc_count - LVM2_PV_PE_ALLOC_COUNT - Total number of allocated Physical Extents.
+         * pv_pe_count       - LVM2_PV_PE_COUNT       - Total number of Physical Extents.
+         * pv_size           - LVM2_PV_SIZE           - Size of PV in current units.
+         * pv_used           - LVM2_PV_USED           - Total amount of allocated space in current units.
+         * pv_uuid           - LVM2_PV_UUID           - Unique identifier.
+         * segtype           - LVM2_SEGTYPE           - Type of LV segment.
+         * vg_extent_size    - LVM2_VG_EXTENT_SIZE    - Size of Physical Extents in current units.
+         * vg_name           - LVM2_VG_NAME           - Name.
+         * vg_seqno          - LVM2_VG_SEQNO          - Revision number of internal metadata.  Incremented whenever it changes.
+         * vg_uuid           - LVM2_VG_UUID           - Unique identifier.
+	 */
+
+	command = "sudo pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options dev_size,pe_start,pvseg_size,pvseg_start,pv_attr,pv_count,pv_free,pv_name,pv_pe_alloc_count,pv_pe_count,pv_size,pv_used,pv_uuid,segtype,vg_extent_size,vg_name,vg_seqno,vg_uuid,lv_uuid,lv_name,lv_attr";
+
+	std::string devices;
+	for (auto i : tables) {
+		devices += " " + i->get_device_name();
+	}
+
+	//log_error ("device = %s\n", devices.c_str());
+	command += " " + devices;
+	execute_command (command, output);
+
+	for (auto line : output) {
+		//log_debug ("OUT: %s\n\n", line.c_str());
+		parse_tagged_line (line, "\t", tags);
+
+		std::string lv_type = tags["LVM2_SEGTYPE"];
+		if (lv_type == "free")				//XXX could process this and add it to the VGSeg's empty list
+			continue;
+
+		LvmPartition *vol_seg = new LvmPartition;
+		//log_debug ("new LvmPartition (%p)\n", vol_seg);
+
+		vol_seg->dev_size	= tags["LVM2_DEV_SIZE"];
+		vol_seg->pe_start	= tags["LVM2_PE_START"];
+		vol_seg->pv_attr	= tags["LVM2_PV_ATTR"];
+		vol_seg->pv_count	= tags["LVM2_PV_COUNT"];
+		vol_seg->pv_free	= tags["LVM2_PV_FREE"];
+		vol_seg->pv_name	= tags["LVM2_PV_NAME"];
+		vol_seg->pv_pe_alloc	= tags["LVM2_PV_PE_ALLOC_COUNT"];
+		vol_seg->pv_pe_count	= tags["LVM2_PV_PE_COUNT"];
+		vol_seg->pv_size	= tags["LVM2_PV_SIZE"];
+		vol_seg->pv_used	= tags["LVM2_PV_USED"];
+		vol_seg->pv_uuid	= tags["LVM2_PV_UUID"];
+
+		vol_seg->pvseg_size	= tags["LVM2_PVSEG_SIZE"];
+		vol_seg->pvseg_start	= tags["LVM2_PVSEG_START"];
+
+		vol_seg->lv_name	= tags["LVM2_LV_NAME"];
+		vol_seg->lv_attr	= tags["LVM2_LV_ATTR"];
+		vol_seg->lv_type	= tags["LVM2_SEGTYPE"];
+		vol_seg->lv_uuid	= tags["LVM2_LV_UUID"];
+
+		vol_seg->vg_extent	= tags["LVM2_VG_EXTENT_SIZE"];
+		vol_seg->vg_name	= tags["LVM2_VG_NAME"];
+		vol_seg->vg_seqno	= tags["LVM2_VG_SEQNO"];
+		vol_seg->vg_uuid	= tags["LVM2_VG_UUID"];
+
+		if ((vol_seg->lv_attr[0] == 'i') || (vol_seg->lv_attr[0] == 'l')) {		// mirror image/log
+			vol_seg->lv_name = vol_seg->lv_name.substr (1, vol_seg->lv_name.length() - 2);	// Strip the []'s
+		}
+
+		vol_seg->name = vol_seg->lv_name;	//XXX container members
+		//log_debug ("LvmPartition : %s\n", vol_seg->lv_name.c_str());
+		vol_seg->uuid = vol_seg->lv_uuid;
+
+		vol_seg->bytes_size	 = vol_seg->pvseg_size;
+		vol_seg->bytes_size	*= vol_seg->vg_extent;
+		vol_seg->bytes_used	 = vol_seg->bytes_size;
+		vol_seg->parent_offset	 = vol_seg->pvseg_start;
+		vol_seg->parent_offset	*= vol_seg->vg_extent;
+		vol_seg->block_size     = vol_seg->vg_extent;
+
+		//DPContainer *pv = top_level->find_uuid (vol_seg->pv_uuid);
+		//log_info ("pv = %p %s\n", (void*) pv, vol_seg->pv_uuid.c_str());
+		LvmTable *t = dynamic_cast<LvmTable*> (top_level->find_uuid (vol_seg->pv_uuid));
+		if (t) {
+			vol_seg->parent_offset += t->metadata_size;
+			t->add_child (vol_seg);
+
+		} else {
+			log_error ("Missing Table: %s\n", vol_seg->pv_uuid.c_str());
+		}
+
+#if 0
+		//std::string seg_id = vg_name + ":" + lv_name + ":" + pv_name + "(" + start + ")";
+		std::string seg_id = pv_name + "(" + start + ")";
+		//log_debug ("\tseg_id = %s\n", seg_id.c_str());
+
+		//log_debug ("lookup uuid %s\n", vg_uuid.c_str());
+		LvmGroup *vg = vg_lookup[vg_uuid];
+		//log_debug ("vg extent size = %ld\n", vg->block_size);
+
+		LvmTable *vg_seg = vg_seg_lookup[dev];	//XXX this should exist
+		if (!vg_seg)
+			continue;			//XXX error?
+#endif
+#if 1
+		//vol_seg->type = lv_type;			// linear, striped, etc
+
+		vol_seg->whole = NULL; //RAR we don't know this yet
+
+		//log_debug ("whole = %p\n", vg_seg->whole);
+
+		//log_debug ("add_child %p [%s/%s] -> %p [%s/%s]\n", vg_seg, vg_seg->type.back().c_str(), vg_seg->name.c_str(), vol_seg, vol_seg->type.back().c_str(), vol_seg->name.c_str());
+		//log_debug ("vol_seg_lookup: %s -> %s\n", seg_id.c_str(), vol_seg->name.c_str());
+		//vol_seg_lookup[seg_id] = vol_seg;
+
+		//std::string vol_id = pv_name + "(" + start + ")";	//XXX dupe
+#endif
+	}
+	//log_debug ("\n");
+}
+
+#endif
+/**
+ * fd_pvs3
+ */
+void
+fd_pvs3 (std::map<std::string, LvmTable*>     &tables,
+	 std::map<std::string, LvmPartition*> &partitions,
+	 std::map<std::string, LvmGroup*>     &groups,
+	 std::map<std::string, LvmVolume*>    &volumes)
+{
+	//LOG_TRACE;
+
+	std::string command;
+	std::vector<std::string> output;
+	std::string error;
+	std::map<std::string,StringNum> tags;
+
+	/* Output fields from the 'pvs' command:
+         * dev_size          - LVM2_DEV_SIZE          - Size of underlying device in current units.
+         * lv_name           - LVM2_LV_NAME           - Name.  LVs created for internal use are enclosed in brackets.
+         * lv_uuid           - LVM2_LV_UUID           - Unique identifier.
+         * pe_start          - LVM2_PE_START          - Offset to the start of data on the underlying device.
+         * pvseg_size        - LVM2_PVSEG_SIZE        - Number of extents in segment.
+         * pvseg_start       - LVM2_PVSEG_START       - Physical Extent number of start of segment.
+         * pv_attr           - LVM2_PV_ATTR           - Various attributes - see man page.
+         * pv_count          - LVM2_PV_COUNT          - Number of PVs.
+         * pv_free           - LVM2_PV_FREE           - Total amount of unallocated space in current units.
+         * pv_name           - LVM2_PV_NAME           - Name.
+         * pv_pe_alloc_count - LVM2_PV_PE_ALLOC_COUNT - Total number of allocated Physical Extents.
+         * pv_pe_count       - LVM2_PV_PE_COUNT       - Total number of Physical Extents.
+         * pv_size           - LVM2_PV_SIZE           - Size of PV in current units.
+         * pv_used           - LVM2_PV_USED           - Total amount of allocated space in current units.
+         * pv_uuid           - LVM2_PV_UUID           - Unique identifier.
+         * segtype           - LVM2_SEGTYPE           - Type of LV segment.
+         * vg_extent_size    - LVM2_VG_EXTENT_SIZE    - Size of Physical Extents in current units.
+         * vg_name           - LVM2_VG_NAME           - Name.
+         * vg_seqno          - LVM2_VG_SEQNO          - Revision number of internal metadata.  Incremented whenever it changes.
+         * vg_uuid           - LVM2_VG_UUID           - Unique identifier.
+	 */
+
+	command = "sudo pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options "
+			"pv_uuid,pv_size,pv_used,pv_attr,vg_extent_size,pvseg_start,pvseg_size,vg_name,vg_uuid,lv_uuid,segtype";
+
+	for (auto i : tables) {
+		command += " " + i.second->get_device_name();
+	}
+
+	execute_command (command, output);
+
+	for (auto line : output) {
+		//log_debug ("OUT: %s\n\n", line.c_str());
+		parse_tagged_line (line, "\t", tags);
+
+		if (tags["LVM2_SEGTYPE"] == "free")		//XXX could process this and add it to the VGSeg's empty list
+			continue;
+
+		LvmPartition *p = new LvmPartition;
+		//log_debug ("new LvmPartition (%p)\n", p);
+
+		// Find our relations
+		std::string vg_uuid = tags["LVM2_VG_UUID"];
+		LvmGroup *g = groups[vg_uuid];
+		if (!g) {
+			g = new LvmGroup();
+			g->name    = tags["VG_NAME"];
+			g->uuid    = vg_uuid;
+			g->missing = true;
+			groups[vg_uuid] = g;
+		}
+
+		std::string pv_uuid = tags["LVM2_PV_UUID"];
+		LvmTable *t = tables[pv_uuid];
+		if (!t) {
+			printf ("new table %s [SHOULDN'T HAPPEN]\n", pv_uuid.c_str());
+			t = new LvmTable();
+			t->uuid    = pv_uuid;
+			t->missing = true;
+			tables[pv_uuid] = t;
+		}
+
+		std::string lv_uuid = tags["LVM2_LV_UUID"];
+		LvmVolume *v = volumes[lv_uuid];
+		if (!v) {
+			v = new LvmVolume();
+			v->uuid    = lv_uuid;
+			v->missing = true;
+			volumes[lv_uuid] = v;
+		}
+
+		// DPContainer
+		p->name		= "partition";
+		p->block_size	= tags["LVM2_VG_EXTENT_SIZE"];
+		p->uuid		= pv_uuid;	// XXX We don't really have our own identity
+		p->whole	= g;
+
+		// LvmTable
+		t->attr		= tags["LVM2_PV_ATTR"];
+		t->bytes_size	= tags["LVM2_PV_SIZE"];
+		//t->bytes_used	= tags["LVM2_PV_USED"];
+
+		// LvmPartition
+		p->parent_offset  = tags["LVM2_PVSEG_START"];
+		p->parent_offset *= p->block_size;
+		p->bytes_size	  = tags["LVM2_PVSEG_SIZE"];
+		p->bytes_size	 *= p->block_size;
+		p->bytes_used     = p->bytes_size;	//XXX for now
+
+		partitions[p->uuid] = p;
+
+		t->add_child (p);
+	}
+}
+
+/**
+ * fd_vgs - Create the LvmGroup objects
+ */
+void
+fd_vgs3 (std::map<std::string, LvmGroup*> &groups)
+{
+	//LOG_TRACE;
+
+	std::string command;
+	std::vector<std::string> output;
+	std::string error;
+	std::map<std::string,StringNum> tags;
+
+	/*
+	 * LVM2_VG_NAME=shuffle
+	 * LVM2_PV_COUNT=1
+	 * LVM2_LV_COUNT=1
+	 * LVM2_VG_ATTR=wz--n-
+	 * LVM2_VG_SIZE=205520896
+	 * LVM2_VG_FREE=0
+	 * LVM2_VG_UUID=Usi3h1-mPFH-Z7kS-JNdQ-lron-H8CN-6dyTsC
+	 * LVM2_VG_EXTENT_SIZE=4194304
+	 * LVM2_VG_EXTENT_COUNT=49
+	 * LVM2_VG_FREE_COUNT=0
+	 * LVM2_VG_SEQNO=11
+	 * LVM2_PV_NAME=/dev/loop3
+	 */
+
+	command = "sudo vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options "
+		"vg_uuid,vg_name,vg_seqno,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_extent_size";
+
+	for (auto i : groups) {
+		command += " " + i.second->name;
+	}
+
+	execute_command (command, output);
+
+	for (auto line : output) {
+		log_debug ("OUT: %s\n\n", line.c_str());
+		parse_tagged_line (line, "\t", tags);
+
+		std::string vg_uuid = tags["LVM2_VG_UUID"];
+		LvmGroup *g = groups[vg_uuid];
+		if (!g) {
+			printf ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
+			g = new LvmGroup();
+			g->uuid    = vg_uuid;
+			g->missing = true;
+			groups[vg_uuid] = g;
+		}
+
+		// DPContainer
+		g->name			= tags["LVM2_VG_NAME"];
+		g->block_size		= tags["LVM2_VG_EXTENT_SIZE"];
+		g->bytes_size		= tags["LVM2_VG_SIZE"];
+		g->bytes_used		= g->bytes_size - (long) tags["LVM2_VG_FREE"];
+
+		// LvmGroup
+		g->vg_attr		= tags["LVM2_VG_ATTR"];
+		g->pv_count		= tags["LVM2_PV_COUNT"];
+		g->lv_count		= tags["LVM2_LV_COUNT"];
+		g->vg_seqno		= tags["LVM2_VG_SEQNO"];
+	}
+}
+
 
 #if 0
 /**
@@ -528,30 +841,6 @@ fd_fs (void)
 }
 
 #endif
-/**
- * find_devices
- */
-void
-LvmGroup::find_devices (DPContainer &disks)
-{
-	//log_debug ("%s\nvgs\n", "_________________________________________________________________________________________________________________________\n");
-	fd_vgs (disks);
-	//log_debug ("%s\npvs\n", "_________________________________________________________________________________________________________________________\n");
-	fd_pvs (disks);
-	//log_debug ("%s\nlvs\n", "_________________________________________________________________________________________________________________________\n");
-	fd_lvs (disks);
-	//log_debug ("%s\ndump\n", "_________________________________________________________________________________________________________________________\n");
-
-#if 0
-	dump_map ("vg_lookup",      vg_lookup);
-	dump_map ("vol_lookup",     vol_lookup);
-	dump_map ("vg_seg_lookup",  vg_seg_lookup);
-	dump_map ("vol_seg_lookup", vol_seg_lookup);
-#endif
-
-	//fd_fs();
-}
-
 
 /**
  * discover
@@ -561,10 +850,29 @@ LvmGroup::discover (DPContainer &top_level)
 {
 	//LOG_TRACE;
 
-	std::vector<std::string> devices;
+	std::map<std::string, LvmTable*>     tables;
+	std::map<std::string, LvmPartition*> partitions;
+	std::map<std::string, LvmGroup*>     groups;
+	std::map<std::string, LvmVolume*>    volumes;
 
-	devices = fd_vgs (top_level, "test_02");
-	fd_pvs (top_level, devices);
-	fd_lvs (top_level, "test_02");
+	std::vector<DPContainer*> t;
+	top_level.find_type ("lvm_table", t);
+
+	for (auto i : t) {
+		tables[i->uuid] = dynamic_cast<LvmTable*>(i);
+	}
+
+	fd_pvs3 (tables, partitions, groups, volumes);
+	fd_vgs3 (groups);
+#if 0
+	fd_lvs3 (volumes);
+#endif
+
+	std::cout << "tables\n";     for (auto i : tables)     std::cout << '\t' << i.second << '\n';
+	std::cout << "partitions\n"; for (auto i : partitions) std::cout << '\t' << i.second << '\n';
+	std::cout << "groups\n";     for (auto i : groups)     std::cout << '\t' << i.second << '\n';
+	std::cout << "volumes\n";    for (auto i : volumes)    std::cout << '\t' << i.second << '\n';
+
+	//probe leaves
 }
 

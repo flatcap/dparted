@@ -201,13 +201,13 @@ main (int argc, char *argv[])
 	}
 #endif
 
-#if 1
+#if 0
 	log_info ("------------------------------------------------------------\n");
 	top_level.dump_objects();
 	log_info ("------------------------------------------------------------\n");
 #endif
 
-	display_dot (top_level.children);
+	//display_dot (top_level.children);
 #if 0
 	if (argc != 1) {
 		display_dot (top_level.children);
