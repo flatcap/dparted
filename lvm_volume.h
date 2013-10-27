@@ -33,6 +33,14 @@ public:
 	long		kernel_major;
 	long		kernel_minor;
 
+	int		seg_count;
+	int		stripes;
+	int		stripesize;
+	int		stripe_size;
+	int		seg_start_pe;
+
+	std::string	mirror_log;
+
 	virtual int read_data (long offset, long size, unsigned char *buffer);
 
 protected:

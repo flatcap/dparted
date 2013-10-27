@@ -47,6 +47,8 @@ Whole::add_segment (DPContainer *seg)
 	bool inserted = false;
 
 	for (auto i = segments.begin(); i != segments.end(); i++) {
+		if ((*i) == seg)
+			return;
 		if ((*i)->parent_offset > seg->parent_offset) {
 			segments.insert (i, seg);
 			inserted = true;
