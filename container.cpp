@@ -398,7 +398,7 @@ operator<< (std::ostream &stream, const DPContainer &c)
 		return stream;
 #endif
 
-	long bytes_free = c.bytes_size - c.bytes_used;
+	//long bytes_free = c.bytes_size - c.bytes_used;
 
 	std::string uuid = c.uuid;
 
@@ -410,6 +410,7 @@ operator<< (std::ostream &stream, const DPContainer &c)
 	stream
 		<< "[" << c.type.back() << "]:"
 		<< c.name << "(" << uuid << "), "
+#if 0
 		//<< c.device << "(" << c.fd << "),"
 		<< " S:" //<< c.bytes_size
 						<< "(" << get_size(c.bytes_size)    << "), "
@@ -420,6 +421,7 @@ operator<< (std::ostream &stream, const DPContainer &c)
 		<< " P:" //<< c.parent_offset
 						<< "(" << get_size(c.parent_offset) << "), "
 		//<< " rc: " << c.ref_count
+#endif
 		;
 
 	return stream;
