@@ -479,6 +479,7 @@ LvmGroup::discover (DPContainer &top_level)
 	top_level.find_type ("lvm_volume", v);
 
 	for (auto i : v) {
+		printf ("Q: [%s] %s: %s\n", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
 		queue_add_probe (i);
 	}
 #endif

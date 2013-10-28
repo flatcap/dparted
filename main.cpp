@@ -184,7 +184,7 @@ main (int argc, char *argv[])
 
 	LvmGroup::discover (top_level);
 
-#if 0
+#if 1
 	// Process the probe_queue
 	//XXX deque?
 	while ((item = probe_queue.front())) {
@@ -207,7 +207,9 @@ main (int argc, char *argv[])
 	log_info ("------------------------------------------------------------\n");
 #endif
 
+#if 0
 	display_dot (top_level.children);
+#endif
 #if 0
 	if (argc != 1) {
 		display_dot (top_level.children);
@@ -220,7 +222,7 @@ main (int argc, char *argv[])
 	}
 #endif
 	int retval = 0;
-#if 0
+#if 1
 	App app (&top_level);
 	retval =  app.run (1, argv);		//XXX argc
 #endif

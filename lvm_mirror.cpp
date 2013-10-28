@@ -49,6 +49,14 @@ LvmMirror::add_child (DPContainer *child)
 	 *	size (restrictions)
 	 *	valid type within this parent
 	 */
+
+	bool isvol = child->is_a("lvm_volume");
+
+	if (isvol) {
+		add_segment (child);
+		return;
+	}
+
 #if 0
 	if (children.size() > 0) {
 		DPContainer *last = children.back();
