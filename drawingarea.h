@@ -66,6 +66,7 @@ private:
 	void draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right = NULL);
 	void draw_partition (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, int width_part, int width_fs, int width_usage, Rect shape, Rect *inside = NULL, Rect *right = NULL);
 	void draw_block     (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect &space, Rect *right = NULL);
+	void draw_segment   (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right = NULL);
 
 	void draw_grid        (const Cairo::RefPtr<Cairo::Context> &cr);
 	void draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size);

@@ -119,7 +119,7 @@ lvm_pvs (std::map<std::string, DPContainer*> &pieces,
 			g = new LvmGroup();
 			g->name    = tags["VG_NAME"];
 			g->uuid    = vg_uuid;
-			g->missing = true;
+			//g->missing = true;
 			pieces[vg_uuid] = g;
 		}
 
@@ -129,7 +129,7 @@ lvm_pvs (std::map<std::string, DPContainer*> &pieces,
 			printf ("new table %s [SHOULDN'T HAPPEN]\n", pv_uuid.c_str());
 			t = new LvmTable();
 			t->uuid    = pv_uuid;
-			t->missing = true;
+			//t->missing = true;
 			pieces[pv_uuid] = t;
 		}
 
@@ -151,8 +151,10 @@ lvm_pvs (std::map<std::string, DPContainer*> &pieces,
 			}
 
 			v->uuid    = lv_uuid;
-			v->missing = true;
+			//v->missing = true;
 			pieces[lv_uuid] = v;
+
+			deps.insert(std::pair<std::string,std::string>(g->uuid,v->uuid));
 		}
 
 		// DPContainer
@@ -249,7 +251,7 @@ lvm_vgs (std::map<std::string, DPContainer*> &pieces,
 			printf ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
 			g = new LvmGroup();
 			g->uuid    = vg_uuid;
-			g->missing = true;
+			//g->missing = true;
 			pieces[vg_uuid] = g;
 		}
 
@@ -257,7 +259,7 @@ lvm_vgs (std::map<std::string, DPContainer*> &pieces,
 		g->name			= tags["LVM2_VG_NAME"];
 		g->block_size		= tags["LVM2_VG_EXTENT_SIZE"];
 		g->bytes_size		= tags["LVM2_VG_SIZE"];
-		g->bytes_used		= g->bytes_size - (long) tags["LVM2_VG_FREE"];
+		//g->bytes_used		= g->bytes_size - (long) tags["LVM2_VG_FREE"];
 
 		// LvmGroup
 		g->vg_attr		= tags["LVM2_VG_ATTR"];
@@ -320,7 +322,7 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 			printf ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
 			g = new LvmGroup();
 			g->uuid    = vg_uuid;
-			g->missing = true;
+			//g->missing = true;
 			pieces[vg_uuid] = g;
 		}
 
@@ -339,7 +341,7 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 				continue;
 			}
 			v->uuid    = lv_uuid;
-			v->missing = true;
+			//v->missing = true;
 			pieces[lv_uuid] = v;
 
 			deps.insert(std::pair<std::string,std::string>(g->uuid,v->uuid));
@@ -400,12 +402,14 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 	printf ("\n");
 #endif
 
+#if 0
 	printf ("\nJoin: %ld\n", deps.size());
 	for (auto d : deps) {
 		printf ("\t%s -> %s\n", d.first.c_str(), d.second.c_str());
 	}
+#endif
 
-	//for (int j = 0; j < 5; j++) {
+	for (int j = 0; j < 5; j++) {
 		for (auto d : deps) {
 			std::string id = d.first;
 
@@ -415,13 +419,13 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 
 			auto ic = pieces.find(d.second);
 			if (ic == pieces.end()) {
-				printf ("can't find %s\n", d.second.c_str());
+				//printf ("can't find %s\n", d.second.c_str());
 				//printf ("compare:\n");
 				for (ic = pieces.begin(); ic != pieces.end(); ic++) {
 					//printf ("\t%s, %s\n", (*ic).second->name.c_str(), d.second.c_str());
 					std::string name = (*ic).second->name + "(0)";
 					if (name == d.second) {
-						printf ("match: %s\n", (*ic).second->uuid.c_str());
+						//printf ("match: %s\n", (*ic).second->uuid.c_str());
 						break;
 					}
 				}
@@ -439,8 +443,8 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 			//printf ("\t%p -> %p\n", (void*) parent, (void*) child);
 			//printf ("\t%s -> %s\n", parent->name.c_str(), child->name.c_str());
 		}
-	//}
-	printf ("\n");
+	}
+	//printf ("\n");
 }
 
 
@@ -467,11 +471,13 @@ LvmGroup::discover (DPContainer &top_level)
 	lvm_vgs (pieces, deps);
 	lvm_lvs (pieces, deps);
 
-	printf ("Pieces (%ld)\n", pieces.size());
+#if 1
+	//printf ("Pieces (%ld)\n", pieces.size());
 	for (auto i : pieces) {
-		std::cout << '\t' << i.second->uuid << '\t' << i.second << '\n';
+		//std::cout << '\t' << i.second->uuid << '\t' << i.second << '\n';
 		top_level.add_child (i.second);
 	}
+#endif
 
 #if 1
 	//probe leaves
@@ -479,7 +485,7 @@ LvmGroup::discover (DPContainer &top_level)
 	top_level.find_type ("lvm_volume", v);
 
 	for (auto i : v) {
-		printf ("Q: [%s] %s: %s\n", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
+		//printf ("Q: [%s] %s: %s\n", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
 		queue_add_probe (i);
 	}
 #endif

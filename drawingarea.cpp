@@ -657,6 +657,40 @@ DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context> &cr,
 }
 
 /**
+ * draw_segment
+ */
+void
+DPDrawingArea::draw_segment (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right /*=NULL*/)
+{
+	//LOG_TRACE;
+	// do stuff
+	// delegate to draw_container
+
+	if (!c)
+		return;
+	if (!c->whole)
+		return;
+
+	Whole *w = c->whole;
+	if (w->segments.empty())
+		return;
+	if (w->children.empty())
+		return;
+
+#if 0
+	DPContainer *seg = w->segments[0];
+	std::cout << seg << std::endl;
+#endif
+
+	DPContainer *child = w->children[0];
+	std::cout << child << std::endl;
+
+	draw_container (cr, w, shape, right);
+
+	//log_info ("OK\n");
+}
+
+/**
  * draw_container
  */
 void
@@ -675,6 +709,11 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	if (right)
 		*right = shape;
 
+	if (c->children.empty() && c->whole) {
+		draw_segment (cr, c, shape, right);
+		return;
+	}
+
 	shape.y += 1;
 	shape.w -= GAP;
 	shape.h -= GAP;
@@ -683,9 +722,9 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 
 	long bytes_per_pixel = c->bytes_size / w;
 
-	std::cout << "draw_container: " << c << "\n";
+	//std::cout << "draw_container: " << c << "\n";
 	for (auto child : c->children) {
-		std::cout << "child: " << child << "\n";
+		//std::cout << "child: " << child << "\n";
 
 		int child_width = (child->bytes_size / bytes_per_pixel);
 		int child_usage = (child->bytes_used / bytes_per_pixel);
@@ -703,7 +742,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 			if (pos == std::string::npos) {
 				label1 = child->device;
 				if (label1.empty())
-					label1 = "<none>";	//RAR tmp
+					//label1 = "<none>";	//RAR tmp
+					label1 = child->get_device_name();
 			} else {
 				label1 = child->device.substr (pos+1);
 			}

@@ -671,10 +671,16 @@ static std::string
 dump_dot_inner (std::vector <DPContainer*> v)
 {
 	std::stringstream dot;
+	int count = 0;
 
 	for (auto c : v) {
 		//if (c->dot_colour == "#ccccff") continue;
 		//log_info ("%s\n", c->name.c_str());
+
+		// Isolate the top-level objects
+		if (c->parent && (c->parent->parent == NULL))
+			dot << "subgraph cluster_" << count++ << " { color=transparent\n;";
+
 		dot << "\n";
 		dot << "// " << c << "\n";
 
@@ -722,6 +728,9 @@ dump_dot_inner (std::vector <DPContainer*> v)
 		}
 
 		dot << dump_dot_inner (c->children);
+
+		if (c->parent && (c->parent->parent == NULL))
+			dot << "}\n";
 	}
 
 	return dot.str();
