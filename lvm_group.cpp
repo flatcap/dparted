@@ -373,8 +373,15 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 		//log_debug ("%s (%s)\n", v->name.c_str(), v->type.back().c_str());
 
 		for (auto d : device_list) {
-			deps.insert(std::pair<std::string,std::string>(v->uuid,d));
-			//log_debug ("ADD DEP: %s -> %s\n", v->uuid.c_str(), d.c_str());
+			auto id = pieces.find (d);
+			if (id != pieces.end()) {
+				v->add_segment (id->second);
+				pieces.erase (id);
+			} else {
+				//XXX deal with the dependency later
+				deps.insert(std::pair<std::string,std::string>(v->uuid,d));
+				//log_debug ("ADD DEP: %s -> %s\n", v->uuid.c_str(), d.c_str());
+			}
 		}
 
 		if (v->lv_attr[0] == 'm') {
@@ -398,10 +405,11 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 		printf ("\t%s -> %s\n", d.first.c_str(), d.second.c_str());
 	}
 
-	printf ("\nJoin: %ld\n", deps.size());
-	for (int j = 0; j < 5; j++) {
+	//for (int j = 0; j < 5; j++) {
 		for (auto d : deps) {
-			auto ip = pieces.find(d.first);
+			std::string id = d.first;
+
+			auto ip = pieces.find(id);
 			if (ip == pieces.end())
 				continue;
 
@@ -431,7 +439,7 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 			//printf ("\t%p -> %p\n", (void*) parent, (void*) child);
 			//printf ("\t%s -> %s\n", parent->name.c_str(), child->name.c_str());
 		}
-	}
+	//}
 	printf ("\n");
 }
 
@@ -459,13 +467,13 @@ LvmGroup::discover (DPContainer &top_level)
 	lvm_vgs (pieces, deps);
 	lvm_lvs (pieces, deps);
 
-	printf ("pieces (%ld)\n", pieces.size());
+	printf ("Pieces (%ld)\n", pieces.size());
 	for (auto i : pieces) {
-		std::cout << '\t' << i.second->uuid << '\t' << i.second << '\t' << i.second->type.back() << '\n';
-		//top_level.add_child (i.second);
+		std::cout << '\t' << i.second->uuid << '\t' << i.second << '\n';
+		top_level.add_child (i.second);
 	}
 
-#if 0
+#if 1
 	//probe leaves
 	std::vector<DPContainer*> v;
 	top_level.find_type ("lvm_volume", v);

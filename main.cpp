@@ -207,7 +207,7 @@ main (int argc, char *argv[])
 	log_info ("------------------------------------------------------------\n");
 #endif
 
-	//display_dot (top_level.children);
+	display_dot (top_level.children);
 #if 0
 	if (argc != 1) {
 		display_dot (top_level.children);
