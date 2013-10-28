@@ -378,6 +378,7 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 			auto id = pieces.find (d);
 			if (id != pieces.end()) {
 				v->add_segment (id->second);
+				//RAR id->second->parent = v;
 				pieces.erase (id);
 			} else {
 				//XXX deal with the dependency later

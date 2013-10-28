@@ -671,19 +671,45 @@ DPDrawingArea::draw_segment (const Cairo::RefPtr<Cairo::Context> &cr, DPContaine
 	if (!c->whole)
 		return;
 
+#if 1
+	std::cout << c << std::endl;
+#endif
+
+#if 1
 	Whole *w = c->whole;
+	std::cout << w << " " << w->segments.size() << " " << w->children.size() << std::endl;
+#endif
+
 	if (w->segments.empty())
 		return;
-	if (w->children.empty())
-		return;
 
-#if 0
+	if (w->children.empty()) {
+		printf ("whole parent = %p\n", (void*) w->parent);
+		DPContainer *parent = w->parent;
+		if (!parent)
+			return;
+		if (!parent->is_a ("volume"))
+			return;
+		if (parent->children.empty())
+			return;
+#if 1
+		for (auto i : parent->children) {
+			printf ("parent:children : %s\n", i->type.back().c_str());
+		}
+#endif
+		draw_container (cr, parent, shape, right);
+		return;
+	}
+
+#if 1
 	DPContainer *seg = w->segments[0];
 	std::cout << seg << std::endl;
 #endif
 
+#if 1
 	DPContainer *child = w->children[0];
 	std::cout << child << std::endl;
+#endif
 
 	draw_container (cr, w, shape, right);
 
@@ -733,7 +759,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 
 		Filesystem *fs = get_filesystem (child);
 		if (fs) {
-			std::cout << "fs: " << fs << "\n";
+			//std::cout << "fs: " << fs << "\n";
 
 			std::string label1;
 			std::string label2;

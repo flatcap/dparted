@@ -54,6 +54,7 @@ LvmMirror::add_child (DPContainer *child)
 
 	if (isvol) {
 		add_segment (child);
+		child->parent = this;
 		return;
 	}
 
