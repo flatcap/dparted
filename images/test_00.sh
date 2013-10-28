@@ -112,17 +112,17 @@ function test_01()
 	vgcreate $GROUP "$LOOP" > /dev/null
 	[ $? = 0 ] || error || return
 
-	lvcreate --size 52m --name $VOLUME $GROUP > /dev/null
-	lvcreate --size 52m --name junk1   $GROUP > /dev/null
-	lvcreate --size 52m --name junk2   $GROUP > /dev/null
-	lvcreate --size 40m --name junk3   $GROUP > /dev/null
+	lvcreate --size 1020m --name $VOLUME $GROUP > /dev/null
+	lvcreate --size 1520m --name junk1   $GROUP > /dev/null
+	lvcreate --size  750m --name junk2   $GROUP > /dev/null
+	lvcreate --size 1800m --name junk3   $GROUP > /dev/null
 
-	lvremove -f /dev/mapper/$GROUP-junk2		> /dev/null
-	lvextend --size +52m /dev/mapper/$GROUP-$VOLUME	> /dev/null
-	lvremove -f /dev/mapper/$GROUP-junk1		> /dev/null
-	lvextend --size +52m /dev/mapper/$GROUP-$VOLUME	> /dev/null
-	lvremove -f /dev/mapper/$GROUP-junk3		> /dev/null
-	lvextend --size +40m /dev/mapper/$GROUP-$VOLUME	> /dev/null
+	lvremove -f /dev/mapper/$GROUP-junk2			> /dev/null
+	lvextend --size  +750m /dev/mapper/$GROUP-$VOLUME	> /dev/null
+	lvremove -f /dev/mapper/$GROUP-junk1			> /dev/null
+	lvextend --size +1520m /dev/mapper/$GROUP-$VOLUME	> /dev/null
+	lvremove -f /dev/mapper/$GROUP-junk3			> /dev/null
+	lvextend --size +1800m /dev/mapper/$GROUP-$VOLUME	> /dev/null
 
 	mke2fs -t ext4 -q -L "jigsaw" /dev/mapper/$GROUP-$VOLUME
 
