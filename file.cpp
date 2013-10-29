@@ -52,7 +52,7 @@ File::~File()
 bool
 File::find_devices (const std::string &name, int fd, struct stat &st, DPContainer &list)
 {
-	File *f = NULL;
+	File *f = nullptr;
 
 	f = new File();
 #if 0

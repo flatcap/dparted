@@ -56,17 +56,17 @@ private:
 
 	bool get_focus (int &x, int &y, int &w, int &h);
 
-	void draw_icon      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below = NULL);
+	void draw_icon      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below = nullptr);
 	void write_label    (const Cairo::RefPtr<Cairo::Context> &cr, const Glib::ustring &text, long size);
-	void draw_frame     (const Cairo::RefPtr<Cairo::Context> &cr, const Gdk::RGBA &colour, const Rect &shape, Rect *inside = NULL, Rect *right = NULL);
-	void draw_border    (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside = NULL, Rect *right = NULL);
+	void draw_frame     (const Cairo::RefPtr<Cairo::Context> &cr, const Gdk::RGBA &colour, const Rect &shape, Rect *inside = nullptr, Rect *right = nullptr);
+	void draw_border    (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside = nullptr, Rect *right = nullptr);
 	void draw_focus     (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
-	void draw_tabframe  (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape, Rect *tab = NULL, Rect *inside = NULL, Rect *right = NULL);
+	void draw_tabframe  (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape, Rect *tab = nullptr, Rect *inside = nullptr, Rect *right = nullptr);
 	void draw_rect      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape);
-	void draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right = NULL);
-	void draw_partition (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, int width_part, int width_fs, int width_usage, Rect shape, Rect *inside = NULL, Rect *right = NULL);
-	void draw_block     (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect &space, Rect *right = NULL);
-	void draw_segment   (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right = NULL);
+	void draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right = nullptr);
+	void draw_partition (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, int width_part, int width_fs, int width_usage, Rect shape, Rect *inside = nullptr, Rect *right = nullptr);
+	void draw_block     (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect &space, Rect *right = nullptr);
+	void draw_segment   (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right = nullptr);
 
 	void draw_grid        (const Cairo::RefPtr<Cairo::Context> &cr);
 	void draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size);

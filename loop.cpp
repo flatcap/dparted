@@ -189,7 +189,7 @@ Loop::identify (DPContainer &top_level, const char *name, int fd, struct stat &s
 {
 	//LOG_TRACE;
 
-	Loop *l = NULL;
+	Loop *l = nullptr;
 	off_t size;
 
 	std::vector <std::string> output;

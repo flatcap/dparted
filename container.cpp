@@ -42,9 +42,9 @@ DPContainer::DPContainer (void) :
 	block_size (0),
 	bytes_size (0),
 	bytes_used (0),
-	whole (NULL),
-	parent (NULL),
-	fd (NULL),
+	whole (nullptr),
+	parent (nullptr),
+	fd (nullptr),
 	ref_count (1),
 	missing (false)
 {
@@ -245,7 +245,7 @@ DPContainer::get_size_free (void)
 DPContainer *
 DPContainer::find_device (const std::string &dev)
 {
-	DPContainer *match = NULL;
+	DPContainer *match = nullptr;
 
 	// am *I* the device?
 	//log_debug ("Me? %s %s\n", device.c_str(), dev.c_str());
@@ -273,7 +273,7 @@ DPContainer::find_name (const std::string &search)
 	if (name == search)
 		return this;
 
-	DPContainer *item = NULL;
+	DPContainer *item = nullptr;
 
 	for (auto i : children) {
 		if ((item = i->find_name (search)))
@@ -306,7 +306,7 @@ DPContainer::find_uuid (const std::string &search)
 	if (uuid == search)
 		return this;
 
-	DPContainer *item = NULL;
+	DPContainer *item = nullptr;
 
 	for (auto i : children) {
 		if ((item = i->find_uuid (search)))
@@ -333,7 +333,7 @@ DPContainer::open_device (void)
 		}
 	} else {
 		fd = fopen (device.c_str(), "re");	// read, close on exec
-		if (fd == NULL) {
+		if (fd == nullptr) {
 			log_error ("failed to open device %s\n", device.c_str());
 		}
 	}
@@ -355,7 +355,7 @@ DPContainer::read_data (long offset, long size, unsigned char *buffer)
 	if (!buffer)
 		return -1;
 
-	if (fd == NULL) {
+	if (fd == nullptr) {
 		if (parent) {
 			return parent->read_data (offset + parent_offset, size, buffer);
 		} else {

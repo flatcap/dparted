@@ -107,7 +107,7 @@ Disk::find_devices_old (const std::string &name, int fd, struct stat &st, DPCont
 #endif
 
 	//log_debug ("%s\n", model.c_str());
-	Disk *d = NULL;
+	Disk *d = nullptr;
 
 	d = new Disk();
 
@@ -260,7 +260,7 @@ Disk::find_device (const std::string &dev)
 		return Block::find_device (dev);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 

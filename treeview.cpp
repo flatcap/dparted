@@ -27,7 +27,7 @@
 TreeView::TreeView()
 {
 	//Add the TreeView's view columns:
-	Gtk::TreeView::Column *col = NULL;
+	Gtk::TreeView::Column *col = nullptr;
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Partition"));
 	col->pack_start (m_Columns.col_partition,  true);
@@ -190,7 +190,7 @@ TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 void
 TreeView::init_treeview (DPContainer *c)
 {
-	tree_add_row (c, NULL);
+	tree_add_row (c, nullptr);
 }
 
 /**
@@ -204,7 +204,7 @@ TreeView::on_row_activated (const Gtk::TreeModel::Path &path, Gtk::TreeViewColum
 
 	Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter (path);
 	if (iter) {
-		DPContainer *c = NULL;
+		DPContainer *c = nullptr;
 		Gtk::TreeModel::Row row = *iter;
 		std::cout << "Row activated: Name=" << row[m_Columns.col_name] << ", Type=" << row[m_Columns.col_type] << "\n";
 

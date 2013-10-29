@@ -52,17 +52,17 @@ public:
 
 	operator bool()
 	{
-		return (strtol (c_str(), NULL, 10) != 0);
+		return (strtol (c_str(), nullptr, 10) != 0);
 	}
 
 	operator int()
 	{
-		return strtoimax (c_str(), NULL, 10);
+		return strtoimax (c_str(), nullptr, 10);
 	}
 
 	operator long()
 	{
-		return strtol (c_str(), NULL, 10);
+		return strtol (c_str(), nullptr, 10);
 	}
 };
 

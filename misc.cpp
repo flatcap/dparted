@@ -107,7 +107,7 @@ DPContainer *
 Misc::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
-	Misc *m = NULL;
+	Misc *m = nullptr;
 
 	if (is_empty (buffer, bufsize)) {
 		//log_error ("probe empty\n");

@@ -53,9 +53,9 @@ Extended *
 Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long size)
 {
 	//LOG_TRACE;
-	Extended *ext = NULL;
+	Extended *ext = nullptr;
 
-	unsigned char *buffer = NULL;
+	unsigned char *buffer = nullptr;
 	int bufsize = 512;
 	//off_t seek = 0;
 	//ssize_t count = 0;
@@ -75,7 +75,7 @@ Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long 
 
 	buffer = (unsigned char*) malloc (bufsize);
 	if (!buffer)
-		return NULL;
+		return nullptr;
 
 	Misc *res1 = new Misc();
 	res1->name          = "reserved";
@@ -96,7 +96,7 @@ Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long 
 		if (*(unsigned short int *) (buffer+510) != 0xAA55) {
 			log_error ("not an extended partition\n");
 			//log_debug ("%s (%s), %lld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
-			return NULL;
+			return nullptr;
 		}
 
 		//log_debug ("extended partition\n");
@@ -109,7 +109,7 @@ Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long 
 
 		if ((num < 0) || (vp.size() > 2)) {
 			log_error ("partition table is corrupt\n");	// bugger
-			return NULL;
+			return nullptr;
 		}
 
 		for (auto &part : vp) {
@@ -124,7 +124,7 @@ Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long 
 				log_debug ("\n");
 			}
 #endif
-			DPContainer *c = NULL;
+			DPContainer *c = nullptr;
 
 			if ((part.type == 0x05) || (part.type == 0x0F)) {
 				table_offset = offset + part.start;

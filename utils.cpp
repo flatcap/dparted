@@ -37,7 +37,7 @@
 unsigned int
 execute_command2 (const std::string &command, std::string &input)
 {
-	FILE *file = NULL;
+	FILE *file = nullptr;
 	int count = 0;
 
 	//XXX log command and output
@@ -45,7 +45,7 @@ execute_command2 (const std::string &command, std::string &input)
 	//log_debug ("running command: %s\n", command.c_str());
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "we");
-	if (file == NULL) {
+	if (file == nullptr) {
 		log_error ("popen failed");	//XXX log_perror
 		return -1;
 	}
@@ -67,8 +67,8 @@ execute_command2 (const std::string &command, std::string &input)
 unsigned int
 execute_command (const std::string &command, std::vector<std::string> &output)
 {
-	FILE *file = NULL;
-	char *ptr = NULL;
+	FILE *file = nullptr;
+	char *ptr = nullptr;
 	size_t n = 0;
 	int count = 0;
 
@@ -79,14 +79,14 @@ execute_command (const std::string &command, std::vector<std::string> &output)
 	//log_debug ("running command: %s\n", command.c_str());
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "r");
-	if (file == NULL) {
+	if (file == nullptr) {
 		//log_error ("popen failed");	//XXX log_perror
 		return -1;
 	}
 
 	//log_debug ("output:\n");
 	do {
-		ptr = NULL;
+		ptr = nullptr;
 		n = 0;
 		count = getline (&ptr, &n, file);		//XXX std::getline, istream::getline
 		if (count > 0) {
@@ -181,7 +181,7 @@ extract_number (const std::string &text, unsigned int &index)
 	num = text.substr (first, last - first);
 
 	index = last;
-	return strtoll (num.c_str(), NULL, 10);
+	return strtoll (num.c_str(), nullptr, 10);
 }
 
 /**
@@ -237,7 +237,7 @@ extract_quoted_long (const std::string &text, unsigned int &index)
 	index = finish;
 
 	tmp = text.substr (start, finish - start);
-	return strtol (tmp.c_str(), NULL, 10);
+	return strtol (tmp.c_str(), nullptr, 10);
 }
 
 /**
@@ -256,7 +256,7 @@ extract_quoted_long_long (const std::string &text, unsigned int &index)
 	index = finish;
 
 	tmp = text.substr (start, finish - start);
-	return strtoll (tmp.c_str(), NULL, 10);
+	return strtoll (tmp.c_str(), nullptr, 10);
 }
 
 /**
@@ -277,8 +277,8 @@ extract_dev_range (const std::string &text, std::string &device, int &start, int
 
 	device = text.substr (index, colon - index);
 
-	start  = strtol (text.substr (colon + 1, dash - 1).c_str(), NULL, 10);
-	finish = strtol (text.substr (dash + 1).c_str(), NULL, 10);
+	start  = strtol (text.substr (colon + 1, dash - 1).c_str(), nullptr, 10);
+	finish = strtol (text.substr (dash + 1).c_str(), nullptr, 10);
 
 	//log_debug ("\tdevice = %s, start = %d, finish = %d\n", device.c_str(), start, finish);
 	return 0;

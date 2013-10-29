@@ -51,7 +51,7 @@ DPContainer *
 Table::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
-	DPContainer *c = NULL;
+	DPContainer *c = nullptr;
 
 	if ((c = Gpt::probe (top_level, parent, buffer, bufsize)))
 		return c;
@@ -65,7 +65,7 @@ Table::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer
 	if ((c = MdTable::probe (top_level, parent, buffer, bufsize)))
 		return c;
 
-	return NULL;
+	return nullptr;
 }
 
 /**

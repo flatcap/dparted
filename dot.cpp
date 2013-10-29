@@ -203,7 +203,7 @@ dot_row (const char *name, void *value)
 	if (value) {
 		output << "<td align=\"left\">" << value << "</td>";
 	} else {
-		output << "<td align=\"left\">NULL</td>";
+		output << "<td align=\"left\">nullptr</td>";
 	}
 	output << "</tr>\n";
 
@@ -678,7 +678,7 @@ dump_dot_inner (std::vector <DPContainer*> v)
 		//log_info ("%s\n", c->name.c_str());
 
 		// Isolate the top-level objects
-		if (c->parent && (c->parent->parent == NULL))
+		if (c->parent && (c->parent->parent == nullptr))
 			dot << "subgraph cluster_" << count++ << " { color=transparent\n;";
 
 		dot << "\n";
@@ -727,9 +727,20 @@ dump_dot_inner (std::vector <DPContainer*> v)
 			dot << "obj_" << (void*) c << " -> obj_" << (void*) c2 << ";\n";
 		}
 
+#if 0
+		if (c->is_a("whole")) {
+			Whole *w = dynamic_cast<Whole*>(c);
+			if (w) {
+				for (auto w2 : w->segments) {
+					dot << "obj_" << (void*) w << " -> obj_" << (void*) w2 << " [constraint=false];\n";
+				}
+			}
+		}
+#endif
+
 		dot << dump_dot_inner (c->children);
 
-		if (c->parent && (c->parent->parent == NULL))
+		if (c->parent && (c->parent->parent == nullptr))
 			dot << "}\n";
 	}
 

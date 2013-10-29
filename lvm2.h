@@ -27,8 +27,8 @@ struct pv_header {
 	/* This size can be overridden if PV belongs to a VG */
 	uint64_t device_size_xl;	/* Bytes */
 
-	/* NULL-terminated list of data areas followed by */
-	/* NULL-terminated list of metadata area headers */
+	/* nullptr-terminated list of data areas followed by */
+	/* nullptr-terminated list of metadata area headers */
 	struct disk_locn disk_areas_xl[8];	/* Two lists */
 } __attribute__((__packed__));
 
@@ -47,7 +47,7 @@ struct mda_header {
 	uint64_t start;		/* Absolute start byte of mda_header */
 	uint64_t size;		/* Size of metadata area */
 
-	struct raw_locn raw_locns[4];	/* NULL-terminated list */
+	struct raw_locn raw_locns[4];	/* nullptr-terminated list */
 } __attribute__((__packed__));
 
 #endif // _LVM2_H_

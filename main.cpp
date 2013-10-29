@@ -98,7 +98,7 @@ probe (DPContainer &top_level, DPContainer *parent)
 	const int bufsize = 256*1024;
 	std::vector<unsigned char> buffer (bufsize);
 
-	DPContainer *item = NULL;
+	DPContainer *item = nullptr;
 
 	parent->open_device();
 	parent->read_data (0, bufsize, &buffer[0]);	// check read num
@@ -115,7 +115,7 @@ probe (DPContainer &top_level, DPContainer *parent)
 		return item;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -167,7 +167,7 @@ main (int argc, char *argv[])
 	}
 
 	// Process the probe_queue
-	DPContainer *item = NULL;
+	DPContainer *item = nullptr;
 	//XXX deque?
 	while ((item = probe_queue.front())) {
 		probe_queue.pop();

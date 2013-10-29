@@ -13,7 +13,7 @@
  */
 int main (int argc, char *argv[])
 {
-	char *buf = NULL;
+	char *buf = nullptr;
 	int bufsize = 1048576;
 	uint32_t crc_gen  = 0;
 	uint32_t crc_read = 0;

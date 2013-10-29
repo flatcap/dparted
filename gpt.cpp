@@ -50,10 +50,10 @@ DPContainer *
 Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
-	Gpt *g = NULL;
+	Gpt *g = nullptr;
 
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	// XXX replace with strict identify function (static)
-		return NULL;
+		return nullptr;
 
 	// LBA		Description
 	// ---------------------------------
@@ -102,7 +102,7 @@ Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, 
 
 	//std::cout << g << "\n";
 
-	Partition *p = NULL;
+	Partition *p = nullptr;
 	buffer += 1024;	//bufsize -= 1024; for range checking
 #if 0
 	p = new Partition();

@@ -35,7 +35,7 @@
 LvmTable::LvmTable (void) :
 	seq_num(0),
 	metadata_size(0),
-	group (NULL)
+	group (nullptr)
 {
 	declare ("lvm_table");
 }
@@ -79,13 +79,13 @@ get_label_header (unsigned char *buffer)
 	struct label_header *lh = (struct label_header *) buffer;
 
 	if (!lh)
-		return NULL;
+		return nullptr;
 
 	if (strncmp ((char*) lh->id, "LABELONE", 8))
-		return NULL;
+		return nullptr;
 
 	if (strncmp ((char*) lh->type, "LVM2 001", 8))
-		return NULL;
+		return nullptr;
 
 	//XXX validate crc, range check offset
 	return lh;
@@ -100,7 +100,7 @@ get_pv_header (unsigned char *buffer)
 	struct pv_header *ph = (struct pv_header *) buffer;
 
 	if (!ph)
-		return NULL;
+		return nullptr;
 
 	//XXX validate chars in uuid, disk_areas
 	return ph;
@@ -115,13 +115,13 @@ get_mda_header (unsigned char *buffer)
 	struct mda_header *mh = (struct mda_header *) buffer;
 
 	if (!mh)
-		return NULL;
+		return nullptr;
 
 	if (strncmp ((char*) mh->magic, FMTT_MAGIC, 16))
-		return NULL;
+		return nullptr;
 
 	if (mh->version != FMTT_VERSION)
-		return NULL;
+		return nullptr;
 
 	//XXX validate checksum
 	return mh;
@@ -212,19 +212,19 @@ DPContainer *
 LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
-	LvmTable *t = NULL;
+	LvmTable *t = nullptr;
 
 	//XXX check bufsize gives us all the data we need
 
 	struct label_header *lh = get_label_header (buffer+512);
 	if (!lh)
-		return NULL;
+		return nullptr;
 
 	//log_info ("'%.8s', %lu, 0x%8x, %u, '%.8s'\n", lh->id, lh->sector_xl, lh->crc_xl, lh->offset_xl, lh->type);
 
 	struct pv_header *ph = get_pv_header (buffer + 512 + lh->offset_xl);
 	if (!ph)
-		return NULL;
+		return nullptr;
 
 	std::string pv_uuid = read_uuid_string ((char*) ph->pv_uuid);
 
@@ -252,7 +252,7 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	//XXX 4096 from metadata location
 	struct mda_header *mh = get_mda_header (buffer + 4096);
 	if (!mh)
-		return NULL;
+		return nullptr;
 
 	//log_info ("0x%08x, '%.16s', %u, %lu, %lu\n", mh->checksum_xl, mh->magic, mh->version, mh->start, mh->size);
 
@@ -269,7 +269,7 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	int size   = mh->raw_locns[0].size;
 
 	if ((offset+size) > bufsize)
-		return NULL;
+		return nullptr;
 
 	std::string config;
 	std::string vol_name;

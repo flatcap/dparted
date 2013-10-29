@@ -64,10 +64,10 @@ get_ext_common (Filesystem *f, unsigned char *buffer, int bufsize)
 Filesystem *
 get_btrfs (unsigned char *buffer, int bufsize)
 {
-	Filesystem *f = NULL;
+	Filesystem *f = nullptr;
 
 	if (!identify_btrfs (buffer, bufsize))
-		return NULL;
+		return nullptr;
 
 	//log_info ("bufsize = %d, want %d\n", bufsize, 0x10140);
 	f = new Filesystem();
@@ -89,10 +89,10 @@ get_btrfs (unsigned char *buffer, int bufsize)
 Filesystem *
 get_ext2 (unsigned char *buffer, int bufsize)
 {
-	Filesystem *f = NULL;
+	Filesystem *f = nullptr;
 
 	if (!identify_ext2 (buffer, bufsize))
-		return NULL;
+		return nullptr;
 
 	f = new Filesystem();
 	f->name = "ext2";
@@ -109,10 +109,10 @@ get_ext2 (unsigned char *buffer, int bufsize)
 Filesystem *
 get_ext3 (unsigned char *buffer, int bufsize)
 {
-	Filesystem *f = NULL;
+	Filesystem *f = nullptr;
 
 	if (!identify_ext3 (buffer, bufsize))
-		return NULL;
+		return nullptr;
 
 	f = new Filesystem();
 	f->name = "ext3";
@@ -129,10 +129,10 @@ get_ext3 (unsigned char *buffer, int bufsize)
 Filesystem *
 get_ext4 (unsigned char *buffer, int bufsize)
 {
-	Filesystem *f = NULL;
+	Filesystem *f = nullptr;
 
 	if (!identify_ext4 (buffer, bufsize))
-		return NULL;
+		return nullptr;
 
 	f = new Filesystem();
 	f->name = "ext4";
@@ -149,10 +149,10 @@ get_ext4 (unsigned char *buffer, int bufsize)
 Filesystem *
 get_ntfs (unsigned char *buffer, int bufsize)
 {
-	Filesystem *f = NULL;
+	Filesystem *f = nullptr;
 
 	if (!identify_ntfs (buffer, bufsize))
-		return NULL;
+		return nullptr;
 
 	std::string uuid = read_uuid2 (buffer + 72);
 	long size = *(long*) (buffer + 40) * 512;
@@ -174,10 +174,10 @@ get_ntfs (unsigned char *buffer, int bufsize)
 Filesystem *
 get_reiserfs (unsigned char *buffer, int bufsize)
 {
-	Filesystem *f = NULL;
+	Filesystem *f = nullptr;
 
 	if (!identify_reiserfs (buffer, bufsize))
-		return NULL;
+		return nullptr;
 
 	f = new Filesystem();
 
@@ -204,10 +204,10 @@ get_reiserfs (unsigned char *buffer, int bufsize)
 Filesystem *
 get_swap (unsigned char *buffer, int bufsize)
 {
-	Filesystem *f = NULL;
+	Filesystem *f = nullptr;
 
 	if (!identify_swap (buffer, bufsize))
-		return NULL;
+		return nullptr;
 
 	std::string uuid     = read_uuid1 (buffer + 0x40C);
 	std::string vol_name = (char*) (buffer+0x41C);
@@ -235,10 +235,10 @@ get_swap (unsigned char *buffer, int bufsize)
 Filesystem *
 get_vfat (unsigned char *buffer, int bufsize)
 {
-	Filesystem *f = NULL;
+	Filesystem *f = nullptr;
 
 	if (!identify_vfat (buffer, bufsize))
-		return NULL;
+		return nullptr;
 
 	f = new Filesystem();
 
@@ -290,10 +290,10 @@ get_vfat (unsigned char *buffer, int bufsize)
 Filesystem *
 get_xfs (unsigned char *buffer, int bufsize)
 {
-	Filesystem *f = NULL;
+	Filesystem *f = nullptr;
 
 	if (!identify_xfs (buffer, bufsize))
-		return NULL;
+		return nullptr;
 
 	f = new Filesystem();
 

@@ -120,11 +120,11 @@ DPContainer *
 Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
-	Msdos *m = NULL;
+	Msdos *m = nullptr;
 	int count = 0;
 
 	if (*(unsigned short int *) (buffer+510) != 0xAA55)
-		return NULL;
+		return nullptr;
 
 	// and some other quick checks
 
@@ -143,7 +143,7 @@ Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer
 	if ((count < 0) || (vp.size() > 4)) {
 		log_debug ("partition table is corrupt\n");	// bugger
 		m->unref();
-		return NULL;
+		return nullptr;
 	}
 
 	Misc *res1 = new Misc();
@@ -163,7 +163,7 @@ Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer
 		log_debug ("\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
 		log_debug ("\n");
 #endif
-		DPContainer *c = NULL;
+		DPContainer *c = nullptr;
 
 		std::ostringstream part_name;
 		part_name << m->device;

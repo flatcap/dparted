@@ -51,12 +51,12 @@ DPContainer *
 Filesystem::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
-	Filesystem *f = NULL;
+	Filesystem *f = nullptr;
 
 	if (!parent)
-		return NULL;
+		return nullptr;
 	if (!buffer)
-		return NULL;
+		return nullptr;
 
 	//XXX reorder by likelihood
 	     if ((f = get_btrfs    (buffer, bufsize))) {}

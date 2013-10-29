@@ -24,7 +24,7 @@
 #include "log_trace.h"
 
 //static unsigned int log_level = ~0;
-static FILE *file = NULL;
+static FILE *file = nullptr;
 
 /**
  * log
@@ -150,7 +150,7 @@ log_init (const char *name)
 		//fprintf (file, "\033c");		// reset
 	}
 
-	return (file != NULL);
+	return (file != nullptr);
 }
 
 /**
@@ -162,7 +162,7 @@ log_close (void)
 	if (!file)
 		return;
 	fclose (file);
-	file = NULL;
+	file = nullptr;
 }
 
 

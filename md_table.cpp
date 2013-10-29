@@ -75,13 +75,13 @@ DPContainer *
 MdTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
 {
 	//LOG_TRACE;
-	MdTable *t = NULL;
+	MdTable *t = nullptr;
 
 	buffer  += 4096;	// Ignore the first 4KiB
 	bufsize -= 4096;
 
 	if (!is_mdtable (buffer))
-		return NULL;
+		return nullptr;
 
 	std::string vol_uuid = read_uuid_string (buffer + 16);
 	//log_info ("vol uuid = %s\n", vol_uuid.c_str());

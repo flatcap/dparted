@@ -49,8 +49,8 @@ const int TAB_WIDTH = 26;		// Left side-bar in disk gui
  */
 DPDrawingArea::DPDrawingArea() :
 	//Glib::ObjectBase ("MyDrawingArea"),
-	m_c (NULL),
-	theme (NULL),
+	m_c (nullptr),
+	theme (nullptr),
 	sel_x (-1),
 	sel_y (-1),
 	mouse_close (false)
@@ -145,25 +145,25 @@ DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
 Table *
 DPDrawingArea::get_table (DPContainer *c)
 {
-	DPContainer *child = NULL;
+	DPContainer *child = nullptr;
 
 	if (!c)
-		return NULL;
+		return nullptr;
 
 	if (c->is_a ("table"))
 		return dynamic_cast<Table*> (c);
 
 	if (c->children.size() != 1)
-		return NULL;
+		return nullptr;
 
 	child = c->children[0];
 	if (!child)
-		return NULL;
+		return nullptr;
 
 	if (child->is_a ("table"))
 		return dynamic_cast<Table*> (child);
 
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -174,12 +174,12 @@ Partition *
 DPDrawingArea::get_partition (DPContainer *c)
 {
 	if (!c)
-		return NULL;
+		return nullptr;
 
 	if (c->is_a ("partition"))
 		return dynamic_cast<Partition*> (c);
 
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -188,38 +188,38 @@ DPDrawingArea::get_partition (DPContainer *c)
 Table *
 DPDrawingArea::get_protective (DPContainer *c)
 {
-	DPContainer *child = NULL;
+	DPContainer *child = nullptr;
 
 	//std::cout << "1: " << c << "\n";
 	if (!c)
-		return NULL;
+		return nullptr;
 
 	if (!c->is_a ("table"))
-		return NULL;
+		return nullptr;
 
 	if (c->children.size() != 1)
-		return NULL;
+		return nullptr;
 
 	child = c->children[0];
 	//std::cout << "2: " << child << "\n";
 	if (!child)
-		return NULL;
+		return nullptr;
 
 	if (!child->is_a ("partition"))
-		return NULL;
+		return nullptr;
 
 	if (child->children.size() != 1)
-		return NULL;
+		return nullptr;
 
 	child = child->children[0];
 	//std::cout << "3: " << child << "\n";
 	if (!child)
-		return NULL;
+		return nullptr;
 
 	if (child->is_a ("table"))
 		return dynamic_cast<Table*> (child);
 
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -230,25 +230,25 @@ DPDrawingArea::get_protective (DPContainer *c)
 Filesystem *
 DPDrawingArea::get_filesystem (DPContainer *c)
 {
-	DPContainer *child = NULL;
+	DPContainer *child = nullptr;
 
 	if (!c)
-		return NULL;
+		return nullptr;
 
 	if (c->is_a ("filesystem"))
 		return dynamic_cast<Filesystem*> (c);
 
 	if (c->children.size() != 1)
-		return NULL;
+		return nullptr;
 
 	child = c->children[0];
 	if (!child)
-		return NULL;
+		return nullptr;
 
 	if (child->is_a ("filesystem"))
 		return dynamic_cast<Filesystem*> (child);
 
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -257,22 +257,22 @@ DPDrawingArea::get_filesystem (DPContainer *c)
 Misc *
 DPDrawingArea::get_misc (DPContainer *c)
 {
-	DPContainer *child = NULL;
+	DPContainer *child = nullptr;
 
 	if (!c)
-		return NULL;
+		return nullptr;
 
 	if (c->children.size() != 1)
-		return NULL;
+		return nullptr;
 
 	child = c->children[0];
 	if (!child)
-		return NULL;
+		return nullptr;
 
 	if (child->is_a ("misc"))
 		return dynamic_cast<Misc*> (child);
 
-	return NULL;
+	return nullptr;
 }
 
 
@@ -280,7 +280,7 @@ DPDrawingArea::get_misc (DPContainer *c)
  * draw_icon
  */
 void
-DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below /*=NULL*/)
+DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below /*=nullptr*/)
 {
 	Glib::RefPtr<Gdk::Pixbuf> pb;
 
@@ -312,7 +312,7 @@ DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::st
  * draw_block
  */
 void
-DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect &space, Rect *right /*=NULL*/)
+DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect &space, Rect *right /*=nullptr*/)
 {
 	// adjust the rect to match
 	std::string name;
@@ -388,7 +388,7 @@ DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer 
  * draw_border
  */
 void
-DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
+DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside /*=nullptr*/, Rect *right /*=nullptr*/)
 {
 	const int &r = RADIUS;
 	const int &x = shape.x;
@@ -451,7 +451,7 @@ DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &
  * draw_frame
  */
 void
-DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context> &cr, const Gdk::RGBA &colour, const Rect &shape, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
+DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context> &cr, const Gdk::RGBA &colour, const Rect &shape, Rect *inside /*=nullptr*/, Rect *right /*=nullptr*/)
 {
 	const int r  = 8;					// Radius
 	const int &x = shape.x;
@@ -485,7 +485,7 @@ DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context> &cr, const Gdk::R
 	cr->restore();						// End clipping
 
 	Rect rect = { x, y, w, h };
-	Range rg = { rect, NULL };
+	Range rg = { rect, nullptr };
 	vRange.push_front (rg);
 
 	if (inside) {						// The space remaining inside
@@ -505,7 +505,7 @@ DPDrawingArea::draw_frame (const Cairo::RefPtr<Cairo::Context> &cr, const Gdk::R
  * draw_tabframe
  */
 void
-DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape, Rect *tab /*=NULL*/, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
+DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape, Rect *tab /*=nullptr*/, Rect *inside /*=nullptr*/, Rect *right /*=nullptr*/)
 {
 	const int &r = RADIUS;
 	const int &t = TAB_WIDTH;
@@ -551,7 +551,7 @@ DPDrawingArea::draw_tabframe (const Cairo::RefPtr<Cairo::Context> &cr, const std
 	cr->restore();						// End clipping
 
 	Rect rect = { x, y, w, h };
-	Range rg = { rect, NULL };
+	Range rg = { rect, nullptr };
 	vRange.push_front (rg);
 
 	if (tab) {
@@ -581,7 +581,7 @@ void
 DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context> &cr,
 				const std::string &colour,
 				int width_part, int width_fs, int width_usage,
-				Rect shape, Rect *inside /*=NULL*/, Rect *right /*=NULL*/)
+				Rect shape, Rect *inside /*=nullptr*/, Rect *right /*=nullptr*/)
 {
 	const int r = RADIUS;
 	const int &x = shape.x;
@@ -638,7 +638,7 @@ DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context> &cr,
 	cr->restore();							// End clipping
 
 	Rect rect = { x, y, w, h };
-	Range rg = { rect, NULL };
+	Range rg = { rect, nullptr };
 	vRange.push_front (rg);
 
 	if (inside) {							// The area remaining inside
@@ -660,7 +660,7 @@ DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context> &cr,
  * draw_segment
  */
 void
-DPDrawingArea::draw_segment (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right /*=NULL*/)
+DPDrawingArea::draw_segment (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right /*=nullptr*/)
 {
 	//LOG_TRACE;
 	// do stuff
@@ -720,7 +720,7 @@ DPDrawingArea::draw_segment (const Cairo::RefPtr<Cairo::Context> &cr, DPContaine
  * draw_container
  */
 void
-DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right /*=NULL*/)
+DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c, Rect shape, Rect *right /*=nullptr*/)
 {
 	const int &x = shape.x;
 	const int &y = shape.y;
@@ -931,7 +931,7 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	Table *table = get_table (item);
 	DPContainer *protect = get_protective (table);
-	DPContainer *partition = protect ? protect->parent : NULL;
+	DPContainer *partition = protect ? protect->parent : nullptr;
 
 #if 0
 	std::cout << "item: "      << item      << "\n";
