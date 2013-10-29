@@ -207,7 +207,7 @@ main (int argc, char *argv[])
 	log_info ("------------------------------------------------------------\n");
 #endif
 
-#if 0
+#if 1
 	display_dot (top_level.children);
 #endif
 #if 0
@@ -222,7 +222,7 @@ main (int argc, char *argv[])
 	}
 #endif
 	int retval = 0;
-#if 1
+#if 0
 	App app (&top_level);
 	retval =  app.run (1, argv);		//XXX argc
 #endif

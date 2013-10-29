@@ -32,6 +32,10 @@ public:
 	virtual void add_child    (DPContainer *child);
 	virtual void delete_child (DPContainer *child);
 
+#if 0
+	std::vector<DPContainer*> mirrors;
+	DPContainer *log;
+#endif
 protected:
 
 private:

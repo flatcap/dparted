@@ -203,7 +203,7 @@ dot_row (const char *name, void *value)
 	if (value) {
 		output << "<td align=\"left\">" << value << "</td>";
 	} else {
-		output << "<td align=\"left\">nullptr</td>";
+		output << "<td align=\"left\">NULL</td>";
 	}
 	output << "</tr>\n";
 
@@ -679,7 +679,7 @@ dump_dot_inner (std::vector <DPContainer*> v)
 
 		// Isolate the top-level objects
 		if (c->parent && (c->parent->parent == nullptr))
-			dot << "subgraph cluster_" << count++ << " { color=transparent\n;";
+			dot << "subgraph cluster_" << count++ << " { color=red\n;";
 
 		dot << "\n";
 		dot << "// " << c << "\n";
@@ -732,7 +732,7 @@ dump_dot_inner (std::vector <DPContainer*> v)
 			Whole *w = dynamic_cast<Whole*>(c);
 			if (w) {
 				for (auto w2 : w->segments) {
-					dot << "obj_" << (void*) w << " -> obj_" << (void*) w2 << " [constraint=false];\n";
+					dot << "obj_" << (void*) w << " -> obj_" << (void*) w2 << " [constraint=false style=dashed];\n";
 				}
 			}
 		}
