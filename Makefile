@@ -3,22 +3,19 @@ RM	= rm -fr
 MKDIR	= mkdir -p
 
 # Library
-SRC	= block.cpp container.cpp disk.cpp extended.cpp file.cpp \
-	  filesystem.cpp gpt.cpp fs_identify.cpp log.cpp loop.cpp lvm_group.cpp \
-	  lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_stripe.cpp \
-	  lvm_table.cpp lvm_volume.cpp main.cpp misc.cpp msdos.cpp \
-	  partition.cpp table.cpp utils.cpp volume.cpp whole.cpp \
-	  dot.cpp leak.cpp md_table.cpp app.cpp fs_get.cpp fs_usage.cpp
-
-HDR	= block.h container.h disk.h extended.h file.h filesystem.h \
-	  gpt.h fs_identify.h log.h loop.h lvm_group.h lvm_linear.h lvm_mirror.h \
-	  lvm_partition.h lvm_stripe.h lvm_table.h lvm_volume.h misc.h msdos.h \
-	  partition.h stringnum.h table.h utils.h volume.h whole.h \
-	  main.h dot.h leak.h log_trace.h md_table.h app.h fs_get.h fs_usage.h
+SRC	= app.cpp block.cpp container.cpp disk.cpp dot.cpp extended.cpp		\
+	  file.cpp filesystem.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp	\
+	  gpt.cpp leak.cpp log.cpp loop.cpp lvm_group.cpp lvm_linear.cpp	\
+	  lvm_mirror.cpp lvm_partition.cpp lvm_stripe.cpp lvm_table.cpp		\
+	  lvm_volume.cpp main.cpp md_group.cpp md_table.cpp misc.cpp msdos.cpp	\
+	  partition.cpp table.cpp utils.cpp volume.cpp whole.cpp
 
 # GUI
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp
-HDR	+= dparted.h drawingarea.h treeview.h theme.h
+
+HDR	= $(SRC:%.cpp=%.h)
+
+HDR	+= log_trace.h stringnum.h
 
 DEPDIR	= .dep
 OBJDIR	= .obj

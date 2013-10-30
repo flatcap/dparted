@@ -46,6 +46,7 @@
 #include "file.h"
 #include "app.h"
 #include "lvm_group.h"
+#include "md_group.h"
 
 std::queue<DPContainer*> probe_queue;
 
@@ -152,7 +153,7 @@ main (int argc, char *argv[])
 				File::identify (top_level, argv[i], fd, st);
 			} else if (S_ISBLK (st.st_mode)) {
 				if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
-					Loop::identify (top_level, argv[i], fd, st);
+					//Loop::identify (top_level, argv[i], fd, st);
 				} else {
 					Disk::identify (top_level, argv[i], fd, st);
 				}
@@ -182,7 +183,8 @@ main (int argc, char *argv[])
 		}
 	}
 
-	LvmGroup::discover (top_level);
+	//LvmGroup::discover (top_level);
+	MdGroup::discover (top_level);
 
 #if 1
 	// Process the probe_queue
