@@ -53,7 +53,7 @@ MdGroup::discover (DPContainer &top_level)
 {
 	LOG_TRACE;
 
-	std::string command =
+	//std::string command =
 }
 
 
