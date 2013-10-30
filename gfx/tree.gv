@@ -4,34 +4,6 @@ node [ shape="record", color="black", fillcolor="lightcyan", style="filled" ];
 edge [ penwidth=3.0,color="#cccccc" ];
 
 
-// lvm_table, lvm_table, (off 0), 0
-obj_0x22341d0 [fillcolor="#ffbbbb",label=<<table cellspacing="0" border="0">
-<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>lvm_table</b></font> (0x22341d0)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
-<tr><td align="left">name</td><td>=</td><td align="left">lvm_table</td></tr>
-<tr><td align="left">uuid</td><td>=</td><td align="left">3EpD2Q...</td></tr>
-<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
-<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
-<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">bytes_size</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
-</table>>];
-
-// lvm_table, lvm_table, (off 0), 0
-obj_0x2234450 [fillcolor="#ffbbbb",label=<<table cellspacing="0" border="0">
-<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>lvm_table</b></font> (0x2234450)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
-<tr><td align="left">name</td><td>=</td><td align="left">lvm_table</td></tr>
-<tr><td align="left">uuid</td><td>=</td><td align="left">W6bd7m...</td></tr>
-<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
-<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
-<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">bytes_size</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
-</table>>];
-
 // loop, loop, /dev/loop0(off 0), 2
 obj_0x22344f0 [fillcolor="#aaffaa",label=<<table cellspacing="0" border="0">
 <tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>loop</b></font> (0x22344f0)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
@@ -45,7 +17,6 @@ obj_0x22344f0 [fillcolor="#aaffaa",label=<<table cellspacing="0" border="0">
 <tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
 <tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
 </table>>];
-obj_0x22344f0 -> obj_0x22341d0;
 obj_0x22344f0 -> obj_0x2236110;
 
 // loop, loop, /dev/loop1(off 0), 2
@@ -61,7 +32,6 @@ obj_0x2234910 [fillcolor="#aaffaa",label=<<table cellspacing="0" border="0">
 <tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
 <tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
 </table>>];
-obj_0x2234910 -> obj_0x2234450;
 obj_0x2234910 -> obj_0x2236420;
 
 // loop, loop, /dev/loop2(off 0), 2
@@ -77,7 +47,6 @@ obj_0x2234db0 [fillcolor="#aaffaa",label=<<table cellspacing="0" border="0">
 <tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
 <tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
 </table>>];
-obj_0x2234db0 -> obj_0x2245a80;
 obj_0x2234db0 -> obj_0x22366a0;
 
 // ext2, filesystem, (off 0), 0
@@ -336,19 +305,5 @@ obj_0x22458d0 [fillcolor="#ffffdd",label=<<table cellspacing="0" border="0">
 <tr><td align="left">whole</td><td>=</td><td align="left">0x22383f0</td></tr>
 </table>>];
 obj_0x22458d0 -> obj_0x2237f40;
-
-// lvm_table, lvm_table, (off 0), 0
-obj_0x2245a80 [fillcolor="#ffbbbb",label=<<table cellspacing="0" border="0">
-<tr><td align="left" bgcolor="white" colspan="3"><font color="#000000" point-size="20"><b>lvm_table</b></font> (0x2245a80)<font color="#ff0000" point-size="20"><b> : 1</b></font></td></tr>
-<tr><td align="left">name</td><td>=</td><td align="left">lvm_table</td></tr>
-<tr><td align="left">uuid</td><td>=</td><td align="left">4C4p4R...</td></tr>
-<tr><td align="left">device</td><td>=</td><td align="left"></td></tr>
-<tr><td align="left">file desc</td><td>=</td><td align="left">0</td></tr>
-<tr><td align="left">parent_offset</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">bytes_size</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">bytes_used</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">bytes_free</td><td>=</td><td align="left">0   B</td></tr>
-<tr><td align="left">whole</td><td>=</td><td align="left">0</td></tr>
-</table>>];
 
 };
