@@ -27,6 +27,7 @@
 #include "lvm_linear.h"
 #include "lvm_mirror.h"
 #include "lvm_partition.h"
+#include "lvm_raid.h"
 #include "lvm_stripe.h"
 #include "lvm_table.h"
 #include "lvm_volume.h"
@@ -319,7 +320,7 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		LvmGroup *g = dynamic_cast<LvmGroup*>(pieces[vg_uuid]);
 		if (!g) {
-			printf ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
+			log_info ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
 			g = new LvmGroup();
 			g->uuid    = vg_uuid;
 			//g->missing = true;
@@ -330,12 +331,23 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 		LvmVolume *v = dynamic_cast<LvmVolume*>(pieces[lv_uuid]);
 		if (!v) {
 			std::string segtype = tags["LVM2_SEGTYPE"];
+			//log_info ("Type = %s\n", segtype.c_str());
 			if (segtype == "linear") {
 				v = new LvmLinear();
 			} else if (segtype == "striped") {
 				v = new LvmStripe();
 			} else if (segtype == "mirror") {
 				v = new LvmMirror();
+			} else if (segtype == "raid1") {
+				v = new LvmRaid();
+			} else if (segtype == "raid4") {
+				v = new LvmRaid();
+			} else if (segtype == "raid5") {
+				v = new LvmRaid();
+			} else if (segtype == "raid6") {
+				v = new LvmRaid();
+			} else if (segtype == "raid10") {
+				v = new LvmRaid();
 			} else {
 				log_error ("UNKNOWN type %s\n", segtype.c_str());
 				continue;
@@ -353,7 +365,7 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 		v->bytes_size		= tags["LVM2_LV_SIZE"];
 
 		// LvmVolume
-		v->lv_attr		= tags["LVM2_LV_ATTR"];
+		v->lv_attr		= tags["LVM2_LV_ATTR"];		// m(e)tadata (i)mage, (r)aid
 		v->kernel_major		= tags["LVM2_LV_KERNEL_MAJOR"];
 		v->kernel_minor		= tags["LVM2_LV_KERNEL_MINOR"];
 
@@ -364,7 +376,11 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 		v->seg_start_pe		= tags["LVM2_SEG_START_PE"];
 		v->mirror_log		= tags["LVM2_MIRROR_LOG"];
 
-		if ((v->lv_attr[0] == 'i') || (v->lv_attr[0] == 'I') || (v->lv_attr[0] == 'l')) {		// mirror image/log
+		//log_info ("name = %s, attr = %s\n", v->name.c_str(), v->lv_attr.c_str());
+		if ((v->lv_attr[0] == 'i') ||
+		    (v->lv_attr[0] == 'I') ||
+		    (v->lv_attr[0] == 'l') ||
+		    (v->lv_attr[0] == 'e')) {		// mirror image/log, raid metadata/image
 			v->name = v->name.substr (1, v->name.length() - 2);	// Strip the []'s
 		}
 
@@ -384,6 +400,18 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 				//XXX deal with the dependency later
 				deps.insert(std::pair<std::string,std::string>(v->uuid,d));
 				//log_debug ("ADD DEP: %s -> %s\n", v->uuid.c_str(), d.c_str());
+
+				// Add a metadata dependency
+				if (v->lv_attr[0] == 'r') {
+					// Add an extra dependency for raid metadata
+					std::string dep_name = d;
+					size_t pos = dep_name.find ("_rimage_");
+					if (pos != std::string::npos) {
+						dep_name.replace (pos, 8, "_rmeta_");
+						//log_debug ("ADD XXX: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());
+						deps.insert(std::pair<std::string,std::string>(v->uuid,dep_name));
+					}
+				}
 			}
 		}
 
@@ -395,56 +423,104 @@ lvm_lvs (std::map<std::string, DPContainer*>  &pieces,
 		}
 	}
 
-#if 0
-	printf ("\nDeps: %ld\n", deps.size());
+#if 1
+	log_info ("\nDeps: %ld\n", deps.size());
 	for (auto d : deps) {
-		printf ("\t%s -> %s\n", d.first.c_str(), d.second.c_str());
+		log_info ("\t%s -> %s\n", d.first.c_str(), d.second.c_str());
 	}
-	printf ("\n");
+	log_info ("\n");
 #endif
 
-#if 0
-	printf ("\nJoin: %ld\n", deps.size());
-	for (auto d : deps) {
-		printf ("\t%s -> %s\n", d.first.c_str(), d.second.c_str());
+#if 1
+	log_info ("\nPieces: %ld\n", pieces.size());
+	for (auto p : pieces) {
+		log_info ("\t%s %s\n", p.first.c_str(), p.second->name.c_str());
 	}
 #endif
 
-	for (int j = 0; j < 5; j++) {
-		for (auto d : deps) {
-			std::string id = d.first;
+	//for (int j = 0; j < 5; j++) {
+	for (auto d : deps) {
+		std::string parent_id = d.first;
+		std::string child_id  = d.second;
 
-			auto ip = pieces.find(id);
-			if (ip == pieces.end())
-				continue;
+		DPContainer *parent = nullptr;
+		DPContainer *child  = nullptr;
 
-			auto ic = pieces.find(d.second);
-			if (ic == pieces.end()) {
-				//printf ("can't find %s\n", d.second.c_str());
-				//printf ("compare:\n");
-				for (ic = pieces.begin(); ic != pieces.end(); ic++) {
-					//printf ("\t%s, %s\n", (*ic).second->name.c_str(), d.second.c_str());
-					std::string name = (*ic).second->name + "(0)";
-					if (name == d.second) {
-						//printf ("match: %s\n", (*ic).second->uuid.c_str());
-						break;
+		printf ("DEPS: %s -> %s\n", parent_id.c_str(), child_id.c_str());
+
+		auto ip = pieces.find(parent_id);
+		if (ip != pieces.end()) {
+			printf ("\tFound: %s at top-level\n", parent_id.c_str());
+			parent = ip->second;
+		} else {
+			log_info ("\t%s missing at top-level\n", parent_id.c_str());
+			for (auto p : pieces) {
+				parent = p.second->find_uuid (parent_id);
+				if (parent) {
+					log_info ("\t\tFound uuid\n");
+				} else {
+					parent = p.second->find_name (parent_id);
+					if (parent) {
+						log_info ("\t\tFound name\n");
+					} else {
+						size_t pos = parent_id.find ("(0)");
+						if (pos != std::string::npos) {
+							parent_id = parent_id.substr (0, pos);
+							parent = p.second->find_name (parent_id);
+							if (parent) {
+								log_info ("\t\tFound name2\n");
+							}
+						}
 					}
 				}
-				if (ic == pieces.end()) {
-					continue;
+			}
+		}
+
+		auto ic = pieces.find(child_id);
+		if (ic != pieces.end()) {
+			printf ("\tFound: %s at top-level\n", child_id.c_str());
+			child = ic->second;
+			pieces.erase (ic);
+		} else {
+			log_info ("\t%s missing at top-level\n", child_id.c_str());
+			for (auto p : pieces) {
+				child = p.second->find_uuid (child_id);
+				if (child) {
+					log_info ("\t\tFound uuid\n");
+				} else {
+					child = p.second->find_name (child_id);
+					if (child) {
+						log_info ("\t\tFound name\n");
+					} else {
+						size_t pos = child_id.find ("(0)");
+						if (pos != std::string::npos) {
+							child_id = child_id.substr (0, pos);
+							child = p.second->find_name (child_id);
+							if (child) {
+								log_info ("\t\tFound name2\n");
+							}
+						}
+					}
 				}
 			}
-
-			DPContainer *parent = (*ip).second;
-			DPContainer *child  = (*ic).second;
-
-			parent->add_child (child);
-			pieces.erase (ic);
-
-			//printf ("\t%p -> %p\n", (void*) parent, (void*) child);
-			//printf ("\t%s -> %s\n", parent->name.c_str(), child->name.c_str());
 		}
+
+		if (!parent) {
+			log_error ("\tcan't find parent: %s\n", parent_id.c_str());
+			continue;
+		}
+		if (!child) {
+			log_error ("\tcan't find child: %s\n", child_id.c_str());
+			continue;
+		}
+
+		parent->add_child (child);
+
+		//printf ("\t%p -> %p\n", (void*) parent, (void*) child);
+		//printf ("\t%s -> %s\n", parent->name.c_str(), child->name.c_str());
 	}
+	//printf ("QQQ: %ld items left\n", pieces.size());
+	//}
 	//printf ("\n");
 }
 

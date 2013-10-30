@@ -153,9 +153,9 @@ main (int argc, char *argv[])
 				File::identify (top_level, argv[i], fd, st);
 			} else if (S_ISBLK (st.st_mode)) {
 				if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
-					//Loop::identify (top_level, argv[i], fd, st);
+					Loop::identify (top_level, argv[i], fd, st);
 				} else {
-					Disk::identify (top_level, argv[i], fd, st);
+					//Disk::identify (top_level, argv[i], fd, st);
 				}
 			} else {
 				log_error ("can't probe something else\n");
@@ -183,10 +183,10 @@ main (int argc, char *argv[])
 		}
 	}
 
-	//LvmGroup::discover (top_level);
-	MdGroup::discover (top_level);
+	LvmGroup::discover (top_level);
+	//MdGroup::discover (top_level);
 
-#if 1
+#if 0
 	// Process the probe_queue
 	//XXX deque?
 	while ((item = probe_queue.front())) {
@@ -203,13 +203,13 @@ main (int argc, char *argv[])
 	}
 #endif
 
-#if 0
+#if 1
 	log_info ("------------------------------------------------------------\n");
 	top_level.dump_objects();
 	log_info ("------------------------------------------------------------\n");
 #endif
 
-#if 1
+#if 0
 	display_dot (top_level.children);
 #endif
 #if 0

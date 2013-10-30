@@ -30,6 +30,7 @@
 #include "lvm_linear.h"
 #include "lvm_mirror.h"
 #include "lvm_partition.h"
+#include "lvm_raid.h"
 #include "lvm_stripe.h"
 #include "lvm_table.h"
 #include "lvm_volume.h"
@@ -548,6 +549,21 @@ dot_lvm_mirror (LvmMirror *m)
 }
 
 /**
+ * dot_lvm_raid
+ */
+static std::string
+dot_lvm_raid (LvmRaid *s)
+{
+	std::stringstream output;
+
+	output << dot_lvm_volume(dynamic_cast<LvmVolume *> (s));
+
+	// no specifics for now
+
+	return output.str();
+}
+
+/**
  * dot_lvm_stripe
  */
 static std::string
@@ -674,11 +690,15 @@ dump_dot_inner (std::vector <DPContainer*> v)
 	int count = 0;
 
 	for (auto c : v) {
+		std::string type = c->type.back();
+		if (type == "loop")
+			continue;
+
 		//if (c->dot_colour == "#ccccff") continue;
 		//log_info ("%s\n", c->name.c_str());
 
 		// Isolate the top-level objects
-		if (c->parent && (c->parent->parent == nullptr))
+		//if (c->parent && (c->parent->parent == nullptr))
 			dot << "subgraph cluster_" << count++ << " { color=red\n;";
 
 		dot << "\n";
@@ -697,7 +717,6 @@ dump_dot_inner (std::vector <DPContainer*> v)
 		dot << "obj_" << (void*) c << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << missing << "</b></font></td></tr>\n";
 
-		std::string type = c->type.back();
 		     if (type == "block")         { dot << dot_block         (dynamic_cast<Block        *> (c)); }
 		else if (type == "container")     { dot << dot_container     (dynamic_cast<DPContainer  *> (c)); }
 		else if (type == "disk")          { dot << dot_disk          (dynamic_cast<Disk         *> (c)); }
@@ -710,6 +729,7 @@ dump_dot_inner (std::vector <DPContainer*> v)
 		else if (type == "lvm_linear")    { dot << dot_lvm_linear    (dynamic_cast<LvmLinear    *> (c)); }
 		else if (type == "lvm_mirror")    { dot << dot_lvm_mirror    (dynamic_cast<LvmMirror    *> (c)); }
 		else if (type == "lvm_partition") { dot << dot_lvm_partition (dynamic_cast<LvmPartition *> (c)); }
+		else if (type == "lvm_raid")      { dot << dot_lvm_raid      (dynamic_cast<LvmRaid      *> (c)); }
 		else if (type == "lvm_stripe")    { dot << dot_lvm_stripe    (dynamic_cast<LvmStripe    *> (c)); }
 		else if (type == "lvm_table")     { dot << dot_lvm_table     (dynamic_cast<LvmTable     *> (c)); }
 		else if (type == "lvm_volume")    { dot << dot_lvm_volume    (dynamic_cast<LvmVolume    *> (c)); }
@@ -740,7 +760,7 @@ dump_dot_inner (std::vector <DPContainer*> v)
 
 		dot << dump_dot_inner (c->children);
 
-		if (c->parent && (c->parent->parent == nullptr))
+		//if (c->parent && (c->parent->parent == nullptr))
 			dot << "}\n";
 	}
 

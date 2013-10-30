@@ -268,24 +268,27 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	int offset = mh->raw_locns[0].offset;
 	int size   = mh->raw_locns[0].size;
 
-	if ((offset+size) > bufsize)
-		return nullptr;
-
 	std::string config;
 	std::string vol_name;
 	int seq_num = -1;
-	if (size > 0) {
-		config = std::string ((char*) (buffer+4096+offset), size-1);
 
-		seq_num = get_seq_num (config);
+	if ((offset+size) > bufsize) {
+		//log_info ("TOO BIG (%d > %d)\n", (offset+size), bufsize);
+		//return nullptr;
+	} else {
+		if (size > 0) {
+			config = std::string ((char*) (buffer+4096+offset), size-1);
 
-		//log_info ("seq num = %d\n", seq_num);
-		vol_name = get_vol_name (config);
+			seq_num = get_seq_num (config);
+
+			//log_info ("seq num = %d\n", seq_num);
+			vol_name = get_vol_name (config);
 #if 0
-		log_info ("Config (0x%0x):\n", 4096+offset);
-		format_config (config);
-		std::cout << "\n" << config << "\n";
+			log_info ("Config (0x%0x):\n", 4096+offset);
+			format_config (config);
+			std::cout << "\n" << config << "\n";
 #endif
+		}
 	}
 
 	t = new LvmTable();
