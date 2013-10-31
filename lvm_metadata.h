@@ -15,44 +15,27 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _LVM_VOLUME_H_
-#define _LVM_VOLUME_H_
+#ifndef _LVM_METADATA_H_
+#define _LVM_METADATA_H_
 
-#include "volume.h"
+#include "lvm_linear.h"
 
 /**
- * class LvmVolume
+ * class LvmMetadata
  */
-class LvmVolume : public Volume
+class LvmMetadata : public LvmLinear
 {
 public:
-	LvmVolume (void);
-	virtual ~LvmVolume();
-
-	std::string	lv_attr;
-	long		kernel_major;
-	long		kernel_minor;
-
-	int		seg_count;
-	int		stripes;
-	int		stripesize;
-	int		stripe_size;
-	int		seg_start_pe;
-
-	std::string	mirror_log;
-
-	virtual int read_data (long offset, long size, unsigned char *buffer);
+	LvmMetadata (void);
+	virtual ~LvmMetadata();
 
 	virtual void add_child (DPContainer *child);
 
-	virtual DPContainer * find (const std::string &uuid);
-
-	std::vector<DPContainer*> metadata;
 protected:
 private:
 
 };
 
 
-#endif // _LVM_VOLUME_H_
+#endif // _LVM_METADATA_H_
 

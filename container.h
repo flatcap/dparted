@@ -39,9 +39,10 @@ public:
 
 	static void dump_leaks (void);
 
-	virtual void add_child    (DPContainer *child);
-	virtual void delete_child (DPContainer *child);
-	virtual void move_child   (DPContainer *child, long offset, long size);
+	virtual void add_child      (DPContainer *child);
+	virtual void just_add_child (DPContainer *child);
+	virtual void delete_child   (DPContainer *child);
+	virtual void move_child     (DPContainer *child, long offset, long size);
 
 	virtual long          get_block_size (void);
 	virtual std::string   get_device_name (void);
@@ -55,6 +56,7 @@ public:
 	virtual DPContainer * find_device (const std::string &dev);
 	virtual DPContainer * find_name   (const std::string &name);
 	virtual DPContainer * find_uuid   (const std::string &uuid);
+	virtual DPContainer * find        (const std::string &uuid);
 
 	virtual void          find_type   (const std::string &type, std::vector<DPContainer*> &results);
 	//XXX virtual std::vector<DPContainer*> find_incomplete (void);
@@ -92,7 +94,7 @@ public:
 
 	bool		 missing;
 
-	void dump_objects (int indent = 0);
+	virtual void dump_objects (int indent = 0);
 
 protected:
 	void declare (const char *name);

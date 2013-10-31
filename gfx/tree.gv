@@ -150,6 +150,8 @@ obj_0x2237330 [fillcolor="#ffffdd",label=<<table cellspacing="0" border="0">
 <tr><td align="left">bytes_free</td><td>=</td><td align="left">200 MiB</td></tr>
 <tr><td align="left">whole</td><td>=</td><td align="left">0x22389b0</td></tr>
 </table>>];
+obj_0x2237330 -> obj_0x2235b80;
+obj_0x2237b10 -> obj_0x2235b80;
 
 // stripe2, lvm_partition, (off 0), 1
 obj_0x22374f0 [fillcolor="#ffffdd",label=<<table cellspacing="0" border="0">
@@ -225,6 +227,7 @@ obj_0x22383f0 [fillcolor="#ccccff",label=<<table cellspacing="0" border="0">
 <tr><td align="left"></td><td>=</td><td align="left">0x22458d0</td></tr>
 <tr><td align="left"></td><td>=</td><td align="left">0x22374f0</td></tr>
 </table>>];
+//obj_0x22383f0 -> obj_0x2237f40 [ constraint=false style=dashed ];
 
 // mirror2_mlog, lvm_linear, /dev/mapper/tmpvol-mirror2_mlog(off 0), 0
 obj_0x2238680 [fillcolor="#ccccff",label=<<table cellspacing="0" border="0">
@@ -290,6 +293,7 @@ obj_0x2239170 [fillcolor="#ccccff",label=<<table cellspacing="0" border="0">
 obj_0x2239170 -> obj_0x22389b0;
 obj_0x2239170 -> obj_0x2238d80;
 obj_0x2239170 -> obj_0x2238680;
+//obj_0x2239170 -> obj_0x2235b80 [ constraint=false style=dashed ];
 
 // stripe2, lvm_partition, (off 0), 1
 obj_0x22458d0 [fillcolor="#ffffdd",label=<<table cellspacing="0" border="0">

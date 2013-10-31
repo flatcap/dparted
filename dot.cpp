@@ -29,6 +29,7 @@
 #include "lvm_group.h"
 #include "lvm_linear.h"
 #include "lvm_mirror.h"
+#include "lvm_metadata.h"
 #include "lvm_partition.h"
 #include "lvm_raid.h"
 #include "lvm_stripe.h"
@@ -221,7 +222,7 @@ dot_container (DPContainer *c)
 	std::stringstream output;
 	std::string uuid_short = c->uuid;
 
-	if (uuid_short.size() > 8) {
+	if ((uuid_short.size() > 8) && (uuid_short[0] != '/')) {
 		uuid_short = c->uuid.substr (0, 6) + "...";
 	}
 
@@ -512,7 +513,13 @@ dot_lvm_volume (LvmVolume *v)
 
 	output << dot_volume(dynamic_cast<Volume *> (v));
 
-	// no specifics for now
+	unsigned int count = v->metadata.size();
+	if (count > 0) {
+		output << dot_row ("metadata", count);
+		for (auto i : v->metadata) {
+			output << dot_row ("", i);
+		}
+	}
 
 	return output.str();
 }
@@ -527,6 +534,21 @@ dot_lvm_linear (LvmLinear *l)
 	std::stringstream output;
 
 	output << dot_lvm_volume(dynamic_cast<LvmVolume *> (l));
+
+	// no specifics for now
+
+	return output.str();
+}
+
+/**
+ * dot_lvm_metadata
+ */
+static std::string
+dot_lvm_metadata (LvmMetadata *m)
+{
+	std::stringstream output;
+
+	output << dot_lvm_linear(dynamic_cast<LvmLinear *> (m));
 
 	// no specifics for now
 
@@ -684,15 +706,17 @@ dot_misc (Misc *m)
  * dump_dot_inner
  */
 static std::string
-dump_dot_inner (std::vector <DPContainer*> v)
+dump_dot_inner (std::vector <DPContainer*> &v)
 {
 	std::stringstream dot;
 	int count = 0;
 
 	for (auto c : v) {
 		std::string type = c->type.back();
+#if 0
 		if (type == "loop")
 			continue;
+#endif
 
 		//if (c->dot_colour == "#ccccff") continue;
 		//log_info ("%s\n", c->name.c_str());
@@ -729,6 +753,7 @@ dump_dot_inner (std::vector <DPContainer*> v)
 		else if (type == "lvm_linear")    { dot << dot_lvm_linear    (dynamic_cast<LvmLinear    *> (c)); }
 		else if (type == "lvm_mirror")    { dot << dot_lvm_mirror    (dynamic_cast<LvmMirror    *> (c)); }
 		else if (type == "lvm_partition") { dot << dot_lvm_partition (dynamic_cast<LvmPartition *> (c)); }
+		else if (type == "lvm_metadata")  { dot << dot_lvm_metadata  (dynamic_cast<LvmMetadata  *> (c)); }
 		else if (type == "lvm_raid")      { dot << dot_lvm_raid      (dynamic_cast<LvmRaid      *> (c)); }
 		else if (type == "lvm_stripe")    { dot << dot_lvm_stripe    (dynamic_cast<LvmStripe    *> (c)); }
 		else if (type == "lvm_table")     { dot << dot_lvm_table     (dynamic_cast<LvmTable     *> (c)); }
@@ -753,6 +778,20 @@ dump_dot_inner (std::vector <DPContainer*> v)
 			if (w) {
 				for (auto w2 : w->segments) {
 					dot << "obj_" << (void*) w << " -> obj_" << (void*) w2 << " [constraint=false style=dashed];\n";
+				}
+			}
+		}
+#endif
+
+#if 1
+		if (c->is_a("lvm_volume")) {
+			LvmVolume *v = dynamic_cast<LvmVolume*>(c);
+			if (v) {
+				//log_info ("VOLUME %s, %ld\n", v->type.back().c_str(), v->metadata.size());
+				dot << dump_dot_inner (v->metadata);
+
+				for (auto v2 : v->metadata) {
+					dot << "obj_" << (void*) v << " -> obj_" << (void*) v2 << ";\n";
 				}
 			}
 		}

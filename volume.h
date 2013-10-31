@@ -28,7 +28,6 @@ class Volume : public Whole
 public:
 	Volume (void);
 	virtual ~Volume();
-
 protected:
 
 private:

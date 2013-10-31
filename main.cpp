@@ -209,7 +209,7 @@ main (int argc, char *argv[])
 	log_info ("------------------------------------------------------------\n");
 #endif
 
-#if 0
+#if 1
 	display_dot (top_level.children);
 #endif
 #if 0

@@ -140,6 +140,16 @@ DPContainer::add_child (DPContainer *child)
 }
 
 /**
+ * just_add_child
+ */
+void
+DPContainer::just_add_child (DPContainer *child)
+{
+	if (child)
+		children.push_back (child);
+}
+
+/**
  * delete_child
  */
 void
@@ -179,7 +189,7 @@ std::string
 DPContainer::get_device_name (void)
 {
 	//log_debug ("i am %s\n", typeid (*this).name());
-	if (device.length() > 0)
+	if (!device.empty())
 		return device;
 	else if (parent)
 		return parent->get_device_name();
@@ -310,6 +320,35 @@ DPContainer::find_uuid (const std::string &search)
 
 	for (auto i : children) {
 		if ((item = i->find_uuid (search)))
+			break;
+	}
+
+	return item;
+}
+
+/**
+ * find
+ */
+DPContainer *
+DPContainer::find (const std::string &search)
+{
+	if (uuid == search)
+		return this;
+
+	if (name == search)
+		return this;
+
+	size_t pos = search.find ("(0)");
+	if (pos == (search.length() - 3)) {
+		std::string search2 = search.substr (0, pos);
+		if (name == search2)
+			return this;
+	}
+
+	DPContainer *item = nullptr;
+
+	for (auto i : children) {
+		if ((item = i->find (search)))
 			break;
 	}
 

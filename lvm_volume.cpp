@@ -53,3 +53,39 @@ LvmVolume::read_data (long offset, long size, unsigned char *buffer)
 	return Whole::read_data (offset, size, buffer);
 }
 
+/**
+ * add_child
+ */
+void
+LvmVolume::add_child (DPContainer *child)
+{
+	if (!child)
+		return;
+
+	if (child->is_a ("lvm_metadata")) {
+		metadata.push_back (child);
+	} else {
+		Whole::add_child (child);
+	}
+}
+
+/**
+ * find
+ */
+DPContainer *
+LvmVolume::find (const std::string &search)
+{
+	for (auto i : metadata) {
+		if (i->uuid == search) {
+			//log_info ("metadata uuid %s\n", i->uuid.c_str());
+			return this;
+		}
+		if (i->name == search) {
+			//log_info ("metadata name %s\n", i->uuid.c_str());
+			return this;
+		}
+	}
+
+	return Whole::find (search);
+}
+
