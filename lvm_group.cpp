@@ -199,9 +199,9 @@ lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 #if 0
 	log_info ("TopLevel------------------------------------------------------------\n");
 	pieces.dump_objects();
-	log_info ("Pieces------------------------------------------------------------\n");
-	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
 	log_info ("Deps------------------------------------------------------------\n");
+	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
+	log_info ("Pieces------------------------------------------------------------\n");
 	for (auto p : pieces.children) log_info ("%s %s\n", p->uuid.c_str(), p->name.c_str());
 	log_info ("------------------------------------------------------------\n");
 #endif
@@ -274,9 +274,9 @@ lvm_vgs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 #if 0
 	log_info ("TopLevel------------------------------------------------------------\n");
 	pieces.dump_objects();
-	log_info ("Pieces------------------------------------------------------------\n");
-	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
 	log_info ("Deps------------------------------------------------------------\n");
+	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
+	log_info ("Pieces------------------------------------------------------------\n");
 	for (auto p : pieces.children) log_info ("%s %s\n", p->uuid.c_str(), p->name.c_str());
 	log_info ("------------------------------------------------------------\n");
 #endif
@@ -423,6 +423,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 			}
 #endif
 
+			//log_info ("DEP %s -> %s\n", v->uuid.c_str(), d.c_str());
 			deps.insert(std::pair<std::string,std::string>(v->uuid,d));
 
 			//log_info ("attr = %s\n", v->lv_attr.c_str());
@@ -443,7 +444,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 		if (v->lv_attr[0] == 'm') {
 			// Add an extra dependency for mirrors
 			std::string dep_name = v->mirror_log + "(0)";
-			log_debug ("ADD DEP: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());
+			//log_debug ("ADD DEP: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());
 			deps.insert(std::pair<std::string,std::string>(v->uuid,dep_name));
 		}
 	}
@@ -451,9 +452,9 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 #if 0
 	log_info ("TopLevel------------------------------------------------------------\n");
 	pieces.dump_objects();
-	log_info ("Pieces------------------------------------------------------------\n");
-	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
 	log_info ("Deps------------------------------------------------------------\n");
+	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
+	log_info ("Pieces------------------------------------------------------------\n");
 	for (auto p : pieces.children) log_info ("%s %s\n", p->uuid.c_str(), p->name.c_str());
 	log_info ("------------------------------------------------------------\n");
 #endif
@@ -477,10 +478,12 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 			continue;
 		}
 
+		//log_info ("add_child %s -> %s\n", parent->uuid.c_str(), child->uuid.c_str());
 		parent->add_child (child);
 
 		//log_info ("\t%p -> %p\n", (void*) parent, (void*) child);
 		//log_info ("\t%s -> %s\n", parent->name.c_str(), child->name.c_str());
+		//log_info ("\t%s -> %s\n", parent->uuid.c_str(), child->uuid.c_str());
 
 		for (auto it = pieces.children.begin(); it != pieces.children.end(); it++) {
 			if (*it == child) {

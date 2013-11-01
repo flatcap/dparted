@@ -30,23 +30,23 @@
 #include <linux/fs.h>
 #include <linux/kdev_t.h>
 
+#include "app.h"
 #include "container.h"
 #include "disk.h"
+#include "dot.h"
 #include "dparted.h"
+#include "file.h"
 #include "filesystem.h"
 #include "log.h"
+#include "log_trace.h"
 #include "loop.h"
 #include "lvm_group.h"
+#include "lvm_volume.h"
+#include "md_group.h"
 #include "misc.h"
 #include "table.h"
 #include "utils.h"
 #include "volume.h"
-#include "log_trace.h"
-#include "dot.h"
-#include "file.h"
-#include "app.h"
-#include "lvm_group.h"
-#include "md_group.h"
 
 std::queue<DPContainer*> probe_queue;
 
@@ -105,6 +105,26 @@ probe (DPContainer &top_level, DPContainer *parent)
 	parent->read_data (0, bufsize, &buffer[0]);	// check read num
 
 	if ((item = Filesystem::probe (top_level, parent, &buffer[0], bufsize))) {
+		//XXX need to check for all probed types
+		//printf ("PROBE: parent %s, child %s\n", parent->type.back().c_str(), item->type.back().c_str());
+		if (parent->is_a ("whole")) {
+			Whole *w = dynamic_cast<Whole*> (parent);
+			for (auto i : w->segments) {
+				//log_info ("add filesystem to %s - %s\n", i->name.c_str(), i->type.back().c_str());
+				i->just_add_child (item);
+			}
+			if (parent->is_a ("lvm_volume")) {
+				LvmVolume *v = dynamic_cast<LvmVolume*>(w);
+				for (auto c : v->metadata) {
+					w = dynamic_cast<Whole*> (c);
+					if (w) {
+						for (auto i : w->segments) {
+							i->just_add_child (item);
+						}
+					}
+				}
+			}
+		}
 		return item;
 	}
 
@@ -186,7 +206,7 @@ main (int argc, char *argv[])
 	LvmGroup::discover (top_level);
 	//MdGroup::discover (top_level);
 
-#if 0
+#if 1
 	// Process the probe_queue
 	//XXX deque?
 	while ((item = probe_queue.front())) {
@@ -203,13 +223,13 @@ main (int argc, char *argv[])
 	}
 #endif
 
-#if 1
+#if 0
 	log_info ("------------------------------------------------------------\n");
 	top_level.dump_objects();
 	log_info ("------------------------------------------------------------\n");
 #endif
 
-#if 1
+#if 0
 	display_dot (top_level.children);
 #endif
 #if 0
@@ -224,7 +244,7 @@ main (int argc, char *argv[])
 	}
 #endif
 	int retval = 0;
-#if 0
+#if 1
 	App app (&top_level);
 	retval =  app.run (1, argv);		//XXX argc
 #endif

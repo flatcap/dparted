@@ -78,11 +78,11 @@ LvmVolume::find (const std::string &search)
 	for (auto i : metadata) {
 		if (i->uuid == search) {
 			//log_info ("metadata uuid %s\n", i->uuid.c_str());
-			return this;
+			return i;
 		}
 		if (i->name == search) {
 			//log_info ("metadata name %s\n", i->uuid.c_str());
-			return this;
+			return i;
 		}
 	}
 
