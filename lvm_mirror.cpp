@@ -68,6 +68,7 @@ LvmMirror::add_child (DPContainer *child)
 		child->prev = last;
 	}
 #endif
+#if 0
 	bytes_used += child->bytes_size;
 
 	bool inserted = false;
@@ -88,6 +89,9 @@ LvmMirror::add_child (DPContainer *child)
 
 	child->ref();
 	child->parent = this;
+#endif
+	//XXX for now
+	LvmVolume::add_child (child);
 }
 
 /**

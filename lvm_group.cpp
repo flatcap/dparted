@@ -398,6 +398,8 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 			v->name = v->name.substr (1, v->name.length() - 2);	// Strip the []'s
 		}
 
+		v->device = "/dev/mapper/" + g->name + '-' + v->name; //RAR
+
 		std::string devices = tags["LVM2_DEVICES"];
 		std::vector<std::string> device_list;
 		explode (",", devices, device_list);

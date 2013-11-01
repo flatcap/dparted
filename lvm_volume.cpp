@@ -63,14 +63,29 @@ LvmVolume::add_child (DPContainer *child)
 	if (!child)
 		return;
 
+	log_info ("volume: %s (%s), child: %s (%s)\n", name.c_str(), type.back().c_str(), child->name.c_str(), child->type.back().c_str());
 	if (child->is_a ("lvm_metadata")) {
 		metadata.push_back (child);
 		//log_info ("METADATA %s\n", child->name.c_str());
+		child->whole = this;
 	} else if (child->is_a ("lvm_volume")) {
 		subvols.push_back (child);
 		//log_info ("SUBVOL %s\n", child->name.c_str());
-	} else {
+		child->whole = this;
+	} else if (child->is_a ("lvm_partition")) {
+		//log_info ("PARTITION %s\n", child->name.c_str());
 		Whole::add_child (child);
+		child->whole = this;
+	} else {
+		// filesystem
+		Whole::add_child (child);
+
+		for (auto i : subvols) {
+			log_info ("subvol %s, %ld children\n", i->name.c_str(), i->children.size());
+			for (auto j : i->children) {
+				j->just_add_child (child);
+			}
+		}
 	}
 }
 

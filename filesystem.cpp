@@ -70,6 +70,7 @@ Filesystem::probe (DPContainer &top_level, DPContainer *parent, unsigned char *b
 	else if ((f = get_xfs      (buffer, bufsize))) {}
 
 	if (f) {
+		//log_info ("volume: %s (%s), child: %s\n", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
 		parent->add_child (f);
 	}
 
