@@ -1260,6 +1260,9 @@ VALID NAMES
 	creation,  nor  can it be called '.' or '..'.  A LV cannot be called '.' '..' 'snapshot' or 'pvmove'. The LV name
 	may also not contain the strings '_mlog', '_mimage', '_rimage', '_tdata', '_tmeta'.
 
+if the name contains a hyphen then the /dev/mapper name will contain double-hyphen
+(not in the /dev/VOLNAME/ dir, though)
+
 ENVIRONMENT VARIABLES
        LVM_SYSTEM_DIR
               Directory containing lvm.conf and other LVM system files.  Defaults to "/etc/lvm".
