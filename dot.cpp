@@ -521,6 +521,16 @@ dot_lvm_volume (LvmVolume *v)
 		}
 	}
 
+	count = v->subvols.size();
+	if (count > 0) {
+		output << dot_row ("subvols", count);
+		for (auto i : v->subvols) {
+			output << dot_row ("", i);
+		}
+	}
+
+	output << dot_row ("sibling", v->sibling);
+
 	return output.str();
 }
 
@@ -722,8 +732,10 @@ dump_dot_inner (std::vector <DPContainer*> &v)
 		//log_info ("%s\n", c->name.c_str());
 
 		// Isolate the top-level objects
-		//if (c->parent && (c->parent->parent == nullptr))
-			dot << "subgraph cluster_" << count++ << " { color=red\n;";
+#if 1
+		if (c->parent && (c->parent->parent == nullptr))
+			dot << "subgraph cluster_" << count++ << " { color=transparent\n;";
+#endif
 
 		dot << "\n";
 		dot << "// " << c << "\n";
@@ -787,10 +799,16 @@ dump_dot_inner (std::vector <DPContainer*> &v)
 		if (c->is_a("lvm_volume")) {
 			LvmVolume *v = dynamic_cast<LvmVolume*>(c);
 			if (v) {
-				//log_info ("VOLUME %s, %ld\n", v->type.back().c_str(), v->metadata.size());
+				//log_info ("VOLUME %s, %ld\n", v->type.back().c_str(), v->subvols.size());
 				dot << dump_dot_inner (v->metadata);
 
 				for (auto v2 : v->metadata) {
+					dot << "obj_" << (void*) v << " -> obj_" << (void*) v2 << ";\n";
+				}
+
+				dot << dump_dot_inner (v->subvols);
+
+				for (auto v2 : v->subvols) {
 					dot << "obj_" << (void*) v << " -> obj_" << (void*) v2 << ";\n";
 				}
 			}
@@ -799,8 +817,10 @@ dump_dot_inner (std::vector <DPContainer*> &v)
 
 		dot << dump_dot_inner (c->children);
 
-		//if (c->parent && (c->parent->parent == nullptr))
+#if 1
+		if (c->parent && (c->parent->parent == nullptr))
 			dot << "}\n";
+#endif
 	}
 
 	return dot.str();
@@ -840,7 +860,7 @@ display_dot (std::vector <DPContainer*> v)
 	std::string input = dump_dot(v);
 	//std::cout << input << std::endl;
 
-	execute_command2 ("dot -Tpng | display -resize 60% -", input);
+	execute_command2 ("dot -Tpng | display -resize 60% - &", input);
 }
 
 

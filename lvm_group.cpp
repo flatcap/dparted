@@ -135,13 +135,13 @@ lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 		}
 
 		g->add_segment(t);	// Connect the LvmGroup to its constituent LvmTables
-		//XXX deps.insert(std::pair<std::string,std::string>(g->uuid,t->uuid));
+		//XXX deps.insert(std::make_pair(g->uuid,t->uuid));
 
 		std::string lv_uuid = tags["LVM2_LV_UUID"];
 		LvmVolume *v = dynamic_cast<LvmVolume*>(pieces.find_uuid (lv_uuid));
 		if (!v) {
 			std::string lv_attr = tags["LVM2_LV_ATTR"];
-			if ((lv_attr[0] == 'e') || (lv_attr[0] = 'i') || (lv_attr[0] = 'l')) {
+			if ((lv_attr[0] == 'e') || (lv_attr[0] == 'l')) {
 				//log_info ("not a real volume %s\n", lv_uuid.c_str());
 				v = new LvmMetadata();
 			} else if (segtype == "linear") {
@@ -370,7 +370,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 
 			// A volume discovered here doesn't have any physical parts.
 			// Therefore, it's a top-level entity.
-			deps.insert(std::pair<std::string,std::string>(g->uuid,v->uuid));
+			deps.insert(std::make_pair(g->uuid,v->uuid));
 		}
 
 		// DPContainer
@@ -424,7 +424,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 #endif
 
 			//log_info ("DEP %s -> %s\n", v->uuid.c_str(), d.c_str());
-			deps.insert(std::pair<std::string,std::string>(v->uuid,d));
+			deps.insert(std::make_pair(v->uuid,d));
 
 			//log_info ("attr = %s\n", v->lv_attr.c_str());
 			// Add a metadata dependency
@@ -436,7 +436,11 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 				if (pos != std::string::npos) {
 					dep_name.replace (pos, 8, "_rmeta_");
 					//log_debug ("ADD XXX: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());
-					deps.insert(std::pair<std::string,std::string>(v->uuid,dep_name));
+					deps.insert(std::make_pair(v->uuid,dep_name));
+
+					// add a sibling dependency (image <-> metadata)
+					//log_info ("SIBLING: %s <-> %s\n", dep_name.c_str(), d.c_str());
+					deps.insert(std::make_pair(dep_name, d));
 				}
 			}
 		}
@@ -445,7 +449,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 			// Add an extra dependency for mirrors
 			std::string dep_name = v->mirror_log + "(0)";
 			//log_debug ("ADD DEP: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());
-			deps.insert(std::pair<std::string,std::string>(v->uuid,dep_name));
+			deps.insert(std::make_pair(v->uuid,dep_name));
 		}
 	}
 

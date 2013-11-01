@@ -31,7 +31,7 @@ DParted::DParted () :
 	m_c (nullptr)
 {
 	set_title ("DParted");
-	set_size_request (1324, 120);
+	set_size_request (1324, 700);
 	//set_size_request (1900, 1000);
 #if 0
 	set_default_size (1439, 800); //RAR 1439, 800

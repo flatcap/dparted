@@ -25,7 +25,8 @@
  */
 LvmVolume::LvmVolume (void) :
 	kernel_major (-1),
-	kernel_minor (-1)
+	kernel_minor (-1),
+	sibling (nullptr)
 {
 	declare ("lvm_volume");
 }
@@ -64,6 +65,10 @@ LvmVolume::add_child (DPContainer *child)
 
 	if (child->is_a ("lvm_metadata")) {
 		metadata.push_back (child);
+		//log_info ("METADATA %s\n", child->name.c_str());
+	} else if (child->is_a ("lvm_volume")) {
+		subvols.push_back (child);
+		//log_info ("SUBVOL %s\n", child->name.c_str());
 	} else {
 		Whole::add_child (child);
 	}
@@ -75,6 +80,13 @@ LvmVolume::add_child (DPContainer *child)
 DPContainer *
 LvmVolume::find (const std::string &search)
 {
+	std::string search2;
+
+	size_t pos = search.find ("(0)");
+	if (pos == (search.length() - 3)) {
+		search2 = search.substr (0, pos);
+	}
+
 	for (auto i : metadata) {
 		if (i->uuid == search) {
 			//log_info ("metadata uuid %s\n", i->uuid.c_str());
@@ -82,6 +94,25 @@ LvmVolume::find (const std::string &search)
 		}
 		if (i->name == search) {
 			//log_info ("metadata name %s\n", i->uuid.c_str());
+			return i;
+		}
+		if (i->name == search2) {
+			//log_info ("metadata name2 %s\n", i->uuid.c_str());
+			return i;
+		}
+	}
+
+	for (auto i : subvols) {
+		if (i->uuid == search) {
+			//log_info ("subvols uuid %s\n", i->uuid.c_str());
+			return i;
+		}
+		if (i->name == search) {
+			//log_info ("subvols name %s\n", i->uuid.c_str());
+			return i;
+		}
+		if (i->name == search2) {
+			//log_info ("subvols name2 %s\n", i->uuid.c_str());
 			return i;
 		}
 	}

@@ -107,6 +107,7 @@ probe (DPContainer &top_level, DPContainer *parent)
 	if ((item = Filesystem::probe (top_level, parent, &buffer[0], bufsize))) {
 		//XXX need to check for all probed types
 		//printf ("PROBE: parent %s, child %s\n", parent->type.back().c_str(), item->type.back().c_str());
+#if 0
 		if (parent->is_a ("whole")) {
 			Whole *w = dynamic_cast<Whole*> (parent);
 			for (auto i : w->segments) {
@@ -125,6 +126,7 @@ probe (DPContainer &top_level, DPContainer *parent)
 				}
 			}
 		}
+#endif
 		return item;
 	}
 
@@ -223,13 +225,13 @@ main (int argc, char *argv[])
 	}
 #endif
 
-#if 0
+#if 1
 	log_info ("------------------------------------------------------------\n");
 	top_level.dump_objects();
 	log_info ("------------------------------------------------------------\n");
 #endif
 
-#if 0
+#if 1
 	display_dot (top_level.children);
 #endif
 #if 0
@@ -244,7 +246,7 @@ main (int argc, char *argv[])
 	}
 #endif
 	int retval = 0;
-#if 1
+#if 0
 	App app (&top_level);
 	retval =  app.run (1, argv);		//XXX argc
 #endif

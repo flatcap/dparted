@@ -42,6 +42,13 @@ LvmMetadata::add_child (DPContainer *child)
 	if (!child)
 		return;
 
-	add_segment (child);
+	if (child->is_a ("lvm_volume")) {
+		LvmVolume *v = dynamic_cast<LvmVolume*> (child);
+		sibling = v;
+		v->sibling = this;
+	} else {
+		// probably a partition
+		add_segment (child);
+	}
 }
 

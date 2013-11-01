@@ -48,6 +48,9 @@ public:
 	virtual DPContainer * find (const std::string &uuid);
 
 	std::vector<DPContainer*> metadata;
+	std::vector<DPContainer*> subvols;
+
+	DPContainer *sibling;
 protected:
 private:
 

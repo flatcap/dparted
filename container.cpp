@@ -524,8 +524,9 @@ void
 DPContainer::unref (void)
 {
 	ref_count--;
-	if (ref_count == 0)
-		delete this;
+	if (ref_count == 0) {
+		//delete this;
+	}
 }
 
 
