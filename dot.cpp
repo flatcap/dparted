@@ -233,7 +233,8 @@ dot_container (DPContainer *c)
 		output << dot_row ("device", "[inherit]");
 	else
 		output << dot_row ("device", c->device);
-	output << dot_row ("file desc",     c->fd);
+	output << dot_row ("mmap fd",       c->mmap_fd);
+	output << dot_row ("mmap size",     c->mmap_size);
 	output << dot_row ("parent_offset", c->parent_offset);
 	output << dot_row ("block_size",    c->block_size);
 	output << dot_row ("bytes_size",    c->bytes_size);

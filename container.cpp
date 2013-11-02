@@ -18,6 +18,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 #include <iterator>
@@ -44,9 +45,11 @@ DPContainer::DPContainer (void) :
 	bytes_used (0),
 	whole (nullptr),
 	parent (nullptr),
-	fd (nullptr),
 	ref_count (1),
-	missing (false)
+	missing (false),
+	mmap_fd (-1),
+	mmap_buffer (nullptr),
+	mmap_size (0)
 {
 	declare ("container");
 }
@@ -60,8 +63,15 @@ DPContainer::~DPContainer()
 		i->unref();
 	}
 
-	if (fd) {		//XXX what? >=0 is valid
-		fclose (fd);
+	if (mmap_buffer) {
+		munmap (mmap_buffer, mmap_size);
+		mmap_buffer = nullptr;
+		mmap_size   = 0;
+	}
+
+	if (mmap_fd >= 0) {
+		close (mmap_fd);
+		mmap_fd = -1;
 	}
 }
 
@@ -359,26 +369,36 @@ DPContainer::find (const std::string &search)
 /**
  * open_device
  */
-FILE *
+int
 DPContainer::open_device (void)
 {
 	// flags? ro, rw
-	if (fd)
-		return fd;
+	if (mmap_fd >= 0)
+		return mmap_fd;
 
 	if (device.empty()) {
 		if (parent) {
-			fd = parent->open_device();
+			mmap_fd = parent->open_device();
 		}
 	} else {
-		fd = fopen (device.c_str(), "re");	// read, close on exec
-		if (fd == nullptr) {
+		mmap_fd = open (device.c_str(), O_RDONLY | O_CLOEXEC); // read only, close on exec
+		if (mmap_fd < 0) {
 			log_error ("failed to open device %s\n", device.c_str());
 		}
 	}
 
-	//log_info ("OPEN %s = %p\n", device.c_str(), (void*) fd);
-	return fd;
+	//log_info ("OPEN %s = %p\n", device.c_str(), (void*) mmap_fd);
+
+	unsigned char *buffer = nullptr;
+	long size = 4194304; // 4MiB
+
+	buffer = get_buffer (0, size);
+	if (buffer) {
+		mmap_buffer = buffer;
+		mmap_size   = size;
+	}
+
+	return mmap_fd;
 }
 
 /**
@@ -388,13 +408,16 @@ int
 DPContainer::read_data (long offset, long size, unsigned char *buffer)
 {
 	// if offset >= 0, seek there
-	long current = -1;
+	//long current = -1;
 	long bytes = 0;
 
+	return -1;
+
+#if 0
 	if (!buffer)
 		return -1;
 
-	if (fd == nullptr) {
+	if (fptr == nullptr) {
 		if (parent) {
 			return parent->read_data (offset + parent_offset, size, buffer);
 		} else {
@@ -403,13 +426,13 @@ DPContainer::read_data (long offset, long size, unsigned char *buffer)
 	}
 
 	if (offset >= 0) {
-		current = fseek (fd, offset, SEEK_SET);
+		current = fseek (fptr, offset, SEEK_SET);
 	} else {
-		current = fseek (fd, 0, SEEK_CUR);
+		current = fseek (fptr, 0, SEEK_CUR);
 	}
 
 	if (current < 0) {
-		log_error ("seek to %ld failed on %s (%p)\n", offset, device.c_str(), (void*) fd);
+		log_error ("seek to %ld failed on %s (%p)\n", offset, device.c_str(), (void*) fptr);
 		perror ("seek");
 		return -1;
 	}
@@ -417,12 +440,47 @@ DPContainer::read_data (long offset, long size, unsigned char *buffer)
 	if ((current + size) > bytes_size)
 		return -1;
 
-	bytes = fread (buffer, size, 1, fd);
+	bytes = fread (buffer, size, 1, fptr);
 	bytes *= size;
 	std::string s = get_size (current);
-	//log_info ("READ: device %s (%p), offset %lld (%s), size %lld = %lld\n", device.c_str(), (void*) fd, current, s.c_str(), size, bytes);
+	//log_info ("READ: device %s (%p), offset %lld (%s), size %lld = %lld\n", device.c_str(), (void*) fptr, current, s.c_str(), size, bytes);
+#endif
 
 	return bytes;
+}
+
+/**
+ * get_buffer
+ */
+unsigned char *
+DPContainer::get_buffer (long offset, long size)
+{
+	if (open_device() < 0)
+		return nullptr;
+
+	unsigned char *memblock = nullptr;
+	memblock = (unsigned char*) mmap (NULL, size, PROT_READ, MAP_SHARED, mmap_fd, offset);
+	if (memblock == MAP_FAILED) {
+		perror ("mmap");
+		return nullptr;
+	}
+
+	return memblock;
+}
+
+/**
+ * close_buffer
+ */
+void
+DPContainer::close_buffer (unsigned char *buffer, long size)
+{
+	if (!buffer)
+		return;
+
+	if (munmap (buffer, size) != 0)
+		perror ("munmap");
+
+	// XXX nothing else we can do
 }
 
 
@@ -450,7 +508,7 @@ operator<< (std::ostream &stream, const DPContainer &c)
 		<< "[" << c.type.back() << "]:"
 		<< c.name << "(" << uuid << "), "
 #if 0
-		//<< c.device << "(" << c.fd << "),"
+		//<< c.device << "(" << c.fptr << "),"
 		<< " S:" //<< c.bytes_size
 						<< "(" << get_size(c.bytes_size)    << "), "
 		<< " U:" //<< c.bytes_used

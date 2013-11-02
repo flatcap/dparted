@@ -61,8 +61,10 @@ public:
 	virtual void          find_type   (const std::string &type, std::vector<DPContainer*> &results);
 	//XXX virtual std::vector<DPContainer*> find_incomplete (void);
 
-	virtual FILE * open_device (void);
+	virtual int open_device (void);
 	virtual int read_data (long offset, long size, unsigned char *buffer);
+	virtual unsigned char * get_buffer (long offset, long size);
+	virtual void close_buffer (unsigned char *buffer, long size);
 
 	virtual bool is_a (const std::string &type);
 
@@ -89,12 +91,15 @@ public:
 
 	std::vector<std::string> type;
 
-	FILE		*fd;
 	int		 ref_count;
 
 	bool		 missing;
 
 	virtual void dump_objects (int indent = 0);
+
+	int		 mmap_fd;
+	unsigned char	*mmap_buffer;
+	long		 mmap_size;
 
 protected:
 	void declare (const char *name);

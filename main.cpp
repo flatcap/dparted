@@ -96,45 +96,29 @@ DPContainer *
 probe (DPContainer &top_level, DPContainer *parent)
 {
 	//LOG_TRACE;
-	const int bufsize = 256*1024;
-	std::vector<unsigned char> buffer (bufsize);
+	int bufsize = 0;
+	unsigned char *buffer = nullptr;
 
 	DPContainer *item = nullptr;
 
-	parent->open_device();
-	parent->read_data (0, bufsize, &buffer[0]);	// check read num
+	if (parent->open_device() < 0) {
+		//XXX trouble;
+		log_error ("open device failed: %s\n", parent->get_device_name().c_str());
+		return nullptr;
+	}
 
-	if ((item = Filesystem::probe (top_level, parent, &buffer[0], bufsize))) {
-		//XXX need to check for all probed types
-		//printf ("PROBE: parent %s, child %s\n", parent->type.back().c_str(), item->type.back().c_str());
-#if 0
-		if (parent->is_a ("whole")) {
-			Whole *w = dynamic_cast<Whole*> (parent);
-			for (auto i : w->segments) {
-				//log_info ("add filesystem to %s - %s\n", i->name.c_str(), i->type.back().c_str());
-				i->just_add_child (item);
-			}
-			if (parent->is_a ("lvm_volume")) {
-				LvmVolume *v = dynamic_cast<LvmVolume*>(w);
-				for (auto c : v->metadata) {
-					w = dynamic_cast<Whole*> (c);
-					if (w) {
-						for (auto i : w->segments) {
-							i->just_add_child (item);
-						}
-					}
-				}
-			}
-		}
-#endif
+	buffer  = parent->mmap_buffer;
+	bufsize = parent->mmap_size;
+
+	if ((item = Filesystem::probe (top_level, parent, buffer, bufsize))) {
 		return item;
 	}
 
-	if ((item = Table::probe (top_level, parent, &buffer[0], bufsize))) {
+	if ((item = Table::probe (top_level, parent, buffer, bufsize))) {
 		return item;
 	}
 
-	if ((item = Misc::probe (top_level, parent, &buffer[0], bufsize))) {
+	if ((item = Misc::probe (top_level, parent, buffer, bufsize))) {
 		return item;
 	}
 

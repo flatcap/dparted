@@ -41,8 +41,6 @@ public:
 
 	std::string	mirror_log;
 
-	virtual int read_data (long offset, long size, unsigned char *buffer);
-
 	virtual void add_child (DPContainer *child);
 
 	virtual DPContainer * find (const std::string &uuid);
