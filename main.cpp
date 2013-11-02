@@ -147,6 +147,34 @@ probe (DPContainer &top_level, DPContainer *parent)
 int
 main (int argc, char *argv[])
 {
+	//command line
+	// -a	app
+	// -l	list
+	// -d	dot
+
+	bool app  = false;
+	bool dot  = false;
+	bool list = false;
+
+	if (argc > 1) {
+		std::string arg = argv[1];
+		if (arg[0] == '-') {
+			for (auto c : arg) {
+				switch (c) {
+					case '-':              break;
+					case 'a': app  = true; break;
+					case 'd': dot  = true; break;
+					case 'l': list = true; break;
+					default:
+						  printf ("unknown option '%c'\n", c);
+						  break;
+				}
+			}
+			argc--;
+			argv++;
+		}
+	}
+
 	log_init ("/dev/stdout");
 
 	DPContainer top_level;
@@ -225,15 +253,15 @@ main (int argc, char *argv[])
 	}
 #endif
 
-#if 1
-	log_info ("------------------------------------------------------------\n");
-	top_level.dump_objects();
-	log_info ("------------------------------------------------------------\n");
-#endif
+	if (list) {
+		log_info ("------------------------------------------------------------\n");
+		top_level.dump_objects();
+		log_info ("------------------------------------------------------------\n");
+	}
 
-#if 0
-	display_dot (top_level.children);
-#endif
+	if (dot) {
+		display_dot (top_level.children);
+	}
 #if 0
 	if (argc != 1) {
 		display_dot (top_level.children);
@@ -246,10 +274,12 @@ main (int argc, char *argv[])
 	}
 #endif
 	int retval = 0;
-#if 1
-	App app (&top_level);
-	retval =  app.run (1, argv);		//XXX argc
-#endif
+
+	if (app) {
+		App app (&top_level);
+		retval =  app.run (1, argv);		//XXX argc
+	}
+
 	return retval;
 }
 
