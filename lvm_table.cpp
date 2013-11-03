@@ -33,7 +33,6 @@
  * LvmTable
  */
 LvmTable::LvmTable (void) :
-	seq_num(0),
 	metadata_size(0),
 	group (nullptr)
 {
@@ -127,6 +126,7 @@ get_mda_header (unsigned char *buffer)
 	return mh;
 }
 
+#if 0
 /**
  * get_seq_num
  */
@@ -147,6 +147,7 @@ get_seq_num (const std::string &config)
 	return sn;
 }
 
+#endif
 /**
  * get_vol_name
  */
@@ -270,7 +271,7 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 
 	std::string config;
 	std::string vol_name;
-	int seq_num = -1;
+	//int seq_num = -1;
 
 	if ((offset+size) > bufsize) {
 		//log_info ("TOO BIG (%d > %d)\n", (offset+size), bufsize);
@@ -279,7 +280,7 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 		if (size > 0) {
 			config = std::string ((char*) (buffer+4096+offset), size-1);
 
-			seq_num = get_seq_num (config);
+			//seq_num = get_seq_num (config);
 
 			//log_info ("seq num = %d\n", seq_num);
 			vol_name = get_vol_name (config);
@@ -298,8 +299,6 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	t->parent_offset = 0;
 	t->bytes_used = 0;
 	t->config = config;
-	t->seq_num = seq_num;
-	t->vol_name = vol_name;
 	t->uuid = pv_uuid;
 
 	t->metadata_size = 1048576;
@@ -307,6 +306,29 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 	parent->add_child (t);
 
 	return t;
+}
+
+
+/**
+ * add_child
+ */
+void
+LvmTable::add_child (DPContainer *child)
+{
+	if (!child)
+		return;
+
+	child->parent_offset = metadata_size;
+
+	Table::add_child (child);
+
+	child->open_device();	// get a buffer
+
+#if 0
+	printf ("%p, name %s, type %s, uuid: %s\n", child->mmap_buffer, child->name.c_str(), child->type.back().c_str(), child->uuid.c_str());
+	dump_hex2 (child->mmap_buffer, 0, 4096);
+	printf ("\n");
+#endif
 }
 
 

@@ -191,6 +191,7 @@ dot_row (const char *name, unsigned int value)
 	return output.str();
 }
 
+#if 0
 /**
  * dot_row (void *)
  */
@@ -204,6 +205,33 @@ dot_row (const char *name, void *value)
 	output << "<td>=</td>";
 	if (value) {
 		output << "<td align=\"left\">" << value << "</td>";
+	} else {
+		output << "<td align=\"left\">NULL</td>";
+	}
+	output << "</tr>\n";
+
+	return output.str();
+}
+
+#endif
+/**
+ * dot_row (DPContainer *)
+ */
+static std::string
+dot_row (const char *name, DPContainer *value)
+{
+	std::stringstream output;
+	std::string dest;
+
+	if (value) {
+		dest = " (" + value->type.back() + ")";
+	}
+
+	output << "<tr>";
+	output << "<td align=\"left\">" << name << "</td>";
+	output << "<td>=</td>";
+	if (value) {
+		output << "<td align=\"left\">" << (void*) value << dest << "</td>";
 	} else {
 		output << "<td align=\"left\">NULL</td>";
 	}
@@ -229,14 +257,25 @@ dot_container (DPContainer *c)
 	output << dot_row ("type",          c->type.back());
 	//output << dot_row ("name",          c->name);
 	output << dot_row ("uuid",          uuid_short); //RAR temp
-	if (c->device.empty())
-		output << dot_row ("device", "[inherit]");
-	else
+	if (c->device.empty()) {
+		if (c->is_a ("whole")) {
+			output << dot_row ("device", "[segments]");
+		} else {
+			output << dot_row ("device", "[inherit]");
+		}
+	} else {
 		output << dot_row ("device", c->device);
-	output << dot_row ("mmap fd",       c->mmap_fd);
-	output << dot_row ("mmap size",     c->mmap_size);
+	}
+	if (c->mm_fd >= 0) {
+		output << dot_row ("mmap fd",       c->mm_fd);
+		output << dot_row ("mmap size",     c->mm_size);
+	}
 	output << dot_row ("parent_offset", c->parent_offset);
-	output << dot_row ("block_size",    c->block_size);
+	if (c->block_size) {
+		output << dot_row ("block_size",    c->block_size);
+	} else {
+		output << dot_row ("block_size",    "[inherit]");
+	}
 	output << dot_row ("bytes_size",    c->bytes_size);
 	output << dot_row ("bytes_used",    c->bytes_used);
 	output << dot_row ("bytes_free",    c->bytes_size - c->bytes_used);
@@ -440,10 +479,8 @@ dot_lvm_table (LvmTable *t)
 
 	output << dot_table(dynamic_cast<Table *> (t));
 
-	output << dot_row ("vol_name",      t->vol_name);
-	output << dot_row ("seq_num",       t->seq_num);
 	output << dot_row ("metadata_size", t->metadata_size);
-	output << dot_row ("attr",          t->attr);
+	output << dot_row ("pv_attr",       t->pv_attr);
 	//output << dot_row ("config",   t->config);
 
 	return output.str();

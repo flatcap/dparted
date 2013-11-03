@@ -512,7 +512,7 @@ dump_hex2 (void *buf, int start, int length)
 	int off, i, s, e;
 	unsigned char *mem = (unsigned char*) buf;
 
-#if 0
+#if 1
 	unsigned char last[16];
 	int same = 0;
 #endif
@@ -520,7 +520,7 @@ dump_hex2 (void *buf, int start, int length)
 	e = (start + length + 15) & ~15;	// round up
 
 	for (off = s; off < e; off += 16) {
-#if 0
+#if 1
 		if (memcmp ((char*)buf+off, last, sizeof (last)) == 0) {
 			if (!same) {
 				log_info ("	        ...\n");

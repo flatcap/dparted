@@ -97,9 +97,9 @@ public:
 
 	virtual void dump_objects (int indent = 0);
 
-	int		 mmap_fd;
-	unsigned char	*mmap_buffer;
-	long		 mmap_size;
+	int		 mm_fd;
+	unsigned char	*mm_buffer;
+	long		 mm_size;
 
 protected:
 	void declare (const char *name);

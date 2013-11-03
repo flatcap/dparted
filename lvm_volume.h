@@ -45,6 +45,8 @@ public:
 
 	virtual DPContainer * find (const std::string &uuid);
 
+	virtual void dump_objects (int indent = 0);
+
 	std::vector<DPContainer*> metadata;
 	std::vector<DPContainer*> subvols;
 

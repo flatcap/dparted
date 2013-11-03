@@ -28,6 +28,7 @@
 #include <sstream>
 #include <string>
 #include <typeinfo>
+#include <algorithm>
 
 #include "container.h"
 #include "log.h"
@@ -47,9 +48,9 @@ DPContainer::DPContainer (void) :
 	parent (nullptr),
 	ref_count (1),
 	missing (false),
-	mmap_fd (-1),
-	mmap_buffer (nullptr),
-	mmap_size (0)
+	mm_fd (-1),
+	mm_buffer (nullptr),
+	mm_size (0)
 {
 	declare ("container");
 }
@@ -63,15 +64,15 @@ DPContainer::~DPContainer()
 		i->unref();
 	}
 
-	if (mmap_buffer) {
-		munmap (mmap_buffer, mmap_size);
-		mmap_buffer = nullptr;
-		mmap_size   = 0;
+	if (mm_buffer) {
+		munmap (mm_buffer, mm_size);
+		mm_buffer = nullptr;
+		mm_size   = 0;
 	}
 
-	if (mmap_fd >= 0) {
-		close (mmap_fd);
-		mmap_fd = -1;
+	if (mm_fd >= 0) {
+		close (mm_fd);
+		mm_fd = -1;
 	}
 }
 
@@ -373,32 +374,35 @@ int
 DPContainer::open_device (void)
 {
 	// flags? ro, rw
-	if (mmap_fd >= 0)
-		return mmap_fd;
+	if (mm_fd >= 0)
+		return mm_fd;
 
 	if (device.empty()) {
 		if (parent) {
-			mmap_fd = parent->open_device();
+			mm_fd = parent->open_device();
 		}
 	} else {
-		mmap_fd = open (device.c_str(), O_RDONLY | O_CLOEXEC); // read only, close on exec
-		if (mmap_fd < 0) {
+		mm_fd = open (device.c_str(), O_RDONLY | O_CLOEXEC); // read only, close on exec
+		if (mm_fd < 0) {
 			log_error ("failed to open device %s\n", device.c_str());
 		}
 	}
 
-	//log_info ("OPEN %s = %p\n", device.c_str(), (void*) mmap_fd);
+	//log_info ("OPEN %s = %p\n", device.c_str(), (void*) mm_fd);
 
-	unsigned char *buffer = nullptr;
-	long size = 4194304; // 4MiB
+	if (mm_fd >= 0) {
+		unsigned char *buffer = nullptr;
+		long size = 4194304; // 4MiB
+		long offset = parent_offset;
 
-	buffer = get_buffer (0, size);
-	if (buffer) {
-		mmap_buffer = buffer;
-		mmap_size   = size;
+		buffer = get_buffer (offset, size);
+		if (buffer) {
+			mm_buffer = buffer;
+			mm_size   = size;
+		}
 	}
 
-	return mmap_fd;
+	return mm_fd;
 }
 
 /**
@@ -455,17 +459,50 @@ DPContainer::read_data (long offset, long size, unsigned char *buffer)
 unsigned char *
 DPContainer::get_buffer (long offset, long size)
 {
-	if (open_device() < 0)
-		return nullptr;
+	//XXX validate offset and size against device size
 
-	unsigned char *memblock = nullptr;
-	memblock = (unsigned char*) mmap (NULL, size, PROT_READ, MAP_SHARED, mmap_fd, offset);
-	if (memblock == MAP_FAILED) {
-		perror ("mmap");
-		return nullptr;
+	// Mapping exists (and is big enough)
+	if (mm_buffer && (mm_size >= (offset+size))) {
+		return (mm_buffer + offset);
 	}
 
-	return memblock;
+	// No device -- delegate
+	if (device.empty() || (mm_fd < 0)) {
+		if (parent) {
+			return parent->get_buffer (offset + parent_offset, size);
+		} else {
+			log_error ("mmap: no device and no parent\n");
+			return nullptr;
+		}
+	}
+
+	// Nothing yet -- allocate a big block
+	void	*buf  = nullptr;
+	int	 fd   = -1;
+
+	size = std::max ((long)4194304, size);	// 4 MiB
+
+	fd = open (device.c_str(), O_RDONLY | O_CLOEXEC); // read only, close on exec
+	if (fd < 0) {
+		log_error ("failed to open device %s\n", device.c_str());
+		return nullptr;
+	}
+	log_debug ("opened device %s (%d)\n", device.c_str(), fd);
+
+	offset += parent_offset;
+	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, fd, offset);
+	if (buf == MAP_FAILED) {
+		log_error ("mmap: alloc failed\n");	//XXX perror
+		close (fd);
+		return nullptr;
+	}
+	log_debug ("mmap'd device %s, offset %ld, size %ld\n", device.c_str(), offset, size);
+
+	mm_buffer = (unsigned char*) buf;
+	mm_size   = size;
+	mm_fd     = fd;
+
+	return mm_buffer;
 }
 
 /**

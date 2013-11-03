@@ -36,13 +36,12 @@ public:
 	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
 
 	// my volume
-	std::string vol_name;
 	std::string config;
-	std::string attr;
-
-	int seq_num;
+	std::string pv_attr;
 
 	int metadata_size;
+
+	virtual void add_child      (DPContainer *child);
 
 	LvmGroup *group;
 protected:

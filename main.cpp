@@ -107,8 +107,8 @@ probe (DPContainer &top_level, DPContainer *parent)
 		return nullptr;
 	}
 
-	buffer  = parent->mmap_buffer;
-	bufsize = parent->mmap_size;
+	buffer  = parent->mm_buffer;
+	bufsize = parent->mm_size;
 
 	if ((item = Filesystem::probe (top_level, parent, buffer, bufsize))) {
 		return item;
@@ -214,6 +214,9 @@ main (int argc, char *argv[])
 			//item->add_child (found);
 			//std::cout << "\tFound: " << found << "\n";
 			//probe_queue.push (found);
+		} else {
+			//XXX LOG
+			break;
 		}
 	}
 
@@ -233,6 +236,9 @@ main (int argc, char *argv[])
 			//item->add_child (found);
 			//std::cout << "\tFound: " << found << "\n";
 			//probe_queue.push (found);
+		} else {
+			//XXX LOG
+			break;
 		}
 	}
 #endif

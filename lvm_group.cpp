@@ -155,6 +155,7 @@ lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 				continue;
 			}
 
+			//std::cout << "lv uuid = " << lv_uuid << '\n';
 			v->uuid    = lv_uuid;
 			//v->missing = true;
 			pieces.just_add_child(v);
@@ -164,10 +165,10 @@ lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 		p->name		= "partition";
 		p->block_size	= tags["LVM2_VG_EXTENT_SIZE"];
 		p->uuid		= t->get_device_name() + "(" + tags["LVM2_PVSEG_START"] + ")";
-		p->whole	= g;
+		p->whole	= nullptr;	//XXX we don't know this yet
 
 		// LvmTable
-		t->attr		= tags["LVM2_PV_ATTR"];
+		t->pv_attr	= tags["LVM2_PV_ATTR"];
 		t->bytes_size	= tags["LVM2_PV_SIZE"];
 		//t->bytes_used	= tags["LVM2_PV_USED"];
 
@@ -197,17 +198,16 @@ lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 #endif
 
 #if 0
-	log_info ("TopLevel------------------------------------------------------------\n");
+	log_info ("Pieces------------------------------------------------------------\n");
 	pieces.dump_objects();
 	log_info ("Deps------------------------------------------------------------\n");
 	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
-	log_info ("Pieces------------------------------------------------------------\n");
-	for (auto p : pieces.children) log_info ("%s %s\n", p->uuid.c_str(), p->name.c_str());
 	log_info ("------------------------------------------------------------\n");
 #endif
 
 }
 
+#if 0
 /**
  * lvm_vgs
  */
@@ -272,12 +272,10 @@ lvm_vgs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 	}
 
 #if 0
-	log_info ("TopLevel------------------------------------------------------------\n");
+	log_info ("Pieces------------------------------------------------------------\n");
 	pieces.dump_objects();
 	log_info ("Deps------------------------------------------------------------\n");
 	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
-	log_info ("Pieces------------------------------------------------------------\n");
-	for (auto p : pieces.children) log_info ("%s %s\n", p->uuid.c_str(), p->name.c_str());
 	log_info ("------------------------------------------------------------\n");
 #endif
 
@@ -396,9 +394,18 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 		    (v->lv_attr[0] == 'l') ||
 		    (v->lv_attr[0] == 'e')) {		// mirror image/log, raid metadata/image
 			v->name = v->name.substr (1, v->name.length() - 2);	// Strip the []'s
-		}
 
-		v->device = "/dev/mapper/" + g->name + '-' + v->name; //RAR
+			std::string dev_name = v->name;
+			size_t pos = 0;
+
+			while ((pos = v->name.find_first_of ("-", pos)) != std::string::npos) {
+				dev_name.insert (pos, "-");
+				pos++;
+			}
+
+			v->device = "/dev/mapper/" + g->name + '-' + dev_name; //RAR
+			//printf ("DEVNAME = %s\n", v->device.c_str());
+		}
 
 		std::string devices = tags["LVM2_DEVICES"];
 		std::vector<std::string> device_list;
@@ -456,12 +463,10 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 	}
 
 #if 0
-	log_info ("TopLevel------------------------------------------------------------\n");
+	log_info ("Pieces------------------------------------------------------------\n");
 	pieces.dump_objects();
 	log_info ("Deps------------------------------------------------------------\n");
 	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
-	log_info ("Pieces------------------------------------------------------------\n");
-	for (auto p : pieces.children) log_info ("%s %s\n", p->uuid.c_str(), p->name.c_str());
 	log_info ("------------------------------------------------------------\n");
 #endif
 
@@ -475,6 +480,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 		DPContainer *parent = pieces.find(parent_id);
 		if (!parent) {
 			log_error ("\tcan't find parent: %s\n", parent_id.c_str());
+			exit (1);
 			continue;
 		}
 
@@ -493,7 +499,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 
 		for (auto it = pieces.children.begin(); it != pieces.children.end(); it++) {
 			if (*it == child) {
-				pieces.children.erase (it);
+				//RAR tmp pieces.children.erase (it);
 				break;
 			}
 		}
@@ -505,17 +511,16 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 	//}
 	//log_info ("\n");
 #if 0
-	log_info ("TopLevel------------------------------------------------------------\n");
+	log_info ("Pieces------------------------------------------------------------\n");
 	pieces.dump_objects();
 	log_info ("Deps------------------------------------------------------------\n");
 	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
-	log_info ("Pieces------------------------------------------------------------\n");
-	for (auto p : pieces.children) log_info ("%s %s\n", p->uuid.c_str(), p->name.c_str());
 	log_info ("------------------------------------------------------------\n");
 #endif
 
 }
 
+#endif
 
 /**
  * discover
@@ -536,8 +541,10 @@ LvmGroup::discover (DPContainer &top_level)
 	}
 
 	lvm_pvs (pieces, deps);
+#if 0
 	lvm_vgs (pieces, deps);
 	lvm_lvs (pieces, deps);
+#endif
 
 #if 0
 	//log_info ("Pieces (%ld)\n", pieces.size());

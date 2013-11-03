@@ -48,7 +48,7 @@ LvmVolume::add_child (DPContainer *child)
 	if (!child)
 		return;
 
-	log_info ("volume: %s (%s), child: %s (%s)\n", name.c_str(), type.back().c_str(), child->name.c_str(), child->type.back().c_str());
+	//log_info ("volume: %s (%s), child: %s (%s)\n", name.c_str(), type.back().c_str(), child->name.c_str(), child->type.back().c_str());
 	if (child->is_a ("lvm_metadata")) {
 		metadata.push_back (child);
 		//log_info ("METADATA %s\n", child->name.c_str());
@@ -66,7 +66,7 @@ LvmVolume::add_child (DPContainer *child)
 		Whole::add_child (child);
 
 		for (auto i : subvols) {
-			log_info ("subvol %s, %ld children\n", i->name.c_str(), i->children.size());
+			//log_info ("subvol %s, %ld children\n", i->name.c_str(), i->children.size());
 			for (auto j : i->children) {
 				j->just_add_child (child);
 			}
@@ -80,6 +80,7 @@ LvmVolume::add_child (DPContainer *child)
 DPContainer *
 LvmVolume::find (const std::string &search)
 {
+	//printf ("find: %s -> %s (%s)\n", search.c_str(), name.c_str(), uuid.c_str());
 	std::string search2;
 
 	size_t pos = search.find ("(0)");
@@ -118,5 +119,32 @@ LvmVolume::find (const std::string &search)
 	}
 
 	return Whole::find (search);
+}
+
+
+/**
+ * dump_objects
+ */
+void
+LvmVolume::dump_objects (int indent)
+{
+	printf ("%*s", 8*indent, "");
+	if (name == "dummy") {
+		indent--;
+	} else {
+		std::cout << this << std::endl;
+	}
+
+	for (auto c : subvols) {
+		c->dump_objects (indent+1);
+	}
+
+	for (auto c : metadata) {
+		c->dump_objects (indent+1);
+	}
+
+	for (auto c : children) {
+		c->dump_objects (indent+1);
+	}
 }
 
