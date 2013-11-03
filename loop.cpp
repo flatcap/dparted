@@ -168,11 +168,11 @@ Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 	for (auto line : output) {
 		Loop *l = new Loop (line);
 
-		l->open_device();
+		l->get_fd();
 
 		// move to container::find_size or utils (or block::)
 		off_t size;
-		size = lseek (l->mm_fd, 0, SEEK_END);
+		size = lseek (l->fd, 0, SEEK_END);
 		l->bytes_size = size;
 
 		top_level.add_child (l);

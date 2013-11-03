@@ -96,29 +96,21 @@ DPContainer *
 probe (DPContainer &top_level, DPContainer *parent)
 {
 	//LOG_TRACE;
-	int bufsize = 0;
-	unsigned char *buffer = nullptr;
+
+	if (!parent)
+		return nullptr;
 
 	DPContainer *item = nullptr;
 
-	if (parent->open_device() < 0) {
-		//XXX trouble;
-		log_error ("open device failed: %s\n", parent->get_device_name().c_str());
-		return nullptr;
-	}
-
-	buffer  = parent->mm_buffer;
-	bufsize = parent->mm_size;
-
-	if ((item = Filesystem::probe (top_level, parent, buffer, bufsize))) {
+	if ((item = Filesystem::probe (top_level, parent))) {
 		return item;
 	}
 
-	if ((item = Table::probe (top_level, parent, buffer, bufsize))) {
+	if ((item = Table::probe (top_level, parent))) {
 		return item;
 	}
 
-	if ((item = Misc::probe (top_level, parent, buffer, bufsize))) {
+	if ((item = Misc::probe (top_level, parent))) {
 		return item;
 	}
 
@@ -159,7 +151,7 @@ main (int argc, char *argv[])
 		}
 	}
 
-	log_init ("/dev/stdout");
+	//log_init ("/dev/stdout");
 
 	DPContainer top_level;
 	top_level.name = "dummy";

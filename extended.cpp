@@ -55,6 +55,7 @@ Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long 
 	//LOG_TRACE;
 	Extended *ext = nullptr;
 
+#if 0
 	unsigned char *buffer = nullptr;
 	int bufsize = 512;
 	//off_t seek = 0;
@@ -159,6 +160,7 @@ Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long 
 	ext->fill_space();		// optional
 
 	free (buffer);
+#endif
 	return ext;
 }
 

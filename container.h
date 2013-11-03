@@ -44,9 +44,10 @@ public:
 	virtual void delete_child   (DPContainer *child);
 	virtual void move_child     (DPContainer *child, long offset, long size);
 
+	virtual int           get_fd (void);
 	virtual long          get_block_size (void);
 	virtual std::string   get_device_name (void);
-	virtual long     get_parent_offset (void);
+	virtual long          get_parent_offset (void);
 	virtual unsigned int  get_device_space (std::map<long, long> &spaces);
 
 	virtual long get_size_total (void);
@@ -61,8 +62,10 @@ public:
 	virtual void          find_type   (const std::string &type, std::vector<DPContainer*> &results);
 	//XXX virtual std::vector<DPContainer*> find_incomplete (void);
 
+#if 0
 	virtual int open_device (void);
 	virtual int read_data (long offset, long size, unsigned char *buffer);
+#endif
 	virtual unsigned char * get_buffer (long offset, long size);
 	virtual void close_buffer (unsigned char *buffer, long size);
 
@@ -97,7 +100,7 @@ public:
 
 	virtual void dump_objects (int indent = 0);
 
-	int		 mm_fd;
+	int		 fd;
 	unsigned char	*mm_buffer;
 	long		 mm_size;
 

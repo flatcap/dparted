@@ -31,7 +31,7 @@ public:
 	Table (void);
 	virtual ~Table();
 
-	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
+	static DPContainer * probe (DPContainer &top_level, DPContainer *parent);
 
 protected:
 	long fill_space (void);

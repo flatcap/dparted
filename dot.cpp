@@ -266,8 +266,8 @@ dot_container (DPContainer *c)
 	} else {
 		output << dot_row ("device", c->device);
 	}
-	if (c->mm_fd >= 0) {
-		output << dot_row ("mmap fd",       c->mm_fd);
+	if (c->fd >= 0) {
+		output << dot_row ("mmap fd",       c->fd);
 		output << dot_row ("mmap size",     c->mm_size);
 	}
 	output << dot_row ("parent_offset", c->parent_offset);

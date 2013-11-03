@@ -322,7 +322,7 @@ LvmTable::add_child (DPContainer *child)
 
 	Table::add_child (child);
 
-	child->open_device();	// get a buffer
+	//child->open_device();	// get a buffer
 
 #if 0
 	printf ("%p, name %s, type %s, uuid: %s\n", child->mmap_buffer, child->name.c_str(), child->type.back().c_str(), child->uuid.c_str());

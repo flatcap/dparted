@@ -48,7 +48,7 @@ DPContainer::DPContainer (void) :
 	parent (nullptr),
 	ref_count (1),
 	missing (false),
-	mm_fd (-1),
+	fd (-1),
 	mm_buffer (nullptr),
 	mm_size (0)
 {
@@ -70,9 +70,9 @@ DPContainer::~DPContainer()
 		mm_size   = 0;
 	}
 
-	if (mm_fd >= 0) {
-		close (mm_fd);
-		mm_fd = -1;
+	if (fd >= 0) {
+		close (fd);
+		fd = -1;
 	}
 }
 
@@ -176,6 +176,36 @@ DPContainer::move_child (DPContainer *child, long offset, long size)
 {
 }
 
+
+/**
+ * get_fd
+ */
+int
+DPContainer::get_fd (void)
+{
+	if (fd >= 0)
+		return fd;
+
+	if (parent)
+		return parent->get_fd();
+
+	std::string device = get_device_name();
+	if (device.empty()) {
+		log_error ("no device to open\n");
+		return -1;
+	}
+
+	int newfd = open (device.c_str(), O_RDONLY | O_CLOEXEC); // read only, close on exec
+	if (newfd < 0) {
+		log_error ("failed to open device %s\n", device.c_str());
+		return -1;
+	}
+	log_debug ("opened device %s (%d)\n", device.c_str(), newfd);
+
+	fd = newfd;
+
+	return newfd;
+}
 
 /**
  * get_block_size
@@ -367,6 +397,7 @@ DPContainer::find (const std::string &search)
 }
 
 
+#if 0
 /**
  * open_device
  */
@@ -374,23 +405,23 @@ int
 DPContainer::open_device (void)
 {
 	// flags? ro, rw
-	if (mm_fd >= 0)
-		return mm_fd;
+	if (fd >= 0)
+		return fd;
 
 	if (device.empty()) {
 		if (parent) {
-			mm_fd = parent->open_device();
+			fd = parent->open_device();
 		}
 	} else {
-		mm_fd = open (device.c_str(), O_RDONLY | O_CLOEXEC); // read only, close on exec
-		if (mm_fd < 0) {
+		fd = open (device.c_str(), O_RDONLY | O_CLOEXEC); // read only, close on exec
+		if (fd < 0) {
 			log_error ("failed to open device %s\n", device.c_str());
 		}
 	}
 
-	//log_info ("OPEN %s = %p\n", device.c_str(), (void*) mm_fd);
+	//log_info ("OPEN %s = %p\n", device.c_str(), (void*) fd);
 
-	if (mm_fd >= 0) {
+	if (fd >= 0) {
 		unsigned char *buffer = nullptr;
 		long size = 4194304; // 4MiB
 		long offset = parent_offset;
@@ -402,7 +433,7 @@ DPContainer::open_device (void)
 		}
 	}
 
-	return mm_fd;
+	return fd;
 }
 
 /**
@@ -453,6 +484,7 @@ DPContainer::read_data (long offset, long size, unsigned char *buffer)
 	return bytes;
 }
 
+#endif
 /**
  * get_buffer
  */
@@ -466,8 +498,10 @@ DPContainer::get_buffer (long offset, long size)
 		return (mm_buffer + offset);
 	}
 
+	//XXX what if it's *not* big enough?
+
 	// No device -- delegate
-	if (device.empty() || (mm_fd < 0)) {
+	if (device.empty() || (fd < 0)) {
 		if (parent) {
 			return parent->get_buffer (offset + parent_offset, size);
 		} else {
@@ -478,16 +512,14 @@ DPContainer::get_buffer (long offset, long size)
 
 	// Nothing yet -- allocate a big block
 	void	*buf  = nullptr;
-	int	 fd   = -1;
+	int	 fd   = get_fd();
 
-	size = std::max ((long)4194304, size);	// 4 MiB
-
-	fd = open (device.c_str(), O_RDONLY | O_CLOEXEC); // read only, close on exec
 	if (fd < 0) {
-		log_error ("failed to open device %s\n", device.c_str());
+		log_error ("can't get file descriptor\n");
 		return nullptr;
 	}
-	log_debug ("opened device %s (%d)\n", device.c_str(), fd);
+
+	size = std::max ((long)4194304, size);	// 4 MiB
 
 	offset += parent_offset;
 	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, fd, offset);
@@ -500,7 +532,6 @@ DPContainer::get_buffer (long offset, long size)
 
 	mm_buffer = (unsigned char*) buf;
 	mm_size   = size;
-	mm_fd     = fd;
 
 	return mm_buffer;
 }

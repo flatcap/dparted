@@ -48,16 +48,22 @@ Filesystem::~Filesystem()
  * probe
  */
 DPContainer *
-Filesystem::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+Filesystem::probe (DPContainer &top_level, DPContainer *parent)
 {
 	//LOG_TRACE;
-	Filesystem *f = nullptr;
 
 	if (!parent)
 		return nullptr;
-	if (!buffer)
-		return nullptr;
 
+	long		 bufsize = 131072;	// 128 KiB, enough for the fs signatures
+	unsigned char	*buffer  = parent->get_buffer (0, bufsize);
+
+	if (!buffer) {
+		log_error ("can't get buffer\n");
+		return nullptr;
+	}
+
+	Filesystem *f = nullptr;
 	//XXX reorder by likelihood
 	     if ((f = get_btrfs    (buffer, bufsize))) {}
 	else if ((f = get_ext2     (buffer, bufsize))) {}

@@ -48,11 +48,22 @@ Table::~Table()
  * probe
  */
 DPContainer *
-Table::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+Table::probe (DPContainer &top_level, DPContainer *parent)
 {
 	//LOG_TRACE;
-	DPContainer *c = nullptr;
 
+	if (!parent)
+		return nullptr;
+
+	long		 bufsize = 1048576;	// 1 MiB
+	unsigned char	*buffer  = parent->get_buffer (0, bufsize);
+
+	if (!buffer) {
+		log_error ("can't get buffer\n");
+		return nullptr;
+	}
+
+	DPContainer *c = nullptr;
 	if ((c = Gpt::probe (top_level, parent, buffer, bufsize)))
 		return c;
 

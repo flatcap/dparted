@@ -104,11 +104,22 @@ is_random (unsigned char *buffer, int bufsize)
  * probe
  */
 DPContainer *
-Misc::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+Misc::probe (DPContainer &top_level, DPContainer *parent)
 {
 	//LOG_TRACE;
-	Misc *m = nullptr;
 
+	if (!parent)
+		return nullptr;
+
+	long		 bufsize = 1048576;	// 1 MiB
+	unsigned char	*buffer  = parent->get_buffer (0, bufsize);
+
+	if (!buffer) {
+		log_error ("can't get buffer\n");
+		return nullptr;
+	}
+
+	Misc *m = nullptr;
 	if (is_empty (buffer, bufsize)) {
 		//log_error ("probe empty\n");
 		m = new Misc();
