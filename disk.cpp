@@ -308,7 +308,7 @@ Disk::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 	for (auto line : output) {
 		Disk *d = new Disk (line);
 
-		top_level.add_child (d);
+		top_level.just_add_child (d);
 		probe_queue.push (d);	// We need to probe
 	}
 }
@@ -327,7 +327,7 @@ Disk::identify (DPContainer &top_level, const char *name, int fd, struct stat &s
 
 	Disk *d = new Disk (output[0]);
 
-	top_level.add_child (d);
+	top_level.just_add_child (d);
 	queue_add_probe (d);	// queue the container for action
 }
 

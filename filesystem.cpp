@@ -55,11 +55,17 @@ Filesystem::probe (DPContainer &top_level, DPContainer *parent)
 	if (!parent)
 		return nullptr;
 
+	DPContainer *p = parent;
+	while (p) {
+		////std::cout << p << std::endl;
+		p = p->parent;
+	}
+
 	long		 bufsize = 131072;	// 128 KiB, enough for the fs signatures
 	unsigned char	*buffer  = parent->get_buffer (0, bufsize);
 
 	if (!buffer) {
-		log_error ("can't get buffer\n");
+		//log_error ("can't get buffer\n");
 		return nullptr;
 	}
 

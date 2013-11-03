@@ -62,10 +62,6 @@ public:
 	virtual void          find_type   (const std::string &type, std::vector<DPContainer*> &results);
 	//XXX virtual std::vector<DPContainer*> find_incomplete (void);
 
-#if 0
-	virtual int open_device (void);
-	virtual int read_data (long offset, long size, unsigned char *buffer);
-#endif
 	virtual unsigned char * get_buffer (long offset, long size);
 	virtual void close_buffer (unsigned char *buffer, long size);
 

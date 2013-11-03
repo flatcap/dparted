@@ -207,7 +207,6 @@ lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 
 }
 
-#if 0
 /**
  * lvm_vgs
  */
@@ -411,27 +410,14 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 		std::vector<std::string> device_list;
 		explode (",", devices, device_list);
 
-		//log_debug ("%s (%s)\n", v->name.c_str(), v->type.back().c_str());
-
 #if 0
+		//log_debug ("%s (%s)\n", v->name.c_str(), v->type.back().c_str());
 		for (auto d : device_list) {
 			log_info ("Device: %s\n", d.c_str());
 		}
 #endif
 
 		for (auto d : device_list) {
-#if 0
-			DPContainer *id = pieces.find (d);
-			if (id) {
-				//log_info ("found it: %s\n", d.c_str());
-				v->add_segment (id);
-				//RAR id->parent = v;
-			} else {
-				//XXX deal with the dependency later
-				//log_debug ("ADD DEP: %s -> %s\n", v->uuid.c_str(), d.c_str());
-			}
-#endif
-
 			//log_info ("DEP %s -> %s\n", v->uuid.c_str(), d.c_str());
 			deps.insert(std::make_pair(v->uuid,d));
 
@@ -499,7 +485,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 
 		for (auto it = pieces.children.begin(); it != pieces.children.end(); it++) {
 			if (*it == child) {
-				//RAR tmp pieces.children.erase (it);
+				pieces.children.erase (it);
 				break;
 			}
 		}
@@ -507,20 +493,13 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 	}
 	deps.clear();
 
-	//log_info ("QQQ: %ld items left\n", pieces.size());
-	//}
-	//log_info ("\n");
 #if 0
 	log_info ("Pieces------------------------------------------------------------\n");
 	pieces.dump_objects();
-	log_info ("Deps------------------------------------------------------------\n");
-	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
 	log_info ("------------------------------------------------------------\n");
 #endif
-
 }
 
-#endif
 
 /**
  * discover
@@ -541,16 +520,13 @@ LvmGroup::discover (DPContainer &top_level)
 	}
 
 	lvm_pvs (pieces, deps);
-#if 0
 	lvm_vgs (pieces, deps);
 	lvm_lvs (pieces, deps);
-#endif
 
 #if 0
-	//log_info ("Pieces (%ld)\n", pieces.size());
+	log_info ("Pieces (%ld)\n", pieces.children.size());
 	for (auto i : pieces.children) {
-		//std::cout << '\t' << i->uuid << '\t' << i << '\n';
-		top_level.add_child (i);
+		std::cout << '\t' << i->uuid << '\t' << i << '\n';
 	}
 #endif
 
@@ -561,6 +537,10 @@ LvmGroup::discover (DPContainer &top_level)
 	//printf ("%ld volumes\n", v.size());
 
 	for (auto i : v) {
+		if (i->is_a ("lvm_metadata"))		// nothing interesting here
+			continue;
+		if (i->whole)				// we're part of something bigger
+			continue;
 		//log_info ("Q: [%s] %s: %s\n", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
 		queue_add_probe (i);
 	}
@@ -572,7 +552,7 @@ LvmGroup::discover (DPContainer &top_level)
 
 	for (auto i : g) {
 		//std::cout << '\t' << i->uuid << '\t' << i << '\n';
-		top_level.add_child (i);
+		top_level.just_add_child (i);
 	}
 #endif
 }

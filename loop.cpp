@@ -175,7 +175,7 @@ Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 		size = lseek (l->fd, 0, SEEK_END);
 		l->bytes_size = size;
 
-		top_level.add_child (l);
+		top_level.just_add_child (l);
 		probe_queue.push (l);	// We need to probe
 	}
 }
@@ -219,7 +219,7 @@ Loop::identify (DPContainer &top_level, const char *name, int fd, struct stat &s
 	ss << "[" << l->loop_major << ":" << l->loop_minor << "]";
 	l->uuid = ss.str();
 
-	top_level.add_child (l);
+	top_level.just_add_child (l);
 	queue_add_probe (l);	// queue the container for action
 }
 

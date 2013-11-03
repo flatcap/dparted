@@ -59,7 +59,7 @@ Table::probe (DPContainer &top_level, DPContainer *parent)
 	unsigned char	*buffer  = parent->get_buffer (0, bufsize);
 
 	if (!buffer) {
-		log_error ("can't get buffer\n");
+		//log_error ("can't get buffer\n");
 		return nullptr;
 	}
 

@@ -186,11 +186,11 @@ DPContainer::get_fd (void)
 	if (fd >= 0)
 		return fd;
 
-	if (parent)
-		return parent->get_fd();
-
 	std::string device = get_device_name();
 	if (device.empty()) {
+		if (parent)
+			return parent->get_fd();
+
 		log_error ("no device to open\n");
 		return -1;
 	}
@@ -200,7 +200,7 @@ DPContainer::get_fd (void)
 		log_error ("failed to open device %s\n", device.c_str());
 		return -1;
 	}
-	log_debug ("opened device %s (%d)\n", device.c_str(), newfd);
+	//log_debug ("opened device %s (%d)\n", device.c_str(), newfd);
 
 	fd = newfd;
 
@@ -413,20 +413,21 @@ DPContainer::get_buffer (long offset, long size)
 	//XXX what if it's *not* big enough?
 
 	// No device -- delegate
-	if (device.empty() || (fd < 0)) {
+	if (device.empty()) {
 		if (parent) {
 			return parent->get_buffer (offset + parent_offset, size);
 		} else {
+			std::cout << this << std::endl;
 			log_error ("mmap: no device and no parent\n");
 			return nullptr;
 		}
 	}
 
 	// Nothing yet -- allocate a big block
-	void	*buf  = nullptr;
-	int	 fd   = get_fd();
+	void	*buf   = nullptr;
+	int	 newfd = get_fd();
 
-	if (fd < 0) {
+	if (newfd < 0) {
 		log_error ("can't get file descriptor\n");
 		return nullptr;
 	}
@@ -434,13 +435,13 @@ DPContainer::get_buffer (long offset, long size)
 	size = std::max ((long)4194304, size);	// 4 MiB
 
 	offset += parent_offset;
-	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, fd, offset);
+	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, offset);
 	if (buf == MAP_FAILED) {
 		log_error ("mmap: alloc failed\n");	//XXX perror
-		close (fd);
+		close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
-	log_debug ("mmap'd device %s, offset %ld, size %ld\n", device.c_str(), offset, size);
+	//log_debug ("mmap'd device %s, offset %ld, size %ld\n", device.c_str(), offset, size);
 
 	mm_buffer = (unsigned char*) buf;
 	mm_size   = size;
@@ -487,8 +488,8 @@ operator<< (std::ostream &stream, const DPContainer &c)
 	stream
 		<< "[" << c.type.back() << "]:"
 		<< c.name << "(" << uuid << "), "
+		<< '"' << c.device << '"' << "(" << c.fd << "),"
 #if 0
-		//<< c.device << "(" << c.fptr << "),"
 		<< " S:" //<< c.bytes_size
 						<< "(" << get_size(c.bytes_size)    << "), "
 		<< " U:" //<< c.bytes_used

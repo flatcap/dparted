@@ -151,7 +151,7 @@ main (int argc, char *argv[])
 		}
 	}
 
-	//log_init ("/dev/stdout");
+	log_init ("/dev/stdout");
 
 	DPContainer top_level;
 	top_level.name = "dummy";
