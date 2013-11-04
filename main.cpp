@@ -127,20 +127,23 @@ main (int argc, char *argv[])
 	// -a	app
 	// -l	list
 	// -d	dot
+	// -s	separate dot diagrams
 
-	bool app  = false;
-	bool dot  = false;
-	bool list = false;
+	bool app      = false;
+	bool dot      = false;
+	bool list     = false;
+	bool separate = false;
 
 	if (argc > 1) {
 		std::string arg = argv[1];
 		if (arg[0] == '-') {
 			for (auto c : arg) {
 				switch (c) {
-					case '-':              break;
-					case 'a': app  = true; break;
-					case 'd': dot  = true; break;
-					case 'l': list = true; break;
+					case '-':                  break;
+					case 'a': app      = true; break;
+					case 'd': dot      = true; break;
+					case 'l': list     = true; break;
+					case 's': separate = true; break;
 					default:
 						  printf ("unknown option '%c'\n", c);
 						  break;
@@ -242,19 +245,17 @@ main (int argc, char *argv[])
 	}
 
 	if (dot) {
-		display_dot (top_level.children);
-	}
-#if 0
-	if (argc != 1) {
-		display_dot (top_level.children);
-	} else {
-		for (auto c : top_level.children) {
-			std::vector<DPContainer*> dummy;
-			dummy.push_back(c);
-			display_dot (dummy);
+		if (separate) {
+			for (auto c : top_level.children) {
+				std::vector<DPContainer*> dummy;
+				dummy.push_back(c);
+				display_dot (dummy);
+			}
+		} else {
+			display_dot (top_level.children);
 		}
 	}
-#endif
+
 	int retval = 0;
 
 	if (app) {
