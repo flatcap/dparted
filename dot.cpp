@@ -191,7 +191,6 @@ dot_row (const char *name, unsigned int value)
 	return output.str();
 }
 
-#if 0
 /**
  * dot_row (void *)
  */
@@ -213,7 +212,6 @@ dot_row (const char *name, void *value)
 	return output.str();
 }
 
-#endif
 /**
  * dot_row (DPContainer *)
  */
@@ -266,10 +264,11 @@ dot_container (DPContainer *c)
 	} else {
 		output << dot_row ("device", c->device);
 	}
-	if (c->fd >= 0) {
+	//if (c->fd >= 0) {
 		output << dot_row ("mmap fd",       c->fd);
 		output << dot_row ("mmap size",     c->mm_size);
-	}
+		output << dot_row ("mmap buffer",   c->mm_buffer);
+	//}
 	output << dot_row ("parent_offset", c->parent_offset);
 	if (c->block_size) {
 		output << dot_row ("block_size",    c->block_size);
@@ -284,6 +283,14 @@ dot_container (DPContainer *c)
 
 	if (c->missing)
 		output << dot_row ("missing", c->missing);
+
+	unsigned int count = c->children.size();
+	if (count > 0) {
+		output << dot_row ("children", count);
+		for (auto i : c->children) {
+			output << dot_row ("", i);
+		}
+	}
 
 	return output.str();
 }
@@ -771,8 +778,8 @@ dump_dot_inner (std::vector <DPContainer*> &v)
 
 		// Isolate the top-level objects
 #if 1
-		if (c->parent && (c->parent->parent == nullptr))
-			dot << "subgraph cluster_" << count++ << " { color=transparent\n;";
+		//if (c->parent && (c->parent->parent == nullptr))
+			dot << "subgraph cluster_" << count++ << " { color=red;\n";
 #endif
 
 		dot << "\n";
@@ -856,7 +863,7 @@ dump_dot_inner (std::vector <DPContainer*> &v)
 		dot << dump_dot_inner (c->children);
 
 #if 1
-		if (c->parent && (c->parent->parent == nullptr))
+		//if (c->parent && (c->parent->parent == nullptr))
 			dot << "}\n";
 #endif
 	}

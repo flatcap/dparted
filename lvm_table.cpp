@@ -318,7 +318,7 @@ LvmTable::add_child (DPContainer *child)
 	if (!child)
 		return;
 
-	child->parent_offset = metadata_size;
+	//child->parent_offset = metadata_size;
 
 	Table::add_child (child);
 

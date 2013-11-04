@@ -49,6 +49,7 @@ LvmMetadata::add_child (DPContainer *child)
 	} else {
 		// probably a partition
 		add_segment (child);
+		//log_debug ("segment: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 	}
 }
 
