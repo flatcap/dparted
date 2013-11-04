@@ -9,3 +9,158 @@ echo
 lvs --unquoted --units=b --nosuffix --all --sort lv_kernel_minor --options vg_uuid,vg_name,lv_name,lv_attr,mirror_log,lv_uuid,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start_pe,seg_pe_ranges,devices | suuid
 echo
 
+alias 1="sudo vgs --unquoted --units=b --nosuffix --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno"
+alias 2="sudo pvs --unquoted --units=b --nosuffix --options pv_name,lv_name,lv_attr,segtype,pvseg_start,pvseg_size,devices"
+alias 3="sudo pvs --unquoted --units=b --nosuffix --options pv_name,vg_name,vg_extent_size,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count"
+alias 4="sudo lvs --all --unquoted --units=b --nosuffix --sort lv_kernel_minor --options lv_name,lv_attr,mirror_log,vg_name,lv_size,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_start_pe,devices"
+
+echo "vgs --units=b --nosuffix --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno"
+vgs --units=b --nosuffix --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno
+echo
+echo "pvs --units=b --nosuffix --options pv_name,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count"
+pvs --units=b --nosuffix --options pv_name,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count
+echo
+echo "pvs --units=b --nosuffix --options pv_name,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count,pvseg_start,pvseg_size"
+pvs --units=b --nosuffix --options pv_name,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count,pvseg_start,pvseg_size
+echo
+echo "lvs --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count"
+lvs --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count
+echo
+echo "lvs --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,vg_uuid,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices"
+lvs --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,vg_uuid,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices
+echo
+echo "lvs --all --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices"
+lvs --all --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices
+echo
+
+#!/bin/bash
+
+function show_and_do()
+{
+	local cmd="$@"
+	printf "\n%s\n\n" "$cmd"
+	$cmd | sed 's/^  /	/'
+	echo
+}
+
+cat <<EOF
+vgs - volume group scan
+
+	vg_name         - Name.
+	pv_count        - Number of PVs.
+	lv_count        - Number of LVs.
+	vg_attr         - Various attributes - see man page.
+	vg_size         - Total size of VG in current units.
+	vg_free         - Total amount of free space in current units.
+	vg_uuid         - Unique identifier.
+	vg_extent_size  - Size of Physical Extents in current units.
+	vg_extent_count - Total number of Physical Extents.
+	vg_free_count   - Total number of unallocated Physical Extents.
+	vg_seqno        - Revision number of internal metadata.  Incremented whenever it changes.
+EOF
+
+show_and_do "vgs --units=b --nosuffix --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno"
+
+cat <<EOF
+pvs - physical volume scan
+
+	pv_name           - Name.
+	vg_name           - Name.
+	pv_attr           - Various attributes - see man page.
+	pv_size           - Size of PV in current units.
+	pv_free           - Total amount of unallocated space in current units.
+	pv_uuid           - Unique identifier.
+	dev_size          - Size of underlying device in current units.
+	pe_start          - Offset to the start of data on the underlying device.
+	pv_used           - Total amount of allocated space in current units.
+	pv_pe_count       - Total number of Physical Extents.
+	pv_pe_alloc_count - Total number of allocated Physical Extents.
+	pvseg_start       - Physical Extent number of start of segment.
+	pvseg_size        - Number of extents in segment.
+EOF
+
+show_and_do "pvs --units=b --nosuffix --options pv_name,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count"
+show_and_do "pvs --units=b --nosuffix --options pv_name,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count,pvseg_start,pvseg_size"
+
+cat <<EOF
+lvs - logical volume scan
+
+	lv_name              - Name.  LVs created for internal use are enclosed in brackets.
+	vg_name              - Name.
+	lv_attr              - Various attributes - see man page.
+	lv_size              - Size of LV in current units.
+	lv_uuid              - Unique identifier.
+	lv_path              - Full pathname for LV.
+	lv_kernel_major      - Currently assigned major number or -1 if LV is not active.
+	lv_kernel_minor      - Currently assigned minor number or -1 if LV is not active.
+	seg_count            - Number of segments in LV.
+	vg_uuid              - Unique identifier.
+	segtype              - Type of LV segment.
+	stripes              - Number of stripes or mirror legs.
+	stripe_size          - For stripes, amount of data placed on one device before switching to the next.
+	seg_start            - Offset within the LV to the start of the segment in current units.
+	seg_size             - Size of segment in current units.
+	seg_pe_ranges        - Ranges of Physical Extents of underlying devices in command line format.
+	devices              - Underlying devices used with starting extent numbers.
+EOF
+
+show_and_do "lvs --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count"
+show_and_do "lvs --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,vg_uuid,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices"
+show_and_do "lvs --all --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices"
+
+uuid
+	vg  shuffle     fWD8Xu-s4s8-3VQ9-Ew4D-koI1-e9Qe-cSL1yo
+	pv  /dev/loop3  gbi2yl-YhwC-Nmhi-WhyJ-Dp3e-RJP8-52iyDe
+	lv  data        Xml9fd-xKW2-o14g-aycp-7A09-ZTuv-hoX200
+
+vgs --units=b --nosuffix --options vg_name,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_uuid,vg_extent_size,vg_extent_count,vg_free_count,vg_seqno
+
+	"volume shuffle is this big"
+
+	VG       #PV  #LV  Attr    VSize      VFree  VG UUID                                 Ext      #Ext  Free  Seq
+	shuffle  1    1    wz--n-  205520896  0      fWD8Xu-s4s8-3VQ9-Ew4D-koI1-e9Qe-cSL1yo  4194304  49    0     11
+
+pvs --units=b --nosuffix --options pv_name,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count
+
+	"volume shuffle uses all of /dev/loop3"
+
+	PV          VG       Attr  PSize      PFree  PV UUID                                 DevSize    1st PE   Used       PE  Alloc
+	/dev/loop3  shuffle  a--   205520896  0      gbi2yl-YhwC-Nmhi-WhyJ-Dp3e-RJP8-52iyDe  209715200  1048576  205520896  49  49
+
+pvs --units=b --nosuffix --options pv_name,vg_name,pv_attr,pv_size,pv_free,pv_uuid,dev_size,pe_start,pv_used,pv_pe_count,pv_pe_alloc_count,pvseg_start,pvseg_size
+
+	"pv /dev/loop3 is in 4 segments"
+
+	PV          VG       Attr  PSize      PFree  PV UUID                                 DevSize    1st PE   Used       PE  Alloc  Start  SSize
+	/dev/loop3  shuffle  a--   205520896  0      gbi2yl-YhwC-Nmhi-WhyJ-Dp3e-RJP8-52iyDe  209715200  1048576  205520896  49  49     0      13
+	/dev/loop3  shuffle  a--   205520896  0      gbi2yl-YhwC-Nmhi-WhyJ-Dp3e-RJP8-52iyDe  209715200  1048576  205520896  49  49     13     13
+	/dev/loop3  shuffle  a--   205520896  0      gbi2yl-YhwC-Nmhi-WhyJ-Dp3e-RJP8-52iyDe  209715200  1048576  205520896  49  49     26     13
+	/dev/loop3  shuffle  a--   205520896  0      gbi2yl-YhwC-Nmhi-WhyJ-Dp3e-RJP8-52iyDe  209715200  1048576  205520896  49  49     39     10
+
+lvs --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count
+
+	"lv data is in 4 segments"
+
+	LV    VG       Attr    LSize      LV UUID                                 Path               KMaj  KMin  #Seg
+	data  shuffle  -wi-a-  205520896  Xml9fd-xKW2-o14g-aycp-7A09-ZTuv-hoX200  /dev/shuffle/data  253   6     4
+
+lvs --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,vg_uuid,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices
+
+	"lv data is arranged on /dev/loop3 like this"
+
+	LV    VG       Attr    LSize      LV UUID                                 Path               KMaj  KMin  #Seg  VG UUID                                 Type    #Str  Stripe  Start      SSize     PE Ranges         Devices
+	data  shuffle  -wi-a-  205520896  Xml9fd-xKW2-o14g-aycp-7A09-ZTuv-hoX200  /dev/shuffle/data  253   6     4     fWD8Xu-s4s8-3VQ9-Ew4D-koI1-e9Qe-cSL1yo  linear  1     0       0          54525952  /dev/loop3:0-12   /dev/loop3(0)
+	data  shuffle  -wi-a-  205520896  Xml9fd-xKW2-o14g-aycp-7A09-ZTuv-hoX200  /dev/shuffle/data  253   6     4     fWD8Xu-s4s8-3VQ9-Ew4D-koI1-e9Qe-cSL1yo  linear  1     0       54525952   54525952  /dev/loop3:26-38  /dev/loop3(26)
+	data  shuffle  -wi-a-  205520896  Xml9fd-xKW2-o14g-aycp-7A09-ZTuv-hoX200  /dev/shuffle/data  253   6     4     fWD8Xu-s4s8-3VQ9-Ew4D-koI1-e9Qe-cSL1yo  linear  1     0       109051904  54525952  /dev/loop3:13-25  /dev/loop3(13)
+	data  shuffle  -wi-a-  205520896  Xml9fd-xKW2-o14g-aycp-7A09-ZTuv-hoX200  /dev/shuffle/data  253   6     4     fWD8Xu-s4s8-3VQ9-Ew4D-koI1-e9Qe-cSL1yo  linear  1     0       163577856  41943040  /dev/loop3:39-48  /dev/loop3(39)
+
+lvs --all --units=b --nosuffix --options lv_name,vg_name,lv_attr,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start,seg_size,seg_pe_ranges,devices
+
+	"lv data is arranged on /dev/loop3 like this"
+
+	LV    VG       Attr    LSize      Path               KMaj  KMin  #Seg  Type    #Str  Stripe  Start      SSize     PE Ranges         Devices
+	data  shuffle  -wi-a-  205520896  /dev/shuffle/data  253   6     4     linear  1     0       0          54525952  /dev/loop3:0-12   /dev/loop3(0)
+	data  shuffle  -wi-a-  205520896  /dev/shuffle/data  253   6     4     linear  1     0       54525952   54525952  /dev/loop3:26-38  /dev/loop3(26)
+	data  shuffle  -wi-a-  205520896  /dev/shuffle/data  253   6     4     linear  1     0       109051904  54525952  /dev/loop3:13-25  /dev/loop3(13)
+	data  shuffle  -wi-a-  205520896  /dev/shuffle/data  253   6     4     linear  1     0       163577856  41943040  /dev/loop3:39-48  /dev/loop3(39)
+
