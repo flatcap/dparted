@@ -284,6 +284,7 @@ dot_container (DPContainer *c)
 	if (c->missing)
 		output << dot_row ("missing", c->missing);
 
+#if 0
 	unsigned int count = c->children.size();
 	if (count > 0) {
 		output << dot_row ("children", count);
@@ -291,6 +292,7 @@ dot_container (DPContainer *c)
 			output << dot_row ("", i);
 		}
 	}
+#endif
 
 	return output.str();
 }

@@ -466,7 +466,6 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 		DPContainer *parent = pieces.find(parent_id);
 		if (!parent) {
 			log_error ("\tcan't find parent: %s\n", parent_id.c_str());
-			exit (1);
 			continue;
 		}
 

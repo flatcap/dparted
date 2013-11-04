@@ -121,6 +121,15 @@ LvmVolume::find (const std::string &search)
 		}
 	}
 
+	if (sibling) {
+		if (sibling->uuid == search)
+			return sibling;
+		if (sibling->name == search)
+			return sibling;
+		if (sibling->name == search2)
+			return sibling;
+	}
+
 	return Whole::find (search);
 }
 
