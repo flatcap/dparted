@@ -52,12 +52,13 @@
 static std::string
 get_colour (DPContainer *c)
 {
-	if (c->is_a ("block"))      return "#aaffaa";
-	if (c->is_a ("filesystem")) return "#bbffff";
-	if (c->is_a ("table"))      return "#ffbbbb";
-	if (c->is_a ("partition"))  return "#ffffdd";
-	if (c->is_a ("whole"))      return "#ccccff";
-	if (c->is_a ("misc"))       return "orange";
+	if (c->is_a ("block"))        return "#aaffaa";
+	if (c->is_a ("filesystem"))   return "#bbffff";
+	if (c->is_a ("lvm_metadata")) return "#bbffff";
+	if (c->is_a ("table"))        return "#ffbbbb";
+	if (c->is_a ("partition"))    return "#ffffdd";
+	if (c->is_a ("whole"))        return "#ccccff";
+	if (c->is_a ("misc"))         return "orange";
 
 	return "white";
 }
