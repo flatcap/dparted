@@ -781,7 +781,7 @@ dump_dot_inner (std::vector <DPContainer*> &v)
 		// Isolate the top-level objects
 #if 1
 		//if (c->parent && (c->parent->parent == nullptr))
-			dot << "subgraph cluster_" << count++ << " { color=red;\n";
+			dot << "subgraph cluster_" << count++ << " { color=transparent;\n";
 #endif
 
 		dot << "\n";

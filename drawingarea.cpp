@@ -745,6 +745,10 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	shape.h -= GAP;
 
 	//XXX assert (w > 0)
+	if (w < 1) {
+		log_error ("Zero width\n");
+		return;
+	}
 
 	long bytes_per_pixel = c->bytes_size / w;
 

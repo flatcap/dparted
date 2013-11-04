@@ -69,8 +69,9 @@ LvmVolume::add_child (DPContainer *child)
 		Whole::add_child (child);
 
 		for (auto i : subvols) {
-			//log_info ("subvol %s, %ld children\n", i->name.c_str(), i->children.size());
-			for (auto j : i->children) {
+			LvmVolume *v = dynamic_cast<LvmVolume*> (i);
+			//log_info ("subvol %s, %ld segments\n", v->name.c_str(), v->segments.size());
+			for (auto j : v->segments) {
 				j->just_add_child (child);
 			}
 		}
