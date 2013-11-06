@@ -3,6 +3,7 @@
 
 # useful stuff
 /watcher*
+/todo
 
 # generated deps
 /.dep
