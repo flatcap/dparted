@@ -22,6 +22,8 @@
 
 #include "container.h"
 
+class Volume;
+
 /**
  * class Partition
  */
@@ -37,6 +39,7 @@ public:
 
 	int ptype;
 
+	Volume *volume;
 protected:
 
 private:

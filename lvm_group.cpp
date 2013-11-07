@@ -159,6 +159,11 @@ lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 			v->uuid    = lv_uuid;
 			//v->missing = true;
 			pieces.just_add_child(v);
+
+			if (lv_attr[0] == '-') {
+				// Not an image.  Therefore, it's a top-level entity.
+				deps.insert(std::make_pair(g->uuid,v->uuid));
+			}
 		}
 
 		// DPContainer
@@ -411,7 +416,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 		explode (",", devices, device_list);
 
 #if 0
-		//log_debug ("%s (%s)\n", v->name.c_str(), v->type.back().c_str());
+		log_debug ("%s (%s)\n", v->name.c_str(), v->type.back().c_str());
 		for (auto d : device_list) {
 			log_info ("Device: %s\n", d.c_str());
 		}
@@ -514,6 +519,7 @@ LvmGroup::discover (DPContainer &top_level)
 	std::vector<DPContainer*> t;
 	top_level.find_type ("lvm_table", t);
 
+	//log_info ("top_level: %ld tables\n", t.size());
 	for (auto i : t) {
 		pieces.just_add_child (i);
 	}

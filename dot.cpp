@@ -828,6 +828,12 @@ dump_dot_inner (std::vector <DPContainer*> &v)
 
 		dot << "</table>>];\n";
 
+#if 0
+		if (c->parent) {
+			dot << "obj_" << (void*) c << " -> obj_" << (void*) c->parent << " [constraint=false color=red];\n";
+		}
+#endif
+
 		for (auto c2 : c->children) {
 			dot << "obj_" << (void*) c << " -> obj_" << (void*) c2 << ";\n";
 		}

@@ -26,7 +26,8 @@
  * Partition
  */
 Partition::Partition (void) :
-	ptype (0)
+	ptype (0),
+	volume (nullptr)
 {
 	declare ("partition");
 }
