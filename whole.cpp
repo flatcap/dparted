@@ -63,3 +63,17 @@ Whole::add_segment (DPContainer *seg)
 	seg->whole = this;
 }
 
+
+/**
+ * get_children
+ */
+std::vector<DPContainer*>
+Whole::get_children (void)
+{
+	log_info ("whole::get_children\n");
+	if (children.empty() && whole)
+		return whole->get_children();
+
+	return children;
+}
+

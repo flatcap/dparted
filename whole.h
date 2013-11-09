@@ -37,6 +37,8 @@ public:
 	// seg_count - LVM2_SEG_COUNT
 	std::vector<DPContainer*> segments;
 
+	virtual std::vector<DPContainer*> get_children (void);
+
 protected:
 
 private:

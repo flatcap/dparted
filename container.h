@@ -100,6 +100,8 @@ public:
 	unsigned char	*mm_buffer;
 	long		 mm_size;
 
+	virtual std::vector<DPContainer*> get_children (void);
+
 protected:
 	void declare (const char *name);
 private:

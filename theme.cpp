@@ -47,13 +47,13 @@ Theme::~Theme()
 void
 Theme::init_colours (void)
 {
-	// "yellow"		Colour name
-	// "#F80"		Hex triplet: 1 digit  for Red, Green, Blue
-	// "#FF8800"		Hex triplet: 2 digits for Red, Green, Blue
-	// "#FFF888000"		Hex triplet: 3 digits for Red, Green, Blue
-	// "#FFFF88880000"	Hex triplet: 4 digits for Red, Green, Blue
-	// "rgb(255,128,0)	Decimal triplet: range 0-255 for Red, Green, Blue
-	// "rgba(255,128,0,0.5)	Decimal triplet + alpha (range 0.0 - 1.0)
+	// "yellow"			Colour name
+	// "#F80"			Hex triplet: 1 digit  for Red, Green, Blue
+	// "#FF8800"			Hex triplet: 2 digits for Red, Green, Blue
+	// "#FFF888000"			Hex triplet: 3 digits for Red, Green, Blue
+	// "#FFFF88880000"		Hex triplet: 4 digits for Red, Green, Blue
+	// "rgb(255,128,0)"		Decimal triplet: range 0-255 for Red, Green, Blue
+	// "rgba(255,128,0,0.5)"	Decimal triplet + alpha (range 0.0 - 1.0)
 
 	colours["default"]	= Gdk::RGBA ("#000000");
 

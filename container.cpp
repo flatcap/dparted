@@ -588,3 +588,14 @@ DPContainer::dump_objects (int indent)
 	}
 }
 
+
+/**
+ * get_children
+ */
+std::vector<DPContainer*>
+DPContainer::get_children (void)
+{
+	log_info ("container::get_children\n");
+	return children;
+}
+

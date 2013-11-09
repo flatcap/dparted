@@ -53,7 +53,7 @@ LvmVolume::add_child (DPContainer *child)
 		metadata.push_back (child);
 		//log_debug ("metadata: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 		//log_info ("METADATA %s\n", child->name.c_str());
-		child->whole = this;
+		//XXX no this is self-contained child->whole = this;
 	} else if (child->is_a ("lvm_volume")) {
 		subvols.push_back (child);
 		//log_debug ("subvols: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
@@ -68,6 +68,7 @@ LvmVolume::add_child (DPContainer *child)
 		// filesystem
 		Whole::add_child (child);
 
+#if 0
 		for (auto i : subvols) {
 			LvmVolume *v = dynamic_cast<LvmVolume*> (i);
 			//log_info ("subvol %s, %ld segments\n", v->name.c_str(), v->segments.size());
@@ -75,6 +76,7 @@ LvmVolume::add_child (DPContainer *child)
 				j->just_add_child (child);
 			}
 		}
+#endif
 	}
 }
 
