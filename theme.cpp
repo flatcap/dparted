@@ -19,6 +19,9 @@
 #include <gdkmm/rgba.h>
 
 #include <map>
+#include <iostream>
+
+#include <libconfig.h++>
 
 #include "log.h"
 #include "theme.h"
@@ -197,4 +200,91 @@ Theme::get_icon (const std::string &name)
 	std::cout << "fg = " << fg.get_red() << "," << fg.get_green() << "," << fg.get_blue() << "\n";
 	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << "\n";
 #endif
+
+/**
+ * get_value
+ */
+std::string
+get_value (const libconfig::Setting &s)
+{
+	libconfig::Setting::Type t = s.getType();
+
+	switch (t) {
+		case libconfig::Setting::TypeString:
+			return s.operator std::string();
+		case libconfig::Setting::TypeBoolean:
+			if (bool(s))
+				return "true";
+			else
+				return "false";
+			return "something";
+		case libconfig::Setting::TypeInt:
+			return std::to_string (int (s));
+		case libconfig::Setting::TypeInt64:
+			return std::to_string (long (s));
+		case libconfig::Setting::TypeFloat:
+			return std::to_string (float (s));
+		default:
+			return "unknown";
+	}
+}
+
+/**
+ * dump_config
+ */
+void
+dump_config (const libconfig::Setting &setting)
+{
+	for (int i = 0; i < setting.getLength(); i++) {
+		const libconfig::Setting &s = setting[i];
+
+		if (s.isScalar()) {
+			std::cout << s.getPath() << " = " << get_value(s) << std::endl;
+		}
+
+		if (s.isGroup()) {
+			dump_config (s);
+		}
+	}
+}
+
+/**
+ * dummy (void)
+ */
+bool
+dummy (void)
+{
+	libconfig::Config cfg;
+
+	try
+	{
+		cfg.readFile("themes/default.conf");
+	}
+	catch(const libconfig::FileIOException &fioex)
+	{
+		std::cerr << "I/O error while reading file." << std::endl;
+		return false;
+	}
+	catch(const libconfig::ParseException &pex)
+	{
+		std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
+		return false;
+	}
+
+	try
+	{
+		std::string name = cfg.lookup("name");
+		std::cout << "Theme: " << name << std::endl << std::endl;
+	}
+	catch(const libconfig::SettingNotFoundException &nfex)
+	{
+		std::cerr << "No 'name' setting in configuration file." << std::endl;
+	}
+
+	const libconfig::Setting& root = cfg.getRoot();
+
+	dump_config (root);
+
+	return true;
+}
 
