@@ -31,7 +31,7 @@ DParted::DParted () :
 	m_c (nullptr)
 {
 	set_title ("DParted");
-	set_size_request (1324, 700);
+	set_size_request (1350, 220);
 	//set_size_request (1900, 1000);
 #if 0
 	set_default_size (1439, 800); //RAR 1439, 800
@@ -125,7 +125,8 @@ DParted::set_data (DPContainer *c)
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
 	//move (1920, 768 - height);
-	move (0, 0);
+	move (1200, 768-height);
+	//move (0, 0);
 	//move (480, 1080-height);
 #endif
 

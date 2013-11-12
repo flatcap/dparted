@@ -20,6 +20,7 @@
 
 #include <map>
 #include <iostream>
+#include <string>
 
 #include <libconfig.h++>
 

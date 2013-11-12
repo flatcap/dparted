@@ -36,13 +36,15 @@
 #include "log_trace.h"
 
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
-const double ARC_E = 0;
-const double ARC_S = M_PI_2;
-const double ARC_W = M_PI;
+const double ARC_E = 0*M_PI_2;
+const double ARC_S = 1*M_PI_2;
+const double ARC_W = 2*M_PI_2;
 
-const int GAP       = 3;		// Space between partitions
-const int RADIUS    = 8;		// Curve radius in disk gui
-const int TAB_WIDTH = 26;		// Left side-bar in disk gui
+const int GAP       =  3;		// Space between partitions
+const int RADIUS    =  8;		// Curve radius in disk gui
+const int TAB_WIDTH = 24;		// Left side-bar in disk gui
+
+static int counter = 0;
 
 /**
  * DPDrawingArea
@@ -55,7 +57,15 @@ DPDrawingArea::DPDrawingArea() :
 	sel_y (-1),
 	mouse_close (false)
 {
-	set_size_request (800, 77);
+	counter++;
+	do_it = (counter == 2);
+
+	//set_size_request (800, 77);
+	if (do_it) {
+		set_size_request (800, 130);
+	} else {
+		set_size_request (800, 10);
+	}
 	set_hexpand (true);
 	set_vexpand (false);
 
@@ -277,6 +287,80 @@ DPDrawingArea::get_misc (DPContainer *c)
 
 
 /**
+ * draw_edge - one pixel red border around area
+ */
+void
+draw_edge (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+{
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w - 1;
+	const int &h = shape.h - 1;
+
+	cr->set_source_rgba (1, 0, 0, 1);
+	cr->set_line_width (1);
+
+	cr->move_to     (x+0.5, y+0.5);
+	cr->rel_line_to ( w, 0);
+	cr->rel_line_to ( 0, h);
+	cr->rel_line_to (-w, 0);
+	cr->rel_line_to ( 0,-h);
+
+	cr->stroke();
+}
+
+/**
+ * fill_area - fill rect with black
+ */
+void
+DPDrawingArea::fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+{
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	cr->set_source_rgba (0, 0, 0, 1);
+
+	cr->move_to     ( x, y);
+	cr->rel_line_to ( w, 0);
+	cr->rel_line_to ( 0, h);
+	cr->rel_line_to (-w, 0);
+	cr->rel_line_to ( 0,-h);
+
+	cr->fill();
+}
+
+
+/**
+ * draw_border
+ */
+void
+DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside /*=nullptr*/)
+{
+	const int &r = RADIUS;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	cr->move_to (x, y+r);
+	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
+	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
+	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
+	cr->close_path();
+
+	if (inside) {			// Space inside shape
+		inside->x = x + 6;
+		inside->y = y + 6;
+		inside->w = w;
+		inside->h = h;
+	}
+}
+
+#if 0
+/**
  * draw_icon
  */
 void
@@ -381,38 +465,6 @@ DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer 
 	if (right) {
 		right->x += (space.w + GAP);
 		right->w -= (space.w + GAP);
-	}
-}
-
-/**
- * draw_border
- */
-void
-DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside /*=nullptr*/, Rect *right /*=nullptr*/)
-{
-	const int &r = RADIUS;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
-
-	cr->move_to (x, y+r);
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
-	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
-	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
-	cr->close_path();
-
-	if (inside) {			// Space inside shape
-		inside->x = x + 6;
-		inside->y = y + 6;
-		inside->w = w;
-		inside->h = h;
-	}
-
-	if (right) {			// Region after shape
-		right->x += w;
-		right->w -= w;
 	}
 }
 
@@ -697,7 +749,7 @@ DPDrawingArea::draw_segment (const Cairo::RefPtr<Cairo::Context> &cr, DPContaine
 			printf ("parent:children : %s\n", i->type.back().c_str());
 		}
 #endif
-		draw_container (cr, parent, shape, right);
+		draw_container (cr, parent, shape);
 		return;
 	}
 
@@ -711,7 +763,7 @@ DPDrawingArea::draw_segment (const Cairo::RefPtr<Cairo::Context> &cr, DPContaine
 	std::cout << child << std::endl;
 #endif
 
-	draw_container (cr, w, shape, right);
+	draw_container (cr, w, shape);
 
 	//log_info ("OK\n");
 }
@@ -912,7 +964,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 bool
 DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 {
-	//log_debug ("%s\n", __PRETTY_FUNCTION__);
+	//LOG_TRACE;
 	if (!m_c)
 		return true;
 
@@ -970,6 +1022,277 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 	}
 
 	draw_container (cr, item, space);
+
+	return true;
+}
+
+#endif
+
+/**
+ * draw_corner
+ */
+void draw_corner (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool north, bool east, bool convex)
+{
+	const int &r = RADIUS;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	cr->save();
+	cr->move_to (x, y);
+	cr->rel_line_to (w, 0);
+	cr->rel_line_to (0, h);
+	cr->rel_line_to (-w, 0);
+	cr->rel_line_to (0, -h);
+	cr->clip();
+
+	if (north) {
+		if (east) {
+			if (convex) {
+				// North-East concave
+				cr->arc (x+w-r, y+r, r, ARC_N, ARC_E);
+				cr->rel_line_to (-r, 0);
+				cr->rel_line_to (0, r);
+			} else {
+				// North-East convex
+				cr->arc (x+w-r, y+r, r, ARC_N, ARC_E);
+				cr->rel_line_to (0, -r);
+				cr->rel_line_to (-r, 0);
+			}
+		} else {
+			if (convex) {
+				// North-West concave
+				cr->arc (x+r, y+r, r, ARC_W, ARC_N);
+				cr->rel_line_to (0, r);
+				cr->rel_line_to (-r, 0);
+			} else {
+				// North-West convex
+				cr->arc (x+r, y+r, r, ARC_W, ARC_N);
+				cr->rel_line_to (-r, 0);
+				cr->rel_line_to (0, r);
+			}
+		}
+	} else {
+		if (east) {
+			if (convex) {
+				// South-East concave
+				cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+				cr->rel_line_to (0, -r);
+				cr->rel_line_to (r, 0);
+			} else {
+				// South-East convex
+				cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+				cr->rel_line_to (r, 0);
+				cr->rel_line_to (0, -r);
+			}
+		} else {
+			if (convex) {
+				// South-West concave
+				cr->arc (x+r, y+h-r, r, ARC_S, ARC_W);
+				cr->rel_line_to (r, 0);
+				cr->rel_line_to (0, r);
+			} else {
+				// South-West convex
+				cr->arc (x+r, y+h-r, r, ARC_S, ARC_W);
+				cr->rel_line_to (0, r);
+				cr->rel_line_to (r, 0);
+			}
+		}
+	}
+
+	cr->fill();
+	cr->restore();
+}
+
+/**
+ * draw_arc
+ */
+void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
+{
+	const int &r = RADIUS;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	cr->save();
+	cr->set_line_width (r/4+1);
+
+	if (east) {
+		// South-East
+		cr->move_to (x+w-r, y+h);
+		cr->rel_line_to (0, -r);
+		cr->rel_line_to (r, 0);
+		cr->rel_line_to (0, r);
+		cr->close_path();
+		cr->clip();
+
+		cr->arc (x+w-r-(r/4), y+h-r-(r/4), r+(r/8)+1, ARC_E, ARC_S);
+	} else {
+		// South-West
+		cr->move_to (x, y+h);
+		cr->rel_line_to (0, -r);
+		cr->rel_line_to (r, 0);
+		cr->rel_line_to (0, r);
+		cr->close_path();
+		cr->clip();
+
+		cr->arc (x+r+(r/4), y+h-r-(r/4), r+(r/8)+1, ARC_S, ARC_W);
+	}
+
+	cr->stroke();
+	cr->restore();
+}
+
+/**
+ * draw_container
+ */
+void
+DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape)
+{
+	bool tab = true;
+
+	if (!cont)
+		return;
+
+	if (!do_it) {
+		return;
+	}
+
+	const int &r = RADIUS;
+	const int &t = TAB_WIDTH;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	// 130, 100, 70, 30
+	if (h == 80)
+		return;
+	if (h < 30)
+		return;
+	//printf ("height = %d\n", h);
+
+	if (h == 130)
+		fill_area (cr, shape);
+
+	Rect corner;
+
+	corner = { x, y, w, h };
+
+	// 130 120 110 100 90 80 70
+	switch ((h/10)%4) {
+		case 0:  cr->set_source_rgba (0.0, 0.0, 1.0, 0.7); break; // Blue
+		case 1:  cr->set_source_rgba (1.0, 1.0, 0.0, 0.7); break; // Yellow
+		case 2:  cr->set_source_rgba (0.0, 1.0, 0.0, 0.7); break; // Green
+		default: cr->set_source_rgba (1.0, 0.0, 0.0, 0.7); break; // Red
+	}
+
+	draw_corner (cr, corner, true,  true,  true);		// Top corners
+	draw_corner (cr, corner, true,  false, true);
+
+	cr->set_line_width (r);					// Thick top bar
+	cr->move_to (x+r, y+(r/2));
+	cr->rel_line_to (w-(2*r), 0);
+	cr->stroke();
+
+	cr->set_line_width (r/4);				// Thin left bar
+	cr->move_to (x+(r/8), y+r);
+	cr->rel_line_to (0, h-(2*r));
+	cr->stroke();
+
+	cr->set_line_width (r/4);				// Thin right bar
+	cr->move_to (x+w-(r/8), y+r);
+	cr->rel_line_to (0, h-(2*r));
+	cr->stroke();
+
+	cr->set_line_width (r/4);				// Thin bottom bar
+	cr->move_to (x+r, y+h-(r/8));
+	cr->rel_line_to (w-(2*r), 0);
+	cr->stroke();
+
+	draw_arc (cr, corner, true);				// Thin bottom corners
+
+	if (tab) {
+		draw_corner (cr, corner, false, false, true);
+
+		cr->save();
+		//cr->set_source_rgba (1.0, 0.0, 0.0, 0.3);
+		cr->move_to (x+(r/4), y+r);
+		cr->rel_line_to (t+(r/4), 0);
+		cr->rel_line_to (0, h-r-(r/4));
+		cr->rel_line_to (-t+r-(r/2), 0);
+		cr->rel_line_to (0, -r+(r/4));
+		cr->rel_line_to (-r+(r/4), 0);
+		cr->close_path();
+		cr->fill();
+		cr->restore();
+
+		cr->save();
+		Rect tab = { x+(r/4), y+r, t, h-r-(r/2) };
+		draw_edge (cr, tab);
+		cr->restore();
+
+		//cr->set_source_rgba (1.0, 1.0, 0.0, 0.6);		// yellow
+
+		corner = { x+t+(r/2), y+r, w-t-(r/2)-(r/4), h-r-(r/4) };
+
+		draw_corner (cr, corner, false, false, false);		// Bottom right corner
+	} else {
+		draw_arc (cr, corner, false);
+		corner = { x+(r/4), y+r, w-(r/2), h-r-(r/4) };
+	}
+
+	//cr->set_source_rgba (1.0, 1.0, 0.0, 0.6);		// yellow
+#if 1
+	draw_corner (cr, corner, true, true,  false);		// Inside curves
+	draw_corner (cr, corner, true, false, false);
+#endif
+
+	cr->restore();						// End clipping
+
+	draw_container (cr, cont, corner);
+
+	return;
+#if 0
+	Rect rect = { x, y, w, h };
+	Range rg = { rect, nullptr };
+	vRange.push_front (rg);
+
+	if (tab) {
+		tab->x = shape.x + 2;
+		tab->y = shape.y + 4;
+		tab->w = t;
+		tab->h = h - r - 2;
+	}
+
+	if (inside) {						// The space remaining inside
+		inside->x = x + t;
+		inside->y = y + r;
+		inside->w = w - t - 2;
+		inside->h = h - r - 2;
+	}
+#endif
+}
+
+/**
+ * on_draw
+ */
+bool
+DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
+{
+	//LOG_TRACE;
+	if (!m_c)
+		return true;
+
+	vRange.clear();
+
+	Gtk::Allocation allocation = get_allocation();
+
+	Rect space { 0, 0, allocation.get_width(), allocation.get_height() };
+
+	draw_container (cr, m_c, space);
 
 	return true;
 }
@@ -1082,6 +1405,7 @@ DPDrawingArea::set_data (DPContainer *c)
 }
 
 
+#if 0
 /**
  * draw_grid
  */
@@ -1203,3 +1527,15 @@ DPDrawingArea::draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Re
 	cr->restore();
 }
 
+#endif
+
+/**
+ * get_theme
+ */
+bool
+DPDrawingArea::get_theme (const std::string &object, const std::string &attr)
+{
+	//map of obj.attr => value
+	//read from file
+	return true;
+}

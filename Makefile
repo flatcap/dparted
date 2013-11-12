@@ -55,7 +55,7 @@ CFLAGS	+= -O0
 
 #LDFLAGS	+= -pg -fprofile-arcs
 
-PACKAGES = gtkmm-3.0
+PACKAGES = gtkmm-3.0 libconfig++
 
 CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
 LDFLAGS += $(shell pkg-config --libs   $(PACKAGES))
