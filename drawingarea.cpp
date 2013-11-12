@@ -1167,12 +1167,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	const int &w = shape.w;
 	const int &h = shape.h;
 
-	// 130, 100, 70, 30
-	if (h == 80)
-		return;
 	if (h < 30)
 		return;
-	//printf ("height = %d\n", h);
 
 	if (h == 130)
 		fill_area (cr, shape);
@@ -1218,7 +1214,6 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		draw_corner (cr, corner, false, false, true);
 
 		cr->save();
-		//cr->set_source_rgba (1.0, 0.0, 0.0, 0.3);
 		cr->move_to (x+(r/4), y+r);
 		cr->rel_line_to (t+(r/4), 0);
 		cr->rel_line_to (0, h-r-(r/4));
@@ -1234,8 +1229,6 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		draw_edge (cr, tab);
 		cr->restore();
 
-		//cr->set_source_rgba (1.0, 1.0, 0.0, 0.6);		// yellow
-
 		corner = { x+t+(r/2), y+r, w-t-(r/2)-(r/4), h-r-(r/4) };
 
 		draw_corner (cr, corner, false, false, false);		// Bottom right corner
@@ -1244,13 +1237,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		corner = { x+(r/4), y+r, w-(r/2), h-r-(r/4) };
 	}
 
-	//cr->set_source_rgba (1.0, 1.0, 0.0, 0.6);		// yellow
-#if 1
 	draw_corner (cr, corner, true, true,  false);		// Inside curves
 	draw_corner (cr, corner, true, false, false);
-#endif
-
-	cr->restore();						// End clipping
 
 	draw_container (cr, cont, corner);
 
