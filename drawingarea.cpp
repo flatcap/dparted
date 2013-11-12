@@ -17,6 +17,7 @@
 
 #include <unistd.h>
 #include <gtkmm.h>
+#include <pangomm.h>
 
 #include <cmath>
 #include <cstdlib>
@@ -62,9 +63,9 @@ DPDrawingArea::DPDrawingArea() :
 
 	//set_size_request (800, 77);
 	if (do_it) {
-		set_size_request (800, 130);
+		set_size_request (400, 130);
 	} else {
-		set_size_request (800, 10);
+		set_size_request (400, 10);
 	}
 	set_hexpand (true);
 	set_vexpand (false);
@@ -90,6 +91,18 @@ DPDrawingArea::DPDrawingArea() :
 DPDrawingArea::~DPDrawingArea()
 {
 	delete theme;
+}
+
+
+/**
+ * operator<<
+ */
+std::ostream &
+operator<< (std::ostream &stream, const Rect &r)
+{
+	stream << "[" << r.x << "," << r.y << "," << r.w << "," << r.h << "]";
+
+	return stream;
 }
 
 
@@ -1106,6 +1119,44 @@ void draw_corner (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool nort
 }
 
 /**
+ * draw_fill - fill shape
+ */
+void
+DPDrawingArea::draw_fill (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+{
+	const int &r = RADIUS;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	//std::cout << shape << std::endl;
+
+	draw_corner (cr, shape, true,  true,  true);
+	draw_corner (cr, shape, true,  false, true);
+	draw_corner (cr, shape, false, true,  true);
+	draw_corner (cr, shape, false, false, true);
+
+	cr->move_to     (x, y+r);
+	cr->rel_line_to (r, 0);
+	cr->rel_line_to (0, -r);
+	cr->rel_line_to (w-(2*r), 0);
+	cr->rel_line_to (0, r);
+	cr->rel_line_to (r, 0);
+
+	cr->rel_line_to (0, h-(2*r));
+
+	cr->rel_line_to (-r, 0);
+	cr->rel_line_to (0, r);
+	cr->rel_line_to (-w+(2*r), 0);
+	cr->rel_line_to (0, -r);
+	cr->rel_line_to (-r, 0);
+	cr->close_path();
+
+	cr->fill();
+}
+
+/**
  * draw_arc
  */
 void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
@@ -1159,34 +1210,184 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	}
 
 	Rect inside;
-	Rect tab;
 	Rect below;
+	Rect tab;
 
-	draw_box (cr, cont, shape, &inside, &tab);
-	below = tab;
-	draw_icon (cr, "margin_black", tab, &below);
-	tab = below;
-	draw_icon (cr, "table", tab, &below);
+	if (1) {
+		fill_area (cr, shape);
+		cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 
-	shape = inside;
-	draw_box (cr, cont, shape, &inside, &tab);
-	below = tab;
-	draw_icon (cr, "margin_black", tab, &below);
-	tab = below;
-	draw_icon (cr, "warning", tab, &below);
+		Pango::FontDescription font;
+		font.set_family ("Liberation Sans");
 
-	shape = inside;
-	draw_box (cr, cont, shape, &inside, &tab);
-	below = tab;
-	draw_icon (cr, "margin_black", tab, &below);
-	tab = below;
-	draw_icon (cr, "table", tab, &below);
+		Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
+		layout->set_font_description (font);
 
-	shape = inside;
-	draw_box (cr, cont, shape, &inside, &tab);
+		std::string title = "<b>/dev/sda1</b> - 235 GiB <small>(80% used)</small>";
 
-	shape = inside;
-	draw_box (cr, cont, shape, &inside, &tab);
+		layout->set_markup (title);
+
+		int tw = 0;
+		int th = 0;
+		layout->get_pixel_size (tw, th);
+		printf ("text width = %d, height = %d\n", tw, th);
+
+		cr->move_to (shape.x + 2, shape.y + 2);
+		layout->set_width (Pango::SCALE * (shape.w - 4));
+		layout->set_ellipsize (Pango::ELLIPSIZE_END);
+		layout->update_from_cairo_context (cr);
+		layout->show_in_cairo_context (cr);
+
+		th += 2*2;
+
+		shape.w = 2*TAB_WIDTH + 2*GAP;
+		shape.y += th;
+		shape.h -= th;
+
+		draw_box (cr, cont, shape, &inside, nullptr);
+		//draw_edge (cr, inside);
+
+		cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
+		draw_fill (cr, inside);
+
+		draw_icon (cr, "disk", inside, &below);
+	}
+
+	if (0) {
+		shape.w = 2*TAB_WIDTH + 2*GAP;
+
+		draw_box (cr, cont, shape, &inside, nullptr);
+		//draw_edge (cr, inside);
+
+		cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
+		draw_fill (cr, inside);
+
+		draw_icon (cr, "disk", inside, &below);
+
+		std::string labeld = m_c->device;
+		std::string labels = get_size (m_c->bytes_size);
+
+		Pango::FontDescription font;
+		Glib::RefPtr<Pango::Layout> layoutd = Pango::Layout::create (cr);
+		Glib::RefPtr<Pango::Layout> layouts = Pango::Layout::create (cr);
+
+		int xd = 0, yd = 0, wd = 0, hd = 0;
+		int xs = 0, ys = 0, ws = 0, hs = 0;
+
+		size_t pos = labeld.find_last_of ('/');
+		if (pos != std::string::npos) {
+			labeld = labeld.substr (pos+1);
+		}
+		labeld = "<b>" + labeld + "</b>";
+
+		font.set_family ("Liberation Sans");		//THEME - block_label_font
+
+		font.set_size (12 * Pango::SCALE);		//THEME - block_label_font_size
+		layoutd->set_font_description (font);
+
+		font.set_size (8 * Pango::SCALE);		//THEME - ratio of block_label_font_size
+		layouts->set_font_description (font);
+
+		layoutd->set_markup (labeld);
+		layouts->set_markup (labels);
+
+		layoutd->get_pixel_size (wd, hd);
+		layouts->get_pixel_size (ws, hs);
+
+		xd = (below.w - wd) / 2; if (xd < 0) xd = 0;
+		xs = (below.w - ws) / 2; if (xs < 0) xs = 0;
+
+		yd = below.y + below.h - hd - hs;
+		ys = below.y + below.h - hs;
+
+		// Draw block label
+		cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);	//THEME - block_label_highlight_colour
+		cr->move_to (xd+2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
+		cr->move_to (xd-2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
+		cr->move_to (xd+0, yd+2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
+		cr->move_to (xd+0, yd-2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
+
+		cr->move_to (xd, yd);
+		cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
+		layoutd->update_from_cairo_context (cr);
+		layoutd->show_in_cairo_context (cr);
+
+		// Draw size label
+		cr->move_to (xs, ys);
+		cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
+		layouts->update_from_cairo_context (cr);
+		layouts->show_in_cairo_context (cr);
+	}
+
+	if (0) {
+		shape.w = 15*TAB_WIDTH + 2*GAP;
+
+		draw_box (cr, cont, shape, &inside, nullptr);
+		//draw_edge (cr, inside);
+
+		cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
+		draw_fill (cr, inside);
+
+		inside.w = 3*TAB_WIDTH + 2*GAP;
+		cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
+		draw_fill (cr, inside);
+
+		//draw_icon (cr, "table", inside, &below);
+
+		inside.w = 15*TAB_WIDTH + 2*GAP;
+		Pango::FontDescription font;
+		font.set_family ("Liberation Sans");
+
+		Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
+		layout->set_font_description (font);
+
+		std::string label1 = "/dev/sda1";
+		std::string label2 = "root - fedora19";
+
+		layout->set_text (label1 + "\n" + label2);
+
+#if 0
+		int tw = 0;
+		int th = 0;
+		layout->get_pixel_size (tw, th);
+		printf ("text width = %d, height = %d\n", tw, th);
+#endif
+
+		cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
+		cr->move_to (inside.x + 2, inside.y + 2);
+		layout->set_width (Pango::SCALE * (inside.w - 4));
+		layout->set_ellipsize (Pango::ELLIPSIZE_END);
+		layout->update_from_cairo_context (cr);
+		layout->show_in_cairo_context (cr);
+	}
+
+	if (0) {
+		draw_box (cr, cont, shape, &inside, &tab);
+		below = tab;
+		draw_icon (cr, "margin_black", tab, &below);
+		tab = below;
+		draw_icon (cr, "table", tab, &below);
+
+		shape = inside;
+		draw_box (cr, cont, shape, &inside, &tab);
+		below = tab;
+		draw_icon (cr, "margin_black", tab, &below);
+		tab = below;
+		draw_icon (cr, "warning", tab, &below);
+
+		shape = inside;
+		draw_box (cr, cont, shape, &inside, &tab);
+		below = tab;
+		draw_icon (cr, "margin_black", tab, &below);
+		tab = below;
+		draw_icon (cr, "table", tab, &below);
+
+		shape = inside;
+		draw_box (cr, cont, shape, &inside, &tab);
+
+		shape = inside;
+		draw_box (cr, cont, shape, &inside, &tab);
+	}
 }
 
 /**
@@ -1222,8 +1423,8 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 	// 130 120 110 100 90 80 70
 	switch ((h/10)%4) {
 		case 0:  cr->set_source_rgba (0.0, 0.0, 1.0, 1.0); break; // Blue
-		case 1:  cr->set_source_rgba (1.0, 1.0, 0.0, 1.0); break; // Yellow
-		case 2:  cr->set_source_rgba (0.0, 1.0, 0.0, 1.0); break; // Green
+		case 1:  cr->set_source_rgba (0.0, 1.0, 0.0, 1.0); break; // Green
+		case 2:  cr->set_source_rgba (1.0, 1.0, 0.0, 1.0); break; // Yellow
 		default: cr->set_source_rgba (1.0, 0.0, 0.0, 1.0); break; // Red
 	}
 
