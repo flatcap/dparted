@@ -156,6 +156,9 @@ Theme::init_icons (void)
 	add_icon ("network","/usr/share/icons/gnome/48x48/status/connect_established.png");
 
 	add_icon ("warning", "/usr/share/icons/gnome/24x24/status/dialog-warning.png");
+
+	add_icon ("margin_red",   "icons/margin_red.png");
+	add_icon ("margin_black", "icons/margin_black.png");
 }
 
 /**

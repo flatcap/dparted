@@ -359,7 +359,6 @@ DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect 
 	}
 }
 
-#if 0
 /**
  * draw_icon
  */
@@ -392,6 +391,7 @@ DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::st
 	}
 }
 
+#if 0
 /**
  * draw_block
  */
@@ -1151,8 +1151,50 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
 void
 DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape)
 {
-	bool tab = true;
+	if (!cont)
+		return;
 
+	if (!do_it) {
+		return;
+	}
+
+	Rect inside;
+	Rect tab;
+	Rect below;
+
+	draw_box (cr, cont, shape, &inside, &tab);
+	below = tab;
+	draw_icon (cr, "margin_black", tab, &below);
+	tab = below;
+	draw_icon (cr, "table", tab, &below);
+
+	shape = inside;
+	draw_box (cr, cont, shape, &inside, &tab);
+	below = tab;
+	draw_icon (cr, "margin_black", tab, &below);
+	tab = below;
+	draw_icon (cr, "warning", tab, &below);
+
+	shape = inside;
+	draw_box (cr, cont, shape, &inside, &tab);
+	below = tab;
+	draw_icon (cr, "margin_black", tab, &below);
+	tab = below;
+	draw_icon (cr, "table", tab, &below);
+
+	shape = inside;
+	draw_box (cr, cont, shape, &inside, &tab);
+
+	shape = inside;
+	draw_box (cr, cont, shape, &inside, &tab);
+}
+
+/**
+ * draw_box
+ */
+void
+DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape, Rect *inside, Rect *tab)
+{
 	if (!cont)
 		return;
 
@@ -1179,10 +1221,10 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 
 	// 130 120 110 100 90 80 70
 	switch ((h/10)%4) {
-		case 0:  cr->set_source_rgba (0.0, 0.0, 1.0, 0.7); break; // Blue
-		case 1:  cr->set_source_rgba (1.0, 1.0, 0.0, 0.7); break; // Yellow
-		case 2:  cr->set_source_rgba (0.0, 1.0, 0.0, 0.7); break; // Green
-		default: cr->set_source_rgba (1.0, 0.0, 0.0, 0.7); break; // Red
+		case 0:  cr->set_source_rgba (0.0, 0.0, 1.0, 1.0); break; // Blue
+		case 1:  cr->set_source_rgba (1.0, 1.0, 0.0, 1.0); break; // Yellow
+		case 2:  cr->set_source_rgba (0.0, 1.0, 0.0, 1.0); break; // Green
+		default: cr->set_source_rgba (1.0, 0.0, 0.0, 1.0); break; // Red
 	}
 
 	draw_corner (cr, corner, true,  true,  true);		// Top corners
@@ -1224,14 +1266,11 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		cr->fill();
 		cr->restore();
 
-		cr->save();
-		Rect tab = { x+(r/4), y+r, t, h-r-(r/2) };
-		draw_edge (cr, tab);
-		cr->restore();
-
 		corner = { x+t+(r/2), y+r, w-t-(r/2)-(r/4), h-r-(r/4) };
 
 		draw_corner (cr, corner, false, false, false);		// Bottom right corner
+
+		*tab = { x+(r/4), y+r, t, h-r-(r/2) };
 	} else {
 		draw_arc (cr, corner, false);
 		corner = { x+(r/4), y+r, w-(r/2), h-r-(r/4) };
@@ -1240,7 +1279,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	draw_corner (cr, corner, true, true,  false);		// Inside curves
 	draw_corner (cr, corner, true, false, false);
 
-	draw_container (cr, cont, corner);
+	if (inside)
+		*inside = corner;
 
 	return;
 #if 0
