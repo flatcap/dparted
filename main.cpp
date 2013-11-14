@@ -215,7 +215,7 @@ main (int argc, char *argv[])
 		}
 	}
 
-	LvmGroup::discover (top_level);
+	//LvmGroup::discover (top_level);
 	//MdGroup::discover (top_level);
 
 #if 1

@@ -48,9 +48,7 @@ DPContainer::DPContainer (void) :
 	parent (nullptr),
 	ref_count (1),
 	missing (false),
-	fd (-1),
-	mm_buffer (nullptr),
-	mm_size (0)
+	fd (-1)
 {
 	declare ("container");
 }
@@ -62,12 +60,6 @@ DPContainer::~DPContainer()
 {
 	for (auto i : children) {
 		i->unref();
-	}
-
-	if (mm_buffer) {
-		munmap (mm_buffer, mm_size);
-		mm_buffer = nullptr;
-		mm_size   = 0;
 	}
 
 	if (fd >= 0) {
@@ -406,12 +398,22 @@ DPContainer::get_buffer (long offset, long size)
 {
 	//XXX validate offset and size against device size
 
-	// Mapping exists (and is big enough)
-	if (mm_buffer && (mm_size >= (offset+size))) {
-		return (mm_buffer + offset);
-	}
+	//log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s\n", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size(size).c_str());
 
-	//XXX what if it's *not* big enough?
+	//if (mmaps.size() > 0) log_info ("%ld mmaps\n", mmaps.size());
+	for (auto m : mmaps) {
+		long o;
+		long s;
+		void *p;
+
+		std::tie (o, s, p) = *m;
+		//log_info ("mmap: %ld, %ld, %p (%ld)\n", o, s, p, m.use_count());
+
+		if ((offset == o) && (size <= s)) {
+			//log_info ("mmap match: ask (%ld,%s), found (%ld,%s)\n", offset, get_size(size).c_str(), o, get_size(s).c_str());
+			return (unsigned char*) p;
+		}
+	}
 
 	// No device -- delegate
 	if (device.empty()) {
@@ -424,7 +426,7 @@ DPContainer::get_buffer (long offset, long size)
 		}
 	}
 
-	// Nothing yet -- allocate a big block
+	// mmap doesn't exist, or isn't big enough
 	void	*buf   = nullptr;
 	int	 newfd = get_fd();
 
@@ -435,19 +437,18 @@ DPContainer::get_buffer (long offset, long size)
 
 	size = std::max ((long)4194304, size);	// 4 MiB
 
-	offset += parent_offset;
+	//offset += parent_offset;
 	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, offset);
 	if (buf == MAP_FAILED) {
 		log_error ("mmap: alloc failed\n");	//XXX perror
 		close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
-	//log_debug ("mmap'd device %s, offset %ld, size %ld\n", device.c_str(), offset, size);
+	//log_debug ("mmap created: %p, device %s, offset %ld, size %s\n", buf, device.c_str(), offset, get_size(size).c_str());
 
-	mm_buffer = (unsigned char*) buf;
-	mm_size   = size;
+	insert (offset, size, buf);
 
-	return mm_buffer;
+	return (unsigned char*) buf;
 }
 
 /**
@@ -598,4 +599,31 @@ DPContainer::get_children (void)
 	log_info ("container::get_children\n");
 	return children;
 }
+
+
+/**
+ * deleter
+ */
+void deleter (Mmap *m)
+{
+	long size;
+	void *ptr;
+
+	std::tie (std::ignore, size, ptr) = *m;
+
+	std::cout << "mmap deleter: " << ptr << std::endl;
+	munmap (ptr, size);
+
+	delete m;
+}
+
+/**
+ * insert
+ */
+void
+DPContainer::insert (long offset, long size, void *ptr)
+{
+	mmaps.insert (MmapPtr(new Mmap (offset, size, ptr), deleter));
+}
+
 

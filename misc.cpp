@@ -106,7 +106,7 @@ is_random (unsigned char *buffer, int bufsize)
 DPContainer *
 Misc::probe (DPContainer &top_level, DPContainer *parent)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (!parent)
 		return nullptr;

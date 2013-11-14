@@ -22,8 +22,34 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
+#include <set>
+#include <tuple>
 
 class Whole;
+
+struct compare;
+typedef std::tuple<long,long,void*> Mmap;	// offset, size, ptr
+typedef std::shared_ptr<Mmap>       MmapPtr;	// Mmap smart pointer
+typedef std::set<MmapPtr,compare>   MmapSet;	// sorted set of Mmaps
+
+/**
+ * functor compare
+ */
+struct compare
+{
+	bool operator() (const MmapPtr &a, const MmapPtr &b)
+	{
+		long ao, as, bo, bs;
+		std::tie (ao, as, std::ignore) = *a;
+		std::tie (bo, bs, std::ignore) = *b;
+
+		if (ao == bo)
+			return (as < bs);
+		else
+			return (ao < bo);
+	}
+};
 
 /**
  * class DPContainer
@@ -97,13 +123,14 @@ public:
 	virtual void dump_objects (int indent = 0);
 
 	int		 fd;
-	unsigned char	*mm_buffer;
-	long		 mm_size;
 
 	virtual std::vector<DPContainer*> get_children (void);
 
 protected:
 	void declare (const char *name);
+	void insert (long offset, long size, void *ptr);
+
+	MmapSet	mmaps;
 private:
 
 };

@@ -192,6 +192,7 @@ dot_row (const char *name, unsigned int value)
 	return output.str();
 }
 
+#if 0
 /**
  * dot_row (void *)
  */
@@ -213,6 +214,7 @@ dot_row (const char *name, void *value)
 	return output.str();
 }
 
+#endif
 /**
  * dot_row (DPContainer *)
  */
@@ -265,11 +267,8 @@ dot_container (DPContainer *c)
 	} else {
 		output << dot_row ("device", c->device);
 	}
-	//if (c->fd >= 0) {
-		output << dot_row ("mmap fd",       c->fd);
-		output << dot_row ("mmap size",     c->mm_size);
-		output << dot_row ("mmap buffer",   c->mm_buffer);
-	//}
+
+	output << dot_row ("fd",       c->fd);
 	output << dot_row ("parent_offset", c->parent_offset);
 	if (c->block_size) {
 		output << dot_row ("block_size",    c->block_size);
