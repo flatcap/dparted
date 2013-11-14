@@ -97,7 +97,7 @@ App::on_startup (void)
 	sub->append ("_Elderberry", "app.elderberry");
 	menu->append_submenu ("_Fruit", sub);
 
-	set_menubar (menu);
+	//set_menubar (menu);
 
 	Gio::ActionMap                  *m = dynamic_cast<Gio::ActionMap*>(this);
 	Glib::RefPtr<Gio::Action>        a = m->lookup_action("banana");

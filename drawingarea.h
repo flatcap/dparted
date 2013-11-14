@@ -36,8 +36,6 @@ typedef struct { Rect r; DPContainer *p; } Range;
 class DPDrawingArea : public Gtk::DrawingArea
 {
 public:
-	bool do_it;
-
 	DPDrawingArea();
 	virtual ~DPDrawingArea();
 

@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <gtkmm.h>
 #include <pangomm.h>
+#include <stdlib.h>
 
 #include <cmath>
 #include <cstdlib>
@@ -45,8 +46,6 @@ const int GAP       =  3;		// Space between partitions
 const int RADIUS    =  8;		// Curve radius in disk gui
 const int TAB_WIDTH = 24;		// Left side-bar in disk gui
 
-static int counter = 0;
-
 /**
  * DPDrawingArea
  */
@@ -58,15 +57,8 @@ DPDrawingArea::DPDrawingArea() :
 	sel_y (-1),
 	mouse_close (false)
 {
-	counter++;
-	do_it = (counter == 2);
-
 	//set_size_request (800, 77);
-	if (do_it) {
-		set_size_request (400, 130);
-	} else {
-		set_size_request (400, 10);
-	}
+	set_size_request (400, 77);
 	set_hexpand (true);
 	set_vexpand (false);
 
@@ -333,7 +325,7 @@ DPDrawingArea::fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &s
 	const int &w = shape.w;
 	const int &h = shape.h;
 
-	cr->set_source_rgba (0, 0, 0, 1);
+	cr->set_source_rgba (1, 1, 1, 1);
 
 	cr->move_to     ( x, y);
 	cr->rel_line_to ( w, 0);
@@ -1039,175 +1031,14 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 	return true;
 }
 
-#endif
-
 /**
- * draw_corner
- */
-void draw_corner (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool north, bool east, bool convex)
-{
-	const int &r = RADIUS;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
-
-	cr->save();
-	cr->move_to (x, y);
-	cr->rel_line_to (w, 0);
-	cr->rel_line_to (0, h);
-	cr->rel_line_to (-w, 0);
-	cr->rel_line_to (0, -h);
-	cr->clip();
-
-	if (north) {
-		if (east) {
-			if (convex) {
-				// North-East concave
-				cr->arc (x+w-r, y+r, r, ARC_N, ARC_E);
-				cr->rel_line_to (-r, 0);
-				cr->rel_line_to (0, r);
-			} else {
-				// North-East convex
-				cr->arc (x+w-r, y+r, r, ARC_N, ARC_E);
-				cr->rel_line_to (0, -r);
-				cr->rel_line_to (-r, 0);
-			}
-		} else {
-			if (convex) {
-				// North-West concave
-				cr->arc (x+r, y+r, r, ARC_W, ARC_N);
-				cr->rel_line_to (0, r);
-				cr->rel_line_to (-r, 0);
-			} else {
-				// North-West convex
-				cr->arc (x+r, y+r, r, ARC_W, ARC_N);
-				cr->rel_line_to (-r, 0);
-				cr->rel_line_to (0, r);
-			}
-		}
-	} else {
-		if (east) {
-			if (convex) {
-				// South-East concave
-				cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-				cr->rel_line_to (0, -r);
-				cr->rel_line_to (r, 0);
-			} else {
-				// South-East convex
-				cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-				cr->rel_line_to (r, 0);
-				cr->rel_line_to (0, -r);
-			}
-		} else {
-			if (convex) {
-				// South-West concave
-				cr->arc (x+r, y+h-r, r, ARC_S, ARC_W);
-				cr->rel_line_to (r, 0);
-				cr->rel_line_to (0, r);
-			} else {
-				// South-West convex
-				cr->arc (x+r, y+h-r, r, ARC_S, ARC_W);
-				cr->rel_line_to (0, r);
-				cr->rel_line_to (r, 0);
-			}
-		}
-	}
-
-	cr->fill();
-	cr->restore();
-}
-
-/**
- * draw_fill - fill shape
- */
-void
-DPDrawingArea::draw_fill (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
-{
-	const int &r = RADIUS;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
-
-	//std::cout << shape << std::endl;
-
-	draw_corner (cr, shape, true,  true,  true);
-	draw_corner (cr, shape, true,  false, true);
-	draw_corner (cr, shape, false, true,  true);
-	draw_corner (cr, shape, false, false, true);
-
-	cr->move_to     (x, y+r);
-	cr->rel_line_to (r, 0);
-	cr->rel_line_to (0, -r);
-	cr->rel_line_to (w-(2*r), 0);
-	cr->rel_line_to (0, r);
-	cr->rel_line_to (r, 0);
-
-	cr->rel_line_to (0, h-(2*r));
-
-	cr->rel_line_to (-r, 0);
-	cr->rel_line_to (0, r);
-	cr->rel_line_to (-w+(2*r), 0);
-	cr->rel_line_to (0, -r);
-	cr->rel_line_to (-r, 0);
-	cr->close_path();
-
-	cr->fill();
-}
-
-/**
- * draw_arc
- */
-void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
-{
-	const int &r = RADIUS;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
-
-	cr->save();
-	cr->set_line_width (r/4+1);
-
-	if (east) {
-		// South-East
-		cr->move_to (x+w-r, y+h);
-		cr->rel_line_to (0, -r);
-		cr->rel_line_to (r, 0);
-		cr->rel_line_to (0, r);
-		cr->close_path();
-		cr->clip();
-
-		cr->arc (x+w-r-(r/4), y+h-r-(r/4), r+(r/8)+1, ARC_E, ARC_S);
-	} else {
-		// South-West
-		cr->move_to (x, y+h);
-		cr->rel_line_to (0, -r);
-		cr->rel_line_to (r, 0);
-		cr->rel_line_to (0, r);
-		cr->close_path();
-		cr->clip();
-
-		cr->arc (x+r+(r/4), y+h-r-(r/4), r+(r/8)+1, ARC_S, ARC_W);
-	}
-
-	cr->stroke();
-	cr->restore();
-}
-
-/**
- * draw_container
+ * draw_container - examples
  */
 void
 DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape)
 {
 	if (!cont)
 		return;
-
-	if (!do_it) {
-		return;
-	}
 
 	Rect inside;
 	Rect below;
@@ -1223,8 +1054,9 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
 		layout->set_font_description (font);
 
-		std::string title = "<b>/dev/sda1</b> - 235 GiB <small>(80% used)</small>";
+		std::string title = "<b>" + m_c->get_device_name() + "</b> &#8211; " + get_size (m_c->bytes_size) + " <small>(" + std::to_string(100*m_c->bytes_used/m_c->bytes_size) + "% used)</small>";
 
+		// https://developer.gnome.org/pango/stable/PangoMarkupFormat.html
 		layout->set_markup (title);
 
 		int tw = 0;
@@ -1390,6 +1222,163 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	}
 }
 
+#endif
+
+/**
+ * draw_corner
+ */
+void draw_corner (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool north, bool east, bool convex)
+{
+	const int &r = RADIUS;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	cr->save();
+	cr->move_to (x, y);
+	cr->rel_line_to (w, 0);
+	cr->rel_line_to (0, h);
+	cr->rel_line_to (-w, 0);
+	cr->rel_line_to (0, -h);
+	cr->clip();
+
+	if (north) {
+		if (east) {
+			if (convex) {
+				// North-East concave
+				cr->arc (x+w-r, y+r, r, ARC_N, ARC_E);
+				cr->rel_line_to (-r, 0);
+				cr->rel_line_to (0, r);
+			} else {
+				// North-East convex
+				cr->arc (x+w-r, y+r, r, ARC_N, ARC_E);
+				cr->rel_line_to (0, -r);
+				cr->rel_line_to (-r, 0);
+			}
+		} else {
+			if (convex) {
+				// North-West concave
+				cr->arc (x+r, y+r, r, ARC_W, ARC_N);
+				cr->rel_line_to (0, r);
+				cr->rel_line_to (-r, 0);
+			} else {
+				// North-West convex
+				cr->arc (x+r, y+r, r, ARC_W, ARC_N);
+				cr->rel_line_to (-r, 0);
+				cr->rel_line_to (0, r);
+			}
+		}
+	} else {
+		if (east) {
+			if (convex) {
+				// South-East concave
+				cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+				cr->rel_line_to (0, -r);
+				cr->rel_line_to (r, 0);
+			} else {
+				// South-East convex
+				cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+				cr->rel_line_to (r, 0);
+				cr->rel_line_to (0, -r);
+			}
+		} else {
+			if (convex) {
+				// South-West concave
+				cr->arc (x+r, y+h-r, r, ARC_S, ARC_W);
+				cr->rel_line_to (r, 0);
+				cr->rel_line_to (0, r);
+			} else {
+				// South-West convex
+				cr->arc (x+r, y+h-r, r, ARC_S, ARC_W);
+				cr->rel_line_to (0, r);
+				cr->rel_line_to (r, 0);
+			}
+		}
+	}
+
+	cr->fill();
+	cr->restore();
+}
+
+/**
+ * draw_fill - fill shape
+ */
+void
+DPDrawingArea::draw_fill (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+{
+	const int &r = RADIUS;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	//std::cout << shape << std::endl;
+
+	draw_corner (cr, shape, true,  true,  true);
+	draw_corner (cr, shape, true,  false, true);
+	draw_corner (cr, shape, false, true,  true);
+	draw_corner (cr, shape, false, false, true);
+
+	cr->move_to     (x, y+r);
+	cr->rel_line_to (r, 0);
+	cr->rel_line_to (0, -r);
+	cr->rel_line_to (w-(2*r), 0);
+	cr->rel_line_to (0, r);
+	cr->rel_line_to (r, 0);
+
+	cr->rel_line_to (0, h-(2*r));
+
+	cr->rel_line_to (-r, 0);
+	cr->rel_line_to (0, r);
+	cr->rel_line_to (-w+(2*r), 0);
+	cr->rel_line_to (0, -r);
+	cr->rel_line_to (-r, 0);
+	cr->close_path();
+
+	cr->fill();
+}
+
+/**
+ * draw_arc
+ */
+void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
+{
+	const int &r = RADIUS;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	cr->save();
+	cr->set_line_width (r/4+1);
+
+	if (east) {
+		// South-East
+		cr->move_to (x+w-r, y+h);
+		cr->rel_line_to (0, -r);
+		cr->rel_line_to (r, 0);
+		cr->rel_line_to (0, r);
+		cr->close_path();
+		cr->clip();
+
+		cr->arc (x+w-r-(r/4), y+h-r-(r/4), r+(r/8)+1, ARC_E, ARC_S);
+	} else {
+		// South-West
+		cr->move_to (x, y+h);
+		cr->rel_line_to (0, -r);
+		cr->rel_line_to (r, 0);
+		cr->rel_line_to (0, r);
+		cr->close_path();
+		cr->clip();
+
+		cr->arc (x+r+(r/4), y+h-r-(r/4), r+(r/8)+1, ARC_S, ARC_W);
+	}
+
+	cr->stroke();
+	cr->restore();
+}
+
 /**
  * draw_box
  */
@@ -1398,10 +1387,6 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 {
 	if (!cont)
 		return;
-
-	if (!do_it) {
-		return;
-	}
 
 	const int &r = RADIUS;
 	const int &t = TAB_WIDTH;
@@ -1421,7 +1406,8 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 	corner = { x, y, w, h };
 
 	// 130 120 110 100 90 80 70
-	switch ((h/10)%4) {
+	//switch ((h/10)%4) {
+	switch (rand()%4) {
 		case 0:  cr->set_source_rgba (0.0, 0.0, 1.0, 1.0); break; // Blue
 		case 1:  cr->set_source_rgba (0.0, 1.0, 0.0, 1.0); break; // Green
 		case 2:  cr->set_source_rgba (1.0, 1.0, 0.0, 1.0); break; // Yellow
@@ -1506,6 +1492,60 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 }
 
 /**
+ * draw_container
+ */
+void
+DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape)
+{
+	if (!cont)
+		return;
+
+	Rect inside;
+	Rect tab;
+
+	printf ("height = %d\n", shape.h);
+	shape.x += 1;
+	shape.w -= 2;
+	shape.y += 1;
+	shape.h -= 2;
+
+	std::cout << shape << std::endl;
+	printf ("object = %s (%s)\n", cont->name.c_str(), cont->uuid.c_str());
+	if (shape.w < TAB_WIDTH) {
+		printf ("too narrow\n");
+		return;
+	}
+
+	draw_box (cr, cont, shape, &inside, &tab);
+	draw_edge (cr, inside);
+
+	long count = cont->children.size();
+	printf ("children = %ld\n", count);
+
+	if (shape.h < 65) return;
+
+	long total = cont->bytes_size;
+	long bpp   = total / inside.w;	// bytes per pixel
+
+	printf ("\ttotal = %ld\n", total);
+	printf ("\tbpp   = %ld\n", bpp);
+
+	for (auto c : cont->children) {
+		long offset = c->parent_offset / bpp;
+		long size   = c->bytes_size    / bpp;
+
+		printf ("\t\toffset = %ld\n", offset);
+		printf ("\t\tsize   = %ld\n", size);
+
+		Rect next = inside;
+		next.x += offset;
+		next.w = size - RADIUS;
+
+		draw_container(cr, c, next);
+	}
+}
+
+/**
  * on_draw
  */
 bool
@@ -1521,6 +1561,7 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	Rect space { 0, 0, allocation.get_width(), allocation.get_height() };
 
+	fill_area (cr, space);
 	draw_container (cr, m_c, space);
 
 	return true;
