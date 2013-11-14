@@ -3,8 +3,11 @@
 #include <set>
 #include <tuple>
 
+struct compare;
+
 typedef std::tuple<long,long,void*> Mmap;	// offset, size, ptr
-typedef std::shared_ptr<Mmap> MmapPtr;
+typedef std::shared_ptr<Mmap>       MmapPtr;	// Mmap smart pointer
+typedef std::set<MmapPtr,compare>   MmapSet;	// sorted set of Mmaps
 
 /**
  * lambda deleter
@@ -33,9 +36,6 @@ struct compare
 			return (ao < bo);
 	}
 };
-
-
-typedef std::set<MmapPtr,compare> MmapSet;
 
 /**
  * insert
