@@ -74,6 +74,7 @@ private:
 
 	//void draw_edge (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 	void fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
+	void checker_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 
 	void draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 	void draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape, Rect *inside, Rect *tab);
