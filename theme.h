@@ -23,6 +23,8 @@
 
 #include <map>
 
+#include <libconfig.h++>
+
 /**
  * class Theme
  */
@@ -39,6 +41,9 @@ public:
 	Glib::RefPtr<Gdk::Pixbuf> add_icon (const std::string &name, const std::string &filename);
 	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string &name);
 
+	bool read_config (const char *filename);
+	std::string get_config (std::string path, std::string attr);
+
 protected:
 	std::map<std::string,Gdk::RGBA> colours;
 	std::map<std::string,Glib::RefPtr<Gdk::Pixbuf> > icons;
@@ -46,10 +51,16 @@ protected:
 	void init_colours (void);
 	void init_icons   (void);
 
+	void parse_config (const libconfig::Setting &setting);
+	std::string get_value (const libconfig::Setting &s);
+
+	std::map<std::string,std::string> config;
+
 private:
 
 };
 
 
 #endif // _THEME_H_
+
 

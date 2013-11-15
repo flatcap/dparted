@@ -627,3 +627,19 @@ DPContainer::insert (long offset, long size, void *ptr)
 }
 
 
+/**
+ * get_path
+ */
+std::string
+DPContainer::get_path (void)
+{
+	std::string path;
+
+	for (auto n : type) {
+		if (!path.empty())
+			path += '.';
+		path += n;
+	}
+
+	return path;
+}

@@ -209,7 +209,7 @@ Theme::get_icon (const std::string &name)
  * get_value
  */
 std::string
-get_value (const libconfig::Setting &s)
+Theme::get_value (const libconfig::Setting &s)
 {
 	libconfig::Setting::Type t = s.getType();
 
@@ -234,35 +234,38 @@ get_value (const libconfig::Setting &s)
 }
 
 /**
- * dump_config
+ * parse_config
  */
 void
-dump_config (const libconfig::Setting &setting)
+Theme::parse_config (const libconfig::Setting &setting)
 {
 	for (int i = 0; i < setting.getLength(); i++) {
 		const libconfig::Setting &s = setting[i];
 
 		if (s.isScalar()) {
-			std::cout << s.getPath() << " = " << get_value(s) << std::endl;
+			std::string path  = s.getPath();
+			std::string value = get_value(s);
+
+			config[path] = value;
 		}
 
 		if (s.isGroup()) {
-			dump_config (s);
+			parse_config (s);
 		}
 	}
 }
 
 /**
- * dummy (void)
+ * read_config
  */
 bool
-dummy (void)
+Theme::read_config (const char *filename)
 {
 	libconfig::Config cfg;
 
 	try
 	{
-		cfg.readFile("themes/default.conf");
+		cfg.readFile(filename);
 	}
 	catch(const libconfig::FileIOException &fioex)
 	{
@@ -278,7 +281,7 @@ dummy (void)
 	try
 	{
 		std::string name = cfg.lookup("name");
-		std::cout << "Theme: " << name << std::endl << std::endl;
+		//std::cout << "Theme: " << name << std::endl << std::endl;
 	}
 	catch(const libconfig::SettingNotFoundException &nfex)
 	{
@@ -287,8 +290,58 @@ dummy (void)
 
 	const libconfig::Setting& root = cfg.getRoot();
 
-	dump_config (root);
+	parse_config (root);
+
+#if 0
+	log_info ("Theme:\n");
+	for (auto c : config) {
+		std::cout << '\t' << c.first << " = " << c.second << std::endl;
+	}
+	log_info ("\n");
+#endif
 
 	return true;
 }
+
+/**
+ * get_config
+ */
+std::string
+Theme::get_config (std::string path, std::string attr)
+{
+	std::map<std::string,std::string>::iterator it;
+	std::map<std::string,std::string>::iterator end = config.end();
+	std::string pathname;
+	std::string value;
+
+	for (auto i = 0; i < 20; i++) {
+		pathname = path;
+		if (!pathname.empty())
+			pathname += ".";
+		pathname += attr;
+
+		//printf ("config: search:  %s\n", pathname.c_str());
+		it = config.find (pathname);
+		if (it != end) {
+			value = it->second;
+			break;
+		}
+
+		size_t pos = path.find_last_of(".");
+		if (pos == std::string::npos) {
+			break;
+		}
+
+		path.erase (pos);
+	}
+
+	if (value.empty()) {
+		log_error ("config: missing: %s\n", attr.c_str());
+	} else {
+		//log_info ("config: found:   %s = %s\n", pathname.c_str(), value.c_str());
+	}
+
+	return value;
+}
+
 

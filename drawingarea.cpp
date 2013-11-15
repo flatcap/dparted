@@ -75,6 +75,41 @@ DPDrawingArea::DPDrawingArea() :
 	//std::cout << "GType name: " << G_OBJECT_TYPE_NAME (gobj()) << "\n";
 
 	theme = new Theme();
+
+	theme->read_config ("themes/default.conf");
+
+#if 0
+	std::string path;
+	std::string attr;
+	std::string value;
+
+	path = "container.whole.volume.linear.lvm_linear.lvm_metadata";
+	attr = "handle";
+	value = theme->get_config (path, attr);
+	//std::cout << path << "." << attr << " = " << value << std::endl;
+
+	path = "app";
+	attr = "background";
+	value = theme->get_config (path, attr);
+	//std::cout << path << "." << attr << " = " << value << std::endl;
+
+	path = "container.filesystem.fat32";
+	attr = "box";
+	value = theme->get_config (path, attr);
+	//std::cout << path << "." << attr << " = " << value << std::endl;
+
+	path = "container.whole.volume.mirror.lvm_mirror";
+	attr = "display";
+	value = theme->get_config (path, attr);
+	//std::cout << path << "." << attr << " = " << value << std::endl;
+
+	path = "container.whole.volume.mirror.lvm_mirror";
+	attr = "shade";
+	value = theme->get_config (path, attr);
+	//std::cout << path << "." << attr << " = " << value << std::endl;
+
+	//std::cout << std::endl;
+#endif
 }
 
 /**
@@ -1408,10 +1443,10 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 	// 130 120 110 100 90 80 70
 	//switch ((h/10)%4) {
 	switch (rand()%4) {
-		case 0:  cr->set_source_rgba (0.0, 0.0, 1.0, 1.0); break; // Blue
-		case 1:  cr->set_source_rgba (0.0, 1.0, 0.0, 1.0); break; // Green
-		case 2:  cr->set_source_rgba (1.0, 1.0, 0.0, 1.0); break; // Yellow
-		default: cr->set_source_rgba (1.0, 0.0, 0.0, 1.0); break; // Red
+		case 0:  cr->set_source_rgba (0.0, 0.0, 1.0, 0.4); break; // Blue
+		case 1:  cr->set_source_rgba (0.0, 1.0, 0.0, 0.4); break; // Green
+		case 2:  cr->set_source_rgba (1.0, 1.0, 0.0, 0.6); break; // Yellow
+		default: cr->set_source_rgba (1.0, 0.0, 0.0, 0.4); break; // Red
 	}
 
 	draw_corner (cr, corner, true,  true,  true);		// Top corners
@@ -1509,7 +1544,22 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	shape.y += 1;
 	shape.h -= 2;
 
+#if 0
+	std::string path = cont->get_path();
+	log_info ("theme:\n");
+	log_info ("\t%s.%s\n", path.c_str(), "display");
+	log_info ("\t%s.%s\n", path.c_str(), "handle");
+	log_info ("\t%s.%s\n", path.c_str(), "box");
+	log_info ("\t%s.%s\n", path.c_str(), "size");
+	log_info ("\t%s.%s\n", path.c_str(), "colour");
+	log_info ("\t%s.%s\n", path.c_str(), "background");
+	log_info ("\t%s.%s\n", path.c_str(), "label");
+	log_info ("\t%s.%s\n", path.c_str(), "icon");
+#endif
+
+	//log_info ("theme: %s\n", path.c_str());
 	std::cout << shape << std::endl;
+
 	printf ("object = %s (%s)\n", cont->name.c_str(), cont->uuid.c_str());
 	if (shape.w < TAB_WIDTH) {
 		printf ("too narrow\n");
@@ -1517,12 +1567,19 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	}
 
 	draw_box (cr, cont, shape, &inside, &tab);
-	draw_edge (cr, inside);
+	//draw_edge (cr, inside);
+
+	// width = w
+	// children = c
+	// tabs = t
+	// gaps = c-1
+	// big_icon = 0
 
 	long count = cont->children.size();
 	printf ("children = %ld\n", count);
+	printf ("width    = %d\n",  shape.w);
 
-	if (shape.h < 65) return;
+	//if (shape.h < 65) return;
 
 	long total = cont->bytes_size;
 	long bpp   = total / inside.w;	// bytes per pixel
@@ -1809,3 +1866,4 @@ DPDrawingArea::get_theme (const std::string &object, const std::string &attr)
 	//read from file
 	return true;
 }
+

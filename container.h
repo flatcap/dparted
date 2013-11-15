@@ -126,6 +126,8 @@ public:
 
 	virtual std::vector<DPContainer*> get_children (void);
 
+	std::string get_path (void);
+
 protected:
 	void declare (const char *name);
 	void insert (long offset, long size, void *ptr);
