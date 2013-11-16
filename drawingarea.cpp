@@ -37,18 +37,16 @@
 #include "whole.h"
 #include "log_trace.h"
 
-const int SCALE = 1;
-
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
 const double ARC_E = 0*M_PI_2;
 const double ARC_S = 1*M_PI_2;
 const double ARC_W = 2*M_PI_2;
 
-const int GAP         =  3*SCALE;	// Space between partitions
-const int RADIUS      =  8*SCALE;	// Curve radius of corners
-const int SIDES       =  2*SCALE;	// Width of sides and base
-const int TAB_WIDTH   = 10*SCALE;	// Space in left side-bar
-const int BLOCK_WIDTH = 24*SCALE;	// Placeholder for icons
+const int GAP         =  3;	// Space between partitions
+const int RADIUS      =  8;	// Curve radius of corners
+const int SIDES       =  2;	// Width of sides and base
+const int TAB_WIDTH   = 10;	// Space in left side-bar
+const int BLOCK_WIDTH = 24;	// Placeholder for icons
 
 /**
  * DPDrawingArea
@@ -62,7 +60,7 @@ DPDrawingArea::DPDrawingArea() :
 	mouse_close (false)
 {
 	//set_size_request (800, 77);
-	set_size_request (400, 77*SCALE);
+	set_size_request (400, 77);
 	set_hexpand (true);
 	set_vexpand (false);
 
