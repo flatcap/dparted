@@ -37,15 +37,17 @@
 #include "whole.h"
 #include "log_trace.h"
 
+const int SCALE = 3;
+
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
 const double ARC_E = 0*M_PI_2;
 const double ARC_S = 1*M_PI_2;
 const double ARC_W = 2*M_PI_2;
 
-const int GAP       =  3*3;		// Space between partitions
-const int RADIUS    =  8*3;		// Curve radius of corners
-const int SIDES     =  2*3;		// Width of sides and base
-const int TAB_WIDTH = 24*3;		// Space in left side-bar
+const int GAP       =  3*SCALE;		// Space between partitions
+const int RADIUS    =  8*SCALE;		// Curve radius of corners
+const int SIDES     =  2*SCALE;		// Width of sides and base
+const int TAB_WIDTH = 24*SCALE;		// Space in left side-bar
 
 /**
  * DPDrawingArea
@@ -59,7 +61,7 @@ DPDrawingArea::DPDrawingArea() :
 	mouse_close (false)
 {
 	//set_size_request (800, 77);
-	set_size_request (400, 77*3);
+	set_size_request (400, 77*SCALE);
 	set_hexpand (true);
 	set_vexpand (false);
 
@@ -543,6 +545,7 @@ DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer 
 	}
 }
 
+#endif
 /**
  * draw_focus
  */
@@ -574,6 +577,7 @@ DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &
 	cr->restore();						// End clipping
 }
 
+#if 0
 /**
  * draw_frame
  */
@@ -1300,7 +1304,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 void
 rand_colour (const Cairo::RefPtr<Cairo::Context> &cr)
 {
-#if 1
+#if 0
 	static int colour = 0;
 	switch (colour) {
 #if 0
@@ -1828,6 +1832,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 
 	//Rect right;
 	draw_box (cr, cont, shape, &inside);
+	draw_focus (cr, shape);
 #if 0
 	cr->set_source_rgba (1.0, 1.0, 1.0, 0.6);
 	draw_fill (cr, tab);
@@ -1900,8 +1905,11 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	Rect space { 0, 0, allocation.get_width(), allocation.get_height() };
 
-	//fill_area (cr, space);
+#if 1
+	fill_area (cr, space);
+#else
 	checker_area (cr, space);
+#endif
 	draw_container (cr, m_c, space);
 
 	return true;
