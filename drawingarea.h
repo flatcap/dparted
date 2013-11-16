@@ -78,7 +78,7 @@ private:
 
 	void draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 	void draw_fill (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
-	void draw_tab (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *inside, Rect *right);
+	void draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *right);
 	void draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *inside);
 	void draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *inside);
 

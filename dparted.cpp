@@ -24,7 +24,7 @@
 #include "log.h"
 #include "log_trace.h"
 
-const int SCALE = 3;
+const int SCALE = 1;
 
 /**
  * Dparted

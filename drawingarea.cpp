@@ -37,17 +37,18 @@
 #include "whole.h"
 #include "log_trace.h"
 
-const int SCALE = 3;
+const int SCALE = 1;
 
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
 const double ARC_E = 0*M_PI_2;
 const double ARC_S = 1*M_PI_2;
 const double ARC_W = 2*M_PI_2;
 
-const int GAP       =  3*SCALE;		// Space between partitions
-const int RADIUS    =  8*SCALE;		// Curve radius of corners
-const int SIDES     =  2*SCALE;		// Width of sides and base
-const int TAB_WIDTH = 24*SCALE;		// Space in left side-bar
+const int GAP         =  3*SCALE;	// Space between partitions
+const int RADIUS      =  8*SCALE;	// Curve radius of corners
+const int SIDES       =  2*SCALE;	// Width of sides and base
+const int TAB_WIDTH   = 10*SCALE;	// Space in left side-bar
+const int BLOCK_WIDTH = 24*SCALE;	// Placeholder for icons
 
 /**
  * DPDrawingArea
@@ -1314,7 +1315,7 @@ rand_colour (const Cairo::RefPtr<Cairo::Context> &cr)
 		default: cr->set_source_rgba (1.0, 0.0, 0.0, 0.4); break; // Red
 #else
 		case 0:  cr->set_source_rgba (0.0, 1.0, 0.0, 0.8); break; // Green
-		case 1:  cr->set_source_rgba (1.0, 1.0, 0.0, 0.8); break; // Yellow
+		case 1:  cr->set_source_rgba (0.8, 0.8, 0.0, 0.8); break; // Yellow
 		case 2:  cr->set_source_rgba (0.0, 0.0, 1.0, 0.8); break; // Blue
 		default: cr->set_source_rgba (1.0, 0.0, 0.0, 0.8); break; // Red
 #endif
@@ -1481,10 +1482,10 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
 }
 
 /**
- * draw_tab
+ * draw_block
  */
 void
-DPDrawingArea::draw_tab (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *inside, Rect *right)
+DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *right)
 {
 	/*
 	 * TAB	INSIDE	DRAW	SHAPES		IN		OUT
@@ -1503,15 +1504,19 @@ DPDrawingArea::draw_tab (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 	if (!cont)
 		return;
 
-	if (shape.h < (RADIUS*2))
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_tab: too short\n");
 		return;
+	}
 
-	if (shape.w < (TAB_WIDTH + (RADIUS*2)))
+	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
+		log_info ("draw_tab: too narrow\n");
 		return;
+	}
 
 	Rect work = shape;
 
-	work.w = TAB_WIDTH + (RADIUS/2);
+	work.w = BLOCK_WIDTH + (RADIUS/2);
 
 	const int &x = work.x;
 	const int &y = work.y;
@@ -1520,51 +1525,51 @@ DPDrawingArea::draw_tab (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 
 	vRange.push_front ({work, cont});			// Associate a region with a container
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin left bar (4)
 	cr->move_to (x+(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin right bar (8)
 	cr->move_to (x+w-(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin bottom bar (10)
 	cr->move_to (x+RADIUS, y+h-(SIDES/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
-	Rect tab = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
+	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
 
-	rand_colour(cr);
-	draw_corner (cr, tab, true,  true,  false);		// Tab inside top right corner
-	rand_colour(cr);
-	draw_corner (cr, tab, true,  false, false);		// Tab inside top left corner
+	//rand_colour(cr);
+	draw_corner (cr, t, true,  true,  false);		// Tab inside top right corner
+	//rand_colour(cr);
+	draw_corner (cr, t, true,  false, false);		// Tab inside top left corner
 
 
-	if (inside)
-		*inside = tab;
+	if (tab)
+		*tab = t;
 
 	if (right)
 		*right = { shape.x + work.w + GAP, shape.y, shape.w - work.w - GAP, shape.h};
@@ -1593,13 +1598,18 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer
 	if (!cont)
 		return;
 
-	if (shape.h < (RADIUS*2))
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_tabbox: too short\n");
 		return;
+	}
 
-	if (shape.w < (TAB_WIDTH + (RADIUS*2)))
+	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
+		log_info ("draw_tabbox: too narrow\n");
 		return;
+	}
 
 	Rect work = shape;
+	//draw_edge (cr, work);
 
 	const int &x = work.x;
 	const int &y = work.y;
@@ -1608,45 +1618,43 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer
 
 	vRange.push_front ({work, cont});			// Associate a region with a container
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin left bar (4)
 	cr->move_to (x+(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin right bar (8)
 	cr->move_to (x+w-(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin bottom bar (10)
 	cr->move_to (x+RADIUS, y+h-(SIDES/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	rand_colour(cr);
-	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
 	cr->rel_line_to (TAB_WIDTH+SIDES, 0);
 	cr->rel_line_to (0, h-RADIUS-SIDES);
@@ -1658,22 +1666,22 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer
 
 	Rect i = { x+TAB_WIDTH+(SIDES*2), y+RADIUS, w-TAB_WIDTH-(SIDES*3), h-RADIUS-SIDES };
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, i, false, false, false);		// Bottom left inner corner (11)
 
 	Rect t = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, *tab, true,  true,  false);		// Tab inside top right corner
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, *tab, true,  false, false);		// Tab inside top left corner
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, *tab, false, true,  false);		// Tab inside bottom right corner
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
 
 	if (tab)
@@ -1705,13 +1713,18 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 	if (!cont)
 		return;
 
-	if (shape.h < (RADIUS*2))
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_box: too short\n");
 		return;
+	}
 
-	if (shape.w < (TAB_WIDTH + (RADIUS*2)))
+	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
+		log_info ("draw_box: too narrow\n");
 		return;
+	}
 
 	Rect work = shape;
+	//draw_edge (cr, work);
 
 	const int &x = work.x;
 	const int &y = work.y;
@@ -1720,47 +1733,47 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 
 	vRange.push_front ({work, cont});			// Associate a region with a container
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin left bar (4)
 	cr->move_to (x+(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin right bar (8)
 	cr->move_to (x+w-(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin bottom bar (10)
 	cr->move_to (x+RADIUS, y+h-(SIDES/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
 	Rect i = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
 
-	rand_colour(cr);
+	//rand_colour(cr);
 	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
 
 	if (inside)
@@ -1773,17 +1786,11 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 void
 DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape)
 {
+	Rect tab;
+	Rect inside;
+
 	if (!cont)
 		return;
-
-	Rect inside;
-	//Rect below;
-
-	printf ("height = %d\n", shape.h);
-	shape.x += 1;
-	shape.w -= 2;
-	shape.y += 1;
-	shape.h -= 2;
 
 	std::string path = cont->get_path();
 #if 0
@@ -1807,10 +1814,70 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		return;
 	}
 
-	//bool display = true;
-	//bool handle  = true;
-	//bool box     = true;
+	bool display = true;
+	bool handle  = true;
+	bool box     = true;
 
+	std::string type = cont->type.back();
+	if (type == "loop") {
+		handle = true;
+		box    = false;
+	}
+
+	if (cont->is_a ("filesystem")) {
+		handle = false;
+		box    = true;
+	}
+
+	if (cont->is_a ("table")) {
+		handle = true;
+		box    = true;
+	}
+
+	if (cont->is_a ("partition")) {
+		display = false;
+		handle  = false;
+		box     = true;
+	}
+
+	printf ("height = %d\n", shape.h);
+	if (display) {
+		shape.x += 1;
+		shape.w -= 2;
+		shape.y += 1;
+		shape.h -= 2;
+
+		rand_colour (cr);
+		if (handle) {
+			if (box) {
+				draw_tabbox (cr, cont, shape, &tab, &inside);
+			} else {
+				draw_block (cr, cont, shape, &tab, &inside);
+				//draw_edge (cr, inside);
+#if 1
+				cr->set_source_rgba (1.0, 0.0, 0.0, 1.0);
+				draw_icon (cr, "table", tab, &tab);
+				draw_icon (cr, "warning", tab, &tab);
+#endif
+			}
+		} else {
+			draw_box (cr, cont, shape, &inside);
+			if (cont->is_a ("filesystem")) {
+#if 1
+				Rect usage = inside;
+				usage.w = usage.w * 2 / 3;
+				cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
+				draw_fill (cr, usage);
+#endif
+			}
+		}
+	} else {
+		inside = shape;
+	}
+
+	//draw_edge (cr, inside);
+
+#if 0
 	if (shape.h == 3*77-2) {
 		std::string value;
 		std::string attr;
@@ -1829,20 +1896,25 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 
 		//box = false;
 	}
+#endif
 
+#if 0
 	//Rect right;
 	draw_box (cr, cont, shape, &inside);
 	//draw_focus (cr, shape);
 	draw_highlight (cr, shape);
+#endif
 #if 0
 	cr->set_source_rgba (1.0, 1.0, 1.0, 0.6);
 	draw_fill (cr, tab);
 	draw_edge (cr, tab);
 #endif
+#if 0
 	cr->set_source_rgba (1.0, 1.0, 1.0, 0.6);
 	draw_fill (cr, inside);
 	draw_edge (cr, inside);
 	//draw_box (cr, cont, shape, &inside, &tab);
+#endif
 #if 0
 	cr->set_source_rgba (1.0, 0.0, 0.0, 1.0);
 	draw_fill (cr, tab);
@@ -1855,7 +1927,6 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	draw_fill (cr, inside);
 	//draw_edge (cr, inside);
 #endif
-	return;
 
 	// width = w
 	// children = c
@@ -1884,7 +1955,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 
 		Rect next = inside;
 		next.x += offset;
-		next.w = size - RADIUS;
+		next.w = size;
 
 		draw_container(cr, c, next);
 	}
@@ -1906,8 +1977,9 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	Rect space { 0, 0, allocation.get_width(), allocation.get_height() };
 
-#if 0
+#if 1
 	fill_area (cr, space);
+	//draw_edge (cr, space);
 #else
 	checker_area (cr, space);
 #endif
