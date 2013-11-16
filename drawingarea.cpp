@@ -1305,25 +1305,14 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 void
 rand_colour (const Cairo::RefPtr<Cairo::Context> &cr)
 {
-#if 1
 	static int colour = 0;
 	switch (colour) {
-#if 0
-		case 0:  cr->set_source_rgba (0.0, 1.0, 0.0, 0.4); break; // Green
-		case 1:  cr->set_source_rgba (1.0, 1.0, 0.0, 0.6); break; // Yellow
-		case 2:  cr->set_source_rgba (0.0, 0.0, 1.0, 0.4); break; // Blue
-		default: cr->set_source_rgba (1.0, 0.0, 0.0, 0.4); break; // Red
-#else
 		case 0:  cr->set_source_rgba (0.0, 1.0, 0.0, 0.8); break; // Green
 		case 1:  cr->set_source_rgba (0.8, 0.8, 0.0, 0.8); break; // Yellow
 		case 2:  cr->set_source_rgba (0.0, 0.0, 1.0, 0.8); break; // Blue
 		default: cr->set_source_rgba (1.0, 0.0, 0.0, 0.8); break; // Red
-#endif
 	}
 	colour = (colour+1) % 4;
-#else
-	cr->set_source_rgba (1.0, 0.0, 0.0, 1.0); // red
-#endif
 }
 
 /**
@@ -1487,20 +1476,6 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
 void
 DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *right)
 {
-	/*
-	 * TAB	INSIDE	DRAW	SHAPES		IN		OUT
-	 * 0	0	nothing	Space		s=S t=0 i=0	-   -
-	 * 0	1	box	Inside		s=S t=0 i=P	i=I -
-	 * 1	0	tab	Tab, Right	s=S t=P i=0	-   t=T
-	 * 1	1	tab,box	Tab, Inside	s=S t=P i=P	i=I t=T
-	 */
-
-	/* box components:
-	 *	common		1,2,3,4,6,7,8,10,12
-	 *	empty box	13
-	 *	tab box		5,9,11
-	 */
-
 	if (!cont)
 		return;
 
@@ -1525,46 +1500,35 @@ DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer 
 
 	vRange.push_front ({work, cont});			// Associate a region with a container
 
-	//rand_colour(cr);
 	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-
-	//rand_colour(cr);
 	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
 
-	//rand_colour(cr);
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin left bar (4)
 	cr->move_to (x+(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin right bar (8)
 	cr->move_to (x+w-(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin bottom bar (10)
 	cr->move_to (x+RADIUS, y+h-(SIDES/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	//rand_colour(cr);
 	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	//rand_colour(cr);
 	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
 	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
 
-	//rand_colour(cr);
 	draw_corner (cr, t, true,  true,  false);		// Tab inside top right corner
-	//rand_colour(cr);
 	draw_corner (cr, t, true,  false, false);		// Tab inside top left corner
 
 
@@ -1581,20 +1545,6 @@ DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer 
 void
 DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *inside)
 {
-	/*
-	 * TAB	INSIDE	DRAW	SHAPES		IN		OUT
-	 * 0	0	nothing	Space		s=S t=0 i=0	-   -
-	 * 0	1	box	Inside		s=S t=0 i=P	i=I -
-	 * 1	0	tab	Tab, Right	s=S t=P i=0	-   t=T
-	 * 1	1	tab,box	Tab, Inside	s=S t=P i=P	i=I t=T
-	 */
-
-	/* box components:
-	 *	common		1,2,3,4,6,7,8,10,12
-	 *	empty box	13
-	 *	tab box		5,9,11
-	 */
-
 	if (!cont)
 		return;
 
@@ -1609,7 +1559,6 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer
 	}
 
 	Rect work = shape;
-	//draw_edge (cr, work);
 
 	const int &x = work.x;
 	const int &y = work.y;
@@ -1618,43 +1567,34 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer
 
 	vRange.push_front ({work, cont});			// Associate a region with a container
 
-	//rand_colour(cr);
 	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
 
-	//rand_colour(cr);
 	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
 
-	//rand_colour(cr);
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin left bar (4)
 	cr->move_to (x+(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin right bar (8)
 	cr->move_to (x+w-(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin bottom bar (10)
 	cr->move_to (x+RADIUS, y+h-(SIDES/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	//rand_colour(cr);
 	draw_arc (cr, work, true);				// Thin bottom right corner (12)
 
-	//rand_colour(cr);
 	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
 
-	//rand_colour(cr);
 	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
 	cr->rel_line_to (TAB_WIDTH+SIDES, 0);
 	cr->rel_line_to (0, h-RADIUS-SIDES);
@@ -1666,22 +1606,15 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer
 
 	Rect i = { x+TAB_WIDTH+(SIDES*2), y+RADIUS, w-TAB_WIDTH-(SIDES*3), h-RADIUS-SIDES };
 
-	//rand_colour(cr);
 	draw_corner (cr, i, false, false, false);		// Bottom left inner corner (11)
 
 	Rect t = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
 
-	//rand_colour(cr);
 	draw_corner (cr, *tab, true,  true,  false);		// Tab inside top right corner
-	//rand_colour(cr);
 	draw_corner (cr, *tab, true,  false, false);		// Tab inside top left corner
-	//rand_colour(cr);
 	draw_corner (cr, *tab, false, true,  false);		// Tab inside bottom right corner
 
-	//rand_colour(cr);
 	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
-
-	//rand_colour(cr);
 	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
 
 	if (tab)
@@ -1696,20 +1629,6 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer
 void
 DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *inside)
 {
-	/*
-	 * TAB	INSIDE	DRAW	SHAPES		IN		OUT
-	 * 0	0	nothing	Space		s=S t=0 i=0	-   -
-	 * 0	1	box	Inside		s=S t=0 i=P	i=I -
-	 * 1	0	tab	Tab, Right	s=S t=P i=0	-   t=T
-	 * 1	1	tab,box	Tab, Inside	s=S t=P i=P	i=I t=T
-	 */
-
-	/* box components:
-	 *	common		1,2,3,4,6,7,8,10,12
-	 *	empty box	13
-	 *	tab box		5,9,11
-	 */
-
 	if (!cont)
 		return;
 
@@ -1724,7 +1643,6 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 	}
 
 	Rect work = shape;
-	//draw_edge (cr, work);
 
 	const int &x = work.x;
 	const int &y = work.y;
@@ -1733,47 +1651,36 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 
 	vRange.push_front ({work, cont});			// Associate a region with a container
 
-	//rand_colour(cr);
 	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
 
-	//rand_colour(cr);
 	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
 
-	//rand_colour(cr);
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin left bar (4)
 	cr->move_to (x+(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin right bar (8)
 	cr->move_to (x+w-(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	//rand_colour(cr);
 	cr->set_line_width (SIDES);				// Thin bottom bar (10)
 	cr->move_to (x+RADIUS, y+h-(SIDES/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	//rand_colour(cr);
 	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	//rand_colour(cr);
 	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
 	Rect i = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
 
-	//rand_colour(cr);
 	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
-
-	//rand_colour(cr);
 	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
 
 	if (inside)
