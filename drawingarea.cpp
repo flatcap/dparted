@@ -341,7 +341,7 @@ draw_edge (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 	const int &h = shape.h - 1;
 
 	cr->save();
-	cr->set_source_rgba (1, 0, 0, 1);
+	cr->set_source_rgba (1.0, 0.0, 0.0, 1.0);
 	cr->set_line_width (1);
 
 	cr->move_to     (x+0.5, y+0.5);
@@ -365,7 +365,7 @@ DPDrawingArea::fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &s
 	const int &w = shape.w;
 	const int &h = shape.h;
 
-	cr->set_source_rgba (1, 1, 1, 1);
+	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 
 	cr->move_to     ( x, y);
 	cr->rel_line_to ( w, 0);
@@ -563,13 +563,13 @@ DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &
 	cr->set_line_width (4);
 
 	cr->set_dash (dashes, 0);
-	cr->set_source_rgba (0, 0, 0, 1.0);			//RAR focus colours from theme
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);		//RAR focus colours from theme
 	draw_border (cr, shape);
 	cr->close_path();
 	cr->stroke();
 
 	cr->set_dash (dashes, 5);
-	cr->set_source_rgba (1, 1, 1, 1.0);
+	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 	draw_border (cr, shape);
 	cr->close_path();
 	cr->stroke();
@@ -736,7 +736,7 @@ DPDrawingArea::draw_partition (const Cairo::RefPtr<Cairo::Context> &cr,
 	draw_rect (cr, "unused", r_white);
 
 	if ((width_fs - width_usage) > 1) {
-		cr->set_source_rgba (1, 1, 1, 1);
+		cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 		cr->move_to (x+width_usage, y+r);			// Curvy corners
 		cr->arc (x+width_usage-r, y + (2*r), r, ARC_N, ARC_E);
 		cr->fill();
@@ -1304,7 +1304,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 void
 rand_colour (const Cairo::RefPtr<Cairo::Context> &cr)
 {
-#if 0
+#if 1
 	static int colour = 0;
 	switch (colour) {
 #if 0
@@ -1832,7 +1832,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 
 	//Rect right;
 	draw_box (cr, cont, shape, &inside);
-	draw_focus (cr, shape);
+	//draw_focus (cr, shape);
+	draw_highlight (cr, shape);
 #if 0
 	cr->set_source_rgba (1.0, 1.0, 1.0, 0.6);
 	draw_fill (cr, tab);
@@ -1905,7 +1906,7 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	Rect space { 0, 0, allocation.get_width(), allocation.get_height() };
 
-#if 1
+#if 0
 	fill_area (cr, space);
 #else
 	checker_area (cr, space);
@@ -2037,16 +2038,16 @@ DPDrawingArea::draw_grid (const Cairo::RefPtr<Cairo::Context> &cr)
 	cr->save();
 
 	cr->set_antialias (Cairo::ANTIALIAS_NONE);
-	cr->set_source_rgba (1, 0, 0, 0.2);
+	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
 	cr->set_line_width (1);
 	cr->rectangle (0.5, 0.5, width-1, height-1);
 	cr->stroke();
 
 	for (int i = 10; i < width; i += 10) {
 		if ((i % 100) == 0) {
-			cr->set_source_rgba (0, 0, 1, 0.2);
+			cr->set_source_rgba (0.0, 0.0, 1.0, 0.2);
 		} else {
-			cr->set_source_rgba (0, 1, 0, 0.3);
+			cr->set_source_rgba (0.0, 1.0, 0.0, 0.3);
 		}
 		cr->move_to (i + 0.5, 0);
 		cr->rel_line_to (0, height);
@@ -2055,9 +2056,9 @@ DPDrawingArea::draw_grid (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	for (int i = 10; i < width; i += 10) {
 		if ((i % 100) == 0) {
-			cr->set_source_rgba (0, 0, 1, 0.2);
+			cr->set_source_rgba (0.0, 0.0, 1.0, 0.2);
 		} else {
-			cr->set_source_rgba (0, 1, 0, 0.3);
+			cr->set_source_rgba (0.0, 1.0, 0.0, 0.3);
 		}
 		cr->move_to (0, i + 0.5);
 		cr->rel_line_to (width, 0);
@@ -2091,7 +2092,7 @@ DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect s
 	cr->save();
 
 	cr->set_antialias (Cairo::ANTIALIAS_NONE);
-	cr->set_source_rgba (1, 0, 0, 0.2);
+	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
 	cr->set_line_width (1);
 	cr->rectangle (0.5+x, 0.5, w-1, h-1);
 	cr->stroke();
@@ -2129,6 +2130,7 @@ DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect spac
 }
 
 
+#endif
 /**
  * draw_highlight
  */
@@ -2139,13 +2141,12 @@ DPDrawingArea::draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Re
 	draw_border (cr, shape);
 	cr->clip();
 	draw_rect (cr, "rgba(0,128,0,0.2)", shape);
-	cr->set_source_rgba (1, 0, 0, 1);
+	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 	draw_border (cr, shape);
 	cr->stroke();
 	cr->restore();
 }
 
-#endif
 
 /**
  * get_theme
