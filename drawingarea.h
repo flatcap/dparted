@@ -77,7 +77,7 @@ private:
 	void checker_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 
 	void draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
-	void draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape, Rect *inside, Rect *tab);
+	void draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *inside, Rect *tab);
 	void draw_fill (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 
 	Table *       get_table      (DPContainer *c);
