@@ -46,8 +46,9 @@ protected:
 
 #if 0
 	bool on_timeout (int timer_number);
-	bool get_focus (int &x, int &y, int &w, int &h);
 #endif
+	DPContainer * get_focus (int x, int y);
+	bool on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 
 	bool get_theme (const std::string &object, const std::string &attr);
 

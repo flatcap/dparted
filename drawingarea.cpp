@@ -23,6 +23,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 
 #include "container.h"
 #include "drawingarea.h"
@@ -74,6 +75,11 @@ DPDrawingArea::DPDrawingArea() :
 	theme = new Theme();
 
 	theme->read_config ("themes/default.conf");
+
+	//set_tooltip_text("tooltip number 1");
+
+	set_has_tooltip();	// We'll be handling the tooltips ourself
+	signal_query_tooltip().connect(sigc::mem_fun(*this, &DPDrawingArea::on_textview_query_tooltip));
 }
 
 /**
@@ -1113,34 +1119,47 @@ DPDrawingArea::on_timeout (int timer_number)
 	return false;
 }
 
+#endif
 /**
  * get_focus
  */
-bool
-DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
+DPContainer *
+DPDrawingArea::get_focus (int x, int y)
 {
-	if ((sel_x < 0) || (sel_y < 0))
-		return false;
+	DPContainer *match = nullptr;
 
-	bool b = false;
-#if 0
-	for (auto it = vRange.begin(); it != vRange.end(); it++) {
-		b = ((sel_x >= (*it).x) && (sel_x < ((*it).x + (*it).w)) &&
-		     (sel_y >= (*it).y) && (sel_y < ((*it).y + (*it).h)));
-		if (b) {
-			x = (*it).x;
-			y = (*it).y;
-			w = (*it).w;
-			h = (*it).h;
+	for (auto rg : vRange) {
+		Rect r = rg.r;
+		if ((x >= r.x) && (x < (r.x + r.w)) && (y >= r.y) && (y < (r.y + r.h))) {
+			match = rg.p;
 			break;
 		}
 	}
 
-#endif
-	return b;
+	return match;
 }
 
-#endif
+/**
+ * on_textview_query_tooltip
+ */
+bool
+DPDrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
+{
+	std::stringstream ss;
+
+	DPContainer *c = get_focus (x, y);
+	if (c) {
+		ss << "<b>" << c->name << "</b> (" << c->uuid << ")";
+
+		tooltip->set_markup(ss.str());
+		tooltip->set_icon_from_icon_name("dialog-information", Gtk::ICON_SIZE_MENU);
+
+		return true;
+	}
+
+	return false;
+}
+
 
 /**
  * on_mouse_motion
@@ -1339,3 +1358,5 @@ DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect spac
 }
 
 #endif
+
+
