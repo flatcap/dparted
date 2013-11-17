@@ -21,10 +21,6 @@
 #include <gtkmm/drawingarea.h>
 
 class DPContainer;
-class Filesystem;
-class Misc;
-class Partition;
-class Table;
 class Theme;
 
 typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
@@ -62,7 +58,6 @@ private:
 	Theme *theme;
 
 	void draw_block     (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *right);
-	void draw_border    (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside = nullptr);
 	void draw_box       (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *inside);
 	void draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape);
 	void draw_fill      (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
@@ -78,20 +73,12 @@ private:
 	void draw_grid_log    (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size);
 #endif
 
-	Table *       get_table      (DPContainer *c);
-	Partition *   get_partition  (DPContainer *c);
-	Table *       get_protective (DPContainer *c);
-	Filesystem *  get_filesystem (DPContainer *c);
-	Misc *        get_misc       (DPContainer *c);
-
 	std::deque<Range> vRange;
 
 	int sel_x;
 	int sel_y;
 
 	bool mouse_close;
-
-	std::map<std::string,std::string> newtheme;
 };
 
 

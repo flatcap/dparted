@@ -24,17 +24,12 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "block.h"
 #include "container.h"
 #include "drawingarea.h"
 #include "filesystem.h"
 #include "log.h"
-#include "misc.h"
-#include "partition.h"
-#include "table.h"
 #include "theme.h"
 #include "utils.h"
-#include "whole.h"
 #include "log_trace.h"
 
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
@@ -198,12 +193,11 @@ checker_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 	}
 }
 
-
 /**
  * draw_border
  */
 void
-DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside /*=nullptr*/)
+draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 {
 	const int &r = RADIUS;
 	const int &x = shape.x;
@@ -217,14 +211,8 @@ DPDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect 
 	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
 	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->close_path();
-
-	if (inside) {			// Space inside shape
-		inside->x = x + 6;
-		inside->y = y + 6;
-		inside->w = w;
-		inside->h = h;
-	}
 }
+
 
 /**
  * draw_rect
@@ -516,8 +504,9 @@ draw_label (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect sha
 	if (cont->is_a ("filesystem")) {
 		Filesystem *fs = dynamic_cast<Filesystem*> (cont);
 		if (fs) {
+			label += "\n";
 			if (!fs->label.empty()) {
-				label += " \"" + fs->label + "\"";
+				label += "\"" + fs->label + "\"";
 			}
 		}
 	}
@@ -558,6 +547,10 @@ draw_gradient (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape)
 
 	//XXX needs clipping to rounded rectangle
 
+	cr->save();
+	draw_border (cr, shape);				// Set clipping area
+	cr->clip();
+
 	Cairo::RefPtr<Cairo::LinearGradient> grad;			// Gradient shading
 	grad = Cairo::LinearGradient::create (0.0, 0.0, 0.0, h);
 	grad->add_color_stop_rgba (0.00, 0.0, 0.0, 0.0, 0.2);
@@ -566,6 +559,7 @@ draw_gradient (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape)
 	cr->set_source (grad);
 	cr->rectangle (x, y, w, h);
 	cr->fill();
+	cr->restore();
 }
 
 /**
@@ -1017,57 +1011,6 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	}
 
 	//draw_edge (cr, inside);
-
-#if 0
-	if (shape.h == 3*77-2) {
-		std::string value;
-		std::string attr;
-
-		attr = "display";
-		value = theme->get_config (path, attr);
-		log_info ("%s.%s = %s\n", path.c_str(), attr.c_str(), value.c_str());
-
-		attr = "handle";
-		value = theme->get_config (path, attr);
-		log_info ("%s.%s = %s\n", path.c_str(), attr.c_str(), value.c_str());
-
-		attr = "box";
-		value = theme->get_config (path, attr);
-		log_info ("%s.%s = %s\n", path.c_str(), attr.c_str(), value.c_str());
-
-		//box = false;
-	}
-#endif
-
-#if 0
-	//Rect right;
-	draw_box (cr, cont, shape, &inside);
-	//draw_focus (cr, shape);
-	draw_highlight (cr, shape);
-#endif
-#if 0
-	cr->set_source_rgba (1.0, 1.0, 1.0, 0.6);
-	draw_fill (cr, tab);
-	draw_edge (cr, tab);
-#endif
-#if 0
-	cr->set_source_rgba (1.0, 1.0, 1.0, 0.6);
-	draw_fill (cr, inside);
-	draw_edge (cr, inside);
-	//draw_box (cr, cont, shape, &inside, &tab);
-#endif
-#if 0
-	cr->set_source_rgba (1.0, 0.0, 0.0, 1.0);
-	draw_fill (cr, tab);
-	Rect below;
-	draw_icon (cr, "margin_black", tab, &below);
-	tab = below;
-	draw_icon (cr, "table", tab, &below);
-	//draw_edge (cr, tab);
-	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
-	draw_fill (cr, inside);
-	//draw_edge (cr, inside);
-#endif
 
 	// width = w
 	// children = c
