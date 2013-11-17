@@ -42,7 +42,7 @@ public:
 	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string &name);
 
 	bool read_config (const char *filename);
-	std::string get_config (std::string path, std::string attr);
+	std::string get_config (std::string path, const std::string &name, const std::string &attr);
 
 protected:
 	std::map<std::string,Gdk::RGBA> colours;

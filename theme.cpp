@@ -307,12 +307,22 @@ Theme::read_config (const char *filename)
  * get_config
  */
 std::string
-Theme::get_config (std::string path, std::string attr)
+Theme::get_config (std::string path, const std::string &name, const std::string &attr)
 {
 	std::map<std::string,std::string>::iterator it;
 	std::map<std::string,std::string>::iterator end = config.end();
 	std::string pathname;
 	std::string value;
+
+	pathname = path;
+	if (!pathname.empty())
+		pathname += ".";
+	pathname += name + "." + attr;
+	//printf ("config: search:  %s\n", pathname.c_str());
+	it = config.find (pathname);
+	if (it != end) {
+		return it->second;
+	}
 
 	for (auto i = 0; i < 20; i++) {
 		pathname = path;

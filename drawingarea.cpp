@@ -79,39 +79,6 @@ DPDrawingArea::DPDrawingArea() :
 	theme = new Theme();
 
 	theme->read_config ("themes/default.conf");
-
-#if 0
-	std::string path;
-	std::string attr;
-	std::string value;
-
-	path = "container.whole.volume.linear.lvm_linear.lvm_metadata";
-	attr = "handle";
-	value = theme->get_config (path, attr);
-	//std::cout << path << "." << attr << " = " << value << std::endl;
-
-	path = "app";
-	attr = "background";
-	value = theme->get_config (path, attr);
-	//std::cout << path << "." << attr << " = " << value << std::endl;
-
-	path = "container.filesystem.fat32";
-	attr = "box";
-	value = theme->get_config (path, attr);
-	//std::cout << path << "." << attr << " = " << value << std::endl;
-
-	path = "container.whole.volume.mirror.lvm_mirror";
-	attr = "display";
-	value = theme->get_config (path, attr);
-	//std::cout << path << "." << attr << " = " << value << std::endl;
-
-	path = "container.whole.volume.mirror.lvm_mirror";
-	attr = "shade";
-	value = theme->get_config (path, attr);
-	//std::cout << path << "." << attr << " = " << value << std::endl;
-
-	//std::cout << std::endl;
-#endif
 }
 
 /**
@@ -1608,10 +1575,6 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer
 
 	Rect t = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
 
-	draw_corner (cr, *tab, true,  true,  false);		// Tab inside top right corner
-	draw_corner (cr, *tab, true,  false, false);		// Tab inside top left corner
-	draw_corner (cr, *tab, false, true,  false);		// Tab inside bottom right corner
-
 	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
 	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
 
@@ -1697,69 +1660,53 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	if (!cont)
 		return;
 
-	std::string path = cont->get_path();
-#if 0
-	log_info ("theme:\n");
-	log_info ("\t%s.%s\n", path.c_str(), "display");
-	log_info ("\t%s.%s\n", path.c_str(), "handle");
-	log_info ("\t%s.%s\n", path.c_str(), "box");
-	log_info ("\t%s.%s\n", path.c_str(), "size");
-	log_info ("\t%s.%s\n", path.c_str(), "colour");
-	log_info ("\t%s.%s\n", path.c_str(), "background");
-	log_info ("\t%s.%s\n", path.c_str(), "label");
-	log_info ("\t%s.%s\n", path.c_str(), "icon");
-#endif
-
-	//log_info ("theme: %s\n", path.c_str());
-	std::cout << shape << std::endl;
-
-	printf ("object = %s (%s)\n", cont->name.c_str(), cont->uuid.c_str());
+	//printf ("object = %s (%s)\n", cont->name.c_str(), cont->uuid.c_str());
 	if (shape.w < TAB_WIDTH) {
 		printf ("too narrow\n");
 		return;
 	}
 
-	bool display = true;
-	bool handle  = true;
-	bool box     = true;
+	std::string path = cont->get_path();
+	std::string name = cont->name;
 
-	std::string type = cont->type.back();
-	if (type == "loop") {
-		handle = true;
-		box    = false;
+	std::string display    = theme->get_config (path, name, "display");
+	std::string handle     = theme->get_config (path, name, "handle");
+	std::string box        = theme->get_config (path, name, "box");
+	std::string colour     = theme->get_config (path, name, "colour");
+
+#if 0
+	std::string size       = theme->get_config (path, name, "size");
+	std::string background = theme->get_config (path, name, "background");
+	std::string label      = theme->get_config (path, name, "label");
+	std::string icon       = theme->get_config (path, name, "icon");
+#endif
+
+	Gdk::RGBA rgba ("black");
+	if (!rgba.set (colour.c_str())) {
+		log_error ("don't understand colour: %s\n", colour.c_str());
+		//XXX validate (and default) any colours in theme.cpp
 	}
 
-	if (cont->is_a ("filesystem")) {
-		handle = false;
-		box    = true;
-	}
+	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
 
-	if (cont->is_a ("table")) {
-		handle = true;
-		box    = true;
-	}
+	//log_info ("theme: %s\n", path.c_str());
+	//std::cout << shape << std::endl;
+	//log_info ("%-12s: D: %-5s, H: %-5s, B: %-5s, C: %s\n", cont->name.c_str(), display.c_str(), handle.c_str(), box.c_str(), colour.c_str());
 
-	if (cont->is_a ("partition")) {
-		display = false;
-		handle  = false;
-		box     = true;
-	}
-
-	printf ("height = %d\n", shape.h);
-	if (display) {
+	if (display == "true") {
 		shape.x += 1;
 		shape.w -= 2;
 		shape.y += 1;
 		shape.h -= 2;
 
-		rand_colour (cr);
-		if (handle) {
-			if (box) {
+		//rand_colour (cr);
+		if (handle == "true") {
+			if (box == "true") {
 				draw_tabbox (cr, cont, shape, &tab, &inside);
 			} else {
 				draw_block (cr, cont, shape, &tab, &inside);
 				//draw_edge (cr, inside);
-#if 1
+#if 0
 				cr->set_source_rgba (1.0, 0.0, 0.0, 1.0);
 				draw_icon (cr, "table", tab, &tab);
 				draw_icon (cr, "warning", tab, &tab);
@@ -1767,7 +1714,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 			}
 		} else {
 			draw_box (cr, cont, shape, &inside);
-			if (cont->is_a ("filesystem")) {
+			if (theme->get_config (path, name, "usage") == "true") {
 #if 1
 				Rect usage = inside;
 				usage.w = usage.w * 2 / 3;
@@ -1839,24 +1786,24 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	// gaps = c-1
 	// big_icon = 0
 
-	long count = cont->children.size();
-	printf ("children = %ld\n", count);
-	printf ("width    = %d\n",  shape.w);
+	//long count = cont->children.size();
+	//printf ("children = %ld\n", count);
+	//printf ("width    = %d\n",  shape.w);
 
 	//if (shape.h < 65) return;
 
 	long total = cont->bytes_size;
 	long bpp   = total / inside.w;	// bytes per pixel
 
-	printf ("\ttotal = %ld\n", total);
-	printf ("\tbpp   = %ld\n", bpp);
+	//printf ("\ttotal = %ld\n", total);
+	//printf ("\tbpp   = %ld\n", bpp);
 
 	for (auto c : cont->children) {
 		long offset = c->parent_offset / bpp;
 		long size   = c->bytes_size    / bpp;
 
-		printf ("\t\toffset = %ld\n", offset);
-		printf ("\t\tsize   = %ld\n", size);
+		//printf ("\t\toffset = %ld\n", offset);
+		//printf ("\t\tsize   = %ld\n", size);
 
 		Rect next = inside;
 		next.x += offset;
