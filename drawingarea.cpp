@@ -30,6 +30,7 @@
 #include "log.h"
 #include "theme.h"
 #include "utils.h"
+#include "whole.h"
 #include "log_trace.h"
 
 const double ARC_N = 3*M_PI_2;		// Compass points in radians
@@ -501,9 +502,8 @@ draw_label (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect sha
 	if (cont->is_a ("filesystem")) {
 		Filesystem *fs = dynamic_cast<Filesystem*> (cont);
 		if (fs) {
-			label += "\n";
 			if (!fs->label.empty()) {
-				label += "\"" + fs->label + "\"";
+				label += " \"" + fs->label + "\"";
 			}
 		}
 	}
@@ -1027,7 +1027,11 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	//printf ("\ttotal = %ld\n", total);
 	//printf ("\tbpp   = %ld\n", bpp);
 
-	for (auto c : cont->children) {
+	for (auto c : cont->get_children()) {
+		if (c->bytes_size > total) {
+			total = c->bytes_size;		//XXX tmp -- need to get intermediate object
+			bpp   = total / inside.w;
+		}
 		long offset = c->parent_offset / bpp;
 		long size   = c->bytes_size    / bpp;
 

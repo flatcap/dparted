@@ -851,7 +851,7 @@ dump_dot_inner (std::vector <DPContainer*> &v)
 #if 1
 		if (c->is_a("lvm_metadata")) {
 			LvmVolume *m = dynamic_cast<LvmVolume*>(c);
-			if (m) {
+			if (m && m->sibling) {
 				dot << "obj_" << (void*) m->sibling << " -> obj_" << (void*) m << " [constraint=false style=dashed dir=none];\n";
 			}
 		}
