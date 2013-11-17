@@ -40,11 +40,9 @@ public:
 protected:
 	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context> &cr);
 
-#if 0
 	bool on_mouse_motion (GdkEventMotion *event);
 	bool on_mouse_click  (GdkEventButton *event);
 	bool on_mouse_leave  (GdkEventCrossing *event);
-#endif
 
 #if 0
 	bool on_timeout (int timer_number);

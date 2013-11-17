@@ -61,17 +61,14 @@ DPDrawingArea::DPDrawingArea() :
 
 	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 
-#if 0
 	signal_button_press_event() .connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_click));
 	signal_motion_notify_event().connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_motion));
 	signal_leave_notify_event() .connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_leave));
-#endif
 
 #if 0
 	sigc::slot<bool> my_slot = sigc::bind (sigc::mem_fun (*this, &DPDrawingArea::on_timeout), 0);
 	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 800); // ms
 #endif
-	//std::cout << "GType name: " << G_OBJECT_TYPE_NAME (gobj()) << "\n";
 
 	theme = new Theme();
 
@@ -1141,7 +1138,6 @@ DPDrawingArea::get_focus (int &x, int &y, int &w, int &h)
 
 #endif
 
-#if 0
 /**
  * on_mouse_motion
  */
@@ -1184,20 +1180,22 @@ DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
 bool
 DPDrawingArea::on_mouse_click (GdkEventButton *event)
 {
-	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
+	std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
 	sel_x = event->x;
 	sel_y = event->y;
 
-#if 0
-	for (auto it = vRange.begin(); it != vRange.end(); it++) {
-		bool b = ((event->x >= (*it).x) && (event->x < ((*it).x + (*it).w)) &&
-			  (event->y >= (*it).y) && (event->y < ((*it).y + (*it).h)));
-		if (b) log_error ("Range: %d,%d %d,%d %p\n", (*it).x, (*it).y, (*it).w, (*it).h, (*it).p);
-		else   log_info  ("Range: %d,%d %d,%d %p\n", (*it).x, (*it).y, (*it).w, (*it).h, (*it).p);
+	//std::cout << "Range contains " << vRange.size() << " items\n";
+
+	for (auto rg : vRange) {
+		Rect r = rg.r;
+		bool b = ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
+			  (event->y >= r.y) && (event->y < (r.y + r.h)));
+
+		if (b) log_error ("\033[01;31mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p, rg.p->type.back().c_str());
+		else   log_info  ("\033[01;32mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p, rg.p->type.back().c_str());
 	}
 	log_info ("\n");
-#endif
 
 	//get_window()->invalidate (false); //RAR everything for now
 
@@ -1230,7 +1228,6 @@ DPDrawingArea::on_mouse_click (GdkEventButton *event)
 	return true;
 }
 
-#endif
 
 #if 0
 /**
