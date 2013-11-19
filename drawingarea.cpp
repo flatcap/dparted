@@ -57,7 +57,7 @@ DPDrawingArea::DPDrawingArea() :
 	mouse_close (false)
 {
 	//set_size_request (800, 77);
-	set_size_request (400, 77);
+	set_size_request (400, 70);
 	set_hexpand (true);
 	set_vexpand (false);
 
@@ -91,7 +91,7 @@ DPDrawingArea::~DPDrawingArea()
 }
 
 
-#if 0
+#if 1
 /**
  * operator<< - serialise a Rect
  */
@@ -146,17 +146,30 @@ draw_edge (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 
 #endif
 /**
- * fill_area - fill rect with black
+ * set_colour
+ */
+void set_colour (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour)
+{
+	Gdk::RGBA rgba ("rgba(0,0,0,0)");		// Transparent
+	if (!rgba.set (colour)) {
+		log_error ("don't understand colour: %s\n", colour.c_str());
+	}
+	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
+}
+
+/**
+ * fill_rect - fill rectangle
  */
 void
-fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+fill_rect (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std::string &colour)
 {
 	const int &x = shape.x;
 	const int &y = shape.y;
 	const int &w = shape.w;
 	const int &h = shape.h;
 
-	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
+	cr->save();
+	set_colour (cr, colour);
 
 	cr->move_to     ( x, y);
 	cr->rel_line_to ( w, 0);
@@ -165,6 +178,33 @@ fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 	cr->rel_line_to ( 0,-h);
 
 	cr->fill();
+	cr->restore();
+}
+
+/**
+ * fill_area - fill rounded rectangle
+ */
+void
+fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std::string &colour)
+{
+	const int &r = RADIUS;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	cr->save();
+	set_colour (cr, colour);
+
+	cr->move_to (x, y+r);
+	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
+	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
+	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
+	cr->close_path();
+
+	cr->fill();
+	cr->restore();
 }
 
 /**
@@ -215,6 +255,42 @@ draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
 	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->close_path();
+}
+
+
+/**
+ * draw_text - write some text into an area
+ */
+void
+draw_text (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, const std::string &text)
+{
+	Pango::FontDescription font;
+	font.set_family ("Liberation Sans Bold");	//THEME - icon label font
+
+	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
+	layout->set_font_description (font);
+
+	font.set_size (11 * Pango::SCALE);		//THEME - icon label size
+	layout->set_font_description (font);
+
+	layout->set_text (text);
+
+	int tw = 0;
+	int th = 0;
+	layout->get_pixel_size (tw, th);
+
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - icon label colour
+
+	int left = std::max (GAP, (shape.w - tw) / 2);
+	//printf ("left = %d\n", left);
+	cr->move_to (left, shape.y + shape.h - th);
+
+#if 0
+	layout->set_width (Pango::SCALE * (shape.w - 4));
+	layout->set_ellipsize (Pango::ELLIPSIZE_END);
+#endif
+	layout->update_from_cairo_context (cr);
+	layout->show_in_cairo_context (cr);
 }
 
 
@@ -291,10 +367,14 @@ DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::st
 
 	pb = theme->get_icon (name);
 	if (!pb) {
+		std::cout << "no icon!\n";
 		return;
 	}
 
 	cr->save();
+
+	shape.x += ((shape.w - pb->get_width()) / 2);	// Centre the icon
+
 	Gdk::Cairo::set_source_pixbuf (cr, pb, shape.x, shape.y);
 	shape.w = pb->get_width();
 	shape.h = pb->get_height();
@@ -303,6 +383,7 @@ DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::st
 	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
 	cr->fill();
 	cr->restore();
+	//draw_edge (cr, shape);
 
 	if (below) {
 		below->x  =  shape.x;
@@ -315,10 +396,38 @@ DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::st
 
 #if 0
 /**
- * draw_container - examples
+ * draw_icon2
  */
 void
-DPDrawingArea::draw_container2 (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape, Rect *right)
+draw_icon2 (
+	const Cairo::RefPtr<Cairo::Context> &cr,
+	const std::string &name,
+	const Rect &shape,
+	      Rect *below /*=nullptr*/)
+{
+	Rect inside;
+	//Rect below;
+
+	shape.w = 2*TAB_WIDTH + 2*GAP;
+
+	draw_box (cr, cont, shape, &inside);
+	//draw_edge (cr, inside);
+
+	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
+	draw_fill (cr, inside);
+
+	draw_icon (cr, "disk", inside, &below);
+
+}
+
+#endif
+
+#if 0
+/**
+ * draw_container_examples
+ */
+void
+DPDrawingArea::draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape, Rect *right)
 {
 	if (!cont)
 		return;
@@ -327,7 +436,7 @@ DPDrawingArea::draw_container2 (const Cairo::RefPtr<Cairo::Context> &cr, DPConta
 	Rect inside;
 	Rect below;
 
-	fill_area (cr, shape);
+	fill_rect (cr, shape);
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
 
 	Pango::FontDescription font;
@@ -870,6 +979,81 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer
 }
 
 /**
+ * draw_iconbox - draw a rounded rectangle with a handy tab
+ */
+void
+DPDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *inside)
+{
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_iconbox: too short\n");
+		return;
+	}
+
+	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
+		log_info ("draw_iconbox: too narrow\n");
+		return;
+	}
+
+	Rect work = shape;
+
+	const int &x = work.x;
+	const int &y = work.y;
+	const int &w = work.w;
+	const int &h = work.h;
+
+	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
+
+	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+
+	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->move_to (x+RADIUS, y+(RADIUS/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->move_to (x+(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->move_to (x+w-(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin bottom bar (10)
+	cr->move_to (x+RADIUS, y+h-(SIDES/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	draw_arc (cr, work, true);				// Thin bottom right corner (12)
+
+	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
+
+	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
+	cr->rel_line_to (BLOCK_WIDTH+SIDES, 0);
+	cr->rel_line_to (0, h-RADIUS-SIDES);
+	cr->rel_line_to (-BLOCK_WIDTH+RADIUS-(SIDES*2), 0);
+	cr->rel_line_to (0, -RADIUS+SIDES);
+	cr->rel_line_to (-RADIUS+SIDES, 0);
+	cr->close_path();
+	cr->fill();
+
+	Rect i = { x+BLOCK_WIDTH+(SIDES*2), y+RADIUS, w-BLOCK_WIDTH-(SIDES*3), h-RADIUS-SIDES };
+
+	draw_corner (cr, i, false, false, false);		// Bottom left inner corner (11)
+
+	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
+
+	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
+	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
+
+	if (tab)
+		*tab = t;
+	if (inside)
+		*inside = i;
+}
+
+/**
  * draw_box - draw a rounded rectangle
  */
 void
@@ -939,13 +1123,13 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 void
 DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape)
 {
-	Rect tab;
+	//Rect tab;
 	Rect inside;
 
 	if (!cont)
 		return;
 
-	//printf ("object = %s (%s)\n", cont->name.c_str(), cont->uuid.c_str());
+	printf ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
 		printf ("too narrow\n");
 		return;
@@ -954,18 +1138,141 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	std::string path = cont->get_path();
 	std::string name = cont->name;
 
-	std::string display    = theme->get_config (path, name, "display");
-	std::string handle     = theme->get_config (path, name, "handle");
-	std::string box        = theme->get_config (path, name, "box");
+	std::string display = theme->get_config (path, name, "display");
+	if (display.empty()) {
+		display = "box";
+	}
+
+	//XXX need to define these somewhere .h?
+	//XXX hard-code into theme.cpp?	A bit limiting
+	if (display == "never") {		// Don't display at all
+		return;
+	}
+
+	std::vector<DPContainer*> children = cont->get_children();
+
+	if ((display != "box") && (display != "empty") && (display != "icon") && (display != "iconbox") && (display != "tabbox"))
+		display = "box";
+
+	if (display == "empty") {		// Only display if there's no children
+		if (children.empty()) {
+			display = "box";
+		}
+	}
+
 	std::string colour     = theme->get_config (path, name, "colour");
+	std::string background = theme->get_config (path, name, "background");
+	//std::string label      = theme->get_config (path, name, "label");
+	std::string icon       = theme->get_config (path, name, "icon");
+
+	////icon = "margin_black64";
+	if (display == "icon") {		// Large icon
+		Rect box = shape;
+		Rect right = shape;
+		int width = 48 + SIDES*2;	//XXX fixed at 48px square (for now)
+		box.w = width;
+		right.x += (width + GAP);
+		right.w -= (width + GAP);
+
+		fill_area (cr, box, background);
+
+		Rect box2 = box;
+		box.x += GAP;
+		box.y += GAP;
+		box.w -= (GAP*2);
+		box.h -= (GAP*2);
 
 #if 0
-	std::string size       = theme->get_config (path, name, "size");
-	std::string background = theme->get_config (path, name, "background");
-	std::string label      = theme->get_config (path, name, "label");
-	std::string icon       = theme->get_config (path, name, "icon");
+		draw_edge (cr, box);
+		draw_edge (cr, right);
+		return;
 #endif
 
+		draw_icon (cr, icon, box);
+		draw_text (cr, box2, cont->name);
+
+		//printf ("height = %d\n", shape.h);
+		//std::cout << "icon = " << icon << std::endl;
+		//draw_icon (cr, icon, background, shape, below, right);
+
+		inside = right;
+#ifdef RAR
+		theme
+			icon
+			background
+		get icon
+		rect space = icon size
+		rect right = remaining space
+		draw_icon (clipped to 64x64)
+		rect right
+		rect inside (for label)
+#endif
+	} else if (display == "iconbox") {	// A box containing a small icon
+		//Rect box = shape;
+
+		Rect tab;
+		set_colour (cr, colour);
+		draw_iconbox (cr, shape, &tab, &inside);
+
+		draw_icon (cr, "table", tab, &tab);
+		draw_icon (cr, "shield", tab, &tab);
+#if 0
+		background = "rgba(255,255,0,0.3)";
+		fill_area (cr, inside, background);
+#endif
+
+#ifdef RAR
+		theme
+			icon
+			colour
+			background
+		get_icon
+		rect space = icon size
+		rect inside = remaining space
+		draw_box
+		rect tab (icon space)
+		draw icon(s)
+#endif
+	} else if (display == "box") {		// A simple coloured box
+		set_colour (cr, colour);
+		draw_box (cr, cont, shape, &inside);
+
+		fill_area (cr, inside, background);
+
+		//XXX if usage
+		if (theme->get_config (path, name, "usage") == "true") {
+#if 1
+			Rect usage = inside;
+			usage.w = usage.w * 2 / 3;
+			cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
+			draw_fill (cr, usage);
+#endif
+		}
+
+#ifdef RAR
+		theme
+			colour
+			background
+		draw_box
+		rect inside
+#endif
+	} else if (display == "tabbox") {	// A coloured box with a handy tab
+		set_colour (cr, colour);
+		draw_tabbox (cr, cont, shape, nullptr, &inside);
+
+#ifdef RAR
+		theme
+			colour
+			background
+#endif
+	} else {
+		printf ("unknown display type: %s\n", display.c_str());
+		return;
+	}
+
+	//draw_edge (cr, inside);
+
+#if 0
 	Gdk::RGBA rgba ("black");
 	if (!rgba.set (colour.c_str())) {
 		log_error ("don't understand colour: %s\n", colour.c_str());
@@ -973,17 +1280,21 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	}
 
 	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
+#endif
 
 	//log_info ("theme: %s\n", path.c_str());
 	//std::cout << shape << std::endl;
 	//log_info ("%-12s: D: %-5s, H: %-5s, B: %-5s, C: %s\n", cont->name.c_str(), display.c_str(), handle.c_str(), box.c_str(), colour.c_str());
 
+#if 0
 	if (display == "true") {
 		shape.x += 1;
 		shape.w -= 2;
 		shape.y += 1;
 		shape.h -= 2;
 
+		std::string handle;
+		std::string box;
 		if (handle == "true") {
 			if (box == "true") {
 				draw_tabbox (cr, cont, shape, &tab, &inside);
@@ -1012,8 +1323,10 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	} else {
 		inside = shape;
 	}
+#endif
 
 	//draw_edge (cr, inside);
+	//fill_area (cr, inside, "rgba(1,1,1,0.5)");
 
 	// width = w
 	// children = c
@@ -1040,6 +1353,11 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		}
 		long offset = c->parent_offset / bpp;
 		long size   = c->bytes_size    / bpp;
+
+#if 0
+		printf ("size = %ld, %ld\n", cont->bytes_size, c->bytes_size);
+		printf ("width = %d, %d\n", inside.w, size);
+#endif
 
 		//printf ("\t\toffset = %ld\n", offset);
 		//printf ("\t\tsize   = %ld\n", size);
@@ -1069,8 +1387,11 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	Rect shape { 0, 0, allocation.get_width(), allocation.get_height() };
 
-	//checker_area (cr, shape);
-	fill_area (cr, shape);
+#if 1
+	checker_area (cr, shape);
+#else
+	fill_rect (cr, shape);
+#endif
 	draw_container (cr, m_c, shape);
 
 	return true;

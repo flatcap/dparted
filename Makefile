@@ -10,7 +10,7 @@ SRC	+= app.cpp block.cpp container.cpp disk.cpp dot.cpp extended.cpp	\
 	   lvm_volume.cpp main.cpp md_group.cpp md_table.cpp misc.cpp msdos.cpp	\
 	   partition.cpp table.cpp utils.cpp volume.cpp whole.cpp
 
-SRC	+= lvm_raid.cpp lvm_metadata.cpp
+SRC	+= lvm_raid.cpp lvm_metadata.cpp icon_manager.cpp
 
 # GUI
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp

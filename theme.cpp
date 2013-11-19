@@ -17,6 +17,7 @@
 
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
+#include <glibmm/fileutils.h>
 
 #include <map>
 #include <iostream>
@@ -159,6 +160,9 @@ Theme::init_icons (void)
 
 	add_icon ("margin_red",   "icons/margin_red.png");
 	add_icon ("margin_black", "icons/margin_black.png");
+
+	add_icon ("margin_red64",   "icons/margin_red64.png");
+	add_icon ("margin_black64", "icons/margin_black64.png");
 }
 
 /**
@@ -169,10 +173,19 @@ Theme::add_icon (const std::string &name, const std::string &filename)
 {
 	Glib::RefPtr<Gdk::Pixbuf> &pb = icons[name];
 
-	pb = Gdk::Pixbuf::create_from_file (filename);
+	try {
+		pb = Gdk::Pixbuf::create_from_file (filename);
+	} catch (const Glib::FileError &fe) {
+		std::cout << "file error: " << fe.what() << std::endl;
+	} catch (const Gdk::PixbufError &pbe) {
+		std::cout << "pixbuf error: " << pbe.what() << std::endl;
+	}
 
 	return pb;
 }
+
+
+#include "missing.cpp"
 
 /**
  * get_icon
@@ -183,7 +196,13 @@ Theme::get_icon (const std::string &name)
 	Glib::RefPtr<Gdk::Pixbuf> &pb = icons[name];
 
 	if (!pb) {
+#if 0
 		pb = icons["warning"];
+
+		pb = Gdk::Pixbuf::create (Gdk::Colorspace::COLORSPACE_RGB, true, 8, 24, 24);
+		pb->fill (0xFF0000FF);
+#endif
+		pb = Gdk::Pixbuf::create_from_inline (sizeof (myimage_inline), myimage_inline);
 	}
 
 	return pb;
@@ -346,7 +365,7 @@ Theme::get_config (std::string path, const std::string &name, const std::string 
 	}
 
 	if (value.empty()) {
-		log_error ("config: missing: %s\n", attr.c_str());
+		log_error ("config: missing: %s.%s.%s\n", path.c_str(), name.c_str(), attr.c_str());
 	} else {
 		//log_info ("config: found:   %s = %s\n", pathname.c_str(), value.c_str());
 	}

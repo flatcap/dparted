@@ -63,6 +63,7 @@ private:
 	void draw_focus     (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 	void draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 	void draw_icon      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below = nullptr);
+	void draw_iconbox   (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *inside);
 	void draw_rect      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape);
 	void draw_tabbox    (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *inside);
 
