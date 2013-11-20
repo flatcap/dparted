@@ -540,9 +540,7 @@ draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &ta
 		return;
 	}
 
-	Rect work = shape;
-
-	work.w = BLOCK_WIDTH + (RADIUS/2);
+	Rect work = { shape.x, shape.y, BLOCK_WIDTH + (RADIUS/2), shape.h };
 
 	const int &x = work.x;
 	const int &y = work.y;
@@ -551,6 +549,9 @@ draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &ta
 
 	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
 	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+
+	draw_arc (cr, work, true);				// Thin bottom right corner (12)
+	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
@@ -571,9 +572,6 @@ draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &ta
 	cr->move_to (x+RADIUS, y+h-(SIDES/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
-
-	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
 	tab = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
 
@@ -599,15 +597,16 @@ draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &insi
 		return;
 	}
 
-	Rect work = shape;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
 
-	const int &x = work.x;
-	const int &y = work.y;
-	const int &w = work.w;
-	const int &h = work.h;
+	draw_corner (cr, shape, true,  false, true);		// Top left corner (1)
+	draw_corner (cr, shape, true,  true,  true);		// Top right corner (3)
 
-	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
+	draw_arc (cr, shape, false);				// Thin bottom left corner (13)
 
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
@@ -628,9 +627,6 @@ draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &insi
 	cr->move_to (x+RADIUS, y+h-(SIDES/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
-
-	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
 	inside = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
 
@@ -654,15 +650,16 @@ draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &
 		return;
 	}
 
-	Rect work = shape;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
 
-	const int &x = work.x;
-	const int &y = work.y;
-	const int &w = work.w;
-	const int &h = work.h;
+	draw_corner (cr, shape, true,  false, true);		// Top left corner (1)
+	draw_corner (cr, shape, true,  true,  true);		// Top right corner (3)
+	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
 
-	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
 
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
@@ -683,10 +680,6 @@ draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &
 	cr->move_to (x+RADIUS, y+h-(SIDES/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
-
-	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-
-	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
 
 	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
 	cr->rel_line_to (BLOCK_WIDTH+SIDES, 0);
@@ -722,16 +715,16 @@ draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &t
 		return;
 	}
 
-	Rect work = shape;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
 
-	const int &x = work.x;
-	const int &y = work.y;
-	const int &w = work.w;
-	const int &h = work.h;
+	draw_corner (cr, shape, true,  false, true);		// Top left corner (1)
+	draw_corner (cr, shape, true,  true,  true);		// Top right corner (3)
+	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
 
-	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-
-	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
 
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
@@ -752,10 +745,6 @@ draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &t
 	cr->move_to (x+RADIUS, y+h-(SIDES/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
-
-	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-
-	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
 
 	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
 	cr->rel_line_to (TAB_WIDTH+SIDES, 0);
