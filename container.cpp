@@ -647,3 +647,41 @@ DPContainer::get_path (void)
 
 	return path;
 }
+
+/**
+ * get_property
+ */
+std::string
+DPContainer::get_property (const std::string &propname)
+{
+	if (propname == "name") {
+		return name;
+	} else if (propname == "uuid") {
+		return uuid;
+	} else if (propname == "uuid_short") {
+		std::string uuid_short = uuid;
+
+		if ((uuid_short.size() > 8) && (uuid_short[0] != '/')) {
+			uuid_short = uuid_short.substr (0, 6) + "...";
+		}
+
+		return uuid_short;
+	} else if (propname == "device") {
+		return get_device_name();
+	} else if (propname == "parent_offset") {
+		return std::to_string (parent_offset);
+	} else if (propname == "block_size") {
+		return std::to_string (block_size);
+	} else if (propname == "bytes_size") {
+		return std::to_string (bytes_size);
+	} else if (propname == "bytes_size_human") {
+		return get_size (bytes_size);
+	} else if (propname == "bytes_used") {
+		return std::to_string (bytes_used);
+	} else if (propname == "bytes_used_human") {
+		return get_size (bytes_used);
+	}
+
+	return propname;
+}
+

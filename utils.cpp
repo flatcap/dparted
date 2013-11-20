@@ -139,6 +139,7 @@ execute_command3 (const std::string &command, std::string &output)
 std::string
 get_size (long size)
 {
+	//XXX do this without log2?  use ffs
 	char buffer[64];
 	double power = log2 ((double) llabs (size)) + 0.5;
 	const char *suffix = "";

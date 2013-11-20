@@ -340,7 +340,7 @@ draw_text (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, const std::strin
 
 	int left = std::max (GAP, (shape.w - tw) / 2);
 	//printf ("left = %d\n", left);
-	cr->move_to (left, shape.y + shape.h - th);
+	cr->move_to (shape.x + left, shape.y + shape.h - th);
 
 #if 0
 	layout->set_width (Pango::SCALE * (shape.w - 4));
@@ -934,6 +934,45 @@ DPDrawingArea::on_mouse_click (GdkEventButton *event)
 }
 
 
+/**
+ * find_subst - get the position of a {tag}
+ */
+bool find_subst (const std::string &text, std::string &tag, size_t &start, size_t &stop)
+{
+	//XXX on failure, point start at error
+	const char *valid = "abcdefghijklmnopqrstuvwxyz_";
+	size_t open  = std::string::npos;
+	size_t close = std::string::npos;
+
+	open = text.find ('{');
+	if (open == std::string::npos) {
+		log_debug ("nothing to substitute\n");
+		return false;
+	}
+
+	close = text.find_first_not_of (valid, open+1);
+	if (close == std::string::npos) {
+		log_error ("missing close brace\n");
+		return false;
+	}
+
+	if (text[close] != '}') {
+		log_error ("invalid tag name\n");
+		return false;
+	}
+
+	if (close == (open+1)) {
+		log_error ("missing tag\n");
+		return false;
+	}
+
+	tag   = text.substr (open+1, close-open-1);
+	start = open;
+	stop  = close;
+
+	return true;
+}
+
 #if 0
 /**
  * draw_container_examples
@@ -1256,7 +1295,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 
 	std::string colour     = theme->get_config (path, name, "colour");
 	std::string background = theme->get_config (path, name, "background");
-	//std::string label      = theme->get_config (path, name, "label");
+	std::string label      = theme->get_config (path, name, "label");
 	std::string icon       = theme->get_config (path, name, "icon");
 
 	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
@@ -1345,6 +1384,23 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 			cr->fill();
 #endif
 		}
+		if (!label.empty()) {
+			std::string tag;
+			size_t start = std::string::npos;
+			size_t stop  = std::string::npos;
+			while (find_subst (label, tag, start, stop)) {
+				std::string value = cont->get_property (tag);
+				if (value == tag) {		//XXX tmp
+					break;
+				}
+				label.replace (start, stop-start+1, value);
+			}
+
+			printf ("label = %s\n", label.c_str());
+
+			draw_text (cr, shape, label);
+		}
+
 		if (cont->name == "ext4") {
 			draw_focus (cr, shape);
 			//draw_edge (cr, shape, "red");

@@ -93,6 +93,8 @@ public:
 
 	virtual bool is_a (const std::string &type);
 
+	virtual std::string get_property (const std::string &propname);
+
 	void ref   (void);
 	void unref (void);
 
