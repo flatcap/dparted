@@ -36,6 +36,7 @@ public:
 	std::string	label;
 
 protected:
+	virtual std::string get_property (const std::string &propname);
 
 private:
 	long ext2_get_usage (void);

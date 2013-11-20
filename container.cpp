@@ -668,6 +668,13 @@ DPContainer::get_property (const std::string &propname)
 		return uuid_short;
 	} else if (propname == "device") {
 		return get_device_name();
+	} else if (propname == "device_short") {
+		std::string d = get_device_name();
+		size_t pos = d.find_last_of ('/');
+		if (pos != std::string::npos) {
+			d.erase (0, pos+1);
+		}
+		return d;
 	} else if (propname == "parent_offset") {
 		return std::to_string (parent_offset);
 	} else if (propname == "block_size") {
