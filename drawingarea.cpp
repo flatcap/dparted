@@ -422,230 +422,6 @@ draw_icon2 (
 
 #endif
 
-#if 0
-/**
- * draw_container_examples
- */
-void
-DPDrawingArea::draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape, Rect *right)
-{
-	if (!cont)
-		return;
-
-#if 0 //XXX icon + label above
-	Rect inside;
-	Rect below;
-
-	fill_rect (cr, shape);
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
-
-	Pango::FontDescription font;
-	font.set_family ("Liberation Sans");
-
-	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
-	layout->set_font_description (font);
-
-	std::string title = "<b>" + cont->get_device_name() + "</b> &#8211; " + get_size (cont->bytes_size) + " <small>(" + std::to_string(100*cont->bytes_used/cont->bytes_size) + "% used)</small>";
-
-	// https://developer.gnome.org/pango/stable/PangoMarkupFormat.html
-	layout->set_markup (title);
-
-	int tw = 0;
-	int th = 0;
-	layout->get_pixel_size (tw, th);
-	printf ("text width = %d, height = %d\n", tw, th);
-
-	cr->move_to (shape.x + 2, shape.y + 2);
-	layout->set_width (Pango::SCALE * (shape.w - 4));
-	layout->set_ellipsize (Pango::ELLIPSIZE_END);
-	layout->update_from_cairo_context (cr);
-	layout->show_in_cairo_context (cr);
-
-	th += 2*2;
-
-	shape.w = 2*TAB_WIDTH + 2*GAP;
-	shape.y += th;
-	shape.h -= th;
-
-	draw_box (cr, cont, shape, &inside);
-	//draw_edge (cr, inside);
-
-	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
-	draw_fill (cr, inside);
-
-	draw_icon (cr, "disk", inside, &below);
-#endif
-
-#if 0 //XXX icon + shaded label below
-	Rect inside;
-	Rect below;
-
-	shape.w = 2*TAB_WIDTH + 2*GAP;
-
-	draw_box (cr, cont, shape, &inside);
-	//draw_edge (cr, inside);
-
-	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
-	draw_fill (cr, inside);
-
-	draw_icon (cr, "disk", inside, &below);
-
-	std::string labeld = m_c->device;
-	std::string labels = get_size (m_c->bytes_size);
-
-	Pango::FontDescription font;
-	Glib::RefPtr<Pango::Layout> layoutd = Pango::Layout::create (cr);
-	Glib::RefPtr<Pango::Layout> layouts = Pango::Layout::create (cr);
-
-	int xd = 0, yd = 0, wd = 0, hd = 0;
-	int xs = 0, ys = 0, ws = 0, hs = 0;
-
-	size_t pos = labeld.find_last_of ('/');
-	if (pos != std::string::npos) {
-		labeld = labeld.substr (pos+1);
-	}
-	labeld = "<b>" + labeld + "</b>";
-
-	font.set_family ("Liberation Sans");		//THEME - block_label_font
-
-	font.set_size (12 * Pango::SCALE);		//THEME - block_label_font_size
-	layoutd->set_font_description (font);
-
-	font.set_size (8 * Pango::SCALE);		//THEME - ratio of block_label_font_size
-	layouts->set_font_description (font);
-
-	layoutd->set_markup (labeld);
-	layouts->set_markup (labels);
-
-	layoutd->get_pixel_size (wd, hd);
-	layouts->get_pixel_size (ws, hs);
-
-	xd = (below.w - wd) / 2; if (xd < 0) xd = 0;
-	xs = (below.w - ws) / 2; if (xs < 0) xs = 0;
-
-	yd = below.y + below.h - hd - hs;
-	ys = below.y + below.h - hs;
-
-	// Draw block label
-	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);	//THEME - block_label_highlight_colour
-	cr->move_to (xd+2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
-	cr->move_to (xd-2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
-	cr->move_to (xd+0, yd+2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
-	cr->move_to (xd+0, yd-2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
-
-	cr->move_to (xd, yd);
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
-	layoutd->update_from_cairo_context (cr);
-	layoutd->show_in_cairo_context (cr);
-
-	// Draw size label
-	cr->move_to (xs, ys);
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
-	layouts->update_from_cairo_context (cr);
-	layouts->show_in_cairo_context (cr);
-#endif
-
-#if 0 //XXX get_pixel_size
-	int tw = 0;
-	int th = 0;
-	layout->get_pixel_size (tw, th);
-	printf ("text width = %d, height = %d\n", tw, th);
-#endif
-}
-
-/**
- * get_protective
- */
-Table *
-DPDrawingArea::get_protective (DPContainer *c)
-{
-	DPContainer *child = nullptr;
-
-	//std::cout << "1: " << c << "\n";
-	if (!c)
-		return nullptr;
-
-	if (!c->is_a ("table"))
-		return nullptr;
-
-	if (c->children.size() != 1)
-		return nullptr;
-
-	child = c->children[0];
-	//std::cout << "2: " << child << "\n";
-	if (!child)
-		return nullptr;
-
-	if (!child->is_a ("partition"))
-		return nullptr;
-
-	if (child->children.size() != 1)
-		return nullptr;
-
-	child = child->children[0];
-	//std::cout << "3: " << child << "\n";
-	if (!child)
-		return nullptr;
-
-	if (child->is_a ("table"))
-		return dynamic_cast<Table*> (child);
-
-	return nullptr;
-}
-
-#endif
-
-/**
- * draw_label - write some text into an area
- */
-void
-draw_label (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape)
-{
-	std::string label;
-
-	std::string device = cont->get_device_name();
-	size_t pos = device.find_last_of ('/');
-	if (pos == std::string::npos) {
-		label = cont->device;
-		if (label.empty()) {
-			label = "<none>";	//RAR tmp
-		}
-	} else {
-		label = device.substr (pos+1);
-	}
-
-	if (cont->is_a ("filesystem")) {
-		Filesystem *fs = dynamic_cast<Filesystem*> (cont);
-		if (fs) {
-			if (!fs->label.empty()) {
-				label += " \"" + fs->label + "\"";
-			}
-		}
-	}
-
-	label += "\n";
-	label += get_size (cont->bytes_size);
-
-	Pango::FontDescription font;
-	font.set_family ("Liberation Sans");
-
-	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
-	layout->set_font_description (font);
-
-	font.set_size (10 * Pango::SCALE);		//THEME - block_label_font_size
-	layout->set_font_description (font);
-
-	layout->set_text (label);
-
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
-	cr->move_to (shape.x + 2, shape.y + 2);
-
-	layout->set_width (Pango::SCALE * (shape.w - 4));
-	layout->set_ellipsize (Pango::ELLIPSIZE_END);
-	layout->update_from_cairo_context (cr);
-	layout->show_in_cairo_context (cr);
-}
-
 /**
  * draw_gradient - apply light shading to an area
  */
@@ -830,6 +606,616 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
 }
 
 /**
+ * draw_iconbox - draw a rounded rectangle with a handy tab
+ */
+void
+DPDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *inside)
+{
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_iconbox: too short\n");
+		return;
+	}
+
+	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
+		log_info ("draw_iconbox: too narrow\n");
+		return;
+	}
+
+	Rect work = shape;
+
+	const int &x = work.x;
+	const int &y = work.y;
+	const int &w = work.w;
+	const int &h = work.h;
+
+	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
+
+	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+
+	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->move_to (x+RADIUS, y+(RADIUS/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->move_to (x+(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->move_to (x+w-(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin bottom bar (10)
+	cr->move_to (x+RADIUS, y+h-(SIDES/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	draw_arc (cr, work, true);				// Thin bottom right corner (12)
+
+	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
+
+	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
+	cr->rel_line_to (BLOCK_WIDTH+SIDES, 0);
+	cr->rel_line_to (0, h-RADIUS-SIDES);
+	cr->rel_line_to (-BLOCK_WIDTH+RADIUS-(SIDES*2), 0);
+	cr->rel_line_to (0, -RADIUS+SIDES);
+	cr->rel_line_to (-RADIUS+SIDES, 0);
+	cr->close_path();
+	cr->fill();
+
+	Rect i = { x+BLOCK_WIDTH+(SIDES*2), y+RADIUS, w-BLOCK_WIDTH-(SIDES*3), h-RADIUS-SIDES };
+
+	draw_corner (cr, i, false, false, false);		// Bottom left inner corner (11)
+
+	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
+
+	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
+	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
+
+	if (tab)
+		*tab = t;
+	if (inside)
+		*inside = i;
+}
+
+
+/**
+ * on_draw
+ */
+bool
+DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
+{
+	//LOG_TRACE;
+	if (!m_c)
+		return true;
+
+	vRange.clear();
+
+	Gtk::Allocation allocation = get_allocation();
+
+	Rect shape { 0, 0, allocation.get_width(), allocation.get_height() };
+
+#if 1
+	checker_area (cr, shape);
+#else
+	fill_rect (cr, shape);
+#endif
+	draw_container (cr, m_c, shape);
+
+	return true;
+}
+
+
+/**
+ * get_theme
+ */
+bool
+DPDrawingArea::get_theme (const std::string &object, const std::string &attr)
+{
+	//map of obj.attr => value
+	//read from file
+	return true;
+}
+
+
+#if 0
+/**
+ * on_timeout
+ */
+bool
+DPDrawingArea::on_timeout (int timer_number)
+{
+	std::cout << "timer" << "\n";
+	get_window()->invalidate (false); //RAR everything for now
+	//return (m_c->device == "/dev/sdc");
+	return false;
+}
+
+#endif
+
+/**
+ * on_mouse_motion
+ */
+bool
+DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
+{
+	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")\n";
+
+#if 0
+	bool old = mouse_close;
+
+	mouse_close = ((event->y > 25) and (event->x < 90));
+
+	if (mouse_close != old) {
+		get_window()->invalidate (false); //RAR everything for now
+	}
+#endif
+
+	return true;
+}
+
+/**
+ * on_mouse_leave
+ */
+bool
+DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
+{
+#if 0
+	if (mouse_close) {
+		mouse_close = false;
+		get_window()->invalidate (false); //RAR everything for now
+	}
+#endif
+	return true;
+}
+
+/**
+ * on_mouse_click
+ */
+bool
+DPDrawingArea::on_mouse_click (GdkEventButton *event)
+{
+	std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
+
+	sel_x = event->x;
+	sel_y = event->y;
+
+	//std::cout << "Range contains " << vRange.size() << " items\n";
+
+	for (auto rg : vRange) {
+		Rect r = rg.r;
+		bool b = ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
+			  (event->y >= r.y) && (event->y < (r.y + r.h)));
+
+		if (b) log_error ("\033[01;31mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p, rg.p->type.back().c_str());
+		else   log_info  ("\033[01;32mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p, rg.p->type.back().c_str());
+	}
+	log_info ("\n");
+
+	//get_window()->invalidate (false); //RAR everything for now
+
+#if 0
+	if ((event->x >= 100) && (event->x < 200) &&
+	    (event->y >= 50)  && (event->y < 150)) {
+	}
+#endif
+#if 0
+	std::cout << event->type << "\n";
+	std::cout << event->state << "\n";
+	std::cout << event->button << "\n";
+	std::cout << event->time << "\n";
+	std::cout << event->x << "\n";
+	std::cout << event->y << "\n";
+
+	GdkEventType type;
+	GdkWindow *window;
+	gint8 send_event;
+	guint32 time;
+	gdouble x;
+	gdouble y;
+	gdouble *axes;
+	guint state;
+	guint button;
+	GdkDevice *device;
+	gdouble x_root, y_root;
+#endif
+
+	return true;
+}
+
+
+#if 0
+/**
+ * draw_grid - fine mesh grid
+ */
+void
+DPDrawingArea::draw_grid (const Cairo::RefPtr<Cairo::Context> &cr)
+{
+	Gtk::Allocation allocation = get_allocation();
+	int width  = allocation.get_width();
+	int height = allocation.get_height();
+
+	cr->save();
+
+	cr->set_antialias (Cairo::ANTIALIAS_NONE);
+	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
+	cr->set_line_width (1);
+	cr->rectangle (0.5, 0.5, width-1, height-1);
+	cr->stroke();
+
+	for (int i = 10; i < width; i += 10) {
+		if ((i % 100) == 0) {
+			cr->set_source_rgba (0.0, 0.0, 1.0, 0.2);
+		} else {
+			cr->set_source_rgba (0.0, 1.0, 0.0, 0.3);
+		}
+		cr->move_to (i + 0.5, 0);
+		cr->rel_line_to (0, height);
+		cr->stroke();
+	}
+
+	for (int i = 10; i < width; i += 10) {
+		if ((i % 100) == 0) {
+			cr->set_source_rgba (0.0, 0.0, 1.0, 0.2);
+		} else {
+			cr->set_source_rgba (0.0, 1.0, 0.0, 0.3);
+		}
+		cr->move_to (0, i + 0.5);
+		cr->rel_line_to (width, 0);
+		cr->stroke();
+	}
+
+	cr->restore();
+}
+
+/**
+ * draw_grid_linear - Major and minor grid lines
+ */
+void
+DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
+{
+	space.w -= 2;
+
+	const int &x = space.x;
+	const int &w = space.w;
+	const int &h = space.h;
+
+	double bytes_per_pixel = max_size / w;
+
+	int lower = floor (log2 (40.0 * max_size / w));
+	int major = floor (log2 (256.0 * max_size / w));
+	int minor = major - 1;
+
+	major = 1 << (major - lower);
+	minor = 1 << (minor - lower);
+
+	cr->save();
+
+	cr->set_antialias (Cairo::ANTIALIAS_NONE);
+	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
+	cr->set_line_width (1);
+	cr->rectangle (0.5+x, 0.5, w-1, h-1);
+	cr->stroke();
+
+	double spacing = pow (2, lower) / bytes_per_pixel;
+
+	int count = (w / spacing) + 1;
+
+	for (int i = 0; i <= count; i++) {
+		if ((i % major) == 0) {
+			cr->set_line_width (3);
+			cr->set_source_rgba (0.3, 0.3, 0.8, 0.7);
+		} else if ((i % minor) == 0) {
+			cr->set_line_width (2);
+			cr->set_source_rgba (0.5, 0.5, 0.5, 0.6);	//XXX theme
+		} else {
+			cr->set_line_width (1);
+			cr->set_source_rgba (0.3, 0.3, 0.3, 0.5);
+		}
+
+		cr->move_to ((int) (spacing*i) + 0.5 + x, 0);
+		cr->rel_line_to (0, h);
+		cr->stroke();
+	}
+
+	cr->restore();
+}
+
+/**
+ * draw_grid_log
+ */
+void
+DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
+{
+}
+
+#endif
+
+#if 0
+/**
+ * draw_container_examples
+ */
+void
+DPDrawingArea::draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape, Rect *right)
+{
+	if (!cont)
+		return;
+
+#if 0 //XXX icon + label above
+	Rect inside;
+	Rect below;
+
+	fill_rect (cr, shape);
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
+
+	Pango::FontDescription font;
+	font.set_family ("Liberation Sans");
+
+	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
+	layout->set_font_description (font);
+
+	std::string title = "<b>" + cont->get_device_name() + "</b> &#8211; " + get_size (cont->bytes_size) + " <small>(" + std::to_string(100*cont->bytes_used/cont->bytes_size) + "% used)</small>";
+
+	// https://developer.gnome.org/pango/stable/PangoMarkupFormat.html
+	layout->set_markup (title);
+
+	int tw = 0;
+	int th = 0;
+	layout->get_pixel_size (tw, th);
+	printf ("text width = %d, height = %d\n", tw, th);
+
+	cr->move_to (shape.x + 2, shape.y + 2);
+	layout->set_width (Pango::SCALE * (shape.w - 4));
+	layout->set_ellipsize (Pango::ELLIPSIZE_END);
+	layout->update_from_cairo_context (cr);
+	layout->show_in_cairo_context (cr);
+
+	th += 2*2;
+
+	shape.w = 2*TAB_WIDTH + 2*GAP;
+	shape.y += th;
+	shape.h -= th;
+
+	draw_box (cr, cont, shape, &inside);
+	//draw_edge (cr, inside);
+
+	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
+	draw_fill (cr, inside);
+
+	draw_icon (cr, "disk", inside, &below);
+#endif
+
+#if 0 //XXX icon + shaded label below
+	Rect inside;
+	Rect below;
+
+	shape.w = 2*TAB_WIDTH + 2*GAP;
+
+	draw_box (cr, cont, shape, &inside);
+	//draw_edge (cr, inside);
+
+	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
+	draw_fill (cr, inside);
+
+	draw_icon (cr, "disk", inside, &below);
+
+	std::string labeld = m_c->device;
+	std::string labels = get_size (m_c->bytes_size);
+
+	Pango::FontDescription font;
+	Glib::RefPtr<Pango::Layout> layoutd = Pango::Layout::create (cr);
+	Glib::RefPtr<Pango::Layout> layouts = Pango::Layout::create (cr);
+
+	int xd = 0, yd = 0, wd = 0, hd = 0;
+	int xs = 0, ys = 0, ws = 0, hs = 0;
+
+	size_t pos = labeld.find_last_of ('/');
+	if (pos != std::string::npos) {
+		labeld = labeld.substr (pos+1);
+	}
+	labeld = "<b>" + labeld + "</b>";
+
+	font.set_family ("Liberation Sans");		//THEME - block_label_font
+
+	font.set_size (12 * Pango::SCALE);		//THEME - block_label_font_size
+	layoutd->set_font_description (font);
+
+	font.set_size (8 * Pango::SCALE);		//THEME - ratio of block_label_font_size
+	layouts->set_font_description (font);
+
+	layoutd->set_markup (labeld);
+	layouts->set_markup (labels);
+
+	layoutd->get_pixel_size (wd, hd);
+	layouts->get_pixel_size (ws, hs);
+
+	xd = (below.w - wd) / 2; if (xd < 0) xd = 0;
+	xs = (below.w - ws) / 2; if (xs < 0) xs = 0;
+
+	yd = below.y + below.h - hd - hs;
+	ys = below.y + below.h - hs;
+
+	// Draw block label
+	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);	//THEME - block_label_highlight_colour
+	cr->move_to (xd+2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
+	cr->move_to (xd-2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
+	cr->move_to (xd+0, yd+2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
+	cr->move_to (xd+0, yd-2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
+
+	cr->move_to (xd, yd);
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
+	layoutd->update_from_cairo_context (cr);
+	layoutd->show_in_cairo_context (cr);
+
+	// Draw size label
+	cr->move_to (xs, ys);
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
+	layouts->update_from_cairo_context (cr);
+	layouts->show_in_cairo_context (cr);
+#endif
+
+#if 0 //XXX get_pixel_size
+	int tw = 0;
+	int th = 0;
+	layout->get_pixel_size (tw, th);
+	printf ("text width = %d, height = %d\n", tw, th);
+#endif
+}
+
+/**
+ * get_protective
+ */
+Table *
+DPDrawingArea::get_protective (DPContainer *c)
+{
+	DPContainer *child = nullptr;
+
+	//std::cout << "1: " << c << "\n";
+	if (!c)
+		return nullptr;
+
+	if (!c->is_a ("table"))
+		return nullptr;
+
+	if (c->children.size() != 1)
+		return nullptr;
+
+	child = c->children[0];
+	//std::cout << "2: " << child << "\n";
+	if (!child)
+		return nullptr;
+
+	if (!child->is_a ("partition"))
+		return nullptr;
+
+	if (child->children.size() != 1)
+		return nullptr;
+
+	child = child->children[0];
+	//std::cout << "3: " << child << "\n";
+	if (!child)
+		return nullptr;
+
+	if (child->is_a ("table"))
+		return dynamic_cast<Table*> (child);
+
+	return nullptr;
+}
+
+#endif
+
+/**
+ * set_data
+ */
+void
+DPDrawingArea::set_data (DPContainer *c)
+{
+	// check we've been given a block device
+
+	m_c = c;
+	if (!m_c)
+		return;
+
+	// invalidate window
+	//unsigned int children = c->children.size();
+	//set_size_request (400, 50 * children);
+}
+
+/**
+ * get_focus
+ */
+DPContainer *
+DPDrawingArea::get_focus (int x, int y)
+{
+	DPContainer *match = nullptr;
+
+	for (auto rg : vRange) {
+		Rect r = rg.r;
+		if ((x >= r.x) && (x < (r.x + r.w)) && (y >= r.y) && (y < (r.y + r.h))) {
+			match = rg.p;
+			break;
+		}
+	}
+
+	return match;
+}
+
+/**
+ * on_textview_query_tooltip
+ */
+bool
+DPDrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
+{
+	std::stringstream ss;
+
+	DPContainer *c = get_focus (x, y);
+	if (c) {
+		ss << "<b>" << c->name << "</b> (" << c->uuid << ")";
+
+		tooltip->set_markup(ss.str());
+		tooltip->set_icon_from_icon_name("dialog-information", Gtk::ICON_SIZE_MENU);
+
+		return true;
+	}
+
+	return false;
+}
+
+
+/**
+ * draw_label - write some text into an area
+ */
+void
+draw_label (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape)
+{
+	std::string label;
+
+	std::string device = cont->get_device_name();
+	size_t pos = device.find_last_of ('/');
+	if (pos == std::string::npos) {
+		label = cont->device;
+		if (label.empty()) {
+			label = "<none>";	//RAR tmp
+		}
+	} else {
+		label = device.substr (pos+1);
+	}
+
+	if (cont->is_a ("filesystem")) {
+		Filesystem *fs = dynamic_cast<Filesystem*> (cont);
+		if (fs) {
+			if (!fs->label.empty()) {
+				label += " \"" + fs->label + "\"";
+			}
+		}
+	}
+
+	label += "\n";
+	label += get_size (cont->bytes_size);
+
+	Pango::FontDescription font;
+	font.set_family ("Liberation Sans");
+
+	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
+	layout->set_font_description (font);
+
+	font.set_size (10 * Pango::SCALE);		//THEME - block_label_font_size
+	layout->set_font_description (font);
+
+	layout->set_text (label);
+
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
+	cr->move_to (shape.x + 2, shape.y + 2);
+
+	layout->set_width (Pango::SCALE * (shape.w - 4));
+	layout->set_ellipsize (Pango::ELLIPSIZE_END);
+	layout->update_from_cairo_context (cr);
+	layout->show_in_cairo_context (cr);
+}
+
+/**
  * draw_block - draw an icon-width, hollow, rounded rectangle
  */
 void
@@ -968,81 +1354,6 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer
 	draw_corner (cr, i, false, false, false);		// Bottom left inner corner (11)
 
 	Rect t = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
-
-	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
-	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
-
-	if (tab)
-		*tab = t;
-	if (inside)
-		*inside = i;
-}
-
-/**
- * draw_iconbox - draw a rounded rectangle with a handy tab
- */
-void
-DPDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *inside)
-{
-	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_iconbox: too short\n");
-		return;
-	}
-
-	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
-		log_info ("draw_iconbox: too narrow\n");
-		return;
-	}
-
-	Rect work = shape;
-
-	const int &x = work.x;
-	const int &y = work.y;
-	const int &w = work.w;
-	const int &h = work.h;
-
-	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-
-	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
-
-	cr->set_line_width (RADIUS);				// Thick top bar (2)
-	cr->move_to (x+RADIUS, y+(RADIUS/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin left bar (4)
-	cr->move_to (x+(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin right bar (8)
-	cr->move_to (x+w-(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin bottom bar (10)
-	cr->move_to (x+RADIUS, y+h-(SIDES/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-
-	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
-
-	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
-	cr->rel_line_to (BLOCK_WIDTH+SIDES, 0);
-	cr->rel_line_to (0, h-RADIUS-SIDES);
-	cr->rel_line_to (-BLOCK_WIDTH+RADIUS-(SIDES*2), 0);
-	cr->rel_line_to (0, -RADIUS+SIDES);
-	cr->rel_line_to (-RADIUS+SIDES, 0);
-	cr->close_path();
-	cr->fill();
-
-	Rect i = { x+BLOCK_WIDTH+(SIDES*2), y+RADIUS, w-BLOCK_WIDTH-(SIDES*3), h-RADIUS-SIDES };
-
-	draw_corner (cr, i, false, false, false);		// Bottom left inner corner (11)
-
-	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
 
 	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
 	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
@@ -1369,315 +1680,5 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		draw_container(cr, c, next);
 	}
 }
-
-
-/**
- * on_draw
- */
-bool
-DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
-{
-	//LOG_TRACE;
-	if (!m_c)
-		return true;
-
-	vRange.clear();
-
-	Gtk::Allocation allocation = get_allocation();
-
-	Rect shape { 0, 0, allocation.get_width(), allocation.get_height() };
-
-#if 1
-	checker_area (cr, shape);
-#else
-	fill_rect (cr, shape);
-#endif
-	draw_container (cr, m_c, shape);
-
-	return true;
-}
-
-
-/**
- * set_data
- */
-void
-DPDrawingArea::set_data (DPContainer *c)
-{
-	// check we've been given a block device
-
-	m_c = c;
-	if (!m_c)
-		return;
-
-	// invalidate window
-	//unsigned int children = c->children.size();
-	//set_size_request (400, 50 * children);
-}
-
-/**
- * get_theme
- */
-bool
-DPDrawingArea::get_theme (const std::string &object, const std::string &attr)
-{
-	//map of obj.attr => value
-	//read from file
-	return true;
-}
-
-
-#if 0
-/**
- * on_timeout
- */
-bool
-DPDrawingArea::on_timeout (int timer_number)
-{
-	std::cout << "timer" << "\n";
-	get_window()->invalidate (false); //RAR everything for now
-	//return (m_c->device == "/dev/sdc");
-	return false;
-}
-
-#endif
-/**
- * get_focus
- */
-DPContainer *
-DPDrawingArea::get_focus (int x, int y)
-{
-	DPContainer *match = nullptr;
-
-	for (auto rg : vRange) {
-		Rect r = rg.r;
-		if ((x >= r.x) && (x < (r.x + r.w)) && (y >= r.y) && (y < (r.y + r.h))) {
-			match = rg.p;
-			break;
-		}
-	}
-
-	return match;
-}
-
-/**
- * on_textview_query_tooltip
- */
-bool
-DPDrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
-{
-	std::stringstream ss;
-
-	DPContainer *c = get_focus (x, y);
-	if (c) {
-		ss << "<b>" << c->name << "</b> (" << c->uuid << ")";
-
-		tooltip->set_markup(ss.str());
-		tooltip->set_icon_from_icon_name("dialog-information", Gtk::ICON_SIZE_MENU);
-
-		return true;
-	}
-
-	return false;
-}
-
-
-/**
- * on_mouse_motion
- */
-bool
-DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
-{
-	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")\n";
-
-#if 0
-	bool old = mouse_close;
-
-	mouse_close = ((event->y > 25) and (event->x < 90));
-
-	if (mouse_close != old) {
-		get_window()->invalidate (false); //RAR everything for now
-	}
-#endif
-
-	return true;
-}
-
-/**
- * on_mouse_leave
- */
-bool
-DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
-{
-#if 0
-	if (mouse_close) {
-		mouse_close = false;
-		get_window()->invalidate (false); //RAR everything for now
-	}
-#endif
-	return true;
-}
-
-/**
- * on_mouse_click
- */
-bool
-DPDrawingArea::on_mouse_click (GdkEventButton *event)
-{
-	std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
-
-	sel_x = event->x;
-	sel_y = event->y;
-
-	//std::cout << "Range contains " << vRange.size() << " items\n";
-
-	for (auto rg : vRange) {
-		Rect r = rg.r;
-		bool b = ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
-			  (event->y >= r.y) && (event->y < (r.y + r.h)));
-
-		if (b) log_error ("\033[01;31mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p, rg.p->type.back().c_str());
-		else   log_info  ("\033[01;32mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p, rg.p->type.back().c_str());
-	}
-	log_info ("\n");
-
-	//get_window()->invalidate (false); //RAR everything for now
-
-#if 0
-	if ((event->x >= 100) && (event->x < 200) &&
-	    (event->y >= 50)  && (event->y < 150)) {
-	}
-#endif
-#if 0
-	std::cout << event->type << "\n";
-	std::cout << event->state << "\n";
-	std::cout << event->button << "\n";
-	std::cout << event->time << "\n";
-	std::cout << event->x << "\n";
-	std::cout << event->y << "\n";
-
-	GdkEventType type;
-	GdkWindow *window;
-	gint8 send_event;
-	guint32 time;
-	gdouble x;
-	gdouble y;
-	gdouble *axes;
-	guint state;
-	guint button;
-	GdkDevice *device;
-	gdouble x_root, y_root;
-#endif
-
-	return true;
-}
-
-
-#if 0
-/**
- * draw_grid - fine mesh grid
- */
-void
-DPDrawingArea::draw_grid (const Cairo::RefPtr<Cairo::Context> &cr)
-{
-	Gtk::Allocation allocation = get_allocation();
-	int width  = allocation.get_width();
-	int height = allocation.get_height();
-
-	cr->save();
-
-	cr->set_antialias (Cairo::ANTIALIAS_NONE);
-	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
-	cr->set_line_width (1);
-	cr->rectangle (0.5, 0.5, width-1, height-1);
-	cr->stroke();
-
-	for (int i = 10; i < width; i += 10) {
-		if ((i % 100) == 0) {
-			cr->set_source_rgba (0.0, 0.0, 1.0, 0.2);
-		} else {
-			cr->set_source_rgba (0.0, 1.0, 0.0, 0.3);
-		}
-		cr->move_to (i + 0.5, 0);
-		cr->rel_line_to (0, height);
-		cr->stroke();
-	}
-
-	for (int i = 10; i < width; i += 10) {
-		if ((i % 100) == 0) {
-			cr->set_source_rgba (0.0, 0.0, 1.0, 0.2);
-		} else {
-			cr->set_source_rgba (0.0, 1.0, 0.0, 0.3);
-		}
-		cr->move_to (0, i + 0.5);
-		cr->rel_line_to (width, 0);
-		cr->stroke();
-	}
-
-	cr->restore();
-}
-
-/**
- * draw_grid_linear - Major and minor grid lines
- */
-void
-DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
-{
-	space.w -= 2;
-
-	const int &x = space.x;
-	const int &w = space.w;
-	const int &h = space.h;
-
-	double bytes_per_pixel = max_size / w;
-
-	int lower = floor (log2 (40.0 * max_size / w));
-	int major = floor (log2 (256.0 * max_size / w));
-	int minor = major - 1;
-
-	major = 1 << (major - lower);
-	minor = 1 << (minor - lower);
-
-	cr->save();
-
-	cr->set_antialias (Cairo::ANTIALIAS_NONE);
-	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
-	cr->set_line_width (1);
-	cr->rectangle (0.5+x, 0.5, w-1, h-1);
-	cr->stroke();
-
-	double spacing = pow (2, lower) / bytes_per_pixel;
-
-	int count = (w / spacing) + 1;
-
-	for (int i = 0; i <= count; i++) {
-		if ((i % major) == 0) {
-			cr->set_line_width (3);
-			cr->set_source_rgba (0.3, 0.3, 0.8, 0.7);
-		} else if ((i % minor) == 0) {
-			cr->set_line_width (2);
-			cr->set_source_rgba (0.5, 0.5, 0.5, 0.6);	//XXX theme
-		} else {
-			cr->set_line_width (1);
-			cr->set_source_rgba (0.3, 0.3, 0.3, 0.5);
-		}
-
-		cr->move_to ((int) (spacing*i) + 0.5 + x, 0);
-		cr->rel_line_to (0, h);
-		cr->stroke();
-	}
-
-	cr->restore();
-}
-
-/**
- * draw_grid_log
- */
-void
-DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
-{
-}
-
-#endif
 
 
