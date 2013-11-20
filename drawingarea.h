@@ -55,8 +55,7 @@ private:
 	Theme *theme;
 
 	void draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape);
-	void draw_fill      (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
-	void draw_icon      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below = nullptr);
+	void draw_icon      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, const Rect &shape, Rect &below);
 
 	std::deque<Range> vRange;
 

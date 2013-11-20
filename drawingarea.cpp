@@ -769,12 +769,11 @@ draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &t
  * draw_icon
  */
 void
-DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below /*=nullptr*/)
+DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, const Rect &shape, Rect &below /*=nullptr*/)
 {
 	Glib::RefPtr<Gdk::Pixbuf> pb;
 
-	if (below)
-		*below = shape;
+	Rect work = shape;
 
 	pb = theme->get_icon (name);
 	if (!pb) {
@@ -784,24 +783,19 @@ DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::st
 
 	cr->save();
 
-	shape.x += ((shape.w - pb->get_width()) / 2);	// Centre the icon
+	work.x += ((work.w - pb->get_width()) / 2);	// Centre the icon
 
-	Gdk::Cairo::set_source_pixbuf (cr, pb, shape.x, shape.y);
-	shape.w = pb->get_width();
-	shape.h = pb->get_height();
-	//log_info ("icon %d,%d\n", shape.w, shape.h);
+	Gdk::Cairo::set_source_pixbuf (cr, pb, work.x, work.y);
+	work.w = pb->get_width();
+	work.h = pb->get_height();
+	//log_info ("icon %d,%d\n", work.w, work.h);
 
-	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
+	cr->rectangle (work.x, work.y, work.w, work.h);
 	cr->fill();
 	cr->restore();
-	//draw_edge (cr, shape, "red");
+	//draw_edge (cr, work, "red");
 
-	if (below) {
-		below->x  =  shape.x;
-		below->y += (shape.h + GAP);
-		below->w  =  shape.w;
-		below->h -= (shape.h + GAP);
-	}
+	below = { shape.x, shape.y + (work.h + GAP), shape.w, shape.h - (work.h + GAP) };
 }
 
 
@@ -945,7 +939,7 @@ DPDrawingArea::on_mouse_click (GdkEventButton *event)
  * draw_container_examples
  */
 void
-DPDrawingArea::draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape, Rect *right)
+draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape, Rect *right)
 {
 	if (!cont)
 		return;
@@ -954,7 +948,7 @@ DPDrawingArea::draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr,
 	Rect inside;
 	Rect below;
 
-	fill_rect (cr, shape);
+	fill_rect (cr, shape, "white");
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
 
 	Pango::FontDescription font;
@@ -985,14 +979,14 @@ DPDrawingArea::draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr,
 	shape.y += th;
 	shape.h -= th;
 
-	draw_box (cr, cont, shape, &inside);
+	draw_box (cr, shape, inside);
 	//draw_edge (cr, inside, "red");
 
 	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 	draw_border (cr, inside);
 	cr->fill();
 
-	draw_icon (cr, "disk", inside, &below);
+	draw_icon (cr, "disk", inside, below);
 #endif
 
 #if 0 //XXX icon + shaded label below
@@ -1001,17 +995,17 @@ DPDrawingArea::draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr,
 
 	shape.w = 2*TAB_WIDTH + 2*GAP;
 
-	draw_box (cr, cont, shape, &inside);
+	draw_box (cr, shape, inside);
 	//draw_edge (cr, inside, "red");
 
 	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 	draw_border (cr, inside);
 	cr->fill();
 
-	draw_icon (cr, "disk", inside, &below);
+	draw_icon (cr, "disk", inside, below);
 
-	std::string labeld = m_c->device;
-	std::string labels = get_size (m_c->bytes_size);
+	std::string labeld = cont->device;
+	std::string labels = get_size (cont->bytes_size);
 
 	Pango::FontDescription font;
 	Glib::RefPtr<Pango::Layout> layoutd = Pango::Layout::create (cr);
@@ -1063,13 +1057,6 @@ DPDrawingArea::draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr,
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
 	layouts->update_from_cairo_context (cr);
 	layouts->show_in_cairo_context (cr);
-#endif
-
-#if 0 //XXX get_pixel_size
-	int tw = 0;
-	int th = 0;
-	layout->get_pixel_size (tw, th);
-	printf ("text width = %d, height = %d\n", tw, th);
 #endif
 }
 
@@ -1296,7 +1283,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		return;
 #endif
 
-		draw_icon (cr, icon, box);
+		Rect below;
+		draw_icon (cr, icon, box, below);
 		draw_text (cr, box2, cont->name);
 
 		//printf ("height = %d\n", shape.h);
@@ -1322,8 +1310,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		set_colour (cr, colour);
 		draw_iconbox (cr, shape, tab, inside);
 
-		draw_icon (cr, "table", tab, &tab);
-		draw_icon (cr, "shield", tab, &tab);
+		draw_icon (cr, "table", tab, tab);
+		draw_icon (cr, "shield", tab, tab);
 #if 0
 		background = "rgba(255,255,0,0.3)";
 		fill_area (cr, inside, background);
@@ -1380,81 +1368,13 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 			colour
 			background
 #endif
+	} else if (display == "empty") {	// Do nothing for now
+		//printf ("EMPTY\n");
+		inside = shape;
 	} else {
 		printf ("unknown display type: %s\n", display.c_str());
 		return;
 	}
-
-	//draw_edge (cr, inside, "red");
-
-#if 0
-	Gdk::RGBA rgba ("black");
-	if (!rgba.set (colour.c_str())) {
-		log_error ("don't understand colour: %s\n", colour.c_str());
-		//XXX validate (and default) any colours in theme.cpp
-	}
-
-	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
-#endif
-
-	//log_info ("theme: %s\n", path.c_str());
-	//std::cout << shape << std::endl;
-	//log_info ("%-12s: D: %-5s, H: %-5s, B: %-5s, C: %s\n", cont->name.c_str(), display.c_str(), handle.c_str(), box.c_str(), colour.c_str());
-
-#if 0
-	if (display == "true") {
-		shape.x += 1;
-		shape.w -= 2;
-		shape.y += 1;
-		shape.h -= 2;
-
-		std::string handle;
-		std::string box;
-		if (handle == "true") {
-			if (box == "true") {
-				draw_tabbox (cr, cont, shape, &tab, &inside);
-			} else {
-				draw_block (cr, cont, shape, &tab, &inside);
-				//draw_edge (cr, inside, "red");
-#if 0
-				cr->set_source_rgba (1.0, 0.0, 0.0, 1.0);
-				draw_icon (cr, "table", tab, &tab);
-				draw_icon (cr, "warning", tab, &tab);
-#endif
-			}
-		} else {
-			draw_box (cr, cont, shape, &inside);
-			if (theme->get_config (path, name, "usage") == "true") {
-#if 1
-				Rect usage = inside;
-				usage.w = usage.w * 2 / 3;
-				cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
-				draw_border (cr, usage);
-				cr->fill();
-#endif
-			}
-			draw_gradient (cr, inside);
-			draw_label (cr, cont, inside);
-		}
-	} else {
-		inside = shape;
-	}
-#endif
-
-	//draw_edge (cr, inside, "red");
-	//fill_area (cr, inside, "rgba(1,1,1,0.5)");
-
-	// width = w
-	// children = c
-	// tabs = t
-	// gaps = c-1
-	// big_icon = 0
-
-	//long count = cont->children.size();
-	//printf ("children = %ld\n", count);
-	//printf ("width    = %d\n",  shape.w);
-
-	//if (shape.h < 65) return;
 
 	long total = cont->bytes_size;
 	long bpp   = total / inside.w;	// bytes per pixel
