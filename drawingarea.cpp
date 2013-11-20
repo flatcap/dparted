@@ -419,49 +419,10 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
 
 
 /**
- * draw_icon
- */
-void
-DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below /*=nullptr*/)
-{
-	Glib::RefPtr<Gdk::Pixbuf> pb;
-
-	if (below)
-		*below = shape;
-
-	pb = theme->get_icon (name);
-	if (!pb) {
-		std::cout << "no icon!\n";
-		return;
-	}
-
-	cr->save();
-
-	shape.x += ((shape.w - pb->get_width()) / 2);	// Centre the icon
-
-	Gdk::Cairo::set_source_pixbuf (cr, pb, shape.x, shape.y);
-	shape.w = pb->get_width();
-	shape.h = pb->get_height();
-	//log_info ("icon %d,%d\n", shape.w, shape.h);
-
-	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
-	cr->fill();
-	cr->restore();
-	//draw_edge (cr, shape, "red");
-
-	if (below) {
-		below->x  =  shape.x;
-		below->y += (shape.h + GAP);
-		below->w  =  shape.w;
-		below->h -= (shape.h + GAP);
-	}
-}
-
-/**
  * draw_iconbox - draw a rounded rectangle with a handy tab
  */
 void
-DPDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *inside)
+draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_iconbox: too short\n");
@@ -531,6 +492,243 @@ DPDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect
 		*inside = i;
 }
 
+/**
+ * draw_block - draw an icon-width, hollow, rounded rectangle
+ */
+void
+draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *right)
+{
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_tab: too short\n");
+		return;
+	}
+
+	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
+		log_info ("draw_tab: too narrow\n");
+		return;
+	}
+
+	Rect work = shape;
+
+	work.w = BLOCK_WIDTH + (RADIUS/2);
+
+	const int &x = work.x;
+	const int &y = work.y;
+	const int &w = work.w;
+	const int &h = work.h;
+
+	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
+	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+
+	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->move_to (x+RADIUS, y+(RADIUS/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->move_to (x+(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->move_to (x+w-(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin bottom bar (10)
+	cr->move_to (x+RADIUS, y+h-(SIDES/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	draw_arc (cr, work, true);				// Thin bottom right corner (12)
+	draw_arc (cr, work, false);				// Thin bottom left corner (13)
+
+	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
+
+	draw_corner (cr, t, true,  true,  false);		// Tab inside top right corner
+	draw_corner (cr, t, true,  false, false);		// Tab inside top left corner
+
+
+	if (tab)
+		*tab = t;
+
+	if (right)
+		*right = { shape.x + work.w + GAP, shape.y, shape.w - work.w - GAP, shape.h};
+}
+
+/**
+ * draw_tabbox - draw a rounded rectangle with a handy tab
+ */
+void
+draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *inside)
+{
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_tabbox: too short\n");
+		return;
+	}
+
+	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
+		log_info ("draw_tabbox: too narrow\n");
+		return;
+	}
+
+	Rect work = shape;
+
+	const int &x = work.x;
+	const int &y = work.y;
+	const int &w = work.w;
+	const int &h = work.h;
+
+	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
+
+	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+
+	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->move_to (x+RADIUS, y+(RADIUS/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->move_to (x+(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->move_to (x+w-(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin bottom bar (10)
+	cr->move_to (x+RADIUS, y+h-(SIDES/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	draw_arc (cr, work, true);				// Thin bottom right corner (12)
+
+	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
+
+	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
+	cr->rel_line_to (TAB_WIDTH+SIDES, 0);
+	cr->rel_line_to (0, h-RADIUS-SIDES);
+	cr->rel_line_to (-TAB_WIDTH+RADIUS-(SIDES*2), 0);
+	cr->rel_line_to (0, -RADIUS+SIDES);
+	cr->rel_line_to (-RADIUS+SIDES, 0);
+	cr->close_path();
+	cr->fill();
+
+	Rect i = { x+TAB_WIDTH+(SIDES*2), y+RADIUS, w-TAB_WIDTH-(SIDES*3), h-RADIUS-SIDES };
+
+	draw_corner (cr, i, false, false, false);		// Bottom left inner corner (11)
+
+	Rect t = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
+
+	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
+	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
+
+	if (tab)
+		*tab = t;
+	if (inside)
+		*inside = i;
+}
+
+/**
+ * draw_box - draw a rounded rectangle
+ */
+void
+draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside)
+{
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_box: too short\n");
+		return;
+	}
+
+	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
+		log_info ("draw_box: too narrow\n");
+		return;
+	}
+
+	Rect work = shape;
+
+	const int &x = work.x;
+	const int &y = work.y;
+	const int &w = work.w;
+	const int &h = work.h;
+
+	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
+	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+
+	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->move_to (x+RADIUS, y+(RADIUS/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->move_to (x+(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->move_to (x+w-(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin bottom bar (10)
+	cr->move_to (x+RADIUS, y+h-(SIDES/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	draw_arc (cr, work, true);				// Thin bottom right corner (12)
+	draw_arc (cr, work, false);				// Thin bottom left corner (13)
+
+	Rect i = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
+
+	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
+	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
+
+	if (inside)
+		*inside = i;
+}
+
+
+/**
+ * draw_icon
+ */
+void
+DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below /*=nullptr*/)
+{
+	Glib::RefPtr<Gdk::Pixbuf> pb;
+
+	if (below)
+		*below = shape;
+
+	pb = theme->get_icon (name);
+	if (!pb) {
+		std::cout << "no icon!\n";
+		return;
+	}
+
+	cr->save();
+
+	shape.x += ((shape.w - pb->get_width()) / 2);	// Centre the icon
+
+	Gdk::Cairo::set_source_pixbuf (cr, pb, shape.x, shape.y);
+	shape.w = pb->get_width();
+	shape.h = pb->get_height();
+	//log_info ("icon %d,%d\n", shape.w, shape.h);
+
+	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
+	cr->fill();
+	cr->restore();
+	//draw_edge (cr, shape, "red");
+
+	if (below) {
+		below->x  =  shape.x;
+		below->y += (shape.h + GAP);
+		below->w  =  shape.w;
+		below->h -= (shape.h + GAP);
+	}
+}
+
 
 /**
  * on_draw
@@ -555,18 +753,6 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 #endif
 	draw_container (cr, m_c, shape);
 
-	return true;
-}
-
-
-/**
- * get_theme
- */
-bool
-DPDrawingArea::get_theme (const std::string &object, const std::string &attr)
-{
-	//map of obj.attr => value
-	//read from file
 	return true;
 }
 
@@ -1069,219 +1255,6 @@ draw_label (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect sha
 }
 
 /**
- * draw_block - draw an icon-width, hollow, rounded rectangle
- */
-void
-DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *right)
-{
-	if (!cont)
-		return;
-
-	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_tab: too short\n");
-		return;
-	}
-
-	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
-		log_info ("draw_tab: too narrow\n");
-		return;
-	}
-
-	Rect work = shape;
-
-	work.w = BLOCK_WIDTH + (RADIUS/2);
-
-	const int &x = work.x;
-	const int &y = work.y;
-	const int &w = work.w;
-	const int &h = work.h;
-
-	vRange.push_front ({work, cont});			// Associate a region with a container
-
-	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
-
-	cr->set_line_width (RADIUS);				// Thick top bar (2)
-	cr->move_to (x+RADIUS, y+(RADIUS/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin left bar (4)
-	cr->move_to (x+(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin right bar (8)
-	cr->move_to (x+w-(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin bottom bar (10)
-	cr->move_to (x+RADIUS, y+h-(SIDES/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	draw_arc (cr, work, false);				// Thin bottom left corner (13)
-
-	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
-
-	draw_corner (cr, t, true,  true,  false);		// Tab inside top right corner
-	draw_corner (cr, t, true,  false, false);		// Tab inside top left corner
-
-
-	if (tab)
-		*tab = t;
-
-	if (right)
-		*right = { shape.x + work.w + GAP, shape.y, shape.w - work.w - GAP, shape.h};
-}
-
-/**
- * draw_tabbox - draw a rounded rectangle with a handy tab
- */
-void
-DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *inside)
-{
-	if (!cont)
-		return;
-
-	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_tabbox: too short\n");
-		return;
-	}
-
-	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
-		log_info ("draw_tabbox: too narrow\n");
-		return;
-	}
-
-	Rect work = shape;
-
-	const int &x = work.x;
-	const int &y = work.y;
-	const int &w = work.w;
-	const int &h = work.h;
-
-	vRange.push_front ({work, cont});			// Associate a region with a container
-
-	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-
-	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
-
-	cr->set_line_width (RADIUS);				// Thick top bar (2)
-	cr->move_to (x+RADIUS, y+(RADIUS/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin left bar (4)
-	cr->move_to (x+(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin right bar (8)
-	cr->move_to (x+w-(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin bottom bar (10)
-	cr->move_to (x+RADIUS, y+h-(SIDES/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-
-	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
-
-	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
-	cr->rel_line_to (TAB_WIDTH+SIDES, 0);
-	cr->rel_line_to (0, h-RADIUS-SIDES);
-	cr->rel_line_to (-TAB_WIDTH+RADIUS-(SIDES*2), 0);
-	cr->rel_line_to (0, -RADIUS+SIDES);
-	cr->rel_line_to (-RADIUS+SIDES, 0);
-	cr->close_path();
-	cr->fill();
-
-	Rect i = { x+TAB_WIDTH+(SIDES*2), y+RADIUS, w-TAB_WIDTH-(SIDES*3), h-RADIUS-SIDES };
-
-	draw_corner (cr, i, false, false, false);		// Bottom left inner corner (11)
-
-	Rect t = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
-
-	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
-	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
-
-	if (tab)
-		*tab = t;
-	if (inside)
-		*inside = i;
-}
-
-/**
- * draw_box - draw a rounded rectangle
- */
-void
-DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *inside)
-{
-	if (!cont)
-		return;
-
-	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_box: too short\n");
-		return;
-	}
-
-	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
-		log_info ("draw_box: too narrow\n");
-		return;
-	}
-
-	Rect work = shape;
-
-	const int &x = work.x;
-	const int &y = work.y;
-	const int &w = work.w;
-	const int &h = work.h;
-
-	vRange.push_front ({work, cont});			// Associate a region with a container
-
-	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-
-	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
-
-	cr->set_line_width (RADIUS);				// Thick top bar (2)
-	cr->move_to (x+RADIUS, y+(RADIUS/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin left bar (4)
-	cr->move_to (x+(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin right bar (8)
-	cr->move_to (x+w-(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin bottom bar (10)
-	cr->move_to (x+RADIUS, y+h-(SIDES/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	draw_arc (cr, work, false);				// Thin bottom left corner (13)
-
-	Rect i = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
-
-	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
-	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
-
-	if (inside)
-		*inside = i;
-}
-
-/**
  * draw_container - recursively draw a set of containers
  */
 void
@@ -1329,7 +1302,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	//std::string label      = theme->get_config (path, name, "label");
 	std::string icon       = theme->get_config (path, name, "icon");
 
-	////icon = "margin_black64";
+	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
+
 	if (display == "icon") {		// Large icon
 		Rect box = shape;
 		Rect right = shape;
@@ -1399,7 +1373,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 #endif
 	} else if (display == "box") {		// A simple coloured box
 		set_colour (cr, colour);
-		draw_box (cr, cont, shape, &inside);
+		draw_box (cr, shape, &inside);
 
 		fill_area (cr, inside, background);
 
@@ -1428,7 +1402,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 #endif
 	} else if (display == "tabbox") {	// A coloured box with a handy tab
 		set_colour (cr, colour);
-		draw_tabbox (cr, cont, shape, nullptr, &inside);
+		draw_tabbox (cr, shape, nullptr, &inside);
 
 #ifdef RAR
 		theme

@@ -50,20 +50,13 @@ protected:
 	DPContainer * get_focus (int x, int y);
 	bool on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 
-	bool get_theme (const std::string &object, const std::string &attr);
-
 private:
 	DPContainer *m_c;
 	Theme *theme;
 
-	void draw_block     (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *right);
-	void draw_box       (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *inside);
 	void draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape);
 	void draw_fill      (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 	void draw_icon      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below = nullptr);
-	void draw_iconbox   (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *inside);
-	void draw_rect      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape);
-	void draw_tabbox    (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, const Rect &shape, Rect *tab, Rect *inside);
 
 #if 0
 	void draw_grid        (const Cairo::RefPtr<Cairo::Context> &cr);
