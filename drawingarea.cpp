@@ -133,6 +133,112 @@ draw_edge (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std
 
 #endif
 
+#if 0
+/**
+ * draw_grid - fine mesh grid
+ */
+void
+draw_grid (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+{
+	int width  = shape.w;
+	int height = shape.h;
+
+	cr->save();
+
+	cr->set_antialias (Cairo::ANTIALIAS_NONE);
+	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
+	cr->set_line_width (1);
+	cr->rectangle (0.5, 0.5, width-1, height-1);
+	cr->stroke();
+
+	for (int i = 10; i < width; i += 10) {
+		if ((i % 100) == 0) {
+			cr->set_source_rgba (0.0, 0.0, 1.0, 0.2);
+		} else {
+			cr->set_source_rgba (0.0, 1.0, 0.0, 0.3);
+		}
+		cr->move_to (i + 0.5, 0);
+		cr->rel_line_to (0, height);
+		cr->stroke();
+	}
+
+	for (int i = 10; i < width; i += 10) {
+		if ((i % 100) == 0) {
+			cr->set_source_rgba (0.0, 0.0, 1.0, 0.2);
+		} else {
+			cr->set_source_rgba (0.0, 1.0, 0.0, 0.3);
+		}
+		cr->move_to (0, i + 0.5);
+		cr->rel_line_to (width, 0);
+		cr->stroke();
+	}
+
+	cr->restore();
+}
+
+/**
+ * draw_grid_linear - Major and minor grid lines
+ */
+void
+draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
+{
+	space.w -= 2;
+
+	const int &x = space.x;
+	const int &w = space.w;
+	const int &h = space.h;
+
+	double bytes_per_pixel = max_size / w;
+
+	int lower = floor (log2 (40.0 * max_size / w));
+	int major = floor (log2 (256.0 * max_size / w));
+	int minor = major - 1;
+
+	major = 1 << (major - lower);
+	minor = 1 << (minor - lower);
+
+	cr->save();
+
+	cr->set_antialias (Cairo::ANTIALIAS_NONE);
+	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
+	cr->set_line_width (1);
+	cr->rectangle (0.5+x, 0.5, w-1, h-1);
+	cr->stroke();
+
+	double spacing = pow (2, lower) / bytes_per_pixel;
+
+	int count = (w / spacing) + 1;
+
+	for (int i = 0; i <= count; i++) {
+		if ((i % major) == 0) {
+			cr->set_line_width (3);
+			cr->set_source_rgba (0.3, 0.3, 0.8, 0.7);
+		} else if ((i % minor) == 0) {
+			cr->set_line_width (2);
+			cr->set_source_rgba (0.5, 0.5, 0.5, 0.6);	//XXX theme
+		} else {
+			cr->set_line_width (1);
+			cr->set_source_rgba (0.3, 0.3, 0.3, 0.5);
+		}
+
+		cr->move_to ((int) (spacing*i) + 0.5 + x, 0);
+		cr->rel_line_to (0, h);
+		cr->stroke();
+	}
+
+	cr->restore();
+}
+
+/**
+ * draw_grid_log
+ */
+void
+draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
+{
+}
+
+#endif
+
 /**
  * draw_border - sketch out curved rectangle
  */
@@ -419,6 +525,128 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
 
 
 /**
+ * draw_block - draw an icon-width, hollow, rounded rectangle
+ */
+void
+draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *right)
+{
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_tab: too short\n");
+		return;
+	}
+
+	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
+		log_info ("draw_tab: too narrow\n");
+		return;
+	}
+
+	Rect work = shape;
+
+	work.w = BLOCK_WIDTH + (RADIUS/2);
+
+	const int &x = work.x;
+	const int &y = work.y;
+	const int &w = work.w;
+	const int &h = work.h;
+
+	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
+	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+
+	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->move_to (x+RADIUS, y+(RADIUS/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->move_to (x+(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->move_to (x+w-(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin bottom bar (10)
+	cr->move_to (x+RADIUS, y+h-(SIDES/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	draw_arc (cr, work, true);				// Thin bottom right corner (12)
+	draw_arc (cr, work, false);				// Thin bottom left corner (13)
+
+	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
+
+	draw_corner (cr, t, true,  true,  false);		// Tab inside top right corner
+	draw_corner (cr, t, true,  false, false);		// Tab inside top left corner
+
+
+	if (tab)
+		*tab = t;
+
+	if (right)
+		*right = { shape.x + work.w + GAP, shape.y, shape.w - work.w - GAP, shape.h};
+}
+
+/**
+ * draw_box - draw a rounded rectangle
+ */
+void
+draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside)
+{
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_box: too short\n");
+		return;
+	}
+
+	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
+		log_info ("draw_box: too narrow\n");
+		return;
+	}
+
+	Rect work = shape;
+
+	const int &x = work.x;
+	const int &y = work.y;
+	const int &w = work.w;
+	const int &h = work.h;
+
+	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
+	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+
+	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->move_to (x+RADIUS, y+(RADIUS/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->move_to (x+(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->move_to (x+w-(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin bottom bar (10)
+	cr->move_to (x+RADIUS, y+h-(SIDES/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	draw_arc (cr, work, true);				// Thin bottom right corner (12)
+	draw_arc (cr, work, false);				// Thin bottom left corner (13)
+
+	Rect i = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
+
+	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
+	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
+
+	if (inside)
+		*inside = i;
+}
+
+/**
  * draw_iconbox - draw a rounded rectangle with a handy tab
  */
 void
@@ -490,70 +718,6 @@ draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *
 		*tab = t;
 	if (inside)
 		*inside = i;
-}
-
-/**
- * draw_block - draw an icon-width, hollow, rounded rectangle
- */
-void
-draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *right)
-{
-	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_tab: too short\n");
-		return;
-	}
-
-	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
-		log_info ("draw_tab: too narrow\n");
-		return;
-	}
-
-	Rect work = shape;
-
-	work.w = BLOCK_WIDTH + (RADIUS/2);
-
-	const int &x = work.x;
-	const int &y = work.y;
-	const int &w = work.w;
-	const int &h = work.h;
-
-	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
-
-	cr->set_line_width (RADIUS);				// Thick top bar (2)
-	cr->move_to (x+RADIUS, y+(RADIUS/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin left bar (4)
-	cr->move_to (x+(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin right bar (8)
-	cr->move_to (x+w-(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin bottom bar (10)
-	cr->move_to (x+RADIUS, y+h-(SIDES/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	draw_arc (cr, work, false);				// Thin bottom left corner (13)
-
-	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
-
-	draw_corner (cr, t, true,  true,  false);		// Tab inside top right corner
-	draw_corner (cr, t, true,  false, false);		// Tab inside top left corner
-
-
-	if (tab)
-		*tab = t;
-
-	if (right)
-		*right = { shape.x + work.w + GAP, shape.y, shape.w - work.w - GAP, shape.h};
 }
 
 /**
@@ -631,64 +795,6 @@ draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *t
 		*inside = i;
 }
 
-/**
- * draw_box - draw a rounded rectangle
- */
-void
-draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside)
-{
-	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_box: too short\n");
-		return;
-	}
-
-	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
-		log_info ("draw_box: too narrow\n");
-		return;
-	}
-
-	Rect work = shape;
-
-	const int &x = work.x;
-	const int &y = work.y;
-	const int &w = work.w;
-	const int &h = work.h;
-
-	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
-
-	cr->set_line_width (RADIUS);				// Thick top bar (2)
-	cr->move_to (x+RADIUS, y+(RADIUS/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin left bar (4)
-	cr->move_to (x+(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin right bar (8)
-	cr->move_to (x+w-(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin bottom bar (10)
-	cr->move_to (x+RADIUS, y+h-(SIDES/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	draw_arc (cr, work, true);				// Thin bottom right corner (12)
-	draw_arc (cr, work, false);				// Thin bottom left corner (13)
-
-	Rect i = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
-
-	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
-	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
-
-	if (inside)
-		*inside = i;
-}
-
 
 /**
  * draw_icon
@@ -747,8 +853,10 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 	Rect shape { 0, 0, allocation.get_width(), allocation.get_height() };
 
 #if 1
-	checker_rect (cr, shape, 7);
+	draw_grid_linear (cr, shape, m_c->bytes_size);
 #else
+	draw_grid (cr, shape);
+	checker_rect (cr, shape, 7);
 	fill_rect (cr, shape, "white");
 #endif
 	draw_container (cr, m_c, shape);
@@ -862,113 +970,6 @@ DPDrawingArea::on_mouse_click (GdkEventButton *event)
 	return true;
 }
 
-
-#if 0
-/**
- * draw_grid - fine mesh grid
- */
-void
-DPDrawingArea::draw_grid (const Cairo::RefPtr<Cairo::Context> &cr)
-{
-	Gtk::Allocation allocation = get_allocation();
-	int width  = allocation.get_width();
-	int height = allocation.get_height();
-
-	cr->save();
-
-	cr->set_antialias (Cairo::ANTIALIAS_NONE);
-	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
-	cr->set_line_width (1);
-	cr->rectangle (0.5, 0.5, width-1, height-1);
-	cr->stroke();
-
-	for (int i = 10; i < width; i += 10) {
-		if ((i % 100) == 0) {
-			cr->set_source_rgba (0.0, 0.0, 1.0, 0.2);
-		} else {
-			cr->set_source_rgba (0.0, 1.0, 0.0, 0.3);
-		}
-		cr->move_to (i + 0.5, 0);
-		cr->rel_line_to (0, height);
-		cr->stroke();
-	}
-
-	for (int i = 10; i < width; i += 10) {
-		if ((i % 100) == 0) {
-			cr->set_source_rgba (0.0, 0.0, 1.0, 0.2);
-		} else {
-			cr->set_source_rgba (0.0, 1.0, 0.0, 0.3);
-		}
-		cr->move_to (0, i + 0.5);
-		cr->rel_line_to (width, 0);
-		cr->stroke();
-	}
-
-	cr->restore();
-}
-
-/**
- * draw_grid_linear - Major and minor grid lines
- */
-void
-DPDrawingArea::draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
-{
-	space.w -= 2;
-
-	const int &x = space.x;
-	const int &w = space.w;
-	const int &h = space.h;
-
-	double bytes_per_pixel = max_size / w;
-
-	int lower = floor (log2 (40.0 * max_size / w));
-	int major = floor (log2 (256.0 * max_size / w));
-	int minor = major - 1;
-
-	major = 1 << (major - lower);
-	minor = 1 << (minor - lower);
-
-	cr->save();
-
-	cr->set_antialias (Cairo::ANTIALIAS_NONE);
-	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
-	cr->set_line_width (1);
-	cr->rectangle (0.5+x, 0.5, w-1, h-1);
-	cr->stroke();
-
-	double spacing = pow (2, lower) / bytes_per_pixel;
-
-	int count = (w / spacing) + 1;
-
-	for (int i = 0; i <= count; i++) {
-		if ((i % major) == 0) {
-			cr->set_line_width (3);
-			cr->set_source_rgba (0.3, 0.3, 0.8, 0.7);
-		} else if ((i % minor) == 0) {
-			cr->set_line_width (2);
-			cr->set_source_rgba (0.5, 0.5, 0.5, 0.6);	//XXX theme
-		} else {
-			cr->set_line_width (1);
-			cr->set_source_rgba (0.3, 0.3, 0.3, 0.5);
-		}
-
-		cr->move_to ((int) (spacing*i) + 0.5 + x, 0);
-		cr->rel_line_to (0, h);
-		cr->stroke();
-	}
-
-	cr->restore();
-}
-
-/**
- * draw_grid_log
- */
-void
-DPDrawingArea::draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
-{
-}
-
-#endif
 
 #if 0
 /**

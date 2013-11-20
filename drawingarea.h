@@ -58,12 +58,6 @@ private:
 	void draw_fill      (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape);
 	void draw_icon      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below = nullptr);
 
-#if 0
-	void draw_grid        (const Cairo::RefPtr<Cairo::Context> &cr);
-	void draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size);
-	void draw_grid_log    (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size);
-#endif
-
 	std::deque<Range> vRange;
 
 	int sel_x;
