@@ -69,7 +69,7 @@ DPDrawingArea::DPDrawingArea() :
 
 #if 0
 	sigc::slot<bool> my_slot = sigc::bind (sigc::mem_fun (*this, &DPDrawingArea::on_timeout), 0);
-	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 800); // ms
+	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 300); // ms
 #endif
 
 	theme = new Theme();
@@ -104,49 +104,6 @@ operator<< (std::ostream &stream, const Rect &r)
 }
 
 /**
- * rand_colour - select a colour from set
- */
-void
-rand_colour (const Cairo::RefPtr<Cairo::Context> &cr)
-{
-	static int colour = 0;
-	switch (colour) {
-		case 0:  cr->set_source_rgba (0.0, 1.0, 0.0, 0.8); break; // Green
-		case 1:  cr->set_source_rgba (0.8, 0.8, 0.0, 0.8); break; // Yellow
-		case 2:  cr->set_source_rgba (0.0, 0.0, 1.0, 0.8); break; // Blue
-		default: cr->set_source_rgba (1.0, 0.0, 0.0, 0.8); break; // Red
-	}
-	colour = (colour+1) % 4;
-}
-
-/**
- * draw_edge - one pixel red border around area
- */
-void
-draw_edge (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
-{
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w - 1;
-	const int &h = shape.h - 1;
-
-	cr->save();
-	cr->set_source_rgba (1.0, 0.0, 0.0, 1.0);
-	cr->set_line_width (1);
-
-	cr->move_to     (x+0.5, y+0.5);
-	cr->rel_line_to ( w, 0);
-	cr->rel_line_to ( 0, h);
-	cr->rel_line_to (-w, 0);
-	cr->rel_line_to ( 0,-h);
-
-	cr->stroke();
-	cr->restore();
-}
-
-#endif
-
-/**
  * set_colour
  */
 void set_colour (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour)
@@ -157,6 +114,24 @@ void set_colour (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &col
 	}
 	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
 }
+
+/**
+ * draw_edge - 1px rectangular border
+ */
+void
+draw_edge (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std::string &colour)
+{
+	cr->save();
+	set_colour (cr, colour);
+	cr->set_line_width (1);
+
+	cr->rectangle (shape.x+0.5, shape.y+0.5, shape.w-1, shape.h-1);
+
+	cr->stroke();
+	cr->restore();
+}
+
+#endif
 
 /**
  * draw_border - sketch out curved rectangle
@@ -199,29 +174,20 @@ fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std
 void
 fill_rect (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std::string &colour)
 {
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
-
 	cr->save();
 	set_colour (cr, colour);
 
-	cr->move_to     ( x, y);
-	cr->rel_line_to ( w, 0);
-	cr->rel_line_to ( 0, h);
-	cr->rel_line_to (-w, 0);
-	cr->rel_line_to ( 0,-h);
+	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
 
 	cr->fill();
 	cr->restore();
 }
 
 /**
- * checker_area - checker rect
+ * checker_rect - checker rect
  */
 void
-checker_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, int check_size)
+checker_rect (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, int check_size)
 {
 	const int &s = check_size;
 	const int &x = shape.x;
@@ -236,13 +202,7 @@ checker_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, int ch
 			else
 				cr->set_source_rgba (0.0, 0.0, 0.0, 0.0);
 
-			cr->move_to (x+i, y+j);
-
-			cr->rel_line_to ( s, 0);
-			cr->rel_line_to ( 0, s);
-			cr->rel_line_to (-s, 0);
-			cr->rel_line_to ( 0,-s);
-
+			cr->rectangle (x+i, y+j, s, s);
 			cr->fill();
 		}
 	}
@@ -290,29 +250,29 @@ draw_text (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, const std::strin
 void
 draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 {
-	std::vector<double> dashes;
-	dashes.push_back (5);
-	dashes.push_back (5);
+	static int start = 0;
+	std::vector<double> dashes = {5,5};
 
 	cr->save();
 	draw_border (cr, shape);				// Set clipping area
-	cr->clip();
+	//cr->clip();
 
-	cr->set_line_width (4);
+	cr->set_line_width (2);
 
-	cr->set_dash (dashes, 0);
+	cr->set_dash (dashes, start);
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);		//RAR focus colours from theme
 	draw_border (cr, shape);
 	cr->close_path();
 	cr->stroke();
 
-	cr->set_dash (dashes, 5);
+	cr->set_dash (dashes, start+5);
 	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 	draw_border (cr, shape);
 	cr->close_path();
 	cr->stroke();
 
 	cr->restore();						// End clipping
+	start++;
 }
 
 /**
@@ -345,7 +305,7 @@ draw_gradient (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape)
 
 
 /**
- * draw_corner - draw a corner ne/nw/se/sw convex/concave
+ * draw_corner - solid ne/nw/se/sw convex/concave corner
  */
 void draw_corner (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool north, bool east, bool convex)
 {
@@ -356,11 +316,7 @@ void draw_corner (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool nort
 	const int &h = shape.h;
 
 	cr->save();
-	cr->move_to (x, y);
-	cr->rel_line_to (w, 0);
-	cr->rel_line_to (0, h);
-	cr->rel_line_to (-w, 0);
-	cr->rel_line_to (0, -h);
+	cr->rectangle (x, y, w, h);
 	cr->clip();
 
 	if (north) {
@@ -419,16 +375,6 @@ void draw_corner (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool nort
 
 	cr->fill();
 	cr->restore();
-}
-
-/**
- * draw_fill - fill in a rounded rectangle
- */
-void
-DPDrawingArea::draw_fill (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
-{
-	draw_border (cr, shape);
-	cr->fill();
 }
 
 /**
@@ -501,7 +447,7 @@ DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::st
 	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
 	cr->fill();
 	cr->restore();
-	//draw_edge (cr, shape);
+	//draw_edge (cr, shape, "red");
 
 	if (below) {
 		below->x  =  shape.x;
@@ -602,8 +548,8 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	Rect shape { 0, 0, allocation.get_width(), allocation.get_height() };
 
-#if 0
-	checker_area (cr, shape, 7);
+#if 1
+	checker_rect (cr, shape, 7);
 #else
 	fill_rect (cr, shape, "white");
 #endif
@@ -635,7 +581,7 @@ DPDrawingArea::on_timeout (int timer_number)
 	std::cout << "timer" << "\n";
 	get_window()->invalidate (false); //RAR everything for now
 	//return (m_c->device == "/dev/sdc");
-	return false;
+	return true;
 }
 
 #endif
@@ -884,10 +830,11 @@ DPDrawingArea::draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr,
 	shape.h -= th;
 
 	draw_box (cr, cont, shape, &inside);
-	//draw_edge (cr, inside);
+	//draw_edge (cr, inside, "red");
 
 	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
-	draw_fill (cr, inside);
+	draw_border (cr, inside);
+	cr->fill();
 
 	draw_icon (cr, "disk", inside, &below);
 #endif
@@ -899,10 +846,11 @@ DPDrawingArea::draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr,
 	shape.w = 2*TAB_WIDTH + 2*GAP;
 
 	draw_box (cr, cont, shape, &inside);
-	//draw_edge (cr, inside);
+	//draw_edge (cr, inside, "red");
 
 	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
-	draw_fill (cr, inside);
+	draw_border (cr, inside);
+	cr->fill();
 
 	draw_icon (cr, "disk", inside, &below);
 
@@ -1399,8 +1347,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		box.h -= (GAP*2);
 
 #if 0
-		draw_edge (cr, box);
-		draw_edge (cr, right);
+		draw_edge (cr, box, "red");
+		draw_edge (cr, right, "red");
 		return;
 #endif
 
@@ -1461,11 +1409,13 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 			Rect usage = inside;
 			usage.w = usage.w * 2 / 3;
 			cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
-			draw_fill (cr, usage);
+			draw_border (cr, usage);
+			cr->fill();
 #endif
 		}
 		if (cont->name == "ext4") {
-			draw_focus (cr, shape);
+			//draw_focus (cr, shape);
+			draw_edge (cr, shape, "red");
 		}
 
 
@@ -1490,7 +1440,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		return;
 	}
 
-	//draw_edge (cr, inside);
+	//draw_edge (cr, inside, "red");
 
 #if 0
 	Gdk::RGBA rgba ("black");
@@ -1520,7 +1470,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 				draw_tabbox (cr, cont, shape, &tab, &inside);
 			} else {
 				draw_block (cr, cont, shape, &tab, &inside);
-				//draw_edge (cr, inside);
+				//draw_edge (cr, inside, "red");
 #if 0
 				cr->set_source_rgba (1.0, 0.0, 0.0, 1.0);
 				draw_icon (cr, "table", tab, &tab);
@@ -1534,7 +1484,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 				Rect usage = inside;
 				usage.w = usage.w * 2 / 3;
 				cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
-				draw_fill (cr, usage);
+				draw_border (cr, usage);
+				cr->fill();
 #endif
 			}
 			draw_gradient (cr, inside);
@@ -1545,7 +1496,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 	}
 #endif
 
-	//draw_edge (cr, inside);
+	//draw_edge (cr, inside, "red");
 	//fill_area (cr, inside, "rgba(1,1,1,0.5)");
 
 	// width = w
