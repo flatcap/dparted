@@ -145,6 +145,7 @@ draw_edge (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 }
 
 #endif
+
 /**
  * set_colour
  */
@@ -155,6 +156,41 @@ void set_colour (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &col
 		log_error ("don't understand colour: %s\n", colour.c_str());
 	}
 	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
+}
+
+/**
+ * draw_border - sketch out curved rectangle
+ */
+void
+draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+{
+	const int &r = RADIUS;
+	const int &x = shape.x;
+	const int &y = shape.y;
+	const int &w = shape.w;
+	const int &h = shape.h;
+
+	cr->move_to (x, y+r);
+	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
+	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
+	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
+	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
+	cr->close_path();
+}
+
+/**
+ * fill_area - fill rounded rectangle
+ */
+void
+fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std::string &colour)
+{
+	cr->save();
+	set_colour (cr, colour);
+
+	draw_border (cr, shape);
+
+	cr->fill();
+	cr->restore();
 }
 
 /**
@@ -182,79 +218,34 @@ fill_rect (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std
 }
 
 /**
- * fill_area - fill rounded rectangle
- */
-void
-fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std::string &colour)
-{
-	const int &r = RADIUS;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
-
-	cr->save();
-	set_colour (cr, colour);
-
-	cr->move_to (x, y+r);
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
-	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
-	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
-	cr->close_path();
-
-	cr->fill();
-	cr->restore();
-}
-
-/**
  * checker_area - checker rect
  */
 void
-checker_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+checker_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, int check_size)
 {
-	const int check_size = 7;
+	const int &s = check_size;
 	const int &x = shape.x;
 	const int &y = shape.y;
 	const int &w = shape.w;
 	const int &h = shape.h;
 
-	for (int i = 0; i <= w; i += check_size) {
-		for (int j = 0; j <= h; j += check_size) {
-			if (((i+j)/check_size)&1)
+	for (int i = 0; i <= w; i += s) {
+		for (int j = 0; j <= h; j += s) {
+			if (((i+j)/s)&1)
 				cr->set_source_rgba (0.8, 0.8, 0.8, 1.0);
 			else
 				cr->set_source_rgba (0.0, 0.0, 0.0, 0.0);
 
-			cr->move_to     ( x+i, y+j);
-			cr->rel_line_to ( check_size,          0);
-			cr->rel_line_to (          0, check_size);
-			cr->rel_line_to (-check_size,          0);
-			cr->rel_line_to (          0,-check_size);
+			cr->move_to (x+i, y+j);
+
+			cr->rel_line_to ( s, 0);
+			cr->rel_line_to ( 0, s);
+			cr->rel_line_to (-s, 0);
+			cr->rel_line_to ( 0,-s);
 
 			cr->fill();
 		}
 	}
-}
-
-/**
- * draw_border
- */
-void
-draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
-{
-	const int &r = RADIUS;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
-
-	cr->move_to (x, y+r);
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
-	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
-	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
-	cr->close_path();
 }
 
 
@@ -293,25 +284,11 @@ draw_text (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, const std::strin
 	layout->show_in_cairo_context (cr);
 }
 
-
-/**
- * draw_rect
- */
-void
-DPDrawingArea::draw_rect (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour, const Rect &shape)
-{
-	Gdk::RGBA c = theme->get_colour (colour);
-
-	cr->set_source_rgba (c.get_red(), c.get_green(), c.get_blue(), c.get_alpha());
-	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
-	cr->fill();
-}
-
 /**
  * draw_focus - 2px dashed black/white line
  */
 void
-DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 {
 	std::vector<double> dashes;
 	dashes.push_back (5);
@@ -337,90 +314,6 @@ DPDrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &
 
 	cr->restore();						// End clipping
 }
-
-/**
- * draw_highlight - 1 pixel white border
- */
-void
-DPDrawingArea::draw_highlight (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
-{
-	cr->save();
-	draw_border (cr, shape);
-	cr->clip();
-	draw_rect (cr, "rgba(0,128,0,0.2)", shape);
-	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
-	draw_border (cr, shape);
-	cr->stroke();
-	cr->restore();
-}
-
-/**
- * draw_icon
- */
-void
-DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below /*=nullptr*/)
-{
-	Glib::RefPtr<Gdk::Pixbuf> pb;
-
-	if (below)
-		*below = shape;
-
-	pb = theme->get_icon (name);
-	if (!pb) {
-		std::cout << "no icon!\n";
-		return;
-	}
-
-	cr->save();
-
-	shape.x += ((shape.w - pb->get_width()) / 2);	// Centre the icon
-
-	Gdk::Cairo::set_source_pixbuf (cr, pb, shape.x, shape.y);
-	shape.w = pb->get_width();
-	shape.h = pb->get_height();
-	//log_info ("icon %d,%d\n", shape.w, shape.h);
-
-	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
-	cr->fill();
-	cr->restore();
-	//draw_edge (cr, shape);
-
-	if (below) {
-		below->x  =  shape.x;
-		below->y += (shape.h + GAP);
-		below->w  =  shape.w;
-		below->h -= (shape.h + GAP);
-	}
-}
-
-
-#if 0
-/**
- * draw_icon2
- */
-void
-draw_icon2 (
-	const Cairo::RefPtr<Cairo::Context> &cr,
-	const std::string &name,
-	const Rect &shape,
-	      Rect *below /*=nullptr*/)
-{
-	Rect inside;
-	//Rect below;
-
-	shape.w = 2*TAB_WIDTH + 2*GAP;
-
-	draw_box (cr, cont, shape, &inside);
-	//draw_edge (cr, inside);
-
-	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
-	draw_fill (cr, inside);
-
-	draw_icon (cr, "disk", inside, &below);
-
-}
-
-#endif
 
 /**
  * draw_gradient - apply light shading to an area
@@ -449,6 +342,7 @@ draw_gradient (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape)
 	cr->fill();
 	cr->restore();
 }
+
 
 /**
  * draw_corner - draw a corner ne/nw/se/sw convex/concave
@@ -533,35 +427,7 @@ void draw_corner (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool nort
 void
 DPDrawingArea::draw_fill (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
 {
-	const int &r = RADIUS;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
-
-	//std::cout << shape << std::endl;
-
-	draw_corner (cr, shape, true,  true,  true);
-	draw_corner (cr, shape, true,  false, true);
-	draw_corner (cr, shape, false, true,  true);
-	draw_corner (cr, shape, false, false, true);
-
-	cr->move_to     (x, y+r);
-	cr->rel_line_to (r, 0);
-	cr->rel_line_to (0, -r);
-	cr->rel_line_to (w-(2*r), 0);
-	cr->rel_line_to (0, r);
-	cr->rel_line_to (r, 0);
-
-	cr->rel_line_to (0, h-(2*r));
-
-	cr->rel_line_to (-r, 0);
-	cr->rel_line_to (0, r);
-	cr->rel_line_to (-w+(2*r), 0);
-	cr->rel_line_to (0, -r);
-	cr->rel_line_to (-r, 0);
-	cr->close_path();
-
+	draw_border (cr, shape);
 	cr->fill();
 }
 
@@ -577,7 +443,7 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
 	const int &h = shape.h;
 
 	cr->save();
-	cr->set_line_width (r/4+1);
+	cr->set_line_width (SIDES+1);
 
 	if (east) {
 		// South-East
@@ -588,7 +454,7 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
 		cr->close_path();
 		cr->clip();
 
-		cr->arc (x+w-r-(r/4), y+h-r-(r/4), r+(r/8)+1, ARC_E, ARC_S);
+		cr->arc (x+w-r-(SIDES), y+h-r-SIDES, r+(SIDES/2)+1, ARC_E, ARC_S);
 	} else {
 		// South-West
 		cr->move_to (x, y+h);
@@ -598,11 +464,51 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
 		cr->close_path();
 		cr->clip();
 
-		cr->arc (x+r+(r/4), y+h-r-(r/4), r+(r/8)+1, ARC_S, ARC_W);
+		cr->arc (x+r+SIDES, y+h-r-SIDES, r+(SIDES/2)+1, ARC_S, ARC_W);
 	}
 
 	cr->stroke();
 	cr->restore();
+}
+
+
+/**
+ * draw_icon
+ */
+void
+DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, Rect &shape, Rect *below /*=nullptr*/)
+{
+	Glib::RefPtr<Gdk::Pixbuf> pb;
+
+	if (below)
+		*below = shape;
+
+	pb = theme->get_icon (name);
+	if (!pb) {
+		std::cout << "no icon!\n";
+		return;
+	}
+
+	cr->save();
+
+	shape.x += ((shape.w - pb->get_width()) / 2);	// Centre the icon
+
+	Gdk::Cairo::set_source_pixbuf (cr, pb, shape.x, shape.y);
+	shape.w = pb->get_width();
+	shape.h = pb->get_height();
+	//log_info ("icon %d,%d\n", shape.w, shape.h);
+
+	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
+	cr->fill();
+	cr->restore();
+	//draw_edge (cr, shape);
+
+	if (below) {
+		below->x  =  shape.x;
+		below->y += (shape.h + GAP);
+		below->w  =  shape.w;
+		below->h -= (shape.h + GAP);
+	}
 }
 
 /**
@@ -629,7 +535,6 @@ DPDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect
 	const int &h = work.h;
 
 	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-
 	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
 
 	cr->set_line_width (RADIUS);				// Thick top bar (2)
@@ -697,10 +602,10 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 
 	Rect shape { 0, 0, allocation.get_width(), allocation.get_height() };
 
-#if 1
-	checker_area (cr, shape);
+#if 0
+	checker_area (cr, shape, 7);
 #else
-	fill_rect (cr, shape);
+	fill_rect (cr, shape, "white");
 #endif
 	draw_container (cr, m_c, shape);
 
@@ -1559,6 +1464,10 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 			draw_fill (cr, usage);
 #endif
 		}
+		if (cont->name == "ext4") {
+			draw_focus (cr, shape);
+		}
+
 
 #ifdef RAR
 		theme
