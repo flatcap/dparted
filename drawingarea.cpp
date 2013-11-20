@@ -528,7 +528,7 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
  * draw_block - draw an icon-width, hollow, rounded rectangle
  */
 void
-draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *right)
+draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &tab, Rect &right)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_tab: too short\n");
@@ -575,24 +575,19 @@ draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *ta
 	draw_arc (cr, work, true);				// Thin bottom right corner (12)
 	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
-	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
+	tab = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
 
-	draw_corner (cr, t, true,  true,  false);		// Tab inside top right corner
-	draw_corner (cr, t, true,  false, false);		// Tab inside top left corner
+	draw_corner (cr, tab, true, true,  false);		// Tab inside top right corner
+	draw_corner (cr, tab, true, false, false);		// Tab inside top left corner
 
-
-	if (tab)
-		*tab = t;
-
-	if (right)
-		*right = { shape.x + work.w + GAP, shape.y, shape.w - work.w - GAP, shape.h};
+	right = { shape.x + work.w + GAP, shape.y, shape.w - work.w - GAP, shape.h};
 }
 
 /**
  * draw_box - draw a rounded rectangle
  */
 void
-draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *inside)
+draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_box: too short\n");
@@ -637,20 +632,17 @@ draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *insi
 	draw_arc (cr, work, true);				// Thin bottom right corner (12)
 	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
-	Rect i = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
+	inside = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
 
-	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
-	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
-
-	if (inside)
-		*inside = i;
+	draw_corner (cr, inside, true, false, false);		// Top left inner corner (6)
+	draw_corner (cr, inside, true, true,  false);		// Top right inner corner (7)
 }
 
 /**
  * draw_iconbox - draw a rounded rectangle with a handy tab
  */
 void
-draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *inside)
+draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &tab, Rect &inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_iconbox: too short\n");
@@ -705,26 +697,20 @@ draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *
 	cr->close_path();
 	cr->fill();
 
-	Rect i = { x+BLOCK_WIDTH+(SIDES*2), y+RADIUS, w-BLOCK_WIDTH-(SIDES*3), h-RADIUS-SIDES };
+	inside = { x+BLOCK_WIDTH+(SIDES*2), y+RADIUS, w-BLOCK_WIDTH-(SIDES*3), h-RADIUS-SIDES };
 
-	draw_corner (cr, i, false, false, false);		// Bottom left inner corner (11)
+	draw_corner (cr, inside, false, false, false);		// Bottom left inner corner (11)
+	draw_corner (cr, inside, true,  false, false);		// Top left inner corner (6)
+	draw_corner (cr, inside, true,  true,  false);		// Top right inner corner (7)
 
-	Rect t = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
-
-	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
-	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
-
-	if (tab)
-		*tab = t;
-	if (inside)
-		*inside = i;
+	tab = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
 }
 
 /**
  * draw_tabbox - draw a rounded rectangle with a handy tab
  */
 void
-draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *tab, Rect *inside)
+draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &tab, Rect &inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_tabbox: too short\n");
@@ -780,19 +766,13 @@ draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect *t
 	cr->close_path();
 	cr->fill();
 
-	Rect i = { x+TAB_WIDTH+(SIDES*2), y+RADIUS, w-TAB_WIDTH-(SIDES*3), h-RADIUS-SIDES };
+	inside = { x+TAB_WIDTH+(SIDES*2), y+RADIUS, w-TAB_WIDTH-(SIDES*3), h-RADIUS-SIDES };
 
-	draw_corner (cr, i, false, false, false);		// Bottom left inner corner (11)
+	draw_corner (cr, inside, false, false, false);		// Bottom left inner corner (11)
+	draw_corner (cr, inside, true,  false, false);		// Top left inner corner (6)
+	draw_corner (cr, inside, true,  true,  false);		// Top right inner corner (7)
 
-	Rect t = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
-
-	draw_corner (cr, i, true, false, false);		// Top left inner corner (6)
-	draw_corner (cr, i, true, true,  false);		// Top right inner corner (7)
-
-	if (tab)
-		*tab = t;
-	if (inside)
-		*inside = i;
+	tab = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
 }
 
 
@@ -853,10 +833,10 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
 	Rect shape { 0, 0, allocation.get_width(), allocation.get_height() };
 
 #if 1
-	draw_grid_linear (cr, shape, m_c->bytes_size);
+	checker_rect (cr, shape, 7);
 #else
 	draw_grid (cr, shape);
-	checker_rect (cr, shape, 7);
+	draw_grid_linear (cr, shape, m_c->bytes_size);
 	fill_rect (cr, shape, "white");
 #endif
 	draw_container (cr, m_c, shape);
@@ -1351,7 +1331,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 
 		Rect tab;
 		set_colour (cr, colour);
-		draw_iconbox (cr, shape, &tab, &inside);
+		draw_iconbox (cr, shape, tab, inside);
 
 		draw_icon (cr, "table", tab, &tab);
 		draw_icon (cr, "shield", tab, &tab);
@@ -1374,7 +1354,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 #endif
 	} else if (display == "box") {		// A simple coloured box
 		set_colour (cr, colour);
-		draw_box (cr, shape, &inside);
+		draw_box (cr, shape, inside);
 
 		fill_area (cr, inside, background);
 
@@ -1389,8 +1369,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 #endif
 		}
 		if (cont->name == "ext4") {
-			//draw_focus (cr, shape);
-			draw_edge (cr, shape, "red");
+			draw_focus (cr, shape);
+			//draw_edge (cr, shape, "red");
 		}
 
 
@@ -1403,7 +1383,8 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 #endif
 	} else if (display == "tabbox") {	// A coloured box with a handy tab
 		set_colour (cr, colour);
-		draw_tabbox (cr, shape, nullptr, &inside);
+		Rect tab;
+		draw_tabbox (cr, shape, tab, inside);
 
 #ifdef RAR
 		theme
