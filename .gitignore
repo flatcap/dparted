@@ -9,3 +9,8 @@
 /.dep
 /.obj
 gmon.out
+
+# work dirs
+/backup
+/variant
+/visitor

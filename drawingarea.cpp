@@ -1284,8 +1284,9 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 
 	std::vector<DPContainer*> children = cont->get_children();
 
-	if ((display != "box") && (display != "empty") && (display != "icon") && (display != "iconbox") && (display != "tabbox"))
+	if ((display != "box") && (display != "empty") && (display != "icon") && (display != "iconbox") && (display != "tabbox")) {
 		display = "box";
+	}
 
 	if (display == "empty") {		// Only display if there's no children
 		if (children.empty()) {
