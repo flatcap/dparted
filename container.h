@@ -113,9 +113,6 @@ public:
 	DPContainer	*parent;
 	std::vector<DPContainer*> children;
 
-	friend std::ostream & operator<< (std::ostream &stream, const DPContainer &c);
-	friend std::ostream & operator<< (std::ostream &stream, const DPContainer *c);
-
 	std::vector<std::string> type;
 
 	int		 ref_count;
@@ -131,6 +128,9 @@ public:
 	std::string get_path (void);
 
 protected:
+	friend std::ostream & operator<< (std::ostream &stream, const DPContainer &c);
+	friend std::ostream & operator<< (std::ostream &stream, const DPContainer *c);
+
 	void declare (const char *name);
 	void insert (long offset, long size, void *ptr);
 
