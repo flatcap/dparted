@@ -199,7 +199,8 @@ main (int argc, char *argv[])
 	// Process the probe_queue
 	DPContainer *item = nullptr;
 	//XXX deque?
-	while ((item = probe_queue.front())) {
+	while (!probe_queue.empty()) {
+		item = probe_queue.front();
 		probe_queue.pop();
 
 		//std::cout << "Item: " << item << "\n";
@@ -221,7 +222,8 @@ main (int argc, char *argv[])
 #if 1
 	// Process the probe_queue
 	//XXX deque?
-	while ((item = probe_queue.front())) {
+	while (!probe_queue.empty()) {
+		item = probe_queue.front();
 		probe_queue.pop();
 
 		//std::cout << "Item: " << item << "\n";
