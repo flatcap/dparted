@@ -139,7 +139,7 @@ DPContainer::add_child (DPContainer *child)
 
 	//log_debug ("child: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
-	child->ref();
+	//child->ref();
 	child->parent = this;
 }
 
@@ -567,7 +567,7 @@ DPContainer::unref (void)
 {
 	ref_count--;
 	if (ref_count == 0) {
-		//delete this;
+		delete this;
 	}
 }
 
@@ -615,7 +615,7 @@ void deleter (Mmap *m)
 
 	std::tie (std::ignore, size, ptr) = *m;
 
-	std::cout << "mmap deleter: " << ptr << std::endl;
+	//std::cout << "mmap deleter: " << ptr << std::endl;
 	munmap (ptr, size);
 
 	delete m;

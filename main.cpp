@@ -216,7 +216,7 @@ main (int argc, char *argv[])
 		}
 	}
 
-	LvmGroup::discover (top_level);
+	//LvmGroup::discover (top_level);
 	//MdGroup::discover (top_level);
 
 #if 1
@@ -265,6 +265,7 @@ main (int argc, char *argv[])
 		retval =  app.run (1, argv);		//XXX argc
 	}
 
+	log_close();
 	return retval;
 }
 
