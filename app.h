@@ -20,6 +20,8 @@
 
 #include <gtkmm/application.h>
 
+#include "pointers.h"
+
 class DPContainer;
 
 /**
@@ -48,6 +50,7 @@ protected:
 
 	DPContainer *top_level;
 };
+
 
 #endif // _APP_H_
 

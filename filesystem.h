@@ -21,6 +21,7 @@
 #include <string>
 
 #include "container.h"
+#include "pointers.h"
 
 /**
  * class Filesystem

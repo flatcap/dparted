@@ -19,6 +19,7 @@
 #define _MD_GROUP_H_
 
 #include "whole.h"
+#include "pointers.h"
 
 class MdTable;
 

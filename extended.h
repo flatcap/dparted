@@ -21,6 +21,7 @@
 #include <string>
 
 #include "msdos.h"
+#include "pointers.h"
 
 /**
  * class Extended

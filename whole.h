@@ -22,6 +22,7 @@
 #include <vector>
 
 #include "container.h"
+#include "pointers.h"
 
 /**
  * class Whole

@@ -19,6 +19,7 @@
 #define _LVM_PARTITION_H_
 
 #include "partition.h"
+#include "pointers.h"
 
 /**
  * class LvmPartition

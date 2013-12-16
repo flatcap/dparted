@@ -19,6 +19,7 @@
 #define _LVM_MIRROR_H_
 
 #include "lvm_volume.h"
+#include "pointers.h"
 
 /**
  * class LvmMirror

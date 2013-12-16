@@ -19,6 +19,7 @@
 #define _LVM_METADATA_H_
 
 #include "lvm_linear.h"
+#include "pointers.h"
 
 /**
  * class LvmMetadata

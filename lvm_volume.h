@@ -19,6 +19,7 @@
 #define _LVM_VOLUME_H_
 
 #include "volume.h"
+#include "pointers.h"
 
 /**
  * class LvmVolume

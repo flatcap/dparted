@@ -19,6 +19,7 @@
 #define _LVM_GROUP_H_
 
 #include "whole.h"
+#include "pointers.h"
 
 class LvmTable;
 

@@ -19,6 +19,7 @@
 #define _VOLUME_H_
 
 #include "whole.h"
+#include "pointers.h"
 
 /**
  * class Volume

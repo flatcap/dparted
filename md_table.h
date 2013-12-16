@@ -21,6 +21,7 @@
 #include <string>
 
 #include "table.h"
+#include "pointers.h"
 
 /**
  * class MdTable

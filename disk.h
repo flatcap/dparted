@@ -23,6 +23,7 @@
 #include <queue>
 
 #include "block.h"
+#include "pointers.h"
 
 /**
  * class Disk

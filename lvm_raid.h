@@ -19,6 +19,7 @@
 #define _LVM_RAID_H_
 
 #include "lvm_volume.h"
+#include "pointers.h"
 
 /**
  * class LvmRaid
