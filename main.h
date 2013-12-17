@@ -18,10 +18,10 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-class DPContainer;
+#include "pointers.h"
 
-void queue_add_probe (DPContainer *item);
-DPContainer * probe (DPContainer &top_level, DPContainer *parent);
+void queue_add_probe (ContainerPtr& item);
+ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 #endif // _MAIN_H_
 

@@ -32,7 +32,7 @@ public:
 	MdTable (void);
 	virtual ~MdTable();
 
-	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
+	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 	std::string	vol_uuid;
 	std::string	vol_name;

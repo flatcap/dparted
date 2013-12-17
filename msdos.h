@@ -41,12 +41,12 @@ public:
 	Msdos (void);
 	virtual ~Msdos();
 
-	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
+	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 protected:
-	virtual bool read_partition (unsigned char *buffer, int index, struct partition *part);
-	virtual unsigned int read_table (unsigned char *buffer, int bufsize, long offset, std::vector<struct partition> &vp);
-	virtual void read_chs (unsigned char *buffer, int *cylinder, int *head, int *sector);
+	virtual bool read_partition (unsigned char* buffer, int index, struct partition* part);
+	virtual unsigned int read_table (unsigned char* buffer, int bufsize, long offset, std::vector<struct partition>& vp);
+	virtual void read_chs (unsigned char* buffer, int* cylinder, int* head, int* sector);
 
 private:
 

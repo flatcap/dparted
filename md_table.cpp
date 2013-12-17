@@ -41,7 +41,7 @@ MdTable::~MdTable()
  * read_uuid
  */
 std::string
-read_uuid_string (unsigned char *buffer)
+read_uuid_string (unsigned char* buffer)
 {
 	char uuid[40];
 
@@ -56,7 +56,7 @@ read_uuid_string (unsigned char *buffer)
  * is_mdtable
  */
 static bool
-is_mdtable (unsigned char *buffer)
+is_mdtable (unsigned char* buffer)
 {
 	if (!buffer)
 		return false;
@@ -71,11 +71,10 @@ is_mdtable (unsigned char *buffer)
 /**
  * probe
  */
-DPContainer *
-MdTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+ContainerPtr
+MdTable::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize)
 {
 	//LOG_TRACE;
-	MdTable *t = nullptr;
 
 	buffer  += 4096;	// Ignore the first 4KiB
 	bufsize -= 4096;
@@ -111,7 +110,7 @@ MdTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buff
 	//log_info ("data offset/size = %ld (%s), %ld (%s)\n", data_offset, get_size (data_offset).c_str(), data_size, get_size (data_size).c_str());
 
 	//log_info ("mdtable\n");
-	t = new MdTable();
+	MdTablePtr t (new MdTable());
 
 	t->bytes_size		= data_offset + data_size;
 	t->uuid			= dev_uuid;
@@ -125,7 +124,8 @@ MdTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buff
 	t->data_offset		= data_offset;
 	t->data_size		= data_size;
 
-	parent->add_child (t);
+	ContainerPtr c(t);
+	parent->add_child (c);
 
 	return t;
 }

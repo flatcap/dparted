@@ -41,7 +41,7 @@ LvmMirror::~LvmMirror()
  * add_child
  */
 void
-LvmMirror::add_child (DPContainer *child)
+LvmMirror::add_child (ContainerPtr child)
 {
 	/* Check:
 	 *	available space
@@ -62,7 +62,7 @@ LvmMirror::add_child (DPContainer *child)
 
 #if 0
 	if (children.size() > 0) {
-		DPContainer *last = children.back();
+		ContainerPtr last = children.back();
 
 		last->next = child;
 		child->prev = last;
@@ -98,7 +98,7 @@ LvmMirror::add_child (DPContainer *child)
  * delete_child
  */
 void
-LvmMirror::delete_child (DPContainer *child)
+LvmMirror::delete_child (ContainerPtr child)
 {
 }
 

@@ -42,16 +42,16 @@ public:
 
 	std::string	mirror_log;
 
-	virtual void add_child (DPContainer *child);
+	virtual void add_child (ContainerPtr& child);
 
-	virtual DPContainer * find (const std::string &uuid);
+	virtual ContainerPtr find (const std::string& uuid);
 
 	virtual void dump_objects (int indent = 0);
 
-	std::vector<DPContainer*> metadata;
-	std::vector<DPContainer*> subvols;
+	std::vector<ContainerPtr> metadata;
+	std::vector<ContainerPtr> subvols;
 
-	DPContainer *sibling;
+	ContainerPtr sibling;
 protected:
 private:
 

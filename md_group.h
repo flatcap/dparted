@@ -32,7 +32,7 @@ public:
 	MdGroup (void);
 	virtual ~MdGroup();
 
-	static void discover (DPContainer &top_level);
+	static void discover (ContainerPtr& top_level);
 protected:
 
 private:

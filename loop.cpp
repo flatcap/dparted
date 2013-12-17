@@ -114,12 +114,8 @@ Loop::~Loop()
  * losetup
  */
 bool
-Loop::losetup (std::vector <std::string> &output, std::string device)
+Loop::losetup (std::vector <std::string>& output, std::string device)
 {
-	/* Limitations of using "losetup" output:
-	 *	Filename begins, or ends, with whitespace
-	 *	Filename ends " (deleted)"
-	 */
 	/* Alternative source of info:
 	 *	/sys/devices/virtual/block/loop48/
 	 *		dev
@@ -133,6 +129,10 @@ Loop::losetup (std::vector <std::string> &output, std::string device)
 	 * Need to stat backing file for inode, kernel major, kernel minor
 	 */
 
+	/* Limitations of using "losetup" output:
+	 *	Filename begins, or ends, with whitespace
+	 *	Filename ends " (deleted)"
+	 */
 	/* Example output:
 	 *	/dev/loop17 0 47 8:3 7:272 0 1 0 0 /mnt/space/test/test_24.img
 	 *	/dev/loop18 0 48 8:3 7:288 0 1 0 0 /mnt/space/test/test_30.img (deleted)
@@ -158,7 +158,7 @@ Loop::losetup (std::vector <std::string> &output, std::string device)
  * discover
  */
 void
-Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
+Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 {
 	std::vector <std::string> output;
 
@@ -166,7 +166,7 @@ Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 		return;
 
 	for (auto line : output) {
-		Loop *l = new Loop (line);
+		LoopPtr l (new Loop (line));
 
 		l->get_fd();
 
@@ -175,8 +175,9 @@ Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 		size = lseek (l->fd, 0, SEEK_END);
 		l->bytes_size = size;
 
-		top_level.just_add_child (l);
-		probe_queue.push (l);	// We need to probe
+		ContainerPtr c(l);
+		top_level->just_add_child (c);
+		probe_queue.push (c);	// We need to probe
 	}
 }
 
@@ -184,11 +185,10 @@ Loop::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
  * identify
  */
 void
-Loop::identify (DPContainer &top_level, const char *name, int fd, struct stat &st)
+Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st)
 {
 	//LOG_TRACE;
 
-	Loop *l = nullptr;
 	off_t size;
 
 	std::vector <std::string> output;
@@ -197,7 +197,7 @@ Loop::identify (DPContainer &top_level, const char *name, int fd, struct stat &s
 
 	//std::cout << output[0] << std::endl;
 
-	l = new Loop (output[0]);
+	LoopPtr l (new Loop (output[0]));
 
 	size = lseek (fd, 0, SEEK_END);
 
@@ -219,7 +219,8 @@ Loop::identify (DPContainer &top_level, const char *name, int fd, struct stat &s
 	ss << "[" << l->loop_major << ":" << l->loop_minor << "]";
 	l->uuid = ss.str();
 
-	top_level.just_add_child (l);
-	queue_add_probe (l);	// queue the container for action
+	ContainerPtr c(l);
+	top_level->just_add_child (c);
+	queue_add_probe (c);	// queue the container for action
 }
 

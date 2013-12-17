@@ -43,7 +43,7 @@ LvmVolume::~LvmVolume()
  * add_child
  */
 void
-LvmVolume::add_child (DPContainer *child)
+LvmVolume::add_child (ContainerPtr& child)
 {
 	if (!child)
 		return;
@@ -58,19 +58,19 @@ LvmVolume::add_child (DPContainer *child)
 		subvols.push_back (child);
 		//log_debug ("subvols: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 		//log_info ("SUBVOL %s\n", child->name.c_str());
-		child->whole = this;
+		child->whole.reset (this);
 	} else if (child->is_a ("lvm_partition")) {
 		//log_info ("PARTITION %s\n", child->name.c_str());
 		add_segment (child);
 		//Whole::add_child (child);
-		child->whole = this;
+		child->whole.reset (this);
 	} else {
 		// filesystem
 		Whole::add_child (child);
 
 #if 0
 		for (auto i : subvols) {
-			LvmVolume *v = dynamic_cast<LvmVolume*> (i);
+			LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (i);
 			//log_info ("subvol %s, %ld segments\n", v->name.c_str(), v->segments.size());
 			for (auto j : v->segments) {
 				j->just_add_child (child);
@@ -83,8 +83,8 @@ LvmVolume::add_child (DPContainer *child)
 /**
  * find
  */
-DPContainer *
-LvmVolume::find (const std::string &search)
+ContainerPtr
+LvmVolume::find (const std::string& search)
 {
 	//printf ("find: %s -> %s (%s)\n", search.c_str(), name.c_str(), uuid.c_str());
 	std::string search2;

@@ -135,7 +135,7 @@ xfs		xfs_db {device}, sb, p
  * get_mounted_usage
  */
 bool
-get_mounted_usage (Filesystem *f)
+get_mounted_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
@@ -149,7 +149,7 @@ get_mounted_usage (Filesystem *f)
  * get_btrfs_usage
  */
 bool
-get_btrfs_usage (Filesystem *f)
+get_btrfs_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
@@ -165,7 +165,7 @@ get_btrfs_usage (Filesystem *f)
  * get_ext2_usage
  */
 bool
-get_ext2_usage (Filesystem *f)
+get_ext2_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
@@ -181,7 +181,7 @@ get_ext2_usage (Filesystem *f)
  * get_ext3_usage
  */
 bool
-get_ext3_usage (Filesystem *f)
+get_ext3_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
@@ -197,7 +197,7 @@ get_ext3_usage (Filesystem *f)
  * get_ext4_usage
  */
 bool
-get_ext4_usage (Filesystem *f)
+get_ext4_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
@@ -213,7 +213,7 @@ get_ext4_usage (Filesystem *f)
  * get_ntfs_usage
  */
 bool
-get_ntfs_usage (Filesystem *f)
+get_ntfs_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
@@ -229,7 +229,7 @@ get_ntfs_usage (Filesystem *f)
  * get_reiserfs_usage
  */
 bool
-get_reiserfs_usage (Filesystem *f)
+get_reiserfs_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
@@ -245,7 +245,7 @@ get_reiserfs_usage (Filesystem *f)
  * get_swap_usage
  */
 bool
-get_swap_usage (Filesystem *f)
+get_swap_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
@@ -261,7 +261,7 @@ get_swap_usage (Filesystem *f)
  * get_vfat_usage
  */
 bool
-get_vfat_usage (Filesystem *f)
+get_vfat_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
@@ -277,7 +277,7 @@ get_vfat_usage (Filesystem *f)
  * get_xfs_usage
  */
 bool
-get_xfs_usage (Filesystem *f)
+get_xfs_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;

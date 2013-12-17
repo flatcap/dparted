@@ -3,14 +3,13 @@ RM	= rm -fr
 MKDIR	= mkdir -p
 
 # Library
-SRC	+= app.cpp block.cpp container.cpp disk.cpp dot.cpp extended.cpp	\
-	   file.cpp filesystem.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp	\
-	   gpt.cpp leak.cpp log.cpp loop.cpp lvm_group.cpp lvm_linear.cpp	\
-	   lvm_mirror.cpp lvm_partition.cpp lvm_stripe.cpp lvm_table.cpp	\
-	   lvm_volume.cpp main.cpp md_group.cpp md_table.cpp misc.cpp msdos.cpp	\
-	   partition.cpp table.cpp utils.cpp volume.cpp whole.cpp
-
-SRC	+= lvm_raid.cpp lvm_metadata.cpp icon_manager.cpp variant.cpp
+SRC	+= app.cpp block.cpp container.cpp disk.cpp dot.cpp extended.cpp \
+	   file.cpp filesystem.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp \
+	   gpt.cpp icon_manager.cpp leak.cpp log.cpp loop.cpp lvm_group.cpp \
+	   lvm_linear.cpp lvm_metadata.cpp lvm_mirror.cpp lvm_partition.cpp \
+	   lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp main.cpp \
+	   md_group.cpp md_table.cpp misc.cpp msdos.cpp partition.cpp \
+	   table.cpp utils.cpp variant.cpp volume.cpp whole.cpp
 
 # GUI
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp

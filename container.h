@@ -40,7 +40,7 @@ typedef std::set<MmapPtr,compare>   MmapSet;	// sorted set of Mmaps
  */
 struct compare
 {
-	bool operator() (const MmapPtr &a, const MmapPtr &b)
+	bool operator() (const MmapPtr& a, const MmapPtr& b)
 	{
 		long ao, as, bo, bs;
 		std::tie (ao, as, std::ignore) = *a;
@@ -62,40 +62,40 @@ public:
 	DPContainer (void);
 	virtual ~DPContainer();
 
-	void * operator new    (size_t s);
-	void   operator delete (void *ptr);
+	void* operator new    (size_t s);
+	void  operator delete (void* ptr);
 
 	static void dump_leaks (void);
 
-	virtual void add_child      (DPContainer *child);
-	virtual void just_add_child (DPContainer *child);
-	virtual void delete_child   (DPContainer *child);
-	virtual void move_child     (DPContainer *child, long offset, long size);
+	virtual void add_child      (ContainerPtr& child);
+	virtual void just_add_child (ContainerPtr& child);
+	virtual void delete_child   (ContainerPtr& child);
+	virtual void move_child     (ContainerPtr& child, long offset, long size);
 
 	virtual int           get_fd (void);
 	virtual long          get_block_size (void);
 	virtual std::string   get_device_name (void);
 	virtual long          get_parent_offset (void);
-	virtual unsigned int  get_device_space (std::map<long, long> &spaces);
+	virtual unsigned int  get_device_space (std::map<long, long>& spaces);
 
 	virtual long get_size_total (void);
 	virtual long get_size_used (void);
 	virtual long get_size_free (void);
 
-	virtual DPContainer * find_device (const std::string &dev);
-	virtual DPContainer * find_name   (const std::string &name);
-	virtual DPContainer * find_uuid   (const std::string &uuid);
-	virtual DPContainer * find        (const std::string &uuid);
+	virtual ContainerPtr find_device (const std::string& dev);
+	virtual ContainerPtr find_name   (const std::string& name);
+	virtual ContainerPtr find_uuid   (const std::string& uuid);
+	virtual ContainerPtr find        (const std::string& uuid);
 
-	virtual void          find_type   (const std::string &type, std::vector<DPContainer*> &results);
-	//XXX virtual std::vector<DPContainer*> find_incomplete (void);
+	virtual void find_type (const std::string& type, std::vector<ContainerPtr>& results);
+	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);
 
-	virtual unsigned char * get_buffer (long offset, long size);
-	virtual void close_buffer (unsigned char *buffer, long size);
+	virtual unsigned char* get_buffer (long offset, long size);
+	virtual void close_buffer (unsigned char* buffer, long size);
 
-	virtual bool is_a (const std::string &type);
+	virtual bool is_a (const std::string& type);
 
-	virtual std::string get_property (const std::string &propname);
+	virtual std::string get_property (const std::string& propname);
 
 	void ref   (void);
 	void unref (void);
@@ -110,9 +110,9 @@ public:
 	long		 bytes_size;
 	long		 bytes_used;
 
-	Whole		*whole;
+	WholePtr	 whole;
 
-	DPContainer	*parent;
+	ContainerPtr	 parent;
 
 	std::vector<std::string> type;
 
@@ -124,20 +124,19 @@ public:
 
 	int		 fd;
 
-	virtual std::vector<DPContainer*> get_children (void);
+	virtual std::vector<ContainerPtr>& get_children (void);
 
 	std::string get_path (void);
 
 protected:
-	friend std::ostream & operator<< (std::ostream &stream, const DPContainer &c);
-	friend std::ostream & operator<< (std::ostream &stream, const DPContainer *c);
+	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 
-	void declare (const char *name);
-	void insert (long offset, long size, void *ptr);
+	void declare (const char* name);
+	void insert (long offset, long size, void* ptr);
 
 	MmapSet	mmaps;
 
-	std::vector<DPContainer*> children;
+	std::vector<ContainerPtr> children;
 private:
 
 };

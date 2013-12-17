@@ -32,7 +32,7 @@ public:
 	Extended (void);
 	virtual ~Extended();
 
-	static Extended * probe (DPContainer &top_level, DPContainer *parent, long offset, long size);
+	static ExtendedPtr probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size);
 
 protected:
 

@@ -49,9 +49,9 @@ public:
 	bool		read_only;
 	bool		deleted;
 
-	static bool losetup  (std::vector <std::string> &output, std::string device = std::string());
-	static void discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue);
-	static void identify (DPContainer &top_level, const char *name, int fd, struct stat &st);
+	static bool losetup  (std::vector <std::string>& output, std::string device = std::string());
+	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
+	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 protected:
 private:

@@ -47,23 +47,23 @@ Table::~Table()
 /**
  * probe
  */
-DPContainer *
-Table::probe (DPContainer &top_level, DPContainer *parent)
+ContainerPtr
+Table::probe (ContainerPtr &top_level, ContainerPtr& parent)
 {
 	//LOG_TRACE;
 
 	if (!parent)
 		return nullptr;
 
-	long		 bufsize = 1048576;	// 1 MiB
-	unsigned char	*buffer  = parent->get_buffer (0, bufsize);
+	long		bufsize = 1048576;	// 1 MiB
+	unsigned char*	buffer  = parent->get_buffer (0, bufsize);
 
 	if (!buffer) {
 		//log_error ("can't get buffer\n");
 		return nullptr;
 	}
 
-	DPContainer *c = nullptr;
+	ContainerPtr c;
 	if ((c = Gpt::probe (top_level, parent, buffer, bufsize)))
 		return c;
 
@@ -88,7 +88,7 @@ Table::fill_space (void)
 	// iterate through the children and add a Misc for all the unallocated regions
 	// the size of these fillers must be >= alignment size
 
-	std::vector<DPContainer*> vm;
+	std::vector<ContainerPtr> vm;
 #if 0
 	std::string s1;
 	std::string s2;
@@ -114,7 +114,7 @@ Table::fill_space (void)
 			s2 = get_size (c->parent_offset + c->bytes_size);
 			log_debug ("\tpartition %12lld -> %12lld    %8s -> %8s\n", c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str(), s2.c_str());
 #endif
-			Misc *m = new Misc();
+			MiscPtr m (new Misc());
 			m->name = "unallocated";
 			m->parent_offset = upto;
 			m->bytes_size = (c->parent_offset - upto);
@@ -128,7 +128,7 @@ Table::fill_space (void)
 
 	//log_debug ("upto = %lld, size = %lld\n", upto, bytes_size);
 	if (upto < bytes_size) {
-		Misc *m = new Misc();
+		MiscPtr m (new Misc());
 		m->name = "unallocated";
 		m->parent_offset = upto;
 		m->bytes_size = (bytes_size - upto);

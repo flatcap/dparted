@@ -49,7 +49,7 @@ MdGroup::~MdGroup()
  * discover
  */
 void
-MdGroup::discover (DPContainer &top_level)
+MdGroup::discover (ContainerPtr& top_level)
 {
 	LOG_TRACE;
 

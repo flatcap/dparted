@@ -51,7 +51,7 @@ Disk::Disk (void) :
 /**
  * Disk (std::string)
  */
-Disk::Disk (const std::string &lsblk) :
+Disk::Disk (const std::string& lsblk) :
 	Disk()
 {
 	std::map<std::string,StringNum> tags;
@@ -89,7 +89,7 @@ Disk::~Disk()
  * find_devices_old
  */
 bool
-Disk::find_devices_old (const std::string &name, int fd, struct stat &st, DPContainer &list)
+Disk::find_devices_old (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
 {
 	// for /dev/sda look at
 	//	/sys/block/sda/size
@@ -107,9 +107,7 @@ Disk::find_devices_old (const std::string &name, int fd, struct stat &st, DPCont
 #endif
 
 	//log_debug ("%s\n", model.c_str());
-	Disk *d = nullptr;
-
-	d = new Disk();
+	DiskPtr d (new Disk());
 
 	//log_debug ("fd = %d\n", fd);
 	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); //XXX replace with ftell (user, not root)
@@ -152,7 +150,7 @@ Disk::find_devices_old (const std::string &name, int fd, struct stat &st, DPCont
  * find_devices
  */
 unsigned int
-Disk::find_devices (DPContainer &list)
+Disk::find_devices (ContainerPtr& list)
 {
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
 	//XXX use LOOP_MAJOR
@@ -208,7 +206,7 @@ Disk::find_devices (DPContainer &list)
 		log_debug ("\n");
 #endif
 
-		Disk *d = new Disk();
+		DiskPtr d (new Disk());
 		d->device = "/dev/" + device;
 		d->parent_offset = 0;
 		d->kernel_major = kernel_major;
@@ -218,7 +216,8 @@ Disk::find_devices (DPContainer &list)
 
 		//d->open_device();
 
-		list.add_child (d);
+		ContainerPtr c(d);
+		list->add_child (c);
 		added++;
 	}
 
@@ -239,7 +238,7 @@ Disk::get_block_size (void)
  * get_device_space
  */
 unsigned int
-Disk::get_device_space (std::map<long, long> &spaces)
+Disk::get_device_space (std::map<long, long>& spaces)
 {
 	return 0;
 }
@@ -248,8 +247,8 @@ Disk::get_device_space (std::map<long, long> &spaces)
 /**
  * find_device
  */
-DPContainer *
-Disk::find_device (const std::string &dev)
+ContainerPtr
+Disk::find_device (const std::string& dev)
 {
 	// does it sound like one of my children?  /dev/sdaX, /dev/sdaXX
 	unsigned int dev_len = device.length();
@@ -268,7 +267,7 @@ Disk::find_device (const std::string &dev)
  * lsblk
  */
 bool
-Disk::lsblk (std::vector <std::string> &output, std::string device)
+Disk::lsblk (std::vector <std::string>& output, std::string device)
 {
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
 	std::string command = "sudo lsblk -b -P ";
@@ -294,7 +293,7 @@ Disk::lsblk (std::vector <std::string> &output, std::string device)
  * discover
  */
 void
-Disk::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
+Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 {
 	//LOG_TRACE;
 
@@ -306,10 +305,11 @@ Disk::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
 	//log_debug ("%d lines\n", count);
 
 	for (auto line : output) {
-		Disk *d = new Disk (line);
+		DiskPtr d (new Disk (line));
 
-		top_level.just_add_child (d);
-		probe_queue.push (d);	// We need to probe
+		ContainerPtr c(d);
+		top_level->just_add_child (c);
+		probe_queue.push (c);	// We need to probe
 	}
 }
 
@@ -317,7 +317,7 @@ Disk::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
  * identify
  */
 void
-Disk::identify (DPContainer &top_level, const char *name, int fd, struct stat &st)
+Disk::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st)
 {
 	//LOG_TRACE;
 	std::vector<std::string> output;
@@ -325,10 +325,11 @@ Disk::identify (DPContainer &top_level, const char *name, int fd, struct stat &s
 	if (!lsblk (output, name))
 		return;
 
-	Disk *d = new Disk (output[0]);
+	DiskPtr d (new Disk (output[0]));
 
-	top_level.just_add_child (d);
-	queue_add_probe (d);	// queue the container for action
+	ContainerPtr c(d);
+	top_level->just_add_child (c);
+	queue_add_probe (c);	// queue the container for action
 }
 
 

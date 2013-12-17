@@ -15,21 +15,20 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #ifndef _FS_GET_H_
 #define _FS_GET_H_
 
-class Filesystem;
+#include "pointers.h"
 
-Filesystem * get_btrfs    (unsigned char *buffer, int bufsize);
-Filesystem * get_ext2     (unsigned char *buffer, int bufsize);
-Filesystem * get_ext3     (unsigned char *buffer, int bufsize);
-Filesystem * get_ext4     (unsigned char *buffer, int bufsize);
-Filesystem * get_ntfs     (unsigned char *buffer, int bufsize);
-Filesystem * get_reiserfs (unsigned char *buffer, int bufsize);
-Filesystem * get_swap     (unsigned char *buffer, int bufsize);
-Filesystem * get_vfat     (unsigned char *buffer, int bufsize);
-Filesystem * get_xfs      (unsigned char *buffer, int bufsize);
+FilesystemPtr get_btrfs    (unsigned char* buffer, int bufsize);
+FilesystemPtr get_ext2     (unsigned char* buffer, int bufsize);
+FilesystemPtr get_ext3     (unsigned char* buffer, int bufsize);
+FilesystemPtr get_ext4     (unsigned char* buffer, int bufsize);
+FilesystemPtr get_ntfs     (unsigned char* buffer, int bufsize);
+FilesystemPtr get_reiserfs (unsigned char* buffer, int bufsize);
+FilesystemPtr get_swap     (unsigned char* buffer, int bufsize);
+FilesystemPtr get_vfat     (unsigned char* buffer, int bufsize);
+FilesystemPtr get_xfs      (unsigned char* buffer, int bufsize);
 
 #endif // _FS_GET_H_
 

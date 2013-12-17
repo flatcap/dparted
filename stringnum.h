@@ -33,11 +33,11 @@ public:
 	{
 	}
 
-	StringNum (const char *str) : std::string (str)
+	StringNum (const char* str) : std::string (str)
 	{
 	}
 
-	StringNum (const std::string &str) : std::string (str)
+	StringNum (const std::string& str) : std::string (str)
 	{
 	}
 
@@ -45,7 +45,7 @@ public:
 	{
 	}
 
-	const std::string operator= (const std::string &value)
+	const std::string operator= (const std::string& value)
 	{
 		return std::string::operator= (value);
 	}

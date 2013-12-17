@@ -44,8 +44,8 @@ dump_leaks (void)
 /**
  * object_track
  */
-DPContainer *
-object_track (DPContainer *obj)
+DPContainer*
+object_track (DPContainer* obj)
 {
 	obj_set.insert (obj);
 	return obj;
@@ -55,7 +55,7 @@ object_track (DPContainer *obj)
  * object_untrack
  */
 bool
-object_untrack (DPContainer *obj)
+object_untrack (DPContainer* obj)
 {
 	//XXX check for presence
 	obj_set.erase (obj);

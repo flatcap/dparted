@@ -41,7 +41,7 @@ public:
 	DParted();
 	virtual ~DParted();
 
-	void set_data (DPContainer *c);
+	void set_data (ContainerPtr c);
 
 protected:
 	// GUI
@@ -67,7 +67,7 @@ protected:
 	void on_menu_choices_one();
 	void on_menu_choices_two();
 
-	DPContainer *m_c;
+	ContainerPtr m_c;
 
 private:
 	void init_menubar (void);

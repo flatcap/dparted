@@ -34,7 +34,7 @@ public:
 	LvmTable (void);
 	virtual ~LvmTable();
 
-	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
+	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 	// my volume
 	std::string config;
@@ -42,9 +42,9 @@ public:
 
 	int metadata_size;
 
-	virtual void add_child      (DPContainer *child);
+	virtual void add_child (ContainerPtr& child);
 
-	LvmGroup *group;
+	LvmGroupPtr group;
 protected:
 
 private:

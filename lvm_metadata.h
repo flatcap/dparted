@@ -30,7 +30,7 @@ public:
 	LvmMetadata (void);
 	virtual ~LvmMetadata();
 
-	virtual void add_child (DPContainer *child);
+	virtual void add_child (ContainerPtr& child);
 
 protected:
 private:

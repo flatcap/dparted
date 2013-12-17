@@ -32,7 +32,7 @@ public:
 	Gpt (void);
 	virtual ~Gpt();
 
-	static DPContainer * probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize);
+	static ContainerPtr  probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 protected:
 

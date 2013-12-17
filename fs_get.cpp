@@ -29,7 +29,7 @@
  * get_ext_common
  */
 void
-get_ext_common (Filesystem *f, unsigned char *buffer, int bufsize)
+get_ext_common (FilesystemPtr& f, unsigned char* buffer, int bufsize)
 {
 	if (!f)
 		return;
@@ -39,11 +39,11 @@ get_ext_common (Filesystem *f, unsigned char *buffer, int bufsize)
 	f->uuid = read_uuid1 (buffer + 0x468);
 	f->label = (char*) (buffer+0x478);
 
-	int block_size = *(int *) (buffer + 0x418);
+	int block_size = *(int*) (buffer + 0x418);
 	block_size = (1 << (block_size+10));		// 2^(10+ value at 0x18)
 
-	long blocks_total = *(int *) (buffer + 0x404);
-	long blocks_free  = *(int *) (buffer + 0x40C);
+	long blocks_total = *(int*) (buffer + 0x404);
+	long blocks_free  = *(int*) (buffer + 0x40C);
 
 	f->block_size = block_size;
 	f->bytes_size = blocks_total * block_size;
@@ -61,16 +61,14 @@ get_ext_common (Filesystem *f, unsigned char *buffer, int bufsize)
 /**
  * get_btrfs
  */
-Filesystem *
-get_btrfs (unsigned char *buffer, int bufsize)
+FilesystemPtr
+get_btrfs (unsigned char* buffer, int bufsize)
 {
-	Filesystem *f = nullptr;
-
 	if (!identify_btrfs (buffer, bufsize))
 		return nullptr;
 
 	//log_info ("bufsize = %d, want %d\n", bufsize, 0x10140);
-	f = new Filesystem();
+	FilesystemPtr f (new Filesystem());
 
 	f->name = "btrfs";
 	f->uuid = read_uuid1 (buffer + 0x10020);
@@ -86,15 +84,13 @@ get_btrfs (unsigned char *buffer, int bufsize)
 /**
  * get_ext2
  */
-Filesystem *
-get_ext2 (unsigned char *buffer, int bufsize)
+FilesystemPtr
+get_ext2 (unsigned char* buffer, int bufsize)
 {
-	Filesystem *f = nullptr;
-
 	if (!identify_ext2 (buffer, bufsize))
 		return nullptr;
 
-	f = new Filesystem();
+	FilesystemPtr f (new Filesystem());
 	f->name = "ext2";
 
 	get_ext_common (f, buffer, bufsize);
@@ -106,15 +102,13 @@ get_ext2 (unsigned char *buffer, int bufsize)
 /**
  * get_ext3
  */
-Filesystem *
-get_ext3 (unsigned char *buffer, int bufsize)
+FilesystemPtr
+get_ext3 (unsigned char* buffer, int bufsize)
 {
-	Filesystem *f = nullptr;
-
 	if (!identify_ext3 (buffer, bufsize))
 		return nullptr;
 
-	f = new Filesystem();
+	FilesystemPtr f (new Filesystem());
 	f->name = "ext3";
 
 	get_ext_common (f, buffer, bufsize);
@@ -126,15 +120,13 @@ get_ext3 (unsigned char *buffer, int bufsize)
 /**
  * get_ext4
  */
-Filesystem *
-get_ext4 (unsigned char *buffer, int bufsize)
+FilesystemPtr
+get_ext4 (unsigned char* buffer, int bufsize)
 {
-	Filesystem *f = nullptr;
-
 	if (!identify_ext4 (buffer, bufsize))
 		return nullptr;
 
-	f = new Filesystem();
+	FilesystemPtr f (new Filesystem());
 	f->name = "ext4";
 
 	get_ext_common (f, buffer, bufsize);
@@ -146,18 +138,16 @@ get_ext4 (unsigned char *buffer, int bufsize)
 /**
  * get_ntfs
  */
-Filesystem *
-get_ntfs (unsigned char *buffer, int bufsize)
+FilesystemPtr
+get_ntfs (unsigned char* buffer, int bufsize)
 {
-	Filesystem *f = nullptr;
-
 	if (!identify_ntfs (buffer, bufsize))
 		return nullptr;
 
 	std::string uuid = read_uuid2 (buffer + 72);
 	long size = *(long*) (buffer + 40) * 512;
 
-	f = new Filesystem();
+	FilesystemPtr f (new Filesystem());
 
 	f->name = "ntfs";
 	f->uuid = uuid;
@@ -171,23 +161,21 @@ get_ntfs (unsigned char *buffer, int bufsize)
 /**
  * get_reiserfs
  */
-Filesystem *
-get_reiserfs (unsigned char *buffer, int bufsize)
+FilesystemPtr
+get_reiserfs (unsigned char* buffer, int bufsize)
 {
-	Filesystem *f = nullptr;
-
 	if (!identify_reiserfs (buffer, bufsize))
 		return nullptr;
 
-	f = new Filesystem();
+	FilesystemPtr f (new Filesystem());
 
 	f->name = "reiserfs";
 	f->uuid = read_uuid1 (buffer + 0x10054);
 	f->label = (char*) (buffer+0x10064);
 
-	short    int block_size   = *(short    int *) (buffer + 0x1002C);
-	unsigned int blocks_total = *(unsigned int *) (buffer + 0x10000);
-	unsigned int blocks_free  = *(unsigned int *) (buffer + 0x10004);
+	short    int block_size   = *(short    int*) (buffer + 0x1002C);
+	unsigned int blocks_total = *(unsigned int*) (buffer + 0x10000);
+	unsigned int blocks_free  = *(unsigned int*) (buffer + 0x10004);
 
 	f->bytes_size = (blocks_total * block_size);
 	f->bytes_used = (blocks_total - blocks_free) * block_size;
@@ -201,11 +189,9 @@ get_reiserfs (unsigned char *buffer, int bufsize)
 /**
  * get_swap
  */
-Filesystem *
-get_swap (unsigned char *buffer, int bufsize)
+FilesystemPtr
+get_swap (unsigned char* buffer, int bufsize)
 {
-	Filesystem *f = nullptr;
-
 	if (!identify_swap (buffer, bufsize))
 		return nullptr;
 
@@ -218,7 +204,7 @@ get_swap (unsigned char *buffer, int bufsize)
 		size = *(long*) (buffer + 0x404) * 4096;
 	}
 
-	f = new Filesystem();
+	FilesystemPtr f (new Filesystem());
 
 	f->name = "swap";
 	f->uuid = uuid;
@@ -232,15 +218,13 @@ get_swap (unsigned char *buffer, int bufsize)
 /**
  * get_vfat
  */
-Filesystem *
-get_vfat (unsigned char *buffer, int bufsize)
+FilesystemPtr
+get_vfat (unsigned char* buffer, int bufsize)
 {
-	Filesystem *f = nullptr;
-
 	if (!identify_vfat (buffer, bufsize))
 		return nullptr;
 
-	f = new Filesystem();
+	FilesystemPtr f (new Filesystem());
 
 	f->name = "vfat";
 	f->uuid = read_uuid3 (buffer+0x1C);
@@ -262,7 +246,7 @@ get_vfat (unsigned char *buffer, int bufsize)
 	int free_clust = 0;
 
 	if ((sect_fat * 512) <= bufsize) {
-		short int *ptr = (short int*) (buffer + (512*reserved));
+		short int* ptr = (short int*) (buffer + (512*reserved));
 		if (sect_fat == 0) {
 			sect_fat = *(int*) (buffer + 0x24);
 		}
@@ -287,23 +271,21 @@ get_vfat (unsigned char *buffer, int bufsize)
 /**
  * get_xfs
  */
-Filesystem *
-get_xfs (unsigned char *buffer, int bufsize)
+FilesystemPtr
+get_xfs (unsigned char* buffer, int bufsize)
 {
-	Filesystem *f = nullptr;
-
 	if (!identify_xfs (buffer, bufsize))
 		return nullptr;
 
-	f = new Filesystem();
+	FilesystemPtr f (new Filesystem());
 
 	f->name = "xfs";
 	f->uuid = read_uuid1 (buffer + 0x20);
 	f->label = (char*) (buffer+0x6C);
 
-	int  block_size   = *(int  *) (buffer + 0x04);
-	long blocks_total = *(long *) (buffer + 0x08);
-	long blocks_free  = *(long *) (buffer + 0x90);
+	int  block_size   = *(int*)  (buffer + 0x04);
+	long blocks_total = *(long*) (buffer + 0x08);
+	long blocks_free  = *(long*) (buffer + 0x90);
 
 	block_size   = be32toh (block_size);
 	blocks_total = be64toh (blocks_total);

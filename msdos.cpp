@@ -55,7 +55,7 @@ Msdos::~Msdos()
  * read_chs
  */
 void
-Msdos::read_chs (unsigned char *buffer, int *cylinder, int *head, int *sector)
+Msdos::read_chs (unsigned char* buffer, int* cylinder, int* head, int* sector)
 {
 	if (!buffer || !cylinder || !head || !sector)
 		return;
@@ -69,7 +69,7 @@ Msdos::read_chs (unsigned char *buffer, int *cylinder, int *head, int *sector)
  * read_partition
  */
 bool
-Msdos::read_partition (unsigned char *buffer, int index, struct partition *part)
+Msdos::read_partition (unsigned char* buffer, int index, struct partition* part)
 {
 	//XXX include this in read_table?
 	if (!buffer || !part)
@@ -85,10 +85,10 @@ Msdos::read_partition (unsigned char *buffer, int index, struct partition *part)
 
 	part->type = buffer[index + 4];
 
-	part->start = *(int *) (buffer + index + 8);
+	part->start = *(int*) (buffer + index + 8);
 	part->start *= 512;
 
-	part->size = *(int *) (buffer + index + 12);
+	part->size = *(int*) (buffer + index + 12);
 	part->size *= 512;
 
 	return true;
@@ -98,7 +98,7 @@ Msdos::read_partition (unsigned char *buffer, int index, struct partition *part)
  * read_table
  */
 unsigned int
-Msdos::read_table (unsigned char *buffer, int bufsize, long offset, std::vector<struct partition> &vp)
+Msdos::read_table (unsigned char* buffer, int bufsize, long offset, std::vector<struct partition>& vp)
 {
 	struct partition part;
 
@@ -116,26 +116,26 @@ Msdos::read_table (unsigned char *buffer, int bufsize, long offset, std::vector<
 /**
  * probe
  */
-DPContainer *
-Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+ContainerPtr
+Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize)
 {
 	//LOG_TRACE;
-	Msdos *m = nullptr;
 	int count = 0;
 
-	if (*(unsigned short int *) (buffer+510) != 0xAA55)
+	if (*(unsigned short int*) (buffer+510) != 0xAA55)
 		return nullptr;
 
 	// and some other quick checks
 
-	m = new Msdos();
+	MsdosPtr m (new Msdos());
 
 	m->name = "msdos";
 	m->bytes_size = parent->bytes_size;
 	m->device = parent->device;
 	m->parent_offset = 0;
 
-	parent->add_child (m);	//RAR new
+	ContainerPtr c(m);
+	parent->add_child (c);	//RAR new
 
 	std::vector<struct partition> vp;
 	count = m->read_table (buffer, bufsize, 0, vp);
@@ -146,12 +146,13 @@ Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer
 		return nullptr;
 	}
 
-	Misc *res1 = new Misc();
+	MiscPtr res1 (new Misc());
 	res1->name          = "reserved";
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	m->add_child (res1);		// change to add_reserved?
+	c = res1;
+	m->add_child (c);		// change to add_reserved?
 
 	for (unsigned int i = 0; i < vp.size(); i++) {
 #if 0
@@ -163,7 +164,7 @@ Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer
 		log_debug ("\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
 		log_debug ("\n");
 #endif
-		DPContainer *c = nullptr;
+		ContainerPtr c;
 
 		std::ostringstream part_name;
 		part_name << m->device;
@@ -175,14 +176,15 @@ Msdos::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer
 
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 			//log_debug ("vp[i].start = %lld\n", vp[i].start);
-			c = Extended::probe (top_level, m, vp[i].start, vp[i].size);
+			ContainerPtr m2(m);
+			c = Extended::probe (top_level, m2, vp[i].start, vp[i].size);
 			if (!c)
 				continue;
 
 			c->parent_offset = vp[i].start;
 			c->device = part_name.str();
 		} else {
-			Partition *p = new Partition();
+			PartitionPtr p (new Partition());
 			p->ptype = vp[i].type;
 			c = p;
 			c->name = "partition";

@@ -33,10 +33,10 @@ public:
 	Whole (void);
 	virtual ~Whole();
 
-	virtual void add_segment (DPContainer *seg);
+	virtual void add_segment (ContainerPtr& seg);
 
 	// seg_count - LVM2_SEG_COUNT
-	std::vector<DPContainer*> segments;
+	std::vector<ContainerPtr> segments;
 
 protected:
 

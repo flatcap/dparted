@@ -31,7 +31,7 @@ public:
 	IconManager (void);
 	virtual ~IconManager();
 
-	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string &name, int w, int h);
+	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string& name, int w, int h);
 
 protected:
 	std::map <std::string, Glib::RefPtr<Gdk::Pixbuf>> icons;

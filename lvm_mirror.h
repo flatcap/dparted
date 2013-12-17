@@ -30,12 +30,12 @@ public:
 	LvmMirror (void);
 	virtual ~LvmMirror();
 
-	virtual void add_child    (DPContainer *child);
-	virtual void delete_child (DPContainer *child);
+	virtual void add_child    (ContainerPtr child);
+	virtual void delete_child (ContainerPtr child);
 
 #if 0
-	std::vector<DPContainer*> mirrors;
-	DPContainer *log;
+	std::vector<ContainerPtr> mirrors;
+	ContainerPtr log;
 #endif
 protected:
 

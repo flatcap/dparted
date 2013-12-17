@@ -45,7 +45,7 @@ Misc::~Misc()
  * is_empty
  */
 static bool
-is_empty (unsigned char *buffer, int bufsize)
+is_empty (unsigned char* buffer, int bufsize)
 {
 	for (int i = 0; i < bufsize; i++) {
 		if (buffer[i]) {
@@ -60,11 +60,11 @@ is_empty (unsigned char *buffer, int bufsize)
  * is_luks
  */
 static bool
-is_luks (unsigned char *buffer, int bufsize)
+is_luks (unsigned char* buffer, int bufsize)
 {
-	const char *signature = "LUKS\xBA\xBE";
+	const char* signature = "LUKS\xBA\xBE";
 
-	if (strncmp ((const char *) buffer, signature, strlen (signature)))
+	if (strncmp ((const char*) buffer, signature, strlen (signature)))
 		return false;
 #if 1
 	log_info ("LUKS:\n");
@@ -81,7 +81,7 @@ is_luks (unsigned char *buffer, int bufsize)
  * is_random
  */
 static bool
-is_random (unsigned char *buffer, int bufsize)
+is_random (unsigned char* buffer, int bufsize)
 {
 	double mean = 0;
 
@@ -103,8 +103,8 @@ is_random (unsigned char *buffer, int bufsize)
 /**
  * probe
  */
-DPContainer *
-Misc::probe (DPContainer &top_level, DPContainer *parent)
+ContainerPtr
+Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 {
 	LOG_TRACE;
 
@@ -119,23 +119,24 @@ Misc::probe (DPContainer &top_level, DPContainer *parent)
 		return nullptr;
 	}
 
-	Misc *m = nullptr;
+	MiscPtr m;
 	if (is_empty (buffer, bufsize)) {
 		//log_error ("probe empty\n");
-		m = new Misc();
+		m.reset (new Misc());
 		m->name = "zero";
 	} else if (is_luks (buffer, bufsize)) {
 		//log_error ("probe luks\n");
-		m = new Misc();
+		m.reset (new Misc());
 		m->name = "luks";
 	} else if (is_random (buffer, bufsize)) {
 		//log_error ("probe random\n");
-		m = new Misc();
+		m.reset (new Misc());
 		m->name = "random";
 	}
 
 	if (m) {
-		parent->add_child (m);
+		ContainerPtr c(m);
+		parent->add_child (c);
 
 		m->bytes_size = parent->bytes_size;
 		m->bytes_used = 0;

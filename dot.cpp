@@ -50,7 +50,7 @@
  * get_colour
  */
 static std::string
-get_colour (DPContainer *c)
+get_colour (ContainerPtr c)
 {
 	if (c->is_a ("block"))        return "#aaffaa";
 	if (c->is_a ("filesystem"))   return "#bbffff";
@@ -68,7 +68,7 @@ get_colour (DPContainer *c)
  * dot_row (bool)
  */
 static std::string
-dot_row (const char *name, bool value)
+dot_row (const char* name, bool value)
 {
 	std::stringstream output;
 
@@ -85,7 +85,7 @@ dot_row (const char *name, bool value)
  * dot_row (int)
  */
 static std::string
-dot_row (const char *name, int value)
+dot_row (const char* name, int value)
 {
 	std::stringstream output;
 
@@ -102,7 +102,7 @@ dot_row (const char *name, int value)
  * dot_row (long)
  */
 static std::string
-dot_row (const char *name, long value)
+dot_row (const char* name, long value)
 {
 	std::stringstream output;
 	std::string str;
@@ -128,7 +128,7 @@ dot_row (const char *name, long value)
  * dot_row (std::string)
  */
 static std::string
-dot_row (const char *name, const std::string &value)
+dot_row (const char* name, const std::string& value)
 {
 	std::stringstream output;
 
@@ -145,7 +145,7 @@ dot_row (const char *name, const std::string &value)
  * dot_row (std::stringstream)
  */
 static std::string
-dot_row (const char *name, const std::stringstream &value)
+dot_row (const char* name, const std::stringstream& value)
 {
 	std::stringstream output;
 
@@ -159,10 +159,10 @@ dot_row (const char *name, const std::stringstream &value)
 }
 
 /**
- * dot_row (char *)
+ * dot_row (char*)
  */
 static std::string
-dot_row (const char *name, const char *value)
+dot_row (const char* name, const char* value)
 {
 	std::stringstream output;
 
@@ -179,7 +179,7 @@ dot_row (const char *name, const char *value)
  * dot_row (unsigned int)
  */
 static std::string
-dot_row (const char *name, unsigned int value)
+dot_row (const char* name, unsigned int value)
 {
 	std::stringstream output;
 
@@ -194,10 +194,10 @@ dot_row (const char *name, unsigned int value)
 
 #if 0
 /**
- * dot_row (void *)
+ * dot_row (void*)
  */
 static std::string
-dot_row (const char *name, void *value)
+dot_row (const char* name, void* value)
 {
 	std::stringstream output;
 
@@ -216,10 +216,10 @@ dot_row (const char *name, void *value)
 
 #endif
 /**
- * dot_row (DPContainer *)
+ * dot_row (ContainerPtr)
  */
 static std::string
-dot_row (const char *name, DPContainer *value)
+dot_row (const char* name, ContainerPtr value)
 {
 	std::stringstream output;
 	std::string dest;
@@ -232,7 +232,7 @@ dot_row (const char *name, DPContainer *value)
 	output << "<td align=\"left\">" << name << "</td>";
 	output << "<td>=</td>";
 	if (value) {
-		output << "<td align=\"left\">" << (void*) value << dest << "</td>";
+		output << "<td align=\"left\">" << (void*) value.get() << dest << "</td>";
 	} else {
 		output << "<td align=\"left\">NULL</td>";
 	}
@@ -246,7 +246,7 @@ dot_row (const char *name, DPContainer *value)
  * dot_container
  */
 static std::string
-dot_container (DPContainer *c)
+dot_container (ContainerPtr c)
 {
 	std::stringstream output;
 	std::string uuid_short = c->uuid;
@@ -278,7 +278,8 @@ dot_container (DPContainer *c)
 	output << dot_row ("bytes_size",    c->bytes_size);
 	output << dot_row ("bytes_used",    c->bytes_used);
 	output << dot_row ("bytes_free",    c->bytes_size - c->bytes_used);
-	output << dot_row ("whole",         c->whole);		//XXX what's this doing here?
+	ContainerPtr cwhole (c->whole);
+	output << dot_row ("whole",         cwhole);		//XXX what's this doing here?
 	//output << dot_row ("parent",        c->parent);
 
 	if (c->missing)
@@ -302,11 +303,11 @@ dot_container (DPContainer *c)
  * dot_block
  */
 static std::string
-dot_block (Block *b)
+dot_block (BlockPtr b)
 {
 	std::stringstream output;
 
-	output << dot_container (dynamic_cast<DPContainer *> (b));
+	output << dot_container (std::dynamic_pointer_cast<DPContainer> (b));
 
 	// no specifics for now
 
@@ -317,11 +318,11 @@ dot_block (Block *b)
  * dot_disk
  */
 static std::string
-dot_disk (Disk *d)
+dot_disk (DiskPtr d)
 {
 	std::stringstream output;
 
-	output << dot_block (dynamic_cast<Block *> (d));
+	output << dot_block (std::dynamic_pointer_cast<Block> (d));
 
 	//output << dot_row ("hw_cylinders",   hw_cylinders);
 	//output << dot_row ("hw_heads",       hw_heads);
@@ -340,12 +341,12 @@ dot_disk (Disk *d)
  * dot_loop
  */
 static std::string
-dot_loop (Loop *l)
+dot_loop (LoopPtr l)
 {
 	std::stringstream output;
 	std::stringstream mm;
 
-	output << dot_block(dynamic_cast<Block *> (l));
+	output << dot_block(std::dynamic_pointer_cast<Block> (l));
 
 	std::string flags;
 	if (l->autoclear)	flags += ", autoclear";
@@ -397,11 +398,11 @@ dot_loop (Loop *l)
  * dot_table
  */
 static std::string
-dot_table (Table *t)
+dot_table (TablePtr t)
 {
 	std::stringstream output;
 
-	output << dot_container(dynamic_cast<DPContainer *> (t));
+	output << dot_container(std::dynamic_pointer_cast<DPContainer> (t));
 
 	// no specifics for now
 
@@ -412,11 +413,11 @@ dot_table (Table *t)
  * dot_msdos
  */
 static std::string
-dot_msdos (Msdos *m)
+dot_msdos (MsdosPtr m)
 {
 	std::stringstream output;
 
-	output << dot_table(dynamic_cast<Table *> (m));
+	output << dot_table(std::dynamic_pointer_cast<Table> (m));
 
 	// no specifics for now
 
@@ -427,11 +428,11 @@ dot_msdos (Msdos *m)
  * dot_extended
  */
 static std::string
-dot_extended (Extended *e)
+dot_extended (ExtendedPtr e)
 {
 	std::stringstream output;
 
-	output << dot_msdos(dynamic_cast<Msdos *> (e));
+	output << dot_msdos(std::dynamic_pointer_cast<Msdos> (e));
 
 	// no specifics for now
 
@@ -444,11 +445,11 @@ dot_extended (Extended *e)
  * dot_gpt
  */
 static std::string
-dot_gpt (Gpt *g)
+dot_gpt (GptPtr g)
 {
 	std::stringstream output;
 
-	output << dot_table(dynamic_cast<Table *> (g));
+	output << dot_table(std::dynamic_pointer_cast<Table> (g));
 
 	// no specifics for now
 
@@ -459,11 +460,11 @@ dot_gpt (Gpt *g)
  * dot_md_table
  */
 static std::string
-dot_md_table (MdTable *t)
+dot_md_table (MdTablePtr t)
 {
 	std::stringstream output;
 
-	output << dot_table(dynamic_cast<Table *> (t));
+	output << dot_table(std::dynamic_pointer_cast<Table> (t));
 
 	output << dot_row ("vol_uuid",    t->vol_uuid);
 	output << dot_row ("vol_name",    t->vol_name);
@@ -482,11 +483,11 @@ dot_md_table (MdTable *t)
  * dot_lvm_table
  */
 static std::string
-dot_lvm_table (LvmTable *t)
+dot_lvm_table (LvmTablePtr t)
 {
 	std::stringstream output;
 
-	output << dot_table(dynamic_cast<Table *> (t));
+	output << dot_table(std::dynamic_pointer_cast<Table> (t));
 
 	output << dot_row ("metadata_size", t->metadata_size);
 	output << dot_row ("pv_attr",       t->pv_attr);
@@ -500,12 +501,12 @@ dot_lvm_table (LvmTable *t)
  * dot_whole
  */
 static std::string
-dot_whole (Whole *w)
+dot_whole (WholePtr w)
 {
 	std::stringstream output;
 	unsigned int count = w->segments.size();
 
-	output << dot_container(dynamic_cast<DPContainer *> (w));
+	output << dot_container(std::dynamic_pointer_cast<DPContainer> (w));
 
 	if (count > 0) {
 		output << dot_row ("segments", count);
@@ -521,11 +522,11 @@ dot_whole (Whole *w)
  * dot_volume
  */
 static std::string
-dot_volume (Volume *v)
+dot_volume (VolumePtr v)
 {
 	std::stringstream output;
 
-	output << dot_whole(dynamic_cast<Whole *> (v));
+	output << dot_whole(std::dynamic_pointer_cast<Whole> (v));
 
 	// no specifics for now
 
@@ -536,11 +537,11 @@ dot_volume (Volume *v)
  * dot_lvm_group
  */
 static std::string
-dot_lvm_group (LvmGroup *g)
+dot_lvm_group (LvmGroupPtr g)
 {
 	std::stringstream output;
 
-	output << dot_whole(dynamic_cast<Whole *> (g));
+	output << dot_whole(std::dynamic_pointer_cast<Whole> (g));
 
 	output << dot_row ("pv_count",        g->pv_count);
 	output << dot_row ("lv_count",        g->lv_count);
@@ -554,11 +555,11 @@ dot_lvm_group (LvmGroup *g)
  * dot_lvm_volume
  */
 static std::string
-dot_lvm_volume (LvmVolume *v)
+dot_lvm_volume (LvmVolumePtr v)
 {
 	std::stringstream output;
 
-	output << dot_volume(dynamic_cast<Volume *> (v));
+	output << dot_volume(std::dynamic_pointer_cast<Volume> (v));
 
 	unsigned int count = v->metadata.size();
 	if (count > 0) {
@@ -586,11 +587,11 @@ dot_lvm_volume (LvmVolume *v)
  * dot_lvm_linear
  */
 static std::string
-dot_lvm_linear (LvmLinear *l)
+dot_lvm_linear (LvmLinearPtr l)
 {
 	std::stringstream output;
 
-	output << dot_lvm_volume(dynamic_cast<LvmVolume *> (l));
+	output << dot_lvm_volume(std::dynamic_pointer_cast<LvmVolume> (l));
 
 	// no specifics for now
 
@@ -601,11 +602,11 @@ dot_lvm_linear (LvmLinear *l)
  * dot_lvm_metadata
  */
 static std::string
-dot_lvm_metadata (LvmMetadata *m)
+dot_lvm_metadata (LvmMetadataPtr m)
 {
 	std::stringstream output;
 
-	output << dot_lvm_linear(dynamic_cast<LvmLinear *> (m));
+	output << dot_lvm_linear(std::dynamic_pointer_cast<LvmLinear> (m));
 
 	// no specifics for now
 
@@ -616,11 +617,11 @@ dot_lvm_metadata (LvmMetadata *m)
  * dot_lvm_mirror
  */
 static std::string
-dot_lvm_mirror (LvmMirror *m)
+dot_lvm_mirror (LvmMirrorPtr m)
 {
 	std::stringstream output;
 
-	output << dot_lvm_volume(dynamic_cast<LvmVolume *> (m));
+	output << dot_lvm_volume(std::dynamic_pointer_cast<LvmVolume> (m));
 
 	// no specifics for now
 
@@ -631,11 +632,11 @@ dot_lvm_mirror (LvmMirror *m)
  * dot_lvm_raid
  */
 static std::string
-dot_lvm_raid (LvmRaid *s)
+dot_lvm_raid (LvmRaidPtr s)
 {
 	std::stringstream output;
 
-	output << dot_lvm_volume(dynamic_cast<LvmVolume *> (s));
+	output << dot_lvm_volume(std::dynamic_pointer_cast<LvmVolume> (s));
 
 	// no specifics for now
 
@@ -646,11 +647,11 @@ dot_lvm_raid (LvmRaid *s)
  * dot_lvm_stripe
  */
 static std::string
-dot_lvm_stripe (LvmStripe *s)
+dot_lvm_stripe (LvmStripePtr s)
 {
 	std::stringstream output;
 
-	output << dot_lvm_volume(dynamic_cast<LvmVolume *> (s));
+	output << dot_lvm_volume(std::dynamic_pointer_cast<LvmVolume> (s));
 
 	// no specifics for now
 
@@ -662,11 +663,11 @@ dot_lvm_stripe (LvmStripe *s)
  * dot_partition
  */
 static std::string
-dot_partition (Partition *p)
+dot_partition (PartitionPtr p)
 {
 	std::stringstream output;
 
-	output << dot_container(dynamic_cast<Partition *> (p));
+	output << dot_container(std::dynamic_pointer_cast<Partition> (p));
 
 	// no specifics for now
 
@@ -677,11 +678,11 @@ dot_partition (Partition *p)
  * dot_lvm_partition
  */
 static std::string
-dot_lvm_partition (LvmPartition *p)
+dot_lvm_partition (LvmPartitionPtr p)
 {
 	std::stringstream output;
 
-	output << dot_partition(dynamic_cast<Partition *> (p));
+	output << dot_partition(std::dynamic_pointer_cast<Partition> (p));
 
 #if 0
 	output << dot_row ("dev_size",		p->dev_size);
@@ -717,13 +718,13 @@ dot_lvm_partition (LvmPartition *p)
  * dot_file
  */
 static std::string
-dot_file (File *f)
+dot_file (FilePtr f)
 {
 	std::stringstream output;
 
 	// no specifics for now
 
-	output << dot_block(dynamic_cast<Block *> (f));
+	output << dot_block(std::dynamic_pointer_cast<Block> (f));
 
 	return output.str();
 }
@@ -732,11 +733,11 @@ dot_file (File *f)
  * dot_filesystem
  */
 static std::string
-dot_filesystem (Filesystem *f)
+dot_filesystem (FilesystemPtr f)
 {
 	std::stringstream output;
 
-	output << dot_container(dynamic_cast<DPContainer *> (f));
+	output << dot_container(std::dynamic_pointer_cast<DPContainer> (f));
 
 	output << dot_row ("label", f->label);
 
@@ -747,11 +748,11 @@ dot_filesystem (Filesystem *f)
  * dot_misc
  */
 static std::string
-dot_misc (Misc *m)
+dot_misc (MiscPtr m)
 {
 	std::stringstream output;
 
-	output << dot_container(dynamic_cast<DPContainer *> (m));
+	output << dot_container(std::dynamic_pointer_cast<DPContainer> (m));
 
 	// no specifics for now
 
@@ -763,7 +764,7 @@ dot_misc (Misc *m)
  * dump_dot_inner
  */
 static std::string
-dump_dot_inner (const std::vector <DPContainer*> &v)
+dump_dot_inner (const std::vector <ContainerPtr>& v)
 {
 	std::stringstream dot;
 	int count = 0;
@@ -797,33 +798,33 @@ dump_dot_inner (const std::vector <DPContainer*> &v)
 			missing = " MISSING";
 		}
 
-		dot << "obj_" << (void*) c << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << missing << "</b></font></td></tr>\n";
+		dot << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << missing << "</b></font></td></tr>\n";
 
-		     if (type == "block")         { dot << dot_block         (dynamic_cast<Block        *> (c)); }
-		else if (type == "container")     { dot << dot_container     (dynamic_cast<DPContainer  *> (c)); }
-		else if (type == "disk")          { dot << dot_disk          (dynamic_cast<Disk         *> (c)); }
-		else if (type == "extended")      { dot << dot_extended      (dynamic_cast<Extended     *> (c)); }
-		else if (type == "file")          { dot << dot_file          (dynamic_cast<File         *> (c)); }
-		else if (type == "filesystem")    { dot << dot_filesystem    (dynamic_cast<Filesystem   *> (c)); }
-		else if (type == "gpt")           { dot << dot_gpt           (dynamic_cast<Gpt          *> (c)); }
-		else if (type == "loop")          { dot << dot_loop          (dynamic_cast<Loop         *> (c)); }
-		else if (type == "lvm_group")     { dot << dot_lvm_group     (dynamic_cast<LvmGroup     *> (c)); }
-		else if (type == "lvm_linear")    { dot << dot_lvm_linear    (dynamic_cast<LvmLinear    *> (c)); }
-		else if (type == "lvm_mirror")    { dot << dot_lvm_mirror    (dynamic_cast<LvmMirror    *> (c)); }
-		else if (type == "lvm_partition") { dot << dot_lvm_partition (dynamic_cast<LvmPartition *> (c)); }
-		else if (type == "lvm_metadata")  { dot << dot_lvm_metadata  (dynamic_cast<LvmMetadata  *> (c)); }
-		else if (type == "lvm_raid")      { dot << dot_lvm_raid      (dynamic_cast<LvmRaid      *> (c)); }
-		else if (type == "lvm_stripe")    { dot << dot_lvm_stripe    (dynamic_cast<LvmStripe    *> (c)); }
-		else if (type == "lvm_table")     { dot << dot_lvm_table     (dynamic_cast<LvmTable     *> (c)); }
-		else if (type == "lvm_volume")    { dot << dot_lvm_volume    (dynamic_cast<LvmVolume    *> (c)); }
-		else if (type == "md_table")      { dot << dot_md_table      (dynamic_cast<MdTable      *> (c)); }
-		else if (type == "misc")          { dot << dot_misc          (dynamic_cast<Misc         *> (c)); }
-		else if (type == "msdos")         { dot << dot_msdos         (dynamic_cast<Msdos        *> (c)); }
-		else if (type == "partition")     { dot << dot_partition     (dynamic_cast<Partition    *> (c)); }
-		else if (type == "table")         { dot << dot_table         (dynamic_cast<Table        *> (c)); }
-		else if (type == "volume")        { dot << dot_volume        (dynamic_cast<Volume       *> (c)); }
-		else if (type == "whole")         { dot << dot_whole         (dynamic_cast<Whole        *> (c)); }
+		     if (type == "block")         { dot << dot_block         (std::dynamic_pointer_cast<Block       > (c)); }
+		else if (type == "container")     { dot << dot_container     (std::dynamic_pointer_cast<DPContainer > (c)); }
+		else if (type == "disk")          { dot << dot_disk          (std::dynamic_pointer_cast<Disk        > (c)); }
+		else if (type == "extended")      { dot << dot_extended      (std::dynamic_pointer_cast<Extended    > (c)); }
+		else if (type == "file")          { dot << dot_file          (std::dynamic_pointer_cast<File        > (c)); }
+		else if (type == "filesystem")    { dot << dot_filesystem    (std::dynamic_pointer_cast<Filesystem  > (c)); }
+		else if (type == "gpt")           { dot << dot_gpt           (std::dynamic_pointer_cast<Gpt         > (c)); }
+		else if (type == "loop")          { dot << dot_loop          (std::dynamic_pointer_cast<Loop        > (c)); }
+		else if (type == "lvm_group")     { dot << dot_lvm_group     (std::dynamic_pointer_cast<LvmGroup    > (c)); }
+		else if (type == "lvm_linear")    { dot << dot_lvm_linear    (std::dynamic_pointer_cast<LvmLinear   > (c)); }
+		else if (type == "lvm_mirror")    { dot << dot_lvm_mirror    (std::dynamic_pointer_cast<LvmMirror   > (c)); }
+		else if (type == "lvm_partition") { dot << dot_lvm_partition (std::dynamic_pointer_cast<LvmPartition> (c)); }
+		else if (type == "lvm_metadata")  { dot << dot_lvm_metadata  (std::dynamic_pointer_cast<LvmMetadata > (c)); }
+		else if (type == "lvm_raid")      { dot << dot_lvm_raid      (std::dynamic_pointer_cast<LvmRaid     > (c)); }
+		else if (type == "lvm_stripe")    { dot << dot_lvm_stripe    (std::dynamic_pointer_cast<LvmStripe   > (c)); }
+		else if (type == "lvm_table")     { dot << dot_lvm_table     (std::dynamic_pointer_cast<LvmTable    > (c)); }
+		else if (type == "lvm_volume")    { dot << dot_lvm_volume    (std::dynamic_pointer_cast<LvmVolume   > (c)); }
+		else if (type == "md_table")      { dot << dot_md_table      (std::dynamic_pointer_cast<MdTable     > (c)); }
+		else if (type == "misc")          { dot << dot_misc          (std::dynamic_pointer_cast<Misc        > (c)); }
+		else if (type == "msdos")         { dot << dot_msdos         (std::dynamic_pointer_cast<Msdos       > (c)); }
+		else if (type == "partition")     { dot << dot_partition     (std::dynamic_pointer_cast<Partition   > (c)); }
+		else if (type == "table")         { dot << dot_table         (std::dynamic_pointer_cast<Table       > (c)); }
+		else if (type == "volume")        { dot << dot_volume        (std::dynamic_pointer_cast<Volume      > (c)); }
+		else if (type == "whole")         { dot << dot_whole         (std::dynamic_pointer_cast<Whole       > (c)); }
 
 		dot << "</table>>];\n";
 
@@ -834,12 +835,12 @@ dump_dot_inner (const std::vector <DPContainer*> &v)
 #endif
 
 		for (auto c2 : c->get_children()) {
-			dot << "obj_" << (void*) c << " -> obj_" << (void*) c2 << ";\n";
+			dot << "obj_" << (void*) c.get() << " -> obj_" << (void*) c2.get() << ";\n";
 		}
 
 #if 0
 		if (c->is_a("whole")) {
-			Whole *w = dynamic_cast<Whole*>(c);
+			WholePtr w = std::dynamic_pointer_cast<Whole>(c);
 			if (w) {
 				for (auto w2 : w->segments) {
 					dot << "obj_" << (void*) w << " -> obj_" << (void*) w2 << " [constraint=false style=dashed];\n";
@@ -850,28 +851,28 @@ dump_dot_inner (const std::vector <DPContainer*> &v)
 
 #if 1
 		if (c->is_a("lvm_metadata")) {
-			LvmVolume *m = dynamic_cast<LvmVolume*>(c);
+			LvmVolumePtr m = std::dynamic_pointer_cast<LvmVolume>(c);
 			if (m && m->sibling) {
-				dot << "obj_" << (void*) m->sibling << " -> obj_" << (void*) m << " [constraint=false style=dashed dir=none];\n";
+				dot << "obj_" << (void*) m->sibling.get() << " -> obj_" << (void*) m.get() << " [constraint=false style=dashed dir=none];\n";
 			}
 		}
 #endif
 
 #if 1
 		if (c->is_a("lvm_volume")) {
-			LvmVolume *v = dynamic_cast<LvmVolume*>(c);
+			LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume>(c);
 			if (v) {
 				//log_info ("VOLUME %s, %ld\n", v->type.back().c_str(), v->subvols.size());
 				dot << dump_dot_inner (v->metadata);
 
 				for (auto v2 : v->metadata) {
-					dot << "obj_" << (void*) v << " -> obj_" << (void*) v2 << ";\n";
+					dot << "obj_" << (void*) v.get() << " -> obj_" << (void*) v2.get() << ";\n";
 				}
 
 				dot << dump_dot_inner (v->subvols);
 
 				for (auto v2 : v->subvols) {
-					dot << "obj_" << (void*) v << " -> obj_" << (void*) v2 << ";\n";
+					dot << "obj_" << (void*) v.get() << " -> obj_" << (void*) v2.get() << ";\n";
 				}
 			}
 		}
@@ -892,7 +893,7 @@ dump_dot_inner (const std::vector <DPContainer*> &v)
  * dump_dot
  */
 std::string
-dump_dot (std::vector <DPContainer*> v)
+dump_dot (std::vector <ContainerPtr> v)
 {
 	std::stringstream dot;
 
@@ -914,7 +915,7 @@ dump_dot (std::vector <DPContainer*> v)
  * display_dot
  */
 void
-display_dot (std::vector <DPContainer*> v)
+display_dot (std::vector <ContainerPtr> v)
 {
 	if (v.size() == 0)
 		return;

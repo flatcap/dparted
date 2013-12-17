@@ -35,7 +35,7 @@
 /**
  * App
  */
-App::App (DPContainer *top_level) :
+App::App (ContainerPtr& top_level) :
 	Gtk::Application("org.flatcap.test.area", Gio::APPLICATION_HANDLES_OPEN),
 	top_level (top_level)
 {
@@ -99,7 +99,7 @@ App::on_startup (void)
 
 	//set_menubar (menu);
 
-	Gio::ActionMap                  *m = dynamic_cast<Gio::ActionMap*>(this);
+	Gio::ActionMap*                  m = dynamic_cast<Gio::ActionMap*>(this);
 	Glib::RefPtr<Gio::Action>        a = m->lookup_action("banana");
 	Glib::RefPtr<Gio::SimpleAction>  s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(a);
 	s->set_enabled(false);
@@ -118,7 +118,7 @@ App::on_activate()
 		win->present();
 	}
 
-	DParted *dp = new DParted();
+	DParted* dp = new DParted();	//XXX and just leak it?
 	dp->set_data (top_level);
 	add_window(*dp);
 	dp->show();
@@ -129,7 +129,7 @@ App::on_activate()
  * on_window_added
  */
 void
-App::on_window_added  (Gtk::Window *window)
+App::on_window_added  (Gtk::Window* window)
 {
 	//LOG_TRACE;
 	Gtk::Application::on_window_added (window);
@@ -139,7 +139,7 @@ App::on_window_added  (Gtk::Window *window)
  * on_window_removed
  */
 void
-App::on_window_removed(Gtk::Window *window)
+App::on_window_removed(Gtk::Window* window)
 {
 	//LOG_TRACE;
 	Gtk::Application::on_window_removed (window);
@@ -150,7 +150,7 @@ App::on_window_removed(Gtk::Window *window)
  * on_open
  */
 void
-App::on_open (const type_vec_files &files, const Glib::ustring &hint)
+App::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
 	//LOG_TRACE;
 	Gtk::Application::on_open (files, hint);
@@ -160,7 +160,7 @@ App::on_open (const type_vec_files &files, const Glib::ustring &hint)
  * on_command_line
  */
 int
-App::on_command_line(const Glib::RefPtr<Gio::ApplicationCommandLine> &command_line)
+App::on_command_line(const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
 {
 	//LOG_TRACE;
 	return Gtk::Application::on_command_line (command_line);

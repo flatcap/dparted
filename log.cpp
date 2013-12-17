@@ -24,14 +24,14 @@
 #include "log_trace.h"
 
 //static unsigned int log_level = ~0;
-static FILE *file = nullptr;
+static FILE* file = nullptr;
 
 /**
  * log
  */
 __attribute__ ((format (printf, 1, 0)))
 static int
-log (const char *format, va_list args)
+log (const char* format, va_list args)
 {
 	char buffer[1024];
 
@@ -52,7 +52,7 @@ log (const char *format, va_list args)
  */
 __attribute__ ((format (printf, 1, 2)))
 int
-log_debug (const char *format, ...)
+log_debug (const char* format, ...)
 {
 	va_list args;
 	int retval;
@@ -74,7 +74,7 @@ log_debug (const char *format, ...)
  */
 __attribute__ ((format (printf, 1, 2)))
 int
-log_error (const char *format, ...)
+log_error (const char* format, ...)
 {
 	va_list args;
 	int retval;
@@ -96,7 +96,7 @@ log_error (const char *format, ...)
  */
 __attribute__ ((format (printf, 1, 2)))
 int
-log_info (const char *format, ...)
+log_info (const char* format, ...)
 {
 	va_list args;
 	int retval;
@@ -118,7 +118,7 @@ log_info (const char *format, ...)
  */
 __attribute__ ((format (printf, 1, 2)))
 int
-log_trace (const char *format, ...)
+log_trace (const char* format, ...)
 {
 	va_list args;
 	int retval;
@@ -141,7 +141,7 @@ log_trace (const char *format, ...)
  * log_init
  */
 bool
-log_init (const char *name)
+log_init (const char* name)
 {
 	file = fopen (name, "ae");	// append, close on exec
 	//log_info ("log init: %s\n", name);

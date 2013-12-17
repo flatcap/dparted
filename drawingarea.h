@@ -20,11 +20,12 @@
 
 #include <gtkmm/drawingarea.h>
 
-class DPContainer;
+#include "pointers.h"
+
 class Theme;
 
 typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
-typedef struct { Rect r; DPContainer *p; } Range;
+typedef struct { Rect r; ContainerPtr p; } Range;
 
 /**
  * class DPDrawingArea
@@ -35,27 +36,27 @@ public:
 	DPDrawingArea();
 	virtual ~DPDrawingArea();
 
-	void set_data (DPContainer *c);
+	void set_data (ContainerPtr& c);
 
 protected:
-	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context> &cr);
+	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
 
-	bool on_mouse_motion (GdkEventMotion *event);
-	bool on_mouse_click  (GdkEventButton *event);
-	bool on_mouse_leave  (GdkEventCrossing *event);
+	bool on_mouse_motion (GdkEventMotion* event);
+	bool on_mouse_click  (GdkEventButton* event);
+	bool on_mouse_leave  (GdkEventCrossing* event);
 
 #if 0
 	bool on_timeout (int timer_number);
 #endif
-	DPContainer * get_focus (int x, int y);
+	ContainerPtr get_focus (int x, int y);
 	bool on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 
 private:
-	DPContainer *m_c;
-	Theme *theme;
+	ContainerPtr m_c;
+	Theme* theme;
 
-	void draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape);
-	void draw_icon      (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, const Rect &shape, Rect &below);
+	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, Rect shape);
+	void draw_icon      (const Cairo::RefPtr<Cairo::Context>& cr, const std::string& name, const Rect& shape, Rect& below);
 
 	std::deque<Range> vRange;
 

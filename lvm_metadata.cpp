@@ -37,15 +37,15 @@ LvmMetadata::~LvmMetadata()
  * add_child
  */
 void
-LvmMetadata::add_child (DPContainer *child)
+LvmMetadata::add_child (ContainerPtr& child)
 {
 	if (!child)
 		return;
 
 	if (child->is_a ("lvm_volume")) {
-		LvmVolume *v = dynamic_cast<LvmVolume*> (child);
+		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (child);
 		sibling = v;
-		v->sibling = this;
+		v->sibling.reset (this);
 	} else {
 		// probably a partition
 		add_segment (child);

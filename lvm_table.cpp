@@ -51,7 +51,7 @@ LvmTable::~LvmTable()
  * read_uuid_string
  */
 std::string
-read_uuid_string (char *buffer)
+read_uuid_string (char* buffer)
 {
 	if (!buffer)
 		return "";
@@ -72,10 +72,10 @@ read_uuid_string (char *buffer)
 /**
  * get_label_header
  */
-static struct label_header *
-get_label_header (unsigned char *buffer)
+static struct label_header*
+get_label_header (unsigned char* buffer)
 {
-	struct label_header *lh = (struct label_header *) buffer;
+	struct label_header* lh = (struct label_header*) buffer;
 
 	if (!lh)
 		return nullptr;
@@ -93,10 +93,10 @@ get_label_header (unsigned char *buffer)
 /**
  * get_pv_header
  */
-static struct pv_header *
-get_pv_header (unsigned char *buffer)
+static struct pv_header*
+get_pv_header (unsigned char* buffer)
 {
-	struct pv_header *ph = (struct pv_header *) buffer;
+	struct pv_header* ph = (struct pv_header*) buffer;
 
 	if (!ph)
 		return nullptr;
@@ -108,10 +108,10 @@ get_pv_header (unsigned char *buffer)
 /**
  * get_mda_header
  */
-static struct mda_header *
-get_mda_header (unsigned char *buffer)
+static struct mda_header*
+get_mda_header (unsigned char* buffer)
 {
-	struct mda_header *mh = (struct mda_header *) buffer;
+	struct mda_header* mh = (struct mda_header*) buffer;
 
 	if (!mh)
 		return nullptr;
@@ -131,7 +131,7 @@ get_mda_header (unsigned char *buffer)
  * get_seq_num
  */
 static int
-get_seq_num (const std::string &config)
+get_seq_num (const std::string& config)
 {
 	size_t index = config.find ("seqno = ");
 	size_t end   = config.find ('\n', index);
@@ -152,7 +152,7 @@ get_seq_num (const std::string &config)
  * get_vol_name
  */
 static std::string
-get_vol_name (const std::string &config)
+get_vol_name (const std::string& config)
 {
 	size_t end = config.find (" {\n");
 
@@ -168,7 +168,7 @@ get_vol_name (const std::string &config)
  * format_config
  */
 static void
-format_config (std::string &config)
+format_config (std::string& config)
 {
 	size_t index = 0;
 	size_t first;
@@ -209,21 +209,21 @@ format_config (std::string &config)
 /**
  * probe
  */
-DPContainer *
-LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+ContainerPtr
+LvmTable::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize)
 {
 	//LOG_TRACE;
-	LvmTable *t = nullptr;
+	LvmTablePtr t;
 
 	//XXX check bufsize gives us all the data we need
 
-	struct label_header *lh = get_label_header (buffer+512);
+	struct label_header* lh = get_label_header (buffer+512);
 	if (!lh)
 		return nullptr;
 
 	//log_info ("'%.8s', %lu, 0x%8x, %u, '%.8s'\n", lh->id, lh->sector_xl, lh->crc_xl, lh->offset_xl, lh->type);
 
-	struct pv_header *ph = get_pv_header (buffer + 512 + lh->offset_xl);
+	struct pv_header* ph = get_pv_header (buffer + 512 + lh->offset_xl);
 	if (!ph)
 		return nullptr;
 
@@ -251,7 +251,7 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 #endif
 
 	//XXX 4096 from metadata location
-	struct mda_header *mh = get_mda_header (buffer + 4096);
+	struct mda_header* mh = get_mda_header (buffer + 4096);
 	if (!mh)
 		return nullptr;
 
@@ -292,7 +292,7 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 		}
 	}
 
-	t = new LvmTable();
+	t.reset (new LvmTable());
 	//log_debug ("new LvmTable (%p)\n", t);
 
 	t->bytes_size = ph->device_size_xl;
@@ -303,7 +303,8 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
 
 	t->metadata_size = 1048576;
 
-	parent->add_child (t);
+	ContainerPtr c(t);
+	parent->add_child (c);
 
 	return t;
 }
@@ -313,7 +314,7 @@ LvmTable::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buf
  * add_child
  */
 void
-LvmTable::add_child (DPContainer *child)
+LvmTable::add_child (ContainerPtr& child)
 {
 	if (!child)
 		return;

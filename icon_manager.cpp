@@ -27,7 +27,7 @@ IconManager::~IconManager()
 }
 
 Glib::RefPtr<Gdk::Pixbuf>
-IconManager::get_icon (const std::string &name, int w, int h)
+IconManager::get_icon (const std::string& name, int w, int h)
 {
 	return Glib::RefPtr<Gdk::Pixbuf> (nullptr);
 }

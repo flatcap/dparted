@@ -18,17 +18,17 @@
 #ifndef _FS_USAGE_H_
 #define _FS_USAGE_H_
 
-class Filesystem;
+#include "pointers.h"
 
-bool get_btrfs_usage    (Filesystem *f);
-bool get_ext2_usage     (Filesystem *f);
-bool get_ext3_usage     (Filesystem *f);
-bool get_ext4_usage     (Filesystem *f);
-bool get_ntfs_usage     (Filesystem *f);
-bool get_reiserfs_usage (Filesystem *f);
-bool get_swap_usage     (Filesystem *f);
-bool get_vfat_usage     (Filesystem *f);
-bool get_xfs_usage      (Filesystem *f);
+bool get_btrfs_usage    (FilesystemPtr f);
+bool get_ext2_usage     (FilesystemPtr f);
+bool get_ext3_usage     (FilesystemPtr f);
+bool get_ext4_usage     (FilesystemPtr f);
+bool get_ntfs_usage     (FilesystemPtr f);
+bool get_reiserfs_usage (FilesystemPtr f);
+bool get_swap_usage     (FilesystemPtr f);
+bool get_vfat_usage     (FilesystemPtr f);
+bool get_xfs_usage      (FilesystemPtr f);
 
 #endif // _FS_USAGE_H_
 

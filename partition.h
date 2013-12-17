@@ -40,7 +40,7 @@ public:
 
 	int ptype;
 
-	Volume *volume;
+	VolumePtr volume;
 protected:
 
 private:

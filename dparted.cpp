@@ -55,13 +55,13 @@ DParted::DParted () :
 
 #if 0
 	//Get the menubar and toolbar widgets, and add them to a container widget:
-	Gtk::Widget *pMenubar = m_refUIManager->get_widget ("/MenuBar");
+	Gtk::Widget* pMenubar = m_refUIManager->get_widget ("/MenuBar");
 	if (pMenubar) {
 		pMenubar->set_hexpand (true);
 		grid.add (*pMenubar);
 	}
 
-	Gtk::Widget *pToolbar = m_refUIManager->get_widget ("/ToolBar") ;
+	Gtk::Widget* pToolbar = m_refUIManager->get_widget ("/ToolBar") ;
 	if (pToolbar) {
 		pToolbar->set_hexpand (true);
 		grid.add (*pToolbar);
@@ -98,7 +98,7 @@ DParted::~DParted()
  * set_data
  */
 void
-DParted::set_data (DPContainer *c)
+DParted::set_data (ContainerPtr c)
 {
 	m_c = c;
 	treeview.init_treeview (m_c);
@@ -108,7 +108,7 @@ DParted::set_data (DPContainer *c)
 		if (i->is_a ("lvm_group"))
 			continue; //RAR for now ignore vg
 		//std::cout << i->type << "\n";
-		DPDrawingArea *da = manage (new DPDrawingArea());
+		DPDrawingArea* da = manage (new DPDrawingArea());
 		da_grid.add (*da);
 		da_grid.show_all();
 		//std::cout << i->device << "\n";
@@ -212,7 +212,7 @@ DParted::init_menubar (void)
 
 	try {
 		m_refUIManager->add_ui_from_string (ui_info);
-	} catch (const Glib::Error &ex) {
+	} catch (const Glib::Error& ex) {
 		std::cerr << "building menus failed: " << ex.what();
 	}
 #endif

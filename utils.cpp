@@ -35,9 +35,9 @@
  * execute_command2
  */
 unsigned int
-execute_command2 (const std::string &command, std::string &input)
+execute_command2 (const std::string& command, std::string& input)
 {
-	FILE *file = nullptr;
+	FILE* file = nullptr;
 	int count = 0;
 
 	//XXX log command and output
@@ -65,10 +65,10 @@ execute_command2 (const std::string &command, std::string &input)
  * execute_command
  */
 unsigned int
-execute_command (const std::string &command, std::vector<std::string> &output)
+execute_command (const std::string& command, std::vector<std::string>& output)
 {
-	FILE *file = nullptr;
-	char *ptr = nullptr;
+	FILE* file = nullptr;
+	char* ptr = nullptr;
 	size_t n = 0;
 	int count = 0;
 
@@ -118,7 +118,7 @@ execute_command (const std::string &command, std::vector<std::string> &output)
  * execute_command3
  */
 unsigned int
-execute_command3 (const std::string &command, std::string &output)
+execute_command3 (const std::string& command, std::string& output)
 {
 	std::vector<std::string> v;
 	int count;
@@ -142,7 +142,7 @@ get_size (long size)
 	//XXX do this without log2?  use ffs
 	char buffer[64];
 	double power = log2 ((double) llabs (size)) + 0.5;
-	const char *suffix = "";
+	const char* suffix = "";
 	double divide = 1;
 
 	if (power < 10) {
@@ -172,9 +172,9 @@ get_size (long size)
  * extract_number
  */
 long
-extract_number (const std::string &text, unsigned int &index)
+extract_number (const std::string& text, unsigned int& index)
 {
-	const char *digits = "0123456789";
+	const char* digits = "0123456789";
 	unsigned int first = text.find_first_of     (digits, index);
 	unsigned int last  = text.find_first_not_of (digits, first);
 	std::string num;
@@ -189,7 +189,7 @@ extract_number (const std::string &text, unsigned int &index)
  * extract_quoted_string
  */
 std::string
-extract_quoted_string (const std::string &text, unsigned int &index)
+extract_quoted_string (const std::string& text, unsigned int& index)
 {
 	unsigned int start  = -1;
 	unsigned int finish = -1;
@@ -209,7 +209,7 @@ extract_quoted_string (const std::string &text, unsigned int &index)
  * extract_bare_string
  */
 std::string
-extract_bare_string (const std::string &text, unsigned int &index)
+extract_bare_string (const std::string& text, unsigned int& index)
 {
 	unsigned int start  = -1;
 	unsigned int finish = -1;
@@ -226,7 +226,7 @@ extract_bare_string (const std::string &text, unsigned int &index)
  * extract_quoted_long
  */
 long
-extract_quoted_long (const std::string &text, unsigned int &index)
+extract_quoted_long (const std::string& text, unsigned int& index)
 {
 	unsigned int start  = -1;
 	unsigned int finish = -1;
@@ -245,7 +245,7 @@ extract_quoted_long (const std::string &text, unsigned int &index)
  * extract_quoted_long_long
  */
 long
-extract_quoted_long_long (const std::string &text, unsigned int &index)
+extract_quoted_long_long (const std::string& text, unsigned int& index)
 {
 	unsigned int start  = -1;
 	unsigned int finish = -1;
@@ -264,7 +264,7 @@ extract_quoted_long_long (const std::string &text, unsigned int &index)
  * extract_dev_range
  */
 int
-extract_dev_range (const std::string &text, std::string &device, int &start, int &finish, int element /* = 0 */)
+extract_dev_range (const std::string& text, std::string& device, int& start, int& finish, int element /* = 0 */)
 {
 	int index = 0;
 
@@ -289,7 +289,7 @@ extract_dev_range (const std::string &text, std::string &device, int &start, int
  * explode
  */
 unsigned int
-explode (const char *separators, const std::string &input, std::vector<std::string> &parts)
+explode (const char* separators, const std::string& input, std::vector<std::string>& parts)
 {
 	size_t start = 0;
 	size_t end   = 0;
@@ -326,7 +326,7 @@ explode (const char *separators, const std::string &input, std::vector<std::stri
  * explode
  */
 unsigned int
-explode_n (const char *separators, const std::string &input, std::vector<std::string> &parts, int max)
+explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max)
 {
 	size_t start = 0;
 	size_t end   = 0;
@@ -374,7 +374,7 @@ explode_n (const char *separators, const std::string &input, std::vector<std::st
  * parse_tagged_line
  */
 unsigned int
-parse_tagged_line (const std::string &line, const char *separators, std::map<std::string,StringNum> &tags, bool clear_map /* = true */)
+parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map /* = true */)
 {
 	//XXX optional param: bool clear_array = true;
 	int middle;
@@ -421,7 +421,7 @@ parse_tagged_line (const std::string &line, const char *separators, std::map<std
  * read_file_line
  */
 std::string
-read_file_line (const std::string &filename)
+read_file_line (const std::string& filename)
 {
 	std::ifstream in (filename.c_str());
 
@@ -438,7 +438,7 @@ read_file_line (const std::string &filename)
  * read_uuid1
  */
 std::string
-read_uuid1 (unsigned char *buffer)
+read_uuid1 (unsigned char* buffer)
 {
 	std::stringstream ss;
 
@@ -457,7 +457,7 @@ read_uuid1 (unsigned char *buffer)
  * read_uuid2
  */
 std::string
-read_uuid2 (unsigned char *buffer)
+read_uuid2 (unsigned char* buffer)
 {
 	std::stringstream ss;
 
@@ -474,7 +474,7 @@ read_uuid2 (unsigned char *buffer)
  * read_uuid3
  */
 std::string
-read_uuid3 (unsigned char *buffer)
+read_uuid3 (unsigned char* buffer)
 {
 	std::stringstream ss;
 
@@ -494,7 +494,7 @@ read_uuid3 (unsigned char *buffer)
  * dump_hex
  */
 void
-dump_hex (unsigned char *buffer, int bufsize)
+dump_hex (unsigned char* buffer, int bufsize)
 {
 	for (int i = 0; i < bufsize; i += 16) {
 		log_debug ("%06x  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
@@ -508,10 +508,10 @@ dump_hex (unsigned char *buffer, int bufsize)
  * dump_hex2
  */
 void
-dump_hex2 (void *buf, int start, int length)
+dump_hex2 (void* buf, int start, int length)
 {
 	int off, i, s, e;
-	unsigned char *mem = (unsigned char*) buf;
+	unsigned char* mem = (unsigned char*) buf;
 
 #if 1
 	unsigned char last[16];

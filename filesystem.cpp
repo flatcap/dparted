@@ -47,15 +47,15 @@ Filesystem::~Filesystem()
 /**
  * probe
  */
-DPContainer *
-Filesystem::probe (DPContainer &top_level, DPContainer *parent)
+FilesystemPtr
+Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
 {
 	//LOG_TRACE;
 
 	if (!parent)
 		return nullptr;
 
-	DPContainer *p = parent;
+	ContainerPtr p (parent);
 	while (p) {
 		////std::cout << p << std::endl;
 		p = p->parent;
@@ -69,7 +69,8 @@ Filesystem::probe (DPContainer &top_level, DPContainer *parent)
 		return nullptr;
 	}
 
-	Filesystem *f = nullptr;
+	FilesystemPtr f;
+
 	//XXX reorder by likelihood
 	     if ((f = get_btrfs    (buffer, bufsize))) {}
 	else if ((f = get_ext2     (buffer, bufsize))) {}
@@ -83,7 +84,8 @@ Filesystem::probe (DPContainer &top_level, DPContainer *parent)
 
 	if (f) {
 		//log_info ("volume: %s (%s), child: %s\n", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
-		parent->add_child (f);
+		ContainerPtr c(f);
+		parent->add_child (c);
 	}
 
 	return f;
@@ -94,7 +96,7 @@ Filesystem::probe (DPContainer &top_level, DPContainer *parent)
  * get_property
  */
 std::string
-Filesystem::get_property (const std::string &propname)
+Filesystem::get_property (const std::string& propname)
 {
 	if (propname == "label") {
 		return label;

@@ -46,11 +46,10 @@ Gpt::~Gpt()
 /**
  * probe
  */
-DPContainer *
-Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, int bufsize)
+ContainerPtr
+Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize)
 {
 	//LOG_TRACE;
-	Gpt *g = nullptr;
 
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	// XXX replace with strict identify function (static)
 		return nullptr;
@@ -64,7 +63,7 @@ Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, 
 	// -33		128 gpt entries
 	// -1		secondary gpt header
 
-	g = new Gpt();
+	GptPtr g (new Gpt());
 
 	g->name = "gpt";
 	g->bytes_size = parent->bytes_size;
@@ -73,7 +72,8 @@ Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, 
 	g->block_size = 0;
 	g->uuid = read_uuid1 (buffer+568);
 
-	parent->add_child (g); //RAR new
+	ContainerPtr c(g);
+	parent->add_child (c); //RAR new
 
 	// Assumption: 1MiB alignment (for now)
 	// Should reserved bits be allocated after actual partitions?
@@ -82,14 +82,14 @@ Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, 
 	// it would be replaced by an aligned partition.
 
 #if 0
-	Misc *res1 = new Misc();
+	MiscPtr res1 = new Misc();
 	res1->name          = "reserved";
 	res1->bytes_size    = 512 * 34;		//align (512 * 34, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
 	g->add_child (res1);		// change to add_reserved?
 
-	Misc *res2 = new Misc();
+	MiscPtr res2 = new Misc();
 	res2->name          = "reserved";
 	res2->bytes_size    = 512 * 33;		//align (512 * 33, 1024*1024);
 	res2->bytes_used    = res2->bytes_size;
@@ -102,14 +102,13 @@ Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, 
 
 	//std::cout << g << "\n";
 
-	Partition *p = nullptr;
 	buffer += 1024;	//bufsize -= 1024; for range checking
 #if 0
 	p = new Partition();
 	p->bytes_size = g->bytes_size / 2;
 	p->parent_offset = g->bytes_size / 4;
 	g->add_child (p);
-	Filesystem *fs = new Filesystem();
+	FilesystemPtr fs = new Filesystem();
 	fs->bytes_size = p->bytes_size;
 	fs->parent_offset = 0;
 	p->add_child (fs);
@@ -120,7 +119,7 @@ Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, 
 			break;
 
 		//log_debug ("new Partition %d\n", i);
-		p = new Partition();
+		PartitionPtr p (new Partition());
 		p->bytes_used = 0;
 		p->uuid = read_uuid1 (buffer+16);
 		//p->part_type_uuid = read_guid (buffer+0);
@@ -156,8 +155,9 @@ Gpt::probe (DPContainer &top_level, DPContainer *parent, unsigned char *buffer, 
 		log_debug ("\t\t\tfinish = %lld\n", *(long*) (buffer+40) * 512);
 		log_debug ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
 #endif
-		g->add_child (p);
-		queue_add_probe (p);
+		ContainerPtr c(p);
+		g->add_child (c);
+		queue_add_probe (c);
 	}
 
 #if 0

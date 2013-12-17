@@ -32,13 +32,13 @@ class Disk : public Block
 {
 public:
 	Disk (void);
-	Disk (const std::string &lsblk);
+	Disk (const std::string& lsblk);
 	virtual ~Disk();
 
 	virtual long          get_block_size (void);
-	virtual unsigned int  get_device_space (std::map<long, long> &spaces);
+	virtual unsigned int  get_device_space (std::map<long, long>& spaces);
 
-	virtual DPContainer * find_device (const std::string &dev);
+	virtual ContainerPtr find_device (const std::string& dev);
 
 	//std::string	model;
 	//std::string	path;
@@ -56,13 +56,13 @@ public:
 	int		host;
 	int		did;
 
-	static unsigned int find_devices (DPContainer &list);
+	static unsigned int find_devices (ContainerPtr& list);
 
 	std::string mounts;	//XXX vector
 
-	static bool lsblk    (std::vector <std::string> &output, std::string device = std::string());
-	static void discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue);
-	static void identify (DPContainer &top_level, const char *name, int fd, struct stat &st);
+	static bool lsblk    (std::vector <std::string>& output, std::string device = std::string());
+	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
+	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 protected:
 private:

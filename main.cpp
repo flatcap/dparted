@@ -48,13 +48,13 @@
 #include "utils.h"
 #include "volume.h"
 
-std::queue<DPContainer*> probe_queue;
+std::queue<ContainerPtr> probe_queue;
 
 /**
  * queue_add_probe
  */
 void
-queue_add_probe (DPContainer *item)
+queue_add_probe (ContainerPtr& item)
 {
 	if (!item)
 		return;
@@ -70,7 +70,7 @@ queue_add_probe (DPContainer *item)
  * mounts_get_list
  */
 unsigned int
-mounts_get_list (DPContainer &mounts)
+mounts_get_list (ContainerPtr& mounts)
 {
 	std::string command;
 	std::vector<std::string> output;
@@ -92,15 +92,15 @@ mounts_get_list (DPContainer &mounts)
 /**
  * probe
  */
-DPContainer *
-probe (DPContainer &top_level, DPContainer *parent)
+ContainerPtr
+probe (ContainerPtr& top_level, ContainerPtr& parent)
 {
 	//LOG_TRACE;
 
 	if (!parent)
 		return nullptr;
 
-	DPContainer *item = nullptr;
+	ContainerPtr item;
 
 	if ((item = Filesystem::probe (top_level, parent))) {
 		return item;
@@ -121,7 +121,7 @@ probe (DPContainer &top_level, DPContainer *parent)
  * main
  */
 int
-main (int argc, char *argv[])
+main (int argc, char* argv[])
 {
 	//command line
 	// -a	app
@@ -156,8 +156,8 @@ main (int argc, char *argv[])
 
 	log_init ("/dev/stdout");
 
-	DPContainer top_level;
-	top_level.name = "dummy";
+	ContainerPtr top_level (new DPContainer());
+	top_level->name = "dummy";
 
 	if (argc > 1) {
 		for (int i = 1; i < argc; i++) {
@@ -197,7 +197,7 @@ main (int argc, char *argv[])
 	}
 
 	// Process the probe_queue
-	DPContainer *item = nullptr;
+	ContainerPtr item;
 	//XXX deque?
 	while (!probe_queue.empty()) {
 		item = probe_queue.front();
@@ -205,7 +205,7 @@ main (int argc, char *argv[])
 
 		//std::cout << "Item: " << item << "\n";
 
-		DPContainer *found = probe (top_level, item);
+		ContainerPtr found = probe (top_level, item);
 		if (found) {
 			//item->add_child (found);
 			//std::cout << "\tFound: " << found << "\n";
@@ -228,7 +228,7 @@ main (int argc, char *argv[])
 
 		//std::cout << "Item: " << item << "\n";
 
-		DPContainer *found = probe (top_level, item);
+		ContainerPtr found = probe (top_level, item);
 		if (found) {
 			//item->add_child (found);
 			//std::cout << "\tFound: " << found << "\n";
@@ -242,26 +242,26 @@ main (int argc, char *argv[])
 
 	if (list) {
 		log_info ("------------------------------------------------------------\n");
-		top_level.dump_objects();
+		top_level->dump_objects();
 		log_info ("------------------------------------------------------------\n");
 	}
 
 	if (dot) {
 		if (separate) {
-			for (auto c : top_level.get_children()) {
-				std::vector<DPContainer*> dummy;
+			for (auto c : top_level->get_children()) {
+				std::vector<ContainerPtr> dummy;
 				dummy.push_back(c);
 				display_dot (dummy);
 			}
 		} else {
-			display_dot (top_level.get_children());
+			display_dot (top_level->get_children());
 		}
 	}
 
 	int retval = 0;
 
 	if (app) {
-		App app (&top_level);
+		App app (top_level);
 		retval =  app.run (1, argv);		//XXX argc
 	}
 

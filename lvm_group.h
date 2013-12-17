@@ -37,17 +37,17 @@ public:
 	std::string	vg_attr;
 	long		vg_seqno;
 
-	//virtual void add_segment (DPContainer *seg);
+	//virtual void add_segment (ContainerPtr& seg);
 
 	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
 	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
 
-	static void discover (DPContainer &top_level);
+	static void discover (ContainerPtr& top_level);
 
 protected:
-	friend void lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps);
-	friend void lvm_vgs (DPContainer &pieces, std::multimap<std::string,std::string> &deps);
-	friend void lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps);
+	friend void lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);
+	friend void lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);
+	friend void lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);
 
 private:
 

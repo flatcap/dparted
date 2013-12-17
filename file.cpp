@@ -50,11 +50,9 @@ File::~File()
  * find_devices
  */
 bool
-File::find_devices (const std::string &name, int fd, struct stat &st, DPContainer &list)
+File::find_devices (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
 {
-	File *f = nullptr;
-
-	f = new File();
+	FilePtr f (new File());
 #if 0
 	log_debug ("dev     = 0x%04lx\n", st.st_dev);
 	log_debug ("ino     = %ld\n",     st.st_ino);
@@ -88,7 +86,7 @@ File::find_devices (const std::string &name, int fd, struct stat &st, DPContaine
  * discover
  */
 void
-File::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
+File::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 {
 	//LOG_TRACE;
 
@@ -107,7 +105,7 @@ File::discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue)
  * identify
  */
 void
-File::identify (DPContainer &top_level, const char *name, int fd, struct stat &st)
+File::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st)
 {
 	//LOG_TRACE;
 

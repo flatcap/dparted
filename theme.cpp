@@ -97,9 +97,9 @@ Theme::init_colours (void)
  * add_colour
  */
 Gdk::RGBA
-Theme::add_colour (const std::string &name, const std::string &colour)
+Theme::add_colour (const std::string& name, const std::string& colour)
 {
-	Gdk::RGBA &c = colours[name];
+	Gdk::RGBA& c = colours[name];
 
 	c.set (colour);
 
@@ -110,9 +110,9 @@ Theme::add_colour (const std::string &name, const std::string &colour)
  * add_colour
  */
 Gdk::RGBA
-Theme::add_colour (const std::string &name, const Gdk::RGBA &colour)
+Theme::add_colour (const std::string& name, const Gdk::RGBA& colour)
 {
-	Gdk::RGBA &c = colours[name];
+	Gdk::RGBA& c = colours[name];
 
 	c = colour;
 
@@ -123,7 +123,7 @@ Theme::add_colour (const std::string &name, const Gdk::RGBA &colour)
  * get_colour
  */
 Gdk::RGBA
-Theme::get_colour (const std::string &name)
+Theme::get_colour (const std::string& name)
 {
 	Gdk::RGBA c ("rgba(255,0,255,0.3)");	//XXX change default to white
 
@@ -169,15 +169,15 @@ Theme::init_icons (void)
  * add_icon
  */
 Glib::RefPtr<Gdk::Pixbuf>
-Theme::add_icon (const std::string &name, const std::string &filename)
+Theme::add_icon (const std::string& name, const std::string& filename)
 {
-	Glib::RefPtr<Gdk::Pixbuf> &pb = icons[name];
+	Glib::RefPtr<Gdk::Pixbuf>& pb = icons[name];
 
 	try {
 		pb = Gdk::Pixbuf::create_from_file (filename);
-	} catch (const Glib::FileError &fe) {
+	} catch (const Glib::FileError& fe) {
 		std::cout << "file error: " << fe.what() << std::endl;
-	} catch (const Gdk::PixbufError &pbe) {
+	} catch (const Gdk::PixbufError& pbe) {
 		std::cout << "pixbuf error: " << pbe.what() << std::endl;
 	}
 
@@ -191,9 +191,9 @@ Theme::add_icon (const std::string &name, const std::string &filename)
  * get_icon
  */
 Glib::RefPtr<Gdk::Pixbuf>
-Theme::get_icon (const std::string &name)
+Theme::get_icon (const std::string& name)
 {
-	Glib::RefPtr<Gdk::Pixbuf> &pb = icons[name];
+	Glib::RefPtr<Gdk::Pixbuf>& pb = icons[name];
 
 	if (!pb) {
 #if 0
@@ -228,7 +228,7 @@ Theme::get_icon (const std::string &name)
  * get_value
  */
 std::string
-Theme::get_value (const libconfig::Setting &s)
+Theme::get_value (const libconfig::Setting& s)
 {
 	libconfig::Setting::Type t = s.getType();
 
@@ -256,10 +256,10 @@ Theme::get_value (const libconfig::Setting &s)
  * parse_config
  */
 void
-Theme::parse_config (const libconfig::Setting &setting)
+Theme::parse_config (const libconfig::Setting& setting)
 {
 	for (int i = 0; i < setting.getLength(); i++) {
-		const libconfig::Setting &s = setting[i];
+		const libconfig::Setting& s = setting[i];
 
 		if (s.isScalar()) {
 			std::string path  = s.getPath();
@@ -278,7 +278,7 @@ Theme::parse_config (const libconfig::Setting &setting)
  * read_config
  */
 bool
-Theme::read_config (const char *filename)
+Theme::read_config (const char* filename)
 {
 	libconfig::Config cfg;
 
@@ -286,12 +286,12 @@ Theme::read_config (const char *filename)
 	{
 		cfg.readFile(filename);
 	}
-	catch(const libconfig::FileIOException &fioex)
+	catch(const libconfig::FileIOException& fioex)
 	{
 		std::cerr << "I/O error while reading file." << std::endl;
 		return false;
 	}
-	catch(const libconfig::ParseException &pex)
+	catch(const libconfig::ParseException& pex)
 	{
 		std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
 		return false;
@@ -302,7 +302,7 @@ Theme::read_config (const char *filename)
 		std::string name = cfg.lookup("name");
 		//std::cout << "Theme: " << name << std::endl << std::endl;
 	}
-	catch(const libconfig::SettingNotFoundException &nfex)
+	catch(const libconfig::SettingNotFoundException& nfex)
 	{
 		std::cerr << "No 'name' setting in configuration file." << std::endl;
 	}
@@ -326,7 +326,7 @@ Theme::read_config (const char *filename)
  * get_config
  */
 std::string
-Theme::get_config (std::string path, const std::string &name, const std::string &attr)
+Theme::get_config (std::string path, const std::string& name, const std::string& attr)
 {
 	std::map<std::string,std::string>::iterator it;
 	std::map<std::string,std::string>::iterator end = config.end();

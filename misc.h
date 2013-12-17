@@ -32,7 +32,7 @@ public:
 	Misc (void);
 	virtual ~Misc();
 
-	static DPContainer * probe (DPContainer &top_level, DPContainer *parent);
+	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 protected:
 

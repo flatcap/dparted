@@ -20,8 +20,8 @@
 
 class DPContainer;
 
-DPContainer * object_track (DPContainer *obj);
-bool object_untrack (DPContainer *obj);
+DPContainer* object_track (DPContainer* obj);
+bool object_untrack (DPContainer* obj);
 std::size_t dump_leaks (void);
 
 #endif // _LEAK_H_

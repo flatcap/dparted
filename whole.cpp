@@ -42,7 +42,7 @@ Whole::~Whole()
  * add_segment
  */
 void
-Whole::add_segment (DPContainer *seg)
+Whole::add_segment (ContainerPtr& seg)
 {
 	bool inserted = false;
 
@@ -60,7 +60,7 @@ Whole::add_segment (DPContainer *seg)
 		segments.push_back (seg);
 	}
 
-	seg->whole = this;
+	seg->whole.reset (this);
 }
 
 

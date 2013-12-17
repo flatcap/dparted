@@ -33,8 +33,8 @@ public:
 	File (void);
 	virtual ~File();
 
-	static void discover (DPContainer &top_level, std::queue<DPContainer*> &probe_queue);
-	static void identify (DPContainer &top_level, const char *name, int fd, struct stat &st);
+	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
+	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 protected:
 

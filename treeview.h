@@ -32,12 +32,12 @@ public:
 	TreeView();
 	virtual ~TreeView();
 
-	void init_treeview (DPContainer *c);
+	void init_treeview (ContainerPtr& c);
 
 protected:
 	// Override Signal handler:
 	// Alternatively, use signal_button_press_event().connect_notify()
-	virtual bool on_button_press_event (GdkEventButton *ev);
+	virtual bool on_button_press_event (GdkEventButton* ev);
 
 	//Signal handler for popup menu items:
 	void on_menu_file_popup_generic();
@@ -74,7 +74,7 @@ protected:
 		Gtk::TreeModelColumn<long>                       col_unused;
 		Gtk::TreeModelColumn<Glib::ustring>              col_flags;
 
-		Gtk::TreeModelColumn<DPContainer*>               col_container;
+		Gtk::TreeModelColumn<ContainerPtr>               col_container;
 		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > col_icon1;
 		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > col_icon2;
 		Gtk::TreeModelColumn<int>                        col_colour;
@@ -83,11 +83,11 @@ protected:
 	ModelColumns m_Columns;
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
 
-	void on_row_activated (const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column);
-	bool on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip> &tooltip);
+	void on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
+	bool on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 	bool on_popup_menu (void);
 
-	void tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent);
+	void tree_add_row (ContainerPtr& c, Gtk::TreeModel::Row* parent);
 
 private:
 

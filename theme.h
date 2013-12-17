@@ -34,15 +34,15 @@ public:
 	Theme();
 	virtual ~Theme();
 
-	Gdk::RGBA add_colour (const std::string &name, const std::string &colour);
-	Gdk::RGBA add_colour (const std::string &name, const Gdk::RGBA   &colour);
-	Gdk::RGBA get_colour (const std::string &name);
+	Gdk::RGBA add_colour (const std::string& name, const std::string& colour);
+	Gdk::RGBA add_colour (const std::string& name, const Gdk::RGBA&   colour);
+	Gdk::RGBA get_colour (const std::string& name);
 
-	Glib::RefPtr<Gdk::Pixbuf> add_icon (const std::string &name, const std::string &filename);
-	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string &name);
+	Glib::RefPtr<Gdk::Pixbuf> add_icon (const std::string& name, const std::string& filename);
+	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string& name);
 
-	bool read_config (const char *filename);
-	std::string get_config (std::string path, const std::string &name, const std::string &attr);
+	bool read_config (const char* filename);
+	std::string get_config (std::string path, const std::string& name, const std::string& attr);
 
 protected:
 	std::map<std::string,Gdk::RGBA> colours;
@@ -51,8 +51,8 @@ protected:
 	void init_colours (void);
 	void init_icons   (void);
 
-	void parse_config (const libconfig::Setting &setting);
-	std::string get_value (const libconfig::Setting &s);
+	void parse_config (const libconfig::Setting& setting);
+	std::string get_value (const libconfig::Setting& s);
 
 	std::map<std::string,std::string> config;
 

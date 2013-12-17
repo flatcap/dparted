@@ -21,10 +21,10 @@
 #include <string>
 #include <vector>
 
-class DPContainer;
+#include "pointers.h"
 
-std::string dump_dot    (std::vector<DPContainer*> v);
-void        display_dot (std::vector<DPContainer*> v);
+std::string dump_dot    (std::vector<ContainerPtr> v);
+void        display_dot (std::vector<ContainerPtr> v);
 
 #endif // _DOT_H_
 

@@ -32,12 +32,12 @@ public:
 	Filesystem (void);
 	virtual ~Filesystem();
 
-	static DPContainer * probe (DPContainer &top_level, DPContainer *parent);
+	static FilesystemPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 	std::string	label;
 
 protected:
-	virtual std::string get_property (const std::string &propname);
+	virtual std::string get_property (const std::string& propname);
 
 private:
 	long ext2_get_usage (void);

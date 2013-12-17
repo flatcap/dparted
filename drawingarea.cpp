@@ -95,8 +95,8 @@ DPDrawingArea::~DPDrawingArea()
 /**
  * operator<< - serialise a Rect
  */
-std::ostream &
-operator<< (std::ostream &stream, const Rect &r)
+std::ostream&
+operator<< (std::ostream& stream, const Rect& r)
 {
 	stream << "[" << r.x << "," << r.y << "," << r.w << "," << r.h << "]";
 
@@ -106,7 +106,7 @@ operator<< (std::ostream &stream, const Rect &r)
 /**
  * set_colour
  */
-void set_colour (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &colour)
+void set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const std::string& colour)
 {
 	Gdk::RGBA rgba ("rgba(0,0,0,0)");		// Transparent
 	if (!rgba.set (colour)) {
@@ -119,7 +119,7 @@ void set_colour (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &col
  * draw_edge - 1px rectangular border
  */
 void
-draw_edge (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std::string &colour)
+draw_edge (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const std::string& colour)
 {
 	cr->save();
 	set_colour (cr, colour);
@@ -138,7 +138,7 @@ draw_edge (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std
  * draw_grid - fine mesh grid
  */
 void
-draw_grid (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+draw_grid (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
 {
 	int width  = shape.w;
 	int height = shape.h;
@@ -180,13 +180,13 @@ draw_grid (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
  * draw_grid_linear - Major and minor grid lines
  */
 void
-draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
+draw_grid_linear (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, long max_size)
 {
 	space.w -= 2;
 
-	const int &x = space.x;
-	const int &w = space.w;
-	const int &h = space.h;
+	const int& x = space.x;
+	const int& w = space.w;
+	const int& h = space.h;
 
 	double bytes_per_pixel = max_size / w;
 
@@ -233,7 +233,7 @@ draw_grid_linear (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_
  * draw_grid_log
  */
 void
-draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_size)
+draw_grid_log (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, long max_size)
 {
 }
 
@@ -243,13 +243,13 @@ draw_grid_log (const Cairo::RefPtr<Cairo::Context> &cr, Rect space, long max_siz
  * draw_border - sketch out curved rectangle
  */
 void
-draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+draw_border (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
 {
-	const int &r = RADIUS;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
+	const int& r = RADIUS;
+	const int& x = shape.x;
+	const int& y = shape.y;
+	const int& w = shape.w;
+	const int& h = shape.h;
 
 	cr->move_to (x, y+r);
 	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
@@ -263,7 +263,7 @@ draw_border (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
  * fill_area - fill rounded rectangle
  */
 void
-fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std::string &colour)
+fill_area (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const std::string& colour)
 {
 	cr->save();
 	set_colour (cr, colour);
@@ -278,7 +278,7 @@ fill_area (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std
  * fill_rect - fill rectangle
  */
 void
-fill_rect (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std::string &colour)
+fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const std::string& colour)
 {
 	cr->save();
 	set_colour (cr, colour);
@@ -293,13 +293,13 @@ fill_rect (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, const std
  * checker_rect - checker rect
  */
 void
-checker_rect (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, int check_size)
+checker_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, int check_size)
 {
-	const int &s = check_size;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
+	const int& s = check_size;
+	const int& x = shape.x;
+	const int& y = shape.y;
+	const int& w = shape.w;
+	const int& h = shape.h;
 
 	for (int i = 0; i <= w; i += s) {
 		for (int j = 0; j <= h; j += s) {
@@ -319,7 +319,7 @@ checker_rect (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, int ch
  * draw_text - write some text into an area
  */
 void
-draw_text (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, const std::string &text)
+draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, const std::string& text)
 {
 	Pango::FontDescription font;
 	font.set_family ("Liberation Sans Bold");	//THEME - icon label font
@@ -354,7 +354,7 @@ draw_text (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, const std::strin
  * draw_focus - 2px dashed black/white line
  */
 void
-draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
+draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
 {
 	static int start = 0;
 	std::vector<double> dashes = {5,5};
@@ -385,12 +385,12 @@ draw_focus (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape)
  * draw_gradient - apply light shading to an area
  */
 void
-draw_gradient (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape)
+draw_gradient (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape)
 {
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
+	const int& x = shape.x;
+	const int& y = shape.y;
+	const int& w = shape.w;
+	const int& h = shape.h;
 
 	//XXX needs clipping to rounded rectangle
 
@@ -413,13 +413,13 @@ draw_gradient (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape)
 /**
  * draw_corner - solid ne/nw/se/sw convex/concave corner
  */
-void draw_corner (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool north, bool east, bool convex)
+void draw_corner (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, bool north, bool east, bool convex)
 {
-	const int &r = RADIUS;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
+	const int& r = RADIUS;
+	const int& x = shape.x;
+	const int& y = shape.y;
+	const int& w = shape.w;
+	const int& h = shape.h;
 
 	cr->save();
 	cr->rectangle (x, y, w, h);
@@ -486,13 +486,13 @@ void draw_corner (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool nort
 /**
  * draw_arc - draw a corner line (90 degrees) se/sw
  */
-void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
+void draw_arc (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, bool east)
 {
-	const int &r = RADIUS;
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
+	const int& r = RADIUS;
+	const int& x = shape.x;
+	const int& y = shape.y;
+	const int& w = shape.w;
+	const int& h = shape.h;
 
 	cr->save();
 	cr->set_line_width (SIDES+1);
@@ -528,7 +528,7 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context> &cr, Rect shape, bool east)
  * draw_block - draw an icon-width, hollow, rounded rectangle
  */
 void
-draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &tab, Rect &right)
+draw_block (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& right)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_tab: too short\n");
@@ -542,10 +542,10 @@ draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &ta
 
 	Rect work = { shape.x, shape.y, BLOCK_WIDTH + (RADIUS/2), shape.h };
 
-	const int &x = work.x;
-	const int &y = work.y;
-	const int &w = work.w;
-	const int &h = work.h;
+	const int& x = work.x;
+	const int& y = work.y;
+	const int& w = work.w;
+	const int& h = work.h;
 
 	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
 	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
@@ -585,7 +585,7 @@ draw_block (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &ta
  * draw_box - draw a rounded rectangle
  */
 void
-draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &inside)
+draw_box (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_box: too short\n");
@@ -597,10 +597,10 @@ draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &insi
 		return;
 	}
 
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
+	const int& x = shape.x;
+	const int& y = shape.y;
+	const int& w = shape.w;
+	const int& h = shape.h;
 
 	draw_corner (cr, shape, true,  false, true);		// Top left corner (1)
 	draw_corner (cr, shape, true,  true,  true);		// Top right corner (3)
@@ -638,7 +638,7 @@ draw_box (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &insi
  * draw_iconbox - draw a rounded rectangle with a handy tab
  */
 void
-draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &tab, Rect &inside)
+draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_iconbox: too short\n");
@@ -650,10 +650,10 @@ draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &
 		return;
 	}
 
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
+	const int& x = shape.x;
+	const int& y = shape.y;
+	const int& w = shape.w;
+	const int& h = shape.h;
 
 	draw_corner (cr, shape, true,  false, true);		// Top left corner (1)
 	draw_corner (cr, shape, true,  true,  true);		// Top right corner (3)
@@ -703,7 +703,7 @@ draw_iconbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &
  * draw_tabbox - draw a rounded rectangle with a handy tab
  */
 void
-draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &tab, Rect &inside)
+draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_tabbox: too short\n");
@@ -715,10 +715,10 @@ draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &t
 		return;
 	}
 
-	const int &x = shape.x;
-	const int &y = shape.y;
-	const int &w = shape.w;
-	const int &h = shape.h;
+	const int& x = shape.x;
+	const int& y = shape.y;
+	const int& w = shape.w;
+	const int& h = shape.h;
 
 	draw_corner (cr, shape, true,  false, true);		// Top left corner (1)
 	draw_corner (cr, shape, true,  true,  true);		// Top right corner (3)
@@ -769,7 +769,7 @@ draw_tabbox (const Cairo::RefPtr<Cairo::Context> &cr, const Rect &shape, Rect &t
  * draw_icon
  */
 void
-DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::string &name, const Rect &shape, Rect &below /*=nullptr*/)
+DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, const std::string& name, const Rect& shape, Rect& below /*=nullptr*/)
 {
 	Glib::RefPtr<Gdk::Pixbuf> pb;
 
@@ -803,7 +803,7 @@ DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context> &cr, const std::st
  * on_draw
  */
 bool
-DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context> &cr)
+DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	//LOG_TRACE;
 	if (!m_c)
@@ -847,7 +847,7 @@ DPDrawingArea::on_timeout (int timer_number)
  * on_mouse_motion
  */
 bool
-DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
+DPDrawingArea::on_mouse_motion (GdkEventMotion* event)
 {
 	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")\n";
 
@@ -868,7 +868,7 @@ DPDrawingArea::on_mouse_motion (GdkEventMotion *event)
  * on_mouse_leave
  */
 bool
-DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
+DPDrawingArea::on_mouse_leave (GdkEventCrossing* event)
 {
 #if 0
 	if (mouse_close) {
@@ -883,7 +883,7 @@ DPDrawingArea::on_mouse_leave (GdkEventCrossing *event)
  * on_mouse_click
  */
 bool
-DPDrawingArea::on_mouse_click (GdkEventButton *event)
+DPDrawingArea::on_mouse_click (GdkEventButton* event)
 {
 	std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
@@ -897,8 +897,8 @@ DPDrawingArea::on_mouse_click (GdkEventButton *event)
 		bool b = ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
 			  (event->y >= r.y) && (event->y < (r.y + r.h)));
 
-		if (b) log_error ("\033[01;31mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p, rg.p->type.back().c_str());
-		else   log_info  ("\033[01;32mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p, rg.p->type.back().c_str());
+		if (b) log_error ("\033[01;31mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p.get(), rg.p->type.back().c_str());
+		else   log_info  ("\033[01;32mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p.get(), rg.p->type.back().c_str());
 	}
 	log_info ("\n");
 
@@ -918,15 +918,15 @@ DPDrawingArea::on_mouse_click (GdkEventButton *event)
 	std::cout << event->y << "\n";
 
 	GdkEventType type;
-	GdkWindow *window;
+	GdkWindow* window;
 	gint8 send_event;
 	guint32 time;
 	gdouble x;
 	gdouble y;
-	gdouble *axes;
+	gdouble* axes;
 	guint state;
 	guint button;
-	GdkDevice *device;
+	GdkDevice* device;
 	gdouble x_root, y_root;
 #endif
 
@@ -937,10 +937,10 @@ DPDrawingArea::on_mouse_click (GdkEventButton *event)
 /**
  * find_subst - get the position of a {tag}
  */
-bool find_subst (const std::string &text, std::string &tag, size_t &start, size_t &stop)
+bool find_subst (const std::string& text, std::string& tag, size_t& start, size_t& stop)
 {
 	//XXX on failure, point start at error
-	const char *valid = "abcdefghijklmnopqrstuvwxyz_";
+	const char* valid = "abcdefghijklmnopqrstuvwxyz_";
 	size_t open  = std::string::npos;
 	size_t close = std::string::npos;
 
@@ -978,7 +978,7 @@ bool find_subst (const std::string &text, std::string &tag, size_t &start, size_
  * draw_container_examples
  */
 void
-draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape, Rect *right)
+draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr cont, Rect shape, Rect* right)
 {
 	if (!cont)
 		return;
@@ -1102,10 +1102,10 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *c
 /**
  * get_protective
  */
-Table *
-DPDrawingArea::get_protective (DPContainer *c)
+TablePtr
+DPDrawingArea::get_protective (ContainerPtr& c)
 {
-	DPContainer *child = nullptr;
+	ContainerPtr child;
 
 	//std::cout << "1: " << c << "\n";
 	if (!c)
@@ -1134,7 +1134,7 @@ DPDrawingArea::get_protective (DPContainer *c)
 		return nullptr;
 
 	if (child->is_a ("table"))
-		return dynamic_cast<Table*> (child);
+		return std::dynamic_pointer_cast<Table> (child);
 
 	return nullptr;
 }
@@ -1145,7 +1145,7 @@ DPDrawingArea::get_protective (DPContainer *c)
  * set_data
  */
 void
-DPDrawingArea::set_data (DPContainer *c)
+DPDrawingArea::set_data (ContainerPtr& c)
 {
 	// check we've been given a block device
 
@@ -1161,10 +1161,10 @@ DPDrawingArea::set_data (DPContainer *c)
 /**
  * get_focus
  */
-DPContainer *
+ContainerPtr
 DPDrawingArea::get_focus (int x, int y)
 {
-	DPContainer *match = nullptr;
+	ContainerPtr match;
 
 	for (auto rg : vRange) {
 		Rect r = rg.r;
@@ -1185,7 +1185,7 @@ DPDrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, co
 {
 	std::stringstream ss;
 
-	DPContainer *c = get_focus (x, y);
+	ContainerPtr c = get_focus (x, y);
 	if (c) {
 		ss << "<b>" << c->name << "</b> (" << c->uuid << ")";
 
@@ -1203,7 +1203,7 @@ DPDrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, co
  * draw_label - write some text into an area
  */
 void
-draw_label (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape)
+draw_label (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr cont, Rect shape)
 {
 	std::string label;
 
@@ -1219,7 +1219,7 @@ draw_label (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect sha
 	}
 
 	if (cont->is_a ("filesystem")) {
-		Filesystem *fs = dynamic_cast<Filesystem*> (cont);
+		FilesystemPtr fs = std::dynamic_pointer_cast<Filesystem> (cont);
 		if (fs) {
 			if (!fs->label.empty()) {
 				label += " \"" + fs->label + "\"";
@@ -1254,7 +1254,7 @@ draw_label (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect sha
  * draw_container - recursively draw a set of containers
  */
 void
-DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContainer *cont, Rect shape)
+DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, Rect shape)
 {
 	//Rect tab;
 	Rect inside;
@@ -1282,7 +1282,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context> &cr, DPContai
 		return;
 	}
 
-	std::vector<DPContainer*> children = cont->get_children();
+	std::vector<ContainerPtr> children = cont->get_children();
 
 	if ((display != "box") && (display != "empty") && (display != "icon") && (display != "iconbox") && (display != "tabbox")) {
 		display = "box";

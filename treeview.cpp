@@ -27,7 +27,7 @@
 TreeView::TreeView()
 {
 	//Add the TreeView's view columns:
-	Gtk::TreeView::Column *col = nullptr;
+	Gtk::TreeView::Column* col = nullptr;
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Partition"));
 	col->pack_start (m_Columns.col_partition,  true);
@@ -59,7 +59,7 @@ TreeView::TreeView()
 
 #if 1
 	//Fill popup menu:
-	Gtk::MenuItem *item = Gtk::manage (new Gtk::MenuItem ("_Edit", true));
+	Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem ("_Edit", true));
 	item->signal_activate().connect (sigc::mem_fun (*this, &TreeView::on_menu_file_popup_generic));
 	m_Menu_Popup.append (*item);
 
@@ -103,7 +103,7 @@ TreeView::on_popup_menu (void)
  * on_button_press_event
  */
 bool
-TreeView::on_button_press_event (GdkEventButton *event)
+TreeView::on_button_press_event (GdkEventButton* event)
 {
 	bool return_value = false;
 
@@ -156,7 +156,7 @@ get_color_as_pixbuf (int width, int height)
  * tree_add_row
  */
 void
-TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
+TreeView::tree_add_row (ContainerPtr& c, Gtk::TreeModel::Row* parent)
 {
 	Gtk::TreeModel::Row row;
 
@@ -188,7 +188,7 @@ TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
  * init_treeview
  */
 void
-TreeView::init_treeview (DPContainer *c)
+TreeView::init_treeview (ContainerPtr& c)
 {
 	tree_add_row (c, nullptr);
 }
@@ -197,14 +197,14 @@ TreeView::init_treeview (DPContainer *c)
  * on_row_activated
  */
 void
-TreeView::on_row_activated (const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *col)
+TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* col)
 {
 #if 0
 	std::cout << "Path: " << path.to_string() << "\n";
 
 	Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter (path);
 	if (iter) {
-		DPContainer *c = nullptr;
+		ContainerPtr c;
 		Gtk::TreeModel::Row row = *iter;
 		std::cout << "Row activated: Name=" << row[m_Columns.col_name] << ", Type=" << row[m_Columns.col_type] << "\n";
 

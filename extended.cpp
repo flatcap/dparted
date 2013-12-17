@@ -49,14 +49,14 @@ Extended::~Extended()
 /**
  * probe
  */
-Extended *
-Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long size)
+ExtendedPtr
+Extended::probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size)
 {
 	//LOG_TRACE;
-	Extended *ext = nullptr;
+	ExtendedPtr ext;
 
 #if 0
-	unsigned char *buffer = nullptr;
+	unsigned char* buffer = nullptr;
 	int bufsize = 512;
 	//off_t seek = 0;
 	//ssize_t count = 0;
@@ -78,7 +78,7 @@ Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long 
 	if (!buffer)
 		return nullptr;
 
-	Misc *res1 = new Misc();
+	MiscPtr res1 = new Misc();
 	res1->name          = "reserved";
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
@@ -88,13 +88,13 @@ Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long 
 	for (int loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
 		std::string s = get_size (table_offset);
 		//log_debug ("table_offset = %lld (%s)\n", table_offset, s.c_str());
-		/*FILE *f =*/ parent->open_device();
+		/*FILE* f =*/ parent->open_device();
 		/*int r =*/ parent->read_data (table_offset, bufsize, buffer);
 		//log_debug ("f = %p, r = %d\n", f, r);
 
 		//dump_hex (buffer, bufsize);
 
-		if (*(unsigned short int *) (buffer+510) != 0xAA55) {
+		if (*(unsigned short int*) (buffer+510) != 0xAA55) {
 			log_error ("not an extended partition\n");
 			//log_debug ("%s (%s), %lld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
 			return nullptr;
@@ -113,7 +113,7 @@ Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long 
 			return nullptr;
 		}
 
-		for (auto &part : vp) {
+		for (auto& part : vp) {
 #if 0
 			if ((part.type != 5) || (part.type != 5)) {
 				std::string s1 = get_size (part.start);
@@ -125,7 +125,7 @@ Extended::probe (DPContainer &top_level, DPContainer *parent, long offset, long 
 				log_debug ("\n");
 			}
 #endif
-			DPContainer *c = nullptr;
+			ContainerPtr c;
 
 			if ((part.type == 0x05) || (part.type == 0x0F)) {
 				table_offset = offset + part.start;
