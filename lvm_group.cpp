@@ -58,7 +58,7 @@ LvmGroup::~LvmGroup()
 /**
  * lvm_pvs
  */
-static void
+void
 lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 {
 	//LOG_TRACE;
@@ -93,7 +93,7 @@ lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 	command = "sudo pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options "
 			"pv_uuid,pv_size,pv_used,pv_attr,vg_extent_size,pvseg_start,pvseg_size,vg_name,vg_uuid,lv_uuid,lv_attr,segtype";
 
-	for (auto i : pieces.children) {
+	for (auto i : pieces.get_children()) {
 		if (i->is_a ("lvm_table")) {
 			//log_info ("command: %s\n", i->get_device_name().c_str());
 			command += " " + i->get_device_name();
@@ -215,7 +215,7 @@ lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 /**
  * lvm_vgs
  */
-static void
+void
 lvm_vgs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 {
 	//LOG_TRACE;
@@ -242,7 +242,7 @@ lvm_vgs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 	command = "sudo vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options "
 		"vg_uuid,vg_name,vg_seqno,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_extent_size";
 
-	for (auto i : pieces.children) {
+	for (auto i : pieces.get_children()) {
 		if (i->is_a ("lvm_group"))
 			command += " " + i->name;
 	}
@@ -288,7 +288,7 @@ lvm_vgs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 /**
  * lvm_lvs
  */
-static void
+void
 lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 {
 	//LOG_TRACE;
@@ -320,7 +320,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 	command = "sudo lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options "
 		  "vg_uuid,lv_uuid,lv_name,lv_attr,mirror_log,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start_pe,devices";
 
-	for (auto i : pieces.children) {
+	for (auto i : pieces.get_children()) {
 		if (i->is_a ("lvm_group"))
 			command += " " + i->name;
 	}
@@ -487,13 +487,7 @@ lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps)
 		//log_info ("\t%s -> %s\n", parent->name.c_str(), child->name.c_str());
 		//log_info ("\t%s -> %s\n", parent->uuid.c_str(), child->uuid.c_str());
 
-		for (auto it = pieces.children.begin(); it != pieces.children.end(); it++) {
-			if (*it == child) {
-				pieces.children.erase (it);
-				break;
-			}
-		}
-
+		pieces.delete_child (child);
 	}
 	deps.clear();
 

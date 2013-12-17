@@ -113,7 +113,6 @@ public:
 	Whole		*whole;
 
 	DPContainer	*parent;
-	std::vector<DPContainer*> children;
 
 	std::vector<std::string> type;
 
@@ -137,6 +136,8 @@ protected:
 	void insert (long offset, long size, void *ptr);
 
 	MmapSet	mmaps;
+
+	std::vector<DPContainer*> children;
 private:
 
 };

@@ -248,13 +248,13 @@ main (int argc, char *argv[])
 
 	if (dot) {
 		if (separate) {
-			for (auto c : top_level.children) {
+			for (auto c : top_level.get_children()) {
 				std::vector<DPContainer*> dummy;
 				dummy.push_back(c);
 				display_dot (dummy);
 			}
 		} else {
-			display_dot (top_level.children);
+			display_dot (top_level.get_children());
 		}
 	}
 

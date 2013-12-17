@@ -160,6 +160,12 @@ DPContainer::just_add_child (DPContainer *child)
 void
 DPContainer::delete_child (DPContainer *child)
 {
+	for (auto it = children.begin(); it != children.end(); it++) {
+		if (*it == child) {
+			children.erase (it);
+			break;
+		}
+	}
 }
 
 /**

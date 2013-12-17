@@ -43,7 +43,11 @@ public:
 	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
 
 	static void discover (DPContainer &top_level);
+
 protected:
+	friend void lvm_pvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps);
+	friend void lvm_vgs (DPContainer &pieces, std::multimap<std::string,std::string> &deps);
+	friend void lvm_lvs (DPContainer &pieces, std::multimap<std::string,std::string> &deps);
 
 private:
 

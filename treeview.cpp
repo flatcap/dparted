@@ -160,7 +160,7 @@ TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 {
 	Gtk::TreeModel::Row row;
 
-	for (auto x : c->children) {
+	for (auto x : c->get_children()) {
 		if (x->is_a ("group"))
 			continue; //RAR for now ignore vg
 		//std::cout << "name: " << x->name << "\n";
@@ -176,7 +176,7 @@ TreeView::tree_add_row (DPContainer *c, Gtk::TreeModel::Row *parent)
 		row[m_Columns.col_unused] = x->bytes_size - x->bytes_used;
 		//row[m_Columns.col_colour] = get_color_as_pixbuf (16, 16);
 
-		if (x->children.size() > 0) {
+		if (x->get_children().size() > 0) {
 			tree_add_row (x, &row);
 		}
 	}

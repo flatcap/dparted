@@ -763,7 +763,7 @@ dot_misc (Misc *m)
  * dump_dot_inner
  */
 static std::string
-dump_dot_inner (std::vector <DPContainer*> &v)
+dump_dot_inner (const std::vector <DPContainer*> &v)
 {
 	std::stringstream dot;
 	int count = 0;
@@ -833,7 +833,7 @@ dump_dot_inner (std::vector <DPContainer*> &v)
 		}
 #endif
 
-		for (auto c2 : c->children) {
+		for (auto c2 : c->get_children()) {
 			dot << "obj_" << (void*) c << " -> obj_" << (void*) c2 << ";\n";
 		}
 
@@ -877,7 +877,7 @@ dump_dot_inner (std::vector <DPContainer*> &v)
 		}
 #endif
 
-		dot << dump_dot_inner (c->children);
+		dot << dump_dot_inner (c->get_children());
 
 #if 1
 		//if (c->parent && (c->parent->parent == nullptr))

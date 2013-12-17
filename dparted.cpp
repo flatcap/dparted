@@ -104,7 +104,7 @@ DParted::set_data (DPContainer *c)
 	treeview.init_treeview (m_c);
 
 	int count = 0;
-	for (auto i : c->children) {
+	for (auto i : c->get_children()) {
 		if (i->is_a ("lvm_group"))
 			continue; //RAR for now ignore vg
 		//std::cout << i->type << "\n";
