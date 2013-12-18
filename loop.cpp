@@ -46,10 +46,10 @@ Loop::Loop (void) :
 }
 
 /**
- * Loop (std::string)
+ * create
  */
-Loop::Loop (const std::string losetup) :
-	Loop()
+LoopPtr
+Loop::create (const std::string& losetup)
 {
 	std::vector<std::string> parts;
 
@@ -65,48 +65,44 @@ Loop::Loop (const std::string losetup) :
 
 	//XXX validate all input, else throw()
 
-	device     = parts[0];
-	file_name  = parts[11];
+	LoopPtr l (new Loop());
+	l->device     = parts[0];
+	l->file_name  = parts[11];
 
-	name = device;
-	size_t index = name.find_last_of ('/');
+	l->name = l->device;
+	size_t index = l->name.find_last_of ('/');
 	if (index != std::string::npos) {
-		name = name.substr (index+1);
+		l->name = l->name.substr (index+1);
 	}
 
-	autoclear  = StringNum (parts[ 1]);
-	file_inode = StringNum (parts[ 2]);
-	file_major = StringNum (parts[ 3]);
-	file_minor = StringNum (parts[ 4]);
-	loop_major = StringNum (parts[ 5]);
-	loop_minor = StringNum (parts[ 6]);
-	offset     = StringNum (parts[ 7]);
-	partscan   = StringNum (parts[ 8]);
-	read_only  = StringNum (parts[ 9]);
-	sizelimit  = StringNum (parts[10]);
+	l->autoclear  = StringNum (parts[ 1]);
+	l->file_inode = StringNum (parts[ 2]);
+	l->file_major = StringNum (parts[ 3]);
+	l->file_minor = StringNum (parts[ 4]);
+	l->loop_major = StringNum (parts[ 5]);
+	l->loop_minor = StringNum (parts[ 6]);
+	l->offset     = StringNum (parts[ 7]);
+	l->partscan   = StringNum (parts[ 8]);
+	l->read_only  = StringNum (parts[ 9]);
+	l->sizelimit  = StringNum (parts[10]);
 
-	std::size_t len = file_name.size();
-	if ((len > 10) && (file_name.substr (len-10) == " (deleted)")) {
-		file_name.erase(len-10);
-		deleted = true;
+	std::size_t len = l->file_name.size();
+	if ((len > 10) && (l->file_name.substr (len-10) == " (deleted)")) {
+		l->file_name.erase(len-10);
+		l->deleted = true;
 		//log_info ("%s is deleted\n", device.c_str());
 	}
 
 	//XXX tmp
-	kernel_major = loop_major;
-	kernel_minor = loop_minor;
-	block_size   = 512;	//XXX kernel limit, but fs block size is likely to be bigger
+	l->kernel_major = l->loop_major;
+	l->kernel_minor = l->loop_minor;
+	l->block_size   = 512;	//XXX kernel limit, but fs block size is likely to be bigger
 
 	std::stringstream ss;
-	ss << "[" << kernel_major << ":" << kernel_minor << "]";
-	uuid = ss.str();
-}
+	ss << "[" << l->kernel_major << ":" << l->kernel_minor << "]";
+	l->uuid = ss.str();
 
-/**
- * ~Loop
- */
-Loop::~Loop()
-{
+	return l;
 }
 
 
@@ -166,7 +162,7 @@ Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 		return;
 
 	for (auto line : output) {
-		LoopPtr l (new Loop (line));
+		LoopPtr l = create(line);
 
 		l->get_fd();
 
@@ -197,7 +193,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 
 	//std::cout << output[0] << std::endl;
 
-	LoopPtr l (new Loop (output[0]));
+	LoopPtr l = create (output[0]);
 
 	size = lseek (fd, 0, SEEK_END);
 

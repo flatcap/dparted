@@ -33,10 +33,14 @@ Partition::Partition (void) :
 }
 
 /**
- * ~Partition
+ * create
  */
-Partition::~Partition()
+PartitionPtr
+Partition::create (void)
 {
+	PartitionPtr p (new Partition());
+
+	return p;
 }
 
 

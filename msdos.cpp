@@ -184,7 +184,7 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 			c->parent_offset = vp[i].start;
 			c->device = part_name.str();
 		} else {
-			PartitionPtr p (new Partition());
+			PartitionPtr p = Partition::create();
 			p->ptype = vp[i].type;
 			c = p;
 			c->name = "partition";

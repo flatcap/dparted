@@ -36,10 +36,14 @@ Gpt::Gpt (void)
 }
 
 /**
- * ~Gpt
+ * create
  */
-Gpt::~Gpt()
+GptPtr
+Gpt::create (void)
 {
+	GptPtr g (new Gpt());
+
+	return g;
 }
 
 
@@ -63,7 +67,7 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 	// -33		128 gpt entries
 	// -1		secondary gpt header
 
-	GptPtr g (new Gpt());
+	GptPtr g = create();
 
 	g->name = "gpt";
 	g->bytes_size = parent->bytes_size;
@@ -119,7 +123,7 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 			break;
 
 		//log_debug ("new Partition %d\n", i);
-		PartitionPtr p (new Partition());
+		PartitionPtr p = Partition::create();
 		p->bytes_used = 0;
 		p->uuid = read_uuid1 (buffer+16);
 		//p->part_type_uuid = read_guid (buffer+0);

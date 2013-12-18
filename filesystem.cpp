@@ -37,10 +37,14 @@ Filesystem::Filesystem (void)
 }
 
 /**
- * ~Filesystem
+ * create
  */
-Filesystem::~Filesystem()
+FilesystemPtr
+Filesystem::create (void)
 {
+	FilesystemPtr f (new Filesystem());
+
+	return f;
 }
 
 

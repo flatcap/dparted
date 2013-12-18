@@ -68,7 +68,7 @@ get_btrfs (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	//log_info ("bufsize = %d, want %d\n", bufsize, 0x10140);
-	FilesystemPtr f (new Filesystem());
+	FilesystemPtr f  = Filesystem::create();
 
 	f->name = "btrfs";
 	f->uuid = read_uuid1 (buffer + 0x10020);
@@ -90,7 +90,7 @@ get_ext2 (unsigned char* buffer, int bufsize)
 	if (!identify_ext2 (buffer, bufsize))
 		return nullptr;
 
-	FilesystemPtr f (new Filesystem());
+	FilesystemPtr f  = Filesystem::create();
 	f->name = "ext2";
 
 	get_ext_common (f, buffer, bufsize);
@@ -108,7 +108,7 @@ get_ext3 (unsigned char* buffer, int bufsize)
 	if (!identify_ext3 (buffer, bufsize))
 		return nullptr;
 
-	FilesystemPtr f (new Filesystem());
+	FilesystemPtr f  = Filesystem::create();
 	f->name = "ext3";
 
 	get_ext_common (f, buffer, bufsize);
@@ -126,7 +126,7 @@ get_ext4 (unsigned char* buffer, int bufsize)
 	if (!identify_ext4 (buffer, bufsize))
 		return nullptr;
 
-	FilesystemPtr f (new Filesystem());
+	FilesystemPtr f  = Filesystem::create();
 	f->name = "ext4";
 
 	get_ext_common (f, buffer, bufsize);
@@ -147,7 +147,7 @@ get_ntfs (unsigned char* buffer, int bufsize)
 	std::string uuid = read_uuid2 (buffer + 72);
 	long size = *(long*) (buffer + 40) * 512;
 
-	FilesystemPtr f (new Filesystem());
+	FilesystemPtr f  = Filesystem::create();
 
 	f->name = "ntfs";
 	f->uuid = uuid;
@@ -167,7 +167,7 @@ get_reiserfs (unsigned char* buffer, int bufsize)
 	if (!identify_reiserfs (buffer, bufsize))
 		return nullptr;
 
-	FilesystemPtr f (new Filesystem());
+	FilesystemPtr f  = Filesystem::create();
 
 	f->name = "reiserfs";
 	f->uuid = read_uuid1 (buffer + 0x10054);
@@ -204,7 +204,7 @@ get_swap (unsigned char* buffer, int bufsize)
 		size = *(long*) (buffer + 0x404) * 4096;
 	}
 
-	FilesystemPtr f (new Filesystem());
+	FilesystemPtr f  = Filesystem::create();
 
 	f->name = "swap";
 	f->uuid = uuid;
@@ -224,7 +224,7 @@ get_vfat (unsigned char* buffer, int bufsize)
 	if (!identify_vfat (buffer, bufsize))
 		return nullptr;
 
-	FilesystemPtr f (new Filesystem());
+	FilesystemPtr f  = Filesystem::create();
 
 	f->name = "vfat";
 	f->uuid = read_uuid3 (buffer+0x1C);
@@ -277,7 +277,7 @@ get_xfs (unsigned char* buffer, int bufsize)
 	if (!identify_xfs (buffer, bufsize))
 		return nullptr;
 
-	FilesystemPtr f (new Filesystem());
+	FilesystemPtr f  = Filesystem::create();
 
 	f->name = "xfs";
 	f->uuid = read_uuid1 (buffer + 0x20);

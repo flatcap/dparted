@@ -128,6 +128,18 @@ public:
 
 	std::string get_path (void);
 
+	std::weak_ptr<DPContainer> weak;
+
+	ContainerPtr get_smart (void)
+	{
+		if (weak.expired()) {
+			//XXX who created us?
+			ContainerPtr c (this);
+			weak = c;
+		}
+		return weak.lock();
+	}
+
 protected:
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 

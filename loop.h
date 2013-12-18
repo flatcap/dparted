@@ -22,6 +22,7 @@
 #include <queue>
 
 #include "block.h"
+#include "pointers.h"
 
 /**
  * class Loop
@@ -29,9 +30,9 @@
 class Loop : public Block
 {
 public:
-	Loop (void);
-	Loop (const std::string losetup);
-	virtual ~Loop();
+	static LoopPtr create (const std::string& losetup);
+
+	virtual ~Loop() = default;
 
 	// Backing file
 	std::string	file_name;
@@ -54,6 +55,8 @@ public:
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 protected:
+	Loop (void);
+
 private:
 
 };

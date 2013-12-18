@@ -31,8 +31,8 @@ class Volume;
 class Partition : public DPContainer
 {
 public:
-	Partition (void);
-	virtual ~Partition();
+	static PartitionPtr create (void);
+	virtual ~Partition() = default;
 
 	//XXX flag for protective partition
 	//XXX partition number - nth in set?
@@ -41,7 +41,9 @@ public:
 	int ptype;
 
 	VolumePtr volume;
+
 protected:
+	Partition (void);
 
 private:
 

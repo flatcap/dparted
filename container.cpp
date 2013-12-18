@@ -59,9 +59,11 @@ DPContainer::DPContainer (void) :
  */
 DPContainer::~DPContainer()
 {
+#if 0
 	for (auto i : children) {
 		i->unref();
 	}
+#endif
 
 	if (fd >= 0) {
 		close (fd);
@@ -575,7 +577,7 @@ DPContainer::unref (void)
 {
 	ref_count--;
 	if (ref_count == 0) {
-		delete this;
+		//delete this;
 	}
 }
 
@@ -590,7 +592,7 @@ DPContainer::dump_objects (int indent)
 	if (name == "dummy") {
 		indent--;
 	} else {
-		std::cout << this << std::endl;
+		std::cout << get_smart() << std::endl;
 	}
 
 	for (auto c : children) {
