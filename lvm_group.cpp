@@ -37,13 +37,6 @@
 #include "log_trace.h"
 
 /**
- * LvmGroup
- */
-LvmGroup::LvmGroup (void)
-{
-}
-
-/**
  * create
  */
 LvmGroupPtr

@@ -19,13 +19,6 @@
 #include "log_trace.h"
 
 /**
- * LvmMetadata
- */
-LvmMetadata::LvmMetadata (void)
-{
-}
-
-/**
  * create
  */
 LvmMetadataPtr

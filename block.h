@@ -30,14 +30,11 @@ class Block : public DPContainer
 {
 public:
 	static BlockPtr create (void);
-	virtual ~Block() = default;
 
-	int kernel_major;	//XXX rename device major
-	int kernel_minor;
+	int kernel_major = 0;	//XXX rename device major
+	int kernel_minor = 0;
 
 protected:
-	Block (void);
-
 private:
 
 };

@@ -22,13 +22,6 @@
 #include "log_trace.h"
 
 /**
- * LvmRaid
- */
-LvmRaid::LvmRaid (void)
-{
-}
-
-/**
  * create
  */
 LvmRaidPtr

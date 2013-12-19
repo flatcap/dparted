@@ -31,13 +31,6 @@
 #include "log_trace.h"
 
 /**
- * Extended
- */
-Extended::Extended (void)
-{
-}
-
-/**
  * create
  */
 ExtendedPtr

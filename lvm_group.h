@@ -30,7 +30,6 @@ class LvmGroup : public Whole
 {
 public:
 	static LvmGroupPtr create (void);
-	virtual ~LvmGroup() = default;
 
 	long		pv_count = 0;	//XXX put this in seg_count in Whole
 	long		lv_count = 0;	//XXX this matches children.size()
@@ -45,8 +44,6 @@ public:
 	static void discover (ContainerPtr& top_level);
 
 protected:
-	LvmGroup (void);
-
 	friend void lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);
 	friend void lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);
 	friend void lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);

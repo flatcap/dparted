@@ -28,11 +28,8 @@ class LvmLinear : public LvmVolume
 {
 public:
 	static LvmLinearPtr create (void);
-	virtual ~LvmLinear() = default;
 
 protected:
-	LvmLinear (void);
-
 private:
 
 };

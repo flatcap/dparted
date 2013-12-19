@@ -28,13 +28,10 @@ class LvmMetadata : public LvmLinear
 {
 public:
 	static LvmMetadataPtr create (void);
-	virtual ~LvmMetadata() = default;
 
 	virtual void add_child (ContainerPtr& child);
 
 protected:
-	LvmMetadata (void);
-
 private:
 
 };

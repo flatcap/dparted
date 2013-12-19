@@ -30,15 +30,12 @@ class Filesystem : public DPContainer
 {
 public:
 	static FilesystemPtr create (void);
-	virtual ~Filesystem() = default;
 
 	static FilesystemPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 	std::string	label;
 
 protected:
-	Filesystem (void);
-
 	virtual std::string get_property (const std::string& propname);
 
 private:

@@ -28,11 +28,8 @@ class LvmStripe : public LvmVolume
 {
 public:
 	static LvmStripePtr create (void);
-	virtual ~LvmStripe() = default;
 
 protected:
-	LvmStripe (void);
-
 private:
 
 };

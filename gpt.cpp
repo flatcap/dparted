@@ -28,13 +28,6 @@
 #include "log_trace.h"
 
 /**
- * Gpt
- */
-Gpt::Gpt (void)
-{
-}
-
-/**
  * create
  */
 GptPtr

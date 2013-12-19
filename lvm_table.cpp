@@ -30,13 +30,6 @@
 #include "utils.h"
 
 /**
- * LvmTable
- */
-LvmTable::LvmTable (void)
-{
-}
-
-/**
  * create
  */
 LvmTablePtr

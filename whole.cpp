@@ -23,13 +23,6 @@
 #include "log_trace.h"
 
 /**
- * Whole
- */
-Whole::Whole (void)
-{
-}
-
-/**
  * create
  */
 WholePtr

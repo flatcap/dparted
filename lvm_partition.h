@@ -28,7 +28,6 @@ class LvmPartition : public Partition
 {
 public:
 	static LvmPartitionPtr create (void);
-	virtual ~LvmPartition() = default;
 
 #if 0
 	long		dev_size;	// 5368709120
@@ -58,8 +57,6 @@ public:
 #endif
 
 protected:
-	LvmPartition (void);
-
 private:
 
 };

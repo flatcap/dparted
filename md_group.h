@@ -30,13 +30,10 @@ class MdGroup : public Whole
 {
 public:
 	static MdGroupPtr create (void);
-	virtual ~MdGroup() = default;
 
 	static void discover (ContainerPtr& top_level);
 
 protected:
-	MdGroup (void);
-
 private:
 
 };

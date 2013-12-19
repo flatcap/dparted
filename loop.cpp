@@ -27,13 +27,6 @@
 #include "stringnum.h"
 
 /**
- * Loop (void)
- */
-Loop::Loop (void)
-{
-}
-
-/**
  * create
  */
 LoopPtr

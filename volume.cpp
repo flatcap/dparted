@@ -22,13 +22,6 @@
 #include "log_trace.h"
 
 /**
- * Volume
- */
-Volume::Volume (void)
-{
-}
-
-/**
  * create
  */
 VolumePtr

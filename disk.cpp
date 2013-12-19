@@ -32,13 +32,6 @@
 #include "log_trace.h"
 
 /**
- * Disk (void)
- */
-Disk::Disk (void)
-{
-}
-
-/**
  * create
  */
 DiskPtr

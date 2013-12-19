@@ -21,13 +21,6 @@
 #include "log_trace.h"
 
 /**
- * LvmLinear
- */
-LvmLinear::LvmLinear (void)
-{
-}
-
-/**
  * create
  */
 LvmLinearPtr

@@ -30,13 +30,6 @@
 #include "log_trace.h"
 
 /**
- * File
- */
-File::File (void)
-{
-}
-
-/**
  * create
  */
 FilePtr

@@ -29,13 +29,6 @@
 #include "log_trace.h"
 
 /**
- * Table
- */
-Table::Table (void)
-{
-}
-
-/**
  * create
  */
 TablePtr

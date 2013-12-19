@@ -30,13 +30,10 @@ class Misc : public DPContainer
 {
 public:
 	static MiscPtr create (void);
-	virtual ~Misc() = default;
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 protected:
-	Misc (void);
-
 private:
 
 };

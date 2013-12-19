@@ -22,13 +22,6 @@
 #include "log_trace.h"
 
 /**
- * LvmMirror
- */
-LvmMirror::LvmMirror (void)
-{
-}
-
-/**
  * create
  */
 LvmMirrorPtr

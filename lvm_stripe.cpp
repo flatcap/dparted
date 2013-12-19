@@ -21,13 +21,6 @@
 #include "log_trace.h"
 
 /**
- * LvmStripe
- */
-LvmStripe::LvmStripe (void)
-{
-}
-
-/**
  * create
  */
 LvmStripePtr

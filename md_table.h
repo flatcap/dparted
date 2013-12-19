@@ -30,7 +30,6 @@ class MdTable : public Table
 {
 public:
 	static MdTablePtr create (void);
-	virtual ~MdTable() = default;
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
@@ -45,8 +44,6 @@ public:
 	long		data_size;
 
 protected:
-	MdTable (void);
-
 private:
 
 };

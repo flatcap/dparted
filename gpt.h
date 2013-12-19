@@ -30,13 +30,10 @@ class Gpt : public Table
 {
 public:
 	static GptPtr create (void);
-	virtual ~Gpt() = default;
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 protected:
-	Gpt (void);
-
 private:
 
 };

@@ -36,13 +36,6 @@
 #include "log_trace.h"
 
 /**
- * Msdos
- */
-Msdos::Msdos (void)
-{
-}
-
-/**
  * create
  */
 MsdosPtr

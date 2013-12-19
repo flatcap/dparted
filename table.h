@@ -30,12 +30,10 @@ class Table : public DPContainer
 {
 public:
 	static TablePtr create (void);
-	virtual ~Table() = default;
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 protected:
-	Table (void);
 	long fill_space (void);
 
 private:

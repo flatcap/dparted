@@ -21,13 +21,6 @@
 #include "log_trace.h"
 
 /**
- * LvmVolume
- */
-LvmVolume::LvmVolume (void)
-{
-}
-
-/**
  * create
  */
 LvmVolumePtr

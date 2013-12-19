@@ -29,13 +29,6 @@
 #include "log_trace.h"
 
 /**
- * Filesystem
- */
-Filesystem::Filesystem (void)
-{
-}
-
-/**
  * create
  */
 FilesystemPtr

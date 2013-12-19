@@ -28,11 +28,8 @@ class LvmRaid : public LvmVolume
 {
 public:
 	static LvmRaidPtr create (void);
-	virtual ~LvmRaid() = default;
 
 protected:
-	LvmRaid (void);
-
 private:
 
 };

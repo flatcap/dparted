@@ -36,13 +36,6 @@
 #include "log_trace.h"
 
 /**
- * Block
- */
-Block::Block (void)
-{
-}
-
-/**
  * create
  */
 BlockPtr

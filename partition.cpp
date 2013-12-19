@@ -23,13 +23,6 @@
 #include "log_trace.h"
 
 /**
- * Partition
- */
-Partition::Partition (void)
-{
-}
-
-/**
  * create
  */
 PartitionPtr

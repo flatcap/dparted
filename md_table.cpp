@@ -22,13 +22,6 @@
 #include "utils.h"
 
 /**
- * MdTable
- */
-MdTable::MdTable (void)
-{
-}
-
-/**
  * create
  */
 MdTablePtr

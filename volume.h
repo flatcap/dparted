@@ -28,11 +28,8 @@ class Volume : public Whole
 {
 public:
 	static VolumePtr create (void);
-	virtual ~Volume() = default;
 
 protected:
-	Volume (void);
-
 private:
 
 };

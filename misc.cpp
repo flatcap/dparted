@@ -26,13 +26,6 @@
 #include "log_trace.h"
 
 /**
- * Misc
- */
-Misc::Misc (void)
-{
-}
-
-/**
  * create
  */
 MiscPtr

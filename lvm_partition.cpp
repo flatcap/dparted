@@ -21,13 +21,6 @@
 #include "log_trace.h"
 
 /**
- * LvmPartition
- */
-LvmPartition::LvmPartition (void)
-{
-}
-
-/**
  * create
  */
 LvmPartitionPtr

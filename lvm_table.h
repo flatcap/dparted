@@ -30,7 +30,6 @@ class LvmTable : public Table
 {
 public:
 	static LvmTablePtr create (void);
-	virtual ~LvmTable() = default;
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
@@ -45,8 +44,6 @@ public:
 	LvmGroupPtr group;
 
 protected:
-	LvmTable (void);
-
 private:
 
 };

@@ -30,13 +30,6 @@
 #include "log_trace.h"
 
 /**
- * MdGroup
- */
-MdGroup::MdGroup (void)
-{
-}
-
-/**
  * create
  */
 MdGroupPtr
