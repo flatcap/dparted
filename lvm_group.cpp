@@ -48,10 +48,15 @@ LvmGroup::LvmGroup (void) :
 }
 
 /**
- * ~LvmGroup
+ * create
  */
-LvmGroup::~LvmGroup()
+LvmGroupPtr
+LvmGroup::create (void)
 {
+	LvmGroupPtr l (new LvmGroup());
+
+	l->weak = l;
+	return l;
 }
 
 
@@ -110,7 +115,7 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		if (segtype == "free")		//XXX could process this and add it to the VGSeg's empty list
 			continue;
 
-		LvmPartitionPtr p (new LvmPartition());
+		LvmPartitionPtr p = LvmPartition::create();
 		//log_debug ("new LvmPartition (%p)\n", p);
 
 		// Find our relations
@@ -129,7 +134,7 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		LvmTablePtr t = std::dynamic_pointer_cast<LvmTable>(pieces->find_uuid (pv_uuid));
 		if (!t) {
 			log_info ("new table %s [SHOULDN'T HAPPEN]\n", pv_uuid.c_str());
-			t.reset (new LvmTable());
+			t = LvmTable::create();
 			t->uuid    = pv_uuid;
 			//t->missing = true;
 			ContainerPtr c(t);
@@ -146,13 +151,13 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 			std::string lv_attr = tags["LVM2_LV_ATTR"];
 			if ((lv_attr[0] == 'e') || (lv_attr[0] == 'l')) {
 				//log_info ("not a real volume %s\n", lv_uuid.c_str());
-				v.reset (new LvmMetadata());
+				v = LvmMetadata::create();
 			} else if (segtype == "linear") {
-				v.reset (new LvmLinear());
+				v = LvmLinear::create();
 			} else if (segtype == "striped") {
-				v.reset (new LvmStripe());
+				v = LvmStripe::create();
 			} else if (segtype == "mirror") {
-				v.reset (new LvmMirror());
+				v = LvmMirror::create();
 			} else {
 				log_error ("UNKNOWN type %s\n", segtype.c_str());
 				continue;
@@ -353,21 +358,21 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 			std::string segtype = tags["LVM2_SEGTYPE"];
 			//log_info ("Type = %s\n", segtype.c_str());
 			if (segtype == "linear") {
-				v.reset (new LvmLinear());
+				v = LvmLinear::create();
 			} else if (segtype == "striped") {
-				v.reset (new LvmStripe());
+				v = LvmStripe::create();
 			} else if (segtype == "mirror") {
-				v.reset (new LvmMirror());
+				v = LvmMirror::create();
 			} else if (segtype == "raid1") {
-				v.reset (new LvmRaid());
+				v = LvmRaid::create();
 			} else if (segtype == "raid4") {
-				v.reset (new LvmRaid());
+				v = LvmRaid::create();
 			} else if (segtype == "raid5") {
-				v.reset (new LvmRaid());
+				v = LvmRaid::create();
 			} else if (segtype == "raid6") {
-				v.reset (new LvmRaid());
+				v = LvmRaid::create();
 			} else if (segtype == "raid10") {
-				v.reset (new LvmRaid());
+				v = LvmRaid::create();
 			} else {
 				log_error ("UNKNOWN type %s\n", segtype.c_str());
 				continue;

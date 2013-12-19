@@ -23,16 +23,14 @@
 #include "table.h"
 #include "pointers.h"
 
-class LvmGroup;
-
 /**
  * class LvmTable
  */
 class LvmTable : public Table
 {
 public:
-	LvmTable (void);
-	virtual ~LvmTable();
+	static LvmTablePtr create (void);
+	virtual ~LvmTable() = default;
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
@@ -45,7 +43,9 @@ public:
 	virtual void add_child (ContainerPtr& child);
 
 	LvmGroupPtr group;
+
 protected:
+	LvmTable (void);
 
 private:
 

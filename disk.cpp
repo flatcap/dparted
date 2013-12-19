@@ -49,11 +49,13 @@ Disk::Disk (void) :
 }
 
 /**
- * Disk (std::string)
+ * create
  */
-Disk::Disk (const std::string& lsblk) :
-	Disk()
+DiskPtr
+Disk::create (const std::string& lsblk)
 {
+	DiskPtr d (new Disk());
+
 	std::map<std::string,StringNum> tags;
 	int scan;
 
@@ -62,25 +64,21 @@ Disk::Disk (const std::string& lsblk) :
 	if (tags["TYPE"] != "disk")
 		throw "not a disk";
 
-	name = tags["NAME"];
-	device = "/dev/" + name;
+	d->name = tags["NAME"];
+	d->device = "/dev/" + d->name;
 	//log_debug ("%s\n", device.c_str());
 
 	std::string majmin = tags["MAJ:MIN"];
-	scan = sscanf (majmin.c_str(), "%d:%d", &kernel_major, &kernel_minor);
+	scan = sscanf (majmin.c_str(), "%d:%d", &d->kernel_major, &d->kernel_minor);
 	if (scan != 2) {
 		log_debug ("scan failed1\n");
 	}
 
-	bytes_size = tags["SIZE"];
-	mounts = tags["MOUNTPOINT"];
-}
+	d->bytes_size = tags["SIZE"];
+	d->mounts = tags["MOUNTPOINT"];
 
-/**
- * ~Disk
- */
-Disk::~Disk()
-{
+	d->weak = d;
+	return d;
 }
 
 
@@ -305,7 +303,7 @@ Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 	//log_debug ("%d lines\n", count);
 
 	for (auto line : output) {
-		DiskPtr d (new Disk (line));
+		DiskPtr d = Disk::create (line);
 
 		ContainerPtr c(d);
 		top_level->just_add_child (c);
@@ -325,7 +323,7 @@ Disk::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	if (!lsblk (output, name))
 		return;
 
-	DiskPtr d (new Disk (output[0]));
+	DiskPtr d = Disk::create (output[0]);
 
 	ContainerPtr c(d);
 	top_level->just_add_child (c);

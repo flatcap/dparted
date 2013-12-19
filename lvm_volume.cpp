@@ -32,10 +32,15 @@ LvmVolume::LvmVolume (void) :
 }
 
 /**
- * ~LvmVolume
+ * create
  */
-LvmVolume::~LvmVolume()
+LvmVolumePtr
+LvmVolume::create (void)
 {
+	LvmVolumePtr l (new LvmVolume());
+
+	l->weak = l;
+	return l;
 }
 
 

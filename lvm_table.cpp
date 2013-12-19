@@ -40,10 +40,15 @@ LvmTable::LvmTable (void) :
 }
 
 /**
- * ~LvmTable
+ * create
  */
-LvmTable::~LvmTable()
+LvmTablePtr
+LvmTable::create (void)
 {
+	LvmTablePtr l (new LvmTable());
+
+	l->weak = l;
+	return l;
 }
 
 

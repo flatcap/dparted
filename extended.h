@@ -29,12 +29,13 @@
 class Extended : public Msdos
 {
 public:
-	Extended (void);
-	virtual ~Extended();
+	static ExtendedPtr create (void);
+	virtual ~Extended() = default;
 
 	static ExtendedPtr probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size);
 
 protected:
+	Extended (void);
 
 private:
 

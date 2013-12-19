@@ -30,10 +30,15 @@ MdTable::MdTable (void)
 }
 
 /**
- * ~MdTable
+ * create
  */
-MdTable::~MdTable()
+MdTablePtr
+MdTable::create (void)
 {
+	MdTablePtr m (new MdTable());
+
+	m->weak = m;
+	return m;
 }
 
 

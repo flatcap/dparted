@@ -31,9 +31,8 @@
 class Disk : public Block
 {
 public:
-	Disk (void);
-	Disk (const std::string& lsblk);
-	virtual ~Disk();
+	static DiskPtr create (const std::string& lsblk);
+	virtual ~Disk() = default;
 
 	virtual long          get_block_size (void);
 	virtual unsigned int  get_device_space (std::map<long, long>& spaces);
@@ -65,6 +64,8 @@ public:
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 protected:
+	Disk (void);
+
 private:
 
 };

@@ -30,8 +30,8 @@
 class Whole : public DPContainer
 {
 public:
-	Whole (void);
-	virtual ~Whole();
+	static WholePtr create (void);
+	virtual ~Whole() = default;
 
 	virtual void add_segment (ContainerPtr& seg);
 
@@ -39,6 +39,7 @@ public:
 	std::vector<ContainerPtr> segments;
 
 protected:
+	Whole (void);
 
 private:
 

@@ -30,9 +30,14 @@ Volume::Volume (void)
 }
 
 /**
- * ~Volume
+ * create
  */
-Volume::~Volume()
+VolumePtr
+Volume::create (void)
 {
+	VolumePtr v (new Volume());
+
+	v->weak = v;
+	return v;
 }
 

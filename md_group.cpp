@@ -38,10 +38,15 @@ MdGroup::MdGroup (void)
 }
 
 /**
- * ~MdGroup
+ * create
  */
-MdGroup::~MdGroup()
+MdGroupPtr
+MdGroup::create (void)
 {
+	MdGroupPtr m (new MdGroup());
+
+	m->weak = m;
+	return m;
 }
 
 

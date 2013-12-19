@@ -30,10 +30,15 @@ LvmMirror::LvmMirror (void)
 }
 
 /**
- * ~LvmMirror
+ * create
  */
-LvmMirror::~LvmMirror()
+LvmMirrorPtr
+LvmMirror::create (void)
 {
+	LvmMirrorPtr l (new LvmMirror());
+
+	l->weak = l;
+	return l;
 }
 
 

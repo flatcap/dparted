@@ -29,9 +29,14 @@ LvmPartition::LvmPartition (void)
 }
 
 /**
- * ~LvmPartition
+ * create
  */
-LvmPartition::~LvmPartition()
+LvmPartitionPtr
+LvmPartition::create (void)
 {
+	LvmPartitionPtr l (new LvmPartition());
+
+	l->weak = l;
+	return l;
 }
 

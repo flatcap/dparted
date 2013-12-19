@@ -38,10 +38,15 @@ File::File (void)
 }
 
 /**
- * ~File
+ * create
  */
-File::~File()
+FilePtr
+File::create (void)
 {
+	FilePtr f (new File());
+
+	f->weak = f;
+	return f;
 }
 
 

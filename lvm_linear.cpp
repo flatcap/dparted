@@ -29,9 +29,14 @@ LvmLinear::LvmLinear (void)
 }
 
 /**
- * ~LvmLinear
+ * create
  */
-LvmLinear::~LvmLinear()
+LvmLinearPtr
+LvmLinear::create (void)
 {
+	LvmLinearPtr l (new LvmLinear());
+
+	l->weak = l;
+	return l;
 }
 

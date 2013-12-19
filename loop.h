@@ -31,7 +31,6 @@ class Loop : public Block
 {
 public:
 	static LoopPtr create (const std::string& losetup);
-
 	virtual ~Loop() = default;
 
 	// Backing file

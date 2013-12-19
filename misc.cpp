@@ -34,10 +34,15 @@ Misc::Misc (void)
 }
 
 /**
- * ~Misc
+ * create
  */
-Misc::~Misc()
+MiscPtr
+Misc::create (void)
 {
+	MiscPtr m (new Misc());
+
+	m->weak = m;
+	return m;
 }
 
 

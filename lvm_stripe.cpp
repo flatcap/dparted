@@ -29,9 +29,14 @@ LvmStripe::LvmStripe (void)
 }
 
 /**
- * ~LvmStripe
+ * create
  */
-LvmStripe::~LvmStripe()
+LvmStripePtr
+LvmStripe::create (void)
 {
+	LvmStripePtr l (new LvmStripe());
+
+	l->weak = l;
+	return l;
 }
 

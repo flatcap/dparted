@@ -30,13 +30,14 @@
 class File : public Block
 {
 public:
-	File (void);
-	virtual ~File();
+	static FilePtr create (void);
+	virtual ~File() = default;
 
 	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 protected:
+	File (void);
 
 private:
 

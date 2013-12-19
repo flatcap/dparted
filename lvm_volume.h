@@ -27,8 +27,8 @@
 class LvmVolume : public Volume
 {
 public:
-	LvmVolume (void);
-	virtual ~LvmVolume();
+	static LvmVolumePtr create (void);
+	virtual ~LvmVolume() = default;
 
 	std::string	lv_attr;
 	long		kernel_major;
@@ -52,7 +52,10 @@ public:
 	std::vector<ContainerPtr> subvols;
 
 	ContainerPtr sibling;
+
 protected:
+	LvmVolume (void);
+
 private:
 
 };

@@ -30,10 +30,15 @@ LvmRaid::LvmRaid (void)
 }
 
 /**
- * ~LvmRaid
+ * create
  */
-LvmRaid::~LvmRaid()
+LvmRaidPtr
+LvmRaid::create (void)
 {
+	LvmRaidPtr l (new LvmRaid());
+
+	l->weak = l;
+	return l;
 }
 
 

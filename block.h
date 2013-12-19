@@ -29,13 +29,15 @@
 class Block : public DPContainer
 {
 public:
-	Block (void);
-	virtual ~Block();
+	static BlockPtr create (void);
+	virtual ~Block() = default;
 
 	int kernel_major;	//XXX rename device major
 	int kernel_minor;
 
 protected:
+	Block (void);
+
 private:
 
 };

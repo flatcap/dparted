@@ -27,11 +27,17 @@ LvmMetadata::LvmMetadata (void)
 }
 
 /**
- * ~LvmMetadata
+ * create
  */
-LvmMetadata::~LvmMetadata()
+LvmMetadataPtr
+LvmMetadata::create (void)
 {
+	LvmMetadataPtr l (new LvmMetadata());
+
+	l->weak = l;
+	return l;
 }
+
 
 /**
  * add_child

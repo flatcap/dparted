@@ -27,8 +27,8 @@
 class LvmMirror : public LvmVolume
 {
 public:
-	LvmMirror (void);
-	virtual ~LvmMirror();
+	static LvmMirrorPtr create (void);
+	virtual ~LvmMirror() = default;
 
 	virtual void add_child    (ContainerPtr child);
 	virtual void delete_child (ContainerPtr child);
@@ -38,6 +38,7 @@ public:
 	ContainerPtr log;
 #endif
 protected:
+	LvmMirror (void);
 
 private:
 

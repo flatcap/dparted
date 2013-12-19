@@ -31,10 +31,15 @@ Whole::Whole (void)
 }
 
 /**
- * ~Whole
+ * create
  */
-Whole::~Whole()
+WholePtr
+Whole::create (void)
 {
+	WholePtr w (new Whole());
+
+	w->weak = w;
+	return w;
 }
 
 

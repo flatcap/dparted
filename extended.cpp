@@ -39,10 +39,15 @@ Extended::Extended (void)
 }
 
 /**
- * ~Extended
+ * create
  */
-Extended::~Extended()
+ExtendedPtr
+Extended::create (void)
 {
+	ExtendedPtr e (new Extended());
+
+	e->weak = e;
+	return e;
 }
 
 

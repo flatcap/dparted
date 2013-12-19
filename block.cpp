@@ -44,11 +44,15 @@ Block::Block (void)
 }
 
 /**
- * ~Block
+ * create
  */
-Block::~Block()
+BlockPtr
+Block::create (void)
 {
-}
+	BlockPtr b (new Block());
 
+	b->weak = b;
+	return b;
+}
 
 
