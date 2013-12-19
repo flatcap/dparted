@@ -23,7 +23,6 @@
  */
 LvmMetadata::LvmMetadata (void)
 {
-	declare ("lvm_metadata");
 }
 
 /**
@@ -33,8 +32,9 @@ LvmMetadataPtr
 LvmMetadata::create (void)
 {
 	LvmMetadataPtr l (new LvmMetadata());
-
+	l->declare ("lvm_metadata");
 	l->weak = l;
+
 	return l;
 }
 

@@ -39,12 +39,8 @@
 /**
  * LvmGroup
  */
-LvmGroup::LvmGroup (void) :
-	pv_count (0),
-	lv_count (0),
-	vg_seqno (0)
+LvmGroup::LvmGroup (void)
 {
-	declare ("lvm_group");
 }
 
 /**
@@ -54,8 +50,9 @@ LvmGroupPtr
 LvmGroup::create (void)
 {
 	LvmGroupPtr l (new LvmGroup());
-
+	l->declare ("lvm_group");
 	l->weak = l;
+
 	return l;
 }
 

@@ -35,7 +35,6 @@
  */
 Extended::Extended (void)
 {
-	declare ("extended");
 }
 
 /**
@@ -45,8 +44,9 @@ ExtendedPtr
 Extended::create (void)
 {
 	ExtendedPtr e (new Extended());
-
+	e->declare ("extended");
 	e->weak = e;
+
 	return e;
 }
 

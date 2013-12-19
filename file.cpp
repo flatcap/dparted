@@ -34,7 +34,6 @@
  */
 File::File (void)
 {
-	declare ("file");
 }
 
 /**
@@ -44,8 +43,9 @@ FilePtr
 File::create (void)
 {
 	FilePtr f (new File());
-
+	f->declare ("file");
 	f->weak = f;
+
 	return f;
 }
 

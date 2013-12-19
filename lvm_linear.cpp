@@ -25,7 +25,6 @@
  */
 LvmLinear::LvmLinear (void)
 {
-	declare ("lvm_linear");
 }
 
 /**
@@ -35,8 +34,9 @@ LvmLinearPtr
 LvmLinear::create (void)
 {
 	LvmLinearPtr l (new LvmLinear());
-
+	l->declare ("lvm_linear");
 	l->weak = l;
+
 	return l;
 }
 

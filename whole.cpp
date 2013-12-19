@@ -27,7 +27,6 @@
  */
 Whole::Whole (void)
 {
-	declare ("whole");
 }
 
 /**
@@ -37,8 +36,9 @@ WholePtr
 Whole::create (void)
 {
 	WholePtr w (new Whole());
-
+	w->declare ("whole");
 	w->weak = w;
+
 	return w;
 }
 

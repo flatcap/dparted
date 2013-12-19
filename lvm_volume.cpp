@@ -23,12 +23,8 @@
 /**
  * LvmVolume
  */
-LvmVolume::LvmVolume (void) :
-	kernel_major (-1),
-	kernel_minor (-1),
-	sibling (nullptr)
+LvmVolume::LvmVolume (void)
 {
-	declare ("lvm_volume");
 }
 
 /**
@@ -38,8 +34,9 @@ LvmVolumePtr
 LvmVolume::create (void)
 {
 	LvmVolumePtr l (new LvmVolume());
-
+	l->declare ("lvm_volume");
 	l->weak = l;
+
 	return l;
 }
 

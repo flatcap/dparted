@@ -34,18 +34,8 @@
 /**
  * Disk (void)
  */
-Disk::Disk (void) :
-	read_only (false),
-	hw_cylinders (0),
-	hw_heads (0),
-	hw_sectors (0),
-	bios_cylinders (0),
-	bios_heads (0),
-	bios_sectors (0),
-	host (0),
-	did (0)
+Disk::Disk (void)
 {
-	declare ("disk");
 }
 
 /**
@@ -55,6 +45,8 @@ DiskPtr
 Disk::create (const std::string& lsblk)
 {
 	DiskPtr d (new Disk());
+	d->declare ("disk");
+	d->weak = d;
 
 	std::map<std::string,StringNum> tags;
 	int scan;
@@ -77,7 +69,6 @@ Disk::create (const std::string& lsblk)
 	d->bytes_size = tags["SIZE"];
 	d->mounts = tags["MOUNTPOINT"];
 
-	d->weak = d;
 	return d;
 }
 

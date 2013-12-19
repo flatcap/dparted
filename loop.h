@@ -35,19 +35,19 @@ public:
 
 	// Backing file
 	std::string	file_name;
-	long		file_inode;
-	int		file_major;
-	int		file_minor;
+	long		file_inode = 0;
+	int		file_major = 0;
+	int		file_minor = 0;
 
 	// Loop device
-	int		loop_major;
-	int		loop_minor;
-	long		offset;
-	long		sizelimit;
-	bool		autoclear;
-	bool		partscan;
-	bool		read_only;
-	bool		deleted;
+	int		loop_major = 0;
+	int		loop_minor = 0;
+	long		offset     = 0;
+	long		sizelimit  = 0;
+	bool		autoclear  = false;
+	bool		partscan   = false;
+	bool		read_only  = false;
+	bool		deleted    = false;
 
 	static bool losetup  (std::vector <std::string>& output, std::string device = std::string());
 	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);

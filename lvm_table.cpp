@@ -32,11 +32,8 @@
 /**
  * LvmTable
  */
-LvmTable::LvmTable (void) :
-	metadata_size(0),
-	group (nullptr)
+LvmTable::LvmTable (void)
 {
-	declare ("lvm_table");
 }
 
 /**
@@ -46,8 +43,9 @@ LvmTablePtr
 LvmTable::create (void)
 {
 	LvmTablePtr l (new LvmTable());
-
+	l->declare ("lvm_table");
 	l->weak = l;
+
 	return l;
 }
 

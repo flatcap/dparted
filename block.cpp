@@ -40,7 +40,6 @@
  */
 Block::Block (void)
 {
-	declare ("block");
 }
 
 /**
@@ -50,8 +49,9 @@ BlockPtr
 Block::create (void)
 {
 	BlockPtr b (new Block());
-
+	b->declare ("block");
 	b->weak = b;
+
 	return b;
 }
 

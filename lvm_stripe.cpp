@@ -25,7 +25,6 @@
  */
 LvmStripe::LvmStripe (void)
 {
-	declare ("lvm_stripe");
 }
 
 /**
@@ -35,8 +34,9 @@ LvmStripePtr
 LvmStripe::create (void)
 {
 	LvmStripePtr l (new LvmStripe());
-
+	l->declare ("lvm_stripe");
 	l->weak = l;
+
 	return l;
 }
 

@@ -25,11 +25,8 @@
 /**
  * Partition
  */
-Partition::Partition (void) :
-	ptype (0),
-	volume (nullptr)
+Partition::Partition (void)
 {
-	declare ("partition");
 }
 
 /**
@@ -39,8 +36,9 @@ PartitionPtr
 Partition::create (void)
 {
 	PartitionPtr p (new Partition());
-
+	p->declare ("partition");
 	p->weak = p;
+
 	return p;
 }
 

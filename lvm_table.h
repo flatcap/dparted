@@ -38,7 +38,7 @@ public:
 	std::string config;
 	std::string pv_attr;
 
-	int metadata_size;
+	int metadata_size = 0;
 
 	virtual void add_child (ContainerPtr& child);
 

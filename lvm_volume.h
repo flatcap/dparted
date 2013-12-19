@@ -31,14 +31,14 @@ public:
 	virtual ~LvmVolume() = default;
 
 	std::string	lv_attr;
-	long		kernel_major;
-	long		kernel_minor;
+	long		kernel_major = -1;
+	long		kernel_minor = -1;
 
-	int		seg_count;
-	int		stripes;
-	int		stripesize;
-	int		stripe_size;
-	int		seg_start_pe;
+	int		seg_count    = 0;
+	int		stripes      = 0;
+	int		stripesize   = 0;
+	int		stripe_size  = 0;
+	int		seg_start_pe = 0;
 
 	std::string	mirror_log;
 

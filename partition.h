@@ -38,7 +38,7 @@ public:
 	//XXX partition number - nth in set?
 	//XXX partition type - 0x82 Linux Swap
 
-	int ptype;
+	int ptype = 0;
 
 	VolumePtr volume;
 

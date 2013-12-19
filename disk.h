@@ -45,15 +45,15 @@ public:
 	//long		sector_size;
 	//long		phys_sector_size;
 	//long	length;
-	bool		read_only;
-	int		hw_cylinders;
-	int		hw_heads;
-	int		hw_sectors;
-	int		bios_cylinders;
-	int		bios_heads;
-	int		bios_sectors;
-	int		host;
-	int		did;
+	bool		read_only      = false;
+	int		hw_cylinders   = 0;
+	int		hw_heads       = 0;
+	int		hw_sectors     = 0;
+	int		bios_cylinders = 0;
+	int		bios_heads     = 0;
+	int		bios_sectors   = 0;
+	int		host           = 0;
+	int		did            = 0;
 
 	static unsigned int find_devices (ContainerPtr& list);
 

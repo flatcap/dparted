@@ -32,7 +32,6 @@
  */
 Gpt::Gpt (void)
 {
-	declare ("gpt");
 }
 
 /**
@@ -42,8 +41,9 @@ GptPtr
 Gpt::create (void)
 {
 	GptPtr g (new Gpt());
-
+	g->declare ("gpt");
 	g->weak = g;
+
 	return g;
 }
 

@@ -29,20 +29,8 @@
 /**
  * Loop (void)
  */
-Loop::Loop (void) :
-	file_inode(0),
-	file_major(0),
-	file_minor(0),
-	loop_major(0),
-	loop_minor(0),
-	offset(0),
-	sizelimit(0),
-	autoclear(false),
-	partscan(false),
-	read_only(false),
-	deleted(false)
+Loop::Loop (void)
 {
-	declare ("loop");
 }
 
 /**
@@ -66,6 +54,9 @@ Loop::create (const std::string& losetup)
 	//XXX validate all input, else throw()
 
 	LoopPtr l (new Loop());
+	l->declare ("loop");
+	l->weak = l;
+
 	l->device     = parts[0];
 	l->file_name  = parts[11];
 
@@ -102,7 +93,6 @@ Loop::create (const std::string& losetup)
 	ss << "[" << l->kernel_major << ":" << l->kernel_minor << "]";
 	l->uuid = ss.str();
 
-	l->weak = l;
 	return l;
 }
 
