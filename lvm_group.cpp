@@ -514,7 +514,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 {
 	//LOG_TRACE;
 
-	ContainerPtr pieces (new DPContainer());
+	ContainerPtr pieces = DPContainer::create();
 	std::multimap<std::string,std::string> deps;
 
 	std::vector<ContainerPtr> t;

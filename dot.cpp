@@ -799,7 +799,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 		}
 
 		dot << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c->ref_count << missing << "</b></font></td></tr>\n";
+		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << missing << "</b></font></td></tr>\n";
 
 		     if (type == "block")         { dot << dot_block         (std::dynamic_pointer_cast<Block       > (c)); }
 		else if (type == "container")     { dot << dot_container     (std::dynamic_pointer_cast<DPContainer > (c)); }

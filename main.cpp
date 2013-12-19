@@ -17,7 +17,7 @@
 
 #include <fcntl.h>
 #include <gtkmm.h>
-#include "gtkmm/main.h"
+#include <gtkmm/main.h>
 #include <sys/types.h>
 
 #include <iostream>
@@ -37,6 +37,7 @@
 #include "dparted.h"
 #include "file.h"
 #include "filesystem.h"
+#include "gpt.h"
 #include "log.h"
 #include "log_trace.h"
 #include "loop.h"
@@ -97,7 +98,7 @@ probe (ContainerPtr& top_level, ContainerPtr& parent)
 {
 	//LOG_TRACE;
 
-	if (!parent)
+	if (!top_level || !parent)
 		return nullptr;
 
 	ContainerPtr item;
@@ -156,7 +157,7 @@ main (int argc, char* argv[])
 
 	log_init ("/dev/stdout");
 
-	ContainerPtr top_level (new DPContainer());
+	ContainerPtr top_level = DPContainer::create();
 	top_level->name = "dummy";
 
 	if (argc > 1) {
@@ -184,7 +185,7 @@ main (int argc, char* argv[])
 				if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
 					Loop::identify (top_level, argv[i], fd, st);
 				} else {
-					//Disk::identify (top_level, argv[i], fd, st);
+					//Gpt::identify (top_level, argv[i], fd, st);
 				}
 			} else {
 				log_error ("can't probe something else\n");
@@ -193,7 +194,7 @@ main (int argc, char* argv[])
 		}
 	} else {
 		Loop::discover (top_level, probe_queue);
-		//Disk::discover (top_level, probe_queue);
+		//Gpt::discover (top_level, probe_queue);
 	}
 
 	// Process the probe_queue

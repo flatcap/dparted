@@ -56,7 +56,7 @@ Loop::create (const std::string& losetup)
 	explode_n (" :", losetup, parts, 12);
 
 #if 0
-	log_info ("parts:\n");
+	log_info ("parts: (%ld)\n", parts.size());
 	for (auto i : parts) {
 		std::cout << "\t" << i << std::endl;
 	}
@@ -102,6 +102,7 @@ Loop::create (const std::string& losetup)
 	ss << "[" << l->kernel_major << ":" << l->kernel_minor << "]";
 	l->uuid = ss.str();
 
+	l->weak = l;
 	return l;
 }
 

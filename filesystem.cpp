@@ -44,6 +44,7 @@ Filesystem::create (void)
 {
 	FilesystemPtr f (new Filesystem());
 
+	f->weak = f;
 	return f;
 }
 
@@ -62,7 +63,7 @@ Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	ContainerPtr p (parent);
 	while (p) {
 		////std::cout << p << std::endl;
-		p = p->parent;
+		p = p->parent.lock();
 	}
 
 	long		 bufsize = 131072;	// 128 KiB, enough for the fs signatures

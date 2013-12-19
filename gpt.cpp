@@ -43,6 +43,7 @@ Gpt::create (void)
 {
 	GptPtr g (new Gpt());
 
+	g->weak = g;
 	return g;
 }
 

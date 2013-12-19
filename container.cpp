@@ -45,8 +45,6 @@ DPContainer::DPContainer (void) :
 	bytes_size (0),
 	bytes_used (0),
 	whole (nullptr),
-	parent (nullptr),
-	ref_count (1),
 	missing (false),
 	fd (-1)
 {
@@ -58,16 +56,22 @@ DPContainer::DPContainer (void) :
  */
 DPContainer::~DPContainer()
 {
-#if 0
-	for (auto i : children) {
-		i->unref();
-	}
-#endif
-
 	if (fd >= 0) {
 		close (fd);
 		fd = -1;
 	}
+}
+
+/**
+ * create
+ */
+ContainerPtr
+DPContainer::create (void)
+{
+	ContainerPtr c (new DPContainer());
+
+	c->weak = c;
+	return c;
 }
 
 
@@ -109,8 +113,8 @@ DPContainer::add_child (ContainerPtr& child)
 
 	//log_debug ("child: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
-	//child->ref();
-	child->parent.reset (this);
+	//child->parent.reset (this);
+	child->parent = get_smart();
 }
 
 /**
@@ -158,8 +162,9 @@ DPContainer::get_fd (void)
 
 	std::string device = get_device_name();
 	if (device.empty()) {
-		if (parent)
-			return parent->get_fd();
+		ContainerPtr p = parent.lock();
+		if (p)
+			return p->get_fd();
 
 		log_error ("no device to open\n");
 		return -1;
@@ -187,8 +192,9 @@ DPContainer::get_block_size (void)
 	if (block_size > 0)
 		return block_size;
 
-	if (parent)
-		return parent->get_block_size();
+	ContainerPtr p = parent.lock();
+	if (p)
+		return p->get_block_size();
 
 	return -1;
 }
@@ -202,8 +208,10 @@ DPContainer::get_device_name (void)
 	//log_debug ("i am %s\n", typeid (*this).name());
 	if (!device.empty())
 		return device;
-	else if (parent)
-		return parent->get_device_name();
+
+	ContainerPtr p = parent.lock();
+	if (p)
+		return p->get_device_name();
 	else
 		return "UNKNOWN";
 }
@@ -408,8 +416,9 @@ DPContainer::get_buffer (long offset, long size)
 
 	// No device -- delegate
 	if (device.empty()) {
-		if (parent) {
-			return parent->get_buffer (offset + parent_offset, size);
+		ContainerPtr p = parent.lock();
+		if (p) {
+			return p->get_buffer (offset + parent_offset, size);
 		} else {
 			std::cout << this << std::endl;
 			log_error ("mmap: no device and no parent\n");
@@ -525,28 +534,6 @@ DPContainer::declare (const char* n)
 {
 	type.push_back (n);
 	name = n;
-}
-
-
-/**
- * ref
- */
-void
-DPContainer::ref (void)
-{
-	ref_count++;
-}
-
-/**
- * unref
- */
-void
-DPContainer::unref (void)
-{
-	ref_count--;
-	if (ref_count == 0) {
-		//delete this;
-	}
 }
 
 

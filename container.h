@@ -28,8 +28,6 @@
 
 #include "pointers.h"
 
-class Whole;
-
 struct compare;
 typedef std::tuple<long,long,void*> Mmap;	// offset, size, ptr
 typedef std::shared_ptr<Mmap>       MmapPtr;	// Mmap smart pointer
@@ -59,7 +57,7 @@ struct compare
 class DPContainer
 {
 public:
-	DPContainer (void);
+	static ContainerPtr create (void);
 	virtual ~DPContainer();
 
 	virtual void add_child      (ContainerPtr& child);
@@ -92,9 +90,6 @@ public:
 
 	virtual std::string get_property (const std::string& propname);
 
-	void ref   (void);
-	void unref (void);
-
 	std::string	 name;
 	std::string	 uuid;
 
@@ -107,11 +102,10 @@ public:
 
 	WholePtr	 whole;
 
-	ContainerPtr	 parent;
+	std::weak_ptr<DPContainer> parent;
+	//ContainerPtr	 parent;
 
 	std::vector<std::string> type;
-
-	int		 ref_count;
 
 	bool		 missing;
 
@@ -128,6 +122,7 @@ public:
 	ContainerPtr get_smart (void)
 	{
 		if (weak.expired()) {
+			std::cout << "SMART\n";
 			//XXX who created us?
 			ContainerPtr c (this);
 			weak = c;
@@ -136,6 +131,8 @@ public:
 	}
 
 protected:
+	DPContainer (void);
+
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 
 	void declare (const char* name);
