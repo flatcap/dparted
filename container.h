@@ -62,11 +62,6 @@ public:
 	DPContainer (void);
 	virtual ~DPContainer();
 
-	void* operator new    (size_t s);
-	void  operator delete (void* ptr);
-
-	static void dump_leaks (void);
-
 	virtual void add_child      (ContainerPtr& child);
 	virtual void just_add_child (ContainerPtr& child);
 	virtual void delete_child   (ContainerPtr& child);

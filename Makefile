@@ -5,7 +5,7 @@ MKDIR	= mkdir -p
 # Library
 SRC	+= app.cpp block.cpp container.cpp disk.cpp dot.cpp extended.cpp \
 	   file.cpp filesystem.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp \
-	   gpt.cpp icon_manager.cpp leak.cpp log.cpp loop.cpp lvm_group.cpp \
+	   gpt.cpp icon_manager.cpp log.cpp loop.cpp lvm_group.cpp \
 	   lvm_linear.cpp lvm_metadata.cpp lvm_mirror.cpp lvm_partition.cpp \
 	   lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp main.cpp \
 	   md_group.cpp md_table.cpp misc.cpp msdos.cpp partition.cpp \

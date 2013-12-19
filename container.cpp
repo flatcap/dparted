@@ -34,7 +34,6 @@
 #include "whole.h"
 #include "log.h"
 #include "utils.h"
-#include "leak.h"
 #include "log_trace.h"
 
 /**
@@ -71,37 +70,6 @@ DPContainer::~DPContainer()
 	}
 }
 
-
-/**
- * operator new
- */
-void*
-DPContainer::operator new (size_t size)
-{
-	DPContainer* c = (DPContainer*) malloc (size);
-
-	//log_info ("new object %p\n", (void*) c);
-
-	return object_track (c);
-}
-
-/**
- * operator delete
- */
-void
-DPContainer::operator delete (void* ptr)
-{
-	if (!ptr)
-		return;
-
-	DPContainer* c = (DPContainer*) (ptr);
-	if (c->ref_count != 0)
-		log_error ("REF COUNT = %d\n", c->ref_count);
-
-	//log_info ("deleted object %p\n", ptr);
-	object_untrack (c);
-	free (ptr);
-}
 
 /**
  * add_child
