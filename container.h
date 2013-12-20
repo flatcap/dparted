@@ -28,6 +28,8 @@
 
 #include "pointers.h"
 
+class Visitor;
+
 struct compare;
 typedef std::tuple<long,long,void*> Mmap;	// offset, size, ptr
 typedef std::shared_ptr<Mmap>       MmapPtr;	// Mmap smart pointer
@@ -59,6 +61,8 @@ class DPContainer
 public:
 	static ContainerPtr create (void);
 	virtual ~DPContainer();
+
+	virtual bool accept (Visitor& v);
 
 	virtual void add_child      (ContainerPtr& child);
 	virtual void just_add_child (ContainerPtr& child);
@@ -124,7 +128,7 @@ public:
 
 	std::string get_path (void);
 
-	std::weak_ptr<DPContainer> weak;
+	std::weak_ptr<DPContainer> weak;	//XXX private?
 
 	ContainerPtr get_smart (void)
 	{
@@ -139,6 +143,8 @@ public:
 
 protected:
 	DPContainer (void);
+
+	bool visit_children (Visitor& v);
 
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 

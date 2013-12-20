@@ -11,12 +11,14 @@ SRC	+= app.cpp block.cpp container.cpp disk.cpp dot.cpp extended.cpp \
 	   md_group.cpp md_table.cpp misc.cpp msdos.cpp partition.cpp \
 	   table.cpp utils.cpp variant.cpp volume.cpp whole.cpp
 
+SRC	+= dot_visitor.cpp
+
 # GUI
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp
 
 HDR	= $(SRC:%.cpp=%.h)
 
-HDR	+= log_trace.h stringnum.h
+HDR	+= log_trace.h lvm2.h pointers.h stringnum.h visitor.h
 
 DEPDIR	= .dep
 OBJDIR	= .obj

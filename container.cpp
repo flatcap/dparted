@@ -34,6 +34,7 @@
 #include "whole.h"
 #include "log.h"
 #include "utils.h"
+#include "visitor.h"
 #include "log_trace.h"
 
 /**
@@ -72,6 +73,40 @@ DPContainer::create (void)
 
 	c->weak = c;
 	return c;
+}
+
+
+/**
+ * visit_children
+ */
+bool
+DPContainer::visit_children (Visitor& v)
+{
+	ContainerPtr c = get_smart();
+	if (!v.visit_enter (c))
+		return false;
+
+	for (auto c : children) {
+		if (!c->accept (v))
+			return false;
+	}
+
+	if (!v.visit_leave())
+		return false;
+
+	return true;
+}
+
+/**
+ * accept
+ */
+bool
+DPContainer::accept (Visitor& v)
+{
+	ContainerPtr c = get_smart();
+	if (!v.visit (c))
+		return false;
+	return visit_children (v);
 }
 
 
