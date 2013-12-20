@@ -81,6 +81,9 @@ DPContainer::create (void)
 void
 DPContainer::add_child (ContainerPtr& child)
 {
+	if (!child)
+		return;
+
 	/* Check:
 	 *	available space
 	 *	alignment type
