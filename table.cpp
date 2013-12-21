@@ -59,7 +59,7 @@ Table::accept (Visitor& v)
  * probe
  */
 ContainerPtr
-Table::probe (ContainerPtr &top_level, ContainerPtr& parent)
+Table::probe (ContainerPtr& top_level, ContainerPtr& parent)
 {
 	//LOG_TRACE;
 

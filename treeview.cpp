@@ -220,7 +220,7 @@ TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeViewColum
  * on_query_tooltip
  */
 bool
-TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip> &tooltip)
+TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
 #if 1
 	if (keyboard_tooltip)

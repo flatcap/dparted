@@ -123,7 +123,7 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 		return nullptr;
 
 	long		 bufsize = 1048576;	// 1 MiB
-	unsigned char	*buffer  = parent->get_buffer (0, bufsize);
+	unsigned char*	 buffer  = parent->get_buffer (0, bufsize);
 
 	if (!buffer) {
 		//log_error ("can't get buffer\n");
