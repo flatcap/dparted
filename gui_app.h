@@ -15,15 +15,45 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#ifndef _GUI_APP_H_
+#define _GUI_APP_H_
 
+#include <gtkmm/application.h>
+
+#include "app.h"
 #include "pointers.h"
 
-void queue_add_probe (ContainerPtr& item);
-ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
+class DPContainer;
 
-extern AppPtr main_app;
+/**
+ * class GuiApp
+ */
+class GuiApp :
+	public App,
+	public Gtk::Application
+{
+public:
+	GuiApp (ContainerPtr& top_level);
+	virtual ~GuiApp();
 
-#endif // _MAIN_H_
+protected:
+	virtual void on_activate (void);
+	virtual void on_startup  (void);
+
+	virtual void on_window_added   (Gtk::Window* window);
+	virtual void on_window_removed (Gtk::Window* window);
+
+	virtual void on_open         (const type_vec_files& files, const Glib::ustring& hint);
+	virtual int  on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line);
+
+	void menu_preferences (void);
+	void menu_help        (void);
+	void menu_about       (void);
+	void menu_quit        (void);
+
+	ContainerPtr top_level;
+};
+
+
+#endif // _GUI_APP_H_
 

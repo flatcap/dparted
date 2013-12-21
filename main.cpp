@@ -31,6 +31,7 @@
 #include <linux/kdev_t.h>
 
 #include "app.h"
+#include "gui_app.h"
 #include "container.h"
 #include "file.h"
 #include "filesystem.h"
@@ -46,6 +47,8 @@
 #include "volume.h"
 
 std::queue<ContainerPtr> probe_queue;
+
+AppPtr main_app;
 
 /**
  * queue_add_probe
@@ -262,8 +265,11 @@ main (int argc, char* argv[])
 	int retval = 0;
 
 	if (app) {
-		App app (top_level);
-		retval =  app.run (1, argv);		//XXX argc
+                std::shared_ptr<GuiApp> gui (new GuiApp (top_level));
+
+                main_app = gui;
+
+                retval =  gui->run (1, argv);           //XXX argc
 	}
 
 	log_close();
