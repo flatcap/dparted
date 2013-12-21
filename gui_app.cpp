@@ -21,6 +21,7 @@
 #include <gtkmm/settings.h>
 #include <gtkmm/aboutdialog.h>
 #include <gtkmm/stock.h>
+#include <gtkmm/messagedialog.h>
 #include <gtkmm/builder.h>
 #include <giomm/menu.h>
 #include <giomm/menuitem.h>
@@ -226,6 +227,27 @@ void
 GuiApp::menu_quit (void)
 {
 	quit();
+}
+
+
+/**
+ * ask
+ */
+bool
+GuiApp::ask (Question& q)
+{
+	Gtk::MessageDialog dialog (q.question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
+
+	dialog.set_title (q.title);
+
+	int id = 1;
+	for (auto a : q.answers) {
+		dialog.add_button (a, id++);
+	}
+
+	dialog.run();
+
+	return true;
 }
 
 

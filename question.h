@@ -15,40 +15,25 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _GPT_H
-#define _GPT_H
+#ifndef _QUESTION_H_
+#define _QUESTION_H_
 
 #include <string>
+#include <vector>
 
-#include "table.h"
-#include "pointers.h"
-
-class Visitor;
-
-/**
- * class Gpt
- */
-class Gpt : public Table
+class Question
 {
 public:
-	virtual ~Gpt() = default;
-	static GptPtr create (void);
-	virtual bool accept (Visitor& v);
+#if 0
+	Question (void);
+	virtual ~Question();
+#endif
 
-	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
+	std::string title;
+	std::string question;
 
-	virtual void mouse_event (void)
-	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-	}
-
-protected:
-	Gpt (void);
-
-private:
-
+	std::vector<std::string> answers;
 };
 
-
-#endif // _GPT_H
+#endif // _QUESTION_H_
 

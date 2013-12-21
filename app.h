@@ -18,6 +18,8 @@
 #ifndef _APP_H_
 #define _APP_H_
 
+#include "question.h"
+
 /**
  * class App
  */
@@ -26,6 +28,8 @@ class App
 public:
 	App (void);
 	virtual ~App();
+
+	virtual bool ask (Question& q);
 };
 
 

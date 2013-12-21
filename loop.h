@@ -36,6 +36,11 @@ public:
 	static LoopPtr create (const std::string& losetup);
 	virtual bool accept (Visitor& v);
 
+	virtual void mouse_event (void)
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+	}
+
 	// Backing file
 	std::string	file_name;
 	long		file_inode = 0;

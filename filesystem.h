@@ -39,6 +39,8 @@ public:
 
 	std::string	label;
 
+	virtual void mouse_event (void);
+
 protected:
 	Filesystem (void);
 

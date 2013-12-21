@@ -35,3 +35,19 @@ App::~App()
 }
 
 
+/**
+ * ask
+ */
+bool
+App::ask (Question& q)
+{
+	std::cout << q.title << std::endl;
+	std::cout << q.question << std::endl;
+	std::cout << '\t';
+	for (auto a : q.answers) {
+		std::cout << a << " ";
+	}
+	std::cout << '\n';
+	return false;
+}
+

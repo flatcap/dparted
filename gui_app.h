@@ -36,6 +36,8 @@ public:
 	GuiApp (ContainerPtr& top_level);
 	virtual ~GuiApp();
 
+	virtual bool ask (Question& q);
+
 protected:
 	virtual void on_activate (void);
 	virtual void on_startup  (void);

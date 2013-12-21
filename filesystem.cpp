@@ -28,6 +28,9 @@
 #include "utils.h"
 #include "log_trace.h"
 #include "visitor.h"
+#include "question.h"
+#include "main.h"
+#include "app.h"
 
 /**
  * Filesystem
@@ -122,5 +125,21 @@ Filesystem::get_property (const std::string& propname)
 	} else {
 		return DPContainer::get_property (propname);
 	}
+}
+
+
+/**
+ * mouse_event
+ */
+void
+Filesystem::mouse_event (void)
+{
+	std::cout << __PRETTY_FUNCTION__ << std::endl;
+
+	Question q { "Delete filesystem",
+		     "Are you sure?",
+		     { "Yes", "No" } };
+
+	main_app->ask(q);
 }
 
