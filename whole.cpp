@@ -21,6 +21,7 @@
 #include "log.h"
 #include "whole.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -33,6 +34,18 @@ Whole::create (void)
 	w->weak = w;
 
 	return w;
+}
+
+/**
+ * accept
+ */
+bool
+Whole::accept (Visitor& v)
+{
+	WholePtr w = std::dynamic_pointer_cast<Whole> (get_smart());
+	if (!v.visit (w))
+		return false;
+	return visit_children (v);
 }
 
 

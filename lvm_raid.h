@@ -21,6 +21,8 @@
 #include "lvm_volume.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class LvmRaid
  */
@@ -28,6 +30,7 @@ class LvmRaid : public LvmVolume
 {
 public:
 	static LvmRaidPtr create (void);
+	virtual bool accept (Visitor& v);
 
 protected:
 private:

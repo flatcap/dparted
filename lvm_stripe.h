@@ -21,6 +21,8 @@
 #include "lvm_volume.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class LvmStripe
  */
@@ -28,6 +30,7 @@ class LvmStripe : public LvmVolume
 {
 public:
 	static LvmStripePtr create (void);
+	virtual bool accept (Visitor& v);
 
 protected:
 private:

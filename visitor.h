@@ -31,10 +31,30 @@ public:
 
 	virtual bool visit (ContainerPtr& c) = 0;
 
-	virtual bool visit (LoopPtr&       l) { return visit ((ContainerPtr&) l); }
-	virtual bool visit (GptPtr&        g) { return visit ((ContainerPtr&) g); }
-	virtual bool visit (PartitionPtr&  p) { return visit ((ContainerPtr&) p); }
-	virtual bool visit (FilesystemPtr& f) { return visit ((ContainerPtr&) f); }
+	virtual bool visit (BlockPtr&        b) { return visit ((ContainerPtr&) b); }
+	virtual bool visit (DiskPtr&         d) { return visit ((ContainerPtr&) d); }
+	virtual bool visit (ExtendedPtr&     e) { return visit ((ContainerPtr&) e); }
+	virtual bool visit (FilePtr&         f) { return visit ((ContainerPtr&) f); }
+	virtual bool visit (FilesystemPtr&   f) { return visit ((ContainerPtr&) f); }
+	virtual bool visit (GptPtr&          g) { return visit ((ContainerPtr&) g); }
+	virtual bool visit (LoopPtr&         l) { return visit ((ContainerPtr&) l); }
+	virtual bool visit (LvmGroupPtr&     l) { return visit ((ContainerPtr&) l); }
+	virtual bool visit (LvmLinearPtr&    l) { return visit ((ContainerPtr&) l); }
+	virtual bool visit (LvmMetadataPtr&  l) { return visit ((ContainerPtr&) l); }
+	virtual bool visit (LvmMirrorPtr&    l) { return visit ((ContainerPtr&) l); }
+	virtual bool visit (LvmPartitionPtr& l) { return visit ((ContainerPtr&) l); }
+	virtual bool visit (LvmRaidPtr&      l) { return visit ((ContainerPtr&) l); }
+	virtual bool visit (LvmStripePtr&    l) { return visit ((ContainerPtr&) l); }
+	virtual bool visit (LvmTablePtr&     l) { return visit ((ContainerPtr&) l); }
+	virtual bool visit (LvmVolumePtr&    l) { return visit ((ContainerPtr&) l); }
+	virtual bool visit (MdGroupPtr&      m) { return visit ((ContainerPtr&) m); }
+	virtual bool visit (MdTablePtr&      m) { return visit ((ContainerPtr&) m); }
+	virtual bool visit (MiscPtr&         m) { return visit ((ContainerPtr&) m); }
+	virtual bool visit (MsdosPtr&        m) { return visit ((ContainerPtr&) m); }
+	virtual bool visit (PartitionPtr&    p) { return visit ((ContainerPtr&) p); }
+	virtual bool visit (TablePtr&        t) { return visit ((ContainerPtr&) t); }
+	virtual bool visit (VolumePtr&       v) { return visit ((ContainerPtr&) v); }
+	virtual bool visit (WholePtr&        w) { return visit ((ContainerPtr&) w); }
 };
 
 

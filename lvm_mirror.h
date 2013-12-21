@@ -21,6 +21,8 @@
 #include "lvm_volume.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class LvmMirror
  */
@@ -28,6 +30,7 @@ class LvmMirror : public LvmVolume
 {
 public:
 	static LvmMirrorPtr create (void);
+	virtual bool accept (Visitor& v);
 
 	virtual void add_child    (ContainerPtr child);
 	virtual void delete_child (ContainerPtr child);

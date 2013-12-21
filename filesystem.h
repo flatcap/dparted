@@ -23,6 +23,8 @@
 #include "container.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class Filesystem
  */
@@ -30,6 +32,7 @@ class Filesystem : public DPContainer
 {
 public:
 	static FilesystemPtr create (void);
+	virtual bool accept (Visitor& v);
 
 	static FilesystemPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 

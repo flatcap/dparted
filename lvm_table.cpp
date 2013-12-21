@@ -28,6 +28,7 @@
 #include "lvm2.h"
 
 #include "utils.h"
+#include "visitor.h"
 
 /**
  * create
@@ -40,6 +41,18 @@ LvmTable::create (void)
 	l->weak = l;
 
 	return l;
+}
+
+/**
+ * accept
+ */
+bool
+LvmTable::accept (Visitor& v)
+{
+	LvmTablePtr l = std::dynamic_pointer_cast<LvmTable> (get_smart());
+	if (!v.visit (l))
+		return false;
+	return visit_children (v);
 }
 
 

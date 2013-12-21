@@ -19,6 +19,7 @@
 
 #include "lvm_stripe.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -32,4 +33,17 @@ LvmStripe::create (void)
 
 	return l;
 }
+
+/**
+ * accept
+ */
+bool
+LvmStripe::accept (Visitor& v)
+{
+	LvmStripePtr l = std::dynamic_pointer_cast<LvmStripe> (get_smart());
+	if (!v.visit (l))
+		return false;
+	return visit_children (v);
+}
+
 

@@ -24,6 +24,8 @@
 #include "block.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class Loop
  */
@@ -31,6 +33,7 @@ class Loop : public Block
 {
 public:
 	static LoopPtr create (const std::string& losetup);
+	virtual bool accept (Visitor& v);
 
 	// Backing file
 	std::string	file_name;

@@ -24,6 +24,8 @@
 #include "block.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class File
  */
@@ -31,6 +33,7 @@ class File : public Block
 {
 public:
 	static FilePtr create (void);
+	virtual bool accept (Visitor& v);
 
 	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);

@@ -21,6 +21,8 @@
 #include "lvm_volume.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class LvmLinear
  */
@@ -28,6 +30,7 @@ class LvmLinear : public LvmVolume
 {
 public:
 	static LvmLinearPtr create (void);
+	virtual bool accept (Visitor& v);
 
 protected:
 private:

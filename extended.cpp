@@ -29,6 +29,7 @@
 #include "partition.h"
 #include "utils.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -41,6 +42,18 @@ Extended::create (void)
 	e->weak = e;
 
 	return e;
+}
+
+/**
+ * accept
+ */
+bool
+Extended::accept (Visitor& v)
+{
+	ExtendedPtr e = std::dynamic_pointer_cast<Extended> (get_smart());
+	if (!v.visit (e))
+		return false;
+	return visit_children (v);
 }
 
 

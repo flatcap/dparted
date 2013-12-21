@@ -21,6 +21,8 @@
 #include "whole.h"
 #include "pointers.h"
 
+class Visitor;
+
 class LvmTable;
 
 /**
@@ -30,6 +32,7 @@ class LvmGroup : public Whole
 {
 public:
 	static LvmGroupPtr create (void);
+	virtual bool accept (Visitor& v);
 
 	long		pv_count = 0;	//XXX put this in seg_count in Whole
 	long		lv_count = 0;	//XXX this matches children.size()

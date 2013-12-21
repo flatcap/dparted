@@ -25,6 +25,7 @@
 #include "utils.h"
 #include "main.h"
 #include "stringnum.h"
+#include "visitor.h"
 
 /**
  * create
@@ -87,6 +88,18 @@ Loop::create (const std::string& losetup)
 	l->uuid = ss.str();
 
 	return l;
+}
+
+/**
+ * accept
+ */
+bool
+Loop::accept (Visitor& v)
+{
+	LoopPtr l = std::dynamic_pointer_cast<Loop> (get_smart());
+	if (!v.visit (l))
+		return false;
+	return visit_children (v);
 }
 
 

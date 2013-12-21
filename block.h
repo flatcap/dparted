@@ -23,6 +23,8 @@
 #include "container.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class Block
  */
@@ -30,6 +32,7 @@ class Block : public DPContainer
 {
 public:
 	static BlockPtr create (void);
+	virtual bool accept (Visitor& v);
 
 	int kernel_major = 0;	//XXX rename device major
 	int kernel_minor = 0;

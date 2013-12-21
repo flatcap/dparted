@@ -19,6 +19,7 @@
 
 #include "lvm_linear.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -32,4 +33,17 @@ LvmLinear::create (void)
 
 	return l;
 }
+
+/**
+ * accept
+ */
+bool
+LvmLinear::accept (Visitor& v)
+{
+	LvmLinearPtr l = std::dynamic_pointer_cast<LvmLinear> (get_smart());
+	if (!v.visit (l))
+		return false;
+	return visit_children (v);
+}
+
 

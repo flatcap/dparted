@@ -25,6 +25,8 @@
 #include "block.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class Disk
  */
@@ -32,6 +34,7 @@ class Disk : public Block
 {
 public:
 	static DiskPtr create (const std::string& lsblk);
+	virtual bool accept (Visitor& v);
 
 	virtual long          get_block_size (void);
 	virtual unsigned int  get_device_space (std::map<long, long>& spaces);

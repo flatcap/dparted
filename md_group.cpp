@@ -28,6 +28,7 @@
 #include "main.h"
 #include "utils.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -40,6 +41,18 @@ MdGroup::create (void)
 	m->weak = m;
 
 	return m;
+}
+
+/**
+ * accept
+ */
+bool
+MdGroup::accept (Visitor& v)
+{
+	MdGroupPtr m = std::dynamic_pointer_cast<MdGroup> (get_smart());
+	if (!v.visit (m))
+		return false;
+	return visit_children (v);
 }
 
 

@@ -27,6 +27,7 @@
 #include "md_table.h"
 #include "utils.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -39,6 +40,18 @@ Table::create (void)
 	t->weak = t;
 
 	return t;
+}
+
+/**
+ * accept
+ */
+bool
+Table::accept (Visitor& v)
+{
+	TablePtr t = std::dynamic_pointer_cast<Table> (get_smart());
+	if (!v.visit (t))
+		return false;
+	return visit_children (v);
 }
 
 

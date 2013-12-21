@@ -19,6 +19,7 @@
 
 #include "lvm_partition.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -32,4 +33,17 @@ LvmPartition::create (void)
 
 	return l;
 }
+
+/**
+ * accept
+ */
+bool
+LvmPartition::accept (Visitor& v)
+{
+	LvmPartitionPtr l = std::dynamic_pointer_cast<LvmPartition> (get_smart());
+	if (!v.visit (l))
+		return false;
+	return visit_children (v);
+}
+
 

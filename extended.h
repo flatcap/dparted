@@ -23,6 +23,8 @@
 #include "msdos.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class Extended
  */
@@ -30,6 +32,7 @@ class Extended : public Msdos
 {
 public:
 	static ExtendedPtr create (void);
+	virtual bool accept (Visitor& v);
 
 	static ExtendedPtr probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size);
 

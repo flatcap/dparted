@@ -3,7 +3,7 @@ RM	= rm -fr
 MKDIR	= mkdir -p
 
 # Library
-SRC	+= app.cpp block.cpp container.cpp disk.cpp dot.cpp extended.cpp \
+SRC	+= app.cpp block.cpp container.cpp disk.cpp extended.cpp \
 	   file.cpp filesystem.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp \
 	   gpt.cpp icon_manager.cpp log.cpp loop.cpp lvm_group.cpp \
 	   lvm_linear.cpp lvm_metadata.cpp lvm_mirror.cpp lvm_partition.cpp \

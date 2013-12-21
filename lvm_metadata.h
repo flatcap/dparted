@@ -21,6 +21,8 @@
 #include "lvm_linear.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class LvmMetadata
  */
@@ -28,6 +30,7 @@ class LvmMetadata : public LvmLinear
 {
 public:
 	static LvmMetadataPtr create (void);
+	virtual bool accept (Visitor& v);
 
 	virtual void add_child (ContainerPtr& child);
 

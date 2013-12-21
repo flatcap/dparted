@@ -23,6 +23,8 @@
 #include "container.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class Table
  */
@@ -30,6 +32,7 @@ class Table : public DPContainer
 {
 public:
 	static TablePtr create (void);
+	virtual bool accept (Visitor& v);
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 

@@ -21,6 +21,8 @@
 #include "volume.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class LvmVolume
  */
@@ -28,6 +30,7 @@ class LvmVolume : public Volume
 {
 public:
 	static LvmVolumePtr create (void);
+	virtual bool accept (Visitor& v);
 
 	std::string	lv_attr;
 	long		kernel_major = -1;

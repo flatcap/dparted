@@ -35,6 +35,7 @@
 #include "main.h"
 #include "utils.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -47,6 +48,18 @@ LvmGroup::create (void)
 	l->weak = l;
 
 	return l;
+}
+
+/**
+ * accept
+ */
+bool
+LvmGroup::accept (Visitor& v)
+{
+	LvmGroupPtr l = std::dynamic_pointer_cast<LvmGroup> (get_smart());
+	if (!v.visit (l))
+		return false;
+	return visit_children (v);
 }
 
 

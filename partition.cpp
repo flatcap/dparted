@@ -21,6 +21,7 @@
 #include "log.h"
 #include "partition.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -35,4 +36,15 @@ Partition::create (void)
 	return p;
 }
 
+/**
+ * accept
+ */
+bool
+Partition::accept (Visitor& v)
+{
+	PartitionPtr p = std::dynamic_pointer_cast<Partition> (get_smart());
+	if (!v.visit (p))
+		return false;
+	return visit_children (v);
+}
 

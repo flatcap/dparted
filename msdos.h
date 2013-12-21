@@ -23,6 +23,8 @@
 #include "table.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * struct partition
  */
@@ -39,6 +41,7 @@ class Msdos : public Table
 {
 public:
 	static MsdosPtr create (void);
+	virtual bool accept (Visitor& v);
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 

@@ -34,6 +34,7 @@
 #include "partition.h"
 #include "utils.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -46,6 +47,18 @@ Msdos::create (void)
 	m->weak = m;
 
 	return m;
+}
+
+/**
+ * accept
+ */
+bool
+Msdos::accept (Visitor& v)
+{
+	MsdosPtr m = std::dynamic_pointer_cast<Msdos> (get_smart());
+	if (!v.visit (m))
+		return false;
+	return visit_children (v);
 }
 
 

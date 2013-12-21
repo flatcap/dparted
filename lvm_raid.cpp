@@ -20,6 +20,7 @@
 #include "lvm_raid.h"
 #include "log.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -32,6 +33,18 @@ LvmRaid::create (void)
 	l->weak = l;
 
 	return l;
+}
+
+/**
+ * accept
+ */
+bool
+LvmRaid::accept (Visitor& v)
+{
+	LvmRaidPtr l = std::dynamic_pointer_cast<LvmRaid> (get_smart());
+	if (!v.visit (l))
+		return false;
+	return visit_children (v);
 }
 
 

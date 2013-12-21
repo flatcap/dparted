@@ -19,6 +19,7 @@
 
 #include "lvm_volume.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -31,6 +32,18 @@ LvmVolume::create (void)
 	l->weak = l;
 
 	return l;
+}
+
+/**
+ * accept
+ */
+bool
+LvmVolume::accept (Visitor& v)
+{
+	LvmVolumePtr l = std::dynamic_pointer_cast<LvmVolume> (get_smart());
+	if (!v.visit (l))
+		return false;
+	return visit_children (v);
 }
 
 

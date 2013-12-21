@@ -20,6 +20,7 @@
 #include "lvm_mirror.h"
 #include "log.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -32,6 +33,18 @@ LvmMirror::create (void)
 	l->weak = l;
 
 	return l;
+}
+
+/**
+ * accept
+ */
+bool
+LvmMirror::accept (Visitor& v)
+{
+	LvmMirrorPtr l = std::dynamic_pointer_cast<LvmMirror> (get_smart());
+	if (!v.visit (l))
+		return false;
+	return visit_children (v);
 }
 
 

@@ -24,6 +24,7 @@
 #include "partition.h"
 #include "utils.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -36,6 +37,18 @@ Misc::create (void)
 	m->weak = m;
 
 	return m;
+}
+
+/**
+ * accept
+ */
+bool
+Misc::accept (Visitor& v)
+{
+	MiscPtr m = std::dynamic_pointer_cast<Misc> (get_smart());
+	if (!v.visit (m))
+		return false;
+	return visit_children (v);
 }
 
 

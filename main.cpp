@@ -38,7 +38,6 @@
 #include "misc.h"
 #include "table.h"
 
-#include "dot.h"
 #include "dot_visitor.h"
 #include "log.h"
 #include "log_trace.h"
@@ -239,26 +238,24 @@ main (int argc, char* argv[])
 #endif
 
 	if (list) {
-#if 0
 		log_info ("------------------------------------------------------------\n");
 		top_level->dump_objects();
 		log_info ("------------------------------------------------------------\n");
-#else
-		DotVisitor dv;
-		top_level->accept (dv);
-		dv.run_dotty();
-#endif
 	}
 
 	if (dot) {
 		if (separate) {
 			for (auto c : top_level->get_children()) {
-				std::vector<ContainerPtr> dummy;
-				dummy.push_back(c);
-				display_dot (dummy);
+				DotVisitor dv;
+				c->accept (dv);
+				dv.run_dotty();
 			}
 		} else {
-			display_dot (top_level->get_children());
+			DotVisitor dv;
+			for (auto c : top_level->get_children()) {
+				c->accept (dv);
+			}
+			dv.run_dotty();
 		}
 	}
 

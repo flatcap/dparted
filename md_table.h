@@ -23,6 +23,8 @@
 #include "table.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class MdTable
  */
@@ -30,6 +32,7 @@ class MdTable : public Table
 {
 public:
 	static MdTablePtr create (void);
+	virtual bool accept (Visitor& v);
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 

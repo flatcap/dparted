@@ -17,6 +17,7 @@
 
 #include "lvm_metadata.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -29,6 +30,18 @@ LvmMetadata::create (void)
 	l->weak = l;
 
 	return l;
+}
+
+/**
+ * accept
+ */
+bool
+LvmMetadata::accept (Visitor& v)
+{
+	LvmMetadataPtr l = std::dynamic_pointer_cast<LvmMetadata> (get_smart());
+	if (!v.visit (l))
+		return false;
+	return visit_children (v);
 }
 
 

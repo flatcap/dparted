@@ -30,6 +30,7 @@
 #include "main.h"
 #include "utils.h"
 #include "log_trace.h"
+#include "visitor.h"
 
 /**
  * create
@@ -63,6 +64,18 @@ Disk::create (const std::string& lsblk)
 	d->mounts = tags["MOUNTPOINT"];
 
 	return d;
+}
+
+/**
+ * accept
+ */
+bool
+Disk::accept (Visitor& v)
+{
+	DiskPtr d = std::dynamic_pointer_cast<Disk> (get_smart());
+	if (!v.visit (d))
+		return false;
+	return visit_children (v);
 }
 
 

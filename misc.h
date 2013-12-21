@@ -23,6 +23,8 @@
 #include "container.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class Misc
  */
@@ -30,6 +32,7 @@ class Misc : public DPContainer
 {
 public:
 	static MiscPtr create (void);
+	virtual bool accept (Visitor& v);
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 

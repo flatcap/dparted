@@ -21,6 +21,8 @@
 #include "whole.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class Volume
  */
@@ -28,6 +30,7 @@ class Volume : public Whole
 {
 public:
 	static VolumePtr create (void);
+	virtual bool accept (Visitor& v);
 
 protected:
 private:

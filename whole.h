@@ -24,6 +24,8 @@
 #include "container.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class Whole
  */
@@ -31,6 +33,7 @@ class Whole : public DPContainer
 {
 public:
 	static WholePtr create (void);
+	virtual bool accept (Visitor& v);
 
 	virtual void add_segment (ContainerPtr& seg);
 

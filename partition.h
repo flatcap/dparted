@@ -23,6 +23,8 @@
 #include "container.h"
 #include "pointers.h"
 
+class Visitor;
+
 class Volume;
 
 /**
@@ -32,6 +34,7 @@ class Partition : public DPContainer
 {
 public:
 	static PartitionPtr create (void);
+	virtual bool accept (Visitor& v);
 
 	//XXX flag for protective partition
 	//XXX partition number - nth in set?

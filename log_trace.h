@@ -47,7 +47,7 @@ public:
 
 	virtual ~LogTrace()
 	{
-		log_trace ("Leaving:  %s -- %s\n", m_function.c_str(), m_file_name.c_str());
+		//log_trace ("Leaving:  %s -- %s\n", m_function.c_str(), m_file_name.c_str());
 	}
 
 protected:

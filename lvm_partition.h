@@ -21,6 +21,8 @@
 #include "partition.h"
 #include "pointers.h"
 
+class Visitor;
+
 /**
  * class LvmPartition
  */
@@ -28,6 +30,7 @@ class LvmPartition : public Partition
 {
 public:
 	static LvmPartitionPtr create (void);
+	virtual bool accept (Visitor& v);
 
 #if 0
 	long		dev_size;	// 5368709120
