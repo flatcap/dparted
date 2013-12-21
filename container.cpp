@@ -40,14 +40,7 @@
 /**
  * DPContainer
  */
-DPContainer::DPContainer (void) :
-	parent_offset (0),
-	block_size (0),
-	bytes_size (0),
-	bytes_used (0),
-	whole (nullptr),
-	missing (false),
-	fd (-1)
+DPContainer::DPContainer (void)
 {
 	declare ("container");
 }

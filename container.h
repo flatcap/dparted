@@ -105,11 +105,11 @@ public:
 	std::string	 uuid;
 
 	std::string	 device;
-	long		 parent_offset;
+	long		 parent_offset = 0;
 
-	long		 block_size;
-	long		 bytes_size;
-	long		 bytes_used;
+	long		 block_size = 0;
+	long		 bytes_size = 0;
+	long		 bytes_used = 0;
 
 	WholePtr	 whole;
 
@@ -118,11 +118,11 @@ public:
 
 	std::vector<std::string> type;
 
-	bool		 missing;
+	bool		 missing = false;
 
 	virtual void dump_objects (int indent = 0);
 
-	int		 fd;
+	int		 fd = -1;
 
 	virtual std::vector<ContainerPtr>& get_children (void);
 

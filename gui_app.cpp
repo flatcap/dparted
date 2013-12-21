@@ -119,9 +119,9 @@ GuiApp::on_activate()
 		win->present();
 	}
 
-	DParted* dp = new DParted();	//XXX and just leak it?
+	DParted* dp = new DParted();
 	dp->set_data (top_level);
-	add_window(*dp);
+	add_window(*dp);	// App now owns DParted
 	dp->show();
 }
 

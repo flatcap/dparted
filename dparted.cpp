@@ -27,8 +27,7 @@
 /**
  * Dparted
  */
-DParted::DParted () :
-	m_c (nullptr)
+DParted::DParted ()
 {
 	set_title ("DParted");
 	set_size_request (1360, 70);

@@ -48,13 +48,8 @@ const int BLOCK_WIDTH = 24;	// Placeholder for icons
 /**
  * DPDrawingArea
  */
-DPDrawingArea::DPDrawingArea() :
-	//Glib::ObjectBase ("MyDrawingArea"),
-	m_c (nullptr),
-	theme (nullptr),
-	sel_x (-1),
-	sel_y (-1),
-	mouse_close (false)
+DPDrawingArea::DPDrawingArea()
+	//Glib::ObjectBase ("MyDrawingArea")
 {
 	//set_size_request (800, 77);
 	set_size_request (400, 70);

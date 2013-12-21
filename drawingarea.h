@@ -53,7 +53,7 @@ protected:
 
 private:
 	ContainerPtr m_c;
-	Theme* theme;
+	Theme* theme = nullptr;
 
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, Rect shape);
 	void draw_icon      (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below);
@@ -65,10 +65,10 @@ private:
 
 	std::deque<Range> vRange;
 
-	int sel_x;
-	int sel_y;
+	int sel_x = -1;
+	int sel_y = -1;
 
-	bool mouse_close;
+	bool mouse_close = false;
 };
 
 
