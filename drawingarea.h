@@ -56,7 +56,12 @@ private:
 	Theme* theme;
 
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, Rect shape);
-	void draw_icon      (const Cairo::RefPtr<Cairo::Context>& cr, const std::string& name, const Rect& shape, Rect& below);
+	void draw_icon      (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below);
+
+	void draw_block   (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right);
+	void draw_box     (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& inside);
+	void draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
+	void draw_tabbox  (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
 
 	std::deque<Range> vRange;
 
