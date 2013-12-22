@@ -29,6 +29,14 @@
 #include "visitor.h"
 
 /**
+ * Gpt
+ */
+Gpt::Gpt (void)
+{
+	declare ("gpt");
+}
+
+/**
  * create
  */
 GptPtr
@@ -36,10 +44,10 @@ Gpt::create (void)
 {
 	GptPtr g (new Gpt());
 	g->weak = g;
-	g->declare ("gpt");
 
 	return g;
 }
+
 
 /**
  * accept

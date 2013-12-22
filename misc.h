@@ -31,12 +31,15 @@ class Visitor;
 class Misc : public DPContainer
 {
 public:
+	virtual ~Misc() = default;
 	static MiscPtr create (void);
 	virtual bool accept (Visitor& v);
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 protected:
+	Misc (void);
+
 private:
 
 };

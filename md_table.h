@@ -31,6 +31,7 @@ class Visitor;
 class MdTable : public Table
 {
 public:
+	virtual ~MdTable() = default;
 	static MdTablePtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -47,6 +48,8 @@ public:
 	long		data_size;
 
 protected:
+	MdTable (void);
+
 private:
 
 };

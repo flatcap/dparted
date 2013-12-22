@@ -31,6 +31,7 @@ class LvmTable;
 class LvmGroup : public Whole
 {
 public:
+	virtual ~LvmGroup() = default;
 	static LvmGroupPtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -47,6 +48,8 @@ public:
 	static void discover (ContainerPtr& top_level);
 
 protected:
+	LvmGroup (void);
+
 	friend void lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);
 	friend void lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);
 	friend void lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);

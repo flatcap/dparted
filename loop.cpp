@@ -28,6 +28,14 @@
 #include "visitor.h"
 
 /**
+ * Loop
+ */
+Loop::Loop (void)
+{
+	declare ("loop");
+}
+
+/**
  * create
  */
 LoopPtr
@@ -49,7 +57,6 @@ Loop::create (const std::string& losetup)
 
 	LoopPtr l (new Loop());
 	l->weak = l;
-	l->declare ("loop");
 
 	l->device     = parts[0];
 	l->file_name  = parts[11];
@@ -89,6 +96,7 @@ Loop::create (const std::string& losetup)
 
 	return l;
 }
+
 
 /**
  * accept

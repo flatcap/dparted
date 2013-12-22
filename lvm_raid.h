@@ -29,10 +29,13 @@ class Visitor;
 class LvmRaid : public LvmVolume
 {
 public:
+	virtual ~LvmRaid() = default;
 	static LvmRaidPtr create (void);
 	virtual bool accept (Visitor& v);
 
 protected:
+	LvmRaid (void);
+
 private:
 
 };

@@ -30,6 +30,14 @@
 #include "visitor.h"
 
 /**
+ * Filesystem
+ */
+Filesystem::Filesystem (void)
+{
+	declare ("filesystem");
+}
+
+/**
  * create
  */
 FilesystemPtr
@@ -37,10 +45,10 @@ Filesystem::create (void)
 {
 	FilesystemPtr f (new Filesystem());
 	f->weak = f;
-	f->declare ("filesystem");
 
 	return f;
 }
+
 
 /**
  * accept

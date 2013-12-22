@@ -24,6 +24,14 @@
 #include "visitor.h"
 
 /**
+ * Whole
+ */
+Whole::Whole (void)
+{
+	declare ("whole");
+}
+
+/**
  * create
  */
 WholePtr
@@ -31,10 +39,10 @@ Whole::create (void)
 {
 	WholePtr w (new Whole());
 	w->weak = w;
-	w->declare ("whole");
 
 	return w;
 }
+
 
 /**
  * accept

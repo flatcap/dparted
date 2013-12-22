@@ -22,6 +22,14 @@
 #include "visitor.h"
 
 /**
+ * LvmVolume
+ */
+LvmVolume::LvmVolume (void)
+{
+	declare ("lvm_volume");
+}
+
+/**
  * create
  */
 LvmVolumePtr
@@ -29,10 +37,10 @@ LvmVolume::create (void)
 {
 	LvmVolumePtr l (new LvmVolume());
 	l->weak = l;
-	l->declare ("lvm_volume");
 
 	return l;
 }
+
 
 /**
  * accept

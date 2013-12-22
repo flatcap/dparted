@@ -31,6 +31,7 @@ class Visitor;
 class LvmTable : public Table
 {
 public:
+	virtual ~LvmTable() = default;
 	static LvmTablePtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -47,6 +48,8 @@ public:
 	LvmGroupPtr group;
 
 protected:
+	LvmTable (void);
+
 private:
 
 };

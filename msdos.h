@@ -40,12 +40,15 @@ struct partition {
 class Msdos : public Table
 {
 public:
+	virtual ~Msdos() = default;
 	static MsdosPtr create (void);
 	virtual bool accept (Visitor& v);
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 protected:
+	Msdos (void);
+
 	virtual bool read_partition (unsigned char* buffer, int index, struct partition* part);
 	virtual unsigned int read_table (unsigned char* buffer, int bufsize, long offset, std::vector<struct partition>& vp);
 	virtual void read_chs (unsigned char* buffer, int* cylinder, int* head, int* sector);

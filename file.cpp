@@ -31,6 +31,14 @@
 #include "visitor.h"
 
 /**
+ * File
+ */
+File::File (void)
+{
+	declare ("file");
+}
+
+/**
  * create
  */
 FilePtr
@@ -38,10 +46,10 @@ File::create (void)
 {
 	FilePtr f (new File());
 	f->weak = f;
-	f->declare ("file");
 
 	return f;
 }
+
 
 /**
  * accept

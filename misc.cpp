@@ -27,6 +27,14 @@
 #include "visitor.h"
 
 /**
+ * Misc
+ */
+Misc::Misc (void)
+{
+	declare ("misc");
+}
+
+/**
  * create
  */
 MiscPtr
@@ -34,10 +42,10 @@ Misc::create (void)
 {
 	MiscPtr m (new Misc());
 	m->weak = m;
-	m->declare ("misc");
 
 	return m;
 }
+
 
 /**
  * accept

@@ -22,6 +22,14 @@
 #include "visitor.h"
 
 /**
+ * LvmStripe
+ */
+LvmStripe::LvmStripe (void)
+{
+	declare ("lvm_stripe");
+}
+
+/**
  * create
  */
 LvmStripePtr
@@ -29,10 +37,10 @@ LvmStripe::create (void)
 {
 	LvmStripePtr l (new LvmStripe());
 	l->weak = l;
-	l->declare ("lvm_stripe");
 
 	return l;
 }
+
 
 /**
  * accept

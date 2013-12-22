@@ -23,6 +23,14 @@
 #include "visitor.h"
 
 /**
+ * MdTable
+ */
+MdTable::MdTable (void)
+{
+	declare ("md_table");
+}
+
+/**
  * create
  */
 MdTablePtr
@@ -30,10 +38,10 @@ MdTable::create (void)
 {
 	MdTablePtr m (new MdTable());
 	m->weak = m;
-	m->declare ("md_table");
 
 	return m;
 }
+
 
 /**
  * accept

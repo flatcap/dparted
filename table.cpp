@@ -30,6 +30,14 @@
 #include "visitor.h"
 
 /**
+ * Table
+ */
+Table::Table (void)
+{
+	declare ("table");
+}
+
+/**
  * create
  */
 TablePtr
@@ -37,10 +45,10 @@ Table::create (void)
 {
 	TablePtr t (new Table());
 	t->weak = t;
-	t->declare ("table");
 
 	return t;
 }
+
 
 /**
  * accept

@@ -29,10 +29,13 @@ class Visitor;
 class LvmLinear : public LvmVolume
 {
 public:
+	virtual ~LvmLinear() = default;
 	static LvmLinearPtr create (void);
 	virtual bool accept (Visitor& v);
 
 protected:
+	LvmLinear (void);
+
 private:
 
 };

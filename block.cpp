@@ -37,6 +37,14 @@
 #include "visitor.h"
 
 /**
+ * Block
+ */
+Block::Block (void)
+{
+	declare ("block");
+}
+
+/**
  * create
  */
 BlockPtr
@@ -44,10 +52,10 @@ Block::create (void)
 {
 	BlockPtr b (new Block());
 	b->weak = b;
-	b->declare ("block");
 
 	return b;
 }
+
 
 /**
  * accept

@@ -42,6 +42,7 @@
  */
 DPContainer::DPContainer (void)
 {
+	declare ("container");
 }
 
 /**
@@ -63,7 +64,6 @@ DPContainer::create (void)
 {
 	ContainerPtr c (new DPContainer());
 	c->weak = c;
-	c->declare ("container");
 
 	return c;
 }

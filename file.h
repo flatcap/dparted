@@ -32,6 +32,7 @@ class Visitor;
 class File : public Block
 {
 public:
+	virtual ~File() = default;
 	static FilePtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -39,6 +40,8 @@ public:
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 protected:
+	File (void);
+
 private:
 
 };

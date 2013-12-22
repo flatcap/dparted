@@ -23,6 +23,14 @@
 #include "visitor.h"
 
 /**
+ * LvmMirror
+ */
+LvmMirror::LvmMirror (void)
+{
+	declare ("lvm_mirror");
+}
+
+/**
  * create
  */
 LvmMirrorPtr
@@ -30,10 +38,10 @@ LvmMirror::create (void)
 {
 	LvmMirrorPtr l (new LvmMirror());
 	l->weak = l;
-	l->declare ("lvm_mirror");
 
 	return l;
 }
+
 
 /**
  * accept

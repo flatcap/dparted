@@ -29,6 +29,7 @@ class Visitor;
 class LvmMirror : public LvmVolume
 {
 public:
+	virtual ~LvmMirror() = default;
 	static LvmMirrorPtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -40,6 +41,8 @@ public:
 	ContainerPtr log;
 #endif
 protected:
+	LvmMirror (void);
+
 private:
 
 };

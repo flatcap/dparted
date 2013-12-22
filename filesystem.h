@@ -31,6 +31,7 @@ class Visitor;
 class Filesystem : public DPContainer
 {
 public:
+	virtual ~Filesystem() = default;
 	static FilesystemPtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -39,6 +40,8 @@ public:
 	std::string	label;
 
 protected:
+	Filesystem (void);
+
 	virtual std::string get_property (const std::string& propname);
 
 private:

@@ -31,12 +31,15 @@ class Visitor;
 class Table : public DPContainer
 {
 public:
+	virtual ~Table() = default;
 	static TablePtr create (void);
 	virtual bool accept (Visitor& v);
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 protected:
+	Table (void);
+
 	long fill_space (void);
 
 private:

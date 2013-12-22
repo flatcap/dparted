@@ -29,12 +29,15 @@ class Visitor;
 class LvmMetadata : public LvmLinear
 {
 public:
+	virtual ~LvmMetadata() = default;
 	static LvmMetadataPtr create (void);
 	virtual bool accept (Visitor& v);
 
 	virtual void add_child (ContainerPtr& child);
 
 protected:
+	LvmMetadata (void);
+
 private:
 
 };

@@ -31,6 +31,7 @@ class Visitor;
 class Block : public DPContainer
 {
 public:
+	virtual ~Block() = default;
 	static BlockPtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -38,6 +39,8 @@ public:
 	int kernel_minor = 0;
 
 protected:
+	Block (void);
+
 private:
 
 };

@@ -38,6 +38,14 @@
 #include "visitor.h"
 
 /**
+ * LvmGroup
+ */
+LvmGroup::LvmGroup (void)
+{
+	declare ("lvm_group");
+}
+
+/**
  * create
  */
 LvmGroupPtr
@@ -45,10 +53,10 @@ LvmGroup::create (void)
 {
 	LvmGroupPtr l (new LvmGroup());
 	l->weak = l;
-	l->declare ("lvm_group");
 
 	return l;
 }
+
 
 /**
  * accept

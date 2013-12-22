@@ -23,6 +23,14 @@
 #include "visitor.h"
 
 /**
+ * LvmRaid
+ */
+LvmRaid::LvmRaid (void)
+{
+	declare ("lvm_raid");
+}
+
+/**
  * create
  */
 LvmRaidPtr
@@ -30,10 +38,10 @@ LvmRaid::create (void)
 {
 	LvmRaidPtr l (new LvmRaid());
 	l->weak = l;
-	l->declare ("lvm_raid");
 
 	return l;
 }
+
 
 /**
  * accept

@@ -31,6 +31,14 @@
 #include "visitor.h"
 
 /**
+ * MdGroup
+ */
+MdGroup::MdGroup (void)
+{
+	declare ("md_group");
+}
+
+/**
  * create
  */
 MdGroupPtr
@@ -38,10 +46,10 @@ MdGroup::create (void)
 {
 	MdGroupPtr m (new MdGroup());
 	m->weak = m;
-	m->declare ("md_group");
 
 	return m;
 }
+
 
 /**
  * accept

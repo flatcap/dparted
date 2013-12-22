@@ -20,6 +20,14 @@
 #include "visitor.h"
 
 /**
+ * LvmMetadata
+ */
+LvmMetadata::LvmMetadata (void)
+{
+	declare ("lvm_metadata");
+}
+
+/**
  * create
  */
 LvmMetadataPtr
@@ -27,10 +35,10 @@ LvmMetadata::create (void)
 {
 	LvmMetadataPtr l (new LvmMetadata());
 	l->weak = l;
-	l->declare ("lvm_metadata");
 
 	return l;
 }
+
 
 /**
  * accept

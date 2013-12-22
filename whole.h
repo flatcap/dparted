@@ -32,6 +32,7 @@ class Visitor;
 class Whole : public DPContainer
 {
 public:
+	virtual ~Whole() = default;
 	static WholePtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -41,6 +42,8 @@ public:
 	std::vector<ContainerPtr> segments;
 
 protected:
+	Whole (void);
+
 private:
 
 };

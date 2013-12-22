@@ -37,9 +37,8 @@ class Visitor;
 class DPContainer
 {
 public:
-	static ContainerPtr create (void);
 	virtual ~DPContainer();
-
+	static ContainerPtr create (void);
 	virtual bool accept (Visitor& v);
 
 	virtual void add_child      (ContainerPtr& child);

@@ -33,6 +33,7 @@ class Visitor;
 class Disk : public Block
 {
 public:
+	virtual ~Disk() = default;
 	static DiskPtr create (const std::string& lsblk);
 	virtual bool accept (Visitor& v);
 
@@ -66,6 +67,8 @@ public:
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 protected:
+	Disk (void);
+
 private:
 
 };

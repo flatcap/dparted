@@ -29,6 +29,7 @@ class Visitor;
 class LvmVolume : public Volume
 {
 public:
+	virtual ~LvmVolume() = default;
 	static LvmVolumePtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -54,6 +55,8 @@ public:
 	ContainerPtr sibling;
 
 protected:
+	LvmVolume (void);
+
 private:
 
 };

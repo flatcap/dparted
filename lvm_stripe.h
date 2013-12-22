@@ -29,10 +29,13 @@ class Visitor;
 class LvmStripe : public LvmVolume
 {
 public:
+	virtual ~LvmStripe() = default;
 	static LvmStripePtr create (void);
 	virtual bool accept (Visitor& v);
 
 protected:
+	LvmStripe (void);
+
 private:
 
 };

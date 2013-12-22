@@ -31,12 +31,15 @@ class MdTable;
 class MdGroup : public Whole
 {
 public:
+	virtual ~MdGroup() = default;
 	static MdGroupPtr create (void);
 	virtual bool accept (Visitor& v);
 
 	static void discover (ContainerPtr& top_level);
 
 protected:
+	MdGroup (void);
+
 private:
 
 };

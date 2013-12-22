@@ -33,6 +33,14 @@
 #include "visitor.h"
 
 /**
+ * Disk
+ */
+Disk::Disk (void)
+{
+	declare ("disk");
+}
+
+/**
  * create
  */
 DiskPtr
@@ -40,7 +48,6 @@ Disk::create (const std::string& lsblk)
 {
 	DiskPtr d (new Disk());
 	d->weak = d;
-	d->declare ("disk");
 
 	std::map<std::string,StringNum> tags;
 	int scan;
@@ -65,6 +72,7 @@ Disk::create (const std::string& lsblk)
 
 	return d;
 }
+
 
 /**
  * accept

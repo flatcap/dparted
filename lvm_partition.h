@@ -29,6 +29,7 @@ class Visitor;
 class LvmPartition : public Partition
 {
 public:
+	virtual ~LvmPartition() = default;
 	static LvmPartitionPtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -60,6 +61,8 @@ public:
 #endif
 
 protected:
+	LvmPartition (void);
+
 private:
 
 };

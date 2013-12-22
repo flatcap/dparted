@@ -31,12 +31,15 @@ class Visitor;
 class Extended : public Msdos
 {
 public:
+	virtual ~Extended() = default;
 	static ExtendedPtr create (void);
 	virtual bool accept (Visitor& v);
 
 	static ExtendedPtr probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size);
 
 protected:
+	Extended (void);
+
 private:
 
 };

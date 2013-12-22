@@ -32,6 +32,7 @@ class Visitor;
 class Loop : public Block
 {
 public:
+	virtual ~Loop() = default;
 	static LoopPtr create (const std::string& losetup);
 	virtual bool accept (Visitor& v);
 
@@ -56,6 +57,8 @@ public:
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 protected:
+	Loop (void);
+
 private:
 
 };

@@ -29,10 +29,13 @@ class Visitor;
 class Volume : public Whole
 {
 public:
+	virtual ~Volume() = default;
 	static VolumePtr create (void);
 	virtual bool accept (Visitor& v);
 
 protected:
+	Volume (void);
+
 private:
 
 };

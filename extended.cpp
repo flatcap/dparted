@@ -32,6 +32,14 @@
 #include "visitor.h"
 
 /**
+ * Extended
+ */
+Extended::Extended (void)
+{
+	declare ("extended");
+}
+
+/**
  * create
  */
 ExtendedPtr
@@ -39,10 +47,10 @@ Extended::create (void)
 {
 	ExtendedPtr e (new Extended());
 	e->weak = e;
-	e->declare ("extended");
 
 	return e;
 }
+
 
 /**
  * accept

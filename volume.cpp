@@ -23,6 +23,14 @@
 #include "visitor.h"
 
 /**
+ * Volume
+ */
+Volume::Volume (void)
+{
+	declare ("volume");
+}
+
+/**
  * create
  */
 VolumePtr
@@ -30,10 +38,10 @@ Volume::create (void)
 {
 	VolumePtr v (new Volume());
 	v->weak = v;
-	v->declare ("volume");
 
 	return v;
 }
+
 
 /**
  * accept

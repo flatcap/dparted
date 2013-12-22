@@ -22,6 +22,14 @@
 #include "visitor.h"
 
 /**
+ * LvmLinear
+ */
+LvmLinear::LvmLinear (void)
+{
+	declare ("lvm_linear");
+}
+
+/**
  * create
  */
 LvmLinearPtr
@@ -29,10 +37,10 @@ LvmLinear::create (void)
 {
 	LvmLinearPtr l (new LvmLinear());
 	l->weak = l;
-	l->declare ("lvm_linear");
 
 	return l;
 }
+
 
 /**
  * accept

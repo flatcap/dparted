@@ -22,6 +22,14 @@
 #include "visitor.h"
 
 /**
+ * LvmPartition
+ */
+LvmPartition::LvmPartition (void)
+{
+	declare ("lvm_partition");
+}
+
+/**
  * create
  */
 LvmPartitionPtr
@@ -29,10 +37,10 @@ LvmPartition::create (void)
 {
 	LvmPartitionPtr l (new LvmPartition());
 	l->weak = l;
-	l->declare ("lvm_partition");
 
 	return l;
 }
+
 
 /**
  * accept

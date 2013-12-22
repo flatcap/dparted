@@ -24,6 +24,14 @@
 #include "visitor.h"
 
 /**
+ * Partition
+ */
+Partition::Partition (void)
+{
+	declare ("partition");
+}
+
+/**
  * create
  */
 PartitionPtr
@@ -31,10 +39,10 @@ Partition::create (void)
 {
 	PartitionPtr p (new Partition());
 	p->weak = p;
-	p->declare ("partition");
 
 	return p;
 }
+
 
 /**
  * accept

@@ -33,6 +33,7 @@ class Volume;
 class Partition : public DPContainer
 {
 public:
+	virtual ~Partition() = default;
 	static PartitionPtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -45,6 +46,8 @@ public:
 	VolumePtr volume;
 
 protected:
+	Partition (void);
+
 private:
 
 };

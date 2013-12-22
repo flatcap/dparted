@@ -31,6 +31,14 @@
 #include "visitor.h"
 
 /**
+ * LvmTable
+ */
+LvmTable::LvmTable (void)
+{
+	declare ("lvm_table");
+}
+
+/**
  * create
  */
 LvmTablePtr
@@ -38,10 +46,10 @@ LvmTable::create (void)
 {
 	LvmTablePtr l (new LvmTable());
 	l->weak = l;
-	l->declare ("lvm_table");
 
 	return l;
 }
+
 
 /**
  * accept

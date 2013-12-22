@@ -37,6 +37,14 @@
 #include "visitor.h"
 
 /**
+ * Msdos
+ */
+Msdos::Msdos (void)
+{
+	declare ("msdos");
+}
+
+/**
  * create
  */
 MsdosPtr
@@ -44,10 +52,10 @@ Msdos::create (void)
 {
 	MsdosPtr m (new Msdos());
 	m->weak = m;
-	m->declare ("msdos");
 
 	return m;
 }
+
 
 /**
  * accept
