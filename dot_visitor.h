@@ -36,11 +36,11 @@ public:
 	virtual bool visit_enter (ContainerPtr& c);
 	virtual bool visit_leave (void);
 
-	virtual bool visit (ContainerPtr&  c);
-	virtual bool visit (LoopPtr&       l);
-	virtual bool visit (GptPtr&        g);
-	virtual bool visit (PartitionPtr&  p);
-	virtual bool visit (FilesystemPtr& f);
+	virtual bool visit (ContainerPtr  c);
+	virtual bool visit (LoopPtr       l);
+	virtual bool visit (GptPtr        g);
+	virtual bool visit (PartitionPtr  p);
+	virtual bool visit (FilesystemPtr f);
 
 	std::string get_output (void);
 	void run_dotty (void);

@@ -933,7 +933,7 @@ dot_lvm_stripe (std::shared_ptr<T> t)
  * visit (ContainerPtr)
  */
 bool
-DotVisitor::visit (ContainerPtr& c)
+DotVisitor::visit (ContainerPtr c)
 {
 	//LOG_TRACE;
 	output << "\n";
@@ -958,7 +958,7 @@ DotVisitor::visit (ContainerPtr& c)
  * visit (LoopPtr)
  */
 bool
-DotVisitor::visit (LoopPtr& l)
+DotVisitor::visit (LoopPtr l)
 {
 	//LOG_TRACE;
 	output << "\n";
@@ -1027,7 +1027,7 @@ DotVisitor::visit (LoopPtr& l)
  * visit (GptPtr)
  */
 bool
-DotVisitor::visit (GptPtr& g)
+DotVisitor::visit (GptPtr g)
 {
 	//LOG_TRACE;
 	output << "\n";
@@ -1052,7 +1052,7 @@ DotVisitor::visit (GptPtr& g)
  * visit (PartitionPtr)
  */
 bool
-DotVisitor::visit (PartitionPtr& p)
+DotVisitor::visit (PartitionPtr p)
 {
 	//LOG_TRACE;
 	output << "\n";
@@ -1077,7 +1077,7 @@ DotVisitor::visit (PartitionPtr& p)
  * visit (FilesystemPtr)
  */
 bool
-DotVisitor::visit (FilesystemPtr& f)
+DotVisitor::visit (FilesystemPtr f)
 {
 	//LOG_TRACE;
 	output << "\n";
