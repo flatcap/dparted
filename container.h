@@ -27,31 +27,9 @@
 #include <tuple>
 
 #include "pointers.h"
+#include "mmap.h"
 
 class Visitor;
-
-struct compare;
-typedef std::tuple<long,long,void*> Mmap;	// offset, size, ptr
-typedef std::shared_ptr<Mmap>       MmapPtr;	// Mmap smart pointer
-typedef std::set<MmapPtr,compare>   MmapSet;	// sorted set of Mmaps
-
-/**
- * functor compare
- */
-struct compare
-{
-	bool operator() (const MmapPtr& a, const MmapPtr& b)
-	{
-		long ao, as, bo, bs;
-		std::tie (ao, as, std::ignore) = *a;
-		std::tie (bo, bs, std::ignore) = *b;
-
-		if (ao == bo)
-			return (as < bs);
-		else
-			return (ao < bo);
-	}
-};
 
 /**
  * class DPContainer
