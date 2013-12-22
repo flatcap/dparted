@@ -37,8 +37,8 @@ LvmTablePtr
 LvmTable::create (void)
 {
 	LvmTablePtr l (new LvmTable());
-	l->declare ("lvm_table");
 	l->weak = l;
+	l->declare ("lvm_table");
 
 	return l;
 }

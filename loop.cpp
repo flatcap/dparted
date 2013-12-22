@@ -48,8 +48,8 @@ Loop::create (const std::string& losetup)
 	//XXX validate all input, else throw()
 
 	LoopPtr l (new Loop());
-	l->declare ("loop");
 	l->weak = l;
+	l->declare ("loop");
 
 	l->device     = parts[0];
 	l->file_name  = parts[11];

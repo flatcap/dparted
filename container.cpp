@@ -42,7 +42,6 @@
  */
 DPContainer::DPContainer (void)
 {
-	declare ("container");
 }
 
 /**
@@ -63,8 +62,9 @@ ContainerPtr
 DPContainer::create (void)
 {
 	ContainerPtr c (new DPContainer());
-
 	c->weak = c;
+	c->declare ("container");
+
 	return c;
 }
 
@@ -563,8 +563,8 @@ DPContainer::is_a (const std::string& t)
 void
 DPContainer::declare (const char* n)
 {
-	type.push_back (n);
 	name = n;
+	type.push_back (name);
 }
 
 

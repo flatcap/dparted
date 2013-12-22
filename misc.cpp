@@ -33,8 +33,8 @@ MiscPtr
 Misc::create (void)
 {
 	MiscPtr m (new Misc());
-	m->declare ("misc");
 	m->weak = m;
+	m->declare ("misc");
 
 	return m;
 }

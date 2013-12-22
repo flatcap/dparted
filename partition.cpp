@@ -30,8 +30,8 @@ PartitionPtr
 Partition::create (void)
 {
 	PartitionPtr p (new Partition());
-	p->declare ("partition");
 	p->weak = p;
+	p->declare ("partition");
 
 	return p;
 }

@@ -29,8 +29,8 @@ LvmMirrorPtr
 LvmMirror::create (void)
 {
 	LvmMirrorPtr l (new LvmMirror());
-	l->declare ("lvm_mirror");
 	l->weak = l;
+	l->declare ("lvm_mirror");
 
 	return l;
 }

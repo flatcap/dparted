@@ -26,8 +26,8 @@ LvmMetadataPtr
 LvmMetadata::create (void)
 {
 	LvmMetadataPtr l (new LvmMetadata());
-	l->declare ("lvm_metadata");
 	l->weak = l;
+	l->declare ("lvm_metadata");
 
 	return l;
 }

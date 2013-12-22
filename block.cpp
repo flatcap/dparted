@@ -43,8 +43,8 @@ BlockPtr
 Block::create (void)
 {
 	BlockPtr b (new Block());
-	b->declare ("block");
 	b->weak = b;
+	b->declare ("block");
 
 	return b;
 }

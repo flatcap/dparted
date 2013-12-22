@@ -29,8 +29,8 @@ LvmRaidPtr
 LvmRaid::create (void)
 {
 	LvmRaidPtr l (new LvmRaid());
-	l->declare ("lvm_raid");
 	l->weak = l;
+	l->declare ("lvm_raid");
 
 	return l;
 }

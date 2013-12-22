@@ -28,8 +28,8 @@ LvmVolumePtr
 LvmVolume::create (void)
 {
 	LvmVolumePtr l (new LvmVolume());
-	l->declare ("lvm_volume");
 	l->weak = l;
+	l->declare ("lvm_volume");
 
 	return l;
 }

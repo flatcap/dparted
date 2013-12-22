@@ -28,8 +28,8 @@ LvmPartitionPtr
 LvmPartition::create (void)
 {
 	LvmPartitionPtr l (new LvmPartition());
-	l->declare ("lvm_partition");
 	l->weak = l;
+	l->declare ("lvm_partition");
 
 	return l;
 }

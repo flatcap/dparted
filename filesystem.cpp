@@ -36,8 +36,8 @@ FilesystemPtr
 Filesystem::create (void)
 {
 	FilesystemPtr f (new Filesystem());
-	f->declare ("filesystem");
 	f->weak = f;
+	f->declare ("filesystem");
 
 	return f;
 }

@@ -37,8 +37,8 @@ FilePtr
 File::create (void)
 {
 	FilePtr f (new File());
-	f->declare ("file");
 	f->weak = f;
+	f->declare ("file");
 
 	return f;
 }

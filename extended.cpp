@@ -38,8 +38,8 @@ ExtendedPtr
 Extended::create (void)
 {
 	ExtendedPtr e (new Extended());
-	e->declare ("extended");
 	e->weak = e;
+	e->declare ("extended");
 
 	return e;
 }

@@ -44,8 +44,8 @@ LvmGroupPtr
 LvmGroup::create (void)
 {
 	LvmGroupPtr l (new LvmGroup());
-	l->declare ("lvm_group");
 	l->weak = l;
+	l->declare ("lvm_group");
 
 	return l;
 }

@@ -37,8 +37,8 @@ MdGroupPtr
 MdGroup::create (void)
 {
 	MdGroupPtr m (new MdGroup());
-	m->declare ("md_group");
 	m->weak = m;
+	m->declare ("md_group");
 
 	return m;
 }

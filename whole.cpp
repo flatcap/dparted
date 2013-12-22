@@ -30,8 +30,8 @@ WholePtr
 Whole::create (void)
 {
 	WholePtr w (new Whole());
-	w->declare ("whole");
 	w->weak = w;
+	w->declare ("whole");
 
 	return w;
 }

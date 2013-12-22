@@ -28,8 +28,8 @@ LvmStripePtr
 LvmStripe::create (void)
 {
 	LvmStripePtr l (new LvmStripe());
-	l->declare ("lvm_stripe");
 	l->weak = l;
+	l->declare ("lvm_stripe");
 
 	return l;
 }

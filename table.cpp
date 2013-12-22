@@ -36,8 +36,8 @@ TablePtr
 Table::create (void)
 {
 	TablePtr t (new Table());
-	t->declare ("table");
 	t->weak = t;
+	t->declare ("table");
 
 	return t;
 }

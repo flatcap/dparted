@@ -29,8 +29,8 @@ MdTablePtr
 MdTable::create (void)
 {
 	MdTablePtr m (new MdTable());
-	m->declare ("md_table");
 	m->weak = m;
+	m->declare ("md_table");
 
 	return m;
 }

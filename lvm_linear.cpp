@@ -28,8 +28,8 @@ LvmLinearPtr
 LvmLinear::create (void)
 {
 	LvmLinearPtr l (new LvmLinear());
-	l->declare ("lvm_linear");
 	l->weak = l;
+	l->declare ("lvm_linear");
 
 	return l;
 }

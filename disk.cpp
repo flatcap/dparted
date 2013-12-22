@@ -39,8 +39,8 @@ DiskPtr
 Disk::create (const std::string& lsblk)
 {
 	DiskPtr d (new Disk());
-	d->declare ("disk");
 	d->weak = d;
+	d->declare ("disk");
 
 	std::map<std::string,StringNum> tags;
 	int scan;
