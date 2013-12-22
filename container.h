@@ -114,13 +114,10 @@ public:
 	WholePtr	 whole;
 
 	std::weak_ptr<DPContainer> parent;
-	//ContainerPtr	 parent;
 
 	std::vector<std::string> type;
 
 	bool		 missing = false;
-
-	virtual void dump_objects (int indent = 0);
 
 	int		 fd = -1;
 

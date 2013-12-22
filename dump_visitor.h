@@ -15,49 +15,36 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _LVM_VOLUME_H_
-#define _LVM_VOLUME_H_
+#ifndef _DUMP_VISITOR_H_
+#define _DUMP_VISITOR_H_
 
-#include "volume.h"
-#include "pointers.h"
+#include <sstream>
 
-class Visitor;
+#include "visitor.h"
 
 /**
- * class LvmVolume
+ * class DumpVisitor
  */
-class LvmVolume : public Volume
+class DumpVisitor : public Visitor
 {
 public:
-	static LvmVolumePtr create (void);
-	virtual bool accept (Visitor& v);
+	DumpVisitor (void);
+	virtual ~DumpVisitor();
 
-	std::string	lv_attr;
-	long		kernel_major = -1;
-	long		kernel_minor = -1;
+	virtual bool visit_enter (ContainerPtr& c);
+	virtual bool visit_leave (void);
 
-	int		seg_count    = 0;
-	int		stripes      = 0;
-	int		stripesize   = 0;
-	int		stripe_size  = 0;
-	int		seg_start_pe = 0;
+	virtual bool visit (ContainerPtr c);
+	virtual bool visit (LvmVolumePtr c);
 
-	std::string	mirror_log;
-
-	virtual void add_child (ContainerPtr& child);
-
-	virtual ContainerPtr find (const std::string& uuid);
-
-	std::vector<ContainerPtr> metadata;
-	std::vector<ContainerPtr> subvols;
-
-	ContainerPtr sibling;
+	void dump (void);
 
 protected:
-private:
+	std::stringstream output;
 
+	int indent = -1;
 };
 
 
-#endif // _LVM_VOLUME_H_
+#endif // _DUMP_VISITOR_H_
 

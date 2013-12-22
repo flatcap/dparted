@@ -569,25 +569,6 @@ DPContainer::declare (const char* n)
 
 
 /**
- * dump_objects
- */
-void
-DPContainer::dump_objects (int indent)
-{
-	printf ("%*s", 8*indent, "");
-	if (name == "dummy") {
-		indent--;
-	} else {
-		std::cout << get_smart() << std::endl;
-	}
-
-	for (auto c : children) {
-		c->dump_objects (indent+1);
-	}
-}
-
-
-/**
  * get_children
  */
 std::vector<ContainerPtr>&

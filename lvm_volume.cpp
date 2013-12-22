@@ -145,30 +145,3 @@ LvmVolume::find (const std::string& search)
 }
 
 
-/**
- * dump_objects
- */
-void
-LvmVolume::dump_objects (int indent)
-{
-	printf ("%*s", 8*indent, "");
-	if (name == "dummy") {
-		indent--;
-	} else {
-		std::cout << this << std::endl;
-	}
-
-	for (auto c : subvols) {
-		c->dump_objects (indent+1);
-	}
-
-	for (auto c : metadata) {
-		c->dump_objects (indent+1);
-	}
-
-	for (auto c : children) {
-		c->dump_objects (indent+1);
-	}
-}
-
-

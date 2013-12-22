@@ -40,6 +40,7 @@
 #include "table.h"
 
 #include "dot_visitor.h"
+#include "dump_visitor.h"
 #include "log.h"
 #include "log_trace.h"
 #include "pointers.h"
@@ -242,7 +243,9 @@ main (int argc, char* argv[])
 
 	if (list) {
 		log_info ("------------------------------------------------------------\n");
-		top_level->dump_objects();
+		DumpVisitor dv;
+		top_level->accept (dv);
+		dv.dump();
 		log_info ("------------------------------------------------------------\n");
 	}
 
