@@ -240,7 +240,7 @@ GuiApp::ask (Question& q)
 
 	dialog.set_title (q.title);
 
-	int id = 1;
+	int id = 1001;
 	for (auto a : q.answers) {
 		dialog.add_button (a, id++);
 	}

@@ -847,6 +847,25 @@ DPDrawingArea::on_timeout (int timer_number)
 #endif
 
 /**
+ * dump_range
+ */
+void
+dump_range (const std::deque<Range>& vRange)
+{
+	std::cout << "Ranges:\n";
+	for (auto& rg : vRange) {
+		Rect         r = rg.r;
+		ContainerPtr p = rg.p;
+		std::string type = "unknown";
+		if (p && p->type.size() > 0) {
+			type = p->type.back();
+		}
+
+		printf ("\t%d,%d %d,%d %p (%s) - %ld\n", r.x, r.y, r.w, r.h, (void*)p.get(), type.c_str(), p.use_count());
+	}
+}
+
+/**
  * on_mouse_motion
  */
 bool
@@ -888,41 +907,32 @@ DPDrawingArea::on_mouse_leave (GdkEventCrossing* event)
 bool
 DPDrawingArea::on_mouse_click (GdkEventButton* event)
 {
-	std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
+	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
 	sel_x = event->x;
 	sel_y = event->y;
 
-	std::cout << "Range contains " << vRange.size() << " items\n";
+	//std::cout << "Range contains " << vRange.size() << " items\n";
 
-	for (auto rg : vRange) {
+	for (auto& rg : vRange) {
 		Rect r = rg.r;
 		bool b = ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
 			  (event->y >= r.y) && (event->y < (r.y + r.h)));
 
 		if (b) {
-#if 0
+			//log_error ("\033[01;31mMOUSE on %s\033[0m\n", rg.p->type.back().c_str());
 			rg.p->mouse_event();
-#else
-			Gtk::MessageDialog dialog ("are you sure?", false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_OK, true);
-			dialog.set_title ("delete something");
-			dialog.run();
 			break;
-#endif
 		}
 
-		if (b) log_error ("\033[01;31mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p.get(), rg.p->type.back().c_str());
-		else   log_info  ("\033[01;32mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p.get(), rg.p->type.back().c_str());
+		if (b) {
+			printf ("\033[01;31mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p.get(), rg.p->type.back().c_str());
+		} else {
+			printf  ("\033[01;32mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p.get(), rg.p->type.back().c_str());
+		}
 	}
 	log_info ("\n");
 
-	//get_window()->invalidate (false); //RAR everything for now
-
-#if 0
-	if ((event->x >= 100) && (event->x < 200) &&
-	    (event->y >= 50)  && (event->y < 150)) {
-	}
-#endif
 #if 0
 	std::cout << event->type << "\n";
 	std::cout << event->state << "\n";
@@ -960,7 +970,7 @@ bool find_subst (const std::string& text, std::string& tag, size_t& start, size_
 
 	open = text.find ('{');
 	if (open == std::string::npos) {
-		log_debug ("nothing to substitute\n");
+		//log_debug ("nothing to substitute\n");
 		return false;
 	}
 
@@ -1276,7 +1286,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, Containe
 	if (!cont)
 		return;
 
-	printf ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
+	//printf ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
 		printf ("too narrow\n");
 		return;
@@ -1412,7 +1422,7 @@ DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, Containe
 				label.replace (start, stop-start+1, value);
 			}
 
-			printf ("label = %s\n", label.c_str());
+			//printf ("label = %s\n", label.c_str());
 
 			draw_text (cr, shape, label);
 		}

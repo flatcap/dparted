@@ -130,7 +130,7 @@ main (int argc, char* argv[])
 	// -d	dot
 	// -s	separate dot diagrams
 
-	bool app      = false;
+	bool app      = true;
 	bool dot      = false;
 	bool list     = false;
 	bool separate = false;

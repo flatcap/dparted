@@ -365,7 +365,7 @@ Theme::get_config (std::string path, const std::string& name, const std::string&
 	}
 
 	if (value.empty()) {
-		log_error ("config: missing: %s.%s.%s\n", path.c_str(), name.c_str(), attr.c_str());
+		//log_error ("config: missing: %s.%s.%s\n", path.c_str(), name.c_str(), attr.c_str());
 	} else {
 		//log_info ("config: found:   %s = %s\n", pathname.c_str(), value.c_str());
 	}

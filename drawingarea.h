@@ -18,6 +18,8 @@
 #ifndef _DRAWINGAREA_
 #define _DRAWINGAREA_
 
+#include <deque>
+
 #include <gtkmm/drawingarea.h>
 
 #include "pointers.h"
