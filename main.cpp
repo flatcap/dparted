@@ -16,9 +16,12 @@
  */
 
 #include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include <gtkmm.h>
 #include <gtkmm/main.h>
-#include <sys/types.h>
 
 #include <iostream>
 #include <cstdlib>
