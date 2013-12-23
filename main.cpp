@@ -272,7 +272,7 @@ main (int argc, char* argv[])
 
                 main_app = gui;
 
-                retval =  gui->run (1, argv);           //XXX argc
+                retval = gui->run (1, argv);           //XXX argc
 	}
 
 	log_close();

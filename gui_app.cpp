@@ -37,9 +37,9 @@
 /**
  * GuiApp
  */
-GuiApp::GuiApp (ContainerPtr& top_level) :
+GuiApp::GuiApp (ContainerPtr& c) :
 	Gtk::Application("org.flatcap.test.area", Gio::APPLICATION_HANDLES_OPEN),
-	top_level (top_level)
+	top_level (c)
 {
 	//LOG_TRACE;
 	Glib::set_application_name("dparted");
@@ -50,7 +50,6 @@ GuiApp::GuiApp (ContainerPtr& top_level) :
  */
 GuiApp::~GuiApp()
 {
-	//LOG_TRACE;
 }
 
 
