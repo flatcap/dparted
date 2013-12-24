@@ -49,6 +49,7 @@
 #include "pointers.h"
 #include "utils.h"
 #include "volume.h"
+#include "invariant.h"
 
 std::queue<ContainerPtr> probe_queue;
 
