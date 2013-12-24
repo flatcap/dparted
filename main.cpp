@@ -94,6 +94,7 @@ mounts_get_list (ContainerPtr& mounts)
 
 #endif
 
+#if 0
 /**
  * probe
  */
@@ -283,4 +284,18 @@ main (int argc, char* argv[])
 	return retval;
 }
 
+#endif
 
+#include "vw.h"
+int main()
+{
+	int i = 42;
+
+	Variant<int> v(i);
+
+	std::cout << v.get_value() << std::endl;
+
+	v.set_value (99);
+
+	std::cout << i << std::endl;
+}
