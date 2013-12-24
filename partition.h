@@ -30,7 +30,7 @@ class Volume;
 /**
  * class Partition
  */
-class Partition : public DPContainer
+class Partition : public Container
 {
 public:
 	virtual ~Partition() = default;

@@ -29,7 +29,7 @@ class Visitor;
 /**
  * class Whole
  */
-class Whole : public DPContainer
+class Whole : public Container
 {
 public:
 	virtual ~Whole() = default;

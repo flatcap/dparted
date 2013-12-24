@@ -32,12 +32,12 @@
 class Visitor;
 
 /**
- * class DPContainer
+ * class Container
  */
-class DPContainer
+class Container
 {
 public:
-	virtual ~DPContainer();
+	virtual ~Container();
 	static ContainerPtr create (void);
 	virtual bool accept (Visitor& v);
 
@@ -95,7 +95,7 @@ public:
 
 	WholePtr	 whole;
 
-	std::weak_ptr<DPContainer> parent;
+	std::weak_ptr<Container> parent;
 
 	std::vector<std::string> type;
 
@@ -107,7 +107,7 @@ public:
 
 	std::string get_path (void);
 
-	std::weak_ptr<DPContainer> weak;	//XXX private?
+	std::weak_ptr<Container> weak;	//XXX private?
 
 	ContainerPtr get_smart (void)
 	{
@@ -121,7 +121,7 @@ public:
 	}
 
 protected:
-	DPContainer (void);
+	Container (void);
 
 	bool visit_children (Visitor& v);
 

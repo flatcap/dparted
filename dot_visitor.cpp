@@ -653,7 +653,7 @@ dot_whole (std::shared_ptr<T> t)
 	std::stringstream output;
 	unsigned int count = w->segments.size();
 
-	output << dot_container(std::dynamic_pointer_cast<DPContainer> (w));
+	output << dot_container(std::dynamic_pointer_cast<Container> (w));
 
 	if (count > 0) {
 		output << dot_row ("segments", count);

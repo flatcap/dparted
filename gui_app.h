@@ -23,7 +23,7 @@
 #include "app.h"
 #include "pointers.h"
 
-class DPContainer;
+class Container;
 
 /**
  * class GuiApp

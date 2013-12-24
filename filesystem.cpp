@@ -123,7 +123,7 @@ Filesystem::get_property (const std::string& propname)
 	if (propname == "label") {
 		return label;
 	} else {
-		return DPContainer::get_property (propname);
+		return Container::get_property (propname);
 	}
 }
 

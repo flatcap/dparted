@@ -25,7 +25,7 @@
 class App;
 class Block;
 class Disk;
-class DPContainer;
+class Container;
 class Extended;
 class File;
 class Filesystem;
@@ -52,7 +52,7 @@ class Whole;
 typedef std::shared_ptr<App>          AppPtr;
 typedef std::shared_ptr<Block>        BlockPtr;
 typedef std::shared_ptr<Disk>         DiskPtr;
-typedef std::shared_ptr<DPContainer>  ContainerPtr;
+typedef std::shared_ptr<Container>  ContainerPtr;
 typedef std::shared_ptr<Extended>     ExtendedPtr;
 typedef std::shared_ptr<File>         FilePtr;
 typedef std::shared_ptr<Filesystem>   FilesystemPtr;

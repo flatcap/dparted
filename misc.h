@@ -28,7 +28,7 @@ class Visitor;
 /**
  * class Misc
  */
-class Misc : public DPContainer
+class Misc : public Container
 {
 public:
 	virtual ~Misc() = default;

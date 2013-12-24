@@ -161,7 +161,7 @@ main (int argc, char* argv[])
 
 	log_init ("/dev/stdout");
 
-	ContainerPtr top_level = DPContainer::create();
+	ContainerPtr top_level = Container::create();
 	top_level->name = "dummy";
 
 	if (argc > 1) {

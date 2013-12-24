@@ -30,7 +30,7 @@
 #include "drawingarea.h"
 #include "treeview.h"
 
-class DPContainer;
+class Container;
 
 /**
  * class DParted

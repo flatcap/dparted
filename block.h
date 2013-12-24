@@ -28,7 +28,7 @@ class Visitor;
 /**
  * class Block
  */
-class Block : public DPContainer
+class Block : public Container
 {
 public:
 	virtual ~Block() = default;

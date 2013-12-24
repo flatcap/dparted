@@ -60,11 +60,11 @@ public:
 	virtual bool visit (ContainerPtr c) = 0;
 
 	//XXX move the dirty inheritance stuff elsewhere? (hideous dependency problem)
-	virtual bool visit (BlockPtr        b) { return visit (std::dynamic_pointer_cast<DPContainer> (b)); }
+	virtual bool visit (BlockPtr        b) { return visit (std::dynamic_pointer_cast<Container> (b)); }
 	virtual bool visit (DiskPtr         d) { return visit (std::dynamic_pointer_cast<Block>       (d)); }
 	virtual bool visit (ExtendedPtr     e) { return visit (std::dynamic_pointer_cast<Msdos>       (e)); }
 	virtual bool visit (FilePtr         f) { return visit (std::dynamic_pointer_cast<Block>       (f)); }
-	virtual bool visit (FilesystemPtr   f) { return visit (std::dynamic_pointer_cast<DPContainer> (f)); }
+	virtual bool visit (FilesystemPtr   f) { return visit (std::dynamic_pointer_cast<Container> (f)); }
 	virtual bool visit (GptPtr          g) { return visit (std::dynamic_pointer_cast<Table>       (g)); }
 	virtual bool visit (LoopPtr         l) { return visit (std::dynamic_pointer_cast<Block>       (l)); }
 	virtual bool visit (LvmGroupPtr     l) { return visit (std::dynamic_pointer_cast<Whole>       (l)); }
@@ -78,12 +78,12 @@ public:
 	virtual bool visit (LvmVolumePtr    l) { return visit (std::dynamic_pointer_cast<Volume>      (l)); }
 	virtual bool visit (MdGroupPtr      m) { return visit (std::dynamic_pointer_cast<Whole>       (m)); }
 	virtual bool visit (MdTablePtr      m) { return visit (std::dynamic_pointer_cast<Table>       (m)); }
-	virtual bool visit (MiscPtr         m) { return visit (std::dynamic_pointer_cast<DPContainer> (m)); }
+	virtual bool visit (MiscPtr         m) { return visit (std::dynamic_pointer_cast<Container> (m)); }
 	virtual bool visit (MsdosPtr        m) { return visit (std::dynamic_pointer_cast<Table>       (m)); }
-	virtual bool visit (PartitionPtr    p) { return visit (std::dynamic_pointer_cast<DPContainer> (p)); }
-	virtual bool visit (TablePtr        t) { return visit (std::dynamic_pointer_cast<DPContainer> (t)); }
+	virtual bool visit (PartitionPtr    p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
+	virtual bool visit (TablePtr        t) { return visit (std::dynamic_pointer_cast<Container> (t)); }
 	virtual bool visit (VolumePtr       v) { return visit (std::dynamic_pointer_cast<Whole>       (v)); }
-	virtual bool visit (WholePtr        w) { return visit (std::dynamic_pointer_cast<DPContainer> (w)); }
+	virtual bool visit (WholePtr        w) { return visit (std::dynamic_pointer_cast<Container> (w)); }
 };
 
 

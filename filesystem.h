@@ -28,7 +28,7 @@ class Visitor;
 /**
  * class Filesystem
  */
-class Filesystem : public DPContainer
+class Filesystem : public Container
 {
 public:
 	virtual ~Filesystem() = default;

@@ -38,17 +38,17 @@
 #include "log_trace.h"
 
 /**
- * DPContainer
+ * Container
  */
-DPContainer::DPContainer (void)
+Container::Container (void)
 {
 	declare ("container");
 }
 
 /**
- * ~DPContainer
+ * ~Container
  */
-DPContainer::~DPContainer()
+Container::~Container()
 {
 	if (fd >= 0) {
 		close (fd);
@@ -60,9 +60,9 @@ DPContainer::~DPContainer()
  * create
  */
 ContainerPtr
-DPContainer::create (void)
+Container::create (void)
 {
-	ContainerPtr c (new DPContainer());
+	ContainerPtr c (new Container());
 	c->weak = c;
 
 	return c;
@@ -73,7 +73,7 @@ DPContainer::create (void)
  * visit_children
  */
 bool
-DPContainer::visit_children (Visitor& v)
+Container::visit_children (Visitor& v)
 {
 	ContainerPtr c = get_smart();
 	if (!v.visit_enter (c))
@@ -94,7 +94,7 @@ DPContainer::visit_children (Visitor& v)
  * accept
  */
 bool
-DPContainer::accept (Visitor& v)
+Container::accept (Visitor& v)
 {
 	ContainerPtr c = get_smart();
 	if (!v.visit (c))
@@ -107,7 +107,7 @@ DPContainer::accept (Visitor& v)
  * add_child
  */
 void
-DPContainer::add_child (ContainerPtr& child)
+Container::add_child (ContainerPtr& child)
 {
 	if (!child)
 		return;
@@ -152,7 +152,7 @@ DPContainer::add_child (ContainerPtr& child)
  * just_add_child
  */
 void
-DPContainer::just_add_child (ContainerPtr& child)
+Container::just_add_child (ContainerPtr& child)
 {
 	if (child)
 		children.push_back (child);
@@ -163,7 +163,7 @@ DPContainer::just_add_child (ContainerPtr& child)
  * delete_child
  */
 void
-DPContainer::delete_child (ContainerPtr& child)
+Container::delete_child (ContainerPtr& child)
 {
 	for (auto it = children.begin(); it != children.end(); it++) {
 		if (*it == child) {
@@ -177,7 +177,7 @@ DPContainer::delete_child (ContainerPtr& child)
  * move_child
  */
 void
-DPContainer::move_child (ContainerPtr& child, long offset, long size)
+Container::move_child (ContainerPtr& child, long offset, long size)
 {
 }
 
@@ -186,7 +186,7 @@ DPContainer::move_child (ContainerPtr& child, long offset, long size)
  * get_fd
  */
 int
-DPContainer::get_fd (void)
+Container::get_fd (void)
 {
 	if (fd >= 0)
 		return fd;
@@ -217,7 +217,7 @@ DPContainer::get_fd (void)
  * get_block_size
  */
 long
-DPContainer::get_block_size (void)
+Container::get_block_size (void)
 {
 	//XXX need to get the max of all parents
 	if (block_size > 0)
@@ -234,7 +234,7 @@ DPContainer::get_block_size (void)
  * get_device_name
  */
 std::string
-DPContainer::get_device_name (void)
+Container::get_device_name (void)
 {
 	//log_debug ("i am %s\n", typeid (*this).name());
 	if (!device.empty())
@@ -251,7 +251,7 @@ DPContainer::get_device_name (void)
  * get_parent_offset
  */
 long
-DPContainer::get_parent_offset (void)
+Container::get_parent_offset (void)
 {
 	return parent_offset;
 }
@@ -260,7 +260,7 @@ DPContainer::get_parent_offset (void)
  * get_device_space
  */
 unsigned int
-DPContainer::get_device_space (std::map<long, long>& spaces)
+Container::get_device_space (std::map<long, long>& spaces)
 {
 	spaces.clear();
 
@@ -275,7 +275,7 @@ DPContainer::get_device_space (std::map<long, long>& spaces)
  * get_size_total
  */
 long
-DPContainer::get_size_total (void)
+Container::get_size_total (void)
 {
 	return bytes_size;
 }
@@ -284,7 +284,7 @@ DPContainer::get_size_total (void)
  * get_size_used
  */
 long
-DPContainer::get_size_used (void)
+Container::get_size_used (void)
 {
 	return bytes_used;
 }
@@ -293,7 +293,7 @@ DPContainer::get_size_used (void)
  * get_size_free
  */
 long
-DPContainer::get_size_free (void)
+Container::get_size_free (void)
 {
 	return bytes_size - bytes_used;
 }
@@ -303,7 +303,7 @@ DPContainer::get_size_free (void)
  * find_device
  */
 ContainerPtr
-DPContainer::find_device (const std::string& dev)
+Container::find_device (const std::string& dev)
 {
 	ContainerPtr match;
 
@@ -330,7 +330,7 @@ DPContainer::find_device (const std::string& dev)
  * find_name
  */
 ContainerPtr
-DPContainer::find_name (const std::string& search)
+Container::find_name (const std::string& search)
 {
 	if (name == search) {
 		ContainerPtr c(this);
@@ -351,7 +351,7 @@ DPContainer::find_name (const std::string& search)
  * find_type
  */
 void
-DPContainer::find_type (const std::string& type, std::vector<ContainerPtr>& results)
+Container::find_type (const std::string& type, std::vector<ContainerPtr>& results)
 {
 	if (is_a (type)) {
 		ContainerPtr c(this);
@@ -367,7 +367,7 @@ DPContainer::find_type (const std::string& type, std::vector<ContainerPtr>& resu
  * find_uuid
  */
 ContainerPtr
-DPContainer::find_uuid (const std::string& search)
+Container::find_uuid (const std::string& search)
 {
 	if (uuid == search) {
 		ContainerPtr c(this);
@@ -388,7 +388,7 @@ DPContainer::find_uuid (const std::string& search)
  * find
  */
 ContainerPtr
-DPContainer::find (const std::string& search)
+Container::find (const std::string& search)
 {
 	if (uuid == search) {
 		ContainerPtr c(this);
@@ -424,7 +424,7 @@ DPContainer::find (const std::string& search)
  * get_buffer
  */
 unsigned char*
-DPContainer::get_buffer (long offset, long size)
+Container::get_buffer (long offset, long size)
 {
 	//XXX validate offset and size against device size
 
@@ -486,7 +486,7 @@ DPContainer::get_buffer (long offset, long size)
  * close_buffer
  */
 void
-DPContainer::close_buffer (unsigned char* buffer, long size)
+Container::close_buffer (unsigned char* buffer, long size)
 {
 	if (!buffer)
 		return;
@@ -543,7 +543,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
  * is_a
  */
 bool
-DPContainer::is_a (const std::string& t)
+Container::is_a (const std::string& t)
 {
 	//std::cout << "my type = " << type.back() << ", compare to " << t << "\n";
 
@@ -561,7 +561,7 @@ DPContainer::is_a (const std::string& t)
  * declare
  */
 void
-DPContainer::declare (const char* n)
+Container::declare (const char* n)
 {
 	name = n;
 	type.push_back (name);
@@ -572,7 +572,7 @@ DPContainer::declare (const char* n)
  * get_children
  */
 std::vector<ContainerPtr>&
-DPContainer::get_children (void)
+Container::get_children (void)
 {
 	//log_info ("container::get_children\n");
 	if (children.empty() && whole)
@@ -602,7 +602,7 @@ void deleter (Mmap* m)
  * insert
  */
 void
-DPContainer::insert (long offset, long size, void* ptr)
+Container::insert (long offset, long size, void* ptr)
 {
 	mmaps.insert (MmapPtr(new Mmap (offset, size, ptr), deleter));
 }
@@ -612,7 +612,7 @@ DPContainer::insert (long offset, long size, void* ptr)
  * get_path
  */
 std::string
-DPContainer::get_path (void)
+Container::get_path (void)
 {
 	std::string path;
 
@@ -629,7 +629,7 @@ DPContainer::get_path (void)
  * get_property
  */
 std::string
-DPContainer::get_property (const std::string& propname)
+Container::get_property (const std::string& propname)
 {
 	if (propname == "name") {
 		return name;

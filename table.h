@@ -28,7 +28,7 @@ class Visitor;
 /**
  * class Table
  */
-class Table : public DPContainer
+class Table : public Container
 {
 public:
 	virtual ~Table() = default;

@@ -186,7 +186,7 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 			}
 		}
 
-		// DPContainer
+		// Container
 		p->name		= "partition";
 		p->block_size	= tags["LVM2_VG_EXTENT_SIZE"];
 		p->uuid		= t->get_device_name() + "(" + tags["LVM2_PVSEG_START"] + ")";
@@ -283,7 +283,7 @@ lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 			//g->missing = true;
 		}
 
-		// DPContainer
+		// Container
 		g->name			= tags["LVM2_VG_NAME"];
 		g->block_size		= tags["LVM2_VG_EXTENT_SIZE"];
 		g->bytes_size		= tags["LVM2_VG_SIZE"];
@@ -398,7 +398,7 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 			deps.insert(std::make_pair(g->uuid,v->uuid));
 		}
 
-		// DPContainer
+		// Container
 		v->name			= tags["LVM2_LV_NAME"];
 		v->device		= tags["LVM2_LV_PATH"];		// "/dev/mapper/" + vg_name + "-" + lv_name;
 		v->bytes_size		= tags["LVM2_LV_SIZE"];
@@ -530,7 +530,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 {
 	//LOG_TRACE;
 
-	ContainerPtr pieces = DPContainer::create();
+	ContainerPtr pieces = Container::create();
 	std::multimap<std::string,std::string> deps;
 
 	std::vector<ContainerPtr> t;
