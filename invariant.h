@@ -15,6 +15,9 @@
  *  Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#ifndef _INVARIANT_H_
+#define _INVARIANT_H_
+
 #include <string>
 #include <iostream>
 #include <cstdint>
@@ -107,4 +110,6 @@ protected:
 	std::string s_value;
 };
 
+
+#endif // _INVARIANT_H_
 
