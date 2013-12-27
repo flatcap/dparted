@@ -15,14 +15,17 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _VW_H_
-#define _VW_H_
+#ifndef _VARIANT_H_
+#define _VARIANT_H_
 
 #include <iostream>
 #include <stdexcept>
 #include <cstdint>
 #include <string>
 
+/**
+ * class BaseVariant
+ */
 class BaseVariant
 {
 public:
@@ -70,6 +73,9 @@ public:
 	} type = Tag::t_unset;
 };
 
+/**
+ * template class Variant
+ */
 template <typename T>
 class Variant : public BaseVariant
 {
@@ -93,4 +99,6 @@ protected:
 	T& value;
 };
 
-#endif // _VW_H_
+
+#endif // _VARIANT_H_
+
