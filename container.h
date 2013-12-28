@@ -124,16 +124,10 @@ public:
 	}
 
 	template<typename T>
-	//void declare_prop (std::string& name, T& var)
-	void declare_prop (const char* owner,
-			   const char* name,
-			   T& var,
-			   const char* desc)
+	void declare_prop (const char* owner, const char* name, T& var, const char* desc)
 	{
-		std::cout << props.count (name) << std::endl;
 		VPtr vp (new Variant<T>(owner, name, var, desc));
 		props[name] = vp;
-		std::cout << "Props: " << props.size() << std::endl;
 	}
 
 	VPtr get_prop (const char* name);
