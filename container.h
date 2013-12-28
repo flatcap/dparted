@@ -130,7 +130,9 @@ public:
 		props[name] = vp;
 	}
 
-	VPtr get_prop (const char* name);
+	VPtr get_prop (const std::string& name);
+
+	std::vector<std::string> get_prop_names (void);
 
 protected:
 	Container (void);

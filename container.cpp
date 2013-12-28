@@ -670,10 +670,27 @@ Container::get_property (const std::string& propname)
 }
 
 
+/**
+ * get_prop
+ */
 VPtr
-Container::get_prop (const char* name)
+Container::get_prop (const std::string& name)
 {
 	std::cout << "get_prop: " << props.count (name) << std::endl;
 	return props[name];
+}
+
+/**
+ * get_prop_names
+ */
+std::vector<std::string>
+Container::get_prop_names (void)
+{
+	std::vector<std::string> names;
+	for (auto p : props) {
+		names.push_back (p.second->name);
+	}
+
+	return names;
 }
 
