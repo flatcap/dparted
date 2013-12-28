@@ -27,9 +27,12 @@
 #include <tuple>
 
 #include "pointers.h"
+#include "variant.h"
 #include "mmap.h"
 
 class Visitor;
+
+typedef std::shared_ptr<BaseVariant>          VPtr;
 
 /**
  * class Container
@@ -97,7 +100,7 @@ public:
 
 	std::weak_ptr<Container> parent;
 
-	std::vector<std::string> type;
+	std::vector<std::string> type;	//XXX move to protected
 
 	bool		 missing = false;
 
@@ -120,6 +123,21 @@ public:
 		return weak.lock();
 	}
 
+	template<typename T>
+	//void declare_prop (std::string& name, T& var)
+	void declare_prop (const char* owner,
+			   const char* name,
+			   T& var,
+			   const char* desc)
+	{
+		std::cout << props.count (name) << std::endl;
+		VPtr vp (new Variant<T>(owner, name, var, desc));
+		props[name] = vp;
+		std::cout << "Props: " << props.size() << std::endl;
+	}
+
+	VPtr get_prop (const char* name);
+
 protected:
 	Container (void);
 
@@ -132,6 +150,7 @@ protected:
 
 	MmapSet	mmaps;
 
+	std::map<std::string,VPtr> props;
 	std::vector<ContainerPtr> children;
 private:
 

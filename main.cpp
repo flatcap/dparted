@@ -122,6 +122,7 @@ probe (ContainerPtr& top_level, ContainerPtr& parent)
 	return nullptr;
 }
 
+#if 0
 /**
  * main
  */
@@ -283,4 +284,76 @@ main (int argc, char* argv[])
 	return retval;
 }
 
+#endif
 
+#include <cstdint>
+#include "variant.h"
+int main()
+{
+	ContainerPtr cp = Container::create();
+
+	std::string a = "abc";
+	double      b = 100;
+#if 0
+	bool        c = 101;
+	uint8_t     d = 102;
+	int8_t      e = 103;
+	uint16_t    f = 104;
+	int16_t     g = 105;
+	uint32_t    h = 106;
+	int32_t     i = 107;
+	uint64_t    j = 108;
+	int64_t     k = 109;
+#endif
+
+	cp->declare_prop ("main", "a", a, "apple");
+	cp->declare_prop ("main", "b", b, "banana");
+
+	VPtr v = cp->get_prop ("a");
+
+	std::cout << (std::string) *v << std::endl;
+
+#if 0
+	Variant<std::string> va("main", "a", a, "param a");
+
+	std::map<std::string,BaseVariant> props;
+
+	props["xyz"] = va;
+
+	Variant<std::string> vb = va;
+	auto vc = vb;
+
+	std::cout << "Props: " << props.size() << std::endl;
+#endif
+
+#if 0
+	Variant<std::string> va("main", "a", a, "param a");
+	Variant<double>      vb("main", "b", b, "param b");
+	Variant<bool>        vc("main", "c", c, "param c");
+	Variant<uint8_t>     vd("main", "d", d, "param d");
+	Variant<int8_t>      ve("main", "e", e, "param e");
+	Variant<uint16_t>    vf("main", "f", f, "param f");
+	Variant<int16_t>     vg("main", "g", g, "param g");
+	Variant<uint32_t>    vh("main", "h", h, "param h");
+	Variant<int32_t>     vi("main", "i", i, "param i");
+	Variant<uint64_t>    vj("main", "j", j, "param j");
+	Variant<int64_t>     vk("main", "k", k, "param k");
+#endif
+
+#if 0
+	std::cout << "uint16_t:" << std::endl;
+	try { std::cout << "\tstd::string " << std::flush; std::cout << (uint16_t) va << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	try { std::cout << "\tdouble      " << std::flush; std::cout << (uint16_t) vb << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	try { std::cout << "\tbool        " << std::flush; std::cout << (uint16_t) vc << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	try { std::cout << "\tuint8_t     " << std::flush; std::cout << (uint16_t) vd << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	try { std::cout << "\tint8_t      " << std::flush; std::cout << (uint16_t) ve << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	try { std::cout << "\tuint16_t    " << std::flush; std::cout << (uint16_t) vf << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	try { std::cout << "\tint16_t     " << std::flush; std::cout << (uint16_t) vg << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	try { std::cout << "\tuint32_t    " << std::flush; std::cout << (uint16_t) vh << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	try { std::cout << "\tint32_t     " << std::flush; std::cout << (uint16_t) vi << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	try { std::cout << "\tuint64_t    " << std::flush; std::cout << (uint16_t) vj << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	try { std::cout << "\tint64_t     " << std::flush; std::cout << (uint16_t) vk << std::endl; } catch (std::runtime_error& e) { std::cout << e.what() << std::endl; }
+	std::cout << std::endl;
+#endif
+
+}

@@ -669,3 +669,11 @@ Container::get_property (const std::string& propname)
 	return propname;
 }
 
+
+VPtr
+Container::get_prop (const char* name)
+{
+	std::cout << "get_prop: " << props.count (name) << std::endl;
+	return props[name];
+}
+

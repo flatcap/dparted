@@ -29,21 +29,34 @@
 class BaseVariant
 {
 public:
+	BaseVariant (const char* owner, const char* name, const char* desc) :
+		owner (owner),
+		name  (name),
+		desc  (desc)
+	{
+	}
+
 	BaseVariant (void)     = default;
 	virtual ~BaseVariant() = default;
 
-	BaseVariant (std::string) : type (Tag::t_string) {}
-	BaseVariant (const char*) : type (Tag::t_string) {}
-	BaseVariant (double)      : type (Tag::t_double) {}
-	BaseVariant (bool)        : type (Tag::t_bool)   {}
-	BaseVariant (uint8_t)     : type (Tag::t_u8)     {}
-	BaseVariant (int8_t)      : type (Tag::t_s8)     {}
-	BaseVariant (uint16_t)    : type (Tag::t_u16)    {}
-	BaseVariant (int16_t)     : type (Tag::t_s16)    {}
-	BaseVariant (uint32_t)    : type (Tag::t_u32)    {}
-	BaseVariant (int32_t)     : type (Tag::t_s32)    {}
-	BaseVariant (uint64_t)    : type (Tag::t_u64)    {}
-	BaseVariant (int64_t)     : type (Tag::t_s64)    {}
+	BaseVariant (const BaseVariant&  other) = default;
+	BaseVariant (BaseVariant&& other)       = default;
+
+	BaseVariant& operator= (BaseVariant&  other) = default;
+	BaseVariant& operator= (BaseVariant&& other) = default;
+
+	void set_type (std::string) { type = Tag::t_string; }
+	void set_type (const char*) { type = Tag::t_string; }
+	void set_type (double)      { type = Tag::t_double; }
+	void set_type (bool)        { type = Tag::t_bool;   }
+	void set_type (uint8_t)     { type = Tag::t_u8;     }
+	void set_type (int8_t)      { type = Tag::t_s8;     }
+	void set_type (uint16_t)    { type = Tag::t_u16;    }
+	void set_type (int16_t)     { type = Tag::t_s16;    }
+	void set_type (uint32_t)    { type = Tag::t_u32;    }
+	void set_type (int32_t)     { type = Tag::t_s32;    }
+	void set_type (uint64_t)    { type = Tag::t_u64;    }
+	void set_type (int64_t)     { type = Tag::t_s64;    }
 
 	virtual operator std::string (void);
 	virtual operator double      (void);
@@ -71,7 +84,12 @@ public:
 		t_u64,		// 64 bit unsigned integer
 		t_s64		//          signed
 	} type = Tag::t_unset;
+
+	std::string owner;
+	std::string name;
+	std::string desc;
 };
+
 
 /**
  * template class Variant
@@ -80,18 +98,27 @@ template <typename T>
 class Variant : public BaseVariant
 {
 public:
-	Variant (T& v) :
-		BaseVariant(v),
+	Variant (const char* owner, const char* name, T& v, const char* desc = "") :
+		BaseVariant(owner, name, desc),
 		value(v)
 	{
+		set_type(v);
 	}
+
 	virtual ~Variant()
 	{
 	}
 
+	Variant (void) = default;
+
+	Variant (const Variant&  other) = default;
+	Variant (Variant&& other)       = default;
+
+	Variant& operator= (Variant&  other) = default;
+	Variant& operator= (Variant&& other) = default;
+
 	virtual operator T (void)
 	{
-		//std::cout << "derived cast" << std::endl;
 		return value;
 	}
 
