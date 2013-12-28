@@ -225,3 +225,13 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	queue_add_probe (c);	// queue the container for action
 }
 
+
+/**
+ * mouse_event
+ */
+void
+Loop::mouse_event (void)
+{
+	std::cout << __PRETTY_FUNCTION__ << std::endl;
+}
+

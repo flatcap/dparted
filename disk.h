@@ -42,6 +42,13 @@ public:
 
 	virtual ContainerPtr find_device (const std::string& dev);
 
+	static unsigned int find_devices (ContainerPtr& list);
+
+	static bool lsblk    (std::vector <std::string>& output, std::string device = std::string());
+	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
+	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
+
+public:
 	//std::string	model;
 	//std::string	path;
 	//int		type;
@@ -58,13 +65,7 @@ public:
 	int		host           = 0;
 	int		did            = 0;
 
-	static unsigned int find_devices (ContainerPtr& list);
-
 	std::string mounts;	//XXX vector
-
-	static bool lsblk    (std::vector <std::string>& output, std::string device = std::string());
-	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
-	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 protected:
 	Disk (void);

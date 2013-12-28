@@ -36,10 +36,12 @@ public:
 	virtual void add_child    (ContainerPtr child);
 	virtual void delete_child (ContainerPtr child);
 
+public:
 #if 0
 	std::vector<ContainerPtr> mirrors;
 	ContainerPtr log;
 #endif
+
 protected:
 	LvmMirror (void);
 

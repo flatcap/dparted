@@ -32,7 +32,7 @@
 
 class Visitor;
 
-typedef std::shared_ptr<BaseVariant>          VPtr;
+typedef std::shared_ptr<BaseVariant> VPtr;
 
 /**
  * class Container
@@ -44,22 +44,12 @@ public:
 	static ContainerPtr create (void);
 	virtual bool accept (Visitor& v);
 
-	virtual void mouse_event (void)	//RAR
-	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-	}
+	virtual void mouse_event (void);
 
 	virtual void add_child      (ContainerPtr& child);
 	virtual void just_add_child (ContainerPtr& child);
 	virtual void delete_child   (ContainerPtr& child);
 	virtual void move_child     (ContainerPtr& child, long offset, long size);
-
-	template<class T>
-	void add_child (std::shared_ptr<T>& child)
-	{
-		ContainerPtr c (child);
-		add_child (c);
-	}
 
 	virtual int           get_fd (void);
 	virtual long          get_block_size (void);
@@ -86,6 +76,31 @@ public:
 
 	virtual std::string get_property (const std::string& propname);
 
+	virtual std::vector<ContainerPtr>& get_children (void);
+
+	std::string get_path (void);
+
+	ContainerPtr get_smart (void);
+
+	VPtr get_prop (const std::string& name);
+
+	std::vector<std::string> get_prop_names (void);
+
+	template<class T>
+	void add_child (std::shared_ptr<T>& child)
+	{
+		ContainerPtr c (child);
+		add_child (c);
+	}
+
+	template<typename T>
+	void declare_prop (const char* owner, const char* name, T& var, const char* desc)
+	{
+		VPtr vp (new Variant<T>(owner, name, var, desc));
+		props[name] = vp;
+	}
+
+public:
 	std::string	 name;
 	std::string	 uuid;
 
@@ -106,33 +121,7 @@ public:
 
 	int		 fd = -1;
 
-	virtual std::vector<ContainerPtr>& get_children (void);
-
-	std::string get_path (void);
-
 	std::weak_ptr<Container> weak;	//XXX private?
-
-	ContainerPtr get_smart (void)
-	{
-		if (weak.expired()) {
-			std::cout << "SMART\n";
-			//XXX who created us?
-			ContainerPtr c (this);
-			weak = c;
-		}
-		return weak.lock();
-	}
-
-	template<typename T>
-	void declare_prop (const char* owner, const char* name, T& var, const char* desc)
-	{
-		VPtr vp (new Variant<T>(owner, name, var, desc));
-		props[name] = vp;
-	}
-
-	VPtr get_prop (const std::string& name);
-
-	std::vector<std::string> get_prop_names (void);
 
 protected:
 	Container (void);
@@ -148,6 +137,7 @@ protected:
 
 	std::map<std::string,VPtr> props;
 	std::vector<ContainerPtr> children;
+
 private:
 
 };

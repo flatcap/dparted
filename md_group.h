@@ -37,6 +37,9 @@ public:
 
 	static void discover (ContainerPtr& top_level);
 
+public:
+	//properties
+
 protected:
 	MdGroup (void);
 

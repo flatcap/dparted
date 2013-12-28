@@ -33,6 +33,9 @@ public:
 	static VolumePtr create (void);
 	virtual bool accept (Visitor& v);
 
+public:
+	//properties
+
 protected:
 	Volume (void);
 

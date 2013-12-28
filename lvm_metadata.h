@@ -35,6 +35,9 @@ public:
 
 	virtual void add_child (ContainerPtr& child);
 
+public:
+	//properties
+
 protected:
 	LvmMetadata (void);
 

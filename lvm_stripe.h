@@ -33,6 +33,9 @@ public:
 	static LvmStripePtr create (void);
 	virtual bool accept (Visitor& v);
 
+public:
+	//properties
+
 protected:
 	LvmStripe (void);
 

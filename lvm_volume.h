@@ -33,6 +33,11 @@ public:
 	static LvmVolumePtr create (void);
 	virtual bool accept (Visitor& v);
 
+	virtual void add_child (ContainerPtr& child);
+
+	virtual ContainerPtr find (const std::string& uuid);
+
+public:
 	std::string	lv_attr;
 	long		kernel_major = -1;
 	long		kernel_minor = -1;
@@ -44,10 +49,6 @@ public:
 	int		seg_start_pe = 0;
 
 	std::string	mirror_log;
-
-	virtual void add_child (ContainerPtr& child);
-
-	virtual ContainerPtr find (const std::string& uuid);
 
 	std::vector<ContainerPtr> metadata;
 	std::vector<ContainerPtr> subvols;

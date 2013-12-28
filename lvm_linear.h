@@ -33,6 +33,9 @@ public:
 	static LvmLinearPtr create (void);
 	virtual bool accept (Visitor& v);
 
+public:
+	//properties
+
 protected:
 	LvmLinear (void);
 

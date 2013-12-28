@@ -37,13 +37,14 @@ public:
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
+	virtual void add_child (ContainerPtr& child);
+
+public:
 	// my volume
 	std::string config;
 	std::string pv_attr;
 
 	int metadata_size = 0;
-
-	virtual void add_child (ContainerPtr& child);
 
 	LvmGroupPtr group;
 

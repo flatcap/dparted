@@ -35,17 +35,18 @@ public:
 	static LvmGroupPtr create (void);
 	virtual bool accept (Visitor& v);
 
+	//virtual void add_segment (ContainerPtr& seg);
+
+	static void discover (ContainerPtr& top_level);
+
+public:
 	long		pv_count = 0;	//XXX put this in seg_count in Whole
 	long		lv_count = 0;	//XXX this matches children.size()
 	long		vg_seqno = 0;
 	std::string	vg_attr;
 
-	//virtual void add_segment (ContainerPtr& seg);
-
 	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
 	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
-
-	static void discover (ContainerPtr& top_level);
 
 protected:
 	LvmGroup (void);

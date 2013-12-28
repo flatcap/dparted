@@ -37,6 +37,9 @@ public:
 
 	static ExtendedPtr probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size);
 
+public:
+	//properties
+
 protected:
 	Extended (void);
 

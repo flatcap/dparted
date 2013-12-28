@@ -694,3 +694,29 @@ Container::get_prop_names (void)
 	return names;
 }
 
+
+/**
+ * get_smart
+ */
+ContainerPtr
+Container::get_smart (void)
+{
+	if (weak.expired()) {
+		std::cout << "SMART\n";
+		//XXX who created us?
+		ContainerPtr c (this);
+		weak = c;
+	}
+	return weak.lock();
+}
+
+
+/**
+ * mouse_event
+ */
+void
+Container::mouse_event (void)
+{
+	std::cout << __PRETTY_FUNCTION__ << std::endl;
+}
+

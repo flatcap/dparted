@@ -33,6 +33,7 @@ public:
 	static LvmPartitionPtr create (void);
 	virtual bool accept (Visitor& v);
 
+public:
 #if 0
 	long		dev_size;	// 5368709120
 	long		pe_start;	// 1048576

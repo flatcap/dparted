@@ -35,6 +35,7 @@ public:
 	static BlockPtr create (void);
 	virtual bool accept (Visitor& v);
 
+public:
 	int kernel_major = 0;	//XXX rename device major
 	int kernel_minor = 0;
 

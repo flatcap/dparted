@@ -37,13 +37,14 @@ public:
 	static PartitionPtr create (void);
 	virtual bool accept (Visitor& v);
 
-	//XXX flag for protective partition
-	//XXX partition number - nth in set?
-	//XXX partition type - 0x82 Linux Swap
-
+public:
 	int ptype = 0;
 
 	VolumePtr volume;
+
+	//XXX flag for protective partition
+	//XXX partition number - nth in set?
+	//XXX partition type - 0x82 Linux Swap
 
 protected:
 	Partition (void);

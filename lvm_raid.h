@@ -33,6 +33,9 @@ public:
 	static LvmRaidPtr create (void);
 	virtual bool accept (Visitor& v);
 
+public:
+	//properties
+
 protected:
 	LvmRaid (void);
 

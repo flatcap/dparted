@@ -37,6 +37,9 @@ public:
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
+public:
+	//properties
+
 protected:
 	Misc (void);
 
