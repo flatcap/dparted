@@ -42,7 +42,7 @@
  */
 LvmGroup::LvmGroup (void)
 {
-	declare ("lvm_group");
+	declare ("LvmGroup");
 }
 
 /**

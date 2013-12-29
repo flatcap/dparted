@@ -32,7 +32,7 @@
  */
 Loop::Loop (void)
 {
-	declare ("loop");
+	declare ("Loop");
 }
 
 /**

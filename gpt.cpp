@@ -33,7 +33,7 @@
  */
 Gpt::Gpt (void)
 {
-	declare ("gpt");
+	declare ("Gpt");
 }
 
 /**

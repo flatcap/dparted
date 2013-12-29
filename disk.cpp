@@ -37,7 +37,7 @@
  */
 Disk::Disk (void)
 {
-	declare ("disk");
+	declare ("Disk");
 }
 
 /**

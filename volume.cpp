@@ -27,7 +27,7 @@
  */
 Volume::Volume (void)
 {
-	declare ("volume");
+	declare ("Volume");
 }
 
 /**

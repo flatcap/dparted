@@ -42,7 +42,7 @@
  */
 Container::Container (void)
 {
-	declare ("container");
+	declare ("Container");
 }
 
 /**

@@ -35,7 +35,7 @@
  */
 LvmTable::LvmTable (void)
 {
-	declare ("lvm_table");
+	declare ("LvmTable");
 }
 
 /**

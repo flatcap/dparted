@@ -34,7 +34,7 @@
  */
 Table::Table (void)
 {
-	declare ("table");
+	declare ("Table");
 }
 
 /**

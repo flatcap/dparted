@@ -36,7 +36,7 @@
  */
 Extended::Extended (void)
 {
-	declare ("extended");
+	declare ("Extended");
 }
 
 /**

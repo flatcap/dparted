@@ -31,7 +31,7 @@
  */
 Misc::Misc (void)
 {
-	declare ("misc");
+	declare ("Misc");
 }
 
 /**

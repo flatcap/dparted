@@ -26,7 +26,7 @@
  */
 LvmStripe::LvmStripe (void)
 {
-	declare ("lvm_stripe");
+	declare ("LvmStripe");
 }
 
 /**

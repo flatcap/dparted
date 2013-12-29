@@ -27,7 +27,7 @@
  */
 LvmMirror::LvmMirror (void)
 {
-	declare ("lvm_mirror");
+	declare ("LvmMirror");
 }
 
 /**

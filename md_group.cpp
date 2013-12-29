@@ -35,7 +35,7 @@
  */
 MdGroup::MdGroup (void)
 {
-	declare ("md_group");
+	declare ("MdGroup");
 }
 
 /**

@@ -41,7 +41,7 @@
  */
 Block::Block (void)
 {
-	declare ("block");
+	declare ("Block");
 }
 
 /**

@@ -26,7 +26,7 @@
  */
 LvmLinear::LvmLinear (void)
 {
-	declare ("lvm_linear");
+	declare ("LvmLinear");
 }
 
 /**

@@ -41,7 +41,7 @@
  */
 Msdos::Msdos (void)
 {
-	declare ("msdos");
+	declare ("Msdos");
 }
 
 /**

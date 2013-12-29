@@ -27,7 +27,7 @@
  */
 LvmRaid::LvmRaid (void)
 {
-	declare ("lvm_raid");
+	declare ("LvmRaid");
 }
 
 /**

@@ -24,7 +24,7 @@
  */
 LvmMetadata::LvmMetadata (void)
 {
-	declare ("lvm_metadata");
+	declare ("LvmMetadata");
 }
 
 /**

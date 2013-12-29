@@ -28,7 +28,7 @@
  */
 Partition::Partition (void)
 {
-	declare ("partition");
+	declare ("Partition");
 }
 
 /**

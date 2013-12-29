@@ -26,7 +26,7 @@
  */
 LvmPartition::LvmPartition (void)
 {
-	declare ("lvm_partition");
+	declare ("LvmPartition");
 }
 
 /**

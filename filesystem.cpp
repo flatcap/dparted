@@ -37,7 +37,7 @@
  */
 Filesystem::Filesystem (void)
 {
-	declare ("filesystem");
+	declare ("Filesystem");
 }
 
 /**

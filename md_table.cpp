@@ -27,7 +27,7 @@
  */
 MdTable::MdTable (void)
 {
-	declare ("md_table");
+	declare ("MdTable");
 }
 
 /**

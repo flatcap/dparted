@@ -35,7 +35,7 @@
  */
 File::File (void)
 {
-	declare ("file");
+	declare ("File");
 }
 
 /**

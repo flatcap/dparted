@@ -26,7 +26,7 @@
  */
 LvmVolume::LvmVolume (void)
 {
-	declare ("lvm_volume");
+	declare ("LvmVolume");
 }
 
 /**
