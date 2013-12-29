@@ -82,9 +82,9 @@ public:
 
 	ContainerPtr get_smart (void);
 
-	VPtr get_prop (const std::string& name);
-
 	std::vector<std::string> get_prop_names (void);
+	VPtr get_prop (const std::string& name);
+	std::vector<VPtr> get_all_props (void);
 
 	template<class T>
 	void add_child (std::shared_ptr<T>& child)

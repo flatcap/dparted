@@ -681,17 +681,6 @@ Container::get_property (const std::string& propname)
 
 
 /**
- * get_prop
- */
-VPtr
-Container::get_prop (const std::string& name)
-{
-	//std::cout << "get_prop: " << props.count (name) << std::endl;
-	//XXX check exists, otherwise throw
-	return props[name];
-}
-
-/**
  * get_prop_names
  */
 std::vector<std::string>
@@ -703,6 +692,32 @@ Container::get_prop_names (void)
 	}
 
 	return names;
+}
+
+/**
+ * get_prop
+ */
+VPtr
+Container::get_prop (const std::string& name)
+{
+	//std::cout << "get_prop: " << props.count (name) << std::endl;
+	//XXX check exists, otherwise throw
+	return props[name];
+}
+
+/**
+ * get_all_props
+ */
+std::vector<VPtr> Container::get_all_props (void)
+{
+	std::vector<VPtr> vv;
+
+	for (auto p : props) {
+		//XXX what's the magic C++11 way of doing this?
+		vv.push_back (p.second);
+	}
+
+	return vv;
 }
 
 
