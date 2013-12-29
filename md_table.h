@@ -19,11 +19,14 @@
 #define _MD_TABLE_H_
 
 #include <string>
+#include <memory>
 
 #include "table.h"
-#include "pointers.h"
 
+class MdTable;
 class Visitor;
+
+typedef std::shared_ptr<MdTable> MdTablePtr;
 
 /**
  * class MdTable

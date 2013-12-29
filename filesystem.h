@@ -19,11 +19,14 @@
 #define _FILESYSTEM_H
 
 #include <string>
+#include <memory>
 
 #include "container.h"
-#include "pointers.h"
 
+class Filesystem;
 class Visitor;
+
+typedef std::shared_ptr<Filesystem> FilesystemPtr;
 
 /**
  * class Filesystem

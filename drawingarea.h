@@ -21,8 +21,9 @@
 #include <deque>
 
 #include <gtkmm/drawingarea.h>
+#include <memory>
 
-#include "pointers.h"
+#include "container.h"
 
 class Theme;
 

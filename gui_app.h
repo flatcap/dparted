@@ -19,11 +19,10 @@
 #define _GUI_APP_H_
 
 #include <gtkmm/application.h>
+#include <memory>
 
 #include "app.h"
-#include "pointers.h"
-
-class Container;
+#include "container.h"
 
 /**
  * class GuiApp

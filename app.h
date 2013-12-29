@@ -18,7 +18,13 @@
 #ifndef _APP_H_
 #define _APP_H_
 
+#include <memory>
+
 #include "question.h"
+
+class App;
+
+typedef std::shared_ptr<App> AppPtr;
 
 /**
  * class App

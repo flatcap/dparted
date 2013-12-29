@@ -18,10 +18,14 @@
 #ifndef _LVM_RAID_H_
 #define _LVM_RAID_H_
 
-#include "lvm_volume.h"
-#include "pointers.h"
+#include <memory>
 
+#include "lvm_volume.h"
+
+class LvmRaid;
 class Visitor;
+
+typedef std::shared_ptr<LvmRaid> LvmRaidPtr;
 
 /**
  * class LvmRaid

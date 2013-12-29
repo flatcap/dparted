@@ -19,11 +19,14 @@
 #define _EXTENDED_H
 
 #include <string>
+#include <memory>
 
 #include "msdos.h"
-#include "pointers.h"
 
+class Extended;
 class Visitor;
+
+typedef std::shared_ptr<Extended> ExtendedPtr;
 
 /**
  * class Extended

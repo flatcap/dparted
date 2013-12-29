@@ -18,10 +18,14 @@
 #ifndef _LVM_MIRROR_H_
 #define _LVM_MIRROR_H_
 
-#include "lvm_volume.h"
-#include "pointers.h"
+#include <memory>
 
+#include "lvm_volume.h"
+
+class LvmMirror;
 class Visitor;
+
+typedef std::shared_ptr<LvmMirror> LvmMirrorPtr;
 
 /**
  * class LvmMirror

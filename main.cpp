@@ -28,6 +28,7 @@
 #include <queue>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include <linux/major.h>
 #include <linux/fs.h>
@@ -47,7 +48,6 @@
 #include "prop_visitor.h"
 #include "log.h"
 #include "log_trace.h"
-#include "pointers.h"
 #include "utils.h"
 #include "volume.h"
 

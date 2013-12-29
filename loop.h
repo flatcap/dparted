@@ -20,11 +20,14 @@
 
 #include <string>
 #include <queue>
+#include <memory>
 
 #include "block.h"
-#include "pointers.h"
 
+class Loop;
 class Visitor;
+
+typedef std::shared_ptr<Loop> LoopPtr;
 
 /**
  * class Loop

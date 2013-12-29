@@ -18,10 +18,14 @@
 #ifndef _LVM_METADATA_H_
 #define _LVM_METADATA_H_
 
-#include "lvm_linear.h"
-#include "pointers.h"
+#include <memory>
 
+#include "lvm_linear.h"
+
+class LvmMetadata;
 class Visitor;
+
+typedef std::shared_ptr<LvmMetadata> LvmMetadataPtr;
 
 /**
  * class LvmMetadata

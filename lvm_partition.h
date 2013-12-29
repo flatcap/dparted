@@ -18,10 +18,14 @@
 #ifndef _LVM_PARTITION_H_
 #define _LVM_PARTITION_H_
 
-#include "partition.h"
-#include "pointers.h"
+#include <memory>
 
+#include "partition.h"
+
+class LvmPartition;
 class Visitor;
+
+typedef std::shared_ptr<LvmPartition> LvmPartitionPtr;
 
 /**
  * class LvmPartition

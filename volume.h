@@ -18,10 +18,14 @@
 #ifndef _VOLUME_H_
 #define _VOLUME_H_
 
-#include "whole.h"
-#include "pointers.h"
+#include <memory>
 
+#include "whole.h"
+
+class Volume;
 class Visitor;
+
+typedef std::shared_ptr<Volume> VolumePtr;
 
 /**
  * class Volume

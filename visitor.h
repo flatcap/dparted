@@ -20,8 +20,6 @@
 
 #include <memory>
 
-#include "pointers.h"
-
 #include "block.h"
 #include "container.h"
 #include "disk.h"

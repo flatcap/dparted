@@ -19,11 +19,15 @@
 #define _LVM_TABLE_H_
 
 #include <string>
+#include <memory>
 
 #include "table.h"
-#include "pointers.h"
+#include "lvm_group.h"
 
+class LvmTable;
 class Visitor;
+
+typedef std::shared_ptr<LvmTable> LvmTablePtr;
 
 /**
  * class LvmTable

@@ -22,6 +22,11 @@
 #include <stdexcept>
 #include <cstdint>
 #include <string>
+#include <memory>
+
+class BaseVariant;
+
+typedef std::shared_ptr<BaseVariant> VPtr;
 
 /**
  * class BaseVariant

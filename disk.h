@@ -21,11 +21,14 @@
 #include <map>
 #include <string>
 #include <queue>
+#include <memory>
 
 #include "block.h"
-#include "pointers.h"
 
+class Disk;
 class Visitor;
+
+typedef std::shared_ptr<Disk> DiskPtr;
 
 /**
  * class Disk

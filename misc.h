@@ -19,11 +19,14 @@
 #define _MISC_H
 
 #include <string>
+#include <memory>
 
 #include "container.h"
-#include "pointers.h"
 
+class Misc;
 class Visitor;
+
+typedef std::shared_ptr<Misc> MiscPtr;
 
 /**
  * class Misc

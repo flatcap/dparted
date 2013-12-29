@@ -18,12 +18,15 @@
 #ifndef _LVM_GROUP_H_
 #define _LVM_GROUP_H_
 
-#include "whole.h"
-#include "pointers.h"
+#include <memory>
 
+#include "whole.h"
+
+class LvmGroup;
+class LvmTable;
 class Visitor;
 
-class LvmTable;
+typedef std::shared_ptr<LvmGroup> LvmGroupPtr;
 
 /**
  * class LvmGroup

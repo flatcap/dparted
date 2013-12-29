@@ -18,7 +18,7 @@
 #ifndef _FS_USAGE_H_
 #define _FS_USAGE_H_
 
-#include "pointers.h"
+#include "filesystem.h"
 
 bool get_btrfs_usage    (FilesystemPtr f);
 bool get_ext2_usage     (FilesystemPtr f);

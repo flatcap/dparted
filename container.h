@@ -26,13 +26,13 @@
 #include <set>
 #include <tuple>
 
-#include "pointers.h"
 #include "variant.h"
 #include "mmap.h"
 
+class Container;
 class Visitor;
 
-typedef std::shared_ptr<BaseVariant> VPtr;
+typedef std::shared_ptr<Container> ContainerPtr;
 
 /**
  * class Container
@@ -111,7 +111,7 @@ public:
 	long		 bytes_size = 0;
 	long		 bytes_used = 0;
 
-	WholePtr	 whole;
+	ContainerPtr	 whole;
 
 	std::weak_ptr<Container> parent;
 

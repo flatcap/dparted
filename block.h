@@ -19,11 +19,14 @@
 #define _BLOCK_H_
 
 #include <string>
+#include <memory>
 
 #include "container.h"
-#include "pointers.h"
 
+class Block;
 class Visitor;
+
+typedef std::shared_ptr<Block> BlockPtr;
 
 /**
  * class Block

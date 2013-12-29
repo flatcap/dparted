@@ -18,10 +18,14 @@
 #ifndef _LVM_LINEAR_H_
 #define _LVM_LINEAR_H_
 
-#include "lvm_volume.h"
-#include "pointers.h"
+#include <memory>
 
+#include "lvm_volume.h"
+
+class LvmLinear;
 class Visitor;
+
+typedef std::shared_ptr<LvmLinear> LvmLinearPtr;
 
 /**
  * class LvmLinear

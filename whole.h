@@ -20,11 +20,14 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "container.h"
-#include "pointers.h"
 
 class Visitor;
+class Whole;
+
+typedef std::shared_ptr<Whole> WholePtr;
 
 /**
  * class Whole

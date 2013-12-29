@@ -19,11 +19,14 @@
 #define _TABLE_H_
 
 #include <string>
+#include <memory>
 
 #include "container.h"
-#include "pointers.h"
 
+class Table;
 class Visitor;
+
+typedef std::shared_ptr<Table> TablePtr;
 
 /**
  * class Table

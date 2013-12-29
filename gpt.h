@@ -19,11 +19,14 @@
 #define _GPT_H
 
 #include <string>
+#include <memory>
 
 #include "table.h"
-#include "pointers.h"
 
+class Gpt;
 class Visitor;
+
+typedef std::shared_ptr<Gpt> GptPtr;
 
 /**
  * class Gpt

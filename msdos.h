@@ -19,11 +19,14 @@
 #define _MSDOS_H
 
 #include <string>
+#include <memory>
 
 #include "table.h"
-#include "pointers.h"
 
+class Msdos;
 class Visitor;
+
+typedef std::shared_ptr<Msdos> MsdosPtr;
 
 /**
  * struct partition

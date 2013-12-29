@@ -18,7 +18,7 @@ SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp gui_app.cpp icon_manag
 
 HDR	= $(SRC:%.cpp=%.h)
 
-HDR	+= log_trace.h lvm2.h pointers.h stringnum.h visitor.h mmap.h
+HDR	+= log_trace.h lvm2.h stringnum.h visitor.h mmap.h
 
 DEPDIR	= .dep
 OBJDIR	= .obj

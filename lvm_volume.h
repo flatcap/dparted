@@ -18,10 +18,14 @@
 #ifndef _LVM_VOLUME_H_
 #define _LVM_VOLUME_H_
 
-#include "volume.h"
-#include "pointers.h"
+#include <memory>
 
+#include "volume.h"
+
+class LvmVolume;
 class Visitor;
+
+typedef std::shared_ptr<LvmVolume> LvmVolumePtr;
 
 /**
  * class LvmVolume

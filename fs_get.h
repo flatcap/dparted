@@ -18,7 +18,7 @@
 #ifndef _FS_GET_H_
 #define _FS_GET_H_
 
-#include "pointers.h"
+#include "filesystem.h"
 
 FilesystemPtr get_btrfs    (unsigned char* buffer, int bufsize);
 FilesystemPtr get_ext2     (unsigned char* buffer, int bufsize);

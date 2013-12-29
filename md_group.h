@@ -18,12 +18,15 @@
 #ifndef _MD_GROUP_H_
 #define _MD_GROUP_H_
 
-#include "whole.h"
-#include "pointers.h"
+#include <memory>
 
+#include "whole.h"
+
+class MdGroup;
+class MdTable;
 class Visitor;
 
-class MdTable;
+typedef std::shared_ptr<MdGroup> MdGroupPtr;
 
 /**
  * class MdGroup

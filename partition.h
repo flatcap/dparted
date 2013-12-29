@@ -19,13 +19,16 @@
 #define _PARTITION_H_
 
 #include <string>
+#include <memory>
 
 #include "container.h"
-#include "pointers.h"
+#include "volume.h"
 
+class Partition;
 class Visitor;
-
 class Volume;
+
+typedef std::shared_ptr<Partition> PartitionPtr;
 
 /**
  * class Partition

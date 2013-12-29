@@ -18,10 +18,14 @@
 #ifndef _LVM_STRIPE_H_
 #define _LVM_STRIPE_H_
 
-#include "lvm_volume.h"
-#include "pointers.h"
+#include <memory>
 
+#include "lvm_volume.h"
+
+class LvmStripe;
 class Visitor;
+
+typedef std::shared_ptr<LvmStripe> LvmStripePtr;
 
 /**
  * class LvmStripe
