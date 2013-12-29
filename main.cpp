@@ -44,6 +44,7 @@
 
 #include "dot_visitor.h"
 #include "dump_visitor.h"
+#include "prop_visitor.h"
 #include "log.h"
 #include "log_trace.h"
 #include "pointers.h"
@@ -133,10 +134,11 @@ main (int argc, char* argv[])
 	// -d	dot
 	// -s	separate dot diagrams
 
-	bool app      = true;
+	bool app      = false;
 	bool dot      = false;
 	bool list     = false;
 	bool separate = false;
+	bool props    = false;
 
 	if (argc > 1) {
 		std::string arg = argv[1];
@@ -147,6 +149,7 @@ main (int argc, char* argv[])
 					case 'a': app      = true; break;
 					case 'd': dot      = true; break;
 					case 'l': list     = true; break;
+					case 'p': props    = true; break;
 					case 's': separate = true; break;
 					default:
 						  printf ("unknown option '%c'\n", c);
@@ -249,6 +252,14 @@ main (int argc, char* argv[])
 		DumpVisitor dv;
 		top_level->accept (dv);
 		dv.dump();
+		log_info ("------------------------------------------------------------\n");
+	}
+
+	if (props) {
+		log_info ("------------------------------------------------------------\n");
+		PropVisitor pv;
+		top_level->accept (pv);
+		pv.dump();
 		log_info ("------------------------------------------------------------\n");
 	}
 

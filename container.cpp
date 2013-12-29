@@ -686,7 +686,8 @@ Container::get_property (const std::string& propname)
 VPtr
 Container::get_prop (const std::string& name)
 {
-	std::cout << "get_prop: " << props.count (name) << std::endl;
+	//std::cout << "get_prop: " << props.count (name) << std::endl;
+	//XXX check exists, otherwise throw
 	return props[name];
 }
 

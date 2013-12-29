@@ -11,7 +11,7 @@ SRC	+= app.cpp block.cpp container.cpp disk.cpp extended.cpp \
 	   md_group.cpp md_table.cpp misc.cpp msdos.cpp partition.cpp \
 	   table.cpp utils.cpp volume.cpp whole.cpp
 
-SRC	+= dot_visitor.cpp dump_visitor.cpp question.cpp variant.cpp
+SRC	+= dot_visitor.cpp dump_visitor.cpp prop_visitor.cpp question.cpp variant.cpp
 
 # GUI
 SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp gui_app.cpp icon_manager.cpp
