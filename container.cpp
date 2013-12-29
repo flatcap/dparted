@@ -42,7 +42,17 @@
  */
 Container::Container (void)
 {
-	declare ("Container");
+	const char* me = "Container";
+
+	declare (me);
+
+	declare_prop (me, "name",          name,          "desc of name");
+	declare_prop (me, "uuid",          uuid,          "desc of uuid");
+	declare_prop (me, "device",        device,        "desc of device");
+	declare_prop (me, "parent_offset", parent_offset, "desc of parent_offset");
+	declare_prop (me, "block_size",    block_size,    "desc of block_size");
+	declare_prop (me, "bytes_size",    bytes_size,    "desc of bytes_size");
+	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used");
 }
 
 /**

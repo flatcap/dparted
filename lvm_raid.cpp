@@ -27,7 +27,9 @@
  */
 LvmRaid::LvmRaid (void)
 {
-	declare ("LvmRaid");
+	const char* me = "LvmRaid";
+
+	declare (me);
 }
 
 /**

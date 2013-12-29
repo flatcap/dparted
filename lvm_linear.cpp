@@ -26,7 +26,9 @@
  */
 LvmLinear::LvmLinear (void)
 {
-	declare ("LvmLinear");
+	const char* me = "LvmLinear";
+
+	declare (me);
 }
 
 /**

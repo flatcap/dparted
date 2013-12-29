@@ -32,7 +32,22 @@
  */
 Loop::Loop (void)
 {
-	declare ("Loop");
+	const char* me = "Loop";
+
+	declare (me);
+
+	declare_prop (me, "file_name",  file_name,  "desc of file_name");
+	declare_prop (me, "file_inode", file_inode, "desc of file_inode");
+	declare_prop (me, "file_major", file_major, "desc of file_major");
+	declare_prop (me, "file_minor", file_minor, "desc of file_minor");
+	declare_prop (me, "loop_major", loop_major, "desc of loop_major");
+	declare_prop (me, "loop_minor", loop_minor, "desc of loop_minor");
+	declare_prop (me, "offset",     offset,     "desc of offset");
+	declare_prop (me, "sizelimit",  sizelimit,  "desc of sizelimit");
+	declare_prop (me, "autoclear",  autoclear,  "desc of autoclear");
+	declare_prop (me, "partscan",   partscan,   "desc of partscan");
+	declare_prop (me, "read_only",  read_only,  "desc of read_only");
+	declare_prop (me, "deleted",    deleted,    "desc of deleted");
 }
 
 /**

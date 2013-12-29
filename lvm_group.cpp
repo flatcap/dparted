@@ -42,7 +42,14 @@
  */
 LvmGroup::LvmGroup (void)
 {
-	declare ("LvmGroup");
+	const char* me = "LvmGroup";
+
+	declare (me);
+
+	declare_prop (me, "pv_count", pv_count, "desc of pv_count");
+	declare_prop (me, "lv_count", lv_count, "desc of lv_count");
+	declare_prop (me, "vg_seqno", vg_seqno, "desc of vg_seqno");
+	declare_prop (me, "vg_attr",  vg_attr,  "desc of vg_attr");
 }
 
 /**

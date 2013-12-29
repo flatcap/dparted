@@ -31,7 +31,9 @@
  */
 Misc::Misc (void)
 {
-	declare ("Misc");
+	const char* me = "Misc";
+
+	declare (me);
 }
 
 /**

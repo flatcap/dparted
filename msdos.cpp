@@ -41,7 +41,9 @@
  */
 Msdos::Msdos (void)
 {
-	declare ("Msdos");
+	const char* me = "Msdos";
+
+	declare (me);
 }
 
 /**

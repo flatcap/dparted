@@ -37,7 +37,11 @@
  */
 Filesystem::Filesystem (void)
 {
-	declare ("Filesystem");
+	const char* me = "Filesystem";
+
+	declare (me);
+
+	declare_prop (me, "label", label, "desc of label");
 }
 
 /**

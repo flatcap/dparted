@@ -35,7 +35,9 @@
  */
 MdGroup::MdGroup (void)
 {
-	declare ("MdGroup");
+	const char* me = "MdGroup";
+
+	declare (me);
 }
 
 /**

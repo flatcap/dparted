@@ -34,7 +34,9 @@
  */
 Table::Table (void)
 {
-	declare ("Table");
+	const char* me = "Table";
+
+	declare (me);
 }
 
 /**

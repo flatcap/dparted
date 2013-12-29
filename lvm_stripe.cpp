@@ -26,7 +26,9 @@
  */
 LvmStripe::LvmStripe (void)
 {
-	declare ("LvmStripe");
+	const char* me = "LvmStripe";
+
+	declare (me);
 }
 
 /**

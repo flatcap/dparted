@@ -36,7 +36,9 @@
  */
 Extended::Extended (void)
 {
-	declare ("Extended");
+	const char* me = "Extended";
+
+	declare (me);
 }
 
 /**

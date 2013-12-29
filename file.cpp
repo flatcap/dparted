@@ -35,7 +35,9 @@
  */
 File::File (void)
 {
-	declare ("File");
+	const char* me = "File";
+
+	declare (me);
 }
 
 /**

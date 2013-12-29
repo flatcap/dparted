@@ -28,7 +28,11 @@
  */
 Partition::Partition (void)
 {
-	declare ("Partition");
+	const char* me = "Partition";
+
+	declare (me);
+
+	declare_prop (me, "ptype", ptype, "desc of ptype");
 }
 
 /**

@@ -27,7 +27,9 @@
  */
 Volume::Volume (void)
 {
-	declare ("Volume");
+	const char* me = "Volume";
+
+	declare (me);
 }
 
 /**

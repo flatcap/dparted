@@ -24,7 +24,9 @@
  */
 LvmMetadata::LvmMetadata (void)
 {
-	declare ("LvmMetadata");
+	const char* me = "LvmMetadata";
+
+	declare (me);
 }
 
 /**

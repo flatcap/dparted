@@ -35,7 +35,13 @@
  */
 LvmTable::LvmTable (void)
 {
-	declare ("LvmTable");
+	const char* me = "LvmTable";
+
+	declare (me);
+
+	declare_prop (me, "config",        config,        "desc of config");
+	declare_prop (me, "pv_attr",       pv_attr,       "desc of pv_attr");
+	declare_prop (me, "metadata_size", metadata_size, "desc of metadata_size");
 }
 
 /**

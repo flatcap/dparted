@@ -28,7 +28,9 @@
  */
 Whole::Whole (void)
 {
-	declare ("Whole");
+	const char* me = "Whole";
+
+	declare (me);
 }
 
 /**

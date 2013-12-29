@@ -33,7 +33,9 @@
  */
 Gpt::Gpt (void)
 {
-	declare ("Gpt");
+	const char* me = "Gpt";
+
+	declare (me);
 }
 
 /**

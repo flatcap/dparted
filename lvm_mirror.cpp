@@ -27,7 +27,9 @@
  */
 LvmMirror::LvmMirror (void)
 {
-	declare ("LvmMirror");
+	const char* me = "LvmMirror";
+
+	declare (me);
 }
 
 /**
