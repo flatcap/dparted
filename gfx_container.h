@@ -20,6 +20,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 
 #include "container.h"
 
@@ -28,7 +29,7 @@ class GfxContainer;
 typedef std::shared_ptr<GfxContainer> GfxContainerPtr;
 
 /**
- * class GfxContainer
+ * class GfxContainer - Shield the GUI from the messy Containers
  */
 class GfxContainer
 {
@@ -44,11 +45,24 @@ public:
 	void add_to_selection (void);
 	void remove_from_selection (void);
 
+	std::string display;
+	std::string colour;
+	std::string background;
+	std::string icon;
+	std::string label;
+
+	bool usage = false;
+
 protected:
 	std::weak_ptr<Container> container;
 
 	bool focussed = false;
-	int seq_num = 0;
+	bool selected = false;
+
+	int container_seqnum = 0;
+
+	//size of what?
+	//32-bit fraction of available space
 };
 
 
