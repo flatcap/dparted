@@ -15,7 +15,6 @@
 # this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 # Place - Suite 330, Boston, MA 02111-1307, USA.
 
-
 CC	= g++
 RM	= rm -fr
 MKDIR	= mkdir -p
@@ -32,10 +31,10 @@ OBJ_SRC	+= block.cpp container.cpp disk.cpp extended.cpp file.cpp filesystem.cpp
 
 # Library - Non-graphical miscellany
 LIB_SRC	+= app.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp gfx_container.cpp log.cpp \
-	   main.cpp prop_visitor.cpp question.cpp utils.cpp variant.cpp
+	   prop_visitor.cpp question.cpp utils.cpp variant.cpp
 
 # GUI - Graphical objects
-GUI_SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp gui_app.cpp icon_manager.cpp
+GUI_SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp gui_app.cpp icon_manager.cpp main.cpp
 
 SRC	= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
 HDR	= $(SRC:%.cpp=%.h)
@@ -50,36 +49,36 @@ GUI_OBJ	= $(GUI_SRC:%.cpp=$(OBJDIR)/%.o)
 CFLAGS	+= -std=c++11 -pedantic
 CFLAGS	+= -g -Wall
 
-CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGDK_DISABLE_DEPRECATED
-CFLAGS	+= -DGDK_PIXBUF_DISABLE_DEPRECATED
-CFLAGS	+= -DGIOMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGLIBMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGLIBMM_G_DISABLE_DEPRECATED_UNDEFED
-CFLAGS	+= -DGTKMM_GTKMM_DISABLE_DEPRECATED_UNDEFED
-CFLAGS	+= -DGTK_DISABLE_DEPRECATED
-CFLAGS	+= -DHB_DISABLE_DEPRECATED
-CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
-CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
-
-#CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
-#CFLAGS	+= -DG_DISABLE_DEPRECATED
-
 #CFLAGS	+= -pg -fprofile-arcs -ftest-coverage
 
-CFLAGS	+= -fno-omit-frame-pointer
-CFLAGS	+= -fno-inline-functions
-CFLAGS	+= -fno-inline-functions-called-once
-CFLAGS	+= -fno-optimize-sibling-calls
-CFLAGS	+= -O0
+#CFLAGS	+= -fno-omit-frame-pointer
+#CFLAGS	+= -fno-inline-functions
+#CFLAGS	+= -fno-inline-functions-called-once
+#CFLAGS	+= -fno-optimize-sibling-calls
+#CFLAGS	+= -O0
+
+#GUI_CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
+#GUI_CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
+#GUI_CFLAGS	+= -DGDK_DISABLE_DEPRECATED
+#GUI_CFLAGS	+= -DGDK_PIXBUF_DISABLE_DEPRECATED
+#GUI_CFLAGS	+= -DGIOMM_DISABLE_DEPRECATED
+#GUI_CFLAGS	+= -DGLIBMM_DISABLE_DEPRECATED
+#GUI_CFLAGS	+= -DGLIBMM_G_DISABLE_DEPRECATED_UNDEFED
+#GUI_CFLAGS	+= -DGTKMM_GTKMM_DISABLE_DEPRECATED_UNDEFED
+#GUI_CFLAGS	+= -DGTK_DISABLE_DEPRECATED
+#GUI_CFLAGS	+= -DHB_DISABLE_DEPRECATED
+#GUI_CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
+#GUI_CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
+
+#GUI_CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
+#GUI_CFLAGS	+= -DG_DISABLE_DEPRECATED
 
 #LDFLAGS	+= -pg -fprofile-arcs
 
 PACKAGES = gtkmm-3.0 libconfig++
 
-CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
-LDFLAGS += $(shell pkg-config --libs   $(PACKAGES))
+GUI_CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
+LDFLAGS		+= $(shell pkg-config --libs   $(PACKAGES))
 
 V	?= 0
 
@@ -92,6 +91,8 @@ endif
 ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
 	quiet=silent_
 endif
+
+$(GUI_OBJ):	CFLAGS += $(GUI_CFLAGS)
 
 all:	$(OBJDIR) $(DEPDIR) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) $(OUT) tags
 
@@ -113,7 +114,7 @@ tags:	$(SRC) $(HDR)
 
 quiet_cmd_CC	= CC	$<
       cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@ && (												\
-		  $(CC) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;							\
+		  $(CC) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;						\
 		  cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp;											\
 		  sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d;		\
 		  rm -f $(DEPDIR)/$*.d.tmp)
