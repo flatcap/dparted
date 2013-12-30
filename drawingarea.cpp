@@ -46,9 +46,9 @@ const int TAB_WIDTH   = 10;	// Space in left side-bar
 const int BLOCK_WIDTH = 24;	// Placeholder for icons
 
 /**
- * DPDrawingArea
+ * DrawingArea
  */
-DPDrawingArea::DPDrawingArea()
+DrawingArea::DrawingArea()
 	//Glib::ObjectBase ("MyDrawingArea")
 {
 	//set_size_request (800, 77);
@@ -58,12 +58,12 @@ DPDrawingArea::DPDrawingArea()
 
 	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 
-	signal_button_press_event() .connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_click));
-	signal_motion_notify_event().connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_motion));
-	signal_leave_notify_event() .connect (sigc::mem_fun (*this, &DPDrawingArea::on_mouse_leave));
+	signal_button_press_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_click));
+	signal_motion_notify_event().connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_motion));
+	signal_leave_notify_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_leave));
 
 #if 0
-	sigc::slot<bool> my_slot = sigc::bind (sigc::mem_fun (*this, &DPDrawingArea::on_timeout), 0);
+	sigc::slot<bool> my_slot = sigc::bind (sigc::mem_fun (*this, &DrawingArea::on_timeout), 0);
 	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 300); // ms
 #endif
 
@@ -74,13 +74,13 @@ DPDrawingArea::DPDrawingArea()
 	//set_tooltip_text("tooltip number 1");
 
 	set_has_tooltip();	// We'll be handling the tooltips ourself
-	signal_query_tooltip().connect(sigc::mem_fun(*this, &DPDrawingArea::on_textview_query_tooltip));
+	signal_query_tooltip().connect(sigc::mem_fun(*this, &DrawingArea::on_textview_query_tooltip));
 }
 
 /**
- * ~DPDrawingArea
+ * ~DrawingArea
  */
-DPDrawingArea::~DPDrawingArea()
+DrawingArea::~DrawingArea()
 {
 	delete theme;
 }
@@ -523,7 +523,7 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, bool east)
  * draw_block - draw an icon-width, hollow, rounded rectangle
  */
 void
-DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right)
+DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_tab: too short\n");
@@ -582,7 +582,7 @@ DPDrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr
  * draw_box - draw a rounded rectangle
  */
 void
-DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& inside)
+DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_box: too short\n");
@@ -637,7 +637,7 @@ DPDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& 
  * draw_iconbox - draw a rounded rectangle with a handy tab
  */
 void
-DPDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside)
+DrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_iconbox: too short\n");
@@ -704,7 +704,7 @@ DPDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerP
  * draw_tabbox - draw a rounded rectangle with a handy tab
  */
 void
-DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside)
+DrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_tabbox: too short\n");
@@ -772,7 +772,7 @@ DPDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPt
  * draw_icon
  */
 void
-DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below /*=nullptr*/)
+DrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below /*=nullptr*/)
 {
 	Glib::RefPtr<Gdk::Pixbuf> pb;
 
@@ -806,7 +806,7 @@ DPDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr&
  * on_draw
  */
 bool
-DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
+DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	//LOG_TRACE;
 	if (!m_c)
@@ -836,7 +836,7 @@ DPDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
  * on_timeout
  */
 bool
-DPDrawingArea::on_timeout (int timer_number)
+DrawingArea::on_timeout (int timer_number)
 {
 	std::cout << "timer" << "\n";
 	get_window()->invalidate (false); //RAR everything for now
@@ -869,7 +869,7 @@ dump_range (const std::deque<Range>& vRange)
  * on_mouse_motion
  */
 bool
-DPDrawingArea::on_mouse_motion (GdkEventMotion* event)
+DrawingArea::on_mouse_motion (GdkEventMotion* event)
 {
 	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")\n";
 
@@ -890,7 +890,7 @@ DPDrawingArea::on_mouse_motion (GdkEventMotion* event)
  * on_mouse_leave
  */
 bool
-DPDrawingArea::on_mouse_leave (GdkEventCrossing* event)
+DrawingArea::on_mouse_leave (GdkEventCrossing* event)
 {
 #if 0
 	if (mouse_close) {
@@ -905,7 +905,7 @@ DPDrawingArea::on_mouse_leave (GdkEventCrossing* event)
  * on_mouse_click
  */
 bool
-DPDrawingArea::on_mouse_click (GdkEventButton* event)
+DrawingArea::on_mouse_click (GdkEventButton* event)
 {
 	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
@@ -1127,7 +1127,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr c
  * get_protective
  */
 TablePtr
-DPDrawingArea::get_protective (ContainerPtr& c)
+DrawingArea::get_protective (ContainerPtr& c)
 {
 	ContainerPtr child;
 
@@ -1169,7 +1169,7 @@ DPDrawingArea::get_protective (ContainerPtr& c)
  * set_data
  */
 void
-DPDrawingArea::set_data (ContainerPtr& c)
+DrawingArea::set_data (ContainerPtr& c)
 {
 	// check we've been given a block device
 
@@ -1186,7 +1186,7 @@ DPDrawingArea::set_data (ContainerPtr& c)
  * get_focus
  */
 ContainerPtr
-DPDrawingArea::get_focus (int x, int y)
+DrawingArea::get_focus (int x, int y)
 {
 	ContainerPtr match;
 
@@ -1205,7 +1205,7 @@ DPDrawingArea::get_focus (int x, int y)
  * on_textview_query_tooltip
  */
 bool
-DPDrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
+DrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
 	std::stringstream ss;
 
@@ -1278,7 +1278,7 @@ draw_label (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr cont, Rect sha
  * draw_container - recursively draw a set of containers
  */
 void
-DPDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, Rect shape)
+DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, Rect shape)
 {
 	//Rect tab;
 	Rect inside;

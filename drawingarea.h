@@ -32,13 +32,13 @@ typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
 typedef struct { Rect r; ContainerPtr p; } Range;
 
 /**
- * class DPDrawingArea
+ * class DrawingArea
  */
-class DPDrawingArea : public Gtk::DrawingArea
+class DrawingArea : public Gtk::DrawingArea
 {
 public:
-	DPDrawingArea();
-	virtual ~DPDrawingArea();
+	DrawingArea();
+	virtual ~DrawingArea();
 
 	void set_data (ContainerPtr& c);
 

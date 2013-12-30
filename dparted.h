@@ -49,7 +49,7 @@ protected:
 	Gtk::MenuBar		menubar;
 	//Gtk::Toolbar		toolbar;
 	Gtk::Grid		da_grid;
-	//DPDrawingArea		drawingarea;
+	//DrawingArea		drawingarea;
 	TreeView		treeview;
 	//Gtk::Statusbar		statusbar;
 

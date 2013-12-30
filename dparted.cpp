@@ -107,7 +107,7 @@ DParted::set_data (ContainerPtr c)
 		if (i->is_a ("lvm_group"))
 			continue; //RAR for now ignore vg
 		//std::cout << i->type << "\n";
-		DPDrawingArea* da = manage (new DPDrawingArea());
+		DrawingArea* da = manage (new DrawingArea());
 		da_grid.add (*da);
 		da_grid.show_all();
 		//std::cout << i->device << "\n";
