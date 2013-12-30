@@ -24,6 +24,7 @@
 #include <memory>
 
 #include "container.h"
+#include "gfx_container.h"
 
 class Theme;
 
@@ -72,6 +73,9 @@ private:
 	int sel_y = -1;
 
 	bool mouse_close = false;
+
+	GfxContainerPtr focus;
+	std::vector<GfxContainerPtr> selection;
 };
 
 
