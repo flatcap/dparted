@@ -20,8 +20,10 @@
 /**
  * GfxContainer
  */
-GfxContainer::GfxContainer (void)
+GfxContainer::GfxContainer (ContainerPtr c)
 {
+	container = c;
+	sync();
 }
 
 /**
@@ -33,10 +35,150 @@ GfxContainer::~GfxContainer()
 
 
 /**
+ * get_smart
+ */
+ContainerPtr
+GfxContainer::get_smart (void)
+{
+	ContainerPtr c = container.lock();
+	if (!c) {
+		// Object has gone away
+		children.clear();
+		seqnum = -1;
+
+		display.clear();
+		colour.clear();
+		background.clear();
+		icon.clear();
+		label.clear();
+		label_template.clear();
+
+		bytes_size = 0;
+		bytes_used = 0;
+
+		usage = false;
+
+		focussed = false;
+		selected = false;
+	}
+
+	return c;
+}
+
+/**
+ * sync
+ */
+bool
+GfxContainer::sync (void)
+{
+	ContainerPtr c = get_smart();
+	if (!c)
+		return false;
+
+	if (seqnum == c->seqnum)
+		return true;
+
+	init(c);
+	for (auto child : c->get_children()) {
+		GfxContainerPtr g = std::make_shared<GfxContainer>(child);
+		children.push_back(g);
+	}
+
+	return true;
+}
+
+/**
  * init
  */
 bool
-init (ContainerPtr c)
+GfxContainer::init (ContainerPtr c)
+{
+	if (!c)
+		return false;
+
+#if 0
+	display        = theme->get_config (path, name, "display");
+	colour         = theme->get_config (path, name, "colour");
+	background     = theme->get_config (path, name, "background");
+	label_template = theme->get_config (path, name, "label");
+	icon           = theme->get_config (path, name, "icon");
+	usage          = theme->get_config (path, name, "usage");
+#endif
+
+	label = process_label (label_template);
+
+	bytes_size = c->bytes_size;
+	bytes_used = c->bytes_used;
+
+	return true;
+}
+
+/**
+ * process_label
+ */
+std::string
+GfxContainer::process_label (std::string label_template)
+{
+	return label_template;
+}
+
+
+/**
+ * dump
+ */
+void
+GfxContainer::dump (void)
+{
+	static int indent = 0;
+	std::string tabs;
+
+	if (indent > 0) {
+		tabs.resize (indent, '\t');
+	}
+
+	std::cout << tabs << "----------------------" << std::endl;
+	std::cout << tabs << "display        = " << display        << std::endl;
+	std::cout << tabs << "colour         = " << colour         << std::endl;
+	std::cout << tabs << "background     = " << background     << std::endl;
+	std::cout << tabs << "icon           = " << icon           << std::endl;
+	std::cout << tabs << "label          = " << label          << std::endl;
+	std::cout << tabs << "label_template = " << label_template << std::endl;
+	std::cout << tabs << "bytes_size     = " << bytes_size     << std::endl;
+	std::cout << tabs << "bytes_used     = " << bytes_used     << std::endl;
+	std::cout << tabs << "usage          = " << usage          << std::endl;
+	std::cout << tabs << "seqnum         = " << seqnum         << std::endl;
+
+	indent++;
+	for (auto c : children) {
+		c->dump();
+	}
+	indent--;
+}
+
+
+/**
+ * set_focus
+ */
+bool
+GfxContainer::set_focus (bool focus)
 {
 	return false;
 }
+
+/**
+ * add_to_selection
+ */
+void
+GfxContainer::add_to_selection (void)
+{
+}
+
+/**
+ * remove_from_selection
+ */
+void
+GfxContainer::remove_from_selection (void)
+{
+}
+
+

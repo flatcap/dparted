@@ -34,37 +34,43 @@ typedef std::shared_ptr<GfxContainer> GfxContainerPtr;
 class GfxContainer
 {
 public:
-	GfxContainer (void);
+	GfxContainer (ContainerPtr c);
 	virtual ~GfxContainer();
 
 	std::vector<GfxContainerPtr> children;
 
-	bool init (ContainerPtr c);
+	bool sync (void);
+	void dump (void);
 
 	bool set_focus (bool focus);
 	void add_to_selection (void);
 	void remove_from_selection (void);
+	bool init (ContainerPtr c);
 
 	std::string display;
 	std::string colour;
 	std::string background;
 	std::string icon;
 	std::string label;
+	std::string label_template;
+
+	uint64_t bytes_size = 0;
+	uint64_t bytes_used = 0;
 
 	bool usage = false;
 
 protected:
+	GfxContainer (void);
+	ContainerPtr get_smart (void);
+	std::string process_label (std::string label_template);
+
 	std::weak_ptr<Container> container;
 
 	bool focussed = false;
 	bool selected = false;
 
-	int container_seqnum = 0;
-
-	//size of what?
-	//32-bit fraction of available space
+	int seqnum = -1;
 };
-
 
 #endif // _GFX_CONTAINER_H_
 

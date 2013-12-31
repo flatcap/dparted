@@ -51,24 +51,24 @@ CFLAGS	+= -g -Wall
 
 #CFLAGS	+= -pg -fprofile-arcs -ftest-coverage
 
-#CFLAGS	+= -fno-omit-frame-pointer
-#CFLAGS	+= -fno-inline-functions
-#CFLAGS	+= -fno-inline-functions-called-once
-#CFLAGS	+= -fno-optimize-sibling-calls
-#CFLAGS	+= -O0
+CFLAGS	+= -fno-omit-frame-pointer
+CFLAGS	+= -fno-inline-functions
+CFLAGS	+= -fno-inline-functions-called-once
+CFLAGS	+= -fno-optimize-sibling-calls
+CFLAGS	+= -O0
 
-#GUI_CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
-#GUI_CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
-#GUI_CFLAGS	+= -DGDK_DISABLE_DEPRECATED
-#GUI_CFLAGS	+= -DGDK_PIXBUF_DISABLE_DEPRECATED
-#GUI_CFLAGS	+= -DGIOMM_DISABLE_DEPRECATED
-#GUI_CFLAGS	+= -DGLIBMM_DISABLE_DEPRECATED
-#GUI_CFLAGS	+= -DGLIBMM_G_DISABLE_DEPRECATED_UNDEFED
-#GUI_CFLAGS	+= -DGTKMM_GTKMM_DISABLE_DEPRECATED_UNDEFED
-#GUI_CFLAGS	+= -DGTK_DISABLE_DEPRECATED
-#GUI_CFLAGS	+= -DHB_DISABLE_DEPRECATED
-#GUI_CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
-#GUI_CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
+GUI_CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
+GUI_CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
+GUI_CFLAGS	+= -DGDK_DISABLE_DEPRECATED
+GUI_CFLAGS	+= -DGDK_PIXBUF_DISABLE_DEPRECATED
+GUI_CFLAGS	+= -DGIOMM_DISABLE_DEPRECATED
+GUI_CFLAGS	+= -DGLIBMM_DISABLE_DEPRECATED
+GUI_CFLAGS	+= -DGLIBMM_G_DISABLE_DEPRECATED_UNDEFED
+GUI_CFLAGS	+= -DGTKMM_GTKMM_DISABLE_DEPRECATED_UNDEFED
+GUI_CFLAGS	+= -DGTK_DISABLE_DEPRECATED
+GUI_CFLAGS	+= -DHB_DISABLE_DEPRECATED
+GUI_CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
+GUI_CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 
 #GUI_CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
 #GUI_CFLAGS	+= -DG_DISABLE_DEPRECATED
@@ -113,10 +113,10 @@ tags:	$(SRC) $(HDR)
 # ----------------------------------------------------------------------------
 
 quiet_cmd_CC	= CC	$<
-      cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@ && (												\
+      cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@ && (											\
 		  $(CC) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;						\
-		  cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp;											\
-		  sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d;		\
+		  cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp;										\
+		  sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d;	\
 		  rm -f $(DEPDIR)/$*.d.tmp)
 
 $(OBJDIR)/%.o: %.cpp

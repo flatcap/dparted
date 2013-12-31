@@ -18,12 +18,17 @@
 #ifndef _THEME_H_
 #define _THEME_H_
 
+#include <map>
+#include <memory>
+
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
 
-#include <map>
-
 #include <libconfig.h++>
+
+class Theme;
+
+typedef std::shared_ptr<Theme> ThemePtr;
 
 /**
  * class Theme

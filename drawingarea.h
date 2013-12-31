@@ -25,8 +25,7 @@
 
 #include "container.h"
 #include "gfx_container.h"
-
-class Theme;
+#include "theme.h"
 
 typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
 typedef struct { Rect r; ContainerPtr p; } Range;
@@ -57,7 +56,7 @@ protected:
 
 private:
 	ContainerPtr m_c;
-	Theme* theme = nullptr;
+	ThemePtr theme;
 
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, Rect shape);
 	void draw_icon      (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below);
@@ -74,6 +73,7 @@ private:
 
 	bool mouse_close = false;
 
+	GfxContainerPtr device;
 	GfxContainerPtr focus;
 	std::vector<GfxContainerPtr> selection;
 };

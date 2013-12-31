@@ -67,8 +67,7 @@ DrawingArea::DrawingArea()
 	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 300); // ms
 #endif
 
-	theme = new Theme();
-
+	theme.reset (new Theme());
 	theme->read_config ("themes/default.conf");
 
 	//set_tooltip_text("tooltip number 1");
@@ -82,7 +81,6 @@ DrawingArea::DrawingArea()
  */
 DrawingArea::~DrawingArea()
 {
-	delete theme;
 }
 
 
@@ -1180,6 +1178,9 @@ DrawingArea::set_data (ContainerPtr& c)
 	// invalidate window
 	//unsigned int children = c->children.size();
 	//set_size_request (400, 50 * children);
+
+	device = std::make_shared<GfxContainer>(c);
+	device->dump();
 }
 
 /**

@@ -123,6 +123,8 @@ public:
 
 	std::weak_ptr<Container> weak;	//XXX private?
 
+	int seqnum = 123;
+
 protected:
 	Container (void);
 
