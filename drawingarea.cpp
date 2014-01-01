@@ -921,7 +921,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 		if (b) {
 			//log_error ("\033[01;31mMOUSE on %s\033[0m\n", rg.p->type.back().c_str());
-			//rg.p->mouse_event();
+			rg.p->mouse_event();
 			break;
 		}
 
@@ -1230,6 +1230,16 @@ DrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, cons
 
 
 /**
+ * mouse_event
+ */
+bool GfxContainer::mouse_event (void)
+{
+	std::cout << "mouse_event" << std::endl;
+	return false;
+}
+
+
+/**
  * draw_label - write some text into an area
  */
 void
@@ -1292,7 +1302,13 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		return;
 	if (!cont)
 		return;
+	if (!device)
+		return;
 
+#if 0
+	if (!device->update_info())
+		return;
+#endif
 	std::string display = cont->display;
 	std::string background = cont->background;
 	std::string icon = cont->icon;
@@ -1325,6 +1341,12 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 
 	//Rect tab;
 	Rect inside;
+
+	//printf ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
+	if (shape.w < TAB_WIDTH) {
+		printf ("too narrow\n");
+		return;
+	}
 
 	if (display == "icon") {		// Large icon
 		Rect box = shape;
@@ -1439,9 +1461,6 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	uint64_t total = cont->bytes_size;
 	uint64_t bpp   = total / inside.w;	// bytes per pixel
 
-	//printf ("\ttotal = %ld\n", total);
-	//printf ("\tbpp   = %ld\n", bpp);
-
 	for (auto c : cont->children) {
 		if (c->bytes_size > total) {
 			total = c->bytes_size;		//XXX tmp -- need to get intermediate object
@@ -1450,38 +1469,14 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		long offset = c->parent_offset / bpp;
 		long size   = c->bytes_size    / bpp;
 
-#if 0
-		printf ("size = %ld, %ld\n", cont->bytes_size, c->bytes_size);
-		printf ("width = %d, %d\n", inside.w, size);
-#endif
-
-		//printf ("\t\toffset = %ld\n", offset);
-		//printf ("\t\tsize   = %ld\n", size);
-
 		Rect next = inside;
 		next.x += offset;
 		next.w = size;
 
 		draw_container(cr, c, next);
 	}
-
 #if 0
-	//printf ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
-	if (shape.w < TAB_WIDTH) {
-		printf ("too narrow\n");
-		return;
-	}
-
-	std::string path = cont->get_path();
-	std::string name = cont->name;
-
-	std::string colour     = theme->get_config (path, name, "colour");
-	std::string background = theme->get_config (path, name, "background");
-	std::string label      = theme->get_config (path, name, "label");
-	std::string icon       = theme->get_config (path, name, "icon");
-
 	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
-
 #endif
 }
 

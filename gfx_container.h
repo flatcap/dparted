@@ -35,6 +35,7 @@ typedef std::shared_ptr<GfxContainer> GfxContainerPtr;
 class GfxContainer
 {
 public:
+	//XXX theme updated?
 	GfxContainer (ContainerPtr c);
 	virtual ~GfxContainer();
 
@@ -60,6 +61,9 @@ public:
 	uint64_t parent_offset = 0;
 
 	bool usage = false;
+
+	bool update_info (void);
+	bool mouse_event (void);
 
 protected:
 	GfxContainer (void);

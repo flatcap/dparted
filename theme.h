@@ -62,6 +62,7 @@ protected:
 	std::map<std::string,std::string> config;
 
 private:
+	int seqnum = 0;
 
 };
 

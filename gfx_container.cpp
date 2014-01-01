@@ -127,6 +127,20 @@ GfxContainer::process_label (std::string label_template)
 	return label_template;
 }
 
+/**
+ * update_info
+ */
+bool GfxContainer::update_info (void)
+{
+	ContainerPtr c = get_smart();
+	if (!c)
+		return false;
+
+	// compare wrapper seqnums
+	// compare theme seqnums
+
+	return true;
+}
 
 /**
  * dump
