@@ -69,8 +69,8 @@ PropVisitor::visit (ContainerPtr c)
 			tabs.resize (indent, '\t');
 		}
 		for (auto n : c->get_prop_names()) {
-			VPtr v = c->get_prop (n);
-			output << tabs << v->owner << ": " << v->name << " = " << (std::string) *v << "\n";
+			PPtr p = c->get_prop (n);
+			output << tabs << p->owner << ": " << p->name << " = " << (std::string) *p << "\n";
 		}
 	}
 

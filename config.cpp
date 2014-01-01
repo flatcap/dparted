@@ -175,7 +175,7 @@ Config& Config::operator= (std::string value)
 			s_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -193,7 +193,7 @@ Config& Config::operator= (double value)
 			d_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -211,7 +211,7 @@ Config& Config::operator= (bool value)
 			l_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -229,7 +229,7 @@ Config& Config::operator= (uint8_t value)
 			l_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -247,7 +247,7 @@ Config& Config::operator= (int8_t value)
 			l_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -265,7 +265,7 @@ Config& Config::operator= (uint16_t value)
 			l_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -283,7 +283,7 @@ Config& Config::operator= (int16_t value)
 			l_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -301,7 +301,7 @@ Config& Config::operator= (uint32_t value)
 			l_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -319,7 +319,7 @@ Config& Config::operator= (int32_t value)
 			l_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -337,7 +337,7 @@ Config& Config::operator= (uint64_t value)
 			l_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -355,7 +355,7 @@ Config& Config::operator= (int64_t value)
 			l_value = value;
 			break;
 		default:
-			throw std::runtime_error ("variant: wrong type");
+			throw std::runtime_error ("config: wrong type");
 	}
 
 	return *this;
@@ -384,7 +384,7 @@ Config::operator std::string (void)
 
 		case Config::Tag::t_unset:	return "";
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -406,11 +406,11 @@ Config::operator double()
 		case Config::Tag::t_u32:
 		case Config::Tag::t_s32:
 		case Config::Tag::t_u64:
-		case Config::Tag::t_s64:	throw std::runtime_error ("variant: wrong type");
+		case Config::Tag::t_s64:	throw std::runtime_error ("config: wrong type");
 
 		case Config::Tag::t_unset:	return 0;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -436,7 +436,7 @@ Config::operator bool()
 
 		case Config::Tag::t_unset:	return false;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -449,21 +449,21 @@ Config::operator uint8_t()
 		case Config::Tag::t_bool:
 		case Config::Tag::t_u8:	return l_value;
 
-		case Config::Tag::t_s8:	throw std::runtime_error ("variant: wrong sign");
+		case Config::Tag::t_s8:	throw std::runtime_error ("config: wrong sign");
 
 		case Config::Tag::t_string:
-		case Config::Tag::t_double:	throw std::runtime_error ("variant: wrong type");
+		case Config::Tag::t_double:	throw std::runtime_error ("config: wrong type");
 
 		case Config::Tag::t_u16:
 		case Config::Tag::t_s16:
 		case Config::Tag::t_u32:
 		case Config::Tag::t_s32:
 		case Config::Tag::t_u64:
-		case Config::Tag::t_s64:	throw std::runtime_error ("variant: too big");
+		case Config::Tag::t_s64:	throw std::runtime_error ("config: too big");
 
 		case Config::Tag::t_unset:	return 0;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -476,21 +476,21 @@ Config::operator int8_t()
 		case Config::Tag::t_bool:
 		case Config::Tag::t_s8:	return l_value;
 
-		case Config::Tag::t_u8:	throw std::runtime_error ("variant: wrong sign");
+		case Config::Tag::t_u8:	throw std::runtime_error ("config: wrong sign");
 
 		case Config::Tag::t_string:
-		case Config::Tag::t_double:	throw std::runtime_error ("variant: wrong type");
+		case Config::Tag::t_double:	throw std::runtime_error ("config: wrong type");
 
 		case Config::Tag::t_u16:
 		case Config::Tag::t_s16:
 		case Config::Tag::t_u32:
 		case Config::Tag::t_s32:
 		case Config::Tag::t_u64:
-		case Config::Tag::t_s64:	throw std::runtime_error ("variant: too big");
+		case Config::Tag::t_s64:	throw std::runtime_error ("config: too big");
 
 		case Config::Tag::t_unset:	return 0;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -505,19 +505,19 @@ Config::operator uint16_t()
 		case Config::Tag::t_u16:	return l_value;
 
 		case Config::Tag::t_s8:
-		case Config::Tag::t_s16:	throw std::runtime_error ("variant: wrong sign");
+		case Config::Tag::t_s16:	throw std::runtime_error ("config: wrong sign");
 
 		case Config::Tag::t_string:
-		case Config::Tag::t_double:	throw std::runtime_error ("variant: wrong type");
+		case Config::Tag::t_double:	throw std::runtime_error ("config: wrong type");
 
 		case Config::Tag::t_u32:
 		case Config::Tag::t_s32:
 		case Config::Tag::t_u64:
-		case Config::Tag::t_s64:	throw std::runtime_error ("variant: too big");
+		case Config::Tag::t_s64:	throw std::runtime_error ("config: too big");
 
 		case Config::Tag::t_unset:	return 0;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -532,19 +532,19 @@ Config::operator int16_t()
 		case Config::Tag::t_s16:	return l_value;
 
 		case Config::Tag::t_u8:
-		case Config::Tag::t_u16:	throw std::runtime_error ("variant: wrong sign");
+		case Config::Tag::t_u16:	throw std::runtime_error ("config: wrong sign");
 
 		case Config::Tag::t_string:
-		case Config::Tag::t_double:	throw std::runtime_error ("variant: wrong type");
+		case Config::Tag::t_double:	throw std::runtime_error ("config: wrong type");
 
 		case Config::Tag::t_u32:
 		case Config::Tag::t_s32:
 		case Config::Tag::t_u64:
-		case Config::Tag::t_s64:	throw std::runtime_error ("variant: too big");
+		case Config::Tag::t_s64:	throw std::runtime_error ("config: too big");
 
 		case Config::Tag::t_unset:	return 0;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -561,17 +561,17 @@ Config::operator uint32_t()
 
 		case Config::Tag::t_s8:
 		case Config::Tag::t_s16:
-		case Config::Tag::t_s32:	throw std::runtime_error ("variant: wrong sign");
+		case Config::Tag::t_s32:	throw std::runtime_error ("config: wrong sign");
 
 		case Config::Tag::t_string:
-		case Config::Tag::t_double:	throw std::runtime_error ("variant: wrong type");
+		case Config::Tag::t_double:	throw std::runtime_error ("config: wrong type");
 
 		case Config::Tag::t_u64:
-		case Config::Tag::t_s64:	throw std::runtime_error ("variant: too big");
+		case Config::Tag::t_s64:	throw std::runtime_error ("config: too big");
 
 		case Config::Tag::t_unset:	return 0;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -588,17 +588,17 @@ Config::operator int32_t()
 
 		case Config::Tag::t_u8:
 		case Config::Tag::t_u16:
-		case Config::Tag::t_u32:	throw std::runtime_error ("variant: wrong sign");
+		case Config::Tag::t_u32:	throw std::runtime_error ("config: wrong sign");
 
 		case Config::Tag::t_string:
-		case Config::Tag::t_double:	throw std::runtime_error ("variant: wrong type");
+		case Config::Tag::t_double:	throw std::runtime_error ("config: wrong type");
 
 		case Config::Tag::t_u64:
-		case Config::Tag::t_s64:	throw std::runtime_error ("variant: too big");
+		case Config::Tag::t_s64:	throw std::runtime_error ("config: too big");
 
 		case Config::Tag::t_unset:	return 0;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -617,14 +617,14 @@ Config::operator uint64_t()
 		case Config::Tag::t_s8:
 		case Config::Tag::t_s16:
 		case Config::Tag::t_s32:
-		case Config::Tag::t_s64:	throw std::runtime_error ("variant: wrong sign");
+		case Config::Tag::t_s64:	throw std::runtime_error ("config: wrong sign");
 
 		case Config::Tag::t_string:
-		case Config::Tag::t_double:	throw std::runtime_error ("variant: wrong type");
+		case Config::Tag::t_double:	throw std::runtime_error ("config: wrong type");
 
 		case Config::Tag::t_unset:	return 0;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -643,14 +643,14 @@ Config::operator int64_t()
 		case Config::Tag::t_u8:
 		case Config::Tag::t_u16:
 		case Config::Tag::t_u32:
-		case Config::Tag::t_u64:	throw std::runtime_error ("variant: wrong sign");
+		case Config::Tag::t_u64:	throw std::runtime_error ("config: wrong sign");
 
 		case Config::Tag::t_string:
-		case Config::Tag::t_double:	throw std::runtime_error ("variant: wrong type");
+		case Config::Tag::t_double:	throw std::runtime_error ("config: wrong type");
 
 		case Config::Tag::t_unset:	return 0;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -720,7 +720,7 @@ operator== (const Config& lhs, const Config& rhs)
 
 		case Config::Tag::t_unset:	return true;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 
@@ -731,7 +731,7 @@ bool
 operator< (const Config& lhs, const Config& rhs)
 {
 	if (lhs.type != rhs.type)
-		throw std::runtime_error ("variant: wrong type");
+		throw std::runtime_error ("config: wrong type");
 
 	switch (lhs.type) {
 		case Config::Tag::t_string:	return (lhs.s_value < rhs.s_value);
@@ -750,7 +750,7 @@ operator< (const Config& lhs, const Config& rhs)
 
 		case Config::Tag::t_unset:	return true;
 
-		default:			throw std::runtime_error ("variant: unknown type");
+		default:			throw std::runtime_error ("config: unknown type");
 	}
 }
 

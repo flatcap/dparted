@@ -26,7 +26,7 @@
 #include <set>
 #include <tuple>
 
-#include "variant.h"
+#include "property.h"
 #include "mmap.h"
 
 class Container;
@@ -83,8 +83,8 @@ public:
 	ContainerPtr get_smart (void);
 
 	std::vector<std::string> get_prop_names (void);
-	VPtr get_prop (const std::string& name);
-	std::vector<VPtr> get_all_props (void);
+	PPtr get_prop (const std::string& name);
+	std::vector<PPtr> get_all_props (void);
 
 	template<class T>
 	void add_child (std::shared_ptr<T>& child)
@@ -96,8 +96,8 @@ public:
 	template<typename T>
 	void declare_prop (const char* owner, const char* name, T& var, const char* desc)
 	{
-		VPtr vp (new Variant<T>(owner, name, var, desc));
-		props[name] = vp;
+		PPtr pp (new Property<T>(owner, name, var, desc));
+		props[name] = pp;
 	}
 
 public:
@@ -137,7 +137,7 @@ protected:
 
 	MmapSet	mmaps;
 
-	std::map<std::string,VPtr> props;
+	std::map<std::string,PPtr> props;
 	std::vector<ContainerPtr> children;
 
 private:

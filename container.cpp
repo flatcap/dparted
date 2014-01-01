@@ -697,7 +697,7 @@ Container::get_prop_names (void)
 /**
  * get_prop
  */
-VPtr
+PPtr
 Container::get_prop (const std::string& name)
 {
 	//std::cout << "get_prop: " << props.count (name) << std::endl;
@@ -708,9 +708,9 @@ Container::get_prop (const std::string& name)
 /**
  * get_all_props
  */
-std::vector<VPtr> Container::get_all_props (void)
+std::vector<PPtr> Container::get_all_props (void)
 {
-	std::vector<VPtr> vv;
+	std::vector<PPtr> vv;
 
 	for (auto p : props) {
 		//XXX what's the magic C++11 way of doing this?

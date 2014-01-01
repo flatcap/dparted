@@ -15,8 +15,8 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _VARIANT_H_
-#define _VARIANT_H_
+#ifndef _PROPERTY_H_
+#define _PROPERTY_H_
 
 #include <iostream>
 #include <stdexcept>
@@ -24,31 +24,31 @@
 #include <string>
 #include <memory>
 
-class BaseVariant;
+class BaseProperty;
 
-typedef std::shared_ptr<BaseVariant> VPtr;
+typedef std::shared_ptr<BaseProperty> PPtr;
 
 /**
- * class BaseVariant
+ * class BaseProperty
  */
-class BaseVariant
+class BaseProperty
 {
 public:
-	BaseVariant (const char* owner, const char* name, const char* desc) :
+	BaseProperty (const char* owner, const char* name, const char* desc) :
 		owner (owner),
 		name  (name),
 		desc  (desc)
 	{
 	}
 
-	BaseVariant (void)     = default;
-	virtual ~BaseVariant() = default;
+	BaseProperty (void)     = default;
+	virtual ~BaseProperty() = default;
 
-	BaseVariant (const BaseVariant&  other) = default;
-	BaseVariant (BaseVariant&& other)       = default;
+	BaseProperty (const BaseProperty&  other) = default;
+	BaseProperty (BaseProperty&& other)       = default;
 
-	BaseVariant& operator= (BaseVariant&  other) = default;
-	BaseVariant& operator= (BaseVariant&& other) = default;
+	BaseProperty& operator= (BaseProperty&  other) = default;
+	BaseProperty& operator= (BaseProperty&& other) = default;
 
 	void set_type (std::string) { type = Tag::t_string; }
 	void set_type (const char*) { type = Tag::t_string; }
@@ -97,30 +97,30 @@ public:
 
 
 /**
- * template class Variant
+ * template class Property
  */
 template <typename T>
-class Variant : public BaseVariant
+class Property : public BaseProperty
 {
 public:
-	Variant (const char* owner, const char* name, T& v, const char* desc = "") :
-		BaseVariant(owner, name, desc),
+	Property (const char* owner, const char* name, T& v, const char* desc = "") :
+		BaseProperty(owner, name, desc),
 		value(v)
 	{
 		set_type(v);
 	}
 
-	virtual ~Variant()
+	virtual ~Property()
 	{
 	}
 
-	Variant (void) = default;
+	Property (void) = default;
 
-	Variant (const Variant&  other) = default;
-	Variant (Variant&& other)       = default;
+	Property (const Property&  other) = default;
+	Property (Property&& other)       = default;
 
-	Variant& operator= (Variant&  other) = default;
-	Variant& operator= (Variant&& other) = default;
+	Property& operator= (Property&  other) = default;
+	Property& operator= (Property&& other) = default;
 
 	virtual operator T (void)
 	{
@@ -132,5 +132,5 @@ protected:
 };
 
 
-#endif // _VARIANT_H_
+#endif // _PROPERTY_H_
 
