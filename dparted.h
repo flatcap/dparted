@@ -27,7 +27,6 @@
 #include <gtkmm/uimanager.h>
 #include "gtkmm/applicationwindow.h"
 
-#include "drawingarea.h"
 #include "treeview.h"
 
 class Container;

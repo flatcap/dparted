@@ -37,6 +37,8 @@ public:
 
 	virtual bool ask (Question& q);
 
+	//ThemePtr get_theme (void);
+
 protected:
 	virtual void on_activate (void);
 	virtual void on_startup  (void);

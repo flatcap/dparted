@@ -15,31 +15,26 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _APP_H_
-#define _APP_H_
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
 
-#include <memory>
-
-#include "question.h"
-
-class App;
-
-typedef std::shared_ptr<App> AppPtr;
-
-/**
- * class App
- */
-class App
+class Config
 {
 public:
-	App (void);
-	virtual ~App();
+	Config (const std::string& filename);
+	virtual ~Config();
 
-	virtual bool ask (Question& q);
+	bool reread_file (void);
+	bool save_file (void);
 
-	//ConfigPtr get_config (void);
+#if 0
+	get_string
+	get_bool
+	get_u32
+	get_u64
+	get_double
+#endif
 };
 
-
-#endif // _APP_H_
+#endif // _CONFIG_H_
 

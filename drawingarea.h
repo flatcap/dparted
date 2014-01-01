@@ -28,7 +28,7 @@
 #include "theme.h"
 
 typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
-typedef struct { Rect r; ContainerPtr p; } Range;
+typedef struct { Rect r; GfxContainerPtr p; } Range;
 
 /**
  * class DrawingArea
@@ -55,16 +55,15 @@ protected:
 	bool on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 
 private:
-	ContainerPtr m_c;
 	ThemePtr theme;
 
-	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, Rect shape);
-	void draw_icon      (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below);
+	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape);
+	void draw_icon      (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below);
 
-	void draw_block   (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right);
-	void draw_box     (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& inside);
-	void draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
-	void draw_tabbox  (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
+	void draw_block   (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right);
+	void draw_box     (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& inside);
+	void draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
+	void draw_tabbox  (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
 
 	std::deque<Range> vRange;
 

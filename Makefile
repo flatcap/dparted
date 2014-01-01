@@ -30,11 +30,11 @@ OBJ_SRC	+= block.cpp container.cpp disk.cpp extended.cpp file.cpp filesystem.cpp
 	   lvm_volume.cpp md_group.cpp md_table.cpp misc.cpp msdos.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
-LIB_SRC	+= app.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp gfx_container.cpp log.cpp \
+LIB_SRC	+= app.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp log.cpp \
 	   prop_visitor.cpp question.cpp utils.cpp variant.cpp
 
 # GUI - Graphical objects
-GUI_SRC	+= dparted.cpp drawingarea.cpp treeview.cpp theme.cpp gui_app.cpp icon_manager.cpp main.cpp
+GUI_SRC	+= dparted.cpp drawingarea.cpp gfx_container.cpp treeview.cpp theme.cpp gui_app.cpp icon_manager.cpp main.cpp
 
 SRC	= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
 HDR	= $(SRC:%.cpp=%.h)

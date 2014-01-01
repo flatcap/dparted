@@ -521,7 +521,7 @@ void draw_arc (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, bool east)
  * draw_block - draw an icon-width, hollow, rounded rectangle
  */
 void
-DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right)
+DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_tab: too short\n");
@@ -580,7 +580,7 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& 
  * draw_box - draw a rounded rectangle
  */
 void
-DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& inside)
+DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_box: too short\n");
@@ -635,7 +635,7 @@ DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& co
  * draw_iconbox - draw a rounded rectangle with a handy tab
  */
 void
-DrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside)
+DrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_iconbox: too short\n");
@@ -702,7 +702,7 @@ DrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr
  * draw_tabbox - draw a rounded rectangle with a handy tab
  */
 void
-DrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside)
+DrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_tabbox: too short\n");
@@ -770,7 +770,7 @@ DrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr&
  * draw_icon
  */
 void
-DrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below /*=nullptr*/)
+DrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below /*=nullptr*/)
 {
 	Glib::RefPtr<Gdk::Pixbuf> pb;
 
@@ -807,7 +807,7 @@ bool
 DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	//LOG_TRACE;
-	if (!m_c)
+	if (!device)
 		return true;
 
 	vRange.clear();
@@ -823,7 +823,7 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	draw_grid_linear (cr, shape, m_c->bytes_size);
 	fill_rect (cr, shape, "white");
 #endif
-	draw_container (cr, m_c, shape);
+	draw_container (cr, device, shape);
 
 	return true;
 }
@@ -844,6 +844,7 @@ DrawingArea::on_timeout (int timer_number)
 
 #endif
 
+#if 0
 /**
  * dump_range
  */
@@ -853,7 +854,7 @@ dump_range (const std::deque<Range>& vRange)
 	std::cout << "Ranges:\n";
 	for (auto& rg : vRange) {
 		Rect         r = rg.r;
-		ContainerPtr p = rg.p;
+		GfxContainerPtr p = rg.p;
 		std::string type = "unknown";
 		if (p && p->type.size() > 0) {
 			type = p->type.back();
@@ -863,6 +864,7 @@ dump_range (const std::deque<Range>& vRange)
 	}
 }
 
+#endif
 /**
  * on_mouse_motion
  */
@@ -919,15 +921,17 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 		if (b) {
 			//log_error ("\033[01;31mMOUSE on %s\033[0m\n", rg.p->type.back().c_str());
-			rg.p->mouse_event();
+			//rg.p->mouse_event();
 			break;
 		}
 
+#if 0
 		if (b) {
 			printf ("\033[01;31mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p.get(), rg.p->type.back().c_str());
 		} else {
 			printf  ("\033[01;32mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p.get(), rg.p->type.back().c_str());
 		}
+#endif
 	}
 	log_info ("\n");
 
@@ -1171,8 +1175,7 @@ DrawingArea::set_data (ContainerPtr& c)
 {
 	// check we've been given a block device
 
-	m_c = c;
-	if (!m_c)
+	if (!c)
 		return;
 
 	// invalidate window
@@ -1180,7 +1183,7 @@ DrawingArea::set_data (ContainerPtr& c)
 	//set_size_request (400, 50 * children);
 
 	device = std::make_shared<GfxContainer>(c);
-	device->dump();
+	//device->dump();
 }
 
 /**
@@ -1191,6 +1194,7 @@ DrawingArea::get_focus (int x, int y)
 {
 	ContainerPtr match;
 
+#if 0
 	for (auto rg : vRange) {
 		Rect r = rg.r;
 		if ((x >= r.x) && (x < (r.x + r.w)) && (y >= r.y) && (y < (r.y + r.h))) {
@@ -1198,6 +1202,7 @@ DrawingArea::get_focus (int x, int y)
 			break;
 		}
 	}
+#endif
 
 	return match;
 }
@@ -1228,8 +1233,9 @@ DrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, cons
  * draw_label - write some text into an area
  */
 void
-draw_label (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr cont, Rect shape)
+draw_label (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr cont, Rect shape)
 {
+#if 0
 	std::string label;
 
 	std::string device = cont->get_device_name();
@@ -1273,30 +1279,28 @@ draw_label (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr cont, Rect sha
 	layout->set_ellipsize (Pango::ELLIPSIZE_END);
 	layout->update_from_cairo_context (cr);
 	layout->show_in_cairo_context (cr);
+#endif
 }
 
 /**
  * draw_container - recursively draw a set of containers
  */
 void
-DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr& cont, Rect shape)
+DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape)
 {
-	//Rect tab;
-	Rect inside;
-
+	if (!cr)
+		return;
 	if (!cont)
 		return;
 
-	//printf ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
-	if (shape.w < TAB_WIDTH) {
-		printf ("too narrow\n");
-		return;
-	}
+	std::string display = cont->display;
+	std::string background = cont->background;
+	std::string icon = cont->icon;
+	std::string name = "dummy"; // cont->name?
+	std::string colour = cont->colour;
+	std::string label = cont->label;
+	bool usage = cont->usage;
 
-	std::string path = cont->get_path();
-	std::string name = cont->name;
-
-	std::string display = theme->get_config (path, name, "display");
 	if (display.empty()) {
 		display = "box";
 	}
@@ -1307,7 +1311,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerP
 		return;
 	}
 
-	std::vector<ContainerPtr> children = cont->get_children();
+	std::vector<GfxContainerPtr> children = cont->children;
 
 	if ((display != "box") && (display != "empty") && (display != "icon") && (display != "iconbox") && (display != "tabbox")) {
 		display = "box";
@@ -1319,12 +1323,8 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerP
 		}
 	}
 
-	std::string colour     = theme->get_config (path, name, "colour");
-	std::string background = theme->get_config (path, name, "background");
-	std::string label      = theme->get_config (path, name, "label");
-	std::string icon       = theme->get_config (path, name, "icon");
-
-	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
+	//Rect tab;
+	Rect inside;
 
 	if (display == "icon") {		// Large icon
 		Rect box = shape;
@@ -1342,20 +1342,10 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerP
 		box.w -= (GAP*2);
 		box.h -= (GAP*2);
 
-#if 0
-		draw_edge (cr, box, "red");
-		draw_edge (cr, right, "red");
-		return;
-#endif
-
 		Rect below;
 		vRange.push_front ({shape, cont});
 		draw_icon (cr, cont, icon, box, below);
-		draw_text (cr, box2, cont->name);
-
-		//printf ("height = %d\n", shape.h);
-		//std::cout << "icon = " << icon << std::endl;
-		//draw_icon (cr, icon, background, shape, below, right);
+		draw_text (cr, box2, name);
 
 		inside = right;
 #ifdef RAR
@@ -1378,10 +1368,6 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerP
 
 		draw_icon (cr, cont, "table", tab, tab);
 		draw_icon (cr, cont, "shield", tab, tab);
-#if 0
-		background = "rgba(255,255,0,0.3)";
-		fill_area (cr, inside, background);
-#endif
 
 #ifdef RAR
 		theme
@@ -1401,17 +1387,15 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerP
 
 		fill_area (cr, inside, background);
 
-		//XXX if usage
-		if (theme->get_config (path, name, "usage") == "true") {
-#if 1
+		if (usage) {
 			Rect usage = inside;
 			usage.w = usage.w * 2 / 3;
 			cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
 			draw_border (cr, usage);
 			cr->fill();
-#endif
 		}
 		if (!label.empty()) {
+#if 0
 			std::string tag;
 			size_t start = std::string::npos;
 			size_t stop  = std::string::npos;
@@ -1424,16 +1408,10 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerP
 			}
 
 			//printf ("label = %s\n", label.c_str());
+#endif
 
 			draw_text (cr, shape, label);
 		}
-
-		if (cont->name == "ext4") {
-			draw_focus (cr, shape);
-			//draw_edge (cr, shape, "red");
-		}
-
-
 #ifdef RAR
 		theme
 			colour
@@ -1445,7 +1423,6 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerP
 		set_colour (cr, colour);
 		Rect tab;
 		draw_tabbox (cr, cont, shape, tab, inside);
-
 #ifdef RAR
 		theme
 			colour
@@ -1459,13 +1436,13 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerP
 		return;
 	}
 
-	long total = cont->bytes_size;
-	long bpp   = total / inside.w;	// bytes per pixel
+	uint64_t total = cont->bytes_size;
+	uint64_t bpp   = total / inside.w;	// bytes per pixel
 
 	//printf ("\ttotal = %ld\n", total);
 	//printf ("\tbpp   = %ld\n", bpp);
 
-	for (auto c : cont->get_children()) {
+	for (auto c : cont->children) {
 		if (c->bytes_size > total) {
 			total = c->bytes_size;		//XXX tmp -- need to get intermediate object
 			bpp   = total / inside.w;
@@ -1487,6 +1464,25 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, ContainerP
 
 		draw_container(cr, c, next);
 	}
+
+#if 0
+	//printf ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
+	if (shape.w < TAB_WIDTH) {
+		printf ("too narrow\n");
+		return;
+	}
+
+	std::string path = cont->get_path();
+	std::string name = cont->name;
+
+	std::string colour     = theme->get_config (path, name, "colour");
+	std::string background = theme->get_config (path, name, "background");
+	std::string label      = theme->get_config (path, name, "label");
+	std::string icon       = theme->get_config (path, name, "icon");
+
+	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
+
+#endif
 }
 
 

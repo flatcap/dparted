@@ -23,6 +23,7 @@
 #include <string>
 
 #include "container.h"
+#include "theme.h"
 
 class GfxContainer;
 
@@ -56,6 +57,7 @@ public:
 
 	uint64_t bytes_size = 0;
 	uint64_t bytes_used = 0;
+	uint64_t parent_offset = 0;
 
 	bool usage = false;
 
@@ -70,7 +72,10 @@ protected:
 	bool selected = false;
 
 	int seqnum = -1;
+
+	ThemePtr theme;
 };
+
 
 #endif // _GFX_CONTAINER_H_
 

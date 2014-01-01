@@ -22,6 +22,9 @@
  */
 GfxContainer::GfxContainer (ContainerPtr c)
 {
+	theme.reset (new Theme());
+	theme->read_config ("themes/default.conf");
+
 	container = c;
 	sync();
 }
@@ -96,19 +99,21 @@ GfxContainer::init (ContainerPtr c)
 	if (!c)
 		return false;
 
-#if 0
+	std::string path = c->get_path();
+	std::string name = c->name;
+
 	display        = theme->get_config (path, name, "display");
 	colour         = theme->get_config (path, name, "colour");
 	background     = theme->get_config (path, name, "background");
 	label_template = theme->get_config (path, name, "label");
 	icon           = theme->get_config (path, name, "icon");
-	usage          = theme->get_config (path, name, "usage");
-#endif
+	usage          = (theme->get_config (path, name, "usage") == "true");
 
 	label = process_label (label_template);
 
 	bytes_size = c->bytes_size;
 	bytes_used = c->bytes_used;
+	parent_offset = c->parent_offset;
 
 	return true;
 }

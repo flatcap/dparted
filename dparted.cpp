@@ -21,6 +21,7 @@
 #include <iostream>
 
 #include "dparted.h"
+#include "drawingarea.h"
 #include "log.h"
 #include "log_trace.h"
 
