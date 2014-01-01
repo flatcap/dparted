@@ -15,14 +15,14 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#ifndef _CONFIG_MANAGER_H_
+#define _CONFIG_MANAGER_H_
 
-class Config
+class ConfigManager
 {
 public:
-	Config (const std::string& filename);
-	virtual ~Config();
+	ConfigManager (const std::string& filename);
+	virtual ~ConfigManager();
 
 	bool reread_file (void);
 	bool save_file (void);
@@ -36,5 +36,5 @@ public:
 #endif
 };
 
-#endif // _CONFIG_H_
+#endif // _CONFIG_MANAGER_H_
 
