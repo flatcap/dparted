@@ -18,23 +18,33 @@
 #ifndef _CONFIG_MANAGER_H_
 #define _CONFIG_MANAGER_H_
 
+#include <string>
+#include <memory>
+#include <map>
+
+#include "config_file.h"
+
+class ConfigManager;
+
+typedef shared_ptr<ConfigManager> ConfigManagerPtr;
+
+/**
+ * class ConfigManager
+ */
 class ConfigManager
 {
 public:
-	ConfigManager (const std::string& filename);
+	ConfigManager (void);
 	virtual ~ConfigManager();
 
-	bool reread_file (void);
-	bool save_file (void);
+	bool reread_files (void);
+	bool save_files (void);
 
-#if 0
-	get_string
-	get_bool
-	get_u32
-	get_u64
-	get_double
-#endif
+protected:
+	std::map<std::string,ConfigFilePtr>
+
 };
+
 
 #endif // _CONFIG_MANAGER_H_
 

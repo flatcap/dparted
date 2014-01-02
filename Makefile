@@ -40,7 +40,7 @@ SRC	= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
 HDR	= $(SRC:%.cpp=%.h)
 
 # Misc header files
-HDR	+= log_trace.h lvm2.h mmap.h stringnum.h visitor.h config_manager.h
+HDR	+= log_trace.h lvm2.h mmap.h stringnum.h visitor.h config_manager.h config_file.h
 
 OBJ_OBJ	= $(OBJ_SRC:%.cpp=$(OBJDIR)/%.o)
 LIB_OBJ	= $(LIB_SRC:%.cpp=$(OBJDIR)/%.o)
