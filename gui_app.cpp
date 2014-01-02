@@ -1,4 +1,4 @@
-/* Copyright (c) 2013 Richard Russon (FlatCap)
+/* Copyright (c) 2014 Richard Russon (FlatCap)
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -202,7 +202,7 @@ GuiApp::menu_about (void)
 	about.set_program_name("dparted");
 	about.set_version("0.1");
 	about.set_logo_icon_name("dparted");
-	about.set_copyright("Copyright \xc2\xa9 2013 Richard Russon (FlatCap)\n");
+	about.set_copyright("Copyright \xc2\xa9 2014 Richard Russon (FlatCap)\n");
 	about.set_comments("Reorganise your disk.");
 	about.set_website("http://flatcap.org/rich");
 	about.set_website_label("Rich's homepage");
