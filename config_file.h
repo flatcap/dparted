@@ -21,6 +21,8 @@
 #include <string>
 #include <memory>
 
+#include <libconfig.h++>
+
 #include "config.h"
 
 class ConfigFile;

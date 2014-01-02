@@ -26,7 +26,7 @@
 
 class ConfigManager;
 
-typedef shared_ptr<ConfigManager> ConfigManagerPtr;
+typedef std::shared_ptr<ConfigManager> ConfigManagerPtr;
 
 /**
  * class ConfigManager
@@ -41,7 +41,7 @@ public:
 	bool save_files (void);
 
 protected:
-	std::map<std::string,ConfigFilePtr>
+	std::map<std::string,ConfigFilePtr> config_file;
 
 };
 
