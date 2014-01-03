@@ -23,7 +23,7 @@
 GfxContainer::GfxContainer (ContainerPtr c)
 {
 	theme.reset (new Theme());
-	theme->read_config ("themes/default.conf");
+	theme->read_config ("config/theme.conf");
 
 	container = c;
 	sync();

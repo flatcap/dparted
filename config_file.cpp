@@ -15,22 +15,33 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "question.h"
+#include <libconfig.h++>
 
-#if 0
+#include "config_file.h"
+
 /**
- * Question
+ * ConfigFile
  */
-Question::Question (void)
+ConfigFile::ConfigFile (void)
 {
 }
 
 /**
- * ~Question
+ * ~ConfigFile
  */
-Question::~Question()
+ConfigFile::~ConfigFile()
 {
 }
 
-#endif
+
+/**
+ * read_file
+ */
+bool
+ConfigFile::read_file (const std::string& filename)
+{
+	libconfig::Config cfg;
+
+	return false;
+}
 

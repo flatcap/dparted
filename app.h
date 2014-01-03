@@ -21,6 +21,7 @@
 #include <memory>
 
 #include "question.h"
+#include "message.h"
 #include "config_manager.h"
 
 class App;
@@ -37,8 +38,11 @@ public:
 	virtual ~App();
 
 	virtual bool ask (Question& q);
+	virtual bool notify (Message& m);
 
 	ConfigManagerPtr get_config_manager (void);
+
+	bool add_config (const std::string& filename);
 
 protected:
 	ConfigManagerPtr config_manager;

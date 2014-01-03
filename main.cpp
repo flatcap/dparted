@@ -133,12 +133,21 @@ main (int argc, char* argv[])
 	// -l	list
 	// -d	dot
 	// -s	separate dot diagrams
+	//
+	//NOTIMPL
+	// -c config_file
+	//	[multiple = override]
+	// -t theme_file
+	//	[multiple = choice]
 
 	bool app      = false;
 	bool dot      = false;
 	bool list     = false;
 	bool separate = false;
 	bool props    = false;
+
+	std::vector<std::string> configs = { "config/dparted.conf" };
+	std::vector<std::string> themes  = { "config/theme.conf" };
 
 	if (argc > 1) {
 		std::string arg = argv[1];
@@ -285,6 +294,14 @@ main (int argc, char* argv[])
                 std::shared_ptr<GuiApp> gui (new GuiApp (top_level));
 
                 main_app = gui;
+
+		for (auto c : configs) {
+			gui->add_config (c);
+		}
+
+		for (auto t : themes) {
+			gui->add_theme (t);
+		}
 
                 retval = gui->run (1, argv);           //XXX argc
 	}

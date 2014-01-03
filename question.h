@@ -20,6 +20,11 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+
+class Question;
+
+typedef std::shared_ptr<Question> QuestionPtr;
 
 class Question
 {

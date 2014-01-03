@@ -31,7 +31,7 @@ OBJ_SRC	+= block.cpp container.cpp disk.cpp extended.cpp file.cpp filesystem.cpp
 
 # Library - Non-graphical miscellany
 LIB_SRC	+= app.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp log.cpp \
-	   prop_visitor.cpp question.cpp utils.cpp property.cpp config.cpp
+	   prop_visitor.cpp question.cpp utils.cpp property.cpp config.cpp config_file.cpp message.cpp
 
 # GUI - Graphical objects
 GUI_SRC	+= dparted.cpp drawingarea.cpp gfx_container.cpp treeview.cpp theme.cpp gui_app.cpp icon_manager.cpp main.cpp default_theme.cpp
@@ -40,7 +40,7 @@ SRC	= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
 HDR	= $(SRC:%.cpp=%.h)
 
 # Misc header files
-HDR	+= log_trace.h lvm2.h mmap.h stringnum.h visitor.h config_manager.h config_file.h
+HDR	+= log_trace.h lvm2.h mmap.h stringnum.h visitor.h config_manager.h
 
 OBJ_OBJ	= $(OBJ_SRC:%.cpp=$(OBJDIR)/%.o)
 LIB_OBJ	= $(LIB_SRC:%.cpp=$(OBJDIR)/%.o)

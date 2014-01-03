@@ -52,11 +52,32 @@ App::ask (Question& q)
 }
 
 /**
+ * notify
+ */
+bool
+App::notify (Message& m)
+{
+	// Might need to queue these until we're ready to confront the user
+	return false;
+}
+
+
+/**
  * get_config_manager
  */
 ConfigManagerPtr
 App::get_config_manager (void)
 {
 	return config_manager;
+}
+
+
+/**
+ * add_config
+ */
+bool
+App::add_config (const std::string& filename)
+{
+	return false;
 }
 

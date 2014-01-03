@@ -15,22 +15,28 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "question.h"
+#ifndef _MESSAGE_H_
+#define _MESSAGE_H_
 
+#include <string>
+#include <vector>
+#include <memory>
+
+class Message;
+
+typedef std::shared_ptr<Message> MessagePtr;
+
+class Message
+{
+public:
 #if 0
-/**
- * Question
- */
-Question::Question (void)
-{
-}
-
-/**
- * ~Question
- */
-Question::~Question()
-{
-}
-
+	Message (void);
+	virtual ~Message();
 #endif
+
+	std::string title;
+	std::string message;
+};
+
+#endif // _MESSAGE_H_
 

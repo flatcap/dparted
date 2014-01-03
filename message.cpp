@@ -15,20 +15,20 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "question.h"
+#include "message.h"
 
 #if 0
 /**
- * Question
+ * Message
  */
-Question::Question (void)
+Message::Message (void)
 {
 }
 
 /**
- * ~Question
+ * ~Message
  */
-Question::~Question()
+Message::~Message()
 {
 }
 

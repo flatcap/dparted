@@ -250,11 +250,44 @@ GuiApp::ask (Question& q)
 }
 
 /**
+ * notify
+ */
+bool
+GuiApp::notify (Message& m)
+{
+	// Might need to queue these until we're ready to confront the user
+	return false;
+}
+
+
+/**
  * get_theme
  */
 ThemePtr
 GuiApp::get_theme (void)
 {
 	return theme;
+}
+
+
+/**
+ * add_config
+ */
+bool
+GuiApp::add_config (const std::string& filename)
+{
+	if (!App::add_config (filename))
+		return false;
+
+	return false;
+}
+
+/**
+ * add_theme
+ */
+bool
+GuiApp::add_theme (const std::string& filename)
+{
+	return false;
 }
 

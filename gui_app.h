@@ -24,6 +24,7 @@
 #include "app.h"
 #include "container.h"
 #include "theme.h"
+#include "message.h"
 
 /**
  * class GuiApp
@@ -37,8 +38,12 @@ public:
 	virtual ~GuiApp();
 
 	virtual bool ask (Question& q);
+	virtual bool notify (Message& m);
 
 	ThemePtr get_theme (void);
+
+	bool add_config (const std::string& filename);
+	bool add_theme  (const std::string& filename);
 
 protected:
 	virtual void on_activate (void);

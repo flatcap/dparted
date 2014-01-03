@@ -20,8 +20,7 @@
 
 #include <string>
 #include <memory>
-
-#include <libconfig.h++>
+#include <map>
 
 #include "config.h"
 
@@ -38,6 +37,8 @@ public:
 	ConfigFile (void);
 	virtual ~ConfigFile();
 
+	bool read_file (const std::string& filename);
+
 #if 0
 	get_string
 	get_bool
@@ -49,8 +50,6 @@ public:
 protected:
 	std::string filename;
 	bool read_only = true;
-
-	libconfig::Config cfg;
 
 	std::map<std::string,std::string> config;
 };
