@@ -1,0 +1,60 @@
+Config file
+
+Types:
+	bool
+	string
+	int
+	float
+
+Example (flat)
+	confirmation.delete.lvm.physical = true
+	confirmation.delete.lvm.volume = true
+	confirmation.delete.partition = true
+	confirmation.delete.table = true
+	confirmation.quit_application = true
+	display.columns = "container,mounts,type,label,size,used,free,flags"
+	display.reserved_space = false
+	display.same_scale = false
+	display.units = "human"
+	warning.backup_before_starting = true
+	warning.not_bootable = true
+
+Does config file exist?
+	Yes
+		Read file
+		Generate config map(key,value)
+	No
+		Generate empty config tree
+		throw an error
+			missing file
+
+
+Does config item exist?
+	Yes
+	No
+
+Read config item
+	Does it exist?
+		Yes
+			Return value
+		No
+			Throw an error
+
+Read config item (with default)
+	Does it exist?
+		Yes
+			Return value
+		No
+			Create config item
+				modified = true
+			Set value to default
+			Return value
+
+Close config file
+	Is config modified?
+		No
+			Do nothing
+		Yes
+			Ask user if we should save file
+
+

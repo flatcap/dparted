@@ -15,48 +15,26 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <iostream>
+
+#include <map>
 #include <string>
 
-#include "app.h"
-
-/**
- * App
- */
-App::App (void)
+std::map<std::string,std::string>
+get_default_theme (void)
 {
-}
+	std::map<std::string,std::string> theme = {
+		{ "Container.Filesystem.display",      "box" },
+		{ "Container.Filesystem.colour",       "red" },
+		{ "Container.Filesystem.background",   "white" },
+		{ "Container.Filesystem.usage",        "true" },
+		{ "Container.Filesystem.label",        "{device_short} - {bytes_size_human}\n{label}" },
+		{ "Container.Filesystem.btrfs.colour", "#FF9955" },
+		{ "Container.Filesystem.exfat.colour", "#2E8B57" },
+		{ "Container.Filesystem.ext2.colour",  "#9DB8D2" },
+	};
 
-/**
- * ~App
- */
-App::~App()
-{
-}
+	//XXX convert this to ConfigPtr tree
 
-
-/**
- * ask
- */
-bool
-App::ask (Question& q)
-{
-	std::cout << q.title << std::endl;
-	std::cout << q.question << std::endl;
-	std::cout << '\t';
-	for (auto a : q.answers) {
-		std::cout << a << " ";
-	}
-	std::cout << '\n';
-	return false;
-}
-
-/**
- * get_config_manager
- */
-ConfigManagerPtr
-App::get_config_manager (void)
-{
-	return config_manager;
+	return theme;
 }
 

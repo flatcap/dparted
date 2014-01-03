@@ -249,4 +249,12 @@ GuiApp::ask (Question& q)
 	return true;
 }
 
+/**
+ * get_theme
+ */
+ThemePtr
+GuiApp::get_theme (void)
+{
+	return theme;
+}
 

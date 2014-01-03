@@ -1,0 +1,73 @@
+Theme file
+
+Types:
+	bool
+	string
+	int
+	float
+	icon (pixbuf)
+	colour (rgba)
+
+Example (flat)
+	container.background = "none"
+	container.block.disk.icon = "disk"
+	container.block.display = "icon"
+	container.block.loop.background = "cyan"
+	container.block.loop.display = "icon"
+	container.block.loop.icon = "loop"
+	container.colour = "black"
+	container.display = "box"
+	container.size = "linear"
+
+Object:
+	type	container.block.file
+	attr	colour
+	name	vm1
+
+Search Order (real):
+	container.block.file.colour
+	container.block.colour
+	container.colour
+
+	container.block.file.vm1.colour
+	container.block.vm1.colour
+	container.vm1.colour
+	vm1.colour
+
+Search Order (symbolic):
+	PATH1.PATH2.PATH3.ATTR
+	PATH1.PATH2.ATTR
+	PATH1.ATTR
+
+	PATH1.PATH2.PATH3.NAME.ATTR
+	PATH1.PATH2.NAME.ATTR
+	PATH1.NAME.ATTR
+	NAME.ATTR
+
+Does theme exist?
+	Yes
+		Read file
+		Generate config map(key,value)
+	
+	No
+		Use some hard-coded colours
+		throw an error
+			missing file
+			parse error
+
+Does theme item exist?
+	Yes - Exact match
+	Yes - Partial match
+	No
+
+Read theme item
+	Does it exist?
+		Yes
+			Return value
+		No
+			throw an error
+				missing theme value
+
+Close theme file
+	Not modifiable -> Do nothing
+

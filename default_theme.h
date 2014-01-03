@@ -15,48 +15,13 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <iostream>
+#ifndef _DEFAULT_THEME_H_
+#define _DEFAULT_THEME_H_
+
 #include <string>
+#include <map>
 
-#include "app.h"
+std::map<std::string,std::string> get_default_theme (void);
 
-/**
- * App
- */
-App::App (void)
-{
-}
-
-/**
- * ~App
- */
-App::~App()
-{
-}
-
-
-/**
- * ask
- */
-bool
-App::ask (Question& q)
-{
-	std::cout << q.title << std::endl;
-	std::cout << q.question << std::endl;
-	std::cout << '\t';
-	for (auto a : q.answers) {
-		std::cout << a << " ";
-	}
-	std::cout << '\n';
-	return false;
-}
-
-/**
- * get_config_manager
- */
-ConfigManagerPtr
-App::get_config_manager (void)
-{
-	return config_manager;
-}
+#endif // _DEFAULT_THEME_H_
 

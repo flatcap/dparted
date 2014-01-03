@@ -49,6 +49,8 @@ public:
 	bool read_config (const char* filename);
 	std::string get_config (std::string path, const std::string& name, const std::string& attr);
 
+	bool is_valid (void);
+
 protected:
 	std::map<std::string,Gdk::RGBA> colours;
 	std::map<std::string,Glib::RefPtr<Gdk::Pixbuf> > icons;

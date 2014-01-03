@@ -30,7 +30,7 @@ class ConfigFile;
 typedef std::shared_ptr<ConfigFile> ConfigFilePtr;
 
 /**
- * class ConfigFile
+ * class ConfigFile - Manages a bunch of nested strings
  */
 class ConfigFile
 {
@@ -51,7 +51,8 @@ protected:
 	bool read_only = true;
 
 	libconfig::Config cfg;
-	ConfigPtr config;
+
+	std::map<std::string,std::string> config;
 };
 
 

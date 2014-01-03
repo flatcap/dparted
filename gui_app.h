@@ -23,6 +23,7 @@
 
 #include "app.h"
 #include "container.h"
+#include "theme.h"
 
 /**
  * class GuiApp
@@ -37,7 +38,7 @@ public:
 
 	virtual bool ask (Question& q);
 
-	//ThemePtr get_theme (void);
+	ThemePtr get_theme (void);
 
 protected:
 	virtual void on_activate (void);
@@ -55,6 +56,8 @@ protected:
 	void menu_quit        (void);
 
 	ContainerPtr top_level;
+
+	ThemePtr theme;
 };
 
 

@@ -374,3 +374,11 @@ Theme::get_config (std::string path, const std::string& name, const std::string&
 }
 
 
+/**
+ * is_valid
+ */
+bool
+Theme::is_valid (void)
+{
+	return true;
+}
