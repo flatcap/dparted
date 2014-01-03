@@ -55,14 +55,29 @@ public:
 		return (strtol (c_str(), nullptr, 10) != 0);
 	}
 
-	operator int()
+	operator uint32_t()
 	{
 		return strtoimax (c_str(), nullptr, 10);
 	}
 
-	operator long()
+	operator int32_t()
+	{
+		return strtoumax (c_str(), nullptr, 10);
+	}
+
+	operator uint64_t()
+	{
+		return strtoul (c_str(), nullptr, 10);
+	}
+
+	operator int64_t()
 	{
 		return strtol (c_str(), nullptr, 10);
+	}
+
+	operator double()
+	{
+		return strtod (c_str(), nullptr);
 	}
 };
 

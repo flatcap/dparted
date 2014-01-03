@@ -15,9 +15,14 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <algorithm>
+#include <vector>
+#include <string>
+
 #include <libconfig.h++>
 
 #include "config_file.h"
+#include "stringnum.h"
 
 /**
  * ConfigFile
@@ -86,6 +91,15 @@ parse_config (const libconfig::Setting& setting, std::map<std::string,std::strin
 
 
 /**
+ * is_valid
+ */
+bool ConfigFile::is_valid (void)
+{
+	return valid;
+}
+
+
+/**
  * read_file
  */
 ConfigFilePtr
@@ -110,7 +124,7 @@ ConfigFile::read_file (const std::string& filename)
 	parse_config (root, cf->config);
 	cf->dump_config();
 
-	return nullptr;
+	return cf;
 }
 
 /**
@@ -123,5 +137,136 @@ ConfigFile::dump_config (void)
 	for (auto c : config) {
 		std::cout << "\t" << c.first << " = " << c.second << "\n";
 	}
+}
+
+
+/**
+ * exists
+ */
+bool ConfigFile::exists (const std::string& name)
+{
+	return (config.count (name) > 0);
+}
+
+
+/**
+ * get_bool
+ */
+bool
+ConfigFile::get_bool (const std::string& name)
+{
+	if (!exists (name))
+		throw "config: " + name + "doesn't exist";
+
+	StringNum value = config[name];
+	std::transform (value.begin(), value.end(), value.begin(), ::tolower);
+
+	return (value == "true");
+}
+
+/**
+ * get_u32
+ */
+uint32_t
+ConfigFile::get_u32 (const std::string& name)
+{
+	if (!exists (name))
+		throw "config: " + name + "doesn't exist";
+
+	StringNum value = config[name];
+
+	return (uint32_t) value;
+}
+
+/**
+ * get_s32
+ */
+int32_t
+ConfigFile::get_s32 (const std::string& name)
+{
+	if (!exists (name))
+		throw "config: " + name + "doesn't exist";
+
+	StringNum value = config[name];
+
+	return (int32_t) value;
+}
+
+/**
+ * get_u64
+ */
+uint64_t
+ConfigFile::get_u64 (const std::string& name)
+{
+	if (!exists (name))
+		throw "config: " + name + "doesn't exist";
+
+	StringNum value = config[name];
+
+	return (uint64_t) value;
+}
+
+/**
+ * get_s64
+ */
+int64_t
+ConfigFile::get_s64 (const std::string& name)
+{
+	if (!exists (name))
+		throw "config: " + name + "doesn't exist";
+
+	StringNum value = config[name];
+
+	return (int64_t) value;
+}
+
+/**
+ * get_double
+ */
+double
+ConfigFile::get_double (const std::string& name)
+{
+	if (!exists (name))
+		throw "config: " + name + "doesn't exist";
+
+	StringNum value = config[name];
+
+	return (double) value;
+}
+
+/**
+ * get_string
+ */
+std::string
+ConfigFile::get_string (const std::string& name)
+{
+	if (!exists (name))
+		throw "config: " + name + "doesn't exist";
+
+	return config[name];
+}
+
+/**
+ * get_strings
+ */
+std::vector<std::string>
+ConfigFile::get_strings (const std::string& name)
+{
+	std::vector<std::string> vs;
+	std::string array;
+
+	for (int i = 0; i < 64; i++) {
+		array = name + ".[" + std::to_string(i) + "]";
+		if (!exists (array))
+			break;
+
+		vs.push_back (config[array]);
+	}
+
+	if (vs.empty()) {
+		throw "config: " + array + "doesn't exist";
+	}
+
+	return vs;
 }
 

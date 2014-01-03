@@ -21,6 +21,7 @@
 #include <string>
 #include <memory>
 #include <map>
+#include <vector>
 
 #include "config.h"
 
@@ -39,17 +40,23 @@ public:
 
 	static ConfigFilePtr read_file (const std::string& filename);
 
-#if 0
-	get_string
-	get_bool
-	get_u32
-	get_u64
-	get_double
-#endif
+	bool exists (const std::string& name);
+
+	bool                     get_bool    (const std::string& name);
+	uint32_t                 get_u32     (const std::string& name);
+	int32_t                  get_s32     (const std::string& name);
+	uint64_t                 get_u64     (const std::string& name);
+	int64_t                  get_s64     (const std::string& name);
+	double                   get_double  (const std::string& name);
+	std::string              get_string  (const std::string& name);
+	std::vector<std::string> get_strings (const std::string& name);
+
+	bool is_valid (void);
 
 protected:
 	std::string filename;
 	bool read_only = true;
+	bool valid = false;
 
 	std::map<std::string,std::string> config;
 
