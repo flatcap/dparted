@@ -37,7 +37,7 @@ public:
 	ConfigFile (void);
 	virtual ~ConfigFile();
 
-	bool read_file (const std::string& filename);
+	static ConfigFilePtr read_file (const std::string& filename);
 
 #if 0
 	get_string
@@ -52,6 +52,8 @@ protected:
 	bool read_only = true;
 
 	std::map<std::string,std::string> config;
+
+	void dump_config (void);
 };
 
 

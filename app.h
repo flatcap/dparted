@@ -22,7 +22,7 @@
 
 #include "question.h"
 #include "message.h"
-#include "config_manager.h"
+#include "config_file.h"
 
 class App;
 
@@ -37,15 +37,13 @@ public:
 	App (void);
 	virtual ~App();
 
-	virtual bool ask (Question& q);
-	virtual bool notify (Message& m);
-
-	ConfigManagerPtr get_config_manager (void);
+	virtual bool ask    (Question& q);
+	virtual bool notify (Message&  m);
 
 	bool add_config (const std::string& filename);
 
 protected:
-	ConfigManagerPtr config_manager;
+	ConfigFilePtr config_file;
 };
 
 

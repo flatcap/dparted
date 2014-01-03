@@ -63,21 +63,25 @@ App::notify (Message& m)
 
 
 /**
- * get_config_manager
- */
-ConfigManagerPtr
-App::get_config_manager (void)
-{
-	return config_manager;
-}
-
-
-/**
  * add_config
  */
 bool
 App::add_config (const std::string& filename)
 {
+	ConfigFilePtr cf;
+
+	cf = ConfigFile::read_file (filename);
+	if (!cf) {
+		//notify the user
+		return false;
+	}
+
+	if (config_file) {
+		//if modified ask user if they're sure
+	}
+
+	config_file = cf;
+
 	return false;
 }
 
