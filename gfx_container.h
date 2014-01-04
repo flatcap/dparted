@@ -22,6 +22,10 @@
 #include <memory>
 #include <string>
 
+#include <gdkmm/pixbuf.h>
+#include <gdkmm/rgba.h>
+#include <glibmm/refptr.h>
+
 #include "container.h"
 #include "theme.h"
 

@@ -62,6 +62,8 @@ protected:
 
 	ContainerPtr top_level;
 
+	ConfigFilePtr theme_file;
+
 	ThemePtr theme;
 };
 

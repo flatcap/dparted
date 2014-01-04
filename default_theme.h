@@ -21,7 +21,19 @@
 #include <string>
 #include <map>
 
-std::map<std::string,std::string> get_default_theme (void);
+#include "theme.h"
+
+/**
+ * class DefaultTheme
+ */
+class DefaultTheme : public Theme
+{
+public:
+	DefaultTheme (void);
+	virtual ~DefaultTheme();
+
+};
+
 
 #endif // _DEFAULT_THEME_H_
 

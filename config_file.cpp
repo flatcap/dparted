@@ -122,7 +122,7 @@ ConfigFile::read_file (const std::string& filename)
 	ConfigFilePtr cf (new ConfigFile());
 
 	parse_config (root, cf->config);
-	cf->dump_config();
+	//cf->dump_config();
 
 	return cf;
 }

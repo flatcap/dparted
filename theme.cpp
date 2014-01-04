@@ -23,11 +23,10 @@
 #include <iostream>
 #include <string>
 
-#include <libconfig.h++>
-
 #include "log.h"
 #include "theme.h"
 #include "log_trace.h"
+#include "missing_icon.h"
 
 /**
  * Theme
@@ -96,27 +95,15 @@ Theme::init_colours (void)
 /**
  * add_colour
  */
-Gdk::RGBA
+bool
 Theme::add_colour (const std::string& name, const std::string& colour)
 {
 	Gdk::RGBA& c = colours[name];
 
-	c.set (colour);
+	if (c.set (colour))
+		return true;
 
-	return c;
-}
-
-/**
- * add_colour
- */
-Gdk::RGBA
-Theme::add_colour (const std::string& name, const Gdk::RGBA& colour)
-{
-	Gdk::RGBA& c = colours[name];
-
-	c = colour;
-
-	return c;
+	return false;
 }
 
 /**
@@ -157,12 +144,6 @@ Theme::init_icons (void)
 	add_icon ("network","/usr/share/icons/gnome/48x48/status/connect_established.png");
 
 	add_icon ("warning", "/usr/share/icons/gnome/24x24/status/dialog-warning.png");
-
-	add_icon ("margin_red",   "icons/margin_red.png");
-	add_icon ("margin_black", "icons/margin_black.png");
-
-	add_icon ("margin_red64",   "icons/margin_red64.png");
-	add_icon ("margin_black64", "icons/margin_black64.png");
 }
 
 /**
@@ -185,8 +166,6 @@ Theme::add_icon (const std::string& name, const std::string& filename)
 }
 
 
-#include "missing.cpp"
-
 /**
  * get_icon
  */
@@ -196,13 +175,11 @@ Theme::get_icon (const std::string& name)
 	Glib::RefPtr<Gdk::Pixbuf>& pb = icons[name];
 
 	if (!pb) {
-#if 0
-		pb = icons["warning"];
+		if (!missing_icon) {
+			missing_icon = Gdk::Pixbuf::create_from_inline (sizeof (missing_icon_bits), (const uint8_t*) missing_icon_bits, false);
+		}
 
-		pb = Gdk::Pixbuf::create (Gdk::Colorspace::COLORSPACE_RGB, true, 8, 24, 24);
-		pb->fill (0xFF0000FF);
-#endif
-		pb = Gdk::Pixbuf::create_from_inline (sizeof (myimage_inline), myimage_inline);
+		pb = missing_icon;
 	}
 
 	return pb;
@@ -223,104 +200,6 @@ Theme::get_icon (const std::string& name)
 	std::cout << "fg = " << fg.get_red() << "," << fg.get_green() << "," << fg.get_blue() << "\n";
 	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << "\n";
 #endif
-
-/**
- * get_value
- */
-std::string
-Theme::get_value (const libconfig::Setting& s)
-{
-	libconfig::Setting::Type t = s.getType();
-
-	switch (t) {
-		case libconfig::Setting::TypeString:
-			return s.operator std::string();
-		case libconfig::Setting::TypeBoolean:
-			if (bool(s))
-				return "true";
-			else
-				return "false";
-			return "something";
-		case libconfig::Setting::TypeInt:
-			return std::to_string (int (s));
-		case libconfig::Setting::TypeInt64:
-			return std::to_string (long (s));
-		case libconfig::Setting::TypeFloat:
-			return std::to_string (float (s));
-		default:
-			return "unknown";
-	}
-}
-
-/**
- * parse_config
- */
-void
-Theme::parse_config (const libconfig::Setting& setting)
-{
-	for (int i = 0; i < setting.getLength(); i++) {
-		const libconfig::Setting& s = setting[i];
-
-		if (s.isScalar()) {
-			std::string path  = s.getPath();
-			std::string value = get_value(s);
-
-			config[path] = value;
-		}
-
-		if (s.isGroup()) {
-			parse_config (s);
-		}
-	}
-}
-
-/**
- * read_config
- */
-bool
-Theme::read_config (const char* filename)
-{
-	libconfig::Config cfg;
-
-	try
-	{
-		cfg.readFile(filename);
-	}
-	catch(const libconfig::FileIOException& fioex)
-	{
-		std::cerr << "I/O error while reading file." << std::endl;
-		return false;
-	}
-	catch(const libconfig::ParseException& pex)
-	{
-		std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
-		return false;
-	}
-
-	try
-	{
-		std::string name = cfg.lookup("name");
-		//std::cout << "Theme: " << name << std::endl << std::endl;
-	}
-	catch(const libconfig::SettingNotFoundException& nfex)
-	{
-		std::cerr << "No 'name' setting in configuration file." << std::endl;
-	}
-
-	const libconfig::Setting& root = cfg.getRoot();
-
-	parse_config (root);
-
-#if 0
-	log_info ("Theme:\n");
-	for (auto c : config) {
-		std::cout << '\t' << c.first << " = " << c.second << std::endl;
-	}
-	log_info ("\n");
-#endif
-
-	return true;
-}
 
 /**
  * get_config

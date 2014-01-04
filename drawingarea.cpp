@@ -29,12 +29,11 @@
 #include "drawingarea.h"
 #include "filesystem.h"
 #include "log.h"
-#include "theme.h"
 #include "utils.h"
 #include "whole.h"
 #include "log_trace.h"
 
-const double ARC_N = 3*M_PI_2;		// Compass points in radians
+const double ARC_N = 3*M_PI_2;	// Compass points in radians
 const double ARC_E = 0*M_PI_2;
 const double ARC_S = 1*M_PI_2;
 const double ARC_W = 2*M_PI_2;
@@ -66,9 +65,6 @@ DrawingArea::DrawingArea()
 	sigc::slot<bool> my_slot = sigc::bind (sigc::mem_fun (*this, &DrawingArea::on_timeout), 0);
 	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 300); // ms
 #endif
-
-	theme.reset (new Theme());
-	theme->read_config ("config/theme.conf");
 
 	//set_tooltip_text("tooltip number 1");
 
@@ -770,25 +766,20 @@ DrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerP
  * draw_icon
  */
 void
-DrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below /*=nullptr*/)
+DrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Glib::RefPtr<Gdk::Pixbuf> icon, const Rect& shape, Rect& below)
 {
-	Glib::RefPtr<Gdk::Pixbuf> pb;
-
 	Rect work = shape;
 
-	pb = theme->get_icon (name);
-	if (!pb) {
-		std::cout << "no icon!\n";
+	if (!icon)
 		return;
-	}
 
 	cr->save();
 
-	work.x += ((work.w - pb->get_width()) / 2);	// Centre the icon
+	work.x += ((work.w - icon->get_width()) / 2);	// Centre the icon
 
-	Gdk::Cairo::set_source_pixbuf (cr, pb, work.x, work.y);
-	work.w = pb->get_width();
-	work.h = pb->get_height();
+	Gdk::Cairo::set_source_pixbuf (cr, icon, work.x, work.y);
+	work.w = icon->get_width();
+	work.h = icon->get_height();
 	//log_info ("icon %d,%d\n", work.w, work.h);
 
 	cr->rectangle (work.x, work.y, work.w, work.h);
@@ -1317,6 +1308,12 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	std::string label = cont->label;
 	bool usage = cont->usage;
 
+	Glib::RefPtr<Gdk::Pixbuf> icon_pb = icons[icon];
+	if (!icon_pb) {
+		std::cout << "NO ICON: " << icon << std::endl;
+		return;
+	}
+
 	if (display.empty()) {
 		display = "box";
 	}
@@ -1364,9 +1361,9 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		box.w -= (GAP*2);
 		box.h -= (GAP*2);
 
-		Rect below;
+		//QWQ Rect below;
 		vRange.push_front ({shape, cont});
-		draw_icon (cr, cont, icon, box, below);
+		//QWQ draw_icon (cr, cont, icon, box, below);
 		draw_text (cr, box2, name);
 
 		inside = right;
@@ -1388,8 +1385,8 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		set_colour (cr, colour);
 		draw_iconbox (cr, cont, shape, tab, inside);
 
-		draw_icon (cr, cont, "table", tab, tab);
-		draw_icon (cr, cont, "shield", tab, tab);
+		//QWQ draw_icon (cr, cont, "table", tab, tab);
+		//QWQ draw_icon (cr, cont, "shield", tab, tab);
 
 #ifdef RAR
 		theme

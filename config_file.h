@@ -53,14 +53,14 @@ public:
 
 	bool is_valid (void);
 
+	void dump_config (void);
+
 protected:
 	std::string filename;
 	bool read_only = true;
 	bool valid = false;
 
 	std::map<std::string,std::string> config;
-
-	void dump_config (void);
 };
 
 

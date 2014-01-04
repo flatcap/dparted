@@ -81,7 +81,8 @@ App::add_config (const std::string& filename)
 	}
 
 	config_file = cf;
+	//cf->dump_config();
 
-	return false;
+	return true;
 }
 

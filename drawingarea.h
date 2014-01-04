@@ -19,13 +19,13 @@
 #define _DRAWINGAREA_
 
 #include <deque>
+#include <memory>
+#include <map>
 
 #include <gtkmm/drawingarea.h>
-#include <memory>
 
 #include "container.h"
 #include "gfx_container.h"
-#include "theme.h"
 
 typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
 typedef struct { Rect r; GfxContainerPtr p; } Range;
@@ -55,10 +55,8 @@ protected:
 	bool on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 
 private:
-	ThemePtr theme;
-
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape);
-	void draw_icon      (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const std::string& name, const Rect& shape, Rect& below);
+	void draw_icon      (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Glib::RefPtr<Gdk::Pixbuf> icon, const Rect& shape, Rect& below);
 
 	void draw_block   (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right);
 	void draw_box     (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& inside);
@@ -75,6 +73,8 @@ private:
 	GfxContainerPtr device;
 	GfxContainerPtr focus;
 	std::vector<GfxContainerPtr> selection;
+
+	std::map<std::string,Glib::RefPtr<Gdk::Pixbuf>> icons;
 };
 
 

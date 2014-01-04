@@ -23,8 +23,9 @@
 
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
+#include <glibmm/refptr.h>
 
-#include <libconfig.h++>
+#include "config_file.h"
 
 class Theme;
 
@@ -39,29 +40,27 @@ public:
 	Theme();
 	virtual ~Theme();
 
-	Gdk::RGBA add_colour (const std::string& name, const std::string& colour);
-	Gdk::RGBA add_colour (const std::string& name, const Gdk::RGBA&   colour);
+	bool add_colour (const std::string& name, const std::string& colour);
 	Gdk::RGBA get_colour (const std::string& name);
 
 	Glib::RefPtr<Gdk::Pixbuf> add_icon (const std::string& name, const std::string& filename);
 	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string& name);
 
-	bool read_config (const char* filename);
 	std::string get_config (std::string path, const std::string& name, const std::string& attr);
 
 	bool is_valid (void);
 
 protected:
+	ConfigFilePtr config_file;
+
+	std::map<std::string,std::string> config;
 	std::map<std::string,Gdk::RGBA> colours;
-	std::map<std::string,Glib::RefPtr<Gdk::Pixbuf> > icons;
+	std::map<std::string,Glib::RefPtr<Gdk::Pixbuf>> icons;
+
+	Glib::RefPtr<Gdk::Pixbuf> missing_icon;
 
 	void init_colours (void);
 	void init_icons   (void);
-
-	void parse_config (const libconfig::Setting& setting);
-	std::string get_value (const libconfig::Setting& s);
-
-	std::map<std::string,std::string> config;
 
 private:
 	int seqnum = 0;

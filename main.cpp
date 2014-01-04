@@ -304,6 +304,8 @@ main (int argc, char* argv[])
 		}
 
                 retval = gui->run (1, argv);           //XXX argc
+
+		main_app = nullptr;
 	}
 
 	log_close();

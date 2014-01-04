@@ -279,7 +279,7 @@ GuiApp::add_config (const std::string& filename)
 	if (!App::add_config (filename))
 		return false;
 
-	return false;
+	return true;
 }
 
 /**
@@ -288,6 +288,21 @@ GuiApp::add_config (const std::string& filename)
 bool
 GuiApp::add_theme (const std::string& filename)
 {
-	return false;
+	ConfigFilePtr tf;
+
+	tf = ConfigFile::read_file (filename);
+	if (!tf) {
+		//notify the user
+		return false;
+	}
+
+	if (theme_file) {
+		//if modified ask user if they're sure
+	}
+
+	theme_file = tf;
+	//tf->dump_config();
+
+	return true;
 }
 

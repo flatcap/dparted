@@ -15,33 +15,12 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <map>
-#include <string>
+#ifndef _MISSING_ICON_H_
+#define _MISSING_ICON_H_
 
-#include "default_theme.h"
+#include <cstdint>
 
-/**
- * DefaultTheme
- */
-DefaultTheme::DefaultTheme (void)
-{
-	config = {
-		{ "Container.Filesystem.display",      "box" },
-		{ "Container.Filesystem.colour",       "red" },
-		{ "Container.Filesystem.background",   "white" },
-		{ "Container.Filesystem.usage",        "true" },
-		{ "Container.Filesystem.label",        "{device_short} - {bytes_size_human}\n{label}" },
-		{ "Container.Filesystem.btrfs.colour", "#FF9955" },
-		{ "Container.Filesystem.exfat.colour", "#2E8B57" },
-		{ "Container.Filesystem.ext2.colour",  "#9DB8D2" },
-	};
-}
+extern const char* missing_icon_bits;
 
-/**
- * ~DefaultTheme
- */
-DefaultTheme::~DefaultTheme()
-{
-}
-
+#endif // _MISSING_ICON_H_
 
