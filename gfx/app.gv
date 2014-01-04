@@ -1,0 +1,47 @@
+digraph app {
+	graph [ rankdir="TB" ];
+	node  [ shape=record, style=filled ];
+	edge  [ penwidth=2.0 ];
+
+	graph [ bgcolor="#002200", color=white ];
+	node  [ fillcolor="#ffffff", color=darkgreen ];
+	edge  [ color="#cccccc" ];
+
+	cfg1 [ label="Config File" fillcolor=darkgreen ];
+	cfg2 [ label="Config File" fillcolor=darkgreen ];
+
+	main [ label="Main" fillcolor=white ];
+	app  [ label="App"  fillcolor=white ];
+
+	gui_app       [ label="Gui App"       fillcolor=pink ];
+	gfx_container [ label="Gfx Container" fillcolor=pink ];
+	theme         [ label="Theme"         fillcolor=pink ];
+	drawing_area  [ label="Drawing Area"  fillcolor=pink ];
+
+	top_level [ label="Top Level" fillcolor=cyan ];
+	container [ label="Container" fillcolor=cyan ];
+	a         [ label="..."       fillcolor=cyan ];
+	b         [ label="..."       fillcolor=cyan ];
+	c         [ label="..."       fillcolor=cyan ];
+
+	main -> app;
+
+	app -> cfg1;
+	app -> top_level;
+	app -> gui_app;
+
+	gui_app -> theme;
+	gui_app -> drawing_area;
+
+	theme -> cfg2;
+	drawing_area -> gfx_container;
+	gfx_container -> container;
+
+	top_level -> container;
+	container -> a;
+	container -> b;
+	container -> c;
+
+	{ rank=same main app top_level }
+	{ rank=same drawing_area gfx_container container }
+}
