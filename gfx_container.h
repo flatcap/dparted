@@ -72,7 +72,7 @@ public:
 protected:
 	GfxContainer (void);
 	ContainerPtr get_smart (void);
-	std::string process_label (std::string label_template);
+	std::string process_label (const std::string& label_template);
 
 	std::weak_ptr<Container> container;
 

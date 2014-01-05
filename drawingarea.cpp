@@ -309,6 +309,10 @@ checker_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, int ch
 void
 draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, const std::string& text)
 {
+	cr->save();
+	draw_border (cr, shape);				// Set clipping area
+	cr->clip();
+
 	Pango::FontDescription font;
 	font.set_family ("Liberation Sans Bold");	//THEME - icon label font
 
@@ -328,7 +332,8 @@ draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, const std::strin
 
 	int left = std::max (GAP, (shape.w - tw) / 2);
 	//printf ("left = %d\n", left);
-	cr->move_to (shape.x + left, shape.y + shape.h - th);
+	//cr->move_to (shape.x + left, shape.y + shape.h - th);	// align to bottom
+	cr->move_to (shape.x + left, shape.y + RADIUS);	// align to top
 
 #if 0
 	layout->set_width (Pango::SCALE * (shape.w - 4));
@@ -336,6 +341,8 @@ draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, const std::strin
 #endif
 	layout->update_from_cairo_context (cr);
 	layout->show_in_cairo_context (cr);
+
+	cr->restore();
 }
 
 /**
@@ -950,45 +957,6 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 }
 
 
-/**
- * find_subst - get the position of a {tag}
- */
-bool find_subst (const std::string& text, std::string& tag, size_t& start, size_t& stop)
-{
-	//XXX on failure, point start at error
-	const char* valid = "abcdefghijklmnopqrstuvwxyz_";
-	size_t open  = std::string::npos;
-	size_t close = std::string::npos;
-
-	open = text.find ('{');
-	if (open == std::string::npos) {
-		//log_debug ("nothing to substitute\n");
-		return false;
-	}
-
-	close = text.find_first_not_of (valid, open+1);
-	if (close == std::string::npos) {
-		log_error ("missing close brace\n");
-		return false;
-	}
-
-	if (text[close] != '}') {
-		log_error ("invalid tag name\n");
-		return false;
-	}
-
-	if (close == (open+1)) {
-		log_error ("missing tag\n");
-		return false;
-	}
-
-	tag   = text.substr (open+1, close-open-1);
-	start = open;
-	stop  = close;
-
-	return true;
-}
-
 #if 0
 /**
  * draw_container_examples
@@ -1410,21 +1378,6 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 			cr->fill();
 		}
 		if (!label.empty()) {
-#if 0
-			std::string tag;
-			size_t start = std::string::npos;
-			size_t stop  = std::string::npos;
-			while (find_subst (label, tag, start, stop)) {
-				std::string value = cont->get_property (tag);
-				if (value == tag) {		//XXX tmp
-					break;
-				}
-				label.replace (start, stop-start+1, value);
-			}
-
-			//printf ("label = %s\n", label.c_str());
-#endif
-
 			draw_text (cr, shape, label);
 		}
 		/* theme

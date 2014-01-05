@@ -17,6 +17,7 @@
 
 #include "gfx_container.h"
 #include "gui_app.h"
+#include "log.h"
 
 /**
  * GfxContainer
@@ -142,13 +143,74 @@ GfxContainer::init (ContainerPtr c)
 	return true;
 }
 
+
+/**
+ * find_subst - get the position of a {tag}
+ */
+bool find_subst (const std::string& text, std::string& tag, size_t& start, size_t& stop)
+{
+	//XXX on failure, point start at error
+	const char* valid = "abcdefghijklmnopqrstuvwxyz_";
+	size_t open  = std::string::npos;
+	size_t close = std::string::npos;
+
+	open = text.find ('{');
+	if (open == std::string::npos) {
+		//log_debug ("nothing to substitute\n");
+		return false;
+	}
+
+	close = text.find_first_not_of (valid, open+1);
+	if (close == std::string::npos) {
+		log_error ("missing close brace\n");
+		return false;
+	}
+
+	if (text[close] != '}') {
+		log_error ("invalid tag name\n");
+		return false;
+	}
+
+	if (close == (open+1)) {
+		log_error ("missing tag\n");
+		return false;
+	}
+
+	tag   = text.substr (open+1, close-open-1);
+	start = open;
+	stop  = close;
+
+	return true;
+}
+
+
 /**
  * process_label
  */
 std::string
-GfxContainer::process_label (std::string label_template)
+GfxContainer::process_label (const std::string& label_template)
 {
-	return label_template;
+	std::string l = label_template;
+
+	//std::cout << "Label: " << l << std::endl;
+	ContainerPtr c = get_smart();
+	if (!c)
+		return l;
+
+	std::string tag;
+	size_t start = std::string::npos;
+	size_t stop  = std::string::npos;
+	while (find_subst (l, tag, start, stop)) {
+		std::string value = c->get_property (tag);
+		if (value == tag) {		//XXX tmp
+			break;
+		}
+		l.replace (start, stop-start+1, value);
+	}
+
+	//printf ("label = %s\n", l.c_str());
+
+	return l;
 }
 
 /**
