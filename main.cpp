@@ -146,9 +146,6 @@ main (int argc, char* argv[])
 	bool separate = false;
 	bool props    = false;
 
-	std::vector<std::string> configs = { "config/dparted.conf" };
-	std::vector<std::string> themes  = { "config/theme.conf" };
-
 	if (argc > 1) {
 		std::string arg = argv[1];
 		if (arg[0] == '-') {
@@ -294,18 +291,15 @@ main (int argc, char* argv[])
                 std::shared_ptr<GuiApp> gui (new GuiApp (top_level));
 
                 main_app = gui;
+		gui_app  = gui;
 
-		for (auto c : configs) {
-			gui->add_config (c);
-		}
-
-		for (auto t : themes) {
-			gui->add_theme (t);
-		}
+		gui->set_config ("config/dparted.conf");
+		gui->set_theme  ("config/theme.conf");
 
                 retval = gui->run (1, argv);           //XXX argc
 
 		main_app = nullptr;
+		gui_app  = nullptr;
 	}
 
 	log_close();

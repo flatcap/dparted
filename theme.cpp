@@ -33,7 +33,6 @@
  */
 Theme::Theme()
 {
-	init_colours();
 	init_icons();
 }
 
@@ -44,53 +43,6 @@ Theme::~Theme()
 {
 }
 
-
-/**
- * init_colours
- */
-void
-Theme::init_colours (void)
-{
-	// "yellow"			Colour name
-	// "#F80"			Hex triplet: 1 digit  for Red, Green, Blue
-	// "#FF8800"			Hex triplet: 2 digits for Red, Green, Blue
-	// "#FFF888000"			Hex triplet: 3 digits for Red, Green, Blue
-	// "#FFFF88880000"		Hex triplet: 4 digits for Red, Green, Blue
-	// "rgb(255,128,0)"		Decimal triplet: range 0-255 for Red, Green, Blue
-	// "rgba(255,128,0,0.5)"	Decimal triplet + alpha (range 0.0 - 1.0)
-
-	colours["default"]	= Gdk::RGBA ("#000000");
-
-	colours["btrfs"]	= Gdk::RGBA ("#FF9955");
-	colours["exfat"]	= Gdk::RGBA ("#2E8B57");
-	colours["ext2"]		= Gdk::RGBA ("#9DB8D2");
-	colours["ext3"]		= Gdk::RGBA ("#7590AE");
-	colours["ext4"]		= Gdk::RGBA ("#4B6983");
-	colours["extended"]	= Gdk::RGBA ("#7DFCFE");
-	colours["fat16"]	= Gdk::RGBA ("#00FF00");
-	colours["fat32"]	= Gdk::RGBA ("#18D918");
-	colours["hfs"]		= Gdk::RGBA ("#E0B6AF");
-	colours["hfsplus"]	= Gdk::RGBA ("#C0A39E");
-	colours["jfs"]		= Gdk::RGBA ("#E0C39E");
-	colours["luks"]		= Gdk::RGBA ("#625B81");
-	colours["lvm2_pv"]	= Gdk::RGBA ("#CC9966");
-	colours["nilfs2"]	= Gdk::RGBA ("#826647");
-	colours["ntfs"]		= Gdk::RGBA ("#42E5AC");
-	colours["reiser4"]	= Gdk::RGBA ("#887FA3");
-	colours["reiserfs"]	= Gdk::RGBA ("#ADA7C8");
-	colours["swap"]		= Gdk::RGBA ("#C1665A");
-	colours["table"]	= Gdk::RGBA ("#BEBEBE");
-	colours["ufs"]		= Gdk::RGBA ("#D1940C");
-	colours["unallocated"]	= Gdk::RGBA ("#A9A9A9");
-	colours["unformatted"]	= Gdk::RGBA ("#000000");
-	colours["unknown"]	= Gdk::RGBA ("#000000");
-	colours["unused"]	= Gdk::RGBA ("#FFFFFF");
-	colours["used"]		= Gdk::RGBA ("#F8F8BA");
-	colours["xfs"]		= Gdk::RGBA ("#EED680");
-
-	colours["focus1"]	= Gdk::RGBA ("#000000");
-	colours["focus2"]	= Gdk::RGBA ("#FFFFFF");
-}
 
 /**
  * add_colour
@@ -186,70 +138,59 @@ Theme::get_icon (const std::string& name)
 }
 
 
-#if 0
-	// move to main window, add accessor function
-	Glib::RefPtr<Gtk::StyleContext> style;
-	style = get_style_context();
-
-	Gdk::RGBA fg;
-	Gdk::RGBA bg;
-
-	fg = style->get_color (Gtk::STATE_FLAG_NORMAL);
-	bg = style->get_background_color (Gtk::STATE_FLAG_NORMAL);
-
-	std::cout << "fg = " << fg.get_red() << "," << fg.get_green() << "," << fg.get_blue() << "\n";
-	std::cout << "bg = " << bg.get_red() << "," << bg.get_green() << "," << bg.get_blue() << "\n";
-#endif
-
 /**
  * get_config
+ *
+ * Search Order
+ *	PATH1.PATH2.PATH3.NAME.ATTR
+ *	PATH1.PATH2.PATH3.ATTR
+ *
+ *	PATH1.PATH2.NAME.ATTR
+ *	PATH1.PATH2.ATTR
+ *
+ *	PATH1.NAME.ATTR
+ *	PATH1.ATTR
  */
 std::string
-Theme::get_config (std::string path, const std::string& name, const std::string& attr)
+Theme::get_config (const std::string& path, const std::string& name, const std::string& attr)
 {
-	std::map<std::string,std::string>::iterator it;
-	std::map<std::string,std::string>::iterator end = config.end();
-	std::string pathname;
-	std::string value;
-
-	pathname = path;
-	if (!pathname.empty())
-		pathname += ".";
-	pathname += name + "." + attr;
-	//printf ("config: search:  %s\n", pathname.c_str());
-	it = config.find (pathname);
-	if (it != end) {
-		return it->second;
-	}
+	std::string work_path = path;
+	std::string dot;
+	std::string search;
 
 	for (auto i = 0; i < 20; i++) {
-		pathname = path;
-		if (!pathname.empty())
-			pathname += ".";
-		pathname += attr;
-
-		//printf ("config: search:  %s\n", pathname.c_str());
-		it = config.find (pathname);
-		if (it != end) {
-			value = it->second;
-			break;
+		if (work_path.empty()) {
+			dot.clear();
+		} else {
+			dot = ".";
 		}
 
-		size_t pos = path.find_last_of(".");
+		if (!name.empty()) {
+			search = work_path + dot + name + "." + attr;
+			//std::cout << "Search: " << search << std::endl;
+			if (config_file->exists (search)) {
+				return config_file->get_string (search);
+			}
+		}
+
+		search = work_path + dot + attr;
+		//std::cout << "Search: " << search << std::endl;
+		if (config_file->exists (search)) {
+			return config_file->get_string (search);
+		}
+
+		size_t pos = work_path.find_last_of(".");
 		if (pos == std::string::npos) {
-			break;
+			if (work_path.empty()) {
+				break;
+			}
+			work_path.clear();
+		} else {
+			work_path.erase (pos);
 		}
-
-		path.erase (pos);
 	}
 
-	if (value.empty()) {
-		//log_error ("config: missing: %s.%s.%s\n", path.c_str(), name.c_str(), attr.c_str());
-	} else {
-		//log_info ("config: found:   %s = %s\n", pathname.c_str(), value.c_str());
-	}
-
-	return value;
+	throw "can't find config: " + path + "/" + name + "/" + attr;
 }
 
 
@@ -261,3 +202,30 @@ Theme::is_valid (void)
 {
 	return true;
 }
+
+/**
+ * read_file
+ */
+ThemePtr
+Theme::read_file (const std::string& filename)
+{
+	ThemePtr tp (new Theme());
+
+	ConfigFilePtr cf;
+
+	cf = ConfigFile::read_file (filename);
+	if (!cf) {
+		//notify the user
+		return false;
+	}
+
+	if (tp->config_file) {
+		//if modified ask user if they're sure
+	}
+
+	tp->config_file = cf;
+	//cf->dump_config();
+
+	return tp;
+}
+

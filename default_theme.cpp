@@ -25,6 +25,7 @@
  */
 DefaultTheme::DefaultTheme (void)
 {
+#if 0
 	config = {
 		{ "Container.Filesystem.display",      "box" },
 		{ "Container.Filesystem.colour",       "red" },
@@ -35,6 +36,7 @@ DefaultTheme::DefaultTheme (void)
 		{ "Container.Filesystem.exfat.colour", "#2E8B57" },
 		{ "Container.Filesystem.ext2.colour",  "#9DB8D2" },
 	};
+#endif
 }
 
 /**

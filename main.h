@@ -24,7 +24,5 @@
 void queue_add_probe (ContainerPtr& item);
 ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
-extern AppPtr main_app;
-
 #endif // _MAIN_H_
 

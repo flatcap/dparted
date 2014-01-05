@@ -26,6 +26,12 @@
 #include "theme.h"
 #include "message.h"
 
+class GuiApp;
+
+typedef std::shared_ptr<GuiApp> GuiAppPtr;
+
+extern GuiAppPtr gui_app;
+
 /**
  * class GuiApp
  */
@@ -41,9 +47,10 @@ public:
 	virtual bool notify (Message& m);
 
 	ThemePtr get_theme (void);
+	void set_theme (ThemePtr theme);
 
-	bool add_config (const std::string& filename);
-	bool add_theme  (const std::string& filename);
+	bool set_config (const std::string& filename);
+	bool set_theme  (const std::string& filename);
 
 protected:
 	virtual void on_activate (void);
@@ -59,10 +66,6 @@ protected:
 	void menu_help        (void);
 	void menu_about       (void);
 	void menu_quit        (void);
-
-	ContainerPtr top_level;
-
-	ConfigFilePtr theme_file;
 
 	ThemePtr theme;
 };

@@ -25,23 +25,21 @@ Object:
 	name	vm1
 
 Search Order (real):
-	container.block.file.colour
-	container.block.colour
-	container.colour
-
 	container.block.file.vm1.colour
+	container.block.file.colour
 	container.block.vm1.colour
+	container.block.colour
 	container.vm1.colour
+	container.colour
 	vm1.colour
 
 Search Order (symbolic):
-	PATH1.PATH2.PATH3.ATTR
-	PATH1.PATH2.ATTR
-	PATH1.ATTR
-
 	PATH1.PATH2.PATH3.NAME.ATTR
+	PATH1.PATH2.PATH3.ATTR
 	PATH1.PATH2.NAME.ATTR
+	PATH1.PATH2.ATTR
 	PATH1.NAME.ATTR
+	PATH1.ATTR
 	NAME.ATTR
 
 Does theme exist?

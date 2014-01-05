@@ -1289,6 +1289,7 @@ draw_label (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr cont, Rect 
 void
 DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape)
 {
+#if 0
 	if (!cr)
 		return;
 	if (!cont)
@@ -1300,6 +1301,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	if (!device->update_info())
 		return;
 #endif
+
 	std::string display = cont->display;
 	std::string background = cont->background;
 	std::string icon = cont->icon;
@@ -1474,6 +1476,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	}
 #if 0
 	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
+#endif
 #endif
 }
 

@@ -34,13 +34,15 @@
 #include "log.h"
 #include "log_trace.h"
 
+GuiAppPtr gui_app;
+
 /**
  * GuiApp
  */
 GuiApp::GuiApp (ContainerPtr& c) :
-	Gtk::Application("org.flatcap.test.area", Gio::APPLICATION_HANDLES_OPEN),
-	top_level (c)
+	Gtk::Application("org.flatcap.test.area", Gio::APPLICATION_HANDLES_OPEN)
 {
+	top_level = c;
 	//LOG_TRACE;
 	Glib::set_application_name("dparted");
 }
@@ -271,37 +273,39 @@ GuiApp::get_theme (void)
 
 
 /**
- * add_config
+ * set_config
  */
 bool
-GuiApp::add_config (const std::string& filename)
+GuiApp::set_config (const std::string& filename)
 {
-	if (!App::add_config (filename))
+	if (!App::set_config (filename))
 		return false;
+
+	// Pick out any gui options we want
 
 	return true;
 }
 
 /**
- * add_theme
+ * set_theme
  */
 bool
-GuiApp::add_theme (const std::string& filename)
+GuiApp::set_theme (const std::string& filename)
 {
-	ConfigFilePtr tf;
+	ThemePtr tp;
 
-	tf = ConfigFile::read_file (filename);
-	if (!tf) {
+	tp = Theme::read_file (filename);
+	if (!tp) {
 		//notify the user
 		return false;
 	}
 
-	if (theme_file) {
+	if (theme) {
 		//if modified ask user if they're sure
 	}
 
-	theme_file = tf;
-	//tf->dump_config();
+	theme = tp;
+	//tp->dump_config();
 
 	return true;
 }

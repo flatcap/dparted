@@ -23,10 +23,13 @@
 #include "question.h"
 #include "message.h"
 #include "config_file.h"
+#include "container.h"
 
 class App;
 
 typedef std::shared_ptr<App> AppPtr;
+
+extern AppPtr main_app;
 
 /**
  * class App
@@ -40,9 +43,11 @@ public:
 	virtual bool ask    (Question& q);
 	virtual bool notify (Message&  m);
 
-	bool add_config (const std::string& filename);
+	bool set_config (const std::string& filename);
 
 protected:
+	ContainerPtr top_level;
+
 	ConfigFilePtr config_file;
 };
 

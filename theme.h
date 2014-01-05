@@ -46,21 +46,21 @@ public:
 	Glib::RefPtr<Gdk::Pixbuf> add_icon (const std::string& name, const std::string& filename);
 	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string& name);
 
-	std::string get_config (std::string path, const std::string& name, const std::string& attr);
+	std::string get_config (const std::string& path, const std::string& name, const std::string& attr);
 
 	bool is_valid (void);
+
+	static ThemePtr read_file (const std::string& filename);
 
 protected:
 	ConfigFilePtr config_file;
 
-	std::map<std::string,std::string> config;
 	std::map<std::string,Gdk::RGBA> colours;
 	std::map<std::string,Glib::RefPtr<Gdk::Pixbuf>> icons;
 
 	Glib::RefPtr<Gdk::Pixbuf> missing_icon;
 
-	void init_colours (void);
-	void init_icons   (void);
+	void init_icons (void);
 
 private:
 	int seqnum = 0;

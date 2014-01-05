@@ -16,13 +16,18 @@
  */
 
 #include "gfx_container.h"
+#include "gui_app.h"
 
 /**
  * GfxContainer
  */
 GfxContainer::GfxContainer (ContainerPtr c)
 {
-	theme.reset (new Theme());
+	if (!gui_app) {
+		throw "no gui_app!";
+	}
+
+	theme = gui_app->get_theme();
 
 	container = c;
 	sync();
@@ -49,9 +54,7 @@ GfxContainer::get_smart (void)
 		seqnum = -1;
 
 		display.clear();
-		colour.clear();
-		background.clear();
-		icon.clear();
+		icon.reset();
 		label.clear();
 		label_template.clear();
 
@@ -101,12 +104,34 @@ GfxContainer::init (ContainerPtr c)
 	std::string path = c->get_path();
 	std::string name = c->name;
 
-	display        = theme->get_config (path, name, "display");
-	colour         = theme->get_config (path, name, "colour");
-	background     = theme->get_config (path, name, "background");
-	label_template = theme->get_config (path, name, "label");
-	icon           = theme->get_config (path, name, "icon");
-	usage          = (theme->get_config (path, name, "usage") == "true");
+	try {
+		display        = theme->get_config (path, name, "display");
+		label_template = theme->get_config (path, name, "label");
+
+		std::string c  = theme->get_config (path, name, "colour");
+		std::string bg = theme->get_config (path, name, "background");
+		std::string i  = theme->get_config (path, name, "icon");
+		std::string u  = theme->get_config (path, name, "usage");
+
+		colour     = process_colour (c);
+		background = process_colour (bg);
+		icon       = process_icon   (i);
+		usage      = process_bool   (u);
+
+#if 0
+		std::cout << "Config\n";
+		std::cout << "\tbackground: " << background     << std::endl;
+		std::cout << "\tcolour:     " << colour         << std::endl;
+		std::cout << "\tdisplay:    " << display        << std::endl;
+		std::cout << "\ticon:       " << icon           << std::endl;
+		std::cout << "\tlabel:      " << label_template << std::endl;
+		std::cout << "\tusage:      " << usage          << std::endl;
+#endif
+
+	} catch (const std::string& e) {
+		std::cout << "Exception: " << e << std::endl;
+		exit (1);
+	}
 
 	label = process_label (label_template);
 
@@ -154,6 +179,7 @@ GfxContainer::dump (void)
 		tabs.resize (indent, '\t');
 	}
 
+#if 0
 	std::cout << tabs << "----------------------" << std::endl;
 	std::cout << tabs << "display        = " << display        << std::endl;
 	std::cout << tabs << "colour         = " << colour         << std::endl;
@@ -165,6 +191,7 @@ GfxContainer::dump (void)
 	std::cout << tabs << "bytes_used     = " << bytes_used     << std::endl;
 	std::cout << tabs << "usage          = " << usage          << std::endl;
 	std::cout << tabs << "seqnum         = " << seqnum         << std::endl;
+#endif
 
 	indent++;
 	for (auto c : children) {
@@ -199,4 +226,53 @@ GfxContainer::remove_from_selection (void)
 {
 }
 
+
+/**
+ * process_colour
+ */
+Gdk::RGBA
+GfxContainer::process_colour (const std::string& str)
+{
+	Gdk::RGBA r;
+
+	if (r.set (str)) {
+		return r;
+	}
+
+	if (str == "none") {
+		r.set ("rbga(0,0,0,0)");
+		return r;
+	}
+
+	throw "bad colour: " + str;
+}
+
+/**
+ * process_icon
+ */
+Glib::RefPtr<Gdk::Pixbuf>
+GfxContainer::process_icon (const std::string& str)
+{
+	Glib::RefPtr<Gdk::Pixbuf> pb;
+
+	if (str.empty())
+		return pb;
+
+	pb = theme->get_icon (str);
+	//pb = Gdk::Pixbuf::create_from_file (str);
+
+	return pb;
+}
+
+/**
+ * process_bool
+ */
+bool
+GfxContainer::process_bool (const std::string& str)
+{
+	if (str == "true")
+		return true;
+
+	return false;
+}
 

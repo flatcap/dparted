@@ -1,11 +1,7 @@
 digraph app {
-	graph [ rankdir="TB" ];
-	node  [ shape=record, style=filled ];
-	edge  [ penwidth=2.0 ];
-
-	graph [ bgcolor="#002200", color=white ];
-	node  [ fillcolor="#ffffff", color=darkgreen ];
-	edge  [ color="#cccccc" ];
+	graph [ rankdir="TB", bgcolor="#002200", color=white ];
+	node  [ shape=record, style=filled, fillcolor="#ffffff", color=darkgreen ];
+	edge  [ penwidth=2.0, color="#cccccc" ];
 
 	cfg1 [ label="Config File" fillcolor=darkgreen ];
 	cfg2 [ label="Config File" fillcolor=darkgreen ];

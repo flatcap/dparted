@@ -53,12 +53,15 @@ public:
 	void remove_from_selection (void);
 	bool init (ContainerPtr c);
 
-	std::string display;
-	std::string colour;
-	std::string background;
-	std::string icon;
-	std::string label;
-	std::string label_template;
+	bool update_info (void);
+	bool mouse_event (void);
+
+	std::string               display;
+	Gdk::RGBA                 colour;
+	Gdk::RGBA                 background;
+	Glib::RefPtr<Gdk::Pixbuf> icon;
+	std::string               label;
+	std::string               label_template;
 
 	uint64_t bytes_size = 0;
 	uint64_t bytes_used = 0;
@@ -66,15 +69,16 @@ public:
 
 	bool usage = false;
 
-	bool update_info (void);
-	bool mouse_event (void);
-
 protected:
 	GfxContainer (void);
 	ContainerPtr get_smart (void);
 	std::string process_label (std::string label_template);
 
 	std::weak_ptr<Container> container;
+
+	Gdk::RGBA                 process_colour (const std::string& str);
+	Glib::RefPtr<Gdk::Pixbuf> process_icon (const std::string& str);
+	bool                      process_bool (const std::string& str);
 
 	bool focussed = false;
 	bool selected = false;

@@ -63,10 +63,10 @@ App::notify (Message& m)
 
 
 /**
- * add_config
+ * set_config
  */
 bool
-App::add_config (const std::string& filename)
+App::set_config (const std::string& filename)
 {
 	ConfigFilePtr cf;
 
