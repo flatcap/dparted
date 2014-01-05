@@ -32,6 +32,7 @@
 #include "utils.h"
 #include "whole.h"
 #include "log_trace.h"
+#include "gui_app.h"
 
 const double ARC_N = 3*M_PI_2;	// Compass points in radians
 const double ARC_E = 0*M_PI_2;
@@ -95,12 +96,10 @@ operator<< (std::ostream& stream, const Rect& r)
 /**
  * set_colour
  */
-void set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const std::string& colour)
+void set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk::RGBA& rgba)
 {
-	Gdk::RGBA rgba ("rgba(0,0,0,0)");		// Transparent
-	if (!rgba.set (colour)) {
-		log_error ("don't understand colour: %s\n", colour.c_str());
-	}
+	if (!cr)
+		return;
 	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
 }
 
@@ -108,7 +107,7 @@ void set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const std::string& col
  * draw_edge - 1px rectangular border
  */
 void
-draw_edge (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const std::string& colour)
+draw_edge (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour)
 {
 	cr->save();
 	set_colour (cr, colour);
@@ -252,7 +251,7 @@ draw_border (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
  * fill_area - fill rounded rectangle
  */
 void
-fill_area (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const std::string& colour)
+fill_area (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour)
 {
 	cr->save();
 	set_colour (cr, colour);
@@ -267,7 +266,7 @@ fill_area (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const std
  * fill_rect - fill rectangle
  */
 void
-fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const std::string& colour)
+fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour)
 {
 	cr->save();
 	set_colour (cr, colour);
@@ -1289,7 +1288,7 @@ draw_label (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr cont, Rect 
 void
 DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape)
 {
-#if 0
+#if 1
 	if (!cr)
 		return;
 	if (!cont)
@@ -1303,18 +1302,12 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 #endif
 
 	std::string display = cont->display;
-	std::string background = cont->background;
-	std::string icon = cont->icon;
+	Gdk::RGBA background = cont->background;
+	Gdk::RGBA colour = cont->colour;
+	Glib::RefPtr<Gdk::Pixbuf> icon = cont->icon;
 	std::string name = "dummy"; // cont->name?
-	std::string colour = cont->colour;
 	std::string label = cont->label;
 	bool usage = cont->usage;
-
-	Glib::RefPtr<Gdk::Pixbuf> icon_pb = icons[icon];
-	if (!icon_pb) {
-		std::cout << "NO ICON: " << icon << std::endl;
-		return;
-	}
 
 	if (display.empty()) {
 		display = "box";
@@ -1363,45 +1356,46 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		box.w -= (GAP*2);
 		box.h -= (GAP*2);
 
-		//QWQ Rect below;
+		Rect below;
 		vRange.push_front ({shape, cont});
-		//QWQ draw_icon (cr, cont, icon, box, below);
+		//std::cout << "Icon: " << icon << std::endl;
+		draw_icon (cr, cont, icon, box, below);
 		draw_text (cr, box2, name);
 
 		inside = right;
-#ifdef RAR
-		theme
-			icon
-			background
-		get icon
-		rect space = icon size
-		rect right = remaining space
-		draw_icon (clipped to 64x64)
-		rect right
-		rect inside (for label)
-#endif
+		/* theme
+		 *	icon
+		 *	background
+		 * get icon
+		 * rect space = icon size
+		 * rect right = remaining space
+		 * draw_icon (clipped to 64x64)
+		 * rect right
+		 * rect inside (for label)
+		 */
 	} else if (display == "iconbox") {	// A box containing a small icon
-		//Rect box = shape;
-
 		Rect tab;
 		set_colour (cr, colour);
 		draw_iconbox (cr, cont, shape, tab, inside);
 
-		//QWQ draw_icon (cr, cont, "table", tab, tab);
-		//QWQ draw_icon (cr, cont, "shield", tab, tab);
+		Glib::RefPtr<Gdk::Pixbuf> icon;
 
-#ifdef RAR
-		theme
-			icon
-			colour
-			background
-		get_icon
-		rect space = icon size
-		rect inside = remaining space
-		draw_box
-		rect tab (icon space)
-		draw icon(s)
-#endif
+		icon = gui_app->get_theme()->get_icon ("table");
+		draw_icon (cr, cont, icon,  tab, tab);
+		icon = gui_app->get_theme()->get_icon ("shield");
+		draw_icon (cr, cont, icon, tab, tab);
+
+		/* theme
+		 *	icon
+		 *	colour
+		 *	background
+		 * get_icon
+		 * rect space = icon size
+		 * rect inside = remaining space
+		 * draw_box
+		 * rect tab (icon space)
+		 * draw icon(s)
+		 */
 	} else if (display == "box") {		// A simple coloured box
 		set_colour (cr, colour);
 		draw_box (cr, cont, shape, inside);
@@ -1433,22 +1427,20 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 
 			draw_text (cr, shape, label);
 		}
-#ifdef RAR
-		theme
-			colour
-			background
-		draw_box
-		rect inside
-#endif
+		/* theme
+		 *	colour
+		 *	background
+		 * draw_box
+		 * rect inside
+		 */
 	} else if (display == "tabbox") {	// A coloured box with a handy tab
 		set_colour (cr, colour);
 		Rect tab;
 		draw_tabbox (cr, cont, shape, tab, inside);
-#ifdef RAR
-		theme
-			colour
-			background
-#endif
+		/* theme
+		 *	colour
+		 *	background
+		 */
 	} else if (display == "empty") {	// Do nothing for now
 		//printf ("EMPTY\n");
 		inside = shape;
@@ -1474,9 +1466,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 
 		draw_container(cr, c, next);
 	}
-#if 0
 	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
-#endif
 #endif
 }
 

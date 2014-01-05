@@ -73,8 +73,6 @@ private:
 	GfxContainerPtr device;
 	GfxContainerPtr focus;
 	std::vector<GfxContainerPtr> selection;
-
-	std::map<std::string,Glib::RefPtr<Gdk::Pixbuf>> icons;
 };
 
 

@@ -259,6 +259,7 @@ GfxContainer::process_icon (const std::string& str)
 		return pb;
 
 	pb = theme->get_icon (str);
+	//std::cout << "icon: " << str << " " << pb << std::endl;
 	//pb = Gdk::Pixbuf::create_from_file (str);
 
 	return pb;
