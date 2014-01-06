@@ -154,7 +154,6 @@ Container::add_child (ContainerPtr& child)
 
 	//log_debug ("child: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
-	//child->parent.reset (this);
 	child->parent = get_smart();
 }
 
@@ -320,7 +319,7 @@ Container::find_device (const std::string& dev)
 	// am *I* the device?
 	//log_debug ("Me? %s %s\n", device.c_str(), dev.c_str());
 	if (dev == device) {
-		match.reset (this);
+		match = get_smart();
 		return match;
 	}
 
@@ -343,7 +342,7 @@ ContainerPtr
 Container::find_name (const std::string& search)
 {
 	if (name == search) {
-		ContainerPtr c(this);
+		ContainerPtr c = get_smart();
 		return c;
 	}
 
@@ -364,7 +363,7 @@ void
 Container::find_type (const std::string& type, std::vector<ContainerPtr>& results)
 {
 	if (is_a (type)) {
-		ContainerPtr c(this);
+		ContainerPtr c = get_smart();
 		results.push_back (c);
 	}
 
@@ -387,7 +386,7 @@ Container::find_uuid (const std::string& search)
 #endif
 
 	if (uuid == search) {
-		ContainerPtr c(this);
+		ContainerPtr c = get_smart();
 		return c;
 	}
 
@@ -408,12 +407,12 @@ ContainerPtr
 Container::find (const std::string& search)
 {
 	if (uuid == search) {
-		ContainerPtr c(this);
+		ContainerPtr c = get_smart();
 		return c;
 	}
 
 	if (name == search) {
-		ContainerPtr c(this);
+		ContainerPtr c = get_smart();
 		return c;
 	}
 
@@ -421,7 +420,7 @@ Container::find (const std::string& search)
 	if (pos == (search.length() - 3)) {
 		std::string search2 = search.substr (0, pos);
 		if (name == search2) {
-			ContainerPtr c(this);
+			ContainerPtr c = get_smart();
 			return c;
 		}
 	}
