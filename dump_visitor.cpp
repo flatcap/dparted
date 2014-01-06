@@ -81,11 +81,13 @@ DumpVisitor::visit (ContainerPtr c)
 bool
 DumpVisitor::visit (LvmVolumePtr l)
 {
+	ContainerPtr c(l);
+
 	std::string tabs;
 	if (indent > 0) {
 		tabs.resize (indent, '\t');
 	}
-	output << tabs << l << "\n";
+	output << tabs << c << "\n";
 
 	tabs += "\t";
 

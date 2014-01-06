@@ -127,7 +127,7 @@ is_random (unsigned char* buffer, int bufsize)
 ContainerPtr
 Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 
 	if (!parent)
 		return nullptr;

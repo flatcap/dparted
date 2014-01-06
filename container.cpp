@@ -547,8 +547,8 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 						<< "(" << get_size(  bytes_free)    << "), "
 		<< " P:" //<< c->parent_offset
 						<< "(" << get_size(c->parent_offset) << "), "
-		//<< " rc: " << c->ref_count
 #endif
+		<< " rc: " << c.use_count()
 		;
 
 	return stream;
