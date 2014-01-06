@@ -57,6 +57,18 @@ Disk::Disk (void)
  * create
  */
 DiskPtr
+Disk::create (void)
+{
+	DiskPtr d (new Disk());
+	d->weak = d;
+
+	return d;
+}
+
+/**
+ * create
+ */
+DiskPtr
 Disk::create (const std::string& lsblk)
 {
 	DiskPtr d (new Disk());
@@ -123,7 +135,7 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 #endif
 
 	//log_debug ("%s\n", model.c_str());
-	DiskPtr d (new Disk());
+	DiskPtr d = Disk::create();
 
 	//log_debug ("fd = %d\n", fd);
 	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); //XXX replace with ftell (user, not root)
@@ -222,7 +234,7 @@ Disk::find_devices (ContainerPtr& list)
 		log_debug ("\n");
 #endif
 
-		DiskPtr d (new Disk());
+		DiskPtr d = Disk::create();
 		d->device = "/dev/" + device;
 		d->parent_offset = 0;
 		d->kernel_major = kernel_major;

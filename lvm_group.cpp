@@ -36,6 +36,7 @@
 #include "utils.h"
 #include "log_trace.h"
 #include "visitor.h"
+#include "dump_visitor.h"
 
 /**
  * LvmGroup
@@ -140,7 +141,7 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup>(pieces->find_uuid (vg_uuid));
 		if (!g) {
-			g.reset (new LvmGroup());
+			g = LvmGroup::create();
 			g->name    = tags["VG_NAME"];
 			g->uuid    = vg_uuid;
 			//g->missing = true;
@@ -541,7 +542,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	std::multimap<std::string,std::string> deps;
 
 	std::vector<ContainerPtr> t;
-	top_level->find_type ("lvm_table", t);
+	top_level->find_type ("LvmTable", t);
 
 	//log_info ("top_level: %ld tables\n", t.size());
 	for (auto i : t) {
@@ -562,7 +563,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 #if 1
 	//probe leaves
 	std::vector<ContainerPtr> v;
-	pieces->find_type ("lvm_volume", v);
+	pieces->find_type ("LvmVolume", v);
 	//printf ("%ld volumes\n", v.size());
 
 	for (auto i : v) {
@@ -576,7 +577,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 #endif
 #if 1
 	std::vector<ContainerPtr> g;
-	pieces->find_type ("lvm_group", g);
+	pieces->find_type ("LvmGroup", g);
 	//printf ("%ld groups\n", g.size());
 
 	for (auto i : g) {

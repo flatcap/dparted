@@ -37,6 +37,7 @@ class Disk : public Block
 {
 public:
 	virtual ~Disk() = default;
+	static DiskPtr create (void);
 	static DiskPtr create (const std::string& lsblk);
 	virtual bool accept (Visitor& v);
 

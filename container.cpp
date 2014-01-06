@@ -379,6 +379,13 @@ Container::find_type (const std::string& type, std::vector<ContainerPtr>& result
 ContainerPtr
 Container::find_uuid (const std::string& search)
 {
+#if 0
+	if (uuid.empty())
+		std::cout << "name = " << name << std::endl;
+	else
+		std::cout << "uuid = " << uuid << std::endl;
+#endif
+
 	if (uuid == search) {
 		ContainerPtr c(this);
 		return c;
@@ -731,6 +738,7 @@ Container::get_smart (void)
 		std::cout << "SMART\n";
 		//XXX who created us?
 		ContainerPtr c (this);
+		std::cout << c << std::endl;
 		weak = c;
 	}
 	return weak.lock();

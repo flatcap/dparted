@@ -141,7 +141,7 @@ MdTable::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* bu
 	//log_info ("data offset/size = %ld (%s), %ld (%s)\n", data_offset, get_size (data_offset).c_str(), data_size, get_size (data_size).c_str());
 
 	//log_info ("mdtable\n");
-	MdTablePtr t (new MdTable());
+	MdTablePtr t = MdTable::create();
 
 	t->bytes_size		= data_offset + data_size;
 	t->uuid			= dev_uuid;

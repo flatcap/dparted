@@ -148,7 +148,7 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 
 	// and some other quick checks
 
-	MsdosPtr m (new Msdos());
+	MsdosPtr m = Msdos::create();
 
 	m->name = "msdos";
 	m->bytes_size = parent->bytes_size;

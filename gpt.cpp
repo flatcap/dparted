@@ -103,14 +103,14 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 	// it would be replaced by an aligned partition.
 
 #if 0
-	MiscPtr res1 = new Misc();
+	MiscPtr res1 = Misc::create();
 	res1->name          = "reserved";
 	res1->bytes_size    = 512 * 34;		//align (512 * 34, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
 	g->add_child (res1);		// change to add_reserved?
 
-	MiscPtr res2 = new Misc();
+	MiscPtr res2 = Misc::create();
 	res2->name          = "reserved";
 	res2->bytes_size    = 512 * 33;		//align (512 * 33, 1024*1024);
 	res2->bytes_used    = res2->bytes_size;
@@ -129,7 +129,7 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 	p->bytes_size = g->bytes_size / 2;
 	p->parent_offset = g->bytes_size / 4;
 	g->add_child (p);
-	FilesystemPtr fs = new Filesystem();
+	FilesystemPtr fs = Filesystem::create();
 	fs->bytes_size = p->bytes_size;
 	fs->parent_offset = 0;
 	p->add_child (fs);

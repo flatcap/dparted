@@ -73,7 +73,7 @@ File::accept (Visitor& v)
 bool
 File::find_devices (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
 {
-	FilePtr f (new File());
+	FilePtr f = File::create();
 #if 0
 	log_debug ("dev     = 0x%04lx\n", st.st_dev);
 	log_debug ("ino     = %ld\n",     st.st_ino);

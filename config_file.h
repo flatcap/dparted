@@ -37,6 +37,7 @@ class ConfigFile
 public:
 	ConfigFile (void);
 	virtual ~ConfigFile();
+	static ConfigFilePtr create (void);
 
 	static ConfigFilePtr read_file (const std::string& filename);
 
@@ -61,6 +62,7 @@ protected:
 	bool valid = false;
 
 	std::map<std::string,std::string> config;
+	std::weak_ptr<ConfigFile> weak;	//XXX private?
 };
 
 

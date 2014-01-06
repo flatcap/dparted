@@ -220,6 +220,8 @@ main (int argc, char* argv[])
 
 		ContainerPtr found = probe (top_level, item);
 		if (found) {
+			top_level->just_add_child (found);
+			//std::cout << "top_level = " << top_level->get_children().size() << std::endl;
 			//item->add_child (found);
 			//std::cout << "\tFound: " << found << "\n";
 			//probe_queue.push (found);
@@ -227,9 +229,10 @@ main (int argc, char* argv[])
 			//XXX LOG
 			break;
 		}
+		//std::cout << std::endl;
 	}
 
-	//LvmGroup::discover (top_level);
+	LvmGroup::discover (top_level);
 	//MdGroup::discover (top_level);
 
 #if 1
@@ -243,6 +246,7 @@ main (int argc, char* argv[])
 
 		ContainerPtr found = probe (top_level, item);
 		if (found) {
+			top_level->just_add_child (found);
 			//item->add_child (found);
 			//std::cout << "\tFound: " << found << "\n";
 			//probe_queue.push (found);

@@ -38,6 +38,18 @@ ConfigFile::~ConfigFile()
 {
 }
 
+/**
+ * create
+ */
+ConfigFilePtr
+ConfigFile::create (void)
+{
+	ConfigFilePtr c (new ConfigFile());
+	c->weak = c;
+
+	return c;
+}
+
 
 /**
  * get_value
@@ -119,7 +131,7 @@ ConfigFile::read_file (const std::string& filename)
 
 	const libconfig::Setting& root = cfg.getRoot();
 
-	ConfigFilePtr cf (new ConfigFile());
+	ConfigFilePtr cf = ConfigFile::create();
 
 	parse_config (root, cf->config);
 	//cf->dump_config();

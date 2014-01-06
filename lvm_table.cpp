@@ -315,8 +315,8 @@ LvmTable::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* b
 		}
 	}
 
-	t.reset (new LvmTable());
-	//log_debug ("new LvmTable (%p)\n", t);
+	t = LvmTable::create();
+	//log_debug ("new LvmTable %s (%p)\n", pv_uuid.c_str(), (void*)t.get());
 
 	t->bytes_size = ph->device_size_xl;
 	t->parent_offset = 0;

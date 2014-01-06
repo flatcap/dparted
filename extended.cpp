@@ -99,7 +99,7 @@ Extended::probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, lon
 	if (!buffer)
 		return nullptr;
 
-	MiscPtr res1 = new Misc();
+	MiscPtr res1 = Misc::create();
 	res1->name          = "reserved";
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
