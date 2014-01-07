@@ -71,10 +71,12 @@ bool
 DotVisitor::visit_leave (void)
 {
 	parents.pop();
+#if 0
 	if (parents.empty()) {
 		output << "\n}";
 		output << "\n";
 	}
+#endif
 
 	return true;
 }
@@ -939,8 +941,13 @@ DotVisitor::visit (ContainerPtr c)
 	output << "\n";
 	output << "// " << (void*) c.get() << "\n";
 
+	std::string name = c->name;
+	if (name.empty()) {
+		name = "UNKNOWN";
+	}
+
 	output << "obj_" << (void*) c.get() << " [fillcolor=\"#c0c0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << (char)toupper(c->name[0]) << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << "</b></font></td></tr>\n";
+	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << "</b></font></td></tr>\n";
 
 	output << dot_container (c);
 
@@ -964,8 +971,13 @@ DotVisitor::visit (LoopPtr l)
 	output << "\n";
 	output << "// " << (void*) l.get() << "\n";
 
+	std::string name = l->name;
+	if (name.empty()) {
+		name = "UNKNOWN";
+	}
+
 	output << "obj_" << (void*) l.get() << " [fillcolor=\"#ffc0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << (char)toupper(l->name[0]) << "</b></font> (" << (void*) l.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << l.use_count() << "</b></font></td></tr>\n";
+	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) l.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << l.use_count() << "</b></font></td></tr>\n";
 
 	std::stringstream mm;
 
@@ -1033,8 +1045,13 @@ DotVisitor::visit (GptPtr g)
 	output << "\n";
 	output << "// " << (void*) g.get() << "\n";
 
+	std::string name = g->name;
+	if (name.empty()) {
+		name = "UNKNOWN";
+	}
+
 	output << "obj_" << (void*) g.get() << " [fillcolor=\"#ffc0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << (char)toupper(g->name[0]) << "</b></font> (" << (void*) g.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << g.use_count() << "</b></font></td></tr>\n";
+	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) g.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << g.use_count() << "</b></font></td></tr>\n";
 
 	output << dot_gpt(g);
 
@@ -1058,8 +1075,13 @@ DotVisitor::visit (PartitionPtr p)
 	output << "\n";
 	output << "// " << (void*) p.get() << "\n";
 
+	std::string name = p->name;
+	if (name.empty()) {
+		name = "UNKNOWN";
+	}
+
 	output << "obj_" << (void*) p.get() << " [fillcolor=\"#d0d080\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << (char)toupper(p->name[0]) << "</b></font> (" << (void*) p.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << p.use_count() << "</b></font></td></tr>\n";
+	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) p.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << p.use_count() << "</b></font></td></tr>\n";
 
 	output << dot_partition(p);
 
@@ -1083,8 +1105,13 @@ DotVisitor::visit (FilesystemPtr f)
 	output << "\n";
 	output << "// " << (void*) f.get() << "\n";
 
+	std::string name = f->name;
+	if (name.empty()) {
+		name = "UNKNOWN";
+	}
+
 	output << "obj_" << (void*) f.get() << " [fillcolor=\"#80c080\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << (char)toupper(f->name[0]) << "</b></font> (" << (void*) f.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << f.use_count() << "</b></font></td></tr>\n";
+	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) f.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << f.use_count() << "</b></font></td></tr>\n";
 
 	output << dot_filesystem(f);
 
@@ -1203,7 +1230,10 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 std::string
 DotVisitor::get_output (void)
 {
-	return output.str();
+	std::string str = output.str();
+	str += "\n}\n";
+
+	return str;
 }
 
 
@@ -1215,6 +1245,7 @@ DotVisitor::run_dotty (void)
 {
 	std::string command = "dot -Tpng | display -resize 70% -& ";
 	std::string input = output.str();
+	input += "\n}\n";
 
 	//std::cout << input << std::endl;
 	execute_command2 (command, input);
