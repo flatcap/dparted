@@ -76,17 +76,17 @@ LvmVolume::add_child (ContainerPtr& child)
 		return;
 
 	//log_info ("volume: %s (%s), child: %s (%s)\n", name.c_str(), type.back().c_str(), child->name.c_str(), child->type.back().c_str());
-	if (child->is_a ("lvm_metadata")) {
+	if (child->is_a ("LvmMetadata")) {
 		metadata.push_back (child);
 		//log_debug ("metadata: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 		//log_info ("METADATA %s\n", child->name.c_str());
 		//XXX no this is self-contained child->whole = this;
-	} else if (child->is_a ("lvm_volume")) {
+	} else if (child->is_a ("LvmVolume")) {
 		subvols.push_back (child);
 		//log_debug ("subvols: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 		//log_info ("SUBVOL %s\n", child->name.c_str());
 		child->whole = get_smart();
-	} else if (child->is_a ("lvm_partition")) {
+	} else if (child->is_a ("LvmPartition")) {
 		//log_info ("PARTITION %s\n", child->name.c_str());
 		add_segment (child);
 		//Whole::add_child (child);

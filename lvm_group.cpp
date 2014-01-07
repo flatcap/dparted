@@ -118,7 +118,7 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 			"pv_uuid,pv_size,pv_used,pv_attr,vg_extent_size,pvseg_start,pvseg_size,vg_name,vg_uuid,lv_uuid,lv_attr,segtype";
 
 	for (auto i : pieces->get_children()) {
-		if (i->is_a ("lvm_table")) {
+		if (i->is_a ("LvmTable")) {
 			//log_info ("command: %s\n", i->get_device_name().c_str());
 			command += " " + i->get_device_name();
 		}
@@ -226,7 +226,7 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 
 #if 0
 	// remove_if puts all the tables at the end of the vector
-	auto end = remove_if (pieces->children.begin(), pieces->children.end(), [] (ContainerPtr c) { return c->is_a ("lvm_table"); });
+	auto end = remove_if (pieces->children.begin(), pieces->children.end(), [] (ContainerPtr c) { return c->is_a ("LvmTable"); });
 	// then we delete them
 	pieces->children.erase (end, pieces->children.end());
 #endif
@@ -272,7 +272,7 @@ lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		"vg_uuid,vg_name,vg_seqno,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_extent_size";
 
 	for (auto i : pieces->get_children()) {
-		if (i->is_a ("lvm_group"))
+		if (i->is_a ("LvmGroup"))
 			command += " " + i->name;
 	}
 
@@ -350,7 +350,7 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		  "vg_uuid,lv_uuid,lv_name,lv_attr,mirror_log,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start_pe,devices";
 
 	for (auto i : pieces->get_children()) {
-		if (i->is_a ("lvm_group"))
+		if (i->is_a ("LvmGroup"))
 			command += " " + i->name;
 	}
 
@@ -567,7 +567,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	//printf ("%ld volumes\n", v.size());
 
 	for (auto i : v) {
-		if (i->is_a ("lvm_metadata"))		// nothing interesting here
+		if (i->is_a ("LvmMetadata"))		// nothing interesting here
 			continue;
 		if (i->whole)				// we're part of something bigger
 			continue;

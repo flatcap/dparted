@@ -64,7 +64,7 @@ LvmMetadata::add_child (ContainerPtr& child)
 	if (!child)
 		return;
 
-	if (child->is_a ("lvm_volume")) {
+	if (child->is_a ("LvmVolume")) {
 		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (child);
 		sibling = v;
 		v->sibling = get_smart();

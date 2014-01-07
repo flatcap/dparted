@@ -73,7 +73,7 @@ LvmMirror::add_child (ContainerPtr child)
 
 
 #if 0
-	bool isvol = child->is_a("lvm_volume");
+	bool isvol = child->is_a("LvmVolume");
 	if (isvol) {
 		add_segment (child);
 		child->parent = this;

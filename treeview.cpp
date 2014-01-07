@@ -161,7 +161,7 @@ TreeView::tree_add_row (ContainerPtr& c, Gtk::TreeModel::Row* parent)
 	Gtk::TreeModel::Row row;
 
 	for (auto x : c->get_children()) {
-		if (x->is_a ("group"))
+		if (x->is_a ("Group"))
 			continue; //RAR for now ignore vg
 		//std::cout << "name: " << x->name << "\n";
 		if (parent) {

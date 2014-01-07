@@ -105,7 +105,7 @@ DParted::set_data (ContainerPtr c)
 
 	int count = 0;
 	for (auto i : c->get_children()) {
-		if (i->is_a ("lvm_group"))
+		if (i->is_a ("LvmGroup"))
 			continue; //RAR for now ignore vg
 		//std::cout << i->type << "\n";
 		DrawingArea* da = manage (new DrawingArea());

@@ -1095,7 +1095,7 @@ DrawingArea::get_protective (ContainerPtr& c)
 	if (!c)
 		return nullptr;
 
-	if (!c->is_a ("table"))
+	if (!c->is_a ("Table"))
 		return nullptr;
 
 	if (c->children.size() != 1)
@@ -1106,7 +1106,7 @@ DrawingArea::get_protective (ContainerPtr& c)
 	if (!child)
 		return nullptr;
 
-	if (!child->is_a ("partition"))
+	if (!child->is_a ("Partition"))
 		return nullptr;
 
 	if (child->children.size() != 1)
@@ -1117,7 +1117,7 @@ DrawingArea::get_protective (ContainerPtr& c)
 	if (!child)
 		return nullptr;
 
-	if (child->is_a ("table"))
+	if (child->is_a ("Table"))
 		return std::dynamic_pointer_cast<Table> (child);
 
 	return nullptr;
@@ -1216,7 +1216,7 @@ draw_label (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr cont, Rect 
 		label = device.substr (pos+1);
 	}
 
-	if (cont->is_a ("filesystem")) {
+	if (cont->is_a ("Filesystem")) {
 		FilesystemPtr fs = std::dynamic_pointer_cast<Filesystem> (cont);
 		if (fs) {
 			if (!fs->label.empty()) {

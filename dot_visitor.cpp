@@ -88,13 +88,13 @@ DotVisitor::visit_leave (void)
 std::string
 get_colour (ContainerPtr c)
 {
-	if (c->is_a ("block"))        return "#aaffaa";
-	if (c->is_a ("filesystem"))   return "#bbffff";
-	if (c->is_a ("lvm_metadata")) return "#bbffff";
-	if (c->is_a ("table"))        return "#ffbbbb";
-	if (c->is_a ("partition"))    return "#ffffdd";
-	if (c->is_a ("whole"))        return "#ccccff";
-	if (c->is_a ("misc"))         return "orange";
+	if (c->is_a ("Block"))       return "#aaffaa";
+	if (c->is_a ("Filesystem"))  return "#bbffff";
+	if (c->is_a ("LvmMetadata")) return "#bbffff";
+	if (c->is_a ("Table"))       return "#ffbbbb";
+	if (c->is_a ("Partition"))   return "#ffffdd";
+	if (c->is_a ("Whole"))       return "#ccccff";
+	if (c->is_a ("Misc"))        return "orange";
 
 	return "white";
 }
@@ -299,7 +299,7 @@ dot_container (std::shared_ptr<T> t)
 	//output << dot_row ("name",          c->name);
 	output << dot_row ("uuid",          uuid_short); //XXX temp
 	if (c->device.empty()) {
-		if (c->is_a ("whole")) {
+		if (c->is_a ("Whole")) {
 			output << dot_row ("device", "[segments]");
 		} else {
 			output << dot_row ("device", "[inherit]");
@@ -1174,7 +1174,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 		}
 
 #if 0
-		if (c->is_a("whole")) {
+		if (c->is_a("Whole")) {
 			WholePtr w = std::dynamic_pointer_cast<Whole>(c);
 			if (w) {
 				for (auto w2 : w->segments) {
@@ -1185,7 +1185,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 #endif
 
 #if 1
-		if (c->is_a("lvm_metadata")) {
+		if (c->is_a("LvmMetadata")) {
 			LvmVolumePtr m = std::dynamic_pointer_cast<LvmVolume>(c);
 			if (m && m->sibling) {
 				dot << "obj_" << (void*) m->sibling.get() << " -> obj_" << (void*) m.get() << " [constraint=false style=dashed dir=none];\n";
@@ -1194,7 +1194,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 #endif
 
 #if 1
-		if (c->is_a("lvm_volume")) {
+		if (c->is_a("LvmVolume")) {
 			LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume>(c);
 			if (v) {
 				//log_info ("VOLUME %s, %ld\n", v->type.back().c_str(), v->subvols.size());
