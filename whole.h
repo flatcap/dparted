@@ -39,7 +39,7 @@ public:
 	static WholePtr create (void);
 	virtual bool accept (Visitor& v);
 
-	virtual void add_segment (ContainerPtr& seg);
+	virtual void add_segment (ContainerPtr seg);
 
 public:
 	// seg_count - LVM2_SEG_COUNT

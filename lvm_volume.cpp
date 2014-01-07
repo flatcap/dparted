@@ -85,12 +85,12 @@ LvmVolume::add_child (ContainerPtr& child)
 		subvols.push_back (child);
 		//log_debug ("subvols: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 		//log_info ("SUBVOL %s\n", child->name.c_str());
-		child->whole.reset (this);
+		child->whole = get_smart();
 	} else if (child->is_a ("lvm_partition")) {
 		//log_info ("PARTITION %s\n", child->name.c_str());
 		add_segment (child);
 		//Whole::add_child (child);
-		child->whole.reset (this);
+		child->whole = get_smart();
 	} else {
 		// filesystem
 		Whole::add_child (child);

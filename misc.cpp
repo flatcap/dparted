@@ -143,15 +143,15 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	MiscPtr m;
 	if (is_empty (buffer, bufsize)) {
 		//log_error ("probe empty\n");
-		m.reset (new Misc());
+		m = Misc::create();
 		m->name = "zero";
 	} else if (is_luks (buffer, bufsize)) {
 		//log_error ("probe luks\n");
-		m.reset (new Misc());
+		m = Misc::create();
 		m->name = "luks";
 	} else if (is_random (buffer, bufsize)) {
 		//log_error ("probe random\n");
-		m.reset (new Misc());
+		m = Misc::create();
 		m->name = "random";
 	}
 

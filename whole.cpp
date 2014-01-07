@@ -63,7 +63,7 @@ Whole::accept (Visitor& v)
  * add_segment
  */
 void
-Whole::add_segment (ContainerPtr& seg)
+Whole::add_segment (ContainerPtr seg)
 {
 	bool inserted = false;
 
@@ -81,7 +81,7 @@ Whole::add_segment (ContainerPtr& seg)
 		segments.push_back (seg);
 	}
 
-	seg->whole.reset (this);
+	seg->whole = get_smart();
 }
 
 

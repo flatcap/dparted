@@ -220,7 +220,6 @@ main (int argc, char* argv[])
 
 		ContainerPtr found = probe (top_level, item);
 		if (found) {
-			top_level->just_add_child (found);
 			//std::cout << "top_level = " << top_level->get_children().size() << std::endl;
 			//item->add_child (found);
 			//std::cout << "\tFound: " << found << "\n";
@@ -256,7 +255,6 @@ main (int argc, char* argv[])
 		}
 	}
 #endif
-
 	if (list) {
 		log_info ("------------------------------------------------------------\n");
 		DumpVisitor dv;

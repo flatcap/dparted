@@ -286,7 +286,7 @@ lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup>(pieces->find_uuid(vg_uuid));
 		if (!g) {
 			log_info ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
-			g.reset (new LvmGroup());
+			g = LvmGroup::create();
 			g->uuid    = vg_uuid;
 			//g->missing = true;
 		}
@@ -364,7 +364,7 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup>(pieces->find_uuid (vg_uuid));
 		if (!g) {
 			log_info ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
-			g.reset (new LvmGroup());
+			g = LvmGroup::create();
 			g->uuid    = vg_uuid;
 			//g->missing = true;
 			ContainerPtr c(g);
@@ -554,8 +554,8 @@ LvmGroup::discover (ContainerPtr& top_level)
 	lvm_lvs (pieces, deps);
 
 #if 0
-	log_info ("Pieces (%ld)\n", pieces->children.size());
-	for (auto i : pieces->children) {
+	log_info ("Pieces (%ld)\n", pieces->get_children().size());
+	for (auto i : pieces->get_children()) {
 		std::cout << '\t' << i->uuid << '\t' << i << '\n';
 	}
 #endif
