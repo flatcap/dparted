@@ -241,12 +241,3 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 }
 
 
-/**
- * mouse_event
- */
-void
-Loop::mouse_event (void)
-{
-	std::cout << __PRETTY_FUNCTION__ << std::endl;
-}
-

@@ -24,7 +24,6 @@
 
 #include <gtkmm/drawingarea.h>
 
-#include "container.h"
 #include "gfx_container.h"
 
 typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height

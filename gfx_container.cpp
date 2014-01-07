@@ -269,7 +269,19 @@ GfxContainer::dump (void)
 bool
 GfxContainer::set_focus (bool focus)
 {
-	return false;
+	ContainerPtr c = get_smart();
+	std::cout << "Focus: " << c << " = " << focus << std::endl;
+	focussed = focus;
+	return true;
+}
+
+/**
+ * get_focus
+ */
+bool
+GfxContainer::get_focus (void)
+{
+	return focussed;
 }
 
 /**
@@ -356,3 +368,13 @@ GfxContainer::get_tooltip (void)
 
 	return tt;
 }
+
+/**
+ * mouse_event
+ */
+bool GfxContainer::mouse_event (void)
+{
+	//std::cout << __PRETTY_FUNCTION__ << std::endl;
+	return false;
+}
+

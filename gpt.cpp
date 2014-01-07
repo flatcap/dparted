@@ -189,12 +189,3 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 }
 
 
-/**
- * mouse_event
- */
-void
-Gpt::mouse_event (void)
-{
-	std::cout << __PRETTY_FUNCTION__ << std::endl;
-}
-

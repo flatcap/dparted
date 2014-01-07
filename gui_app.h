@@ -67,6 +67,8 @@ protected:
 	void menu_about       (void);
 	void menu_quit        (void);
 
+	bool on_mouse_click (GdkEventButton* event);
+
 	ThemePtr theme;
 };
 

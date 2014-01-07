@@ -744,12 +744,3 @@ Container::get_smart (void)
 }
 
 
-/**
- * mouse_event
- */
-void
-Container::mouse_event (void)
-{
-	std::cout << __PRETTY_FUNCTION__ << std::endl;
-}
-

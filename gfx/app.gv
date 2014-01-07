@@ -10,15 +10,16 @@ digraph app {
 	app  [ label="App"  fillcolor=white ];
 
 	gui_app       [ label="Gui App"       fillcolor=pink ];
+	dparted       [ label="DParted"       fillcolor=pink ];
 	gfx_container [ label="Gfx Container" fillcolor=pink ];
 	theme         [ label="Theme"         fillcolor=pink ];
 	drawing_area  [ label="Drawing Area"  fillcolor=pink ];
 
 	top_level [ label="Top Level" fillcolor=cyan ];
 	container [ label="Container" fillcolor=cyan ];
-	a         [ label="..."       fillcolor=cyan ];
-	b         [ label="..."       fillcolor=cyan ];
-	c         [ label="..."       fillcolor=cyan ];
+	a         [ label="a"       fillcolor=cyan ];
+	b         [ label="b"       fillcolor=cyan ];
+	c         [ label="c"       fillcolor=cyan ];
 
 	main -> app;
 
@@ -27,9 +28,11 @@ digraph app {
 	app -> gui_app;
 
 	gui_app -> theme;
-	gui_app -> drawing_area;
-
 	theme -> cfg2;
+
+	gui_app -> dparted;
+	dparted -> drawing_area;
+
 	drawing_area -> gfx_container;
 	gfx_container -> container;
 

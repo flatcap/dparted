@@ -44,8 +44,6 @@ public:
 	static ContainerPtr create (void);
 	virtual bool accept (Visitor& v);
 
-	virtual void mouse_event (void);
-
 	virtual void add_child      (ContainerPtr& child);
 	virtual void just_add_child (ContainerPtr& child);
 	virtual void delete_child   (ContainerPtr& child);

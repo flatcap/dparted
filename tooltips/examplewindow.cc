@@ -1,3 +1,5 @@
+// g++ -o examplewindow{,.cc} $(pkg-config --cflags --libs gtkmm-3.0)
+
 #include <vector>
 #include <gtkmm/application.h>
 

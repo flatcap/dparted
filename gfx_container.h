@@ -49,6 +49,7 @@ public:
 	void dump (void);
 
 	bool set_focus (bool focus);
+	bool get_focus (void);
 	void add_to_selection (void);
 	void remove_from_selection (void);
 	bool init (ContainerPtr c);

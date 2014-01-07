@@ -132,11 +132,12 @@ Filesystem::get_property (const std::string& propname)
 }
 
 
+#if 0
 /**
- * mouse_event
+ * delete_filesystem
  */
 void
-Filesystem::mouse_event (void)
+Filesystem::delete_filesystem (void)
 {
 	std::cout << __PRETTY_FUNCTION__ << std::endl;
 
@@ -147,3 +148,4 @@ Filesystem::mouse_event (void)
 	main_app->ask(q);
 }
 
+#endif

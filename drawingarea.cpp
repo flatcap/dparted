@@ -25,12 +25,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "container.h"
 #include "drawingarea.h"
-#include "filesystem.h"
 #include "log.h"
 #include "utils.h"
-#include "whole.h"
 #include "log_trace.h"
 #include "gui_app.h"
 
@@ -58,7 +55,7 @@ DrawingArea::DrawingArea()
 
 	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 
-	signal_button_press_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_click));
+	//signal_button_press_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_click));
 	signal_motion_notify_event().connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_motion));
 	signal_leave_notify_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_leave));
 
@@ -918,7 +915,13 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 		if (b) {
 			//log_error ("\033[01;31mMOUSE on %s\033[0m\n", rg.p->type.back().c_str());
+			if (focus) {
+				focus->set_focus (false);
+			}
 			rg.p->mouse_event();
+			rg.p->set_focus (true);
+			focus = rg.p;
+			get_window()->invalidate (false);
 			break;
 		}
 
@@ -930,7 +933,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 		}
 #endif
 	}
-	log_info ("\n");
+	//log_info ("\n");
 
 #if 0
 	std::cout << event->type << "\n";
@@ -1187,16 +1190,6 @@ DrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, cons
 
 
 /**
- * mouse_event
- */
-bool GfxContainer::mouse_event (void)
-{
-	std::cout << "mouse_event" << std::endl;
-	return false;
-}
-
-
-/**
  * draw_label - write some text into an area
  */
 void
@@ -1419,6 +1412,10 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		draw_container(cr, c, next);
 	}
 	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
+
+	if (cont->get_focus()) {
+		draw_focus (cr, shape);
+	}
 #endif
 }
 

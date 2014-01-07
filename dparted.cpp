@@ -76,6 +76,9 @@ DParted::DParted ()
 	grid.add (da_grid);
 	//RAR grid.add (treeview);
 
+	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
+	signal_button_press_event() .connect (sigc::mem_fun (*this, &DParted::on_mouse_click));
+
 	set_default_icon_name ("dparted");
 
 	show_all_children();
@@ -91,6 +94,17 @@ DParted::DParted ()
  */
 DParted::~DParted()
 {
+}
+
+
+/**
+ * on_mouse_click
+ */
+bool
+DParted::on_mouse_click (GdkEventButton* event)
+{
+	std::cout << "DParted: mouse click: (" << event->x << "," << event->y << ")\n";
+	return true;
 }
 
 

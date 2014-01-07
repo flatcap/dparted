@@ -40,8 +40,6 @@ public:
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
-	virtual void mouse_event (void);
-
 public:
 	//properties
 

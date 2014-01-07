@@ -66,6 +66,8 @@ protected:
 	void on_menu_choices_one();
 	void on_menu_choices_two();
 
+	bool on_mouse_click (GdkEventButton* event);
+
 	ContainerPtr m_c;
 
 private:

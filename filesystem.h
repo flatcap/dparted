@@ -40,8 +40,6 @@ public:
 
 	static FilesystemPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
-	virtual void mouse_event (void);
-
 public:
 	std::string	label;
 

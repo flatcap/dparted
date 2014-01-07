@@ -39,8 +39,6 @@ public:
 	static LoopPtr create (const std::string& losetup);
 	virtual bool accept (Visitor& v);
 
-	virtual void mouse_event (void);
-
 	static bool losetup  (std::vector <std::string>& output, std::string device = std::string());
 	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
