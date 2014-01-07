@@ -294,7 +294,7 @@ checker_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, int ch
 			if (((i+j)/s)&1)
 				cr->set_source_rgba (0.8, 0.8, 0.8, 1.0);
 			else
-				cr->set_source_rgba (0.0, 0.0, 0.0, 0.0);
+				cr->set_source_rgba (0.6, 0.6, 0.6, 1.0);
 
 			cr->rectangle (x+i, y+j, s, s);
 			cr->fill();
@@ -814,7 +814,7 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	Rect shape { 0, 0, allocation.get_width(), allocation.get_height() };
 
 #if 1
-	checker_rect (cr, shape, 7);
+	checker_rect (cr, shape, 5);
 #else
 	draw_grid (cr, shape);
 	draw_grid_linear (cr, shape, m_c->bytes_size);
@@ -1147,12 +1147,11 @@ DrawingArea::set_data (ContainerPtr& c)
 /**
  * get_focus
  */
-ContainerPtr
+GfxContainerPtr
 DrawingArea::get_focus (int x, int y)
 {
-	ContainerPtr match;
+	GfxContainerPtr match;
 
-#if 0
 	for (auto rg : vRange) {
 		Rect r = rg.r;
 		if ((x >= r.x) && (x < (r.x + r.w)) && (y >= r.y) && (y < (r.y + r.h))) {
@@ -1160,7 +1159,6 @@ DrawingArea::get_focus (int x, int y)
 			break;
 		}
 	}
-#endif
 
 	return match;
 }
@@ -1173,9 +1171,10 @@ DrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, cons
 {
 	std::stringstream ss;
 
-	ContainerPtr c = get_focus (x, y);
+	GfxContainerPtr c = get_focus (x, y);
 	if (c) {
-		ss << "<b>" << c->name << "</b> (" << c->uuid << ")";
+		//ss << "<b>" << c->name << "</b> (" << c->uuid << ")";
+		ss << "<b>" << c->get_tooltip() << "</b>";
 
 		tooltip->set_markup(ss.str());
 		tooltip->set_icon_from_icon_name("dialog-information", Gtk::ICON_SIZE_MENU);

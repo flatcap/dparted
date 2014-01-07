@@ -69,6 +69,8 @@ public:
 
 	bool usage = false;
 
+	std::string get_tooltip (void);
+
 protected:
 	GfxContainer (void);
 	ContainerPtr get_smart (void);

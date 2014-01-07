@@ -339,3 +339,20 @@ GfxContainer::process_bool (const std::string& str)
 	return false;
 }
 
+
+/**
+ * get_tooltip
+ */
+std::string
+GfxContainer::get_tooltip (void)
+{
+	ContainerPtr c = get_smart();
+	if (!c)
+		return "";
+
+	std::string tt;
+
+	tt = c->name + " : " + c->type.back();
+
+	return tt;
+}

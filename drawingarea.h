@@ -51,7 +51,7 @@ protected:
 #if 0
 	bool on_timeout (int timer_number);
 #endif
-	ContainerPtr get_focus (int x, int y);
+	GfxContainerPtr get_focus (int x, int y);
 	bool on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 
 private:
