@@ -264,6 +264,6 @@ App::scan (const std::vector<std::string>& files)
 			break;
 		}
 	}
-	return nullptr;
+	return top_level;
 }
 
