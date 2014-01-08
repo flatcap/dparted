@@ -15,8 +15,8 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _DRAWINGAREA_
-#define _DRAWINGAREA_
+#ifndef _DRAWING_AREA_H_
+#define _DRAWING_AREA_H_
 
 #include <deque>
 #include <memory>
@@ -73,5 +73,5 @@ private:
 };
 
 
-#endif // _DRAWINGAREA_
+#endif // _DRAWING_AREA_H_
 

@@ -18,7 +18,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "treeview.h"
+#include "tree_view.h"
 #include "log_trace.h"
 
 /**

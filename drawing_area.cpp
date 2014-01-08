@@ -25,7 +25,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "drawingarea.h"
+#include "drawing_area.h"
 #include "log.h"
 #include "utils.h"
 #include "log_trace.h"

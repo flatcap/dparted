@@ -15,8 +15,8 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _TREEVIEW_H_
-#define _TREEVIEW_H_
+#ifndef _TREE_VIEW_H_
+#define _TREE_VIEW_H_
 
 #include <gtkmm/treeview.h>
 #include <gtkmm/treestore.h>
@@ -94,5 +94,5 @@ private:
 };
 
 
-#endif // _TREEVIEW_H_
+#endif // _TREE_VIEW_H_
 
