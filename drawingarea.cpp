@@ -1190,59 +1190,6 @@ DrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, cons
 
 
 /**
- * draw_label - write some text into an area
- */
-void
-draw_label (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr cont, Rect shape)
-{
-#if 0
-	std::string label;
-
-	std::string device = cont->get_device_name();
-	size_t pos = device.find_last_of ('/');
-	if (pos == std::string::npos) {
-		label = cont->device;
-		if (label.empty()) {
-			label = "<none>";	//RAR tmp
-		}
-	} else {
-		label = device.substr (pos+1);
-	}
-
-	if (cont->is_a ("Filesystem")) {
-		FilesystemPtr fs = std::dynamic_pointer_cast<Filesystem> (cont);
-		if (fs) {
-			if (!fs->label.empty()) {
-				label += " \"" + fs->label + "\"";
-			}
-		}
-	}
-
-	label += "\n";
-	label += get_size (cont->bytes_size);
-
-	Pango::FontDescription font;
-	font.set_family ("Liberation Sans");
-
-	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
-	layout->set_font_description (font);
-
-	font.set_size (10 * Pango::SCALE);		//THEME - block_label_font_size
-	layout->set_font_description (font);
-
-	layout->set_text (label);
-
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);
-	cr->move_to (shape.x + 2, shape.y + 2);
-
-	layout->set_width (Pango::SCALE * (shape.w - 4));
-	layout->set_ellipsize (Pango::ELLIPSIZE_END);
-	layout->update_from_cairo_context (cr);
-	layout->show_in_cairo_context (cr);
-#endif
-}
-
-/**
  * draw_container - recursively draw a set of containers
  */
 void
