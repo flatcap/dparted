@@ -30,6 +30,7 @@
 #include "utils.h"
 #include "log_trace.h"
 #include "gui_app.h"
+#include "dparted.h"
 
 const double ARC_N = 3*M_PI_2;	// Compass points in radians
 const double ARC_E = 0*M_PI_2;
@@ -55,7 +56,7 @@ DrawingArea::DrawingArea()
 
 	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 
-	//signal_button_press_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_click));
+	signal_button_press_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_click));
 	signal_motion_notify_event().connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_motion));
 	signal_leave_notify_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_leave));
 
@@ -917,14 +918,16 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 		bool b = ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
 			  (event->y >= r.y) && (event->y < (r.y + r.h)));
 
+		//std::cout << "darea = " << get_toplevel() << std::endl;
+		DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
 		if (b) {
+			dp->set_focus (rg.p);
+#if 0
 			//log_error ("\033[01;31mMOUSE on %s\033[0m\n", rg.p->type.back().c_str());
-			if (focus) {
-				focus->set_focus (false);
-			}
 			rg.p->mouse_event();
 			rg.p->set_focus (true);
 			focus = rg.p;
+#endif
 			get_window()->invalidate (false);
 			break;
 		}
@@ -1144,8 +1147,8 @@ DrawingArea::set_data (ContainerPtr& c)
 		return;
 
 	// invalidate window
-	//unsigned int children = c->children.size();
-	//set_size_request (400, 50 * children);
+	unsigned int children = c->get_children().size();
+	set_size_request (1000, 70 * children);
 
 	top_level = std::make_shared<GfxContainer>(c);
 	//top_level->dump();

@@ -13,7 +13,7 @@ digraph app {
 	drawing_area  [ label="Drawing Area"  fillcolor=pink ];
 	tree_view     [ label="Tree View"     fillcolor=pink ];
 
-	app [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3"><tr><td port="inside" bgcolor="white">App</td></tr><tr><td bgcolor="pink">Gui App</td></tr></table>> ];
+	app [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3"><tr><td bgcolor="white">App</td></tr><tr><td bgcolor="pink">Gui App</td></tr></table>> ];
 
 	gfx_t [ label="Gfx Cont"  fillcolor=pink ];
 	gfx_a [ label="A"         fillcolor=pink ];
@@ -40,8 +40,8 @@ digraph app {
 
 	main -> app;
 
-	app:inside -> cfg1;
-	app:inside -> cont_t;
+	app:e -> cfg1;
+	app:se -> cont_t;
 
 	app -> theme;
 	cfg2 -> theme [ dir=back ];

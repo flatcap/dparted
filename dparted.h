@@ -43,18 +43,18 @@ public:
 
 	void set_data (ContainerPtr c);
 
+	bool set_focus (GfxContainerPtr cont);
+
 protected:
 	// GUI
 	Gtk::Grid		grid;
 	Gtk::MenuBar		menubar;
 	//Gtk::Toolbar		toolbar;
-	//DrawingArea		drawingarea;
+	DrawingArea		drawingarea;
 	TreeView		treeview;
 	//Gtk::Statusbar		statusbar;
 
 	Gtk::ScrolledWindow	scrolledwindow;
-
-	DrawingArea* area = nullptr;
 
 	//YYY Glib::RefPtr<Gtk::UIManager> m_refUIManager;
 	//YYY Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup;
@@ -71,6 +71,9 @@ protected:
 	bool on_mouse_click (GdkEventButton* event);
 
 	ContainerPtr m_c;
+
+	GfxContainerPtr focus;
+	std::vector<GfxContainerPtr> selection;
 
 private:
 	void init_menubar (void);

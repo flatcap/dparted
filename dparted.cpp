@@ -30,8 +30,9 @@
  */
 DParted::DParted ()
 {
+	std::cout << "dparted = " << this << std::endl;
 	set_title ("DParted");
-	set_size_request (1360, 70*3);
+	set_size_request (1360, 70*4);
 	//set_size_request (1900, 1000);
 #if 0
 	set_default_size (1439, 800); //RAR 1439, 800
@@ -67,15 +68,15 @@ DParted::DParted ()
 #endif
 
 	//grid.add (toolbar);
-
-	area = manage (new DrawingArea());
-	grid.add (*area);
+	grid.add (drawingarea);
 
 	treeview.set_hexpand (true);
 	//grid.add (treeview);
 
+#if 0
 	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 	signal_button_press_event() .connect (sigc::mem_fun (*this, &DParted::on_mouse_click));
+#endif
 
 	set_default_icon_name ("dparted");
 
@@ -105,6 +106,20 @@ DParted::on_mouse_click (GdkEventButton* event)
 	return true;
 }
 
+/**
+ * set_focus
+ */
+bool
+DParted::set_focus (GfxContainerPtr cont)
+{
+	if (focus) {
+		focus->set_focus (false);
+	}
+	cont->set_focus (true);
+	focus = cont;
+
+	return true;
+}
 
 /**
  * set_data
@@ -115,7 +130,7 @@ DParted::set_data (ContainerPtr c)
 	m_c = c;
 	treeview.init_treeview (m_c);
 
-	area->set_data (c);
+	drawingarea.set_data (c);
 
 	//std::cout << m_c->children.size() << " children\n";
 	//set_size_request (1362, 77*count+6); //RAR
@@ -125,11 +140,7 @@ DParted::set_data (ContainerPtr c)
 	int height = 0;
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
-	//move (1920, 768 - height);
-	//move (1200, 768-height);
-	move (0, 0);
-	//move (1920, 0);
-	//move (480, 1080-height);
+	move (1920, 768-height);
 #endif
 
 }
