@@ -76,6 +76,9 @@ protected:
 	std::vector<GfxContainerPtr> selection;
 
 private:
+	Gtk::Menu m_fake_menu;
+	void quit (void);
+
 	void init_menubar (void);
 #if 0
 	void init_toolbar (void);

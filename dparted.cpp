@@ -80,6 +80,17 @@ DParted::DParted ()
 
 	set_default_icon_name ("dparted");
 
+	Glib::RefPtr<Gtk::AccelGroup> accel = Gtk::AccelGroup::create();
+
+	Gtk::MenuItem *foo = manage(new Gtk::MenuItem());
+	foo->signal_activate().connect(sigc::mem_fun(*this, &DParted::quit));
+	foo->add_accelerator ("activate", accel, GDK_KEY_Q, Gdk::CONTROL_MASK, Gtk::ACCEL_VISIBLE);
+	foo->show ();
+	foo->set_sensitive(m_fake_menu.get_sensitive());
+	m_fake_menu.append (*foo);
+
+	add_accel_group (accel);
+
 	show_all_children();
 
 #if 0
@@ -112,6 +123,9 @@ DParted::on_mouse_click (GdkEventButton* event)
 bool
 DParted::set_focus (GfxContainerPtr cont)
 {
+	if (focus == cont)
+		return true;
+
 	if (focus) {
 		focus->set_focus (false);
 	}
@@ -308,6 +322,15 @@ DParted::on_menu_choices_two()
 
 	std::cout << message << "\n";
 #endif
+}
+
+
+/**
+ * quit
+ */
+void DParted::quit (void)
+{
+	hide();
 }
 
 
