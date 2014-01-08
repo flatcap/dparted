@@ -572,7 +572,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 		if (i->whole)				// we're part of something bigger
 			continue;
 		//log_info ("Q: [%s] %s: %s\n", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
-		queue_add_probe (i);
+		main_app->queue_add_probe (i);
 	}
 #endif
 #if 1

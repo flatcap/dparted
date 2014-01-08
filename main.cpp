@@ -15,112 +15,17 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-#include <gtkmm.h>
-#include <gtkmm/main.h>
-
 #include <iostream>
-#include <cstdlib>
-#include <queue>
 #include <string>
 #include <vector>
-#include <memory>
-
-#include <linux/major.h>
-#include <linux/fs.h>
-#include <linux/kdev_t.h>
 
 #include "app.h"
 #include "gui_app.h"
-#include "container.h"
-#include "file.h"
-#include "filesystem.h"
-#include "loop.h"
-#include "misc.h"
-#include "table.h"
 
 #include "dot_visitor.h"
 #include "dump_visitor.h"
 #include "prop_visitor.h"
 #include "log.h"
-#include "log_trace.h"
-#include "utils.h"
-#include "volume.h"
-
-std::queue<ContainerPtr> probe_queue;
-
-AppPtr main_app;
-
-/**
- * queue_add_probe
- */
-void
-queue_add_probe (ContainerPtr& item)
-{
-	if (!item)
-		return;
-
-	probe_queue.push (item);
-	std::string s = get_size (item->parent_offset);
-	//log_info ("QUEUE: %s %s : %lld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
-	//log_info ("QUEUE has %lu items\n", probe_queue.size());
-}
-
-#if 0
-/**
- * mounts_get_list
- */
-unsigned int
-mounts_get_list (ContainerPtr& mounts)
-{
-	std::string command;
-	std::vector<std::string> output;
-	std::string error;
-
-	command = "grep '^/dev' /proc/mounts";
-	execute_command (command, output);
-
-	for (unsigned int i = 0; i < output.size(); i++) {
-		std::string line = output[i];
-		log_info ("line%d:\n%s\n\n", i, line.c_str());
-	}
-
-	return mounts.children.size();
-}
-
-#endif
-
-/**
- * probe
- */
-ContainerPtr
-probe (ContainerPtr& top_level, ContainerPtr& parent)
-{
-	//LOG_TRACE;
-
-	if (!top_level || !parent)
-		return nullptr;
-
-	ContainerPtr item;
-
-	if ((item = Filesystem::probe (top_level, parent))) {
-		return item;
-	}
-
-	if ((item = Table::probe (top_level, parent))) {
-		return item;
-	}
-
-	if ((item = Misc::probe (top_level, parent))) {
-		return item;
-	}
-
-	return nullptr;
-}
 
 /**
  * main
@@ -128,6 +33,8 @@ probe (ContainerPtr& top_level, ContainerPtr& parent)
 int
 main (int argc, char* argv[])
 {
+	log_init ("/dev/stdout");
+
 	//command line
 	// -a	app
 	// -l	list
@@ -167,95 +74,25 @@ main (int argc, char* argv[])
 		}
 	}
 
-	log_init ("/dev/stdout");
+	std::vector<std::string> files(argv + 1, argv + argc);
 
-	ContainerPtr top_level = Container::create();
-	top_level->name = "dummy";
+	ContainerPtr top_level;
 
-	if (argc > 1) {
-		for (int i = 1; i < argc; i++) {
-			struct stat st;
-			int res = -1;
-			int fd = -1;
+	if (app) {
+		gui_app = std::make_shared<GuiApp>();
+		main_app = gui_app;
 
-			fd = open (argv[i], O_RDONLY | O_CLOEXEC);
-			if (fd < 0) {
-				log_debug ("can't open file %s\n", argv[i]);
-				continue;
-			}
-
-			res = fstat (fd, &st);
-			if (res < 0) {
-				log_debug ("stat on %s failed\n", argv[i]);
-				close (fd);
-				continue;
-			}
-
-			if (S_ISREG (st.st_mode) || S_ISDIR (st.st_mode)) {
-				File::identify (top_level, argv[i], fd, st);
-			} else if (S_ISBLK (st.st_mode)) {
-				if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
-					Loop::identify (top_level, argv[i], fd, st);
-				} else {
-					//Gpt::identify (top_level, argv[i], fd, st);
-				}
-			} else {
-				log_error ("can't probe something else\n");
-			}
-			close (fd);
-		}
+		gui_app->set_config ("config/dparted.conf");
+		gui_app->set_theme  ("config/theme.conf");
 	} else {
-		Loop::discover (top_level, probe_queue);
-		//Gpt::discover (top_level, probe_queue);
+		main_app = std::make_shared<App>();
 	}
 
-	// Process the probe_queue
-	ContainerPtr item;
-	//XXX deque?
-	while (!probe_queue.empty()) {
-		item = probe_queue.front();
-		probe_queue.pop();
-
-		//std::cout << "Item: " << item << "\n";
-
-		ContainerPtr found = probe (top_level, item);
-		if (found) {
-			//std::cout << "top_level = " << top_level->get_children().size() << std::endl;
-			//item->add_child (found);
-			//std::cout << "\tFound: " << found << "\n";
-			//probe_queue.push (found);
-		} else {
-			//XXX LOG
-			break;
-		}
-		//std::cout << std::endl;
+	if (list || props || dot) {
+		top_level = main_app->scan(files);
 	}
 
-	LvmGroup::discover (top_level);
-	//MdGroup::discover (top_level);
-
-#if 1
-	// Process the probe_queue
-	//XXX deque?
-	while (!probe_queue.empty()) {
-		item = probe_queue.front();
-		probe_queue.pop();
-
-		//std::cout << "Item: " << item << "\n";
-
-		ContainerPtr found = probe (top_level, item);
-		if (found) {
-			top_level->just_add_child (found);
-			//item->add_child (found);
-			//std::cout << "\tFound: " << found << "\n";
-			//probe_queue.push (found);
-		} else {
-			//XXX LOG
-			break;
-		}
-	}
-#endif
-	if (list) {
+	if (list && top_level) {
 		log_info ("------------------------------------------------------------\n");
 		DumpVisitor dv;
 		top_level->accept (dv);
@@ -263,7 +100,7 @@ main (int argc, char* argv[])
 		log_info ("------------------------------------------------------------\n");
 	}
 
-	if (props) {
+	if (props && top_level) {
 		log_info ("------------------------------------------------------------\n");
 		PropVisitor pv;
 		top_level->accept (pv);
@@ -271,7 +108,7 @@ main (int argc, char* argv[])
 		log_info ("------------------------------------------------------------\n");
 	}
 
-	if (dot) {
+	if (dot && top_level) {
 		if (separate) {
 			for (auto c : top_level->get_children()) {
 				DotVisitor dv;
@@ -287,25 +124,14 @@ main (int argc, char* argv[])
 		}
 	}
 
-	int retval = 0;
-
-	if (app) {
-                std::shared_ptr<GuiApp> gui (new GuiApp (top_level));
-
-                main_app = gui;
-		gui_app  = gui;
-
-		gui->set_config ("config/dparted.conf");
-		gui->set_theme  ("config/theme.conf");
-
-                retval = gui->run (1, argv);           //XXX argc
-
-		main_app = nullptr;
-		gui_app  = nullptr;
+	if (gui_app) {
+		if (!top_level)
+			top_level = main_app->scan(files);
+                gui_app->run (0, nullptr);
 	}
 
 	log_close();
-	return retval;
+	return 0;
 }
 
 

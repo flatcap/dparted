@@ -19,6 +19,7 @@
 #define _APP_H_
 
 #include <memory>
+#include <queue>
 
 #include "question.h"
 #include "message.h"
@@ -45,10 +46,16 @@ public:
 
 	bool set_config (const std::string& filename);
 
+	void queue_add_probe (ContainerPtr& item);
+	ContainerPtr scan (const std::vector<std::string>& files);
+	ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
+
 protected:
 	ContainerPtr top_level;
 
 	ConfigFilePtr config_file;
+
+	std::queue<ContainerPtr> probe_queue;
 };
 
 

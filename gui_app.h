@@ -40,7 +40,7 @@ class GuiApp :
 	public Gtk::Application
 {
 public:
-	GuiApp (ContainerPtr& top_level);
+	GuiApp (void);
 	virtual ~GuiApp();
 
 	virtual bool ask (Question& q);

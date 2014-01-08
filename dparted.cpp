@@ -30,7 +30,6 @@
  */
 DParted::DParted ()
 {
-	std::cout << "dparted = " << this << std::endl;
 	set_title ("DParted");
 	set_size_request (1360, 70*4);
 	//set_size_request (1900, 1000);

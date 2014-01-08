@@ -237,7 +237,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 
 	ContainerPtr c(l);
 	top_level->just_add_child (c);
-	queue_add_probe (c);	// queue the container for action
+	main_app->queue_add_probe (c);	// queue the container for action
 }
 
 

@@ -178,7 +178,7 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 #endif
 		ContainerPtr c(p);
 		g->add_child (c);
-		queue_add_probe (c);
+		main_app->queue_add_probe (c);
 	}
 
 #if 0

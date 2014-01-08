@@ -26,6 +26,7 @@
 #include <sstream>
 #include <string>
 
+#include "app.h"
 #include "extended.h"
 #include "log.h"
 #include "main.h"
@@ -213,7 +214,7 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 			c->parent_offset = vp[i].start;
 			c->device = part_name.str();
 
-			queue_add_probe (c);
+			main_app->queue_add_probe (c);
 		}
 		m->add_child (c);
 	}
