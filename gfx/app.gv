@@ -1,46 +1,60 @@
 digraph app {
 	graph [ rankdir="TB", bgcolor="#002200", color=white ];
-	node  [ shape=record, style=filled, fillcolor="#ffffff", color=darkgreen ];
-	edge  [ penwidth=2.0, color="#cccccc" ];
+	node  [ shape=record, style=filled, fillcolor="#002200", color="#002200" ];
+	edge  [ penwidth=1.5, color="#ffffff" ];
 
-	cfg1 [ label="Config File" fillcolor=darkgreen ];
-	cfg2 [ label="Config File" fillcolor=darkgreen ];
+	cfg1 [ label="Config File" fontcolor=white color=white fillcolor="#002200" ];
+	cfg2 [ label="Config File" fontcolor=white color=white fillcolor="#002200" ];
 
 	main [ label="Main" fillcolor=white ];
-	app  [ label="App"  fillcolor=white ];
 
-	gui_app       [ label="Gui App"       fillcolor=pink ];
-	dparted       [ label="DParted"       fillcolor=pink ];
-	gfx_container [ label="Gfx Container" fillcolor=pink ];
 	theme         [ label="Theme"         fillcolor=pink ];
+	dparted       [ label="DParted"       fillcolor=pink ];
 	drawing_area  [ label="Drawing Area"  fillcolor=pink ];
+	tree_view     [ label="Tree View"     fillcolor=pink ];
 
-	top_level [ label="Top Level" fillcolor=cyan ];
-	container [ label="Container" fillcolor=cyan ];
-	a         [ label="a"       fillcolor=cyan ];
-	b         [ label="b"       fillcolor=cyan ];
-	c         [ label="c"       fillcolor=cyan ];
+	app [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3"><tr><td port="inside" bgcolor="white">App</td></tr><tr><td bgcolor="pink">Gui App</td></tr></table>> ];
+
+	gfx_t [ label="Gfx Cont"  fillcolor=pink ];
+	gfx_a [ label="A"         fillcolor=pink ];
+	gfx_b [ label="B"         fillcolor=pink ];
+	gfx_c [ label="C"         fillcolor=pink ];
+
+	cont_t [ label="Top Level" fillcolor=cyan ];
+	cont_a [ label="A"         fillcolor=cyan ];
+	cont_b [ label="B"         fillcolor=cyan ];
+	cont_c [ label="C"         fillcolor=cyan ];
+
+	gfx_t -> gfx_a;
+	gfx_t -> gfx_b;
+	gfx_t -> gfx_c;
+
+	cont_t -> cont_a;
+	cont_t -> cont_b;
+	cont_t -> cont_c;
+
+	gfx_t -> cont_t [ constraint=false color=grey penwidth=0.5 ];
+	gfx_a -> cont_a [ constraint=false color=grey penwidth=0.5 ];
+	gfx_b -> cont_b [ constraint=false color=grey penwidth=0.5 ];
+	gfx_c -> cont_c [ constraint=false color=grey penwidth=0.5 ];
 
 	main -> app;
 
-	app -> cfg1;
-	app -> top_level;
-	app -> gui_app;
+	app:inside -> cfg1;
+	app:inside -> cont_t;
 
-	gui_app -> theme;
-	theme -> cfg2;
+	app -> theme;
+	cfg2 -> theme [ dir=back ];
 
-	gui_app -> dparted;
+	app -> dparted;
 	dparted -> drawing_area;
+	dparted -> tree_view;
 
-	drawing_area -> gfx_container;
-	gfx_container -> container;
+	drawing_area -> gfx_t;
+	tree_view -> gfx_t;
 
-	top_level -> container;
-	container -> a;
-	container -> b;
-	container -> c;
+	{ rank=same app   cfg1 }
+	{ rank=same theme cfg2 }
 
-	{ rank=same main app top_level }
-	{ rank=same drawing_area gfx_container container }
+	{ rank=same cont_t gfx_t }
 }
