@@ -40,12 +40,12 @@ TreeView::TreeView()
 	col->pack_start (m_Columns.col_filesystem, true);
 	append_column (*col);
 
-	append_column ("Mount",      m_Columns.col_mount);
-	append_column ("Label",      m_Columns.col_label);
-	append_column ("Size",       m_Columns.col_size);
-	append_column ("Used",       m_Columns.col_used);
-	append_column ("Unused",     m_Columns.col_unused);
-	append_column ("Flags",      m_Columns.col_flags);
+	append_column ("Mount", m_Columns.col_mount);
+	append_column ("Label", m_Columns.col_label);
+	append_column ("Size",  m_Columns.col_size);
+	append_column ("Used",  m_Columns.col_used);
+	append_column ("Free",  m_Columns.col_free);
+	append_column ("Flags", m_Columns.col_flags);
 
 	//Create the Tree model:
 	m_refTreeModel = Gtk::TreeStore::create (m_Columns);
@@ -173,7 +173,7 @@ TreeView::tree_add_row (ContainerPtr& c, Gtk::TreeModel::Row* parent)
 		row[m_Columns.col_partition] = x->device;
 		row[m_Columns.col_size] = x->bytes_size;
 		row[m_Columns.col_used] = x->bytes_used;
-		row[m_Columns.col_unused] = x->bytes_size - x->bytes_used;
+		row[m_Columns.col_free] = x->bytes_size - x->bytes_used;
 		//row[m_Columns.col_colour] = get_color_as_pixbuf (16, 16);
 
 		if (x->get_children().size() > 0) {
@@ -245,7 +245,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 #endif
 	} else {
 		// implies mouse over non-data part of textview, e.g. headers
-		tooltip->set_text ("wibble");
+		tooltip->set_text ("wibble"); // "Click to sort"?
 	}
 #endif
 	return true;

@@ -74,7 +74,7 @@ DParted::DParted ()
 	treeview.set_hexpand (true);
 
 	grid.add (da_grid);
-	//RAR grid.add (treeview);
+	grid.add (treeview);
 
 	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 	signal_button_press_event() .connect (sigc::mem_fun (*this, &DParted::on_mouse_click));

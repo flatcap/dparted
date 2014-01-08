@@ -56,7 +56,7 @@ protected:
 			add (col_label);
 			add (col_size);
 			add (col_used);
-			add (col_unused);
+			add (col_free);
 			add (col_flags);
 
 			add (col_container);
@@ -71,7 +71,7 @@ protected:
 		Gtk::TreeModelColumn<Glib::ustring>              col_label;
 		Gtk::TreeModelColumn<long>                       col_size;
 		Gtk::TreeModelColumn<long>                       col_used;
-		Gtk::TreeModelColumn<long>                       col_unused;
+		Gtk::TreeModelColumn<long>                       col_free;
 		Gtk::TreeModelColumn<Glib::ustring>              col_flags;
 
 		Gtk::TreeModelColumn<ContainerPtr>               col_container;
