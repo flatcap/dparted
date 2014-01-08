@@ -51,8 +51,6 @@ DParted::DParted ()
 	//grid.set_row_homogeneous (false);
 	//grid.add (menubar);
 
-	da_grid.set_orientation (Gtk::ORIENTATION_VERTICAL);
-
 #if 0
 	//Get the menubar and toolbar widgets, and add them to a container widget:
 	Gtk::Widget* pMenubar = m_refUIManager->get_widget ("/MenuBar");
@@ -69,12 +67,12 @@ DParted::DParted ()
 #endif
 
 	//grid.add (toolbar);
-	//grid.add (scrolledwindow);
+
+	area = manage (new DrawingArea());
+	grid.add (*area);
 
 	treeview.set_hexpand (true);
-
-	grid.add (da_grid);
-	grid.add (treeview);
+	//grid.add (treeview);
 
 	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 	signal_button_press_event() .connect (sigc::mem_fun (*this, &DParted::on_mouse_click));
@@ -117,18 +115,7 @@ DParted::set_data (ContainerPtr c)
 	m_c = c;
 	treeview.init_treeview (m_c);
 
-	int count = 0;
-	for (auto i : c->get_children()) {
-		if (i->is_a ("LvmGroup"))
-			continue; //RAR for now ignore vg
-		//std::cout << i->type << "\n";
-		DrawingArea* da = manage (new DrawingArea());
-		da_grid.add (*da);
-		da_grid.show_all();
-		//std::cout << i->device << "\n";
-		da->set_data (i);
-		count++;
-	}
+	area->set_data (c);
 
 	//std::cout << m_c->children.size() << " children\n";
 	//set_size_request (1362, 77*count+6); //RAR

@@ -69,7 +69,7 @@ private:
 
 	bool mouse_close = false;
 
-	GfxContainerPtr device;
+	GfxContainerPtr top_level;
 	GfxContainerPtr focus;
 	std::vector<GfxContainerPtr> selection;
 };

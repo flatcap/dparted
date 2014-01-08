@@ -28,6 +28,7 @@
 #include "gtkmm/applicationwindow.h"
 
 #include "treeview.h"
+#include "drawingarea.h"
 
 class Container;
 
@@ -47,12 +48,13 @@ protected:
 	Gtk::Grid		grid;
 	Gtk::MenuBar		menubar;
 	//Gtk::Toolbar		toolbar;
-	Gtk::Grid		da_grid;
 	//DrawingArea		drawingarea;
 	TreeView		treeview;
 	//Gtk::Statusbar		statusbar;
 
 	Gtk::ScrolledWindow	scrolledwindow;
+
+	DrawingArea* area = nullptr;
 
 	//YYY Glib::RefPtr<Gtk::UIManager> m_refUIManager;
 	//YYY Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup;

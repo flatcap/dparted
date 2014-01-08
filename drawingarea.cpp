@@ -49,7 +49,7 @@ DrawingArea::DrawingArea()
 	//Glib::ObjectBase ("MyDrawingArea")
 {
 	//set_size_request (800, 77);
-	set_size_request (400, 70);
+	set_size_request (400, 70*3);
 	set_hexpand (true);
 	set_vexpand (false);
 
@@ -801,7 +801,7 @@ bool
 DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	//LOG_TRACE;
-	if (!device)
+	if (!top_level)
 		return true;
 
 	vRange.clear();
@@ -817,7 +817,11 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	draw_grid_linear (cr, shape, m_c->bytes_size);
 	fill_rect (cr, shape, "white");
 #endif
-	draw_container (cr, device, shape);
+	shape.h = 70;
+	for (auto c : top_level->children) {
+		draw_container (cr, c, shape);
+		shape.y += 70;
+	}
 
 	return true;
 }
@@ -1134,7 +1138,7 @@ DrawingArea::get_protective (ContainerPtr& c)
 void
 DrawingArea::set_data (ContainerPtr& c)
 {
-	// check we've been given a block device
+	// check we've been given a top level object?
 
 	if (!c)
 		return;
@@ -1143,8 +1147,8 @@ DrawingArea::set_data (ContainerPtr& c)
 	//unsigned int children = c->children.size();
 	//set_size_request (400, 50 * children);
 
-	device = std::make_shared<GfxContainer>(c);
-	//device->dump();
+	top_level = std::make_shared<GfxContainer>(c);
+	//top_level->dump();
 }
 
 /**
@@ -1195,16 +1199,13 @@ DrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, cons
 void
 DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape)
 {
-#if 1
 	if (!cr)
 		return;
 	if (!cont)
 		return;
-	if (!device)
-		return;
 
 #if 0
-	if (!device->update_info())
+	if (!top_level->update_info())
 		return;
 #endif
 
@@ -1363,7 +1364,6 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	if (cont->get_focus()) {
 		draw_focus (cr, shape);
 	}
-#endif
 }
 
 
