@@ -139,7 +139,8 @@ DParted::my_idle (void)
 	std::vector<std::string> files;
 	ContainerPtr c = main_app->scan (files);
 	//std::cout << c->get_children().size() << " children\n";
-	set_data (c);
+	m_g = std::make_shared<GfxContainer>(c);
+	set_data (m_g);
 #endif
 
 	return false;
@@ -178,11 +179,9 @@ DParted::set_focus (GfxContainerPtr cont)
  * set_data
  */
 void
-DParted::set_data (ContainerPtr c)
+DParted::set_data (GfxContainerPtr c)
 {
-	m_c = c;
-	treeview.init_treeview (m_c);
-
+	treeview.init_treeview (c);
 	drawingarea.set_data (c);
 
 	//std::cout << m_c->children.size() << " children\n";
@@ -333,7 +332,7 @@ void
 DParted::on_menu_choices_one()
 {
 #if 0 //YYY
-	Glib::ustring message;
+	std::string message;
 	if (m_refChoiceOne->get_active())
 		message = "Choice 1 was selected.";
 	else
@@ -350,7 +349,7 @@ void
 DParted::on_menu_choices_two()
 {
 #if 0 //YYY
-	Glib::ustring message;
+	std::string message;
 	if (m_refChoiceTwo->get_active())
 		message = "Choice 2 was selected.";
 	else

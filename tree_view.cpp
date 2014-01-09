@@ -85,6 +85,26 @@ TreeView::on_button_press_event (GdkEventButton* event)
 		m_Menu_Popup.popup (event->button, event->time);
 	}
 
+	//Then do our custom stuff:
+	if ((event->type == GDK_DOUBLE_BUTTON_PRESS) && (event->button == 1)) {
+		Glib::RefPtr<Gtk::TreeSelection> s1 = get_selection();
+		Gtk::TreeModel::iterator s2 = s1->get_selected();
+		const Gtk::TreeModel::Row& s3 = *s2;
+		GfxContainerPtr c = s3[m_Columns.col_container];
+		std::cout << "Selection: " << c << std::endl;
+
+#if 0
+		Gtk::TreeModel::Row row;
+		row = *(m_refTreeModel->append (s3->children()));
+		row[m_Columns.col_partition] = c->device;
+		row[m_Columns.col_size]      = c->bytes_size;
+		row[m_Columns.col_used]      = c->bytes_used;
+		row[m_Columns.col_free]      = c->bytes_size - c->bytes_used;
+		row[m_Columns.col_container] = c;
+		expand_all();
+#endif
+	}
+
 	return return_value;
 }
 
@@ -125,31 +145,34 @@ get_color_as_pixbuf (int width, int height)
  * tree_add_row
  */
 void
-TreeView::tree_add_row (ContainerPtr& c, Gtk::TreeModel::Row* parent)
+TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 {
 	Gtk::TreeModel::Row row;
 
-	for (auto x : c->get_children()) {
+	for (auto x : c->children) {
+#if 0
 		if (x->is_a ("Group"))
 			continue; //RAR for now ignore vg
+#endif
 		//std::cout << "name: " << x->name << "\n";
 		if (parent) {
 			row = *(m_refTreeModel->append (parent->children()));
 		} else {
 			row = *(m_refTreeModel->append());
 		}
-		//row[m_Columns.col_icon] = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
-		row[m_Columns.col_partition] = x->device;
-		row[m_Columns.col_size] = x->bytes_size;
-		row[m_Columns.col_used] = x->bytes_used;
-		row[m_Columns.col_free] = x->bytes_size - x->bytes_used;
-		//row[m_Columns.col_colour] = get_color_as_pixbuf (16, 16);
+		//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
+		row[m_Columns.col_partition] = x->label;
+		row[m_Columns.col_size]      = x->bytes_size;
+		row[m_Columns.col_used]      = x->bytes_used;
+		row[m_Columns.col_free]      = x->bytes_size - x->bytes_used;
+		row[m_Columns.col_container] = x;
+		//row[m_Columns.col_colour]    = get_color_as_pixbuf (16, 16);
+		//std::cout << "Container: " << x << std::endl;
 
-		if (x->get_children().size() > 0) {
+		if (x->children.size() > 0) {
 			tree_add_row (x, &row);
 		}
 	}
-	//expand_all();
 }
 
 
@@ -157,7 +180,7 @@ TreeView::tree_add_row (ContainerPtr& c, Gtk::TreeModel::Row* parent)
  * init_treeview
  */
 void
-TreeView::init_treeview (ContainerPtr& c)
+TreeView::init_treeview (GfxContainerPtr& c)
 {
 	//Add the TreeView's view columns:
 	Gtk::TreeView::Column* col = nullptr;
@@ -193,6 +216,7 @@ TreeView::init_treeview (ContainerPtr& c)
 	tree_add_row (c, nullptr);
 
 	set_model (m_refTreeModel);
+	expand_all();
 }
 
 /**
@@ -206,7 +230,7 @@ TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeViewColum
 
 	Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter (path);
 	if (iter) {
-		ContainerPtr c;
+		GfxContainerPtr c;
 		Gtk::TreeModel::Row row = *iter;
 		std::cout << "Row activated: Name=" << row[m_Columns.col_name] << ", Type=" << row[m_Columns.col_type] << "\n";
 

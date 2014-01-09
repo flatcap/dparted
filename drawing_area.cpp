@@ -31,6 +31,7 @@
 #include "log_trace.h"
 #include "gui_app.h"
 #include "dparted.h"
+#include "table.h"
 
 const double ARC_N = 3*M_PI_2;	// Compass points in radians
 const double ARC_E = 0*M_PI_2;
@@ -972,7 +973,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
  * draw_container_examples
  */
 void
-draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr cont, Rect shape, Rect* right)
+draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr cont, Rect shape, Rect* right)
 {
 	if (!cont)
 		return;
@@ -1097,9 +1098,9 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, ContainerPtr c
  * get_protective
  */
 TablePtr
-DrawingArea::get_protective (ContainerPtr& c)
+DrawingArea::get_protective (GfxContainerPtr& c)
 {
-	ContainerPtr child;
+	GfxContainerPtr child;
 
 	//std::cout << "1: " << c << "\n";
 	if (!c)
@@ -1139,7 +1140,7 @@ DrawingArea::get_protective (ContainerPtr& c)
  * set_data
  */
 void
-DrawingArea::set_data (ContainerPtr& c)
+DrawingArea::set_data (GfxContainerPtr& c)
 {
 	// check we've been given a top level object?
 
@@ -1147,10 +1148,10 @@ DrawingArea::set_data (ContainerPtr& c)
 		return;
 
 	// invalidate window
-	unsigned int children = c->get_children().size();
+	unsigned int children = c->children.size();
 	set_size_request (1000, 70 * children);
 
-	top_level = std::make_shared<GfxContainer>(c);
+	top_level = c;
 	//top_level->dump();
 }
 

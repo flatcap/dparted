@@ -41,7 +41,7 @@ public:
 	DParted();
 	virtual ~DParted();
 
-	void set_data (ContainerPtr c);
+	void set_data (GfxContainerPtr c);
 
 	bool set_focus (GfxContainerPtr cont);
 
@@ -75,6 +75,7 @@ protected:
 	bool my_idle (void);
 
 	ContainerPtr m_c;
+	GfxContainerPtr m_g;
 
 	GfxContainerPtr focus;
 	std::vector<GfxContainerPtr> selection;

@@ -21,7 +21,7 @@
 #include <gtkmm/treeview.h>
 #include <gtkmm/treestore.h>
 
-#include "container.h"
+#include "gfx_container.h"
 
 /**
  * class TreeView
@@ -32,7 +32,7 @@ public:
 	TreeView();
 	virtual ~TreeView();
 
-	void init_treeview (ContainerPtr& c);
+	void init_treeview (GfxContainerPtr& c);
 
 protected:
 	// Override Signal handler:
@@ -65,19 +65,19 @@ protected:
 			add (col_colour);
 		}
 
-		Gtk::TreeModelColumn<Glib::ustring>              col_partition;
-		Gtk::TreeModelColumn<Glib::ustring>              col_filesystem;
-		Gtk::TreeModelColumn<Glib::ustring>              col_mount;
-		Gtk::TreeModelColumn<Glib::ustring>              col_label;
-		Gtk::TreeModelColumn<long>                       col_size;
-		Gtk::TreeModelColumn<long>                       col_used;
-		Gtk::TreeModelColumn<long>                       col_free;
-		Gtk::TreeModelColumn<Glib::ustring>              col_flags;
+		Gtk::TreeModelColumn<std::string>               col_partition;
+		Gtk::TreeModelColumn<std::string>               col_filesystem;
+		Gtk::TreeModelColumn<std::string>               col_mount;
+		Gtk::TreeModelColumn<std::string>               col_label;
+		Gtk::TreeModelColumn<uint64_t>                  col_size;
+		Gtk::TreeModelColumn<uint64_t>                  col_used;
+		Gtk::TreeModelColumn<uint64_t>                  col_free;
+		Gtk::TreeModelColumn<std::string>               col_flags;
 
-		Gtk::TreeModelColumn<ContainerPtr>               col_container;
-		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > col_icon1;
-		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > col_icon2;
-		Gtk::TreeModelColumn<int>                        col_colour;
+		Gtk::TreeModelColumn<GfxContainerPtr>           col_container;
+		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> col_icon1;
+		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> col_icon2;
+		Gtk::TreeModelColumn<uint32_t>                  col_colour;
 	};
 
 	ModelColumns m_Columns;
@@ -87,7 +87,7 @@ protected:
 	bool on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 	bool on_popup_menu (void);
 
-	void tree_add_row (ContainerPtr& c, Gtk::TreeModel::Row* parent);
+	void tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent);
 
 private:
 

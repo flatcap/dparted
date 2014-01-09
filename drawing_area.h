@@ -38,7 +38,7 @@ public:
 	DrawingArea();
 	virtual ~DrawingArea();
 
-	void set_data (ContainerPtr& c);
+	void set_data (GfxContainerPtr& c);
 
 protected:
 	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
