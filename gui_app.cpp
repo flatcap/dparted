@@ -116,14 +116,16 @@ GuiApp::on_activate()
 	//LOG_TRACE;
 	Gtk::Application::on_activate();
 
+	DParted* dp = new DParted();
+	add_window(*dp);	// App now owns DParted
+	dp->show();
+
+#if 0
+	// make all windows visible
 	for (auto win : Gtk::Application::get_windows()) {
 		win->present();
 	}
-
-	DParted* dp = new DParted();
-	dp->set_data (top_level);
-	add_window(*dp);	// App now owns DParted
-	dp->show();
+#endif
 }
 
 

@@ -125,8 +125,10 @@ main (int argc, char* argv[])
 	}
 
 	if (gui_app) {
+#if 0
 		if (!top_level)
 			top_level = main_app->scan(files);
+#endif
                 gui_app->run (0, nullptr);
 	}
 

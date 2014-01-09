@@ -20,6 +20,7 @@
 
 #include <iostream>
 
+#include "app.h"
 #include "dparted.h"
 #include "drawing_area.h"
 #include "log.h"
@@ -70,12 +71,16 @@ DParted::DParted ()
 	grid.add (drawingarea);
 
 	treeview.set_hexpand (true);
-	//grid.add (treeview);
+	grid.add (treeview);
 
 #if 0
 	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
-	signal_button_press_event() .connect (sigc::mem_fun (*this, &DParted::on_mouse_click));
+	signal_button_press_event().connect (sigc::mem_fun (*this, &DParted::on_mouse_click));
 #endif
+
+	signal_realize().connect (sigc::mem_fun (*this, &DParted::my_realize));
+	signal_realize().connect (sigc::mem_fun (*this, &DParted::my_show));
+	Glib::signal_idle().connect    (sigc::mem_fun (*this, &DParted::my_idle));
 
 	set_default_icon_name ("dparted");
 
@@ -103,6 +108,41 @@ DParted::DParted ()
  */
 DParted::~DParted()
 {
+}
+
+
+/**
+ * my_realize
+ */
+void
+DParted::my_realize (void)
+{
+	std::cout << __PRETTY_FUNCTION__ << std::endl;
+}
+
+/**
+ * my_show
+ */
+void
+DParted::my_show (void)
+{
+	std::cout << __PRETTY_FUNCTION__ << std::endl;
+}
+
+/**
+ * my_idle
+ */
+bool
+DParted::my_idle (void)
+{
+#if 1
+	std::vector<std::string> files;
+	ContainerPtr c = main_app->scan (files);
+	//std::cout << c->get_children().size() << " children\n";
+	set_data (c);
+#endif
+
+	return false;
 }
 
 
@@ -148,14 +188,11 @@ DParted::set_data (ContainerPtr c)
 	//std::cout << m_c->children.size() << " children\n";
 	//set_size_request (1362, 77*count+6); //RAR
 
-#if 1
 	int width = 0;
 	int height = 0;
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
 	move (1920, 768-height);
-#endif
-
 }
 
 /**

@@ -26,37 +26,6 @@
  */
 TreeView::TreeView()
 {
-	//Add the TreeView's view columns:
-	Gtk::TreeView::Column* col = nullptr;
-
-	col = Gtk::manage (new Gtk::TreeView::Column ("Partition"));
-	col->pack_start (m_Columns.col_partition,  true);
-	col->pack_start (m_Columns.col_icon1,      false);
-	col->pack_start (m_Columns.col_icon2,      false);
-	append_column (*col);
-
-	col = Gtk::manage (new Gtk::TreeView::Column ("Filesystem"));
-	col->pack_start (m_Columns.col_colour,     false);
-	col->pack_start (m_Columns.col_filesystem, true);
-	append_column (*col);
-
-	append_column ("Mount", m_Columns.col_mount);
-	append_column ("Label", m_Columns.col_label);
-	append_column ("Size",  m_Columns.col_size);
-	append_column ("Used",  m_Columns.col_used);
-	append_column ("Free",  m_Columns.col_free);
-	append_column ("Flags", m_Columns.col_flags);
-
-	//Create the Tree model:
-	m_refTreeModel = Gtk::TreeStore::create (m_Columns);
-	set_model (m_refTreeModel);
-
-	set_level_indentation (20);
-
-	//Connect signal:
-	signal_row_activated().connect (sigc::mem_fun (*this, &TreeView::on_row_activated));
-	signal_query_tooltip().connect (sigc::mem_fun (*this, &TreeView::on_query_tooltip));
-
 #if 1
 	//Fill popup menu:
 	Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem ("_Edit", true));
@@ -180,7 +149,7 @@ TreeView::tree_add_row (ContainerPtr& c, Gtk::TreeModel::Row* parent)
 			tree_add_row (x, &row);
 		}
 	}
-	expand_all();
+	//expand_all();
 }
 
 
@@ -190,7 +159,40 @@ TreeView::tree_add_row (ContainerPtr& c, Gtk::TreeModel::Row* parent)
 void
 TreeView::init_treeview (ContainerPtr& c)
 {
+	//Add the TreeView's view columns:
+	Gtk::TreeView::Column* col = nullptr;
+
+	col = Gtk::manage (new Gtk::TreeView::Column ("Partition"));
+	col->pack_start (m_Columns.col_partition,  true);
+	col->pack_start (m_Columns.col_icon1,      false);
+	col->pack_start (m_Columns.col_icon2,      false);
+	append_column (*col);
+
+	col = Gtk::manage (new Gtk::TreeView::Column ("Filesystem"));
+	col->pack_start (m_Columns.col_colour,     false);
+	col->pack_start (m_Columns.col_filesystem, true);
+	append_column (*col);
+
+	append_column ("Mount", m_Columns.col_mount);
+	append_column ("Label", m_Columns.col_label);
+	append_column ("Size",  m_Columns.col_size);
+	append_column ("Used",  m_Columns.col_used);
+	append_column ("Free",  m_Columns.col_free);
+	append_column ("Flags", m_Columns.col_flags);
+
+	//Create the Tree model:
+	m_refTreeModel = Gtk::TreeStore::create (m_Columns);
+	//set_model (m_refTreeModel);
+
+	set_level_indentation (20);
+
+	//Connect signal:
+	signal_row_activated().connect (sigc::mem_fun (*this, &TreeView::on_row_activated));
+	signal_query_tooltip().connect (sigc::mem_fun (*this, &TreeView::on_query_tooltip));
+
 	tree_add_row (c, nullptr);
+
+	set_model (m_refTreeModel);
 }
 
 /**

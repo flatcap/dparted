@@ -70,6 +70,10 @@ protected:
 
 	bool on_mouse_click (GdkEventButton* event);
 
+	void my_realize (void);
+	void my_show (void);
+	bool my_idle (void);
+
 	ContainerPtr m_c;
 
 	GfxContainerPtr focus;
