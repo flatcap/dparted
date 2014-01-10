@@ -18,14 +18,15 @@
 #ifndef _DPARTED_H_
 #define _DPARTED_H_
 
-#include <gtkmm/grid.h>
+#include "gtkmm/applicationwindow.h"
+#include <gtkmm/box.h>
+#include <gtkmm/eventbox.h>
 #include <gtkmm/menubar.h>
 #include <gtkmm/radioaction.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/statusbar.h>
 #include <gtkmm/toolbar.h>
 #include <gtkmm/uimanager.h>
-#include "gtkmm/applicationwindow.h"
 
 #include "tree_view.h"
 #include "drawing_area.h"
@@ -46,19 +47,20 @@ public:
 	bool set_focus (GfxContainerPtr cont);
 
 protected:
-	// GUI
-	Gtk::Grid		grid;
-	Gtk::MenuBar		menubar;
+	Gtk::Box		outer_box;
+	Gtk::EventBox		eventbox;
+	Gtk::Box		box;
+	//Gtk::MenuBar		menubar;
 	//Gtk::Toolbar		toolbar;
 	DrawingArea		drawingarea;
 	TreeView		treeview;
-	//Gtk::Statusbar		statusbar;
+	Gtk::Statusbar		statusbar;
 
 	Gtk::ScrolledWindow	scrolledwindow;
 
-	//YYY Glib::RefPtr<Gtk::UIManager> m_refUIManager;
-	//YYY Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup;
-	//YYY Glib::RefPtr<Gtk::RadioAction> m_refChoiceOne, m_refChoiceTwo;
+	Glib::RefPtr<Gtk::UIManager> m_refUIManager;
+	Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup;
+	Glib::RefPtr<Gtk::RadioAction> m_refChoiceOne, m_refChoiceTwo;
 
 	//Signal handlers:
 	void on_menu_file_new_generic();
@@ -69,6 +71,9 @@ protected:
 	void on_menu_choices_two();
 
 	bool on_mouse_click (GdkEventButton* event);
+
+	void on_keypress (int modifier, int key);
+	void init_shortcuts (void);
 
 	void my_realize (void);
 	void my_show (void);
@@ -82,13 +87,10 @@ protected:
 
 private:
 	Gtk::Menu m_fake_menu;
-	void quit (void);
 
 	void init_menubar (void);
-#if 0
 	void init_toolbar (void);
 	void init_scrolledwindow (void);
-#endif
 };
 
 

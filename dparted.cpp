@@ -38,43 +38,34 @@ DParted::DParted ()
 	set_default_size (1439, 800); //RAR 1439, 800
 #endif
 
-	add (scrolledwindow);
+	init_menubar();
+	init_toolbar();
+	init_scrolledwindow();
 
-	scrolledwindow.add (grid);
 	scrolledwindow.set_hexpand (true);
 	scrolledwindow.set_vexpand (true);
 
-	init_menubar();
-	//init_toolbar();
-	//init_scrolledwindow();
+	box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 
-	grid.set_orientation (Gtk::ORIENTATION_VERTICAL);
-	//grid.set_row_homogeneous (false);
-	//grid.add (menubar);
-
-#if 0
+#if 1
 	//Get the menubar and toolbar widgets, and add them to a container widget:
 	Gtk::Widget* pMenubar = m_refUIManager->get_widget ("/MenuBar");
 	if (pMenubar) {
 		pMenubar->set_hexpand (true);
-		grid.add (*pMenubar);
+		//box.add (*pMenubar);
 	}
 
 	Gtk::Widget* pToolbar = m_refUIManager->get_widget ("/ToolBar") ;
 	if (pToolbar) {
 		pToolbar->set_hexpand (true);
-		grid.add (*pToolbar);
+		//box.add (*pToolbar);
 	}
 #endif
 
-	//grid.add (toolbar);
-	grid.add (drawingarea);
-
 	treeview.set_hexpand (true);
-	grid.add (treeview);
 
+	add_events (Gdk::KEY_PRESS_MASK | Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 #if 0
-	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 	signal_button_press_event().connect (sigc::mem_fun (*this, &DParted::on_mouse_click));
 #endif
 
@@ -84,16 +75,21 @@ DParted::DParted ()
 
 	set_default_icon_name ("dparted");
 
-	Glib::RefPtr<Gtk::AccelGroup> accel = Gtk::AccelGroup::create();
+	init_shortcuts();
 
-	Gtk::MenuItem *foo = manage(new Gtk::MenuItem());
-	foo->signal_activate().connect(sigc::mem_fun(*this, &DParted::quit));
-	foo->add_accelerator ("activate", accel, GDK_KEY_Q, Gdk::CONTROL_MASK, Gtk::ACCEL_VISIBLE);
-	foo->show ();
-	foo->set_sensitive(m_fake_menu.get_sensitive());
-	m_fake_menu.append (*foo);
+	outer_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 
-	add_accel_group (accel);
+	add (outer_box);
+
+	outer_box.set_homogeneous (false);
+	outer_box.pack_start (*pMenubar, false, false);
+	outer_box.pack_start (*pToolbar, false, false);
+	outer_box.add (scrolledwindow);
+	outer_box.pack_end (statusbar, false, false);
+
+	scrolledwindow.add (box);
+	box.pack_start (drawingarea, false, false);
+	box.pack_end (treeview, true, true);
 
 	show_all_children();
 
@@ -200,7 +196,6 @@ DParted::set_data (GfxContainerPtr c)
 void
 DParted::init_menubar (void)
 {
-#if 0 //YYY
 	//Create actions for menus and toolbars:
 	m_refActionGroup = Gtk::ActionGroup::create();
 
@@ -276,10 +271,8 @@ DParted::init_menubar (void)
 	} catch (const Glib::Error& ex) {
 		std::cerr << "building menus failed: " << ex.what();
 	}
-#endif
 }
 
-#if 0
 /**
  * init_toolbar
  */
@@ -296,7 +289,6 @@ DParted::init_scrolledwindow (void)
 {
 }
 
-#endif
 
 /**
  * on_menu_file_quit
@@ -304,6 +296,7 @@ DParted::init_scrolledwindow (void)
 void
 DParted::on_menu_file_quit()
 {
+	LOG_TRACE;
 	hide(); //Closes the main window to stop the Gtk::Main::run().
 }
 
@@ -331,7 +324,6 @@ DParted::on_menu_others()
 void
 DParted::on_menu_choices_one()
 {
-#if 0 //YYY
 	std::string message;
 	if (m_refChoiceOne->get_active())
 		message = "Choice 1 was selected.";
@@ -339,7 +331,6 @@ DParted::on_menu_choices_one()
 		message = "Choice 1 was deselected";
 
 	std::cout << message << "\n";
-#endif
 }
 
 /**
@@ -348,7 +339,6 @@ DParted::on_menu_choices_one()
 void
 DParted::on_menu_choices_two()
 {
-#if 0 //YYY
 	std::string message;
 	if (m_refChoiceTwo->get_active())
 		message = "Choice 2 was selected.";
@@ -356,16 +346,59 @@ DParted::on_menu_choices_two()
 		message = "Choice 2 was deselected";
 
 	std::cout << message << "\n";
-#endif
 }
 
 
 /**
- * quit
+ * init_shortcuts
  */
-void DParted::quit (void)
+void
+DParted::init_shortcuts (void)
 {
-	hide();
+	std::vector<std::pair<int,int>> keys = {
+		{ 0,                 GDK_KEY_Left   },
+		{ 0,                 GDK_KEY_Up     },
+		{ 0,                 GDK_KEY_Right  },
+		{ 0,                 GDK_KEY_Down   },
+
+		{ 0,                 GDK_KEY_Tab    },
+		{ 0,                 GDK_KEY_space  },
+		{ 0,                 GDK_KEY_Return },
+
+		{ Gdk::CONTROL_MASK, GDK_KEY_C      },
+		{ Gdk::CONTROL_MASK, GDK_KEY_F      },
+		{ Gdk::CONTROL_MASK, GDK_KEY_O      },
+		{ Gdk::CONTROL_MASK, GDK_KEY_Q      },
+		{ Gdk::CONTROL_MASK, GDK_KEY_V      },
+		{ Gdk::CONTROL_MASK, GDK_KEY_X      },
+		{ Gdk::CONTROL_MASK, GDK_KEY_Z      }
+	};
+
+	Glib::RefPtr<Gtk::AccelGroup> accel = Gtk::AccelGroup::create();
+
+	for (auto k : keys) {
+		//std::cout << "Keypress: " << k.first << " : " << k.second << std::endl;
+		Gtk::MenuItem* i = manage (new Gtk::MenuItem());
+		i->signal_activate().connect (sigc::bind<int,int> (sigc::mem_fun (*this, &DParted::on_keypress), k.first, k.second));
+		i->add_accelerator ("activate", accel, k.second, (Gdk::ModifierType) k.first, Gtk::ACCEL_VISIBLE);
+		i->show();
+		m_fake_menu.append (*i);
+	}
+
+	add_accel_group (accel);
+
+}
+
+/**
+ * on_keypress
+ */
+void
+DParted::on_keypress (int modifier, int key)
+{
+	std::cout << "Keypress: " << modifier << " : " << (char) key << std::endl;
+
+	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q'))
+		hide();
 }
 
 

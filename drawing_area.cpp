@@ -54,6 +54,7 @@ DrawingArea::DrawingArea()
 	set_size_request (400, 70*3);
 	set_hexpand (true);
 	set_vexpand (false);
+	set_can_focus (true);
 
 	add_events (Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 

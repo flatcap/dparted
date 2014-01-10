@@ -47,6 +47,8 @@ protected:
 	bool on_mouse_click  (GdkEventButton* event);
 	bool on_mouse_leave  (GdkEventCrossing* event);
 
+	void on_keypress (int modifier, int key);
+	void init_shortcuts (void);
 #if 0
 	bool on_timeout (int timer_number);
 #endif
@@ -70,6 +72,7 @@ private:
 	bool mouse_close = false;
 
 	GfxContainerPtr top_level;
+	Gtk::Menu m_fake_menu;
 };
 
 

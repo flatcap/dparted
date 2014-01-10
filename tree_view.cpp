@@ -216,7 +216,7 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	tree_add_row (c, nullptr);
 
 	set_model (m_refTreeModel);
-	expand_all();
+	//expand_all();
 }
 
 /**
