@@ -40,6 +40,7 @@ public:
 
 	void set_data (GfxContainerPtr& c);
 
+	bool on_keypress(GdkEventKey* ev);
 protected:
 	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
 
@@ -47,8 +48,9 @@ protected:
 	bool on_mouse_click  (GdkEventButton* event);
 	bool on_mouse_leave  (GdkEventCrossing* event);
 
-	void on_keypress (int modifier, int key);
-	void init_shortcuts (void);
+	bool on_focus_in (GdkEventFocus* event);
+	bool on_focus_out (GdkEventFocus* event);
+
 #if 0
 	bool on_timeout (int timer_number);
 #endif

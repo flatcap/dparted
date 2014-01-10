@@ -27,6 +27,7 @@
 #include <gtkmm/statusbar.h>
 #include <gtkmm/toolbar.h>
 #include <gtkmm/uimanager.h>
+#include <gtkmm/spinbutton.h>
 
 #include "tree_view.h"
 #include "drawing_area.h"
@@ -55,6 +56,8 @@ protected:
 	DrawingArea		drawingarea;
 	TreeView		treeview;
 	Gtk::Statusbar		statusbar;
+	Gtk::SpinButton		spin1;
+	Gtk::SpinButton		spin2;
 
 	Gtk::ScrolledWindow	scrolledwindow;
 

@@ -32,10 +32,10 @@
 DParted::DParted ()
 {
 	set_title ("DParted");
-	set_size_request (1360, 70*4);
-	//set_size_request (1900, 1000);
+	//set_size_request (1360, 70*4);
+	set_size_request (1000, 760);
 #if 0
-	set_default_size (1439, 800); //RAR 1439, 800
+	set_default_size (1439, 800);
 #endif
 
 	init_menubar();
@@ -69,13 +69,16 @@ DParted::DParted ()
 	signal_button_press_event().connect (sigc::mem_fun (*this, &DParted::on_mouse_click));
 #endif
 
+	eventbox.set_events(Gdk::KEY_PRESS_MASK);
+	eventbox.signal_key_press_event().connect (sigc::mem_fun(drawingarea, &DrawingArea::on_keypress), false);
+
 	signal_realize().connect (sigc::mem_fun (*this, &DParted::my_realize));
 	signal_realize().connect (sigc::mem_fun (*this, &DParted::my_show));
-	Glib::signal_idle().connect    (sigc::mem_fun (*this, &DParted::my_idle));
+	Glib::signal_idle().connect (sigc::mem_fun (*this, &DParted::my_idle));
 
 	set_default_icon_name ("dparted");
 
-	init_shortcuts();
+	//init_shortcuts();
 
 	outer_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 
@@ -88,7 +91,10 @@ DParted::DParted ()
 	outer_box.pack_end (statusbar, false, false);
 
 	scrolledwindow.add (box);
-	box.pack_start (drawingarea, false, false);
+	box.pack_start (spin1, false, false);
+	eventbox.add(drawingarea);
+	box.pack_start (eventbox, false, false);
+	box.add (spin2);
 	box.pack_end (treeview, true, true);
 
 	show_all_children();
@@ -187,7 +193,7 @@ DParted::set_data (GfxContainerPtr c)
 	int height = 0;
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
-	move (1920, 768-height);
+	move (1920+1366-width, 0);
 }
 
 /**
@@ -205,13 +211,13 @@ DParted::init_menubar (void)
 	m_refActionGroup->add (Gtk::Action::create ("FileNewGoo",      Gtk::Stock::NEW, "_New Goo", "Create a new goo"),  sigc::mem_fun (*this, &DParted::on_menu_file_new_generic));
 
 	//File menu:
-	m_refActionGroup->add (Gtk::Action::create ("FileMenu", "File"));
+	m_refActionGroup->add (Gtk::Action::create ("FileMenu", "_File"));
 	//Sub-menu.
 	m_refActionGroup->add (Gtk::Action::create ("FileNew",         Gtk::Stock::NEW));
 	m_refActionGroup->add (Gtk::Action::create ("FileQuit",        Gtk::Stock::QUIT),                                 sigc::mem_fun (*this, &DParted::on_menu_file_quit));
 
 	//Edit menu:
-	m_refActionGroup->add (Gtk::Action::create ("EditMenu", "Edit"));
+	m_refActionGroup->add (Gtk::Action::create ("EditMenu", "_Edit"));
 	m_refActionGroup->add (Gtk::Action::create ("EditCopy",        Gtk::Stock::COPY),                                 sigc::mem_fun (*this, &DParted::on_menu_others));
 	m_refActionGroup->add (Gtk::Action::create ("EditPaste",       Gtk::Stock::PASTE),                                sigc::mem_fun (*this, &DParted::on_menu_others));
 	m_refActionGroup->add (Gtk::Action::create ("EditSomething", "Something"), Gtk::AccelKey ("<control><alt>S"),     sigc::mem_fun (*this, &DParted::on_menu_others));
@@ -226,7 +232,7 @@ DParted::init_menubar (void)
 	m_refActionGroup->add (m_refChoiceTwo, sigc::mem_fun (*this, &DParted::on_menu_choices_two));
 
 	//Help menu:
-	m_refActionGroup->add (Gtk::Action::create ("HelpMenu", "Help"));
+	m_refActionGroup->add (Gtk::Action::create ("HelpMenu", "_Help"));
 	m_refActionGroup->add (Gtk::Action::create ("HelpAbout", Gtk::Stock::HELP), sigc::mem_fun (*this, &DParted::on_menu_others));
 
 	m_refUIManager = Gtk::UIManager::create();

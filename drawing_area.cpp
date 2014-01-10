@@ -62,6 +62,9 @@ DrawingArea::DrawingArea()
 	signal_motion_notify_event().connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_motion));
 	signal_leave_notify_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_leave));
 
+	signal_focus_in_event().connect (sigc::mem_fun (*this, &DrawingArea::on_focus_in));
+	signal_focus_out_event().connect (sigc::mem_fun (*this, &DrawingArea::on_focus_out));
+
 #if 0
 	sigc::slot<bool> my_slot = sigc::bind (sigc::mem_fun (*this, &DrawingArea::on_timeout), 0);
 	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 300); // ms
@@ -910,6 +913,8 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 {
 	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
+	grab_focus();
+
 	sel_x = event->x;
 	sel_y = event->y;
 
@@ -1372,3 +1377,60 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 }
 
 
+/**
+ * on_keypress
+ */
+bool
+DrawingArea::on_keypress(GdkEventKey* ev)
+{
+	bool redraw  = false;
+	bool handled = false;
+
+	std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
+
+	switch (ev->keyval) {
+		case GDK_KEY_Left:	// 65361 (0xFF51)
+			redraw  = true;
+			handled = true;
+			break;
+		case GDK_KEY_Up:	// 65362 (0xFF52)
+			redraw  = true;
+			handled = true;
+			break;
+		case GDK_KEY_Right:	// 65363 (0xFF53)
+			redraw  = true;
+			handled = true;
+			break;
+		case GDK_KEY_Down:	// 65364 (0xFF54)
+			redraw  = true;
+			handled = true;
+			break;
+	}
+
+	if (redraw) {
+		get_window()->invalidate (false);
+	}
+
+	return handled;
+}
+
+
+/**
+ * on_focus_in
+ */
+bool
+DrawingArea::on_focus_in (GdkEventFocus* event)
+{
+	LOG_TRACE;
+	return true;
+}
+
+/**
+ * on_focus_out
+ */
+bool
+DrawingArea::on_focus_out (GdkEventFocus* event)
+{
+	LOG_TRACE;
+	return true;
+}
