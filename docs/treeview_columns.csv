@@ -1,0 +1,28 @@
+Tree View Columns                           Keyword                    Notes
+-------------------------------------------------------------------------------------------------
+Absolute Offset (bytes)                     absolute_offset_bytes
+Absolute Offset (percentage)                absolute_offset_percentage
+Block size                                  block_size_bytes
+Colour                                      colour_icon
+Container                                   container
+Container (short)                           container_short
+Container Type                              container_type
+Filesystem                                  filesystem
+Flags                                       flags
+Bytes Free                                  free_bytes
+Percentage Free                             free_percentage
+Label                                       label
+Mount Point                                 mount_point
+Mounted / Locked                            mounted_icon
+Parent Offset (bytes)                       parent_offset_bytes
+Parent Offset (percentage)                  parent_offset_percentage
+Partition / Volume / Logical Volume         partition_device
+Partition / Volume / Logical Volume (short) partition_device_short
+Siblings                                    siblings
+Bytes Size                                  size_bytes
+Percentage Size                             size_percentage            %age of parent's size
+Bytes Used                                  used_bytes
+Percentage Used                             used_percentage
+UUID                                        uuid
+UUID (short)                                uuid_short
+Volume Group                                volume_group
