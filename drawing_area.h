@@ -66,6 +66,15 @@ private:
 	void draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
 	void draw_tabbox  (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
 
+	void make_menu (void);
+	void on_menu_file_popup_generic (void);
+	void on_popup_menu_position (int& x, int& y, bool& push_in);
+	Gtk::Menu* m_pMenuPopup = nullptr;
+	Glib::RefPtr<Gtk::Builder> m_refBuilder;
+	int menux = 0;
+	int menuy = 0;
+	void get_coords (int& x, int& y);
+
 	Rect get_rect (GfxContainerPtr g);
 
 	std::deque<Range> vRange;

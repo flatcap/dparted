@@ -32,8 +32,11 @@
 DParted::DParted ()
 {
 	set_title ("DParted");
+#if 0
 	set_size_request (1360, 70*3);
-	//set_size_request (1000, 760);
+#else
+	set_size_request (1000, 760);
+#endif
 #if 0
 	set_default_size (1439, 800);
 #endif
@@ -85,17 +88,17 @@ DParted::DParted ()
 	add (outer_box);
 
 	outer_box.set_homogeneous (false);
-	/* outer_box.pack_start (*pMenubar, false, false); */
-	/* outer_box.pack_start (*pToolbar, false, false); */
+	outer_box.pack_start (*pMenubar, false, false);
+	outer_box.pack_start (*pToolbar, false, false);
 	outer_box.add (scrolledwindow);
-	/* outer_box.pack_end (statusbar, false, false); */
+	outer_box.pack_end (statusbar, false, false);
 
 	scrolledwindow.add (box);
-	/* box.pack_start (spin1, false, false); */
+	box.pack_start (spin1, false, false);
 	eventbox.add(drawingarea);
 	box.pack_start (eventbox, false, false);
-	/* box.add (spin2); */
-	/* box.pack_end (treeview, true, true); */
+	box.add (spin2);
+	box.pack_end (treeview, true, true);
 
 	show_all_children();
 

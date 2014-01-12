@@ -19,6 +19,7 @@
 #include <gtkmm.h>
 #include <pangomm.h>
 #include <stdlib.h>
+#include <gdk/gdkwindow.h>
 
 #include <cmath>
 #include <cstdlib>
@@ -74,6 +75,8 @@ DrawingArea::DrawingArea()
 
 	set_has_tooltip();	// We'll be handling the tooltips ourself
 	signal_query_tooltip().connect(sigc::mem_fun(*this, &DrawingArea::on_textview_query_tooltip));
+
+	make_menu();
 }
 
 /**
@@ -919,7 +922,29 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 	grab_focus();
 
+	printf ("event window = %p\n", (void*) event->window);
+
+	printf ("coords1: %d, %d\n", (int) event->x_root, (int) event->y_root);
+	int x = 0;
+	int y = 0;
+	get_coords(x, y);
+	printf ("coords2: %d, %d\n", x, y);
 	//std::cout << "Range contains " << vRange.size() << " items\n";
+
+	/* menux = event->x_root; */
+	/* menuy = event->y_root; */
+
+	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
+		if (!m_pMenuPopup->get_attach_widget()) {
+			m_pMenuPopup->attach_to_widget(*this);
+		}
+
+		if (m_pMenuPopup) {
+			m_pMenuPopup->popup (sigc::mem_fun(*this, &DrawingArea::on_popup_menu_position), event->button, event->time);
+		}
+
+		return true; //It has been handled.
+	}
 
 	for (auto& rg : vRange) {
 		Rect r = rg.r;
@@ -972,6 +997,131 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 #endif
 
 	return true;
+}
+
+
+/**
+ * get_coords
+ */
+void
+DrawingArea::get_coords (int& x, int& y)
+{
+	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	if (!dp) {
+		std::cout << "No DParted" << std::endl;
+		return;
+	}
+
+	GfxContainerPtr c = dp->get_focus();
+	if (!c) {
+		std::cout << "No focus" << std::endl;
+		return;
+	}
+
+	Rect r = get_rect (c);
+
+	x = r.x;
+	y = r.y;
+	printf ("Rect: %d,%d + %d,%d\n", r.x, r.y, r.w, r.h);
+
+	Glib::RefPtr<Gdk::Window> w = get_window();
+	/* printf ("get window = %p\n", w); */
+
+	x = 0;
+	y = 0;
+	w->get_origin(x, y);
+	printf ("Window: %d,%d\n", x, y);
+
+	menux = x;
+	menuy = y;
+
+	x = 0;
+	y = 0;
+
+	translate_coordinates (*get_toplevel(), 0, 0, x, y);
+	printf ("DA: %d,%d\n", x, y);
+
+	x = get_allocated_width();
+	y = get_allocated_height();
+	printf ("DA Size: %d,%d\n", x, y);
+
+	menux += r.x;
+	menuy += r.y;
+
+	menuy += r.h;
+}
+
+
+/**
+ * on_popup_menu_position
+ */
+void
+DrawingArea::on_popup_menu_position (int& x, int& y, bool& push_in)
+{
+	x = menux;
+	y = menuy;
+	push_in = false;
+}
+
+/**
+ * on_menu_file_popup_generic
+ */
+void
+DrawingArea::on_menu_file_popup_generic (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * make_menu
+ */
+void
+DrawingArea::make_menu (void)
+{
+	Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
+
+	refActionGroup->add_action("edit",    sigc::mem_fun(*this, &DrawingArea::on_menu_file_popup_generic));
+	refActionGroup->add_action("process", sigc::mem_fun(*this, &DrawingArea::on_menu_file_popup_generic));
+	refActionGroup->add_action("remove",  sigc::mem_fun(*this, &DrawingArea::on_menu_file_popup_generic));
+
+	insert_action_group("examplepopup", refActionGroup);
+
+	m_refBuilder = Gtk::Builder::create();
+
+	Glib::ustring ui_info =
+		"<interface>"
+		"	<menu id='menu-examplepopup'>"
+		"		<section>"
+		"			<item>"
+		"				<attribute name='label' translatable='yes'>Edit</attribute>"
+		"				<attribute name='action'>examplepopup.edit</attribute>"
+		"			</item>"
+		"			<item>"
+		"				<attribute name='label' translatable='yes'>Process</attribute>"
+		"				<attribute name='action'>examplepopup.process</attribute>"
+		"			</item>"
+		"			<item>"
+		"				<attribute name='label' translatable='yes'>Remove</attribute>"
+		"				<attribute name='action'>examplepopup.remove</attribute>"
+		"			</item>"
+		"		</section>"
+		"	</menu>"
+		"</interface>";
+
+	try {
+		m_refBuilder->add_from_string(ui_info);
+	} catch(const Glib::Error& ex) {
+		std::cerr << "building menus failed: " << ex.what();
+	}
+
+	//Get the menu:
+	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object("menu-examplepopup");
+	Glib::RefPtr<Gio::Menu> gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic(object);
+	if (!gmenu) {
+		g_warning("GMenu not found");
+	}
+
+	m_pMenuPopup = new Gtk::Menu(gmenu);
 }
 
 
@@ -1412,6 +1562,7 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 	std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
+	//GDK_KEY_Menu 0xff67 => popup menu
 
 	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
 	if (!dp) {
