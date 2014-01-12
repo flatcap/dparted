@@ -1562,7 +1562,6 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 	std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
-	//GDK_KEY_Menu 0xff67 => popup menu
 
 	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
 	if (!dp) {
@@ -1578,7 +1577,22 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 
 	GfxContainerPtr new_sel;
 	Rect r;
+	int x = 0;
+	int y = 0;
 	switch (ev->keyval) {
+		case GDK_KEY_Menu:	// 65383 (0xFF67)
+			get_coords(x, y);
+
+			if (!m_pMenuPopup->get_attach_widget()) {
+				m_pMenuPopup->attach_to_widget(*this);
+			}
+
+			if (m_pMenuPopup) {
+				m_pMenuPopup->popup (sigc::mem_fun(*this, &DrawingArea::on_popup_menu_position), 0, gtk_get_current_event_time());
+			}
+
+			handled = true;
+			break;
 		case GDK_KEY_Left:	// 65361 (0xFF51)
 			new_sel = c->get_left();
 			if (new_sel) {
