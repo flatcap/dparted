@@ -76,7 +76,7 @@ Extended::probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, lon
 	//LOG_TRACE;
 	ExtendedPtr ext;
 
-#if 0
+#if 1
 	unsigned char* buffer = nullptr;
 	int bufsize = 512;
 	//off_t seek = 0;
@@ -88,7 +88,7 @@ Extended::probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, lon
 	// create partitions
 	// add to extended
 
-	ext = new Extended();
+	ext = Extended::create();
 
 	ext->name = "extended";
 	ext->bytes_size = size;
@@ -109,9 +109,13 @@ Extended::probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, lon
 	for (int loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
 		std::string s = get_size (table_offset);
 		//log_debug ("table_offset = %lld (%s)\n", table_offset, s.c_str());
+#if 0
 		/*FILE* f =*/ parent->open_device();
 		/*int r =*/ parent->read_data (table_offset, bufsize, buffer);
+#endif
 		//log_debug ("f = %p, r = %d\n", f, r);
+		long		bufsize = 1048576;	// 1 MiB
+		unsigned char*	buffer  = parent->get_buffer (table_offset, bufsize);
 
 		//dump_hex (buffer, bufsize);
 
@@ -151,7 +155,7 @@ Extended::probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, lon
 			if ((part.type == 0x05) || (part.type == 0x0F)) {
 				table_offset = offset + part.start;
 			} else {
-				c = new Partition();
+				c = Partition::create();
 				c->name = "partition";
 				c->bytes_size = part.size;
 
@@ -171,7 +175,7 @@ Extended::probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, lon
 				c->device = part_name.str();
 
 				ext->add_child (c);
-				queue_add_probe (c);
+				main_app->queue_add_probe (c);
 			}
 		}
 		if (vp.size() == 1)

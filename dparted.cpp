@@ -32,8 +32,8 @@
 DParted::DParted ()
 {
 	set_title ("DParted");
-	//set_size_request (1360, 70*4);
-	set_size_request (1000, 760);
+	set_size_request (1360, 70*3);
+	//set_size_request (1000, 760);
 #if 0
 	set_default_size (1439, 800);
 #endif
@@ -85,17 +85,17 @@ DParted::DParted ()
 	add (outer_box);
 
 	outer_box.set_homogeneous (false);
-	outer_box.pack_start (*pMenubar, false, false);
-	outer_box.pack_start (*pToolbar, false, false);
+	/* outer_box.pack_start (*pMenubar, false, false); */
+	/* outer_box.pack_start (*pToolbar, false, false); */
 	outer_box.add (scrolledwindow);
-	outer_box.pack_end (statusbar, false, false);
+	/* outer_box.pack_end (statusbar, false, false); */
 
 	scrolledwindow.add (box);
-	box.pack_start (spin1, false, false);
+	/* box.pack_start (spin1, false, false); */
 	eventbox.add(drawingarea);
 	box.pack_start (eventbox, false, false);
-	box.add (spin2);
-	box.pack_end (treeview, true, true);
+	/* box.add (spin2); */
+	/* box.pack_end (treeview, true, true); */
 
 	show_all_children();
 
@@ -141,7 +141,8 @@ DParted::my_idle (void)
 	std::vector<std::string> files;
 	ContainerPtr c = main_app->scan (files);
 	//std::cout << c->get_children().size() << " children\n";
-	m_g = std::make_shared<GfxContainer>(c);
+	GfxContainerPtr dummy;
+	m_g = GfxContainer::create (dummy, c);
 	set_data (m_g);
 #endif
 
@@ -178,6 +179,15 @@ DParted::set_focus (GfxContainerPtr cont)
 }
 
 /**
+ * get_focus
+ */
+GfxContainerPtr
+DParted::get_focus (void)
+{
+	return focus;
+}
+
+/**
  * set_data
  */
 void
@@ -193,8 +203,9 @@ DParted::set_data (GfxContainerPtr c)
 	int height = 0;
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
-	move (1920+1366-width, 0);
+	//move (1920+1366-width, 0);
 }
+
 
 /**
  * init_menubar

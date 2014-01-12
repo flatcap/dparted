@@ -66,10 +66,9 @@ private:
 	void draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
 	void draw_tabbox  (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
 
-	std::deque<Range> vRange;
+	Rect get_rect (GfxContainerPtr g);
 
-	int sel_x = -1;
-	int sel_y = -1;
+	std::deque<Range> vRange;
 
 	bool mouse_close = false;
 

@@ -22,16 +22,8 @@
 /**
  * GfxContainer
  */
-GfxContainer::GfxContainer (ContainerPtr c)
+GfxContainer::GfxContainer (void)
 {
-	if (!gui_app) {
-		throw "no gui_app!";
-	}
-
-	theme = gui_app->get_theme();
-
-	container = c;
-	sync();
 }
 
 /**
@@ -41,12 +33,35 @@ GfxContainer::~GfxContainer()
 {
 }
 
+/**
+ * GfxContainer
+ */
+GfxContainerPtr
+GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
+{
+	GfxContainerPtr g (new GfxContainer());
+	g->weak = g;
+
+	g->parent = p;
+	g->container = c;
+
+	if (!gui_app) {
+		throw "no gui_app!";
+	}
+
+	g->theme = gui_app->get_theme();
+
+	g->sync();
+
+	return g;
+}
+
 
 /**
- * get_smart
+ * get_container
  */
 ContainerPtr
-GfxContainer::get_smart (void)
+GfxContainer::get_container (void)
 {
 	ContainerPtr c = container.lock();
 	if (!c) {
@@ -77,7 +92,7 @@ GfxContainer::get_smart (void)
 bool
 GfxContainer::sync (void)
 {
-	ContainerPtr c = get_smart();
+	ContainerPtr c = get_container();
 	if (!c)
 		return false;
 
@@ -86,7 +101,7 @@ GfxContainer::sync (void)
 
 	init(c);
 	for (auto child : c->get_children()) {
-		GfxContainerPtr g = std::make_shared<GfxContainer>(child);
+		GfxContainerPtr g = GfxContainer::create (get_smart(), child);
 		children.push_back(g);
 	}
 
@@ -103,7 +118,7 @@ GfxContainer::init (ContainerPtr c)
 		return false;
 
 	std::string path = c->get_path();
-	std::string name = c->name;
+	name = c->name;
 
 	try {
 		display        = theme->get_config (path, name, "display");
@@ -193,7 +208,7 @@ GfxContainer::process_label (const std::string& label_template)
 	std::string l = label_template;
 
 	//std::cout << "Label: " << l << std::endl;
-	ContainerPtr c = get_smart();
+	ContainerPtr c = get_container();
 	if (!c)
 		return l;
 
@@ -218,7 +233,7 @@ GfxContainer::process_label (const std::string& label_template)
  */
 bool GfxContainer::update_info (void)
 {
-	ContainerPtr c = get_smart();
+	ContainerPtr c = get_container();
 	if (!c)
 		return false;
 
@@ -269,8 +284,8 @@ GfxContainer::dump (void)
 bool
 GfxContainer::set_focus (bool focus)
 {
-	ContainerPtr c = get_smart();
-	std::cout << "Focus: " << c << " = " << focus << std::endl;
+	ContainerPtr c = get_container();
+	//std::cout << "Focus: " << c << " = " << focus << std::endl;
 	focussed = focus;
 	return true;
 }
@@ -358,7 +373,7 @@ GfxContainer::process_bool (const std::string& str)
 std::string
 GfxContainer::get_tooltip (void)
 {
-	ContainerPtr c = get_smart();
+	ContainerPtr c = get_container();
 	if (!c)
 		return "";
 
@@ -376,5 +391,142 @@ bool GfxContainer::mouse_event (void)
 {
 	//std::cout << __PRETTY_FUNCTION__ << std::endl;
 	return false;
+}
+
+
+/**
+ * operator<<
+ */
+std::ostream&
+operator<< (std::ostream& stream, const GfxContainerPtr& g)
+{
+	ContainerPtr c = g->get_container();
+	if (c) {
+		stream << c;
+	} else {
+		stream << "[Empty]";
+	}
+
+	return stream;
+}
+
+
+/**
+ * get_smart
+ */
+GfxContainerPtr
+GfxContainer::get_smart (void)
+{
+	if (weak.expired()) {
+		std::cout << "SMART\n";
+		//XXX who created us?
+		GfxContainerPtr c (this);
+		std::cout << c << std::endl;
+		weak = c;
+	}
+	return weak.lock();
+}
+
+
+/**
+ * get_index
+ */
+int
+GfxContainer::get_index (const GfxContainerPtr& me)
+{
+	if (!me)
+		return -1;
+
+	int size = children.size();
+	for (int i = 0; i < size; i++) {
+		if (children[i] == me) {
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+/**
+ * get_depth
+ */
+int
+GfxContainer::get_depth (void)
+{
+	GfxContainerPtr up = parent.lock();
+	int depth = 0;
+
+	while (up) {
+		up = up->parent.lock();
+		depth++;
+	}
+
+	return depth;
+}
+
+/**
+ * get_left
+ */
+GfxContainerPtr
+GfxContainer::get_left (void)
+{
+	GfxContainerPtr empty;
+	GfxContainerPtr me = get_smart();
+
+	GfxContainerPtr gparent = parent.lock();
+	if (!gparent)				// No parent -> no siblings
+		return empty;
+
+	int index = gparent->get_index (me);
+	if (index < 0)				// I'm not my parent's child
+		return empty;
+
+	if (index == 0)				// I'm the first sibling
+		return gparent;
+
+	GfxContainerPtr prev = gparent->children[index-1];
+	if (!prev)				// Empty child!
+		return empty;
+
+	int size;
+	while ((size = prev->children.size()) > 0) {
+		prev = prev->children[size-1];	// Find last (grand)*child
+	}
+
+	return prev;
+}
+
+/**
+ * get_right
+ */
+GfxContainerPtr
+GfxContainer::get_right (void)
+{
+	GfxContainerPtr empty;
+	GfxContainerPtr me = get_smart();
+
+	GfxContainerPtr gparent = parent.lock();
+	if (!gparent)				// No parent -> no siblings
+		return empty;
+
+	if (me->children.size() > 0)		// Descend to children
+		return me->children[0];
+
+	int last_sib;
+	do {
+		int index = gparent->get_index (me);
+		if (index < 0)				// I'm not my parent's child
+			return empty;
+
+		last_sib = gparent->children.size()-1;
+		if (index < last_sib) {
+			return gparent->children[index+1];	// Next sibling
+		}
+		me = gparent;
+		gparent = gparent->parent.lock();
+	}
+	while (gparent);
+
+	return empty;
 }
 

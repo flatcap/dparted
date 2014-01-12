@@ -137,7 +137,7 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 #endif
 	for (int i = 0; i < 128; i++, buffer += 128) {
 		if (*(long*) (buffer+32) == 0)
-			break;
+			continue;			// Skip empty slots
 
 		//log_debug ("new Partition %d\n", i);
 		PartitionPtr p = Partition::create();

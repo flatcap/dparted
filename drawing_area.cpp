@@ -529,12 +529,13 @@ void
 DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right)
 {
 	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_tab: too short\n");
+		log_info ("draw_block: too short\n");
 		return;
 	}
 
 	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
-		log_info ("draw_tab: too narrow\n");
+		log_info ("draw_block: too narrow\n");
+		std::cout << cont << std::endl;
 		return;
 	}
 
@@ -594,6 +595,7 @@ DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr&
 
 	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
 		log_info ("draw_box: too narrow\n");
+		std::cout << cont << std::endl;
 		return;
 	}
 
@@ -649,6 +651,7 @@ DrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainer
 
 	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
 		log_info ("draw_iconbox: too narrow\n");
+		std::cout << cont << std::endl;
 		return;
 	}
 
@@ -716,6 +719,7 @@ DrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerP
 
 	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
 		log_info ("draw_tabbox: too narrow\n");
+		std::cout << cont << std::endl;
 		return;
 	}
 
@@ -914,9 +918,6 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
 	grab_focus();
-
-	sel_x = event->x;
-	sel_y = event->y;
 
 	//std::cout << "Range contains " << vRange.size() << " items\n";
 
@@ -1223,7 +1224,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	Gdk::RGBA background = cont->background;
 	Gdk::RGBA colour = cont->colour;
 	Glib::RefPtr<Gdk::Pixbuf> icon = cont->icon;
-	std::string name = "dummy"; // cont->name?
+	std::string name = cont->name;
 	std::string label = cont->label;
 	bool usage = cont->usage;
 
@@ -1254,7 +1255,10 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 
 	//printf ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
-		printf ("too narrow\n");
+#if 0
+		printf ("draw_container: too narrow\n");
+		std::cout << cont << std::endl;
+#endif
 		return;
 	}
 
@@ -1371,11 +1375,30 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	}
 	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
 
-	if (cont->get_focus()) {
+	if (cont->get_focus() && has_focus()) {
 		draw_focus (cr, shape);
 	}
 }
 
+
+/**
+ * get_rect
+ */
+Rect
+DrawingArea::get_rect (GfxContainerPtr g)
+{
+	Rect r = { -1, -1, -1, -1 };
+	if (!g)
+		return r;
+
+	for (const auto& rg : vRange) {
+		if (rg.p == g) {
+			return rg.r;
+		}
+	}
+
+	return r;
+}
 
 /**
  * on_keypress
@@ -1388,21 +1411,61 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 
 	std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
 
+	//Extra keys: Delete, Insert, Space/Enter (select)?
+
+	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	if (!dp) {
+		std::cout << "No DParted" << std::endl;
+		return false;
+	}
+
+	GfxContainerPtr c = dp->get_focus();
+	if (!c) {
+		std::cout << "No focus" << std::endl;
+		return false;
+	}
+
+	GfxContainerPtr new_sel;
+	Rect r;
 	switch (ev->keyval) {
 		case GDK_KEY_Left:	// 65361 (0xFF51)
-			redraw  = true;
+			new_sel = c->get_left();
+			if (new_sel) {
+				dp->set_focus (new_sel);
+				redraw = true;
+				std::cout << "Focus: " << new_sel << std::endl;
+			}
 			handled = true;
 			break;
 		case GDK_KEY_Up:	// 65362 (0xFF52)
-			redraw  = true;
+			r = get_rect(c);
+			r.y = ((r.y/70) * 70) - 35;
+			new_sel = get_focus (r.x, r.y);
+			if (new_sel) {
+				dp->set_focus (new_sel);
+				redraw = true;
+				std::cout << "Focus: " << new_sel << std::endl;
+			}
 			handled = true;
 			break;
 		case GDK_KEY_Right:	// 65363 (0xFF53)
-			redraw  = true;
+			new_sel = c->get_right();
+			if (new_sel) {
+				dp->set_focus (new_sel);
+				redraw = true;
+				std::cout << "Focus: " << new_sel << std::endl;
+			}
 			handled = true;
 			break;
 		case GDK_KEY_Down:	// 65364 (0xFF54)
-			redraw  = true;
+			r = get_rect(c);
+			r.y = ((r.y/70) * 70) + 70 + 35;
+			new_sel = get_focus (r.x, r.y);
+			if (new_sel) {
+				dp->set_focus (new_sel);
+				redraw = true;
+				std::cout << "Focus: " << new_sel << std::endl;
+			}
 			handled = true;
 			break;
 	}
@@ -1422,6 +1485,21 @@ bool
 DrawingArea::on_focus_in (GdkEventFocus* event)
 {
 	LOG_TRACE;
+
+	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	if (!dp) {
+		std::cout << "No DParted" << std::endl;
+		return false;
+	}
+	GfxContainerPtr c = dp->get_focus();
+	if (!c) {
+		std::cout << "No focus" << std::endl;
+		c = get_focus (0, 0);
+		if (c) {
+			dp->set_focus (c);
+		}
+	}
+
 	return true;
 }
 

@@ -46,6 +46,7 @@ public:
 	void set_data (GfxContainerPtr c);
 
 	bool set_focus (GfxContainerPtr cont);
+	GfxContainerPtr get_focus (void);
 
 protected:
 	Gtk::Box		outer_box;

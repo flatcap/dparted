@@ -40,8 +40,8 @@ class GfxContainer
 {
 public:
 	//XXX theme updated?
-	GfxContainer (ContainerPtr c);
 	virtual ~GfxContainer();
+	static GfxContainerPtr create (GfxContainerPtr parent, ContainerPtr c);
 
 	std::vector<GfxContainerPtr> children;
 
@@ -57,6 +57,7 @@ public:
 	bool update_info (void);
 	bool mouse_event (void);
 
+	std::string               name;
 	std::string               display;
 	Gdk::RGBA                 colour;
 	Gdk::RGBA                 background;
@@ -72,12 +73,20 @@ public:
 
 	std::string get_tooltip (void);
 
+	GfxContainerPtr get_left (void);
+	GfxContainerPtr get_right (void);
+	int get_index (const GfxContainerPtr& me);
+	int get_depth (void);
+
 protected:
 	GfxContainer (void);
-	ContainerPtr get_smart (void);
+	ContainerPtr get_container (void);
 	std::string process_label (const std::string& label_template);
+	GfxContainerPtr get_smart (void);
 
 	std::weak_ptr<Container> container;
+	std::weak_ptr<GfxContainer> weak;
+	std::weak_ptr<GfxContainer> parent;
 
 	Gdk::RGBA                 process_colour (const std::string& str);
 	Glib::RefPtr<Gdk::Pixbuf> process_icon (const std::string& str);
@@ -89,6 +98,8 @@ protected:
 	int seqnum = -1;
 
 	ThemePtr theme;
+
+	friend std::ostream& operator<< (std::ostream& stream, const GfxContainerPtr& c);
 };
 
 
