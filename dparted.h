@@ -57,8 +57,6 @@ protected:
 	DrawingArea		drawingarea;
 	TreeView		treeview;
 	Gtk::Statusbar		statusbar;
-	Gtk::SpinButton		spin1;
-	Gtk::SpinButton		spin2;
 
 	Gtk::ScrolledWindow	scrolledwindow;
 

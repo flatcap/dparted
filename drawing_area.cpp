@@ -920,135 +920,86 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 {
 	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
-	grab_focus();
+	if (event->type != GDK_BUTTON_PRESS)
+		return false;			// We haven't handled the event
 
-	printf ("event window = %p\n", (void*) event->window);
+	grab_focus();				// Place the windows focus on the DrawingArea
 
-	printf ("coords1: %d, %d\n", (int) event->x_root, (int) event->y_root);
-	int x = 0;
-	int y = 0;
-	get_coords(x, y);
-	printf ("coords2: %d, %d\n", x, y);
-	//std::cout << "Range contains " << vRange.size() << " items\n";
+	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
 
-	/* menux = event->x_root; */
-	/* menuy = event->y_root; */
+	for (const auto& rg : vRange) {
+		const Rect& r = rg.r;
 
-	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
-		if (!m_pMenuPopup->get_attach_widget()) {
-			m_pMenuPopup->attach_to_widget(*this);
-		}
-
-		if (m_pMenuPopup) {
-			m_pMenuPopup->popup (sigc::mem_fun(*this, &DrawingArea::on_popup_menu_position), event->button, event->time);
-		}
-
-		return true; //It has been handled.
-	}
-
-	for (auto& rg : vRange) {
-		Rect r = rg.r;
-		bool b = ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
-			  (event->y >= r.y) && (event->y < (r.y + r.h)));
-
-		//std::cout << "darea = " << get_toplevel() << std::endl;
-		DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
-		if (b) {
-			dp->set_focus (rg.p);
-#if 0
-			//log_error ("\033[01;31mMOUSE on %s\033[0m\n", rg.p->type.back().c_str());
-			rg.p->mouse_event();
-			rg.p->set_focus (true);
-			focus = rg.p;
-#endif
-			get_window()->invalidate (false);
+		if ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
+		    (event->y >= r.y) && (event->y < (r.y + r.h))) {
+			if (dp->set_focus (rg.p)) {
+				get_window()->invalidate (false);
+			}
 			break;
 		}
-
-#if 0
-		if (b) {
-			printf ("\033[01;31mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p.get(), rg.p->type.back().c_str());
-		} else {
-			printf  ("\033[01;32mRange: %d,%d %d,%d %p (%s)\033[0m\n", r.x, r.y, r.w, r.h, (void*) rg.p.get(), rg.p->type.back().c_str());
-		}
-#endif
 	}
-	//log_info ("\n");
 
-#if 0
-	std::cout << event->type << "\n";
-	std::cout << event->state << "\n";
-	std::cout << event->button << "\n";
-	std::cout << event->time << "\n";
-	std::cout << event->x << "\n";
-	std::cout << event->y << "\n";
+	if (event->button == 3) {			// Right-click
+		popup_menu (event->x_root, event->y_root);
+	}
 
-	GdkEventType type;
-	GdkWindow* window;
-	gint8 send_event;
-	guint32 time;
-	gdouble x;
-	gdouble y;
-	gdouble* axes;
-	guint state;
-	guint button;
-	GdkDevice* device;
-	gdouble x_root, y_root;
-#endif
-
-	return true;
+	return true;		// We've handled the event
 }
 
 
 /**
  * get_coords
+ *
+ * Get the absolute screen coordinates of the highlighted container.
  */
-void
+bool
 DrawingArea::get_coords (int& x, int& y)
 {
 	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
 	if (!dp) {
 		std::cout << "No DParted" << std::endl;
-		return;
+		return false;
 	}
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		std::cout << "No focus" << std::endl;
-		return;
+		//std::cout << "No focus" << std::endl;
+		return false;
 	}
 
-	Rect r = get_rect (c);
-
-	x = r.x;
-	y = r.y;
-	printf ("Rect: %d,%d + %d,%d\n", r.x, r.y, r.w, r.h);
-
 	Glib::RefPtr<Gdk::Window> w = get_window();
-	/* printf ("get window = %p\n", w); */
+	if (!w) {
+		return false;
+	}
 
-	x = 0;
-	y = 0;
-	w->get_origin(x, y);
-	printf ("Window: %d,%d\n", x, y);
+	int ox = 0;
+	int oy = 0;
+	w->get_origin (ox, oy);		// Coords of DParted's main window (inside chrome)
 
-	menux = x;
-	menuy = y;
+	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
+	if (!window) {
+		return false;
+	}
 
-	x = 0;
-	y = 0;
+	int tx = 0;
+	int ty = 0;
+	if (!translate_coordinates (*window, 0, 0, tx, ty)) {
+		return false;		// Coords of DrawingArea within DParted's window
+	}
 
-	translate_coordinates (*get_toplevel(), 0, 0, x, y);
-	printf ("DA: %d,%d\n", x, y);
+	Rect r = get_rect (c);		// Size and shape of selected container
+	if (r.x < 0) {
+		return false;
+	}
+#if 0
+	printf ("o %d, %d\n", ox, oy);
+	printf ("t %d, %d\n", tx, ty);
+	printf ("r %d, %d, %d\n", r.x, r.y, r.h);
+#endif
 
-	x = get_allocated_width();
-	y = get_allocated_height();
-	printf ("DA Size: %d,%d\n", x, y);
-
-	menux += r.x;
-	menuy += r.y;
-
-	menuy += r.h;
+	x = ox + tx + r.x;
+	y = oy + r.y + r.h;
+	return true;
 }
 
 
@@ -1058,6 +1009,7 @@ DrawingArea::get_coords (int& x, int& y)
 void
 DrawingArea::on_popup_menu_position (int& x, int& y, bool& push_in)
 {
+	//XXX can I make this into a lambda?
 	x = menux;
 	y = menuy;
 	push_in = false;
@@ -1069,7 +1021,7 @@ DrawingArea::on_popup_menu_position (int& x, int& y, bool& push_in)
 void
 DrawingArea::on_menu_file_popup_generic (void)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 }
 
 /**
@@ -1122,6 +1074,10 @@ DrawingArea::make_menu (void)
 	}
 
 	m_pMenuPopup = new Gtk::Menu(gmenu);
+
+	if (m_pMenuPopup && (!m_pMenuPopup->get_attach_widget())) {
+		m_pMenuPopup->attach_to_widget(*this);
+	}
 }
 
 
@@ -1559,7 +1515,7 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 	bool redraw  = false;
 	bool handled = false;
 
-	std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
+	//std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
 
@@ -1571,7 +1527,7 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		std::cout << "No focus" << std::endl;
+		//std::cout << "No focus" << std::endl;
 		return false;
 	}
 
@@ -1582,55 +1538,31 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 	switch (ev->keyval) {
 		case GDK_KEY_Menu:	// 65383 (0xFF67)
 			get_coords(x, y);
-
-			if (!m_pMenuPopup->get_attach_widget()) {
-				m_pMenuPopup->attach_to_widget(*this);
-			}
-
-			if (m_pMenuPopup) {
-				m_pMenuPopup->popup (sigc::mem_fun(*this, &DrawingArea::on_popup_menu_position), 0, gtk_get_current_event_time());
-			}
-
+			popup_menu (x, y);
 			handled = true;
 			break;
 		case GDK_KEY_Left:	// 65361 (0xFF51)
 			new_sel = c->get_left();
-			if (new_sel) {
-				dp->set_focus (new_sel);
-				redraw = true;
-				std::cout << "Focus: " << new_sel << std::endl;
-			}
+			redraw = dp->set_focus (new_sel);
 			handled = true;
 			break;
 		case GDK_KEY_Up:	// 65362 (0xFF52)
 			r = get_rect(c);
 			r.y = ((r.y/70) * 70) - 35;
 			new_sel = get_focus (r.x, r.y);
-			if (new_sel) {
-				dp->set_focus (new_sel);
-				redraw = true;
-				std::cout << "Focus: " << new_sel << std::endl;
-			}
+			redraw = dp->set_focus (new_sel);
 			handled = true;
 			break;
 		case GDK_KEY_Right:	// 65363 (0xFF53)
 			new_sel = c->get_right();
-			if (new_sel) {
-				dp->set_focus (new_sel);
-				redraw = true;
-				std::cout << "Focus: " << new_sel << std::endl;
-			}
+			redraw = dp->set_focus (new_sel);
 			handled = true;
 			break;
 		case GDK_KEY_Down:	// 65364 (0xFF54)
 			r = get_rect(c);
 			r.y = ((r.y/70) * 70) + 70 + 35;
 			new_sel = get_focus (r.x, r.y);
-			if (new_sel) {
-				dp->set_focus (new_sel);
-				redraw = true;
-				std::cout << "Focus: " << new_sel << std::endl;
-			}
+			redraw = dp->set_focus (new_sel);
 			handled = true;
 			break;
 	}
@@ -1649,7 +1581,7 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 bool
 DrawingArea::on_focus_in (GdkEventFocus* event)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 
 	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
 	if (!dp) {
@@ -1658,7 +1590,7 @@ DrawingArea::on_focus_in (GdkEventFocus* event)
 	}
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		std::cout << "No focus" << std::endl;
+		//std::cout << "No focus" << std::endl;
 		c = get_focus (0, 0);
 		if (c) {
 			dp->set_focus (c);
@@ -1674,6 +1606,24 @@ DrawingArea::on_focus_in (GdkEventFocus* event)
 bool
 DrawingArea::on_focus_out (GdkEventFocus* event)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	return true;
 }
+
+
+/**
+ * popup_menu
+ */
+void
+DrawingArea::popup_menu (int x, int y)
+{
+	if (!m_pMenuPopup) {
+		return;
+	}
+
+	menux = x;
+	menuy = y;
+
+	m_pMenuPopup->popup (sigc::mem_fun(*this, &DrawingArea::on_popup_menu_position), 0, gtk_get_current_event_time());
+}
+

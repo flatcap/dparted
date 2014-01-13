@@ -94,10 +94,8 @@ DParted::DParted ()
 	outer_box.pack_end (statusbar, false, false);
 
 	scrolledwindow.add (box);
-	box.pack_start (spin1, false, false);
 	eventbox.add(drawingarea);
 	box.pack_start (eventbox, false, false);
-	box.add (spin2);
 	box.pack_end (treeview, true, true);
 
 	show_all_children();
@@ -122,7 +120,8 @@ DParted::~DParted()
 void
 DParted::my_realize (void)
 {
-	std::cout << __PRETTY_FUNCTION__ << std::endl;
+	//LOG_TRACE;
+	drawingarea.grab_focus();
 }
 
 /**
@@ -131,7 +130,7 @@ DParted::my_realize (void)
 void
 DParted::my_show (void)
 {
-	std::cout << __PRETTY_FUNCTION__ << std::endl;
+	//LOG_TRACE;
 }
 
 /**
@@ -165,12 +164,18 @@ DParted::on_mouse_click (GdkEventButton* event)
 
 /**
  * set_focus
+ *
+ * Return: true  - focus has changed
+ *	   false - focus is the same
  */
 bool
 DParted::set_focus (GfxContainerPtr cont)
 {
+	if (!cont)
+		return false;
+
 	if (focus == cont)
-		return true;
+		return false;
 
 	if (focus) {
 		focus->set_focus (false);
@@ -178,6 +183,7 @@ DParted::set_focus (GfxContainerPtr cont)
 	cont->set_focus (true);
 	focus = cont;
 
+	std::cout << "Focus: " << cont << std::endl;
 	return true;
 }
 
@@ -207,6 +213,7 @@ DParted::set_data (GfxContainerPtr c)
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
 	//move (1920+1366-width, 0);
+	move (1366-width, 0);
 }
 
 

@@ -73,7 +73,8 @@ private:
 	Glib::RefPtr<Gtk::Builder> m_refBuilder;
 	int menux = 0;
 	int menuy = 0;
-	void get_coords (int& x, int& y);
+	bool get_coords (int& x, int& y);
+	void popup_menu (int x, int y);
 
 	Rect get_rect (GfxContainerPtr g);
 
