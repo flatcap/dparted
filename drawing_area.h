@@ -68,14 +68,10 @@ private:
 
 	void make_menu (void);
 	void on_menu_file_popup_generic (void);
-	void on_popup_menu_position (int& x, int& y, bool& push_in);
 	Gtk::Menu* m_pMenuPopup = nullptr;
 	Glib::RefPtr<Gtk::Builder> m_refBuilder;
-	int menux = 0;
-	int menuy = 0;
 	bool get_coords (int& x, int& y);
 	void popup_menu (int x, int y);
-	void on_menu_close (void);
 	bool menu_active = false;
 
 	Rect get_rect (GfxContainerPtr g);

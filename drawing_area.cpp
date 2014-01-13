@@ -1004,18 +1004,6 @@ DrawingArea::get_coords (int& x, int& y)
 
 
 /**
- * on_popup_menu_position
- */
-void
-DrawingArea::on_popup_menu_position (int& x, int& y, bool& push_in)
-{
-	//XXX can I make this into a lambda?
-	x = menux;
-	y = menuy;
-	push_in = false;
-}
-
-/**
  * on_menu_file_popup_generic
  */
 void
@@ -1079,19 +1067,9 @@ DrawingArea::make_menu (void)
 		m_pMenuPopup->attach_to_widget(*this);
 	}
 
-	m_pMenuPopup->signal_deactivate().connect (sigc::mem_fun (*this, &DrawingArea::on_menu_close));
+	// A lambda to mark the popup menu closure
+	m_pMenuPopup->signal_deactivate().connect([this] { menu_active = false; });
 }
-
-/**
- * on_menu_close
- */
-void
-DrawingArea::on_menu_close (void)
-{
-	//std::cout << "menu closed" << std::endl;
-	menu_active = false;
-}
-
 
 #if 0
 /**
@@ -1633,10 +1611,8 @@ DrawingArea::popup_menu (int x, int y)
 		return;
 	}
 
-	menux = x;
-	menuy = y;
+	m_pMenuPopup->popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
 
-	m_pMenuPopup->popup (sigc::mem_fun(*this, &DrawingArea::on_popup_menu_position), 0, gtk_get_current_event_time());
 	menu_active = true;
 }
 
