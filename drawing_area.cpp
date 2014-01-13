@@ -1529,7 +1529,7 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 	bool redraw  = false;
 	bool handled = false;
 
-	std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
+	//std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
 
@@ -1545,8 +1545,6 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 		return false;
 	}
 
-	GfxContainerPtr new_sel;
-	Rect r;
 	int x = 0;
 	int y = 0;
 	switch (ev->keyval) {
@@ -1556,27 +1554,19 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 			handled = true;
 			break;
 		case GDK_KEY_Left:	// 65361 (0xFF51)
-			new_sel = c->get_left();
-			redraw = dp->set_focus (new_sel);
-			handled = true;
-			break;
-		case GDK_KEY_Up:	// 65362 (0xFF52)
-			r = get_rect(c);
-			r.y = ((r.y/70) * 70) - 35;
-			new_sel = get_focus (r.x, r.y);
-			redraw = dp->set_focus (new_sel);
+			redraw = dp->set_focus (left (c));
 			handled = true;
 			break;
 		case GDK_KEY_Right:	// 65363 (0xFF53)
-			new_sel = c->get_right();
-			redraw = dp->set_focus (new_sel);
+			redraw = dp->set_focus (right (c));
+			handled = true;
+			break;
+		case GDK_KEY_Up:	// 65362 (0xFF52)
+			redraw = dp->set_focus (up (c));
 			handled = true;
 			break;
 		case GDK_KEY_Down:	// 65364 (0xFF54)
-			r = get_rect(c);
-			r.y = ((r.y/70) * 70) + 70 + 35;
-			new_sel = get_focus (r.x, r.y);
-			redraw = dp->set_focus (new_sel);
+			redraw = dp->set_focus (down (c));
 			handled = true;
 			break;
 	}
@@ -1637,5 +1627,106 @@ DrawingArea::popup_menu (int x, int y)
 
 	// Lamba to position popup menu
 	m_pMenuPopup->popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
+}
+
+
+/**
+ * is_visible
+ */
+bool
+DrawingArea::is_visible (const GfxContainerPtr& c)
+{
+	if (!c)
+		return false;
+
+	std::string& display = c->display;
+
+	if (display == "never")
+		return false;
+
+	if ((display == "box") || (display == "icon") || (display == "iconbox") || (display == "tabbox"))
+		return true;
+
+	if ((display == "empty") && (c->children.empty()))
+		return true;
+
+	return false;
+}
+
+/**
+ * left
+ */
+GfxContainerPtr
+DrawingArea::left (GfxContainerPtr c)
+{
+	if (!c)
+		return nullptr;
+
+	do {
+		if (c->get_depth() == 1)	// Already at a top-level object
+			return nullptr;
+
+		c = c->get_left();
+
+		if (is_visible (c))
+			return c;
+
+	} while (c);
+
+	return c;
+}
+
+/**
+ * right
+ */
+GfxContainerPtr
+DrawingArea::right (GfxContainerPtr c)
+{
+	//XXX ugly, clumsy
+
+	if (!c)
+		return nullptr;
+
+	int y = get_rect(c).y + 30;	// plus half a row
+
+	do {
+		c = c->get_right();
+		if (get_rect(c).y > y)	// We've changed rows
+			return nullptr;
+
+		if (is_visible (c))
+			return c;
+
+	} while (c);
+
+	return nullptr;
+}
+
+/**
+ * up
+ */
+GfxContainerPtr
+DrawingArea::up (GfxContainerPtr c)
+{
+	if (!c)
+		return nullptr;
+
+	Rect r = get_rect(c);
+	r.y = ((r.y/70) * 70) - 35;
+	return get_focus (r.x, r.y);
+}
+
+/**
+ * down
+ */
+GfxContainerPtr
+DrawingArea::down (GfxContainerPtr c)
+{
+	if (!c)
+		return nullptr;
+
+	Rect r = get_rect(c);
+	r.y = ((r.y/70) * 70) + 70 + 35;
+	return get_focus (r.x, r.y);
 }
 

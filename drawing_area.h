@@ -76,6 +76,12 @@ private:
 	bool popup_on_keypress (GdkEventKey* ev);
 
 	Rect get_rect (GfxContainerPtr g);
+	bool is_visible (const GfxContainerPtr& c);
+
+	GfxContainerPtr left  (GfxContainerPtr c);
+	GfxContainerPtr right (GfxContainerPtr c);
+	GfxContainerPtr up    (GfxContainerPtr c);
+	GfxContainerPtr down  (GfxContainerPtr c);
 
 	std::deque<Range> vRange;
 
