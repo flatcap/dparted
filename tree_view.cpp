@@ -43,9 +43,13 @@ TreeView::TreeView()
 	m_Menu_Popup.accelerate (*this);
 	m_Menu_Popup.show_all();
 
-	set_has_tooltip (true);
+	m_Menu_Popup.signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::popup_on_keypress));
 
-	signal_popup_menu().connect (sigc::mem_fun (*this, &TreeView::on_popup_menu));
+	// Lambdas to let us know when the popup menu is in use.
+	m_Menu_Popup.signal_show().connect([this] { menu_active = true;  });
+	m_Menu_Popup.signal_hide().connect([this] { menu_active = false; });
+
+	set_has_tooltip (true);
 #endif
 }
 
@@ -58,14 +62,19 @@ TreeView::~TreeView()
 
 
 /**
- * on_popup_menu
+ * popup_on_keypress
  */
 bool
-TreeView::on_popup_menu (void)
+TreeView::popup_on_keypress (GdkEventKey* ev)
 {
-	m_Menu_Popup.popup (0, 0);
+	std::cout << "menu key" << std::endl;
+	if ((ev->keyval == GDK_KEY_Menu) && menu_active) {
+		m_Menu_Popup.popdown();
+		menu_active = false;
+		return true;
+	}
 
-	return true;
+	return false;
 }
 
 /**
@@ -249,7 +258,10 @@ bool
 TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
 #if 1
+	//std::cout << "qtt: " << menu_active << std::endl;
 	if (keyboard_tooltip)
+		return false;
+	if (menu_active)
 		return false;
 
 	int tx = 0;

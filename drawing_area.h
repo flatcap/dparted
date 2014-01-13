@@ -73,6 +73,7 @@ private:
 	bool get_coords (int& x, int& y);
 	void popup_menu (int x, int y);
 	bool menu_active = false;
+	bool popup_on_keypress (GdkEventKey* ev);
 
 	Rect get_rect (GfxContainerPtr g);
 

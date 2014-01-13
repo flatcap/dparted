@@ -918,7 +918,7 @@ DrawingArea::on_mouse_leave (GdkEventCrossing* event)
 bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
-	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
+	std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
 	if (event->type != GDK_BUTTON_PRESS)
 		return false;			// We haven't handled the event
@@ -1067,9 +1067,30 @@ DrawingArea::make_menu (void)
 		m_pMenuPopup->attach_to_widget(*this);
 	}
 
-	// A lambda to mark the popup menu closure
-	m_pMenuPopup->signal_deactivate().connect([this] { menu_active = false; });
+	m_pMenuPopup->signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
+
+	// Lambdas to let us know when the popup menu is in use.
+	m_pMenuPopup->signal_show().connect([this] { menu_active = true;  });
+	m_pMenuPopup->signal_hide().connect([this] { menu_active = false; });
+
 }
+
+/**
+ * popup_on_keypress
+ */
+bool
+DrawingArea::popup_on_keypress (GdkEventKey* ev)
+{
+	if ((ev->keyval == GDK_KEY_Menu) && menu_active) {
+		m_pMenuPopup->popdown();
+		menu_active = false;
+		return true;
+	}
+
+	//std::cout << "menu key" << std::endl;
+	return false;
+}
+
 
 #if 0
 /**
@@ -1252,7 +1273,7 @@ DrawingArea::set_data (GfxContainerPtr& c)
 
 	// invalidate window
 	unsigned int children = c->children.size();
-	set_size_request (1000, 70 * children);
+	set_size_request (600, 70 * children);
 
 	top_level = c;
 	//top_level->dump();
@@ -1284,6 +1305,9 @@ bool
 DrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
 	std::stringstream ss;
+
+	if (menu_active)
+		return false;
 
 	GfxContainerPtr c = get_focus (x, y);
 	if (c) {
@@ -1505,7 +1529,7 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 	bool redraw  = false;
 	bool handled = false;
 
-	//std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
+	std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
 
@@ -1571,7 +1595,7 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 bool
 DrawingArea::on_focus_in (GdkEventFocus* event)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 
 	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
 	if (!dp) {
@@ -1596,7 +1620,7 @@ DrawingArea::on_focus_in (GdkEventFocus* event)
 bool
 DrawingArea::on_focus_out (GdkEventFocus* event)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	return true;
 }
 
@@ -1611,8 +1635,7 @@ DrawingArea::popup_menu (int x, int y)
 		return;
 	}
 
+	// Lamba to position popup menu
 	m_pMenuPopup->popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
-
-	menu_active = true;
 }
 
