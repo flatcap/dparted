@@ -1078,6 +1078,18 @@ DrawingArea::make_menu (void)
 	if (m_pMenuPopup && (!m_pMenuPopup->get_attach_widget())) {
 		m_pMenuPopup->attach_to_widget(*this);
 	}
+
+	m_pMenuPopup->signal_deactivate().connect (sigc::mem_fun (*this, &DrawingArea::on_menu_close));
+}
+
+/**
+ * on_menu_close
+ */
+void
+DrawingArea::on_menu_close (void)
+{
+	//std::cout << "menu closed" << std::endl;
+	menu_active = false;
 }
 
 
@@ -1481,7 +1493,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	}
 	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
 
-	if (cont->get_focus() && has_focus()) {
+	if (cont->get_focus() && (has_focus() || menu_active)) {
 		draw_focus (cr, shape);
 	}
 }
@@ -1581,7 +1593,7 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 bool
 DrawingArea::on_focus_in (GdkEventFocus* event)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
 	if (!dp) {
@@ -1606,7 +1618,7 @@ DrawingArea::on_focus_in (GdkEventFocus* event)
 bool
 DrawingArea::on_focus_out (GdkEventFocus* event)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	return true;
 }
 
@@ -1625,5 +1637,6 @@ DrawingArea::popup_menu (int x, int y)
 	menuy = y;
 
 	m_pMenuPopup->popup (sigc::mem_fun(*this, &DrawingArea::on_popup_menu_position), 0, gtk_get_current_event_time());
+	menu_active = true;
 }
 

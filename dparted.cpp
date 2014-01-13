@@ -323,7 +323,7 @@ DParted::init_scrolledwindow (void)
 void
 DParted::on_menu_file_quit()
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 	hide(); //Closes the main window to stop the Gtk::Main::run().
 }
 

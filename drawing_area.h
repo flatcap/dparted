@@ -75,6 +75,8 @@ private:
 	int menuy = 0;
 	bool get_coords (int& x, int& y);
 	void popup_menu (int x, int y);
+	void on_menu_close (void);
+	bool menu_active = false;
 
 	Rect get_rect (GfxContainerPtr g);
 
