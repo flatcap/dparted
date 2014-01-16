@@ -1,28 +1,43 @@
-Tree View Columns                           Keyword                    Notes
--------------------------------------------------------------------------------------------------
-Absolute Offset (bytes)                     absolute_offset_bytes
-Absolute Offset (percentage)                absolute_offset_percentage
-Block size                                  block_size_bytes
-Colour                                      colour_icon
-Container                                   container
-Container (short)                           container_short
-Container Type                              container_type
-Filesystem                                  filesystem
-Flags                                       flags
-Bytes Free                                  free_bytes
-Percentage Free                             free_percentage
-Label                                       label
-Mount Point                                 mount_point
-Mounted / Locked                            mounted_icon
-Parent Offset (bytes)                       parent_offset_bytes
-Parent Offset (percentage)                  parent_offset_percentage
-Partition / Volume / Logical Volume         partition_device
-Partition / Volume / Logical Volume (short) partition_device_short
-Siblings                                    siblings
-Bytes Size                                  size_bytes
-Percentage Size                             size_percentage            %age of parent's size
-Bytes Used                                  used_bytes
-Percentage Used                             used_percentage
-UUID                                        uuid
-UUID (short)                                uuid_short
-Volume Group                                volume_group
+          Column Heading   Extra      Base type   Gfx Type    Display      Keyword                    Example                              Notes
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Scanned
+          Block size       bytes      u64         size        num/scale    block_size_bytes           4194304
+          Container                   string      string      string       container                  /dev/loop0p3                         Partition, Volume, etc
+          Container Type   list       string list string list string list  container_type_list        container,whole,volume,linear
+          Flags            list       string list string list string list  flag_list                  stripe
+          Name                        string      string      string       name                       My Volume
+          Parent Offset    bytes      u64         size        num/scale    parent_offset_bytes        123456789
+          Size             bytes      u64         size        num/scale    size_bytes                 123456789
+          Used             bytes      u64         size        num/scale    used_bytes                 123456789
+          UUID                        string      string      string       uuid                       3f88b283-ebfa-4cc5-a6b0-e45e7e3d63ab
+          Volume Group                string      string      string       volume_group               Group1
+          Warnings         list       string list string list string list  warning_list               Filesystem wasn't unmounted cleanly
+
+          Parent                      string      string      string       parent                     /dev/loop0
+          Siblings         list       string list string list string list  sibling_list               /dev/loop0p1,/dev/loop0p2            List of containers, including self
+          Whole                       string      string      string       whole                      /dev/loop0
+
+Generated
+          Absolute Offset  bytes      u64         size        num/scale    absolute_offset_bytes      123456789
+          Absolute Offset  percentage u8          percentage  num %        absolute_offset_percentage 45
+          Absolute Size    percentage u8          percentage  num %        absolute_size_percentage   23                                   %age of container size
+          Container        short      string      string      string       container_short            loop0p3                              Partition, Volume, etc
+          Container Type              string      string      string       container_type             partition                            Most derived type
+          Free Space       bytes      u64         size        num/scale    free_space_bytes           123456789
+          Free Space       percentage u8          percentage  num %        free_space_percentage      35
+          Mount Points     list       string list string list string list  mount_point_list           /mnt/media,/mnt/other                Ellipsis, tooltip for full list
+          Parent Offset    percentage u8          percentage  num %        parent_offset_percentage   75
+          Size             percentage u8          percentage  num %        size_percentage            27                                   %age of parent's size
+          Used             percentage u8          percentage  num %        used_percentage            88
+          UUID             short      string      string      string       uuid_short                 3f88b283
+
+Theme
+          Colour                      string      rgba        colour       colour                     #ff0080ff                            Representing filesystem, container, etc
+          Colour           icon       string      icon        pixbuf       colour_icon                #ff0080ff
+          Icons            list       n/a         icon list   pixbuf list  icon_list                                                       Warning, Mounted, etc
+          Used             bar graph  u8          graph       progress bar used_bar_graph             [XXXXXXX......]
+
+Plugin
+          Operating System            string      string      string       operating_system           Fedora 20
+          Operating System icon       string      icon        pixbuf       operating_system_icon      Fedora logo
+
