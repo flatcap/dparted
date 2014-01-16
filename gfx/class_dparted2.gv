@@ -1,0 +1,89 @@
+digraph G
+{
+	graph [ rankdir="RL" ];
+	node  [ shape=record, style=filled ];
+	edge  [ penwidth=2.0 ];
+
+	graph [ bgcolor="#002200", color=white ];
+	node  [ fillcolor="#bbbbbb", color=darkgreen ];
+	edge  [ color="#cccccc" ];
+
+	Block [ fillcolor="#aaffaa" ];
+	Disk  [ fillcolor="#aaffaa" ];
+	Loop  [ fillcolor="#aaffaa" ];
+	File  [ fillcolor="#aaffaa" ];
+
+	Table    [ fillcolor="#ffbbbb" ];
+	Msdos    [ fillcolor="#ffbbbb" ];
+	Extended [ fillcolor="#ffbbbb" ];
+	Gpt      [ fillcolor="#ffbbbb" ];
+
+	Partition [ fillcolor="#ffffdd" ];
+
+	Filesystem [ fillcolor="#bbffff" ];
+	Ext4       [ fillcolor="#bbffff" ];
+	Btrfs      [ fillcolor="#bbffff" ];
+	Ntfs       [ fillcolor="#bbffff" ];
+
+	Whole  [ fillcolor="#ccccff" ];
+	Volume [ fillcolor="#ccccff" ];
+
+	LvmGroup     [ fillcolor="#aaaa70" ];
+	LvmLinear    [ fillcolor="#aaaa70" ];
+	LvmMetadata  [ fillcolor="#aaaa70" ];
+	LvmMirror    [ fillcolor="#aaaa70" ];
+	LvmPartition [ fillcolor="#aaaa70" ];
+	LvmRaid      [ fillcolor="#aaaa70" ];
+	LvmStripe    [ fillcolor="#aaaa70" ];
+	LvmTable     [ fillcolor="#aaaa70" ];
+	LvmVolume    [ fillcolor="#aaaa70" ];
+
+	Zero        [ fillcolor="#40cccc" ];
+	Luks        [ fillcolor="#40cccc" ];
+	Random      [ fillcolor="#40cccc" ];
+	Reserved    [ fillcolor="#40cccc" ];
+	Unallocated [ fillcolor="#40cccc" ];
+
+	Disk         -> Block;
+	File         -> Block;
+	Loop         -> Block;
+
+	Block        -> Container;
+	Filesystem   -> Container;
+	Misc         -> Container;
+	Partition    -> Container;
+	Table        -> Container;
+	Whole        -> Container;
+
+	LvmMetadata  -> LvmLinear;
+	LvmLinear    -> LvmVolume;
+	LvmMirror    -> LvmVolume;
+	LvmRaid      -> LvmVolume;
+	LvmStripe    -> LvmVolume;
+
+	Extended     -> Msdos;
+
+	LvmPartition -> Partition;
+
+	Gpt          -> Table;
+	LvmTable     -> Table;
+	MdTable      -> Table;
+	Msdos        -> Table;
+
+	LvmVolume    -> Volume;
+
+	LvmGroup     -> Whole;
+	MdGroup      -> Whole;
+	Volume       -> Whole;
+
+	Ext4        -> Filesystem;
+	Btrfs       -> Filesystem;
+	Ntfs        -> Filesystem;
+
+	Zero        -> Misc;
+	Luks        -> Misc;
+	Random      -> Misc;
+	Reserved    -> Misc;
+	Unallocated -> Misc;
+}
+
