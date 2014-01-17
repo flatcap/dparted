@@ -3,9 +3,9 @@ class Button; // Prewritten GUI element
 class GraphGUI {
 public:
 	GraphGUI() {
-		_button = new Button("Click Me");
+		_button = new Button ("Click Me");
 		_model = new GraphData();
-		_controller = new GraphController(_model, _button);
+		_controller = new GraphController (_model, _button);
 	}
 	~GraphGUI() {
 		delete _button;
@@ -39,10 +39,10 @@ private:
 
 class GraphController {
 public:
-	GraphController(GraphData* model, Button* button) {
+	GraphController (GraphData* model, Button* button) {
 		__model = model;
 		__button = button;
-		__button->setClickHandler(this, &onButtonClicked);
+		__button->setClickHandler (this, &onButtonClicked);
 	}
 
 	void onButtonClicked() {

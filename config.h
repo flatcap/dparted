@@ -23,7 +23,7 @@
 #include <cstdint>
 #include <memory>
 
-//XXX static_assert : sizeof(d_value) == sizeof(l_value)
+//XXX static_assert : sizeof (d_value) == sizeof (l_value)
 
 class Config;
 

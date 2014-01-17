@@ -60,9 +60,9 @@ bool
 LvmVolume::accept (Visitor& v)
 {
 	LvmVolumePtr l = std::dynamic_pointer_cast<LvmVolume> (get_smart());
-	if (!v.visit (l))
+	if (!v.visit(l))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -97,7 +97,7 @@ LvmVolume::add_child (ContainerPtr& child)
 
 #if 0
 		for (auto i : subvols) {
-			LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (i);
+			LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume>(i);
 			//log_info ("subvol %s, %ld segments\n", v->name.c_str(), v->segments.size());
 			for (auto j : v->segments) {
 				j->just_add_child (child);

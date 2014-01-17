@@ -64,9 +64,9 @@ bool
 LvmTable::accept (Visitor& v)
 {
 	LvmTablePtr l = std::dynamic_pointer_cast<LvmTable> (get_smart());
-	if (!v.visit (l))
+	if (!v.visit(l))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -212,7 +212,7 @@ format_config (std::string& config)
 			case '}':
 				indent = indent.substr(1);
 				if (config[first-1] == '\t') {
-					config.erase(first-1, 1);
+					config.erase (first-1, 1);
 					first--;
 				}
 				break;
@@ -327,7 +327,7 @@ LvmTable::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* b
 	t->metadata_size = 1048576;
 
 	ContainerPtr c(t);
-	parent->add_child (c);
+	parent->add_child(c);
 
 	return t;
 }

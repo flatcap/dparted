@@ -56,9 +56,9 @@ bool
 Misc::accept (Visitor& v)
 {
 	MiscPtr m = std::dynamic_pointer_cast<Misc> (get_smart());
-	if (!v.visit (m))
+	if (!v.visit(m))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -157,7 +157,7 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 
 	if (m) {
 		ContainerPtr c(m);
-		parent->add_child (c);
+		parent->add_child(c);
 
 		m->bytes_size = parent->bytes_size;
 		m->bytes_used = 0;

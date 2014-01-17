@@ -179,7 +179,7 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 			return config_file->get_string (search);
 		}
 
-		size_t pos = work_path.find_last_of(".");
+		size_t pos = work_path.find_last_of (".");
 		if (pos == std::string::npos) {
 			if (work_path.empty()) {
 				break;

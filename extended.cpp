@@ -61,9 +61,9 @@ bool
 Extended::accept (Visitor& v)
 {
 	ExtendedPtr e = std::dynamic_pointer_cast<Extended> (get_smart());
-	if (!v.visit (e))
+	if (!v.visit(e))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -174,8 +174,8 @@ Extended::probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, lon
 
 				c->device = part_name.str();
 
-				ext->add_child (c);
-				main_app->queue_add_probe (c);
+				ext->add_child(c);
+				main_app->queue_add_probe(c);
 			}
 		}
 		if (vp.size() == 1)

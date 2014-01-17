@@ -155,7 +155,7 @@ get_btrfs_usage (FilesystemPtr f)
 		return false;
 	if (f->device.empty())
 		return false;
-	if (get_mounted_usage (f))
+	if (get_mounted_usage(f))
 		return true;
 
 	return false;
@@ -171,7 +171,7 @@ get_ext2_usage (FilesystemPtr f)
 		return false;
 	if (f->device.empty())
 		return false;
-	if (get_mounted_usage (f))
+	if (get_mounted_usage(f))
 		return true;
 
 	return false;
@@ -187,7 +187,7 @@ get_ext3_usage (FilesystemPtr f)
 		return false;
 	if (f->device.empty())
 		return false;
-	if (get_mounted_usage (f))
+	if (get_mounted_usage(f))
 		return true;
 
 	return false;
@@ -203,7 +203,7 @@ get_ext4_usage (FilesystemPtr f)
 		return false;
 	if (f->device.empty())
 		return false;
-	if (get_mounted_usage (f))
+	if (get_mounted_usage(f))
 		return true;
 
 	return false;
@@ -219,7 +219,7 @@ get_ntfs_usage (FilesystemPtr f)
 		return false;
 	if (f->device.empty())
 		return false;
-	if (get_mounted_usage (f))
+	if (get_mounted_usage(f))
 		return true;
 
 	return false;
@@ -235,7 +235,7 @@ get_reiserfs_usage (FilesystemPtr f)
 		return false;
 	if (f->device.empty())
 		return false;
-	if (get_mounted_usage (f))
+	if (get_mounted_usage(f))
 		return true;
 
 	return false;
@@ -251,7 +251,7 @@ get_swap_usage (FilesystemPtr f)
 		return false;
 	if (f->device.empty())
 		return false;
-	if (get_mounted_usage (f))
+	if (get_mounted_usage(f))
 		return true;
 
 	return false;
@@ -267,7 +267,7 @@ get_vfat_usage (FilesystemPtr f)
 		return false;
 	if (f->device.empty())
 		return false;
-	if (get_mounted_usage (f))
+	if (get_mounted_usage(f))
 		return true;
 
 	return false;
@@ -283,7 +283,7 @@ get_xfs_usage (FilesystemPtr f)
 		return false;
 	if (f->device.empty())
 		return false;
-	if (get_mounted_usage (f))
+	if (get_mounted_usage(f))
 		return true;
 
 	return false;

@@ -95,7 +95,7 @@ Loop::create (const std::string& losetup)
 
 	std::size_t len = l->file_name.size();
 	if ((len > 10) && (l->file_name.substr (len-10) == " (deleted)")) {
-		l->file_name.erase(len-10);
+		l->file_name.erase (len-10);
 		l->deleted = true;
 		//log_info ("%s is deleted\n", device.c_str());
 	}
@@ -120,9 +120,9 @@ bool
 Loop::accept (Visitor& v)
 {
 	LoopPtr l = std::dynamic_pointer_cast<Loop> (get_smart());
-	if (!v.visit (l))
+	if (!v.visit(l))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -182,7 +182,7 @@ Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 		return;
 
 	for (auto line : output) {
-		LoopPtr l = create(line);
+		LoopPtr l = create (line);
 
 		l->get_fd();
 
@@ -192,8 +192,8 @@ Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 		l->bytes_size = size;
 
 		ContainerPtr c(l);
-		top_level->just_add_child (c);
-		probe_queue.push (c);	// We need to probe
+		top_level->just_add_child(c);
+		probe_queue.push(c);	// We need to probe
 	}
 }
 
@@ -226,7 +226,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	if (i == std::string::npos) {
 		l->name = l->device;
 	} else {
-		l->name = l->device.substr(i+1);
+		l->name = l->device.substr (i+1);
 	}
 
 	l->block_size = 512;	//XXX granularity, or blocksize of backing-file fs/disk?
@@ -236,8 +236,8 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	l->uuid = ss.str();
 
 	ContainerPtr c(l);
-	top_level->just_add_child (c);
-	main_app->queue_add_probe (c);	// queue the container for action
+	top_level->just_add_child(c);
+	main_app->queue_add_probe(c);	// queue the container for action
 }
 
 

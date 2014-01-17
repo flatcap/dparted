@@ -60,9 +60,9 @@ bool
 File::accept (Visitor& v)
 {
 	FilePtr f = std::dynamic_pointer_cast<File> (get_smart());
-	if (!v.visit (f))
+	if (!v.visit(f))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -95,8 +95,8 @@ File::find_devices (const std::string& name, int fd, struct stat& st, ContainerP
 	f->bytes_size    = st.st_size;
 	f->bytes_used    = 0;
 
-	list.add_child (f);
-	queue_add_probe (f);	// queue the container for action
+	list.add_child(f);
+	queue_add_probe(f);	// queue the container for action
 
 	return true;
 }

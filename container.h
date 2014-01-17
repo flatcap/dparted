@@ -88,13 +88,13 @@ public:
 	void add_child (std::shared_ptr<T>& child)
 	{
 		ContainerPtr c (child);
-		add_child (c);
+		add_child(c);
 	}
 
 	template<typename T>
 	void declare_prop (const char* owner, const char* name, T& var, const char* desc)
 	{
-		PPtr pp (new Property<T>(owner, name, var, desc));
+		PPtr pp (new Property<T> (owner, name, var, desc));
 		props[name] = pp;
 	}
 

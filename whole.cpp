@@ -53,9 +53,9 @@ bool
 Whole::accept (Visitor& v)
 {
 	WholePtr w = std::dynamic_pointer_cast<Whole> (get_smart());
-	if (!v.visit (w))
+	if (!v.visit(w))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 

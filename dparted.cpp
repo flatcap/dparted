@@ -29,7 +29,7 @@
 /**
  * Dparted
  */
-DParted::DParted ()
+DParted::DParted()
 {
 	set_title ("DParted");
 #if 0
@@ -72,8 +72,8 @@ DParted::DParted ()
 	signal_button_press_event().connect (sigc::mem_fun (*this, &DParted::on_mouse_click));
 #endif
 
-	eventbox.set_events(Gdk::KEY_PRESS_MASK);
-	eventbox.signal_key_press_event().connect (sigc::mem_fun(drawingarea, &DrawingArea::on_keypress), false);
+	eventbox.set_events (Gdk::KEY_PRESS_MASK);
+	eventbox.signal_key_press_event().connect (sigc::mem_fun (drawingarea, &DrawingArea::on_keypress), false);
 
 	signal_realize().connect (sigc::mem_fun (*this, &DParted::my_realize));
 	signal_realize().connect (sigc::mem_fun (*this, &DParted::my_show));
@@ -95,7 +95,7 @@ DParted::DParted ()
 
 	scrolledwindow.add (box);
 #if 0
-	eventbox.add(drawingarea);
+	eventbox.add (drawingarea);
 	box.pack_start (eventbox, false, false);
 #else
 	box.pack_end (treeview, true, true);
@@ -205,8 +205,8 @@ DParted::get_focus (void)
 void
 DParted::set_data (GfxContainerPtr c)
 {
-	treeview.init_treeview (c);
-	drawingarea.set_data (c);
+	treeview.init_treeview(c);
+	drawingarea.set_data(c);
 
 	//std::cout << m_c->children.size() << " children\n";
 	//set_size_request (1362, 77*count+6); //RAR

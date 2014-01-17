@@ -106,9 +106,9 @@ bool
 Disk::accept (Visitor& v)
 {
 	DiskPtr d = std::dynamic_pointer_cast<Disk> (get_smart());
-	if (!v.visit (d))
+	if (!v.visit(d))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -154,8 +154,8 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	log_debug ("\tsize = %lld\n", file_size_in_bytes);
 #endif
 
-	list.add_child (d);
-	queue_add_probe (d);	// queue the container for action
+	list.add_child(d);
+	queue_add_probe(d);	// queue the container for action
 
 	return true;
 }
@@ -245,7 +245,7 @@ Disk::find_devices (ContainerPtr& list)
 		//d->open_device();
 
 		ContainerPtr c(d);
-		list->add_child (c);
+		list->add_child(c);
 		added++;
 	}
 
@@ -336,8 +336,8 @@ Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 		DiskPtr d = Disk::create (line);
 
 		ContainerPtr c(d);
-		top_level->just_add_child (c);
-		probe_queue.push (c);	// We need to probe
+		top_level->just_add_child(c);
+		probe_queue.push(c);	// We need to probe
 	}
 }
 
@@ -356,8 +356,8 @@ Disk::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	DiskPtr d = Disk::create (output[0]);
 
 	ContainerPtr c(d);
-	top_level->just_add_child (c);
-	main_app->queue_add_probe (c);	// queue the container for action
+	top_level->just_add_child(c);
+	main_app->queue_add_probe(c);	// queue the container for action
 }
 
 

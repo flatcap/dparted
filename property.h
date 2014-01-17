@@ -104,7 +104,7 @@ class Property : public BaseProperty
 {
 public:
 	Property (const char* owner, const char* name, T& v, const char* desc = "") :
-		BaseProperty(owner, name, desc),
+		BaseProperty (owner, name, desc),
 		value(v)
 	{
 		set_type(v);

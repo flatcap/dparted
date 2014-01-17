@@ -71,10 +71,10 @@ DrawingArea::DrawingArea()
 	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 300); // ms
 #endif
 
-	//set_tooltip_text("tooltip number 1");
+	//set_tooltip_text ("tooltip number 1");
 
 	set_has_tooltip();	// We'll be handling the tooltips ourself
-	signal_query_tooltip().connect(sigc::mem_fun(*this, &DrawingArea::on_textview_query_tooltip));
+	signal_query_tooltip().connect (sigc::mem_fun (*this, &DrawingArea::on_textview_query_tooltip));
 
 	make_menu();
 }
@@ -117,7 +117,7 @@ draw_edge (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk
 {
 	cr->save();
 	set_colour (cr, colour);
-	cr->set_line_width (1);
+	cr->set_line_width(1);
 
 	cr->rectangle (shape.x+0.5, shape.y+0.5, shape.w-1, shape.h-1);
 
@@ -141,7 +141,7 @@ draw_grid (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
 
 	cr->set_antialias (Cairo::ANTIALIAS_NONE);
 	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
-	cr->set_line_width (1);
+	cr->set_line_width(1);
 	cr->rectangle (0.5, 0.5, width-1, height-1);
 	cr->stroke();
 
@@ -195,7 +195,7 @@ draw_grid_linear (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, long max_
 
 	cr->set_antialias (Cairo::ANTIALIAS_NONE);
 	cr->set_source_rgba (1.0, 0.0, 0.0, 0.2);
-	cr->set_line_width (1);
+	cr->set_line_width(1);
 	cr->rectangle (0.5+x, 0.5, w-1, h-1);
 	cr->stroke();
 
@@ -205,13 +205,13 @@ draw_grid_linear (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, long max_
 
 	for (int i = 0; i <= count; i++) {
 		if ((i % major) == 0) {
-			cr->set_line_width (3);
+			cr->set_line_width(3);
 			cr->set_source_rgba (0.3, 0.3, 0.8, 0.7);
 		} else if ((i % minor) == 0) {
-			cr->set_line_width (2);
+			cr->set_line_width(2);
 			cr->set_source_rgba (0.5, 0.5, 0.5, 0.6);	//XXX theme
 		} else {
-			cr->set_line_width (1);
+			cr->set_line_width(1);
 			cr->set_source_rgba (0.3, 0.3, 0.3, 0.5);
 		}
 
@@ -364,7 +364,7 @@ draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
 	draw_border (cr, shape);				// Set clipping area
 	//cr->clip();
 
-	cr->set_line_width (2);
+	cr->set_line_width(2);
 
 	cr->set_dash (dashes, start);
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);		//RAR focus colours from theme
@@ -549,23 +549,23 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	const int& w = work.w;
 	const int& h = work.h;
 
-	draw_corner (cr, work, true,  false, true);		// Top left corner (1)
-	draw_corner (cr, work, true,  true,  true);		// Top right corner (3)
+	draw_corner (cr, work, true,  false, true);		// Top left corner(1)
+	draw_corner (cr, work, true,  true,  true);		// Top right corner(3)
 
 	draw_arc (cr, work, true);				// Thin bottom right corner (12)
 	draw_arc (cr, work, false);				// Thin bottom left corner (13)
 
-	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->set_line_width (RADIUS);				// Thick top bar(2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->set_line_width (SIDES);				// Thin left bar(4)
 	cr->move_to (x+(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->set_line_width (SIDES);				// Thin right bar(8)
 	cr->move_to (x+w-(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
@@ -607,23 +607,23 @@ DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr&
 	const int& w = shape.w;
 	const int& h = shape.h;
 
-	draw_corner (cr, shape, true,  false, true);		// Top left corner (1)
-	draw_corner (cr, shape, true,  true,  true);		// Top right corner (3)
+	draw_corner (cr, shape, true,  false, true);		// Top left corner(1)
+	draw_corner (cr, shape, true,  true,  true);		// Top right corner(3)
 
 	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
 	draw_arc (cr, shape, false);				// Thin bottom left corner (13)
 
-	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->set_line_width (RADIUS);				// Thick top bar(2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->set_line_width (SIDES);				// Thin left bar(4)
 	cr->move_to (x+(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->set_line_width (SIDES);				// Thin right bar(8)
 	cr->move_to (x+w-(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
@@ -635,8 +635,8 @@ DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr&
 
 	inside = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
 
-	draw_corner (cr, inside, true, false, false);		// Top left inner corner (6)
-	draw_corner (cr, inside, true, true,  false);		// Top right inner corner (7)
+	draw_corner (cr, inside, true, false, false);		// Top left inner corner(6)
+	draw_corner (cr, inside, true, true,  false);		// Top right inner corner(7)
 
 	vRange.push_front ({shape, cont});
 }
@@ -663,23 +663,23 @@ DrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainer
 	const int& w = shape.w;
 	const int& h = shape.h;
 
-	draw_corner (cr, shape, true,  false, true);		// Top left corner (1)
-	draw_corner (cr, shape, true,  true,  true);		// Top right corner (3)
-	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
+	draw_corner (cr, shape, true,  false, true);		// Top left corner(1)
+	draw_corner (cr, shape, true,  true,  true);		// Top right corner(3)
+	draw_corner (cr, shape, false, false, true);		// Bottom left corner(9)
 
 	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
 
-	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->set_line_width (RADIUS);				// Thick top bar(2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->set_line_width (SIDES);				// Thin left bar(4)
 	cr->move_to (x+(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->set_line_width (SIDES);				// Thin right bar(8)
 	cr->move_to (x+w-(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
@@ -689,7 +689,7 @@ DrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainer
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
+	cr->move_to (x+SIDES, y+RADIUS);			// Tab block(5)
 	cr->rel_line_to (BLOCK_WIDTH+SIDES, 0);
 	cr->rel_line_to (0, h-RADIUS-SIDES);
 	cr->rel_line_to (-BLOCK_WIDTH+RADIUS-(SIDES*2), 0);
@@ -701,8 +701,8 @@ DrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainer
 	inside = { x+BLOCK_WIDTH+(SIDES*2), y+RADIUS, w-BLOCK_WIDTH-(SIDES*3), h-RADIUS-SIDES };
 
 	draw_corner (cr, inside, false, false, false);		// Bottom left inner corner (11)
-	draw_corner (cr, inside, true,  false, false);		// Top left inner corner (6)
-	draw_corner (cr, inside, true,  true,  false);		// Top right inner corner (7)
+	draw_corner (cr, inside, true,  false, false);		// Top left inner corner(6)
+	draw_corner (cr, inside, true,  true,  false);		// Top right inner corner(7)
 
 	tab = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
 
@@ -731,23 +731,23 @@ DrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerP
 	const int& w = shape.w;
 	const int& h = shape.h;
 
-	draw_corner (cr, shape, true,  false, true);		// Top left corner (1)
-	draw_corner (cr, shape, true,  true,  true);		// Top right corner (3)
-	draw_corner (cr, shape, false, false, true);		// Bottom left corner (9)
+	draw_corner (cr, shape, true,  false, true);		// Top left corner(1)
+	draw_corner (cr, shape, true,  true,  true);		// Top right corner(3)
+	draw_corner (cr, shape, false, false, true);		// Bottom left corner(9)
 
 	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
 
-	cr->set_line_width (RADIUS);				// Thick top bar (2)
+	cr->set_line_width (RADIUS);				// Thick top bar(2)
 	cr->move_to (x+RADIUS, y+(RADIUS/2));
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	cr->set_line_width (SIDES);				// Thin left bar (4)
+	cr->set_line_width (SIDES);				// Thin left bar(4)
 	cr->move_to (x+(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
 
-	cr->set_line_width (SIDES);				// Thin right bar (8)
+	cr->set_line_width (SIDES);				// Thin right bar(8)
 	cr->move_to (x+w-(SIDES/2), y+RADIUS);
 	cr->rel_line_to (0, h-(2*RADIUS));
 	cr->stroke();
@@ -757,7 +757,7 @@ DrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerP
 	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
 
-	cr->move_to (x+SIDES, y+RADIUS);			// Tab block (5)
+	cr->move_to (x+SIDES, y+RADIUS);			// Tab block(5)
 	cr->rel_line_to (TAB_WIDTH+SIDES, 0);
 	cr->rel_line_to (0, h-RADIUS-SIDES);
 	cr->rel_line_to (-TAB_WIDTH+RADIUS-(SIDES*2), 0);
@@ -769,8 +769,8 @@ DrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerP
 	inside = { x+TAB_WIDTH+(SIDES*2), y+RADIUS, w-TAB_WIDTH-(SIDES*3), h-RADIUS-SIDES };
 
 	draw_corner (cr, inside, false, false, false);		// Bottom left inner corner (11)
-	draw_corner (cr, inside, true,  false, false);		// Top left inner corner (6)
-	draw_corner (cr, inside, true,  true,  false);		// Top right inner corner (7)
+	draw_corner (cr, inside, true,  false, false);		// Top left inner corner(6)
+	draw_corner (cr, inside, true,  true,  false);		// Top right inner corner(7)
 
 	tab = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
 
@@ -987,7 +987,7 @@ DrawingArea::get_coords (int& x, int& y)
 		return false;		// Coords of DrawingArea within DParted's window
 	}
 
-	Rect r = get_rect (c);		// Size and shape of selected container
+	Rect r = get_rect(c);		// Size and shape of selected container
 	if (r.x < 0) {
 		return false;
 	}
@@ -1020,11 +1020,11 @@ DrawingArea::make_menu (void)
 {
 	Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
 
-	refActionGroup->add_action("edit",    sigc::mem_fun(*this, &DrawingArea::on_menu_file_popup_generic));
-	refActionGroup->add_action("process", sigc::mem_fun(*this, &DrawingArea::on_menu_file_popup_generic));
-	refActionGroup->add_action("remove",  sigc::mem_fun(*this, &DrawingArea::on_menu_file_popup_generic));
+	refActionGroup->add_action ("edit",    sigc::mem_fun (*this, &DrawingArea::on_menu_file_popup_generic));
+	refActionGroup->add_action ("process", sigc::mem_fun (*this, &DrawingArea::on_menu_file_popup_generic));
+	refActionGroup->add_action ("remove",  sigc::mem_fun (*this, &DrawingArea::on_menu_file_popup_generic));
 
-	insert_action_group("examplepopup", refActionGroup);
+	insert_action_group ("examplepopup", refActionGroup);
 
 	m_refBuilder = Gtk::Builder::create();
 
@@ -1049,29 +1049,29 @@ DrawingArea::make_menu (void)
 		"</interface>";
 
 	try {
-		m_refBuilder->add_from_string(ui_info);
-	} catch(const Glib::Error& ex) {
+		m_refBuilder->add_from_string (ui_info);
+	} catch (const Glib::Error& ex) {
 		std::cerr << "building menus failed: " << ex.what();
 	}
 
 	//Get the menu:
-	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object("menu-examplepopup");
-	Glib::RefPtr<Gio::Menu> gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic(object);
+	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object ("menu-examplepopup");
+	Glib::RefPtr<Gio::Menu> gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic (object);
 	if (!gmenu) {
-		g_warning("GMenu not found");
+		g_warning ("GMenu not found");
 	}
 
-	m_pMenuPopup = new Gtk::Menu(gmenu);
+	m_pMenuPopup = new Gtk::Menu (gmenu);
 
 	if (m_pMenuPopup && (!m_pMenuPopup->get_attach_widget())) {
-		m_pMenuPopup->attach_to_widget(*this);
+		m_pMenuPopup->attach_to_widget (*this);
 	}
 
 	m_pMenuPopup->signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
 
 	// Lambdas to let us know when the popup menu is in use.
-	m_pMenuPopup->signal_show().connect([this] { menu_active = true;  });
-	m_pMenuPopup->signal_hide().connect([this] { menu_active = false; });
+	m_pMenuPopup->signal_show().connect ([this] { menu_active = true;  });
+	m_pMenuPopup->signal_hide().connect ([this] { menu_active = false; });
 
 }
 
@@ -1115,7 +1115,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
 	layout->set_font_description (font);
 
-	std::string title = "<b>" + cont->get_device_name() + "</b> &#8211; " + get_size (cont->bytes_size) + " <small>(" + std::to_string(100*cont->bytes_used/cont->bytes_size) + "% used)</small>";
+	std::string title = "<b>" + cont->get_device_name() + "</b> &#8211; " + get_size (cont->bytes_size) + " <small>(" + std::to_string (100*cont->bytes_used/cont->bytes_size) + "% used)</small>";
 
 	// https://developer.gnome.org/pango/stable/PangoMarkupFormat.html
 	layout->set_markup (title);
@@ -1302,7 +1302,7 @@ DrawingArea::get_focus (int x, int y)
  * on_textview_query_tooltip
  */
 bool
-DrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
+DrawingArea::on_textview_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
 	std::stringstream ss;
 
@@ -1314,8 +1314,8 @@ DrawingArea::on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, cons
 		//ss << "<b>" << c->name << "</b> (" << c->uuid << ")";
 		ss << "<b>" << c->get_tooltip() << "</b>";
 
-		tooltip->set_markup(ss.str());
-		tooltip->set_icon_from_icon_name("dialog-information", Gtk::ICON_SIZE_MENU);
+		tooltip->set_markup (ss.str());
+		tooltip->set_icon_from_icon_name ("dialog-information", Gtk::ICON_SIZE_MENU);
 
 		return true;
 	}
@@ -1491,7 +1491,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		next.x += offset;
 		next.w = size;
 
-		draw_container(cr, c, next);
+		draw_container (cr, c, next);
 	}
 	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
 
@@ -1524,7 +1524,7 @@ DrawingArea::get_rect (GfxContainerPtr g)
  * on_keypress
  */
 bool
-DrawingArea::on_keypress(GdkEventKey* ev)
+DrawingArea::on_keypress (GdkEventKey* ev)
 {
 	bool redraw  = false;
 	bool handled = false;
@@ -1549,24 +1549,24 @@ DrawingArea::on_keypress(GdkEventKey* ev)
 	int y = 0;
 	switch (ev->keyval) {
 		case GDK_KEY_Menu:	// 65383 (0xFF67)
-			get_coords(x, y);
+			get_coords (x, y);
 			popup_menu (x, y);
 			handled = true;
 			break;
 		case GDK_KEY_Left:	// 65361 (0xFF51)
-			redraw = dp->set_focus (left (c));
+			redraw = dp->set_focus (left(c));
 			handled = true;
 			break;
 		case GDK_KEY_Right:	// 65363 (0xFF53)
-			redraw = dp->set_focus (right (c));
+			redraw = dp->set_focus (right(c));
 			handled = true;
 			break;
 		case GDK_KEY_Up:	// 65362 (0xFF52)
-			redraw = dp->set_focus (up (c));
+			redraw = dp->set_focus (up(c));
 			handled = true;
 			break;
 		case GDK_KEY_Down:	// 65364 (0xFF54)
-			redraw = dp->set_focus (down (c));
+			redraw = dp->set_focus (down(c));
 			handled = true;
 			break;
 	}
@@ -1597,7 +1597,7 @@ DrawingArea::on_focus_in (GdkEventFocus* event)
 		//std::cout << "No focus" << std::endl;
 		c = get_focus (0, 0);
 		if (c) {
-			dp->set_focus (c);
+			dp->set_focus(c);
 		}
 	}
 
@@ -1668,7 +1668,7 @@ DrawingArea::left (GfxContainerPtr c)
 
 		c = c->get_left();
 
-		if (is_visible (c))
+		if (is_visible(c))
 			return c;
 
 	} while (c);
@@ -1694,7 +1694,7 @@ DrawingArea::right (GfxContainerPtr c)
 		if (get_rect(c).y > y)	// We've changed rows
 			return nullptr;
 
-		if (is_visible (c))
+		if (is_visible(c))
 			return c;
 
 	} while (c);

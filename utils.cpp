@@ -100,9 +100,9 @@ execute_command (const std::string& command, std::vector<std::string>& output)
 
 	/*
 	   XXX correct way to check return code
-	int ret = pclose(fd);
-	if(WIFEXITED(ret))
-		  log_info("%d\n", WEXITSTATUS(ret));
+	int ret = pclose (fd);
+	if (WIFEXITED(ret))
+		  log_info ("%d\n", WEXITSTATUS(ret));
 	*/
 	int retcode = pclose (file);
 	//log_info ("command %s returned %d\n", command.c_str(), retcode);
@@ -447,7 +447,7 @@ read_uuid1 (unsigned char* buffer)
 	for (int i = 0; i < 16; ++i) {
 		if ((i == 4) || (i == 6) || (i == 8) || (i == 10))
 			ss << "-";
-		ss << std::setw (2) << static_cast<unsigned>(buffer[i]);
+		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
 	return ss.str();
@@ -464,7 +464,7 @@ read_uuid2 (unsigned char* buffer)
 	ss << std::setfill ('0') << std::hex;
 
 	for (int i = 0; i < 8; ++i) {
-		ss << std::setw (2) << static_cast<unsigned>(buffer[i]);
+		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
 	return ss.str();
@@ -483,7 +483,7 @@ read_uuid3 (unsigned char* buffer)
 	for (int i = 0; i < 4; ++i) {
 		if (i == 2)
 			ss << "-";
-		ss << std::setw (2) << static_cast<unsigned>(buffer[i]);
+		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
 	return ss.str();
@@ -536,28 +536,28 @@ dump_hex2 (void* buf, int start, int length)
 #endif
 
 		if (off == s)
-			log_info("	%6.6x ", start);
+			log_info ("	%6.6x ", start);
 		else
-			log_info("	%6.6x ", off);
+			log_info ("	%6.6x ", off);
 
 		for (i = 0; i < 16; i++) {
 			if (i == 8)
-				log_info(" -");
+				log_info (" -");
 			if (((off+i) >= start) && ((off+i) < (start+length)))
-				log_info(" %02X", mem[off+i]);
+				log_info (" %02X", mem[off+i]);
 			else
-				log_info("   ");
+				log_info ("   ");
 		}
-		log_info("  ");
+		log_info ("  ");
 		for (i = 0; i < 16; i++) {
 			if (((off+i) < start) || ((off+i) >= (start+length)))
-				log_info(" ");
-			else if (isprint(mem[off + i]))
-				log_info("%c", mem[off + i]);
+				log_info (" ");
+			else if (isprint (mem[off + i]))
+				log_info ("%c", mem[off + i]);
 			else
-				log_info(".");
+				log_info (".");
 		}
-		log_info("\n");
+		log_info ("\n");
 	}
 }
 

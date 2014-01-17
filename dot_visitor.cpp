@@ -353,7 +353,7 @@ dot_block (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_container (b);
+	output << dot_container(b);
 
 	// no specifics for now
 
@@ -373,7 +373,7 @@ dot_disk (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_block (d);
+	output << dot_block(d);
 
 	//output << dot_row ("hw_cylinders",   hw_cylinders);
 	//output << dot_row ("hw_heads",       hw_heads);
@@ -448,7 +448,7 @@ dot_loop (std::shared_ptr<T> t)
 
 	// Loop device
 #if 1
-	mm.str("");
+	mm.str ("");
 	mm << l->loop_major << ":" << l->loop_minor;
 	output << dot_row ("loop maj:min",	mm);
 #else
@@ -482,7 +482,7 @@ dot_table (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_container (p);
+	output << dot_container(p);
 
 	// no specifics for now
 
@@ -522,7 +522,7 @@ dot_lvm_table (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_table(std::dynamic_pointer_cast<Table> (t));
+	output << dot_table (std::dynamic_pointer_cast<Table>(t));
 
 	output << dot_row ("metadata_size", t->metadata_size);
 	output << dot_row ("pv_attr",       t->pv_attr);
@@ -544,7 +544,7 @@ dot_md_table (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_table(std::dynamic_pointer_cast<Table> (t));
+	output << dot_table (std::dynamic_pointer_cast<Table>(t));
 
 	output << dot_row ("vol_uuid",    t->vol_uuid);
 	output << dot_row ("vol_name",    t->vol_name);
@@ -614,7 +614,7 @@ dot_partition (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_container (p);
+	output << dot_container(p);
 
 	// no specifics for now
 
@@ -653,7 +653,7 @@ dot_whole (std::shared_ptr<T> t)
 	std::stringstream output;
 	unsigned int count = w->segments.size();
 
-	output << dot_container(std::dynamic_pointer_cast<Container> (w));
+	output << dot_container (std::dynamic_pointer_cast<Container>(w));
 
 	if (count > 0) {
 		output << dot_row ("segments", count);
@@ -947,7 +947,7 @@ DotVisitor::visit (ContainerPtr c)
 	output << "obj_" << (void*) c.get() << " [fillcolor=\"#c0c0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << "</b></font></td></tr>\n";
 
-	output << dot_container (c);
+	output << dot_container(c);
 
 	output << "</table>>];\n";
 
@@ -979,7 +979,7 @@ DotVisitor::visit (LoopPtr l)
 
 	std::stringstream mm;
 
-	output << dot_block(std::dynamic_pointer_cast<Block> (l));
+	output << dot_block (std::dynamic_pointer_cast<Block>(l));
 
 	std::string flags;
 	if (l->autoclear)	flags += ", autoclear";
@@ -1005,7 +1005,7 @@ DotVisitor::visit (LoopPtr l)
 
 	// Loop device
 #if 1
-	mm.str("");
+	mm.str ("");
 	mm << l->loop_major << ":" << l->loop_minor;
 	output << dot_row ("loop maj:min",	mm);
 #else
@@ -1147,7 +1147,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 			c->name = "UNKNOWN";
 		}
 
-		std::string colour = get_colour (c);
+		std::string colour = get_colour(c);
 		std::string missing;
 		if (c->missing) {
 			missing = " MISSING";
@@ -1156,7 +1156,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 		dot << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << missing << "</b></font></td></tr>\n";
 
-		if (type == "block")         { dot << dot_block         (c); }
+		if (type == "block")         { dot << dot_block        (c); }
 		//...
 
 		dot << "</table>>];\n";
@@ -1172,7 +1172,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 		}
 
 #if 0
-		if (c->is_a("Whole")) {
+		if (c->is_a ("Whole")) {
 			WholePtr w = std::dynamic_pointer_cast<Whole>(c);
 			if (w) {
 				for (auto w2 : w->segments) {
@@ -1183,7 +1183,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 #endif
 
 #if 1
-		if (c->is_a("LvmMetadata")) {
+		if (c->is_a ("LvmMetadata")) {
 			LvmVolumePtr m = std::dynamic_pointer_cast<LvmVolume>(c);
 			if (m && m->sibling) {
 				dot << "obj_" << (void*) m->sibling.get() << " -> obj_" << (void*) m.get() << " [constraint=false style=dashed dir=none];\n";
@@ -1192,7 +1192,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 #endif
 
 #if 1
-		if (c->is_a("LvmVolume")) {
+		if (c->is_a ("LvmVolume")) {
 			LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume>(c);
 			if (v) {
 				//log_info ("VOLUME %s, %ld\n", v->type.back().c_str(), v->subvols.size());

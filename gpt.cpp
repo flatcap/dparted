@@ -58,9 +58,9 @@ bool
 Gpt::accept (Visitor& v)
 {
 	GptPtr g = std::dynamic_pointer_cast<Gpt> (get_smart());
-	if (!v.visit (g))
+	if (!v.visit(g))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -94,7 +94,7 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 	g->uuid = read_uuid1 (buffer+568);
 
 	ContainerPtr c(g);
-	parent->add_child (c); //RAR new
+	parent->add_child(c); //RAR new
 
 	// Assumption: 1MiB alignment (for now)
 	// Should reserved bits be allocated after actual partitions?
@@ -128,7 +128,7 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 	p = new Partition();
 	p->bytes_size = g->bytes_size / 2;
 	p->parent_offset = g->bytes_size / 4;
-	g->add_child (p);
+	g->add_child(p);
 	FilesystemPtr fs = Filesystem::create();
 	fs->bytes_size = p->bytes_size;
 	fs->parent_offset = 0;
@@ -177,8 +177,8 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 		log_debug ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
 #endif
 		ContainerPtr c(p);
-		g->add_child (c);
-		main_app->queue_add_probe (c);
+		g->add_child(c);
+		main_app->queue_add_probe(c);
 	}
 
 #if 0

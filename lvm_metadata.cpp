@@ -49,9 +49,9 @@ bool
 LvmMetadata::accept (Visitor& v)
 {
 	LvmMetadataPtr l = std::dynamic_pointer_cast<LvmMetadata> (get_smart());
-	if (!v.visit (l))
+	if (!v.visit(l))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 

@@ -60,9 +60,9 @@ bool
 MdGroup::accept (Visitor& v)
 {
 	MdGroupPtr m = std::dynamic_pointer_cast<MdGroup> (get_smart());
-	if (!v.visit (m))
+	if (!v.visit(m))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 

@@ -40,7 +40,7 @@ public:
 
 	void set_data (GfxContainerPtr& c);
 
-	bool on_keypress(GdkEventKey* ev);
+	bool on_keypress (GdkEventKey* ev);
 protected:
 	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
 
@@ -55,7 +55,7 @@ protected:
 	bool on_timeout (int timer_number);
 #endif
 	GfxContainerPtr get_focus (int x, int y);
-	bool on_textview_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
+	bool on_textview_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 
 private:
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape);

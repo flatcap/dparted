@@ -67,9 +67,9 @@ bool
 Msdos::accept (Visitor& v)
 {
 	MsdosPtr m = std::dynamic_pointer_cast<Msdos> (get_smart());
-	if (!v.visit (m))
+	if (!v.visit(m))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -157,7 +157,7 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 	m->parent_offset = 0;
 
 	ContainerPtr c(m);
-	parent->add_child (c);	//RAR new
+	parent->add_child(c);	//RAR new
 
 	std::vector<struct partition> vp;
 	count = m->read_table (buffer, bufsize, 0, vp);
@@ -173,7 +173,7 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
 	c = res1;
-	m->add_child (c);		// change to add_reserved?
+	m->add_child(c);		// change to add_reserved?
 
 	for (unsigned int i = 0; i < vp.size(); i++) {
 #if 0
@@ -214,9 +214,9 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 			c->parent_offset = vp[i].start;
 			c->device = part_name.str();
 
-			main_app->queue_add_probe (c);
+			main_app->queue_add_probe(c);
 		}
-		m->add_child (c);
+		m->add_child(c);
 	}
 
 	m->fill_space();		// optional

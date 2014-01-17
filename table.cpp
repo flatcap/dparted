@@ -59,9 +59,9 @@ bool
 Table::accept (Visitor& v)
 {
 	TablePtr t = std::dynamic_pointer_cast<Table> (get_smart());
-	if (!v.visit (t))
+	if (!v.visit(t))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -141,7 +141,7 @@ Table::fill_space (void)
 			m->bytes_size = (c->parent_offset - upto);
 			m->bytes_used = 0;
 
-			vm.push_back (m);
+			vm.push_back(m);
 
 			upto = c->parent_offset + c->bytes_size;
 		}
@@ -154,12 +154,12 @@ Table::fill_space (void)
 		m->parent_offset = upto;
 		m->bytes_size = (bytes_size - upto);
 		m->bytes_used = 0;
-		vm.push_back (m);
+		vm.push_back(m);
 	}
 
 #if 1
 	for (auto i : vm) {
-		add_child (i);			// add_free()
+		add_child(i);			// add_free()
 	}
 #endif
 

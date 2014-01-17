@@ -132,10 +132,10 @@ GfxContainer::init (ContainerPtr c)
 		std::string i  = theme->get_config (path, name, "icon");
 		std::string u  = theme->get_config (path, name, "usage");
 
-		colour     = process_colour (c);
+		colour     = process_colour(c);
 		background = process_colour (bg);
-		icon       = process_icon   (i);
-		usage      = process_bool   (u);
+		icon       = process_icon  (i);
+		usage      = process_bool  (u);
 
 #if 0
 		std::cout << "Config\n";
@@ -149,7 +149,7 @@ GfxContainer::init (ContainerPtr c)
 
 	} catch (const std::string& e) {
 		std::cout << "Exception: " << e << std::endl;
-		exit (1);
+		exit(1);
 	}
 
 	label = process_label (label_template);

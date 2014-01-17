@@ -74,7 +74,7 @@ main (int argc, char* argv[])
 		}
 	}
 
-	std::vector<std::string> files(argv + 1, argv + argc);
+	std::vector<std::string> files (argv + 1, argv + argc);
 
 	ContainerPtr top_level;
 
@@ -89,7 +89,7 @@ main (int argc, char* argv[])
 	}
 
 	if (list || props || dot) {
-		top_level = main_app->scan(files);
+		top_level = main_app->scan (files);
 	}
 
 	if (list && top_level) {
@@ -127,7 +127,7 @@ main (int argc, char* argv[])
 	if (gui_app) {
 #if 0
 		if (!top_level)
-			top_level = main_app->scan(files);
+			top_level = main_app->scan (files);
 #endif
                 gui_app->run (0, nullptr);
 	}

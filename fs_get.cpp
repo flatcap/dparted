@@ -77,7 +77,7 @@ get_btrfs (unsigned char* buffer, int bufsize)
 	f->bytes_size = *(long*) (buffer + 0x10070);
 	f->bytes_used = *(long*) (buffer + 0x10078);
 
-	get_btrfs_usage (f);
+	get_btrfs_usage(f);
 	return f;
 }
 
@@ -95,7 +95,7 @@ get_ext2 (unsigned char* buffer, int bufsize)
 
 	get_ext_common (f, buffer, bufsize);
 
-	get_ext2_usage (f);
+	get_ext2_usage(f);
 	return f;
 }
 
@@ -113,7 +113,7 @@ get_ext3 (unsigned char* buffer, int bufsize)
 
 	get_ext_common (f, buffer, bufsize);
 
-	get_ext3_usage (f);
+	get_ext3_usage(f);
 	return f;
 }
 
@@ -131,7 +131,7 @@ get_ext4 (unsigned char* buffer, int bufsize)
 
 	get_ext_common (f, buffer, bufsize);
 
-	get_ext4_usage (f);
+	get_ext4_usage(f);
 	return f;
 }
 
@@ -153,7 +153,7 @@ get_ntfs (unsigned char* buffer, int bufsize)
 	f->uuid = uuid;
 	f->bytes_size = size;
 
-	get_ntfs_usage (f);
+	get_ntfs_usage(f);
 	return f;
 }
 
@@ -181,7 +181,7 @@ get_reiserfs (unsigned char* buffer, int bufsize)
 
 	//log_info ("reiser: %s, %s, %ld, %ld\n", f->uuid.c_str(), f->label.c_str(), f->bytes_size, f->bytes_used);
 
-	get_reiserfs_usage (f);
+	get_reiserfs_usage(f);
 	return f;
 }
 
@@ -210,7 +210,7 @@ get_swap (unsigned char* buffer, int bufsize)
 	f->uuid = uuid;
 	f->bytes_size = size;
 
-	get_swap_usage (f);
+	get_swap_usage(f);
 	return f;
 }
 
@@ -226,7 +226,7 @@ get_vfat (unsigned char* buffer, int bufsize)
 	FilesystemPtr f  = Filesystem::create();
 	f->declare ("vfat");
 
-	f->name = std::string ((char*)(buffer+0x30), 14);
+	f->name = std::string ((char*) (buffer+0x30), 14);
 	if (!f->name.empty() && ((f->name[0] < 'A') || (f->name[0] > 'z')))
 		f->name.clear();//XXX
 
@@ -266,7 +266,7 @@ get_vfat (unsigned char* buffer, int bufsize)
 	//log_info ("res = %d, sect/fat = %d\n", reserved, sect_fat);
 #endif
 
-	get_vfat_usage (f);
+	get_vfat_usage(f);
 	return f;
 }
 
@@ -296,7 +296,7 @@ get_xfs (unsigned char* buffer, int bufsize)
 	f->bytes_size = blocks_total * block_size;
 	f->bytes_used = (blocks_total - blocks_free) * block_size;
 
-	get_xfs_usage (f);
+	get_xfs_usage(f);
 	return f;
 }
 

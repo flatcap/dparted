@@ -338,7 +338,7 @@ TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeViewColum
 
 		c = row[m_Columns.col_container];
 		std::cout << typeid (row[m_Columns.col_container]).name() << "\n";
-		std::cout << typeid (c).name() << "\n";
+		std::cout << typeid(c).name() << "\n";
 		std::cout << "Name=" << c->name << "\n";
 	}
 #endif

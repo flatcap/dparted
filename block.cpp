@@ -69,9 +69,9 @@ bool
 Block::accept (Visitor& v)
 {
 	BlockPtr b = std::dynamic_pointer_cast<Block> (get_smart());
-	if (!v.visit (b))
+	if (!v.visit(b))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 

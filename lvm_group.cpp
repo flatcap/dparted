@@ -73,9 +73,9 @@ bool
 LvmGroup::accept (Visitor& v)
 {
 	LvmGroupPtr l = std::dynamic_pointer_cast<LvmGroup> (get_smart());
-	if (!v.visit (l))
+	if (!v.visit(l))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -139,33 +139,33 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 
 		// Find our relations
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
-		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup>(pieces->find_uuid (vg_uuid));
+		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup> (pieces->find_uuid (vg_uuid));
 		if (!g) {
 			g = LvmGroup::create();
 			g->name    = tags["VG_NAME"];
 			g->uuid    = vg_uuid;
 			//g->missing = true;
 			ContainerPtr c(g);
-			pieces->just_add_child (c);
+			pieces->just_add_child(c);
 		}
 
 		std::string pv_uuid = tags["LVM2_PV_UUID"];
-		LvmTablePtr t = std::dynamic_pointer_cast<LvmTable>(pieces->find_uuid (pv_uuid));
+		LvmTablePtr t = std::dynamic_pointer_cast<LvmTable> (pieces->find_uuid (pv_uuid));
 		if (!t) {
 			log_info ("new table %s [SHOULDN'T HAPPEN]\n", pv_uuid.c_str());
 			t = LvmTable::create();
 			t->uuid    = pv_uuid;
 			//t->missing = true;
 			ContainerPtr c(t);
-			pieces->just_add_child (c);
+			pieces->just_add_child(c);
 		}
 
 		ContainerPtr c(t);
 		g->add_segment(c);	// Connect the LvmGroup to its constituent LvmTables
-		//XXX deps.insert(std::make_pair(g->uuid,t->uuid));
+		//XXX deps.insert (std::make_pair (g->uuid,t->uuid));
 
 		std::string lv_uuid = tags["LVM2_LV_UUID"];
-		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume>(pieces->find_uuid (lv_uuid));
+		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (pieces->find_uuid (lv_uuid));
 		if (!v) {
 			std::string lv_attr = tags["LVM2_LV_ATTR"];
 			if ((lv_attr[0] == 'e') || (lv_attr[0] == 'l')) {
@@ -190,7 +190,7 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 
 			if (lv_attr[0] == '-') {
 				// Not an image.  Therefore, it's a top-level entity.
-				deps.insert(std::make_pair(g->uuid,v->uuid));
+				deps.insert (std::make_pair (g->uuid,v->uuid));
 			}
 		}
 
@@ -283,7 +283,7 @@ lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
-		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup>(pieces->find_uuid(vg_uuid));
+		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup>(pieces->find_uuid (vg_uuid));
 		if (!g) {
 			log_info ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
 			g = LvmGroup::create();
@@ -361,7 +361,7 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
-		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup>(pieces->find_uuid (vg_uuid));
+		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup> (pieces->find_uuid (vg_uuid));
 		if (!g) {
 			log_info ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
 			g = LvmGroup::create();
@@ -372,7 +372,7 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		}
 
 		std::string lv_uuid = tags["LVM2_LV_UUID"];
-		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume>(pieces->find_uuid (lv_uuid));
+		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (pieces->find_uuid (lv_uuid));
 		if (!v) {
 			std::string segtype = tags["LVM2_SEGTYPE"];
 			//log_info ("Type = %s\n", segtype.c_str());
@@ -403,7 +403,7 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 
 			// A volume discovered here doesn't have any physical parts.
 			// Therefore, it's a top-level entity.
-			deps.insert(std::make_pair(g->uuid,v->uuid));
+			deps.insert (std::make_pair (g->uuid,v->uuid));
 		}
 
 		// Container
@@ -412,7 +412,7 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 		v->bytes_size		= tags["LVM2_LV_SIZE"];
 
 		// LvmVolume
-		v->lv_attr		= tags["LVM2_LV_ATTR"];		// m(e)tadata (i)mage, (r)aid
+		v->lv_attr		= tags["LVM2_LV_ATTR"];		// m(e)tadata(i)mage,(r)aid
 		v->kernel_major		= tags["LVM2_LV_KERNEL_MAJOR"];
 		v->kernel_minor		= tags["LVM2_LV_KERNEL_MINOR"];
 
@@ -455,7 +455,7 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 
 		for (auto d : device_list) {
 			//log_info ("DEP %s -> %s\n", v->uuid.c_str(), d.c_str());
-			deps.insert(std::make_pair(v->uuid,d));
+			deps.insert (std::make_pair (v->uuid,d));
 
 			//log_info ("attr = %s\n", v->lv_attr.c_str());
 			// Add a metadata dependency
@@ -467,11 +467,11 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 				if (pos != std::string::npos) {
 					dep_name.replace (pos, 8, "_rmeta_");
 					//log_debug ("ADD XXX: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());
-					deps.insert(std::make_pair(v->uuid,dep_name));
+					deps.insert (std::make_pair (v->uuid,dep_name));
 
 					// add a sibling dependency (image <-> metadata)
 					//log_info ("SIBLING: %s <-> %s\n", dep_name.c_str(), d.c_str());
-					deps.insert(std::make_pair(dep_name, d));
+					deps.insert (std::make_pair (dep_name, d));
 				}
 			}
 		}
@@ -480,7 +480,7 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 			// Add an extra dependency for mirrors
 			std::string dep_name = v->mirror_log + "(0)";
 			//log_debug ("ADD DEP: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());
-			deps.insert(std::make_pair(v->uuid,dep_name));
+			deps.insert (std::make_pair (v->uuid,dep_name));
 		}
 	}
 
@@ -499,13 +499,13 @@ lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 
 		//log_info ("DEPS: %s -> %s\n", parent_id.c_str(), child_id.c_str());
 
-		ContainerPtr parent = pieces->find(parent_id);
+		ContainerPtr parent = pieces->find (parent_id);
 		if (!parent) {
 			log_error ("\tcan't find parent: %s\n", parent_id.c_str());
 			continue;
 		}
 
-		ContainerPtr child  = pieces->find(child_id);
+		ContainerPtr child  = pieces->find (child_id);
 		if (!child) {
 			log_error ("\tcan't find child: %s\n", child_id.c_str());
 			continue;
@@ -546,7 +546,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	//log_info ("top_level: %ld tables\n", t.size());
 	for (auto i : t) {
-		pieces->just_add_child (i);
+		pieces->just_add_child(i);
 	}
 
 	lvm_pvs (pieces, deps);
@@ -572,7 +572,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 		if (i->whole)				// we're part of something bigger
 			continue;
 		//log_info ("Q: [%s] %s: %s\n", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
-		main_app->queue_add_probe (i);
+		main_app->queue_add_probe(i);
 	}
 #endif
 #if 1
@@ -582,7 +582,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	for (auto i : g) {
 		//std::cout << '\t' << i->uuid << '\t' << i << '\n';
-		top_level->just_add_child (i);
+		top_level->just_add_child(i);
 	}
 #endif
 }

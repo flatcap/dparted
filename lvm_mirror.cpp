@@ -52,9 +52,9 @@ bool
 LvmMirror::accept (Visitor& v)
 {
 	LvmMirrorPtr l = std::dynamic_pointer_cast<LvmMirror> (get_smart());
-	if (!v.visit (l))
+	if (!v.visit(l))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -73,7 +73,7 @@ LvmMirror::add_child (ContainerPtr child)
 
 
 #if 0
-	bool isvol = child->is_a("LvmVolume");
+	bool isvol = child->is_a ("LvmVolume");
 	if (isvol) {
 		add_segment (child);
 		child->parent = this;

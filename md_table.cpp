@@ -62,9 +62,9 @@ bool
 MdTable::accept (Visitor& v)
 {
 	MdTablePtr m = std::dynamic_pointer_cast<MdTable> (get_smart());
-	if (!v.visit (m))
+	if (!v.visit(m))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -116,7 +116,7 @@ MdTable::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* bu
 	std::string vol_uuid = read_uuid_string (buffer + 16);
 	//log_info ("vol uuid = %s\n", vol_uuid.c_str());
 
-	std::string vol_name ((char*)(buffer + 32));
+	std::string vol_name ((char*) (buffer + 32));
 	//log_info ("vol name = %s\n", vol_name.c_str());
 
 	int raid_type   = buffer[72];
@@ -126,17 +126,17 @@ MdTable::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* bu
 	int raid_disks = buffer[92];
 	//log_info ("%d raid disks\n", raid_disks);
 
-	int chunk_size = *(int*)(buffer + 88);
+	int chunk_size = *(int*) (buffer + 88);
 	//log_info ("chunk size = %d\n", chunk_size);
 
-	long chunks_used = *(long*)(buffer + 80);
-	//log_info ("chunks used = %ld (%s)\n", chunks_used, get_size(chunk_size * chunks_used).c_str());
+	long chunks_used = *(long*) (buffer + 80);
+	//log_info ("chunks used = %ld (%s)\n", chunks_used, get_size (chunk_size * chunks_used).c_str());
 
 	std::string dev_uuid = read_uuid_string (buffer + 168);
 	//log_info ("dev uuid = %s\n", dev_uuid.c_str());
 
-	long data_offset = *(long*)(buffer + 128) * 512;
-	long data_size   = *(long*)(buffer + 136) * 512;
+	long data_offset = *(long*) (buffer + 128) * 512;
+	long data_size   = *(long*) (buffer + 136) * 512;
 
 	//log_info ("data offset/size = %ld (%s), %ld (%s)\n", data_offset, get_size (data_offset).c_str(), data_size, get_size (data_size).c_str());
 
@@ -156,7 +156,7 @@ MdTable::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* bu
 	t->data_size		= data_size;
 
 	ContainerPtr c(t);
-	parent->add_child (c);
+	parent->add_child(c);
 
 	return t;
 }

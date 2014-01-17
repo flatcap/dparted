@@ -69,11 +69,11 @@ get_value (const libconfig::Setting& s)
 				return "false";
 			return "something";
 		case libconfig::Setting::TypeInt:
-			return std::to_string (int (s));
+			return std::to_string (int(s));
 		case libconfig::Setting::TypeInt64:
-			return std::to_string (long (s));
+			return std::to_string (long(s));
 		case libconfig::Setting::TypeFloat:
-			return std::to_string (float (s));
+			return std::to_string (float(s));
 		default:
 			return "unknown";
 	}
@@ -120,11 +120,11 @@ ConfigFile::read_file (const std::string& filename)
 	libconfig::Config cfg;
 
 	try {
-		cfg.readFile(filename.c_str());
-	} catch(const libconfig::FileIOException& fioex) {
+		cfg.readFile (filename.c_str());
+	} catch (const libconfig::FileIOException& fioex) {
 		std::cout << "I/O error while reading file." << std::endl;
 		return false;
-	} catch(const libconfig::ParseException& pex) {
+	} catch (const libconfig::ParseException& pex) {
 		std::cout << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
 		return false;
 	}

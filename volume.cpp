@@ -52,8 +52,8 @@ bool
 Volume::accept (Visitor& v)
 {
 	VolumePtr p = std::dynamic_pointer_cast<Volume> (get_smart());
-	if (!v.visit (p))
+	if (!v.visit(p))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 

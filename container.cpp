@@ -86,11 +86,11 @@ bool
 Container::visit_children (Visitor& v)
 {
 	ContainerPtr c = get_smart();
-	if (!v.visit_enter (c))
+	if (!v.visit_enter(c))
 		return false;
 
 	for (auto c : children) {
-		if (!c->accept (v))
+		if (!c->accept(v))
 			return false;
 	}
 
@@ -107,9 +107,9 @@ bool
 Container::accept (Visitor& v)
 {
 	ContainerPtr c = get_smart();
-	if (!v.visit (c))
+	if (!v.visit(c))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -364,7 +364,7 @@ Container::find_type (const std::string& type, std::vector<ContainerPtr>& result
 {
 	if (is_a (type)) {
 		ContainerPtr c = get_smart();
-		results.push_back (c);
+		results.push_back(c);
 	}
 
 	for (auto i : children) {
@@ -444,7 +444,7 @@ Container::get_buffer (long offset, long size)
 {
 	//XXX validate offset and size against device size
 
-	//log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s\n", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size(size).c_str());
+	//log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s\n", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
 
 	//if (mmaps.size() > 0) log_info ("%ld mmaps\n", mmaps.size());
 	for (auto m : mmaps) {
@@ -456,7 +456,7 @@ Container::get_buffer (long offset, long size)
 		//log_info ("mmap: %ld, %ld, %p (%ld)\n", o, s, p, m.use_count());
 
 		if ((offset == o) && (size <= s)) {
-			//log_info ("mmap match: ask (%ld,%s), found (%ld,%s)\n", offset, get_size(size).c_str(), o, get_size(s).c_str());
+			//log_info ("mmap match: ask (%ld,%s), found (%ld,%s)\n", offset, get_size (size).c_str(), o, get_size(s).c_str());
 			return (unsigned char*) p;
 		}
 	}
@@ -491,7 +491,7 @@ Container::get_buffer (long offset, long size)
 		close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
-	//log_debug ("mmap created: %p, device %s, offset %ld, size %s\n", buf, device.c_str(), offset, get_size(size).c_str());
+	//log_debug ("mmap created: %p, device %s, offset %ld, size %s\n", buf, device.c_str(), offset, get_size (size).c_str());
 
 	insert (offset, size, buf);
 
@@ -540,13 +540,13 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 		<< '"' << c->device << '"' << "(" << c->fd << "),"
 #if 0
 		<< " S:" //<< c->bytes_size
-						<< "(" << get_size(c->bytes_size)    << "), "
+						<< "(" << get_size (c->bytes_size)    << "), "
 		<< " U:" //<< c->bytes_used
-						<< "(" << get_size(c->bytes_used)    << "), "
+						<< "(" << get_size (c->bytes_used)    << "), "
 		<< " F:" //<<   bytes_free
-						<< "(" << get_size(  bytes_free)    << "), "
+						<< "(" << get_size (   bytes_free)    << "), "
 		<< " P:" //<< c->parent_offset
-						<< "(" << get_size(c->parent_offset) << "), "
+						<< "(" << get_size (c->parent_offset) << "), "
 #endif
 		<< " rc: " << c.use_count()
 		;
@@ -620,7 +620,7 @@ void deleter (Mmap* m)
 void
 Container::insert (long offset, long size, void* ptr)
 {
-	mmaps.insert (MmapPtr(new Mmap (offset, size, ptr), deleter));
+	mmaps.insert (MmapPtr (new Mmap (offset, size, ptr), deleter));
 }
 
 

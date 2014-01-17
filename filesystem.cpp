@@ -62,9 +62,9 @@ bool
 Filesystem::accept (Visitor& v)
 {
 	FilesystemPtr f = std::dynamic_pointer_cast<Filesystem> (get_smart());
-	if (!v.visit (f))
+	if (!v.visit(f))
 		return false;
-	return visit_children (v);
+	return visit_children(v);
 }
 
 
@@ -109,7 +109,7 @@ Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	if (f) {
 		//log_info ("volume: %s (%s), child: %s\n", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
 		ContainerPtr c(f);
-		parent->add_child (c);
+		parent->add_child(c);
 	}
 
 	return f;
