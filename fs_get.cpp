@@ -227,6 +227,9 @@ get_vfat (unsigned char* buffer, int bufsize)
 	f->declare ("vfat");
 
 	f->name = std::string ((char*)(buffer+0x30), 14);
+	if (!f->name.empty() && ((f->name[0] < 'A') || (f->name[0] > 'z')))
+		f->name.clear();//XXX
+
 	f->uuid = read_uuid3 (buffer+0x1C);
 
 	long sectors = *(short int*) (buffer + 0x13);
