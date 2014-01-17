@@ -215,8 +215,9 @@ DParted::set_data (GfxContainerPtr c)
 	int height = 0;
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
-	move (1920+1366-width, 0);
+	//move (1920+1366-width, 0);
 	//move (1920-width, 0);
+	move (1920, 0);
 }
 
 

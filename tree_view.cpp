@@ -50,6 +50,7 @@ TreeView::TreeView()
 	m_Menu_Popup.signal_hide().connect([this] { menu_active = false; });
 
 	set_has_tooltip (true);
+	set_activate_on_single_click (true);
 #endif
 }
 
@@ -85,10 +86,10 @@ TreeView::on_button_press_event (GdkEventButton* event)
 {
 	bool return_value = false;
 
-#if 0
 	//Call base class, to allow normal handling,
 	//such as allowing the row to be selected by the right-click:
 	return_value = Gtk::TreeView::on_button_press_event (event);
+#if 0
 
 	//Then do our custom stuff:
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
@@ -177,7 +178,7 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			std::string dev = x->device;
 			size_t pos = dev.find_last_of ('/');
 			if (pos != std::string::npos) {
-				eev = dev.substr (pos+1);
+				dev = dev.substr (pos+1);
 			}
 			row[m_Columns.col_container] = dev;
 			row[m_Columns.col_colour]    = get_color_as_pixbuf (16, 16, random());
@@ -319,3 +320,4 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 #endif
 	return true;
 }
+
