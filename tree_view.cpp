@@ -174,7 +174,12 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 
 			//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
 
-			row[m_Columns.col_container] = x->device;
+			std::string dev = x->device;
+			size_t pos = dev.find_last_of ('/');
+			if (pos != std::string::npos) {
+				eev = dev.substr (pos+1);
+			}
+			row[m_Columns.col_container] = dev;
 			row[m_Columns.col_colour]    = get_color_as_pixbuf (16, 16, random());
 			row[m_Columns.col_name]      = x->name;
 		} else {
