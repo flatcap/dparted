@@ -124,6 +124,7 @@ GfxContainer::init (ContainerPtr c)
 
 	try {
 		display        = theme->get_config (path, name, "display");
+		treeview       = theme->get_config (path, name, "treeview");
 		label_template = theme->get_config (path, name, "label");
 
 		std::string c  = theme->get_config (path, name, "colour");

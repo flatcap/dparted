@@ -61,6 +61,7 @@ public:
 	std::string               type;
 	std::string               device;
 	std::string               display;
+	std::string               treeview;
 	Gdk::RGBA                 colour;
 	Gdk::RGBA                 background;
 	Glib::RefPtr<Gdk::Pixbuf> icon;

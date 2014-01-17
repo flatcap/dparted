@@ -166,7 +166,15 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 	for (auto x : c->children) {
 		std::string type = x->type;
 
-		if ((type == "Gpt") || (type == "ext2") || (type == "ext3") || (type == "ext4") || (type == "ntfs") || (type == "reiserfs") || (type == "swap") || (type == "vfat") || (type == "xfs") || (type == "btrfs")) {
+		bool display = false;
+
+		if (x->treeview == "always")
+			display = true;
+
+		if ((x->treeview == "empty") && (x->children.empty()))
+			display = true;
+
+		if (display) {
 			if (parent) {
 				row = *(m_refTreeModel->append (parent->children()));
 			} else {
