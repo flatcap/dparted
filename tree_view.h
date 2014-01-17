@@ -52,6 +52,7 @@ protected:
 		{
 			add (col_container);
 			add (col_colour);
+			add (col_type);
 			add (col_name);
 			add (col_size);
 			add (col_size_suffix);
@@ -64,6 +65,7 @@ protected:
 
 		Gtk::TreeModelColumn<std::string>               col_container;
 		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> col_colour;
+		Gtk::TreeModelColumn<std::string>               col_type;
 		Gtk::TreeModelColumn<std::string>               col_name;
 		Gtk::TreeModelColumn<uint64_t>                  col_size;
 		Gtk::TreeModelColumn<std::string>               col_size_suffix;

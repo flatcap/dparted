@@ -196,6 +196,7 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 #endif
 
 			row[m_Columns.col_colour]    = get_color_as_pixbuf (16, 16, colour);
+			row[m_Columns.col_type]      = x->type;
 			row[m_Columns.col_name]      = x->name;
 
 			row[m_Columns.col_size]        = x->bytes_size / 1024 / 1024;
@@ -253,6 +254,11 @@ TreeView::init_treeview (GfxContainerPtr& c)
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Type"));
 	col->pack_start (m_Columns.col_colour, false);
+	col->pack_start (m_Columns.col_type,   false);
+	col->set_alignment (0.0);
+	append_column (*col);
+
+	col = Gtk::manage (new Gtk::TreeView::Column ("Label"));
 	col->pack_start (m_Columns.col_name,   false);
 	col->set_alignment (0.0);
 	append_column (*col);
