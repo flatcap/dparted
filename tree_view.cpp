@@ -170,7 +170,7 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			row = *(m_refTreeModel->append());
 		}
 		//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
-		row[m_Columns.col_partition] = x->label;
+		//QWQ row[m_Columns.col_partition] = x->label;
 		row[m_Columns.col_size]      = x->bytes_size;
 		row[m_Columns.col_used]      = x->bytes_used;
 		row[m_Columns.col_free]      = x->bytes_size - x->bytes_used;
@@ -206,7 +206,7 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	append_column (*col);
 
 	append_column ("Mount", m_Columns.col_mount);
-	append_column ("Label", m_Columns.col_label);
+	//QWQ append_column ("Label", m_Columns.col_label);
 	append_column ("Size",  m_Columns.col_size);
 	append_column ("Used",  m_Columns.col_used);
 	append_column ("Free",  m_Columns.col_free);

@@ -40,8 +40,6 @@ Filesystem::Filesystem (void)
 	const char* me = "Filesystem";
 
 	declare (me);
-
-	declare_prop (me, "label", label, "desc of label");
 }
 
 /**
@@ -115,20 +113,6 @@ Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	}
 
 	return f;
-}
-
-
-/**
- * get_property
- */
-std::string
-Filesystem::get_property (const std::string& propname)
-{
-	if (propname == "label") {
-		return label;
-	} else {
-		return Container::get_property (propname);
-	}
 }
 
 

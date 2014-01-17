@@ -636,8 +636,6 @@ dot_filesystem (std::shared_ptr<T> t)
 
 	output << dot_container(f);
 
-	output << dot_row ("label", f->label);
-
 	return output.str();
 }
 

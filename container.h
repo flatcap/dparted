@@ -123,6 +123,7 @@ public:
 
 	int seqnum = 123;
 
+	void declare (const char* name);
 protected:
 	Container (void);
 
@@ -130,7 +131,6 @@ protected:
 
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 
-	void declare (const char* name);
 	void insert (long offset, long size, void* ptr);
 
 	MmapSet	mmaps;

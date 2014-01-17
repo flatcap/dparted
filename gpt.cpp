@@ -165,7 +165,7 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 			for (int j = 0; j < 32; j += 2) {
 				if (buffer[56+j] == 0)
 					break;
-				p->name += buffer[56+j];	// put this in a "label" member
+				p->name += buffer[56+j];
 			}
 		}
 

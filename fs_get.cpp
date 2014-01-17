@@ -36,8 +36,8 @@ get_ext_common (FilesystemPtr& f, unsigned char* buffer, int bufsize)
 	if (!buffer)
 		return;
 
+	f->name = (char*) (buffer+0x478);
 	f->uuid = read_uuid1 (buffer + 0x468);
-	f->label = (char*) (buffer+0x478);
 
 	int block_size = *(int*) (buffer + 0x418);
 	block_size = (1 << (block_size+10));		// 2^(10+ value at 0x18)
@@ -69,10 +69,10 @@ get_btrfs (unsigned char* buffer, int bufsize)
 
 	//log_info ("bufsize = %d, want %d\n", bufsize, 0x10140);
 	FilesystemPtr f  = Filesystem::create();
+	f->declare ("btrfs");
 
-	f->name = "btrfs";
+	f->name = (char*) (buffer+0x1012B);
 	f->uuid = read_uuid1 (buffer + 0x10020);
-	f->label = (char*) (buffer+0x1012B);
 
 	f->bytes_size = *(long*) (buffer + 0x10070);
 	f->bytes_used = *(long*) (buffer + 0x10078);
@@ -91,7 +91,7 @@ get_ext2 (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
-	f->name = "ext2";
+	f->declare ("ext2");
 
 	get_ext_common (f, buffer, bufsize);
 
@@ -109,7 +109,7 @@ get_ext3 (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
-	f->name = "ext3";
+	f->declare ("ext3");
 
 	get_ext_common (f, buffer, bufsize);
 
@@ -127,7 +127,7 @@ get_ext4 (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
-	f->name = "ext4";
+	f->declare ("ext4");
 
 	get_ext_common (f, buffer, bufsize);
 
@@ -148,10 +148,9 @@ get_ntfs (unsigned char* buffer, int bufsize)
 	long size = *(long*) (buffer + 40) * 512;
 
 	FilesystemPtr f  = Filesystem::create();
+	f->declare ("ntfs");
 
-	f->name = "ntfs";
 	f->uuid = uuid;
-	f->label = "";
 	f->bytes_size = size;
 
 	get_ntfs_usage (f);
@@ -168,10 +167,10 @@ get_reiserfs (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
+	f->declare ("reiserfs");
 
-	f->name = "reiserfs";
+	f->name = (char*) (buffer+0x10064);
 	f->uuid = read_uuid1 (buffer + 0x10054);
-	f->label = (char*) (buffer+0x10064);
 
 	short    int block_size   = *(short    int*) (buffer + 0x1002C);
 	unsigned int blocks_total = *(unsigned int*) (buffer + 0x10000);
@@ -205,10 +204,10 @@ get_swap (unsigned char* buffer, int bufsize)
 	}
 
 	FilesystemPtr f  = Filesystem::create();
+	f->declare ("swap");
 
-	f->name = "swap";
+	f->name = vol_name;
 	f->uuid = uuid;
-	f->label = vol_name;
 	f->bytes_size = size;
 
 	get_swap_usage (f);
@@ -225,10 +224,10 @@ get_vfat (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
+	f->declare ("vfat");
 
-	f->name = "vfat";
+	f->name = std::string ((char*)(buffer+0x30), 14);
 	f->uuid = read_uuid3 (buffer+0x1C);
-	f->label = std::string ((char*)(buffer+0x30), 14);
 
 	long sectors = *(short int*) (buffer + 0x13);
 	if (sectors == 0) {
@@ -278,10 +277,10 @@ get_xfs (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
+	f->declare ("xfs");
 
-	f->name = "xfs";
+	f->name = (char*) (buffer+0x6C);
 	f->uuid = read_uuid1 (buffer + 0x20);
-	f->label = (char*) (buffer+0x6C);
 
 	int  block_size   = *(int*)  (buffer + 0x04);
 	long blocks_total = *(long*) (buffer + 0x08);

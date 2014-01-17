@@ -41,12 +41,10 @@ public:
 	static FilesystemPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 public:
-	std::string	label;
+	//properties
 
 protected:
 	Filesystem (void);
-
-	virtual std::string get_property (const std::string& propname);
 
 private:
 	long ext2_get_usage (void);
