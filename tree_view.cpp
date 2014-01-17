@@ -46,8 +46,8 @@ TreeView::TreeView()
 	m_Menu_Popup.signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::popup_on_keypress));
 
 	// Lambdas to let us know when the popup menu is in use.
-	m_Menu_Popup.signal_show().connect([this] { menu_active = true;  });
-	m_Menu_Popup.signal_hide().connect([this] { menu_active = false; });
+	m_Menu_Popup.signal_show().connect ([this] { menu_active = true;  });
+	m_Menu_Popup.signal_hide().connect ([this] { menu_active = false; });
 
 	set_has_tooltip (true);
 	set_activate_on_single_click (true);
@@ -139,17 +139,27 @@ TreeView::on_menu_file_popup_generic()
 
 
 /**
- * get_color_as_pixbuf
+ * get_colour_as_pixbuf
  */
 Glib::RefPtr<Gdk::Pixbuf>
-get_color_as_pixbuf (int width, int height, int colour)
+get_colour_as_pixbuf (int size, Gdk::RGBA colour)
 {
 	//XXX circle, of specified colour, transparent background
-	//XXX get width/height from size of treerow (minus a small margin)
+	//XXX get size from size of treerow (minus a small margin)
 	//XXX what if one row is double height?
-	Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create (Gdk::COLORSPACE_RGB, false, 8, width, height);
 
-	pixbuf->fill (colour);
+	Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create (Gdk::COLORSPACE_RGB, true, 8, size, size);
+	Cairo::RefPtr<Cairo::ImageSurface> surface = Cairo::ImageSurface::create (Cairo::FORMAT_ARGB32, size, size);
+	Cairo::RefPtr<Cairo::Context> cr = Cairo::Context::create (surface);
+
+	cr->save();
+	//XXX note the order: ImageSurface (RGBA) and Pixbuf (BGRA)
+	cr->set_source_rgba (colour.get_blue(), colour.get_green(), colour.get_red(), colour.get_alpha());
+	cr->arc (size/2, size/2, (size+2)/2, 0, 2*M_PI);
+	cr->fill();
+	cr->restore();
+
+	memcpy (pixbuf->get_pixels(), surface->get_data(), size*size*4);
 
 	return pixbuf;
 }
@@ -189,21 +199,8 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 				dev = dev.substr (pos+1);
 			}
 			row[m_Columns.col_container] = dev;
-			Gdk::RGBA rgba = x->colour;
-			int colour = ((rgba.get_red_u()   >> 8) << 24) +
-				     ((rgba.get_green_u() >> 8) << 16) +
-				     ((rgba.get_blue_u()  >> 8) <<  8) +
-				     ((rgba.get_alpha_u() >> 8));
 
-#if 0
-			printf ("colour = 0x%02x%02x%02x%02x\n",
-				(colour>>24) & 0xFF,
-				(colour>>16) & 0xFF,
-				(colour>> 8) & 0xFF,
-				(colour)     & 0xFF);
-#endif
-
-			row[m_Columns.col_colour]    = get_color_as_pixbuf (16, 16, colour);
+			row[m_Columns.col_colour]    = get_colour_as_pixbuf (16, x->colour);
 			row[m_Columns.col_type]      = x->type;
 			row[m_Columns.col_name]      = x->name;
 
@@ -274,21 +271,21 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	col = Gtk::manage (new Gtk::TreeView::Column ("Size"));
 	col->pack_start (m_Columns.col_size,        false);
 	col->pack_start (m_Columns.col_size_suffix, false);
-	col->get_first_cell()->set_alignment(1.0, 0.5);
+	col->get_first_cell()->set_alignment (1.0, 0.5);
 	col->set_alignment (1.0);
 	append_column (*col);
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Used"));
 	col->pack_start (m_Columns.col_used,        false);
 	col->pack_start (m_Columns.col_used_suffix, false);
-	col->get_first_cell()->set_alignment(1.0, 0.5);
+	col->get_first_cell()->set_alignment (1.0, 0.5);
 	col->set_alignment (1.0);
 	append_column (*col);
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Free"));
 	col->pack_start (m_Columns.col_free,        false);
 	col->pack_start (m_Columns.col_free_suffix, false);
-	col->get_first_cell()->set_alignment(1.0, 0.5);
+	col->get_first_cell()->set_alignment (1.0, 0.5);
 	col->set_alignment (1.0);
 	append_column (*col);
 
