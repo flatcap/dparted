@@ -50,34 +50,37 @@ protected:
 	public:
 		ModelColumns()
 		{
-			add (col_partition);
-			add (col_filesystem);
+			add (col_container);
+			add (col_colour);
+			add (col_name);
+#if 0
 			add (col_mount);
 			add (col_label);
 			add (col_size);
 			add (col_used);
 			add (col_free);
 			add (col_flags);
-
-			add (col_container);
+			add (col_gfx);
 			add (col_icon1);
 			add (col_icon2);
-			add (col_colour);
+#endif
 		}
 
-		Gtk::TreeModelColumn<std::string>               col_partition;
-		Gtk::TreeModelColumn<std::string>               col_filesystem;
+		Gtk::TreeModelColumn<std::string>               col_container;
+		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> col_colour;
+		Gtk::TreeModelColumn<std::string>               col_name;
+#if 0
 		Gtk::TreeModelColumn<std::string>               col_mount;
 		Gtk::TreeModelColumn<std::string>               col_label;
 		Gtk::TreeModelColumn<uint64_t>                  col_size;
 		Gtk::TreeModelColumn<uint64_t>                  col_used;
 		Gtk::TreeModelColumn<uint64_t>                  col_free;
 		Gtk::TreeModelColumn<std::string>               col_flags;
-
-		Gtk::TreeModelColumn<GfxContainerPtr>           col_container;
+		Gtk::TreeModelColumn<GfxContainerPtr>           col_gfx;
 		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> col_icon1;
 		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> col_icon2;
 		Gtk::TreeModelColumn<uint32_t>                  col_colour;
+#endif
 	};
 
 	ModelColumns m_Columns;

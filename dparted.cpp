@@ -88,15 +88,18 @@ DParted::DParted ()
 	add (outer_box);
 
 	outer_box.set_homogeneous (false);
-	outer_box.pack_start (*pMenubar, false, false);
-	outer_box.pack_start (*pToolbar, false, false);
+	/* outer_box.pack_start (*pMenubar, false, false); */
+	/* outer_box.pack_start (*pToolbar, false, false); */
 	outer_box.add (scrolledwindow);
-	outer_box.pack_end (statusbar, false, false);
+	/* outer_box.pack_end (statusbar, false, false); */
 
 	scrolledwindow.add (box);
+#if 0
 	eventbox.add(drawingarea);
 	box.pack_start (eventbox, false, false);
+#else
 	box.pack_end (treeview, true, true);
+#endif
 
 	show_all_children();
 

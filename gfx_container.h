@@ -58,6 +58,8 @@ public:
 	bool mouse_event (void);
 
 	std::string               name;
+	std::string               type;
+	std::string               device;
 	std::string               display;
 	Gdk::RGBA                 colour;
 	Gdk::RGBA                 background;

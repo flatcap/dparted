@@ -85,6 +85,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 {
 	bool return_value = false;
 
+#if 0
 	//Call base class, to allow normal handling,
 	//such as allowing the row to be selected by the right-click:
 	return_value = Gtk::TreeView::on_button_press_event (event);
@@ -105,7 +106,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 #if 0
 		Gtk::TreeModel::Row row;
 		row = *(m_refTreeModel->append (s3->children()));
-		row[m_Columns.col_partition] = c->device;
+		row[m_Columns.col_container] = c->device;
 		row[m_Columns.col_size]      = c->bytes_size;
 		row[m_Columns.col_used]      = c->bytes_used;
 		row[m_Columns.col_free]      = c->bytes_size - c->bytes_used;
@@ -113,6 +114,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 		expand_all();
 #endif
 	}
+#endif
 
 	return return_value;
 }
@@ -139,12 +141,14 @@ TreeView::on_menu_file_popup_generic()
  * get_color_as_pixbuf
  */
 Glib::RefPtr<Gdk::Pixbuf>
-get_color_as_pixbuf (int width, int height)
+get_color_as_pixbuf (int width, int height, int colour)
 {
+	//XXX circle, of specified colour, transparent background
+	//XXX get width/height from size of treerow (minus a small margin)
+	//XXX what if one row is double height?
 	Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create (Gdk::COLORSPACE_RGB, false, 8, width, height);
 
-	int r = random();
-	pixbuf->fill (r);
+	pixbuf->fill (colour);
 
 	return pixbuf;
 }
@@ -159,24 +163,24 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 	Gtk::TreeModel::Row row;
 
 	for (auto x : c->children) {
-#if 0
-		if (x->is_a ("Group"))
-			continue; //RAR for now ignore vg
-#endif
-		//std::cout << "name: " << x->name << "\n";
-		if (parent) {
-			row = *(m_refTreeModel->append (parent->children()));
+		std::string type = x->type;
+
+		if ((type == "Gpt") || (type == "ext2") || (type == "ext3") || (type == "ext4") || (type == "ntfs") || (type == "reiserfs") || (type == "swap") || (type == "vfat") || (type == "xfs") || (type == "btrfs")) {
+			if (parent) {
+				row = *(m_refTreeModel->append (parent->children()));
+			} else {
+				row = *(m_refTreeModel->append());
+			}
+
+			//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
+
+			row[m_Columns.col_container] = x->device;
+			row[m_Columns.col_colour]    = get_color_as_pixbuf (16, 16, random());
+			row[m_Columns.col_name]      = x->name;
 		} else {
-			row = *(m_refTreeModel->append());
+			if (parent)
+				row = *parent;
 		}
-		//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
-		//QWQ row[m_Columns.col_partition] = x->label;
-		row[m_Columns.col_size]      = x->bytes_size;
-		row[m_Columns.col_used]      = x->bytes_used;
-		row[m_Columns.col_free]      = x->bytes_size - x->bytes_used;
-		row[m_Columns.col_container] = x;
-		//row[m_Columns.col_colour]    = get_color_as_pixbuf (16, 16);
-		//std::cout << "Container: " << x << std::endl;
 
 		if (x->children.size() > 0) {
 			tree_add_row (x, &row);
@@ -191,32 +195,53 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 void
 TreeView::init_treeview (GfxContainerPtr& c)
 {
+	//	DEVICE	COLOUR	TYPE	NAME	DISPLAY
+	//	loop0	none	block	loop0	empty
+	//	loop0	none	table	gpt	always
+	//	loop0p1	none	part	loop0p1	empty
+	//	loop0p1	red	fs	ext4	always
+	//	loop0p2	green	fs	vfat	always
+	//
+	//	CONTAINER		TYPE	COLOUR	NAME
+	//	loop0			table	-	gpt
+	//	|-- loop0p1		fs	red	ext4
+	//	`-- loop0p2		fs	green	vfat
+	//
+	//	loop0			block	-	-
+	//	`-- loop0		table	-	gpt
+	//	    |-- loop0p1		part	-	primary
+	//	    |	`-- loop0p1	ext4	red	ext4_label
+	//	    `-- loop0p2		part	-	primary
+	//	        `-- loop0p2	vfat	green	vfat_label
+
 	//Add the TreeView's view columns:
 	Gtk::TreeView::Column* col = nullptr;
 
-	col = Gtk::manage (new Gtk::TreeView::Column ("Partition"));
-	col->pack_start (m_Columns.col_partition,  true);
-	col->pack_start (m_Columns.col_icon1,      false);
-	col->pack_start (m_Columns.col_icon2,      false);
+	col = Gtk::manage (new Gtk::TreeView::Column ("Container"));
+	col->pack_start (m_Columns.col_container,  true);
+	/* col->pack_start (m_Columns.col_icon1,      false); */
+	/* col->pack_start (m_Columns.col_icon2,      false); */
 	append_column (*col);
 
-	col = Gtk::manage (new Gtk::TreeView::Column ("Filesystem"));
-	col->pack_start (m_Columns.col_colour,     false);
-	col->pack_start (m_Columns.col_filesystem, true);
+	col = Gtk::manage (new Gtk::TreeView::Column ("Type"));
+	col->pack_start (m_Columns.col_colour, false);
+	col->pack_start (m_Columns.col_name,   false);
 	append_column (*col);
 
+#if 0
 	append_column ("Mount", m_Columns.col_mount);
-	//QWQ append_column ("Label", m_Columns.col_label);
+	append_column ("Label", m_Columns.col_label);
 	append_column ("Size",  m_Columns.col_size);
 	append_column ("Used",  m_Columns.col_used);
 	append_column ("Free",  m_Columns.col_free);
 	append_column ("Flags", m_Columns.col_flags);
+#endif
 
 	//Create the Tree model:
 	m_refTreeModel = Gtk::TreeStore::create (m_Columns);
 	//set_model (m_refTreeModel);
 
-	set_level_indentation (20);
+	set_level_indentation (10);
 
 	//Connect signal:
 	signal_row_activated().connect (sigc::mem_fun (*this, &TreeView::on_row_activated));
@@ -225,8 +250,9 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	tree_add_row (c, nullptr);
 
 	set_model (m_refTreeModel);
-	//expand_all();
+	expand_all();
 }
+
 
 /**
  * on_row_activated

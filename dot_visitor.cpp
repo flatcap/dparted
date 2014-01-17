@@ -1241,11 +1241,14 @@ DotVisitor::get_output (void)
 void
 DotVisitor::run_dotty (void)
 {
-	std::string command = "dot -Tpng | display -resize 70% -& ";
+	std::string command = "dot -Tpng | display -resize 70% - &";
 	std::string input = output.str();
 	input += "\n}\n";
 
-	//std::cout << input << std::endl;
+#if 0
+	std::cout << input << std::endl;
+#else
 	execute_command2 (command, input);
+#endif
 }
 

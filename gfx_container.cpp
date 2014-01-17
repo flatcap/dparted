@@ -119,6 +119,8 @@ GfxContainer::init (ContainerPtr c)
 
 	std::string path = c->get_path();
 	name = c->name;
+	type = c->type.back();
+	device = c->get_device_name();
 
 	try {
 		display        = theme->get_config (path, name, "display");
