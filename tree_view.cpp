@@ -230,24 +230,25 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 void
 TreeView::init_treeview (GfxContainerPtr& c)
 {
-	//	DEVICE	COLOUR	TYPE	NAME	DISPLAY
-	//	loop0	none	block	loop0	empty
-	//	loop0	none	table	gpt	always
-	//	loop0p1	none	part	loop0p1	empty
-	//	loop0p1	red	fs	ext4	always
-	//	loop0p2	green	fs	vfat	always
-	//
-	//	CONTAINER		TYPE	COLOUR	NAME
-	//	loop0			table	-	gpt
-	//	|-- loop0p1		fs	red	ext4
-	//	`-- loop0p2		fs	green	vfat
-	//
-	//	loop0			block	-	-
-	//	`-- loop0		table	-	gpt
-	//	    |-- loop0p1		part	-	primary
-	//	    |	`-- loop0p1	ext4	red	ext4_label
-	//	    `-- loop0p2		part	-	primary
-	//	        `-- loop0p2	vfat	green	vfat_label
+	/*	DEVICE	COLOUR	TYPE	NAME	DISPLAY
+	 *	loop0	none	block	loop0	empty
+	 *	loop0	none	table	gpt	always
+	 *	loop0p1	none	part	loop0p1	empty
+	 *	loop0p1	red	fs	ext4	always
+	 *	loop0p2	green	fs	vfat	always
+	 *
+	 *	CONTAINER		TYPE	COLOUR	NAME
+	 *	loop0			table	-	gpt
+	 *	|-- loop0p1		fs	red	ext4
+	 *	`-- loop0p2		fs	green	vfat
+	 *
+	 *	loop0			block	-	-
+	 *	`-- loop0		table	-	gpt
+	 *	    |-- loop0p1		part	-	primary
+	 *	    |	`-- loop0p1	ext4	red	ext4_label
+	 *	    `-- loop0p2		part	-	primary
+	 *	        `-- loop0p2	vfat	green	vfat_label
+	 */
 
 	//Add the TreeView's view columns:
 	Gtk::TreeView::Column* col = nullptr;
