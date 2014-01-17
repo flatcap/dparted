@@ -181,8 +181,31 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 				dev = dev.substr (pos+1);
 			}
 			row[m_Columns.col_container] = dev;
-			row[m_Columns.col_colour]    = get_color_as_pixbuf (16, 16, random());
+			Gdk::RGBA rgba = x->colour;
+			int colour = ((rgba.get_red_u()   >> 8) << 24) +
+				     ((rgba.get_green_u() >> 8) << 16) +
+				     ((rgba.get_blue_u()  >> 8) <<  8) +
+				     ((rgba.get_alpha_u() >> 8));
+
+#if 0
+			printf ("colour = 0x%02x%02x%02x%02x\n",
+				(colour>>24) & 0xFF,
+				(colour>>16) & 0xFF,
+				(colour>> 8) & 0xFF,
+				(colour)     & 0xFF);
+#endif
+
+			row[m_Columns.col_colour]    = get_color_as_pixbuf (16, 16, colour);
 			row[m_Columns.col_name]      = x->name;
+
+			row[m_Columns.col_size]        = x->bytes_size / 1024 / 1024;
+			row[m_Columns.col_size_suffix] = "MiB";
+
+			row[m_Columns.col_used]        = x->bytes_used / 1024 / 1024;
+			row[m_Columns.col_used_suffix] = "MiB";
+
+			row[m_Columns.col_free]        = (x->bytes_size - x->bytes_used) / 1024 / 1024;
+			row[m_Columns.col_free_suffix] = "MiB";
 		} else {
 			if (parent)
 				row = *parent;
@@ -225,15 +248,42 @@ TreeView::init_treeview (GfxContainerPtr& c)
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Container"));
 	col->pack_start (m_Columns.col_container,  true);
-	/* col->pack_start (m_Columns.col_icon1,      false); */
-	/* col->pack_start (m_Columns.col_icon2,      false); */
+	col->set_alignment (0.0);
 	append_column (*col);
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Type"));
 	col->pack_start (m_Columns.col_colour, false);
 	col->pack_start (m_Columns.col_name,   false);
+	col->set_alignment (0.0);
 	append_column (*col);
 
+	col = Gtk::manage (new Gtk::TreeView::Column ("Size"));
+	col->pack_start (m_Columns.col_size,        false);
+	col->pack_start (m_Columns.col_size_suffix, false);
+	col->get_first_cell()->set_alignment(1.0, 0.5);
+	col->set_alignment (1.0);
+	append_column (*col);
+
+	col = Gtk::manage (new Gtk::TreeView::Column ("Used"));
+	col->pack_start (m_Columns.col_used,        false);
+	col->pack_start (m_Columns.col_used_suffix, false);
+	col->get_first_cell()->set_alignment(1.0, 0.5);
+	col->set_alignment (1.0);
+	append_column (*col);
+
+	col = Gtk::manage (new Gtk::TreeView::Column ("Free"));
+	col->pack_start (m_Columns.col_free,        false);
+	col->pack_start (m_Columns.col_free_suffix, false);
+	col->get_first_cell()->set_alignment(1.0, 0.5);
+	col->set_alignment (1.0);
+	append_column (*col);
+
+	col = Gtk::manage (new Gtk::TreeView::Column (""));
+	col->pack_start (m_Columns.col_empty, true);
+	append_column (*col);
+
+	/* col->pack_start (m_Columns.col_icon1,      false); */
+	/* col->pack_start (m_Columns.col_icon2,      false); */
 #if 0
 	append_column ("Mount", m_Columns.col_mount);
 	append_column ("Label", m_Columns.col_label);
