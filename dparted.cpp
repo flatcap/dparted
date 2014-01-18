@@ -534,9 +534,9 @@ DParted::init_shortcuts (void)
 		{ 0,                 GDK_KEY_Right  },
 		{ 0,                 GDK_KEY_Down   },
 
-		{ 0,                 GDK_KEY_Tab    },
-		{ 0,                 GDK_KEY_space  },
-		{ 0,                 GDK_KEY_Return },
+		//{ 0,                 GDK_KEY_Tab    },
+		//{ 0,                 GDK_KEY_space  },
+		//{ 0,                 GDK_KEY_Return },
 
 		{ Gdk::CONTROL_MASK, GDK_KEY_C      },
 		{ Gdk::CONTROL_MASK, GDK_KEY_F      },
@@ -568,7 +568,7 @@ DParted::init_shortcuts (void)
 void
 DParted::on_keypress (int modifier, int key)
 {
-	//std::cout << "Keypress: " << modifier << " : " << (char) key << std::endl;
+	std::cout << "Keypress: " << modifier << " : " << (char) key << std::endl;
 
 	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q'))
 		hide();
