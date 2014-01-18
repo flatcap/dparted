@@ -84,6 +84,8 @@ protected:
 
 	bool on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 	bool popup_on_keypress (GdkEventKey* ev);
+	bool on_keypress (GdkEventKey* event);
+	bool get_coords (int& x, int& y);
 
 	void tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent);
 

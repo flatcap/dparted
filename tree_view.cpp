@@ -53,6 +53,7 @@ TreeView::TreeView()
 	set_has_tooltip (true);
 	set_activate_on_single_click (true);
 #endif
+	signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::on_keypress));
 }
 
 /**
@@ -90,13 +91,13 @@ TreeView::on_button_press_event (GdkEventButton* event)
 	//Call base class, to allow normal handling,
 	//such as allowing the row to be selected by the right-click:
 	return_value = Gtk::TreeView::on_button_press_event (event);
-#if 0
 
 	//Then do our custom stuff:
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
 		m_Menu_Popup.popup (event->button, event->time);
 	}
 
+#if 0
 	//Then do our custom stuff:
 	if ((event->type == GDK_DOUBLE_BUTTON_PRESS) && (event->button == 1)) {
 		Glib::RefPtr<Gtk::TreeSelection> s1 = get_selection();
@@ -104,17 +105,6 @@ TreeView::on_button_press_event (GdkEventButton* event)
 		const Gtk::TreeModel::Row& s3 = *s2;
 		GfxContainerPtr c = s3[m_Columns.col_container];
 		std::cout << "Selection: " << c << std::endl;
-
-#if 0
-		Gtk::TreeModel::Row row;
-		row = *(m_refTreeModel->append (s3->children()));
-		row[m_Columns.col_container] = c->device;
-		row[m_Columns.col_size]      = c->bytes_size;
-		row[m_Columns.col_used]      = c->bytes_used;
-		row[m_Columns.col_free]      = c->bytes_size - c->bytes_used;
-		row[m_Columns.col_container] = c;
-		expand_all();
-#endif
 	}
 #endif
 
@@ -411,9 +401,92 @@ void TreeView::on_selection_changed()
 
 	const Gtk::TreeModel::Row& row = *it;
 	GfxContainerPtr c = row[m_Columns.col_gfx_container];
-	std::cout << "sel: " << c << std::endl;
+	//std::cout << "sel: " << c << std::endl;
 
 	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
 	dp->set_focus (c);
 }
 
+
+/**
+ * get_coords
+ *
+ * Get the absolute screen coordinates of the highlighted container.
+ */
+bool
+TreeView::get_coords (int& x, int& y)
+{
+	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	if (!dp) {
+		std::cout << "No DParted" << std::endl;
+		return false;
+	}
+
+	GfxContainerPtr c = dp->get_focus();
+	if (!c) {
+		//std::cout << "No focus" << std::endl;
+		return false;
+	}
+
+	Glib::RefPtr<Gdk::Window> w = get_window();
+	if (!w) {
+		return false;
+	}
+
+	int ox = 0;
+	int oy = 0;
+	w->get_origin (ox, oy);		// Coords of DParted's main window (inside chrome)
+
+	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
+	if (!window) {
+		return false;
+	}
+
+#if 0
+	Gtk::Allocation allocation = get_allocation();
+	std::cout << "size: " << allocation.get_width() << "," << allocation.get_height() << std::endl;
+#endif
+	int ccx = 0;
+	int ccy = 0;
+	convert_tree_to_widget_coords (0, 0, ccx, ccy);
+
+	int tx = 0;
+	int ty = 0;
+	Gtk::TreeModel::iterator it = treeselection->get_selected();
+	if (it) {
+		Gtk::TreeModel::Path path = m_refTreeModel->get_path (it);
+		Gdk::Rectangle rect;
+		get_cell_area (path, *get_column(0), rect);
+		std::cout << "rect: " << rect.get_x() << "," << rect.get_y() << "," << rect.get_width() << "," << rect.get_height() << std::endl;
+
+		tx += rect.get_x() + rect.get_width();
+		ty += rect.get_y() + rect.get_height();
+	}
+
+	x = ox + tx + ccx;
+	y = oy + ty + ccy;
+	return true;
+}
+
+/**
+ * on_keypress
+ */
+bool
+TreeView::on_keypress (GdkEventKey* event)
+{
+	if (event->keyval == GDK_KEY_Menu) {	// 65383 (0xFF67)
+		/* get_coords (x, y); */
+		/* popup_menu (x, y); */
+		std::cout << "menu" << std::endl;
+		// Lamba to position popup menu
+		int x = 0;
+		int y = 0;
+		//XXX scroll row into view (somehow)
+		// scroll_to_row (path); doesn't seem to work
+		get_coords (x, y);
+		m_Menu_Popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
+		return true;
+	}
+
+	return false;
+}

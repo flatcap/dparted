@@ -35,7 +35,7 @@ DParted::DParted()
 #if 0
 	set_size_request (1360, 70*3);
 #else
-	set_size_request (800, 500);
+	set_size_request (800, 700);
 #endif
 #if 0
 	set_default_size (1439, 800);
@@ -215,8 +215,8 @@ DParted::set_data (GfxContainerPtr c)
 	int height = 0;
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
-	move (1920+1366-width, 768-height);
-	//move (1920-width, 0);
+	//move (1920+1366-width, 768-height);
+	move (1366-width, 0);
 }
 
 

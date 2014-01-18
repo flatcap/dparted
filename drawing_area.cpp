@@ -1077,7 +1077,6 @@ DrawingArea::make_menu (void)
 	// Lambdas to let us know when the popup menu is in use.
 	m_pMenuPopup->signal_show().connect ([this] { menu_active = true;  });
 	m_pMenuPopup->signal_hide().connect ([this] { menu_active = false; });
-
 }
 
 /**
@@ -1312,7 +1311,7 @@ DrawingArea::set_focus (GfxContainerPtr& c)
 	if (!c)
 		return;
 
-	std::cout << "DrawingArea " << c << std::endl;
+	//std::cout << "DrawingArea " << c << std::endl;
 	get_window()->invalidate (false);
 }
 
