@@ -50,6 +50,8 @@ public:
 
 protected:
 	Gtk::Box		outer_box;	//XXX dynamically create the ones we don't care about?
+	Gtk::MenuBar*		menubar = nullptr;	//do not delete
+	Gtk::Toolbar*		toolbar = nullptr;	//do not delete
 	Gtk::EventBox		eventbox;
 	Gtk::ScrolledWindow	scrolledwindow;
 	Gtk::Box		inner_box;
@@ -66,6 +68,8 @@ protected:
 
 	Glib::RefPtr<Gio::SimpleAction> m_refViewGfx;
 	Glib::RefPtr<Gio::SimpleAction> m_refViewTree;
+	Glib::RefPtr<Gio::SimpleAction> m_refViewToolbar;
+	Glib::RefPtr<Gio::SimpleAction> m_refViewStatus;
 
 	void on_menu_choices(const Glib::ustring& parameter);
 	void on_menu_choices_other(int parameter);

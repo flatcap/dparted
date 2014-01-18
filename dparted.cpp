@@ -223,8 +223,10 @@ DParted::init_menubar (Gtk::Box& box)
 	m_refChoiceOther = refActionGroup->add_action_radio_integer ("choiceother", sigc::mem_fun (*this, &DParted::on_menu_choices_other), 1);
 	m_refToggle      = refActionGroup->add_action_bool          ("sometoggle",  sigc::mem_fun (*this, &DParted::on_menu_toggle),        false);
 
-	m_refViewGfx  = refActionGroup->add_action_bool ("view.gfx",  sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 1), true);
-	m_refViewTree = refActionGroup->add_action_bool ("view.tree", sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 2), true);
+	m_refViewGfx     = refActionGroup->add_action_bool ("view.gfx",     sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 1), true);
+	m_refViewTree    = refActionGroup->add_action_bool ("view.tree",    sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 2), true);
+	m_refViewToolbar = refActionGroup->add_action_bool ("view.toolbar", sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 3), true);
+	m_refViewStatus  = refActionGroup->add_action_bool ("view.status",  sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 4), true);
 
 	//Help menu:
 	refActionGroup->add_action ("about", sigc::mem_fun (*this, &DParted::on_menu_others));
@@ -294,6 +296,14 @@ DParted::init_menubar (Gtk::Box& box)
 		"					<attribute name='label' translatable='yes'>_Tree View</attribute>"
 		"					<attribute name='action'>example.view.tree</attribute>"
 		"				</item>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>Tool_bar</attribute>"
+		"					<attribute name='action'>example.view.toolbar</attribute>"
+		"				</item>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>_Status bar</attribute>"
+		"					<attribute name='action'>example.view.status</attribute>"
+		"				</item>"
 		"			</section>"
 		"		</submenu>"
 		"		<submenu>"
@@ -357,11 +367,11 @@ DParted::init_menubar (Gtk::Box& box)
 		g_warning ("GMenu not found");
 
 	//Menubar:
-	Gtk::MenuBar* pMenubar = Gtk::manage (new Gtk::MenuBar (gmenu));
-	box.pack_start (*pMenubar, Gtk::PACK_SHRINK);
+	menubar = Gtk::manage (new Gtk::MenuBar (gmenu));
+	box.pack_start (*menubar, Gtk::PACK_SHRINK);
 
 	//Create the toolbar and add it to a container widget:
-	Gtk::Toolbar* toolbar = Gtk::manage (new Gtk::Toolbar());
+	toolbar = Gtk::manage (new Gtk::Toolbar());
 	Gtk::ToolButton* button = Gtk::manage (new Gtk::ToolButton());
 	button->set_icon_name ("document-new");
 	//We can't do this until we can break the ToolButton ABI: button->set_detailed_action_name ("example.new");
@@ -471,31 +481,46 @@ DParted::on_menu_view (int option)
 {
 	std::cout << "on_menu_view: " << option << std::endl;
 
-	bool show_gfx  = false;
-	bool show_tree = false;
-
-	m_refViewGfx ->get_state (show_gfx);
-	m_refViewTree->get_state (show_tree);
-
-	if (option == 1) {
-		show_gfx = !show_gfx;
-		m_refViewGfx->change_state (show_gfx);
-	} else {
-		show_tree = !show_tree;
-		m_refViewTree->change_state (show_tree);
+	bool val = false;
+	switch (option) {
+		case 1:
+			m_refViewGfx ->get_state (val);
+			val = !val;
+			m_refViewGfx->change_state (val);
+			if (val)
+				drawingarea.show_all();
+			else
+				drawingarea.hide();
+			break;
+		case 2:
+			m_refViewTree->get_state (val);
+			val = !val;
+			m_refViewTree->change_state (val);
+			if (val)
+				treeview.show_all();
+			else
+				treeview.hide();
+			break;
+		case 3:
+			m_refViewToolbar->get_state (val);
+			val = !val;
+			m_refViewToolbar->change_state (val);
+			if (val)
+				toolbar->show_all();
+			else
+				toolbar->hide();
+			break;
+		case 4:
+			m_refViewStatus->get_state (val);
+			val = !val;
+			m_refViewStatus->change_state (val);
+			if (val)
+				statusbar.show_all();
+			else
+				statusbar.hide();
+			break;
 	}
-
-	if (show_gfx)
-		drawingarea.show_all();
-	else
-		drawingarea.hide();
-
-	if (show_tree)
-		treeview.show_all();
-	else
-		treeview.hide();
 }
-
 
 /**
  * init_shortcuts
