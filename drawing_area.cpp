@@ -355,7 +355,7 @@ draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, const std::strin
  * draw_focus - 2px dashed black/white line
  */
 void
-draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
+draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool primary)
 {
 	static int start = 0;
 	std::vector<double> dashes = {5,5};
@@ -364,7 +364,10 @@ draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
 	draw_border (cr, shape);				// Set clipping area
 	//cr->clip();
 
-	cr->set_line_width(2);
+	if (primary)
+		cr->set_line_width(2);
+	else
+		cr->set_line_width(1);
 
 	cr->set_dash (dashes, start);
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);		//RAR focus colours from theme
@@ -372,11 +375,13 @@ draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
 	cr->close_path();
 	cr->stroke();
 
-	cr->set_dash (dashes, start+5);
-	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
-	draw_border (cr, shape);
-	cr->close_path();
-	cr->stroke();
+	if (primary) {
+		cr->set_dash (dashes, start+5);
+		cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
+		draw_border (cr, shape);
+		cr->close_path();
+		cr->stroke();
+	}
 
 	cr->restore();						// End clipping
 	start++;
@@ -1508,8 +1513,9 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	}
 	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
 
-	if (cont->get_focus() && (has_focus() || menu_active)) {
-		draw_focus (cr, shape);
+	//if (cont->get_focus() && (has_focus() || menu_active)) {
+	if (cont->get_focus()) {
+		draw_focus (cr, shape, (has_focus() || menu_active));
 	}
 }
 
