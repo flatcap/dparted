@@ -1,0 +1,11 @@
+Window Layout
+     window (bin)
+     `-- outer_box
+         |-- menu
+         |-- toolbar
+         |-- eventbox (bin)
+         |   `-- scrolled window (bin)
+         |       `-- inner_box
+         |           |-- drawingarea
+         |           `-- treeview
+         `-- status bar
