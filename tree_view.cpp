@@ -396,7 +396,6 @@ TreeView::set_focus (GfxContainerPtr& c)
 	Gtk::TreeModel::Path path (c->treepath);
 	set_cursor (path);
 	scroll_to_row (path);
-
 }
 
 /**
