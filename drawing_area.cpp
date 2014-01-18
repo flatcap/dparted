@@ -918,7 +918,7 @@ DrawingArea::on_mouse_leave (GdkEventCrossing* event)
 bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
-	std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
+	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
 	if (event->type != GDK_BUTTON_PRESS)
 		return false;			// We haven't handled the event
@@ -1296,6 +1296,19 @@ DrawingArea::get_focus (int x, int y)
 	}
 
 	return match;
+}
+
+/**
+ * set_focus
+ */
+void
+DrawingArea::set_focus (GfxContainerPtr& c)
+{
+	if (!c)
+		return;
+
+	std::cout << "DrawingArea " << c << std::endl;
+	get_window()->invalidate (false);
 }
 
 /**

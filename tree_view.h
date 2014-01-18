@@ -33,6 +33,7 @@ public:
 	virtual ~TreeView();
 
 	void init_treeview (GfxContainerPtr& c);
+	void set_focus (GfxContainerPtr& c);
 
 protected:
 	// Override Signal handler:
@@ -50,6 +51,7 @@ protected:
 	public:
 		ModelColumns()
 		{
+			add (col_gfx_container);
 			add (col_container);
 			add (col_colour);
 			add (col_type);
@@ -63,6 +65,7 @@ protected:
 			add (col_empty);
 		}
 
+		Gtk::TreeModelColumn<GfxContainerPtr>           col_gfx_container;
 		Gtk::TreeModelColumn<std::string>               col_container;
 		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> col_colour;
 		Gtk::TreeModelColumn<std::string>               col_type;
@@ -79,13 +82,14 @@ protected:
 	ModelColumns m_Columns;
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
 
-	void on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
 	bool on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 	bool popup_on_keypress (GdkEventKey* ev);
 
 	void tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent);
 
 	bool menu_active = false;
+	Glib::RefPtr<Gtk::TreeSelection> treeselection;
+	void on_selection_changed();
 
 private:
 

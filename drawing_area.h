@@ -23,6 +23,7 @@
 #include <map>
 
 #include <gtkmm/drawingarea.h>
+#include <gtkmm/builder.h>
 
 #include "gfx_container.h"
 
@@ -41,6 +42,7 @@ public:
 	void set_data (GfxContainerPtr& c);
 
 	bool on_keypress (GdkEventKey* ev);
+	void set_focus (GfxContainerPtr& c);
 protected:
 	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
 

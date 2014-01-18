@@ -20,6 +20,7 @@
 
 #include "tree_view.h"
 #include "log_trace.h"
+#include "dparted.h"
 
 /**
  * TreeView
@@ -191,7 +192,12 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 				row = *(m_refTreeModel->append());
 			}
 
+			x->treepath = m_refTreeModel->get_string (row);
+			//std::cout << x->treepath << '\t' << x << std::endl;
+
 			//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
+
+			row[m_Columns.col_gfx_container] = x;
 
 			std::string dev = x->device;
 			size_t pos = dev.find_last_of ('/');
@@ -249,6 +255,7 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	 *	    `-- loop0p2		part	-	primary
 	 *	        `-- loop0p2	vfat	green	vfat_label
 	 */
+
 
 	//Add the TreeView's view columns:
 	Gtk::TreeView::Column* col = nullptr;
@@ -312,8 +319,10 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	set_level_indentation (10);
 
 	//Connect signal:
-	signal_row_activated().connect (sigc::mem_fun (*this, &TreeView::on_row_activated));
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &TreeView::on_query_tooltip));
+
+	treeselection = get_selection();
+	treeselection->signal_changed().connect (sigc::mem_fun (*this, &TreeView::on_selection_changed));
 
 	tree_add_row (c, nullptr);
 
@@ -321,29 +330,6 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	expand_all();
 }
 
-
-/**
- * on_row_activated
- */
-void
-TreeView::on_row_activated (const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* col)
-{
-#if 0
-	std::cout << "Path: " << path.to_string() << "\n";
-
-	Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter (path);
-	if (iter) {
-		GfxContainerPtr c;
-		Gtk::TreeModel::Row row = *iter;
-		std::cout << "Row activated: Name=" << row[m_Columns.col_name] << ", Type=" << row[m_Columns.col_type] << "\n";
-
-		c = row[m_Columns.col_container];
-		std::cout << typeid (row[m_Columns.col_container]).name() << "\n";
-		std::cout << typeid(c).name() << "\n";
-		std::cout << "Name=" << c->name << "\n";
-	}
-#endif
-}
 
 /**
  * on_query_tooltip
@@ -381,5 +367,54 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 	}
 #endif
 	return true;
+}
+
+
+/**
+ * set_focus
+ */
+void
+TreeView::set_focus (GfxContainerPtr& c)
+{
+	//std::cout << "focus: " << c->treepath << std::endl;
+	if (!c)
+		return;
+
+	if (c->treepath.empty()) {
+		std::cout << "TreeView: not visible" << std::endl;
+		treeselection->unselect_all();
+		return;
+	}
+
+	Gtk::TreeModel::iterator it = treeselection->get_selected();
+	if (it) {
+		std::string current_path = m_refTreeModel->get_string (*it);
+		if (c->treepath == current_path)
+			return;
+	}
+
+	Gtk::TreeModel::Path path (c->treepath);
+	set_cursor (path);
+	scroll_to_row (path);
+
+}
+
+/**
+ * on_selection_changed
+ */
+void TreeView::on_selection_changed()
+{
+	//LOG_TRACE;
+
+	Gtk::TreeModel::iterator it = treeselection->get_selected();
+	if (!it)
+		return;
+
+	const Gtk::TreeModel::Row& row = *it;
+	GfxContainerPtr c = row[m_Columns.col_gfx_container];
+	std::cout << "sel: " << c << std::endl;
+
+	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	dp->set_focus (c);
 }
 

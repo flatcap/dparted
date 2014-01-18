@@ -67,6 +67,7 @@ public:
 	Glib::RefPtr<Gdk::Pixbuf> icon;
 	std::string               label;
 	std::string               label_template;
+	std::string               treepath;
 
 	uint64_t bytes_size = 0;
 	uint64_t bytes_used = 0;
