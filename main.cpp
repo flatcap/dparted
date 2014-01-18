@@ -47,7 +47,7 @@ main (int argc, char* argv[])
 	// -t theme_file
 	//	[multiple = choice]
 
-	bool app      = false;
+	bool app      = true;
 	bool dot      = false;
 	bool list     = false;
 	bool separate = false;

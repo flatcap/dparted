@@ -28,6 +28,7 @@
 #include <gtkmm/toolbar.h>
 #include <gtkmm/uimanager.h>
 #include <gtkmm/spinbutton.h>
+#include <giomm/simpleactiongroup.h>
 
 #include "tree_view.h"
 #include "drawing_area.h"
@@ -44,33 +45,37 @@ public:
 	virtual ~DParted();
 
 	void set_data (GfxContainerPtr c);
-
 	bool set_focus (GfxContainerPtr cont);
 	GfxContainerPtr get_focus (void);
 
 protected:
-	Gtk::Box		outer_box;
+	Gtk::Box		outer_box;	//XXX dynamically create the ones we don't care about?
 	Gtk::EventBox		eventbox;
-	Gtk::Box		box;
-	//Gtk::MenuBar		menubar;
-	//Gtk::Toolbar		toolbar;
+	Gtk::ScrolledWindow	scrolledwindow;
+	Gtk::Box		inner_box;
 	DrawingArea		drawingarea;
 	TreeView		treeview;
 	Gtk::Statusbar		statusbar;
 
-	Gtk::ScrolledWindow	scrolledwindow;
+	// MENU
+	void init_menubar (Gtk::Box& box);
+	Glib::RefPtr<Gtk::Builder> m_refBuilder;
+	Glib::RefPtr<Gio::SimpleAction> m_refChoice;
+	Glib::RefPtr<Gio::SimpleAction> m_refChoiceOther;
+	Glib::RefPtr<Gio::SimpleAction> m_refToggle;
 
-	Glib::RefPtr<Gtk::UIManager> m_refUIManager;
-	Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup;
-	Glib::RefPtr<Gtk::RadioAction> m_refChoiceOne, m_refChoiceTwo;
+	Glib::RefPtr<Gio::SimpleAction> m_refViewGfx;
+	Glib::RefPtr<Gio::SimpleAction> m_refViewTree;
 
-	//Signal handlers:
-	void on_menu_file_new_generic();
-	void on_menu_file_quit();
-	void on_menu_others();
+	void on_menu_choices(const Glib::ustring& parameter);
+	void on_menu_choices_other(int parameter);
+	void on_menu_file_new_generic (void);
+	void on_menu_file_quit (void);
+	void on_menu_others (void);
+	void on_menu_toggle (void);
+	void on_menu_view (int option);
 
-	void on_menu_choices_one();
-	void on_menu_choices_two();
+	Gtk::Menu m_fake_menu;
 
 	bool on_mouse_click (GdkEventButton* event);
 
@@ -88,11 +93,6 @@ protected:
 	std::vector<GfxContainerPtr> selection;
 
 private:
-	Gtk::Menu m_fake_menu;
-
-	void init_menubar (void);
-	void init_toolbar (void);
-	void init_scrolledwindow (void);
 };
 
 

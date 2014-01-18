@@ -17,6 +17,7 @@
 
 #include <gtkmm/stock.h>
 #include <gtkmm.h>
+#include <giomm/simpleactiongroup.h>
 
 #include <iostream>
 
@@ -32,38 +33,15 @@
 DParted::DParted()
 {
 	set_title ("DParted");
-#if 0
-	set_size_request (1360, 70*3);
-#else
-	set_size_request (800, 700);
-#endif
-#if 0
-	set_default_size (1439, 800);
-#endif
 
-	init_menubar();
-	init_toolbar();
-	init_scrolledwindow();
+	// set_size_request (1360, 70*3);
+	set_size_request (800, 700);
+	// set_default_size (1439, 800);
 
 	scrolledwindow.set_hexpand (true);
 	scrolledwindow.set_vexpand (true);
 
-	box.set_orientation (Gtk::ORIENTATION_VERTICAL);
-
-#if 1
-	//Get the menubar and toolbar widgets, and add them to a container widget:
-	Gtk::Widget* pMenubar = m_refUIManager->get_widget ("/MenuBar");
-	if (pMenubar) {
-		pMenubar->set_hexpand (true);
-		//box.add (*pMenubar);
-	}
-
-	Gtk::Widget* pToolbar = m_refUIManager->get_widget ("/ToolBar") ;
-	if (pToolbar) {
-		pToolbar->set_hexpand (true);
-		//box.add (*pToolbar);
-	}
-#endif
+	inner_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 
 	treeview.set_hexpand (true);
 
@@ -81,22 +59,22 @@ DParted::DParted()
 
 	set_default_icon_name ("dparted");
 
-	//init_shortcuts();
+	init_shortcuts();
 
 	outer_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
+	outer_box.set_homogeneous (false);
+
+	//-------------------------------------
 
 	add (outer_box);
-
-	outer_box.set_homogeneous (false);
-	outer_box.pack_start (*pMenubar, false, false);
-	outer_box.pack_start (*pToolbar, false, false);
-	outer_box.add (scrolledwindow);
-	outer_box.pack_end (statusbar, false, false);
-
-	scrolledwindow.add (box);
-	eventbox.add (drawingarea);
-	box.pack_start (eventbox, false, false);
-	box.pack_end (treeview, true, true);
+		init_menubar (outer_box);
+		// init_toolbar (outer_box);
+		outer_box.add (eventbox);
+			eventbox.add (scrolledwindow);
+				scrolledwindow.add (inner_box);
+					inner_box.pack_start (drawingarea, false, false);
+					inner_box.pack_start (treeview,    true,  true);
+		outer_box.pack_end (statusbar, false, false);
 
 	show_all_children();
 
@@ -224,158 +202,301 @@ DParted::set_data (GfxContainerPtr c)
  * init_menubar
  */
 void
-DParted::init_menubar (void)
+DParted::init_menubar (Gtk::Box& box)
 {
 	//Create actions for menus and toolbars:
-	m_refActionGroup = Gtk::ActionGroup::create();
+	Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
 
-	//File|New sub menu:
-	m_refActionGroup->add (Gtk::Action::create ("FileNewStandard", Gtk::Stock::NEW, "_New",     "Create a new file"), sigc::mem_fun (*this, &DParted::on_menu_file_new_generic));
-	m_refActionGroup->add (Gtk::Action::create ("FileNewFoo",      Gtk::Stock::NEW, "New Foo",  "Create a new foo"),  sigc::mem_fun (*this, &DParted::on_menu_file_new_generic));
-	m_refActionGroup->add (Gtk::Action::create ("FileNewGoo",      Gtk::Stock::NEW, "_New Goo", "Create a new goo"),  sigc::mem_fun (*this, &DParted::on_menu_file_new_generic));
+	refActionGroup->add_action ("newstandard", sigc::mem_fun (*this, &DParted::on_menu_file_new_generic));
+	refActionGroup->add_action ("newfoo",      sigc::mem_fun (*this, &DParted::on_menu_file_new_generic));
+	refActionGroup->add_action ("newgoo",      sigc::mem_fun (*this, &DParted::on_menu_file_new_generic));
 
-	//File menu:
-	m_refActionGroup->add (Gtk::Action::create ("FileMenu", "_File"));
-	//Sub-menu.
-	m_refActionGroup->add (Gtk::Action::create ("FileNew",         Gtk::Stock::NEW));
-	m_refActionGroup->add (Gtk::Action::create ("FileQuit",        Gtk::Stock::QUIT),                                 sigc::mem_fun (*this, &DParted::on_menu_file_quit));
+	refActionGroup->add_action ("quit",        sigc::mem_fun (*this, &DParted::on_menu_file_quit));
 
-	//Edit menu:
-	m_refActionGroup->add (Gtk::Action::create ("EditMenu", "_Edit"));
-	m_refActionGroup->add (Gtk::Action::create ("EditCopy",        Gtk::Stock::COPY),                                 sigc::mem_fun (*this, &DParted::on_menu_others));
-	m_refActionGroup->add (Gtk::Action::create ("EditPaste",       Gtk::Stock::PASTE),                                sigc::mem_fun (*this, &DParted::on_menu_others));
-	m_refActionGroup->add (Gtk::Action::create ("EditSomething", "Something"), Gtk::AccelKey ("<control><alt>S"),     sigc::mem_fun (*this, &DParted::on_menu_others));
+	refActionGroup->add_action ("copy",        sigc::mem_fun (*this, &DParted::on_menu_others));
+	refActionGroup->add_action ("paste",       sigc::mem_fun (*this, &DParted::on_menu_others));
+	refActionGroup->add_action ("something",   sigc::mem_fun (*this, &DParted::on_menu_others));
 
+	//Choices menus, to demonstrate Radio items,
+	//using our convenience methods for string and int radio values:
+	m_refChoice      = refActionGroup->add_action_radio_string  ("choice",      sigc::mem_fun (*this, &DParted::on_menu_choices),       "a");
+	m_refChoiceOther = refActionGroup->add_action_radio_integer ("choiceother", sigc::mem_fun (*this, &DParted::on_menu_choices_other), 1);
+	m_refToggle      = refActionGroup->add_action_bool          ("sometoggle",  sigc::mem_fun (*this, &DParted::on_menu_toggle),        false);
 
-	//Choices menu, to demonstrate Radio items
-	m_refActionGroup->add (Gtk::Action::create ("ChoicesMenu", "Choices"));
-	Gtk::RadioAction::Group group_userlevel;
-	m_refChoiceOne = Gtk::RadioAction::create (group_userlevel, "ChoiceOne", "One");
-	m_refActionGroup->add (m_refChoiceOne, sigc::mem_fun (*this, &DParted::on_menu_choices_one));
-	m_refChoiceTwo = Gtk::RadioAction::create (group_userlevel, "ChoiceTwo", "Two");
-	m_refActionGroup->add (m_refChoiceTwo, sigc::mem_fun (*this, &DParted::on_menu_choices_two));
+	m_refViewGfx  = refActionGroup->add_action_bool ("view.gfx",  sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 1), true);
+	m_refViewTree = refActionGroup->add_action_bool ("view.tree", sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 2), true);
 
 	//Help menu:
-	m_refActionGroup->add (Gtk::Action::create ("HelpMenu", "_Help"));
-	m_refActionGroup->add (Gtk::Action::create ("HelpAbout", Gtk::Stock::HELP), sigc::mem_fun (*this, &DParted::on_menu_others));
+	refActionGroup->add_action ("about", sigc::mem_fun (*this, &DParted::on_menu_others));
 
-	m_refUIManager = Gtk::UIManager::create();
-	m_refUIManager->insert_action_group (m_refActionGroup);
+	insert_action_group ("example", refActionGroup);
 
-	add_accel_group (m_refUIManager->get_accel_group());
+	m_refBuilder = Gtk::Builder::create();
+
+	//TODO: add_accel_group (m_refBuilder->get_accel_group());
 
 	//Layout the actions in a menubar and toolbar:
 	Glib::ustring ui_info =
-		"<ui>"
-		"	<menubar name='MenuBar'>"
-		"		<menu action='FileMenu'>"
-		"			<menu action='FileNew'>"
-		"				<menuitem action='FileNewStandard'/>"
-		"				<menuitem action='FileNewFoo'/>"
-		"				<menuitem action='FileNewGoo'/>"
-		"			</menu>"
-		"			<separator/>"
-		"			<menuitem action='FileQuit'/>"
-		"		</menu>"
-		"		<menu action='EditMenu'>"
-		"			<menuitem action='EditCopy'/>"
-		"			<menuitem action='EditPaste'/>"
-		"			<menuitem action='EditSomething'/>"
-		"		</menu>"
-		"		<menu action='ChoicesMenu'>"
-		"			<menuitem action='ChoiceOne'/>"
-		"			<menuitem action='ChoiceTwo'/>"
-		"		</menu>"
-		"		<menu action='HelpMenu'>"
-		"			<menuitem action='HelpAbout'/>"
-		"		</menu>"
-		"	</menubar>"
-		"	<toolbar name='ToolBar'>"
-		"		<toolitem action='FileNewStandard'/>"
-		"		<toolitem action='FileQuit'/>"
-		"	</toolbar>"
-		"</ui>";
+		"<interface>"
+		"	<menu id='menu-example'>"
+		"		<submenu>"
+		"			<attribute name='label' translatable='yes'>_File</attribute>"
+		"			<section>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>New _Standard</attribute>"
+		"					<attribute name='action'>example.newstandard</attribute>"
+		"					<attribute name='accel'>&lt;Primary&gt;n</attribute>"
+		"				</item>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>New _Foo</attribute>"
+		"					<attribute name='action'>example.newfoo</attribute>"
+		"				</item>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>New _Goo</attribute>"
+		"					<attribute name='action'>example.newgoo</attribute>"
+		"				</item>"
+		"			</section>"
+		"			<section>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>_Quit</attribute>"
+		"					<attribute name='action'>example.quit</attribute>"
+		"					<attribute name='accel'>&lt;Primary&gt;q</attribute>"
+		"				</item>"
+		"			</section>"
+		"		</submenu>"
+		"		<submenu>"
+		"			<attribute name='label' translatable='yes'>_Edit</attribute>"
+		"			<section>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>_Copy</attribute>"
+		"					<attribute name='action'>example.copy</attribute>"
+		"					<attribute name='accel'>&lt;Primary&gt;c</attribute>"
+		"				</item>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>_Paste</attribute>"
+		"					<attribute name='action'>example.paste</attribute>"
+		"					<attribute name='accel'>&lt;Primary&gt;v</attribute>"
+		"				</item>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>_Something</attribute>"
+		"					<attribute name='action'>example.something</attribute>"
+		"				</item>"
+		"			</section>"
+		"		</submenu>"
+		"		<submenu>"
+		"			<attribute name='label' translatable='yes'>_View</attribute>"
+		"			<section>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>_Graphics</attribute>"
+		"					<attribute name='action'>example.view.gfx</attribute>"
+		"				</item>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>_Tree View</attribute>"
+		"					<attribute name='action'>example.view.tree</attribute>"
+		"				</item>"
+		"			</section>"
+		"		</submenu>"
+		"		<submenu>"
+		"			<attribute name='label' translatable='yes'>_Choices</attribute>"
+		"			<section>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>Choice _A</attribute>"
+		"					<attribute name='action'>example.choice</attribute>"
+		"					<attribute name='target'>a</attribute>"
+		"				</item>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>Choice _B</attribute>"
+		"					<attribute name='action'>example.choice</attribute>"
+		"					<attribute name='target'>b</attribute>"
+		"				</item>"
+		"			</section>"
+		"		</submenu>"
+		"		<submenu>"
+		"			<attribute name='label' translatable='yes'>_Other Choices</attribute>"
+		"			<section>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>Choice 1</attribute>"
+		"					<attribute name='action'>example.choiceother</attribute>"
+		"					<attribute name='target' type='i'>1</attribute>"
+		"				</item>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>Choice 2</attribute>"
+		"					<attribute name='action'>example.choiceother</attribute>"
+		"					<attribute name='target' type='i'>2</attribute>"
+		"				</item>"
+		"			</section>"
+		"			<section>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>Some Toggle</attribute>"
+		"					<attribute name='action'>example.sometoggle</attribute>"
+		"				</item>"
+		"			</section>"
+		"		</submenu>"
+		"		<submenu>"
+		"			<attribute name='label' translatable='yes'>_Help</attribute>"
+		"			<section>"
+		"				<item>"
+		"					<attribute name='label' translatable='yes'>_About</attribute>"
+		"					<attribute name='action'>example.about</attribute>"
+		"				</item>"
+		"			</section>"
+		"		</submenu>"
+		"	</menu>"
+		"</interface>";
 
-	try {
-		m_refUIManager->add_ui_from_string (ui_info);
-	} catch (const Glib::Error& ex) {
+	try
+	{
+		m_refBuilder->add_from_string (ui_info);
+	}
+	catch (const Glib::Error& ex)
+	{
 		std::cerr << "building menus failed: " << ex.what();
 	}
+
+	//Get the menubar and add it to a container widget:
+	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object ("menu-example");
+	Glib::RefPtr<Gio::Menu> gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic (object);
+	if (!gmenu)
+		g_warning ("GMenu not found");
+
+	//Menubar:
+	Gtk::MenuBar* pMenubar = Gtk::manage (new Gtk::MenuBar (gmenu));
+	box.pack_start (*pMenubar, Gtk::PACK_SHRINK);
+
+#if 0
+	//Create the toolbar and add it to a container widget:
+	Gtk::Toolbar* toolbar = Gtk::manage (new Gtk::Toolbar());
+	Gtk::ToolButton* button = Gtk::manage (new Gtk::ToolButton());
+	button->set_icon_name ("document-new");
+	//We can't do this until we can break the ToolButton ABI: button->set_detailed_action_name ("example.new");
+	gtk_actionable_set_detailed_action_name (GTK_ACTIONABLE (button->gobj()), "example.newstandard");
+	toolbar->add (*button);
+
+	button = Gtk::manage (new Gtk::ToolButton());
+	button->set_icon_name ("application-exit");
+	//We can't do this until we can break the ToolButton ABI: button->set_detailed_action_name ("example.quit");
+	gtk_actionable_set_detailed_action_name (GTK_ACTIONABLE (button->gobj()), "example.quit");
+	toolbar->add (*button);
+#endif
+}
+
+
+/**
+ * on_menu_choices
+ */
+void
+DParted::on_menu_choices (const Glib::ustring& parameter)
+{
+	//The radio action's state does not change automatically:
+	m_refChoice->change_state (parameter);
+
+	Glib::ustring message;
+	if (parameter == "a")
+		message = "Choice a was selected.";
+	else
+		message = "Choice b was selected";
+
+	std::cout << message << std::endl;
 }
 
 /**
- * init_toolbar
+ * on_menu_choices_other
  */
 void
-DParted::init_toolbar (void)
+DParted::on_menu_choices_other (int parameter)
 {
-}
+	//The radio action's state does not change automatically:
+	m_refChoiceOther->change_state (parameter);
 
-/**
- * init_scrolledwindow
- */
-void
-DParted::init_scrolledwindow (void)
-{
-}
+	Glib::ustring message;
+	if (parameter == 1)
+		message = "Choice 1 was selected.";
+	else
+		message = "Choice 2 was selected";
 
-
-/**
- * on_menu_file_quit
- */
-void
-DParted::on_menu_file_quit()
-{
-	//LOG_TRACE;
-	hide(); //Closes the main window to stop the Gtk::Main::run().
+	std::cout << message << std::endl;
 }
 
 /**
  * on_menu_file_new_generic
  */
 void
-DParted::on_menu_file_new_generic()
+DParted::on_menu_file_new_generic (void)
 {
-	std::cout << "A File|New menu item was selected.\n";
+	std::cout << "A File|New menu item was selected." << std::endl;
+}
+
+/**
+ * on_menu_file_quit
+ */
+void
+DParted::on_menu_file_quit (void)
+{
+	hide();
 }
 
 /**
  * on_menu_others
  */
 void
-DParted::on_menu_others()
+DParted::on_menu_others (void)
 {
-	std::cout << "A menu item was selected.\n";
+	std::cout << "A menu item was selected." << std::endl;
 }
 
 /**
- * on_menu_choices_one
+ * on_menu_toggle
  */
 void
-DParted::on_menu_choices_one()
+DParted::on_menu_toggle (void)
 {
-	std::string message;
-	if (m_refChoiceOne->get_active())
-		message = "Choice 1 was selected.";
-	else
-		message = "Choice 1 was deselected";
+	bool active = false;
+	m_refToggle->get_state (active);
 
-	std::cout << message << "\n";
+	//The toggle action's state does not change automatically:
+	m_refToggle->change_state (!active);
+	active = !active;
+
+	Glib::ustring message;
+	if (active)
+		message = "Toggle is active.";
+	else
+		message = "Toggle is not active";
+
+	std::cout << message << std::endl;
 }
 
 /**
- * on_menu_choices_two
+ * on_menu_view
  */
 void
-DParted::on_menu_choices_two()
+DParted::on_menu_view (int option)
 {
-	std::string message;
-	if (m_refChoiceTwo->get_active())
-		message = "Choice 2 was selected.";
-	else
-		message = "Choice 2 was deselected";
+	std::cout << "on_menu_view: " << option << std::endl;
 
-	std::cout << message << "\n";
+	bool show_gfx  = false;
+	bool show_tree = false;
+
+	m_refViewGfx ->get_state (show_gfx);
+	m_refViewTree->get_state (show_tree);
+
+	if (option == 1) {
+		show_gfx = !show_gfx;
+		m_refViewGfx->change_state (show_gfx);
+	} else {
+		show_tree = !show_tree;
+		m_refViewTree->change_state (show_tree);
+	}
+
+	if (show_gfx)
+		drawingarea.show_all();
+	else
+		drawingarea.hide();
+
+	if (show_tree)
+		treeview.show_all();
+	else
+		treeview.hide();
 }
 
 
@@ -425,10 +546,9 @@ DParted::init_shortcuts (void)
 void
 DParted::on_keypress (int modifier, int key)
 {
-	std::cout << "Keypress: " << modifier << " : " << (char) key << std::endl;
+	//std::cout << "Keypress: " << modifier << " : " << (char) key << std::endl;
 
 	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q'))
 		hide();
 }
-
 
