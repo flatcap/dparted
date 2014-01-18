@@ -344,12 +344,9 @@ DParted::init_menubar (Gtk::Box& box)
 		"	</menu>"
 		"</interface>";
 
-	try
-	{
+	try {
 		m_refBuilder->add_from_string (ui_info);
-	}
-	catch (const Glib::Error& ex)
-	{
+	} catch (const Glib::Error& ex) {
 		std::cerr << "building menus failed: " << ex.what();
 	}
 
@@ -363,7 +360,6 @@ DParted::init_menubar (Gtk::Box& box)
 	Gtk::MenuBar* pMenubar = Gtk::manage (new Gtk::MenuBar (gmenu));
 	box.pack_start (*pMenubar, Gtk::PACK_SHRINK);
 
-#if 0
 	//Create the toolbar and add it to a container widget:
 	Gtk::Toolbar* toolbar = Gtk::manage (new Gtk::Toolbar());
 	Gtk::ToolButton* button = Gtk::manage (new Gtk::ToolButton());
@@ -377,7 +373,8 @@ DParted::init_menubar (Gtk::Box& box)
 	//We can't do this until we can break the ToolButton ABI: button->set_detailed_action_name ("example.quit");
 	gtk_actionable_set_detailed_action_name (GTK_ACTIONABLE (button->gobj()), "example.quit");
 	toolbar->add (*button);
-#endif
+
+	box.pack_start (*toolbar, Gtk::PACK_SHRINK);
 }
 
 
