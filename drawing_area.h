@@ -68,15 +68,6 @@ private:
 	void draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
 	void draw_tabbox  (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
 
-	void make_menu (void);
-	void on_menu_file_popup_generic (void);
-	Gtk::Menu* m_pMenuPopup = nullptr;
-	Glib::RefPtr<Gtk::Builder> m_refBuilder;
-	bool get_coords (int& x, int& y);
-	void popup_menu (int x, int y);
-	bool menu_active = false;
-	bool popup_on_keypress (GdkEventKey* ev);
-
 	Rect get_rect (GfxContainerPtr g);
 	bool is_visible (const GfxContainerPtr& c);
 
@@ -91,6 +82,15 @@ private:
 
 	GfxContainerPtr top_level;
 	Gtk::Menu m_fake_menu;
+
+	// POPUP
+	void setup_popup (void);
+	void on_menu_select (int option);
+	bool get_coords (int& x, int& y);
+	void popup_menu (int x, int y);
+	bool popup_on_keypress (GdkEventKey* ev);
+	Gtk::Menu m_Menu_Popup;
+	bool menu_active = false;
 };
 
 

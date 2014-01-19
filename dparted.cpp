@@ -296,6 +296,8 @@ DParted::init_menubar (Gtk::Box& box)
 		"					<attribute name='label' translatable='yes'>_Tree View</attribute>"
 		"					<attribute name='action'>example.view.tree</attribute>"
 		"				</item>"
+		"			</section>"
+		"			<section>"
 		"				<item>"
 		"					<attribute name='label' translatable='yes'>Tool_bar</attribute>"
 		"					<attribute name='action'>example.view.toolbar</attribute>"

@@ -40,11 +40,6 @@ protected:
 	// Alternatively, use signal_button_press_event().connect_notify()
 	virtual bool on_button_press_event (GdkEventButton* ev);
 
-	//Signal handler for popup menu items:
-	void on_menu_file_popup_generic();
-
-	Gtk::Menu m_Menu_Popup;
-
 	//Tree model columns:
 	class ModelColumns : public Gtk::TreeModel::ColumnRecord
 	{
@@ -83,18 +78,22 @@ protected:
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
 
 	bool on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
-	bool popup_on_keypress (GdkEventKey* ev);
-	bool on_keypress (GdkEventKey* event);
-	bool get_coords (int& x, int& y);
 
 	void tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent);
 
-	bool menu_active = false;
 	Glib::RefPtr<Gtk::TreeSelection> treeselection;
 	void on_selection_changed();
 
 private:
-
+	// POPUP
+	void setup_popup (void);
+	void on_menu_select (int option);
+	bool get_coords (int& x, int& y);
+	void popup_menu (int x, int y);
+	bool popup_on_keypress (GdkEventKey* ev);
+	bool on_keypress (GdkEventKey* event);
+	Gtk::Menu m_Menu_Popup;
+	bool menu_active = false;
 };
 
 

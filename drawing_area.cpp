@@ -76,7 +76,7 @@ DrawingArea::DrawingArea()
 	set_has_tooltip();	// We'll be handling the tooltips ourself
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &DrawingArea::on_textview_query_tooltip));
 
-	make_menu();
+	setup_popup();
 }
 
 /**
@@ -952,150 +952,6 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 }
 
 
-/**
- * get_coords
- *
- * Get the absolute screen coordinates of the highlighted container.
- */
-bool
-DrawingArea::get_coords (int& x, int& y)
-{
-	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
-	if (!dp) {
-		std::cout << "No DParted" << std::endl;
-		return false;
-	}
-
-	GfxContainerPtr c = dp->get_focus();
-	if (!c) {
-		//std::cout << "No focus" << std::endl;
-		return false;
-	}
-
-	Glib::RefPtr<Gdk::Window> w = get_window();
-	if (!w) {
-		return false;
-	}
-
-	int ox = 0;
-	int oy = 0;
-	w->get_origin (ox, oy);		// Coords of DParted's main window (inside chrome)
-
-	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
-	if (!window) {
-		return false;
-	}
-
-	int tx = 0;
-	int ty = 0;
-	if (!translate_coordinates (*window, 0, 0, tx, ty)) {
-		return false;		// Coords of DrawingArea within DParted's window
-	}
-
-	Rect r = get_rect(c);		// Size and shape of selected container
-	if (r.x < 0) {
-		return false;
-	}
-#if 0
-	printf ("o %d, %d\n", ox, oy);
-	printf ("t %d, %d\n", tx, ty);
-	printf ("r %d, %d, %d\n", r.x, r.y, r.h);
-#endif
-
-	x = ox + tx + r.x;
-	y = oy + r.y + r.h;
-	return true;
-}
-
-
-/**
- * on_menu_file_popup_generic
- */
-void
-DrawingArea::on_menu_file_popup_generic (void)
-{
-	//LOG_TRACE;
-}
-
-/**
- * make_menu
- */
-void
-DrawingArea::make_menu (void)
-{
-	Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
-
-	refActionGroup->add_action ("edit",    sigc::mem_fun (*this, &DrawingArea::on_menu_file_popup_generic));
-	refActionGroup->add_action ("process", sigc::mem_fun (*this, &DrawingArea::on_menu_file_popup_generic));
-	refActionGroup->add_action ("remove",  sigc::mem_fun (*this, &DrawingArea::on_menu_file_popup_generic));
-
-	insert_action_group ("examplepopup", refActionGroup);
-
-	m_refBuilder = Gtk::Builder::create();
-
-	Glib::ustring ui_info =
-		"<interface>"
-		"	<menu id='menu-examplepopup'>"
-		"		<section>"
-		"			<item>"
-		"				<attribute name='label' translatable='yes'>Edit</attribute>"
-		"				<attribute name='action'>examplepopup.edit</attribute>"
-		"			</item>"
-		"			<item>"
-		"				<attribute name='label' translatable='yes'>Process</attribute>"
-		"				<attribute name='action'>examplepopup.process</attribute>"
-		"			</item>"
-		"			<item>"
-		"				<attribute name='label' translatable='yes'>Remove</attribute>"
-		"				<attribute name='action'>examplepopup.remove</attribute>"
-		"			</item>"
-		"		</section>"
-		"	</menu>"
-		"</interface>";
-
-	try {
-		m_refBuilder->add_from_string (ui_info);
-	} catch (const Glib::Error& ex) {
-		std::cerr << "building menus failed: " << ex.what();
-	}
-
-	//Get the menu:
-	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object ("menu-examplepopup");
-	Glib::RefPtr<Gio::Menu> gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic (object);
-	if (!gmenu) {
-		g_warning ("GMenu not found");
-	}
-
-	m_pMenuPopup = new Gtk::Menu (gmenu);
-
-	if (m_pMenuPopup && (!m_pMenuPopup->get_attach_widget())) {
-		m_pMenuPopup->attach_to_widget (*this);
-	}
-
-	m_pMenuPopup->signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
-
-	// Lambdas to let us know when the popup menu is in use.
-	m_pMenuPopup->signal_show().connect ([this] { menu_active = true;  });
-	m_pMenuPopup->signal_hide().connect ([this] { menu_active = false; });
-}
-
-/**
- * popup_on_keypress
- */
-bool
-DrawingArea::popup_on_keypress (GdkEventKey* ev)
-{
-	if ((ev->keyval == GDK_KEY_Menu) && menu_active) {
-		m_pMenuPopup->popdown();
-		menu_active = false;
-		return true;
-	}
-
-	//std::cout << "menu key" << std::endl;
-	return false;
-}
-
-
 #if 0
 /**
  * draw_container_examples
@@ -1634,21 +1490,6 @@ DrawingArea::on_focus_out (GdkEventFocus* event)
 
 
 /**
- * popup_menu
- */
-void
-DrawingArea::popup_menu (int x, int y)
-{
-	if (!m_pMenuPopup) {
-		return;
-	}
-
-	// Lamba to position popup menu
-	m_pMenuPopup->popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
-}
-
-
-/**
  * is_visible
  */
 bool
@@ -1747,4 +1588,123 @@ DrawingArea::down (GfxContainerPtr c)
 	r.y = ((r.y/70) * 70) + 70 + 35;
 	return get_focus (r.x, r.y);
 }
+
+
+// POPUP
+/**
+ * setup_popup
+ */
+void
+DrawingArea::setup_popup (void)
+{
+	Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem ("_Edit", true));
+	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), 1));
+	m_Menu_Popup.append (*item);
+
+	item = Gtk::manage (new Gtk::MenuItem ("_Process", true));
+	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), 2));
+	m_Menu_Popup.append (*item);
+
+	item = Gtk::manage (new Gtk::MenuItem ("_Remove", true));
+	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), 3));
+	m_Menu_Popup.append (*item);
+
+	m_Menu_Popup.accelerate (*this);
+	m_Menu_Popup.show_all();
+
+	m_Menu_Popup.signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
+
+	// Lambdas to let us know when the popup menu is in use.
+	m_Menu_Popup.signal_show().connect ([this] { menu_active = true;  });
+	m_Menu_Popup.signal_hide().connect ([this] { menu_active = false; });
+}
+
+/**
+ * on_menu_select
+ */
+void
+DrawingArea::on_menu_select (int option)
+{
+	LOG_TRACE;
+}
+
+/**
+ * get_coords
+ *
+ * Get the absolute screen coordinates of the highlighted container.
+ */
+bool
+DrawingArea::get_coords (int& x, int& y)
+{
+	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	if (!dp) {
+		std::cout << "No DParted" << std::endl;
+		return false;
+	}
+
+	GfxContainerPtr c = dp->get_focus();
+	if (!c) {
+		//std::cout << "No focus" << std::endl;
+		return false;
+	}
+
+	Glib::RefPtr<Gdk::Window> w = get_window();
+	if (!w) {
+		return false;
+	}
+
+	int ox = 0;
+	int oy = 0;
+	w->get_origin (ox, oy);		// Coords of DParted's main window (inside chrome)
+
+	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
+	if (!window) {
+		return false;
+	}
+
+	int tx = 0;
+	int ty = 0;
+	if (!translate_coordinates (*window, 0, 0, tx, ty)) {
+		return false;		// Coords of DrawingArea within DParted's window
+	}
+
+	Rect r = get_rect(c);		// Size and shape of selected container
+	if (r.x < 0) {
+		return false;
+	}
+#if 0
+	printf ("o %d, %d\n", ox, oy);
+	printf ("t %d, %d\n", tx, ty);
+	printf ("r %d, %d, %d\n", r.x, r.y, r.h);
+#endif
+
+	x = ox + tx + r.x;
+	y = oy + r.y + r.h;
+	return true;
+}
+
+/**
+ * popup_menu
+ */
+void
+DrawingArea::popup_menu (int x, int y)
+{
+	// Lamba to position popup menu
+	m_Menu_Popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
+}
+
+/**
+ * popup_on_keypress
+ */
+bool
+DrawingArea::popup_on_keypress (GdkEventKey* ev)
+{
+	if ((ev->keyval == GDK_KEY_Menu) && menu_active) {
+		m_Menu_Popup.popdown();
+		return true;
+	}
+
+	return false;
+}
+
 

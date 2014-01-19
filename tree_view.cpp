@@ -27,33 +27,10 @@
  */
 TreeView::TreeView()
 {
-#if 1
-	//Fill popup menu:
-	Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem ("_Edit", true));
-	item->signal_activate().connect (sigc::mem_fun (*this, &TreeView::on_menu_file_popup_generic));
-	m_Menu_Popup.append (*item);
-
-	item = Gtk::manage (new Gtk::MenuItem ("_Process", true));
-	item->signal_activate().connect (sigc::mem_fun (*this, &TreeView::on_menu_file_popup_generic));
-	m_Menu_Popup.append (*item);
-
-	item = Gtk::manage (new Gtk::MenuItem ("_Remove", true));
-	item->signal_activate().connect (sigc::mem_fun (*this, &TreeView::on_menu_file_popup_generic));
-	m_Menu_Popup.append (*item);
-
-	m_Menu_Popup.accelerate (*this);
-	m_Menu_Popup.show_all();
-
-	m_Menu_Popup.signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::popup_on_keypress));
-
-	// Lambdas to let us know when the popup menu is in use.
-	m_Menu_Popup.signal_show().connect ([this] { menu_active = true;  });
-	m_Menu_Popup.signal_hide().connect ([this] { menu_active = false; });
+	setup_popup();
 
 	set_has_tooltip (true);
 	set_activate_on_single_click (true);
-#endif
-	signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::on_keypress));
 }
 
 /**
@@ -63,22 +40,6 @@ TreeView::~TreeView()
 {
 }
 
-
-/**
- * popup_on_keypress
- */
-bool
-TreeView::popup_on_keypress (GdkEventKey* ev)
-{
-	std::cout << "menu key" << std::endl;
-	if ((ev->keyval == GDK_KEY_Menu) && menu_active) {
-		m_Menu_Popup.popdown();
-		menu_active = false;
-		return true;
-	}
-
-	return false;
-}
 
 /**
  * on_button_press_event
@@ -94,7 +55,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 
 	//Then do our custom stuff:
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
-		m_Menu_Popup.popup (event->button, event->time);
+		popup_menu (event->x_root, event->y_root);
 	}
 
 #if 0
@@ -110,24 +71,6 @@ TreeView::on_button_press_event (GdkEventButton* event)
 
 	return return_value;
 }
-
-/**
- * on_menu_file_popup_generic
- */
-void
-TreeView::on_menu_file_popup_generic()
-{
-	std::cout << "A popup menu item was selected.\n";
-
-	Glib::RefPtr<Gtk::TreeView::Selection> refSelection = get_selection();
-	if (refSelection) {
-		Gtk::TreeModel::iterator iter = refSelection->get_selected();
-		if (iter) {
-			std::cout << "selected something\n";
-		}
-	}
-}
-
 
 /**
  * get_colour_as_pixbuf
@@ -154,7 +97,6 @@ get_colour_as_pixbuf (int size, Gdk::RGBA colour)
 
 	return pixbuf;
 }
-
 
 /**
  * tree_add_row
@@ -218,7 +160,6 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 		}
 	}
 }
-
 
 /**
  * init_treeview
@@ -320,7 +261,6 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	expand_all();
 }
 
-
 /**
  * on_query_tooltip
  */
@@ -352,13 +292,12 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 		tooltip->set_text (row[m_Columns.col_name] + ":" + row[m_Columns.col_type]);
 #endif
 	} else {
-		// implies mouse over non-data part of textview, e.g. headers
+		// implies mouse over non-data part of textview, e.g. headers, or dead space below
 		tooltip->set_text ("wibble"); // "Click to sort"?
 	}
 #endif
 	return true;
 }
-
 
 /**
  * set_focus
@@ -407,6 +346,54 @@ void TreeView::on_selection_changed()
 	dp->set_focus (c);
 }
 
+
+// POPUP
+/**
+ * setup_popup
+ */
+void
+TreeView::setup_popup (void)
+{
+	Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem ("_Edit", true));
+	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &TreeView::on_menu_select), 1));
+	m_Menu_Popup.append (*item);
+
+	item = Gtk::manage (new Gtk::MenuItem ("_Process", true));
+	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &TreeView::on_menu_select), 2));
+	m_Menu_Popup.append (*item);
+
+	item = Gtk::manage (new Gtk::MenuItem ("_Remove", true));
+	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &TreeView::on_menu_select), 3));
+	m_Menu_Popup.append (*item);
+
+	m_Menu_Popup.accelerate (*this);
+	m_Menu_Popup.show_all();
+
+	m_Menu_Popup.signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::popup_on_keypress));
+
+	// Lambdas to let us know when the popup menu is in use.
+	m_Menu_Popup.signal_show().connect ([this] { menu_active = true;  });
+	m_Menu_Popup.signal_hide().connect ([this] { menu_active = false; });
+
+	signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::on_keypress));
+}
+
+/**
+ * on_menu_select
+ */
+void
+TreeView::on_menu_select (int option)
+{
+	std::cout << "A popup menu item was selected.\n";
+
+	Glib::RefPtr<Gtk::TreeView::Selection> refSelection = get_selection();
+	if (refSelection) {
+		Gtk::TreeModel::iterator iter = refSelection->get_selected();
+		if (iter) {
+			std::cout << "selected something\n";
+		}
+	}
+}
 
 /**
  * get_coords
@@ -469,24 +456,45 @@ TreeView::get_coords (int& x, int& y)
 }
 
 /**
+ * popup_menu
+ */
+void
+TreeView::popup_menu (int x, int y)
+{
+	// Lamba to position popup menu
+	m_Menu_Popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
+}
+
+/**
+ * popup_on_keypress
+ */
+bool
+TreeView::popup_on_keypress (GdkEventKey* ev)
+{
+	if ((ev->keyval == GDK_KEY_Menu) && menu_active) {
+		m_Menu_Popup.popdown();
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * on_keypress
  */
 bool
 TreeView::on_keypress (GdkEventKey* event)
 {
 	if (event->keyval == GDK_KEY_Menu) {	// 65383 (0xFF67)
-		/* get_coords (x, y); */
-		/* popup_menu (x, y); */
-		std::cout << "menu" << std::endl;
-		// Lamba to position popup menu
 		int x = 0;
 		int y = 0;
 		//XXX scroll row into view (somehow)
 		// scroll_to_row (path); doesn't seem to work
 		get_coords (x, y);
-		m_Menu_Popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
+		popup_menu (x, y);
 		return true;
 	}
 
 	return false;
 }
+

@@ -211,7 +211,7 @@ GuiApp::menu_about (void)
 	about.set_website_label ("Rich's homepage");
 	about.set_authors (authors);
 	about.set_documenters (documenters);
-	about.set_translator_credits ("Bjorn ,Volker, Pierre");
+	about.set_translator_credits ("Bjorn, Volker, Pierre");
 	about.set_artists (artists);
 	about.set_license_type (Gtk::LICENSE_GPL_3_0);
 
