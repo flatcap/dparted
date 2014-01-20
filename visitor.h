@@ -28,6 +28,7 @@
 #include "filesystem.h"
 #include "gpt.h"
 #include "loop.h"
+#include "luks.h"
 #include "lvm_group.h"
 #include "lvm_linear.h"
 #include "lvm_metadata.h"
@@ -65,6 +66,7 @@ public:
 	virtual bool visit (FilesystemPtr   f) { return visit (std::dynamic_pointer_cast<Container>(f)); }
 	virtual bool visit (GptPtr          g) { return visit (std::dynamic_pointer_cast<Table>    (g)); }
 	virtual bool visit (LoopPtr         l) { return visit (std::dynamic_pointer_cast<Block>    (l)); }
+	virtual bool visit (LuksPtr         l) { return visit (std::dynamic_pointer_cast<Partition>(l)); }
 	virtual bool visit (LvmGroupPtr     l) { return visit (std::dynamic_pointer_cast<Whole>    (l)); }
 	virtual bool visit (LvmLinearPtr    l) { return visit (std::dynamic_pointer_cast<LvmVolume>(l)); }
 	virtual bool visit (LvmMetadataPtr  l) { return visit (std::dynamic_pointer_cast<LvmLinear>(l)); }

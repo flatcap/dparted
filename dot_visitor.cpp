@@ -26,6 +26,7 @@
 #include "block.h"
 #include "partition.h"
 #include "filesystem.h"
+#include "luks.h"
 #include "lvm_group.h"
 #include "lvm_volume.h"
 
@@ -617,6 +618,29 @@ dot_partition (std::shared_ptr<T> t)
 	output << dot_container(p);
 
 	// no specifics for now
+
+	return output.str();
+}
+
+/**
+ * dot_luks
+ */
+template <class T>
+std::string
+dot_luks (std::shared_ptr<T> t)
+{
+	LuksPtr l(t);
+	if (!l)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_container(l);
+
+	output << dot_row ("version"    , l->version);
+	output << dot_row ("cipher_name", l->cipher_name);
+	output << dot_row ("cipher_mode", l->cipher_mode);
+	output << dot_row ("hash_spec"  , l->hash_spec);
 
 	return output.str();
 }
