@@ -39,11 +39,12 @@ const double ARC_E = 0*M_PI_2;
 const double ARC_S = 1*M_PI_2;
 const double ARC_W = 2*M_PI_2;
 
-const int GAP         =  3;	// Space between partitions
-const int RADIUS      =  8;	// Curve radius of corners
-const int SIDES       =  2;	// Width of sides and base
-const int TAB_WIDTH   = 10;	// Space in left side-bar
-const int BLOCK_WIDTH = 24;	// Placeholder for icons
+const int GAP         =   3;	// Space between partitions
+const int RADIUS      =   8;	// Curve radius of corners
+const int SIDES       =   2;	// Width of sides and base
+const int TAB_WIDTH   =  10;	// Space in left side-bar
+const int BLOCK_WIDTH =  24;	// Placeholder for icons
+const int DA_HEIGHT   = 100;	// Graphical display height in pixels
 
 /**
  * DrawingArea
@@ -52,7 +53,7 @@ DrawingArea::DrawingArea()
 	//Glib::ObjectBase ("MyDrawingArea")
 {
 	//set_size_request (800, 77);
-	set_size_request (400, 70*3);
+	set_size_request (400, DA_HEIGHT*3);
 	set_hexpand (true);
 	set_vexpand (false);
 	set_can_focus (true);
@@ -835,10 +836,10 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	draw_grid_linear (cr, shape, m_c->bytes_size);
 	fill_rect (cr, shape, "white");
 #endif
-	shape.h = 70;
+	shape.h = DA_HEIGHT;
 	for (auto c : top_level->children) {
 		draw_container (cr, c, shape);
-		shape.y += 70;
+		shape.y += DA_HEIGHT;
 	}
 
 	return true;
@@ -1133,7 +1134,7 @@ DrawingArea::set_data (GfxContainerPtr& c)
 
 	// invalidate window
 	unsigned int children = c->children.size();
-	set_size_request (600, 70 * children);
+	set_size_request (600, DA_HEIGHT * children);
 
 	top_level = c;
 	//top_level->dump();
@@ -1571,7 +1572,7 @@ DrawingArea::up (GfxContainerPtr c)
 		return nullptr;
 
 	Rect r = get_rect(c);
-	r.y = ((r.y/70) * 70) - 35;
+	r.y = ((r.y/DA_HEIGHT) * DA_HEIGHT) - (DA_HEIGHT/2);
 	return get_focus (r.x, r.y);
 }
 
@@ -1585,7 +1586,7 @@ DrawingArea::down (GfxContainerPtr c)
 		return nullptr;
 
 	Rect r = get_rect(c);
-	r.y = ((r.y/70) * 70) + 70 + 35;
+	r.y = ((r.y/DA_HEIGHT) * DA_HEIGHT) + DA_HEIGHT + (DA_HEIGHT/2);
 	return get_focus (r.x, r.y);
 }
 
@@ -1699,7 +1700,7 @@ DrawingArea::popup_menu (int x, int y)
 bool
 DrawingArea::popup_on_keypress (GdkEventKey* ev)
 {
-	if ((ev->keyval == GDK_KEY_Menu) && menu_active) {
+	if (ev->keyval == GDK_KEY_Menu) {
 		m_Menu_Popup.popdown();
 		return true;
 	}
