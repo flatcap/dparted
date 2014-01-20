@@ -79,12 +79,6 @@ Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	if (!parent)
 		return nullptr;
 
-	ContainerPtr p (parent);
-	while (p) {
-		////std::cout << p << std::endl;
-		p = p->parent.lock();
-	}
-
 	long		 bufsize = 131072;	// 128 KiB, enough for the fs signatures
 	unsigned char	*buffer  = parent->get_buffer (0, bufsize);
 

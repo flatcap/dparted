@@ -22,6 +22,7 @@
 #include <string>
 #include <algorithm>
 
+#include "app.h"
 #include "log.h"
 #include "lvm_group.h"
 #include "lvm_linear.h"

@@ -18,11 +18,5 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-#include "app.h"
-#include "container.h"
-
-void queue_add_probe (ContainerPtr& item);
-ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
-
 #endif // _MAIN_H_
 

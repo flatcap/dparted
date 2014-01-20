@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <sstream>
 
+#include "app.h"
 #include "loop.h"
 #include "log_trace.h"
 #include "utils.h"

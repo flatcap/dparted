@@ -22,6 +22,7 @@
 #include <sstream>
 #include <string>
 
+#include "app.h"
 #include "extended.h"
 #include "log.h"
 #include "main.h"

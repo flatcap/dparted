@@ -26,7 +26,6 @@
 
 class Partition;
 class Visitor;
-class Volume;
 
 typedef std::shared_ptr<Partition> PartitionPtr;
 

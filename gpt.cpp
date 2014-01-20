@@ -18,6 +18,7 @@
 #include <cstring>
 #include <sstream>
 
+#include "app.h"
 #include "gpt.h"
 #include "log.h"
 #include "main.h"
