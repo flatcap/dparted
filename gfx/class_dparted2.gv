@@ -19,6 +19,7 @@ digraph G
 	Gpt      [ fillcolor="#ffbbbb" ];
 
 	Partition [ fillcolor="#ffffdd" ];
+	Luks      [ fillcolor="#ffffdd" ];
 
 	Filesystem [ fillcolor="#bbffff" ];
 	Ext4       [ fillcolor="#bbffff" ];
@@ -39,7 +40,6 @@ digraph G
 	LvmVolume    [ fillcolor="#aaaa70" ];
 
 	Zero        [ fillcolor="#40cccc" ];
-	Luks        [ fillcolor="#40cccc" ];
 	Random      [ fillcolor="#40cccc" ];
 	Reserved    [ fillcolor="#40cccc" ];
 	Unallocated [ fillcolor="#40cccc" ];
@@ -64,6 +64,7 @@ digraph G
 	Extended     -> Msdos;
 
 	LvmPartition -> Partition;
+	Luks         -> Partition;
 
 	Gpt          -> Table;
 	LvmTable     -> Table;
@@ -81,7 +82,6 @@ digraph G
 	Ntfs        -> Filesystem;
 
 	Zero        -> Misc;
-	Luks        -> Misc;
 	Random      -> Misc;
 	Reserved    -> Misc;
 	Unallocated -> Misc;
