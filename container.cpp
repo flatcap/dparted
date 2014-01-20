@@ -443,6 +443,7 @@ unsigned char*
 Container::get_buffer (long offset, long size)
 {
 	//XXX validate offset and size against device size
+	const int PAGE_SIZE = 4096;	//XXX from kernel, use block size if bigger?
 
 	//log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s\n", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
 
@@ -455,6 +456,7 @@ Container::get_buffer (long offset, long size)
 		std::tie (o, s, p) = *m;
 		//log_info ("mmap: %ld, %ld, %p (%ld)\n", o, s, p, m.use_count());
 
+		//XXX allow subset: offset >= 0 and size < (s-(offset-o)?
 		if ((offset == o) && (size <= s)) {
 			//log_info ("mmap match: ask (%ld,%s), found (%ld,%s)\n", offset, get_size (size).c_str(), o, get_size(s).c_str());
 			return (unsigned char*) p;
@@ -482,7 +484,19 @@ Container::get_buffer (long offset, long size)
 		return nullptr;
 	}
 
-	size = std::max ((long)4194304, size);	// 4 MiB
+	int adjust = (offset % PAGE_SIZE);
+#if 0
+	printf ("offset = %ld\n", offset);
+	printf ("size   = %ld\n", size);
+	printf ("adjust = %d\n", adjust);
+	printf ("\n");
+#endif
+	if (adjust != 0) {
+		offset -= adjust;
+		size   += adjust;
+	}
+
+	size = std::max ((long) 4194304, size);	// 4 MiB
 
 	//offset += parent_offset;
 	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, offset);
@@ -495,7 +509,7 @@ Container::get_buffer (long offset, long size)
 
 	insert (offset, size, buf);
 
-	return (unsigned char*) buf;
+	return ((unsigned char*) buf) + adjust;
 }
 
 /**
