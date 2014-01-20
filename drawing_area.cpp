@@ -876,7 +876,7 @@ dump_range (const std::deque<Range>& vRange)
 			type = p->type.back();
 		}
 
-		printf ("\t%d,%d %d,%d %p (%s) - %ld\n", r.x, r.y, r.w, r.h, (void*)p.get(), type.c_str(), p.use_count());
+		printf ("\t%d,%d %d,%d %p (%s) - %ld\n", r.x, r.y, r.w, r.h, (void*) p.get(), type.c_str(), p.use_count());
 	}
 }
 

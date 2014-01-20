@@ -372,15 +372,15 @@ Config::operator std::string (void)
 
 		case Config::Tag::t_double:	return std::to_string (d_value);
 
-		case Config::Tag::t_bool:	return std::to_string (         l_value);
-		case Config::Tag::t_u8:	return std::to_string (         l_value);
-		case Config::Tag::t_s8:	return std::to_string ((int64_t)l_value);
-		case Config::Tag::t_u16:	return std::to_string (         l_value);
-		case Config::Tag::t_s16:	return std::to_string ((int64_t)l_value);
-		case Config::Tag::t_u32:	return std::to_string (         l_value);
-		case Config::Tag::t_s32:	return std::to_string ((int64_t)l_value);
-		case Config::Tag::t_u64:	return std::to_string (         l_value);
-		case Config::Tag::t_s64:	return std::to_string ((int64_t)l_value);
+		case Config::Tag::t_bool:	return std::to_string (          l_value);
+		case Config::Tag::t_u8:		return std::to_string (          l_value);
+		case Config::Tag::t_s8:		return std::to_string ((int64_t) l_value);
+		case Config::Tag::t_u16:	return std::to_string (          l_value);
+		case Config::Tag::t_s16:	return std::to_string ((int64_t) l_value);
+		case Config::Tag::t_u32:	return std::to_string (          l_value);
+		case Config::Tag::t_s32:	return std::to_string ((int64_t) l_value);
+		case Config::Tag::t_u64:	return std::to_string (          l_value);
+		case Config::Tag::t_s64:	return std::to_string ((int64_t) l_value);
 
 		case Config::Tag::t_unset:	return "";
 

@@ -164,7 +164,7 @@ get_size (long size)
 		suffix = " PiB";
 		divide = 1125899906842624;
 	}
-	sprintf (buffer, "%0.3g%s", (double)size/divide, suffix);
+	sprintf (buffer, "%0.3g%s", (double) size/divide, suffix);
 	return buffer;
 }
 
@@ -522,7 +522,7 @@ dump_hex2 (void* buf, int start, int length)
 
 	for (off = s; off < e; off += 16) {
 #if 1
-		if (memcmp ((char*)buf+off, last, sizeof (last)) == 0) {
+		if (memcmp ((char*) buf+off, last, sizeof (last)) == 0) {
 			if (!same) {
 				log_info ("	        ...\n");
 				same = 1;
@@ -531,7 +531,7 @@ dump_hex2 (void* buf, int start, int length)
 				continue;
 		} else {
 			same = 0;
-			memcpy (last, (char*)buf+off, sizeof (last));
+			memcpy (last, (char*) buf+off, sizeof (last));
 		}
 #endif
 

@@ -92,7 +92,7 @@ is_mdtable (unsigned char* buffer)
 	if (!buffer)
 		return false;
 
-	if ((*(unsigned int*)buffer) != 0xA92B4EFC)
+	if ((*(unsigned int*) buffer) != 0xA92B4EFC)
 		return false;
 
 	return true;

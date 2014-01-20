@@ -953,7 +953,7 @@ DotVisitor::visit (ContainerPtr c)
 
 #if 1
 	if (parents.size() > 0)
-		output << "obj_" << parents.top() << " -> obj_" << (void*)c.get() << ";\n";
+		output << "obj_" << parents.top() << " -> obj_" << (void*) c.get() << ";\n";
 #endif
 
 	return true;
