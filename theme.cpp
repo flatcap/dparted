@@ -87,8 +87,10 @@ void
 Theme::init_icons (void)
 {
 	// We could load these on demand if it becomes slow.
+	//XXX read these from theme file
 	add_icon ("table", "icons/table.png");
 	add_icon ("shield", "icons/shield.png");
+	add_icon ("locked", "icons/locked.png");
 
 	add_icon ("loop",   "/usr/share/icons/gnome/48x48/actions/gtk-refresh.png");
 	add_icon ("disk",   "/usr/share/icons/gnome/48x48/devices/harddrive.png");

@@ -19,6 +19,7 @@
 #include <string>
 #include <cstring>
 
+#include "app.h"
 #include "log.h"
 #include "luks.h"
 #include "log_trace.h"
@@ -83,7 +84,9 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
 	l->hash_spec   = (char*) (buffer+72);
 	l->uuid        = (char*) (buffer+168);
 
-#if 1
+	l->device      = "/dev/mapper/luks-" + l->uuid;
+
+#if 0
 	log_info ("LUKS:\n");
 	log_info ("\tversion:     %d\n", l->version);
 	log_info ("\tcipher name: %s\n", l->cipher_name.c_str());
@@ -93,6 +96,7 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
 #endif
 
 	ContainerPtr c(l);
+	main_app->queue_add_probe(c);
 	return c;
 }
 
