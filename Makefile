@@ -142,6 +142,9 @@ $(DEPDIR) $(OBJDIR):
 
 # ----------------------------------------------------------------------------
 
+docs:	force
+	doxygen docs/doxygen.conf
+
 clean:	force
 	$(RM) $(OUT) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) gmon.out
 

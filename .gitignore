@@ -13,7 +13,8 @@ gmon.out
 # work dirs
 /backup
 /gfx2
+/gtk
+/html
 /question
 /variant
 /visitor
-/gtk
