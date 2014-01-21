@@ -39,11 +39,16 @@ public:
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
+	bool luks_open (const std::string& parent, bool probe);
+	bool luks_close (void);
+
 public:
 	int         version;
 	std::string cipher_name;
 	std::string cipher_mode;
 	std::string hash_spec;
+
+	bool we_opened_this_device = false;
 
 protected:
 	Luks (void);

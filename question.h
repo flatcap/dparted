@@ -21,6 +21,9 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <functional>
+
+#include "container.h"
 
 class Question;
 
@@ -29,15 +32,31 @@ typedef std::shared_ptr<Question> QuestionPtr;
 class Question
 {
 public:
-#if 0
-	Question (void);
-	virtual ~Question();
-#endif
+	virtual ~Question() = default;
+	static QuestionPtr create (ContainerPtr c);
 
 	std::string title;
 	std::string question;
 
 	std::vector<std::string> answers;
+
+	virtual void asked (void);
+
+#if 0
+	void reply (QuestionReply qr)
+	{
+		r = qr;
+	}
+#endif
+
+protected:
+	Question (void);
+
+	ContainerPtr object;
+
+#if 0
+	QuestionReply r = nullptr;
+#endif
 };
 
 #endif // _QUESTION_H_

@@ -24,6 +24,7 @@
 #include "luks.h"
 #include "log_trace.h"
 #include "visitor.h"
+#include "utils.h"
 
 /**
  * Luks
@@ -86,6 +87,13 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
 
 	l->device      = "/dev/mapper/luks-" + l->uuid;
 
+	//std::cout << "Parent: " << parent->get_device_name() << std::endl;
+	//l->luks_open(parent->get_device_name(), false);
+
+	Question q();
+
+	//q->reply (sigc::mem_fun (*this, &Luks::on_reply));
+
 #if 0
 	log_info ("LUKS:\n");
 	log_info ("\tversion:     %d\n", l->version);
@@ -100,3 +108,112 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
 	return c;
 }
 
+
+/**
+ * luks_open
+ */
+bool
+Luks::luks_open (const std::string& parent, bool probe)
+{
+//	cryptsetup open --type luks /dev/loop4p5 luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
+//		/dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
+//
+//	cryptsetup luksUUID /dev/loop4p5
+//		0e6518ff-e7b5-4c84-adac-6a94d10a9116
+//
+//	cryptsetup isLuks /dev/loop4p4; echo $?
+//		0 (is luks)
+//
+//	cryptsetup isLuks /dev/loop4p1; echo $?
+//		1 (not luks)
+//
+//	cryptsetup isLuks /dev/loop4p6; echo $?
+//		4 (Device /dev/loop4p6 doesn't exist or access denied.)
+
+	std::string command = "cryptsetup open --type luks " + parent + " luks-" + uuid;
+	std::cout << "Command: " << command << std::endl;
+	return false;
+}
+
+/**
+ * luks_close
+ */
+bool
+Luks::luks_close (void)
+{
+	//XXX close all dependents first, e.g. umount X, vgchange -an, etc
+	std::string command = "cryptsetup close " + device;
+	std::cout << "Command: " << command << std::endl;
+	return false;
+}
+
+
+#ifdef RAR
+cryptsetup status /dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
+	/dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116 is active and is in use.
+	  type:    LUKS1
+	  cipher:  aes-xts-plain64
+	  keysize: 512 bits
+	  device:  /dev/loop4p5
+	  offset:  4096 sectors
+	  size:    33046528 sectors
+	  mode:    read/write
+
+cryptsetup status /dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
+	/dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116 is active.
+	  type:    LUKS1
+	  cipher:  aes-xts-plain64
+	  keysize: 512 bits
+	  device:  /dev/loop4p5
+	  offset:  4096 sectors
+	  size:    33046528 sectors
+	  mode:    read/write
+
+create
+isLuks
+luksAddKey
+luksClose
+luksDelKey
+luksDump
+luksFormat
+luksHeaderBackup
+luksHeaderRestore
+luksKillSlot
+luksOpen
+luksRemoveKey
+luksResume
+luksSuspend
+luksUUID
+remove
+resize
+status
+
+cryptsetup luksDump /dev/sda2
+LUKS header information for /dev/sda2
+
+Version:        1
+Cipher name:    aes
+Cipher mode:    xts-plain64
+Hash spec:      sha1
+Payload offset: 4096
+MK bits:        512
+MK digest:      df 25 17 cb 40 5b ac 5b ce 88 94 5e 82 92 9f fa 70 42 a6 0c
+MK salt:        c7 b7 61 29 5a 9c a9 88 cf 7b 9a 40 74 9c a0 5f
+                fd 7c 3d 83 b7 86 da af 93 32 3c 2c ae d2 17 73
+MK iterations:  52250
+UUID:           bf56d741-efe5-4931-8f4f-91aa934caf4a
+
+Key Slot 0: ENABLED
+        Iterations:             209835
+        Salt:                   a2 37 d4 0e ad 47 c7 b2 04 70 d9 df 34 43 a0 9a
+                                2e 58 33 98 44 e6 bb 97 b5 24 26 3f bf 1a ab 94
+        Key material offset:    8
+        AF stripes:             4000
+Key Slot 1: DISABLED
+Key Slot 2: DISABLED
+Key Slot 3: DISABLED
+Key Slot 4: DISABLED
+Key Slot 5: DISABLED
+Key Slot 6: DISABLED
+Key Slot 7: DISABLED
+#endif
