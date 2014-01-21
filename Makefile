@@ -36,7 +36,7 @@ LIB_SRC	+= app.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp f
 
 # GUI - Graphical objects
 GUI_SRC	+= dparted.cpp drawing_area.cpp gfx_container.cpp tree_view.cpp theme.cpp gui_app.cpp icon_manager.cpp \
-	   main.cpp default_theme.cpp missing_icon.cpp
+	   main.cpp default_theme.cpp
 
 SRC	= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
 HDR	= $(SRC:%.cpp=%.h)

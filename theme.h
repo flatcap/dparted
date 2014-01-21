@@ -59,6 +59,7 @@ protected:
 	std::map<std::string,Glib::RefPtr<Gdk::Pixbuf>> icons;
 
 	Glib::RefPtr<Gdk::Pixbuf> missing_icon;
+	Glib::RefPtr<Gdk::Pixbuf> create_missing_pixbuf (int size);
 
 	void init_icons (void);
 

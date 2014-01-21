@@ -18,6 +18,7 @@
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
 #include <glibmm/fileutils.h>
+#include <gtkmm.h>
 
 #include <map>
 #include <iostream>
@@ -26,7 +27,6 @@
 #include "log.h"
 #include "theme.h"
 #include "log_trace.h"
-#include "missing_icon.h"
 
 /**
  * Theme
@@ -119,6 +119,40 @@ Theme::add_icon (const std::string& name, const std::string& filename)
 
 
 /**
+ * create_missing_pixbuf
+ */
+Glib::RefPtr<Gdk::Pixbuf>
+Theme::create_missing_pixbuf (int size)
+{
+	Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create (Gdk::COLORSPACE_RGB, true, 8, size, size);
+	Cairo::RefPtr<Cairo::ImageSurface> surface = Cairo::ImageSurface::create (Cairo::FORMAT_ARGB32, size, size);
+	Cairo::RefPtr<Cairo::Context> cr = Cairo::Context::create (surface);
+
+	cr->save();
+	cr->set_source_rgba (1, 1, 1, 1);
+	cr->rectangle (0, 0, size, size);
+	cr->fill();
+
+	//XXX note the order: ImageSurface (RGBA) and Pixbuf (BGRA)
+	cr->set_source_rgba (0, 0, 1, 1);
+	cr->set_line_width(size/4);
+
+	cr->move_to (0, 0);
+	cr->rel_line_to (size, size);
+	cr->stroke();
+
+	cr->move_to (size, 0);
+	cr->rel_line_to (-size, size);
+	cr->stroke();
+
+	cr->restore();
+
+	memcpy (pixbuf->get_pixels(), surface->get_data(), size*size*4);	//XXX 4 hard-coded!
+
+	return pixbuf;
+}
+
+/**
  * get_icon
  */
 Glib::RefPtr<Gdk::Pixbuf>
@@ -128,7 +162,7 @@ Theme::get_icon (const std::string& name)
 
 	if (!pb) {
 		if (!missing_icon) {
-			missing_icon = Gdk::Pixbuf::create_from_inline (sizeof (missing_icon_bits), (const uint8_t*) missing_icon_bits, false);
+			missing_icon = create_missing_pixbuf (24);
 		}
 
 		pb = missing_icon;
