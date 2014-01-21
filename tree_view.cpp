@@ -354,17 +354,14 @@ void TreeView::on_selection_changed()
 void
 TreeView::setup_popup (void)
 {
-	Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem ("_Edit", true));
-	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &TreeView::on_menu_select), 1));
-	m_Menu_Popup.append (*item);
+	std::vector<std::string> list = { "_Edit", "_Process", "_Remove" };
 
-	item = Gtk::manage (new Gtk::MenuItem ("_Process", true));
-	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &TreeView::on_menu_select), 2));
-	m_Menu_Popup.append (*item);
-
-	item = Gtk::manage (new Gtk::MenuItem ("_Remove", true));
-	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &TreeView::on_menu_select), 3));
-	m_Menu_Popup.append (*item);
+	Gtk::MenuItem* item = nullptr;
+	for (unsigned int i = 0; i < list.size(); i++) {
+		item = Gtk::manage (new Gtk::MenuItem (list[i], true));
+		item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &TreeView::on_menu_select), i));
+		m_Menu_Popup.append (*item);
+	}
 
 	m_Menu_Popup.accelerate (*this);
 	m_Menu_Popup.show_all();
@@ -471,7 +468,7 @@ TreeView::popup_menu (int x, int y)
 bool
 TreeView::popup_on_keypress (GdkEventKey* ev)
 {
-	if ((ev->keyval == GDK_KEY_Menu) && menu_active) {
+	if (ev->keyval == GDK_KEY_Menu) {
 		m_Menu_Popup.popdown();
 		return true;
 	}
