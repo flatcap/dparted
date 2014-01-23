@@ -40,6 +40,8 @@ public:
 	std::string question;
 	std::string help_url;
 
+	int result = -1;
+
 	std::vector<std::string> answers;
 
 	virtual void done (void);

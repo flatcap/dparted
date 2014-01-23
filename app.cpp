@@ -105,6 +105,15 @@ App::set_config (const std::string& filename)
 	return true;
 }
 
+/**
+ * get_config
+ */
+ConfigFilePtr
+App::get_config (void)
+{
+	return config_file;
+}
+
 
 /**
  * queue_add_probe

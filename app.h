@@ -44,6 +44,7 @@ public:
 	virtual bool ask    (QuestionPtr q);
 	virtual bool notify (Message&  m);
 
+	ConfigFilePtr get_config (void);
 	bool set_config (const std::string& filename);
 
 	void queue_add_probe (ContainerPtr& item);

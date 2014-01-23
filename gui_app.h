@@ -69,6 +69,7 @@ protected:
 
 	bool on_mouse_click (GdkEventButton* event);
 
+	std::vector<QuestionPtr> vq;
 	ThemePtr theme;
 };
 

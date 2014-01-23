@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-#include "app.h"
+#include "gui_app.h"
 #include "dparted.h"
 #include "drawing_area.h"
 #include "log.h"
@@ -119,7 +119,7 @@ DParted::my_idle (void)
 {
 #if 1
 	std::vector<std::string> files;
-	ContainerPtr c = main_app->scan (files);
+	ContainerPtr c = gui_app->scan (files);
 	//std::cout << c->get_children().size() << " children\n";
 	GfxContainerPtr dummy;
 	m_g = GfxContainer::create (dummy, c);
@@ -441,7 +441,30 @@ DParted::on_menu_file_new_generic (void)
 void
 DParted::on_menu_file_quit (void)
 {
-	hide();
+	bool ask_user = true;
+	bool quit_app = false;
+
+	ConfigFilePtr cfg = gui_app->get_config();
+	if (cfg) {
+		ask_user = cfg->get_bool ("confirmation.quit_application");
+	}
+
+	if (ask_user) {
+		ContainerPtr c;
+		QuestionPtr q = Question::create (c, [] (QuestionPtr q) { std::cout << "reply\n"; } );
+		q->title = "Quit Application?";
+		q->question = "Are you sure?";
+		q->answers = { "No", "Yes" };
+		gui_app->ask (q);
+
+		quit_app = (q->result == 1);
+	} else {
+		quit_app = true;
+	}
+
+	if (quit_app) {
+		hide();
+	}
 }
 
 /**

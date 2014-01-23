@@ -238,17 +238,37 @@ GuiApp::menu_quit (void)
 bool
 GuiApp::ask (QuestionPtr q)
 {
+	//vq.push_back (q);
 	Gtk::MessageDialog dialog (q->question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
 
 	dialog.set_title (q->title);
 
-	int id = 1001;
+	int id = 0;
 	for (auto a : q->answers) {
 		dialog.add_button (a, id++);
 	}
 
-	dialog.run();
+	q->result = dialog.run();
+	//std::cout << "question = " << q->result << std::endl;
 	q->done();
+
+#if 0
+	enum Gtk::ResponseType
+	{
+		RESPONSE_NONE = -1,
+		RESPONSE_REJECT = -2,
+		RESPONSE_ACCEPT = -3,
+		RESPONSE_DELETE_EVENT = -4,
+		RESPONSE_OK = -5,
+		RESPONSE_CANCEL = -6,
+		RESPONSE_CLOSE = -7,
+		RESPONSE_YES = -8,
+		RESPONSE_NO = -9,
+		RESPONSE_APPLY = -10,
+		RESPONSE_HELP = -11
+	};
+#endif
+
 
 	return true;
 }
