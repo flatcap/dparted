@@ -22,7 +22,7 @@ MKDIR	= mkdir -p
 DEPDIR	= .dep
 OBJDIR	= .obj
 
-OUT	= main
+OUT	= dparted
 
 # Core Objects
 OBJ_SRC	+= block.cpp container.cpp disk.cpp extended.cpp file.cpp filesystem.cpp gpt.cpp loop.cpp lvm_group.cpp \
@@ -129,7 +129,7 @@ $(OBJDIR)/%.o: %.cpp
 quiet_cmd_LD	= LD	$@
       cmd_LD	= $(CC) -o $@ $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) $(LDFLAGS)
 
-main:	$(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ)
+$(OUT):	$(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ)
 	$(call cmd,LD)
 
 # ----------------------------------------------------------------------------
