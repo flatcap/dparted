@@ -42,8 +42,7 @@ execute_command2 (const std::string& command, std::string& input)
 
 	//XXX log command and output
 
-	//log_debug ("running command: %s\n", command.c_str());
-	// Execute command and save its output to stdout
+	log_debug ("running command: %s\n", command.c_str());
 	file = popen (command.c_str(), "we");
 	if (file == nullptr) {
 		log_error ("popen failed");	//XXX log_perror
@@ -62,10 +61,10 @@ execute_command2 (const std::string& command, std::string& input)
 }
 
 /**
- * execute_command
+ * execute_command1
  */
 unsigned int
-execute_command (const std::string& command, std::vector<std::string>& output)
+execute_command1 (const std::string& command, std::vector<std::string>& output)
 {
 	FILE* file = nullptr;
 	char* ptr = nullptr;
@@ -123,7 +122,7 @@ execute_command3 (const std::string& command, std::string& output)
 	std::vector<std::string> v;
 	int count;
 
-	count = execute_command (command, v);
+	count = execute_command1 (command, v);
 
 	output.clear();
 	for (auto it : v) {

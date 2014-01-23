@@ -187,7 +187,7 @@ Disk::find_devices (ContainerPtr& list)
 	std::string error;
 	unsigned int count;
 
-	count = execute_command (command, output);
+	count = execute_command1 (command, output);
 	if (count < 0)
 		return 0;
 
@@ -309,7 +309,7 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 	command += " | grep 'TYPE=\"disk\"'";
 
 	output.clear();
-	if (execute_command (command, output) < 0) {
+	if (execute_command1 (command, output) < 0) {
 		//XXX distinguish between zero loop devices and an error
 		return false;
 	}

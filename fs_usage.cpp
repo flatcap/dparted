@@ -37,7 +37,7 @@ Filesystem::ext2_get_usage (void)
 		command = build.str();
 		execute_command3 (command, output);
 		//log_debug ("command = %s\n", command.c_str());
-		//execute_command ("losetup /dev/loop16 ", output);
+		//execute_command1 ("losetup /dev/loop16 ", output);
 		dev = "/dev/loop16";
 	}
 
