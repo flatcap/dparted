@@ -18,6 +18,7 @@
 #include <sstream>
 #include <string>
 #include <cstring>
+#include <functional>
 
 #include "app.h"
 #include "log.h"
@@ -90,22 +91,36 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
 	//std::cout << "Parent: " << parent->get_device_name() << std::endl;
 	//l->luks_open(parent->get_device_name(), false);
 
-	Question q();
-
-	//q->reply (sigc::mem_fun (*this, &Luks::on_reply));
-
-#if 0
+#if 1
 	log_info ("LUKS:\n");
-	log_info ("\tversion:     %d\n", l->version);
+	log_info ("\tversion:     %d\n", l->version);		//XXX wrong endian (version == 1)
 	log_info ("\tcipher name: %s\n", l->cipher_name.c_str());
 	log_info ("\tcipher mode: %s\n", l->cipher_mode.c_str());
 	log_info ("\thash spec:   %s\n", l->hash_spec.c_str());
 	log_info ("\tuuid:        %s\n", l->uuid.c_str());
 #endif
 
+	question_cb_t fn = std::bind(&Luks::on_reply, l, std::placeholders::_1);
+	QuestionPtr q = Question::create (l, fn);
+	q->title = "Enter Password";
+	q->question = "for luks device " + l->device;
+	q->answers = { "Cancel", "Done" };
+
+	main_app->ask (q);
+
 	ContainerPtr c(l);
-	main_app->queue_add_probe(c);
+	//main_app->queue_add_probe(c);	//XXX do this when we've asked for a password
+
 	return c;
+}
+
+/**
+ * on_reply
+ */
+void
+Luks::on_reply (QuestionPtr q)
+{
+	std::cout << "user has answered question" << std::endl;
 }
 
 

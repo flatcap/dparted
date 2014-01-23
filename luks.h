@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "partition.h"
+#include "question.h"
 
 class Luks;
 
@@ -48,10 +49,12 @@ public:
 	std::string cipher_mode;
 	std::string hash_spec;
 
-	bool we_opened_this_device = false;
-
 protected:
 	Luks (void);
+
+	void on_reply (QuestionPtr q);
+
+	bool we_opened_this_device = false;
 
 private:
 

@@ -43,7 +43,7 @@ public:
 	GuiApp (void);
 	virtual ~GuiApp();
 
-	virtual bool ask (Question& q);
+	virtual bool ask (QuestionPtr q);
 	virtual bool notify (Message& m);
 
 	ThemePtr get_theme (void);

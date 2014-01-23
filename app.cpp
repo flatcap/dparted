@@ -58,12 +58,12 @@ App::~App()
  * ask
  */
 bool
-App::ask (Question& q)
+App::ask (QuestionPtr q)
 {
-	std::cout << q.title << std::endl;
-	std::cout << q.question << std::endl;
+	std::cout << q->title << std::endl;
+	std::cout << q->question << std::endl;
 	std::cout << '\t';
-	for (auto a : q.answers) {
+	for (auto a : q->answers) {
 		std::cout << a << " ";
 	}
 	std::cout << '\n';

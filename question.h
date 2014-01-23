@@ -28,35 +28,30 @@
 class Question;
 
 typedef std::shared_ptr<Question> QuestionPtr;
+typedef std::function<void(QuestionPtr)> question_cb_t;
 
 class Question
 {
 public:
-	virtual ~Question() = default;
-	static QuestionPtr create (ContainerPtr c);
+	virtual ~Question();
+	static QuestionPtr create (ContainerPtr c, question_cb_t fn);
 
 	std::string title;
 	std::string question;
+	std::string help_url;
 
 	std::vector<std::string> answers;
 
-	virtual void asked (void);
-
-#if 0
-	void reply (QuestionReply qr)
-	{
-		r = qr;
-	}
-#endif
+	virtual void done (void);
 
 protected:
 	Question (void);
 
 	ContainerPtr object;
 
-#if 0
-	QuestionReply r = nullptr;
-#endif
+	question_cb_t done_fn = nullptr;
+
+	std::weak_ptr<Question> weak;
 };
 
 #endif // _QUESTION_H_

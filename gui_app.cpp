@@ -236,18 +236,19 @@ GuiApp::menu_quit (void)
  * ask
  */
 bool
-GuiApp::ask (Question& q)
+GuiApp::ask (QuestionPtr q)
 {
-	Gtk::MessageDialog dialog (q.question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
+	Gtk::MessageDialog dialog (q->question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
 
-	dialog.set_title (q.title);
+	dialog.set_title (q->title);
 
 	int id = 1001;
-	for (auto a : q.answers) {
+	for (auto a : q->answers) {
 		dialog.add_button (a, id++);
 	}
 
 	dialog.run();
+	q->done();
 
 	return true;
 }

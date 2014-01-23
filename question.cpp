@@ -17,7 +17,6 @@
 
 #include "question.h"
 
-#if 0
 /**
  * Question
  */
@@ -32,5 +31,28 @@ Question::~Question()
 {
 }
 
-#endif
+
+/**
+ * create
+ */
+QuestionPtr
+Question::create (ContainerPtr c, question_cb_t fn)
+{
+	QuestionPtr q (new Question());
+	q->weak = q;
+	q->done_fn = fn;
+
+	return q;
+}
+
+/**
+ * done
+ */
+void
+Question::done (void)
+{
+	if (done_fn) {
+		done_fn (weak.lock());
+	}
+}
 

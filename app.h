@@ -41,7 +41,7 @@ public:
 	App (void);
 	virtual ~App();
 
-	virtual bool ask    (Question& q);
+	virtual bool ask    (QuestionPtr q);
 	virtual bool notify (Message&  m);
 
 	bool set_config (const std::string& filename);
