@@ -29,7 +29,7 @@ LvmRaid::LvmRaid (void)
 {
 	const char* me = "LvmRaid";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

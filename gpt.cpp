@@ -36,7 +36,7 @@ Gpt::Gpt (void)
 {
 	const char* me = "Gpt";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

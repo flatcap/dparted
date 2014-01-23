@@ -34,7 +34,7 @@ Misc::Misc (void)
 {
 	const char* me = "Misc";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

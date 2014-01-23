@@ -28,7 +28,7 @@ LvmVolume::LvmVolume (void)
 {
 	const char* me = "LvmVolume";
 
-	declare (me);
+	sub_type (me);
 
 	declare_prop (me, "lv_attr",      lv_attr,      "desc of lv_attr");
 	declare_prop (me, "kernel_major", kernel_major, "desc of kernel_major");

@@ -40,7 +40,7 @@ Disk::Disk (void)
 {
 	const char* me = "Disk";
 
-	declare (me);
+	sub_type (me);
 
 	declare_prop (me, "read_only",      read_only,      "desc of read_only");
 	declare_prop (me, "hw_cylinders",   hw_cylinders,   "desc of hw_cylinders");

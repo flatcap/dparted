@@ -34,7 +34,7 @@ Luks::Luks (void)
 {
 	const char* me = "Luks";
 
-	declare (me);
+	sub_type (me);
 
 	declare_prop (me, "version",     ptype, "desc of version");
 	declare_prop (me, "cipher_name", ptype, "desc of cipher_name");

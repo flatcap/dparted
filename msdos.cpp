@@ -44,7 +44,7 @@ Msdos::Msdos (void)
 {
 	const char* me = "Msdos";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

@@ -37,7 +37,7 @@ LvmTable::LvmTable (void)
 {
 	const char* me = "LvmTable";
 
-	declare (me);
+	sub_type (me);
 
 	declare_prop (me, "config",        config,        "desc of config");
 	declare_prop (me, "pv_attr",       pv_attr,       "desc of pv_attr");

@@ -39,7 +39,7 @@ Extended::Extended (void)
 {
 	const char* me = "Extended";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

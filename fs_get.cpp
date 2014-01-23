@@ -69,7 +69,7 @@ get_btrfs (unsigned char* buffer, int bufsize)
 
 	//log_info ("bufsize = %d, want %d\n", bufsize, 0x10140);
 	FilesystemPtr f  = Filesystem::create();
-	f->declare ("btrfs");
+	f->sub_type ("btrfs");
 
 	f->name = (char*) (buffer+0x1012B);
 	f->uuid = read_uuid1 (buffer + 0x10020);
@@ -91,7 +91,7 @@ get_ext2 (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
-	f->declare ("ext2");
+	f->sub_type ("ext2");
 
 	get_ext_common (f, buffer, bufsize);
 
@@ -109,7 +109,7 @@ get_ext3 (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
-	f->declare ("ext3");
+	f->sub_type ("ext3");
 
 	get_ext_common (f, buffer, bufsize);
 
@@ -127,7 +127,7 @@ get_ext4 (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
-	f->declare ("ext4");
+	f->sub_type ("ext4");
 
 	get_ext_common (f, buffer, bufsize);
 
@@ -148,7 +148,7 @@ get_ntfs (unsigned char* buffer, int bufsize)
 	long size = *(long*) (buffer + 40) * 512;
 
 	FilesystemPtr f  = Filesystem::create();
-	f->declare ("ntfs");
+	f->sub_type ("ntfs");
 
 	f->uuid = uuid;
 	f->bytes_size = size;
@@ -167,7 +167,7 @@ get_reiserfs (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
-	f->declare ("reiserfs");
+	f->sub_type ("reiserfs");
 
 	f->name = (char*) (buffer+0x10064);
 	f->uuid = read_uuid1 (buffer + 0x10054);
@@ -204,7 +204,7 @@ get_swap (unsigned char* buffer, int bufsize)
 	}
 
 	FilesystemPtr f  = Filesystem::create();
-	f->declare ("swap");
+	f->sub_type ("swap");
 
 	f->name = vol_name;
 	f->uuid = uuid;
@@ -224,7 +224,7 @@ get_vfat (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
-	f->declare ("vfat");
+	f->sub_type ("vfat");
 
 	f->name = std::string ((char*) (buffer+0x30), 14);
 	if (!f->name.empty() && ((f->name[0] < 'A') || (f->name[0] > 'z')))
@@ -280,7 +280,7 @@ get_xfs (unsigned char* buffer, int bufsize)
 		return nullptr;
 
 	FilesystemPtr f  = Filesystem::create();
-	f->declare ("xfs");
+	f->sub_type ("xfs");
 
 	f->name = (char*) (buffer+0x6C);
 	f->uuid = read_uuid1 (buffer + 0x20);

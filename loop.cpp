@@ -35,7 +35,7 @@ Loop::Loop (void)
 {
 	const char* me = "Loop";
 
-	declare (me);
+	sub_type (me);
 
 	declare_prop (me, "file_name",  file_name,  "desc of file_name");
 	declare_prop (me, "file_inode", file_inode, "desc of file_inode");

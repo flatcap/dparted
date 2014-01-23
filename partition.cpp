@@ -30,7 +30,7 @@ Partition::Partition (void)
 {
 	const char* me = "Partition";
 
-	declare (me);
+	sub_type (me);
 
 	declare_prop (me, "ptype", ptype, "desc of ptype");
 }

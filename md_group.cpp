@@ -37,7 +37,7 @@ MdGroup::MdGroup (void)
 {
 	const char* me = "MdGroup";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

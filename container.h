@@ -123,7 +123,7 @@ public:
 
 	int seqnum = 123;
 
-	void declare (const char* name);
+	void sub_type (const char* name);
 protected:
 	Container (void);
 

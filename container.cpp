@@ -44,7 +44,7 @@ Container::Container (void)
 {
 	const char* me = "Container";
 
-	declare (me);
+	sub_type (me);
 
 	declare_prop (me, "name",          name,          "desc of name");
 	declare_prop (me, "uuid",          uuid,          "desc of uuid");
@@ -588,10 +588,10 @@ Container::is_a (const std::string& t)
 }
 
 /**
- * declare
+ * sub_type
  */
 void
-Container::declare (const char* n)
+Container::sub_type (const char* n)
 {
 	name = n;
 	type.push_back (name);

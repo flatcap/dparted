@@ -29,7 +29,7 @@ LvmMirror::LvmMirror (void)
 {
 	const char* me = "LvmMirror";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

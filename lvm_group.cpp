@@ -46,7 +46,7 @@ LvmGroup::LvmGroup (void)
 {
 	const char* me = "LvmGroup";
 
-	declare (me);
+	sub_type (me);
 
 	declare_prop (me, "pv_count", pv_count, "desc of pv_count");
 	declare_prop (me, "lv_count", lv_count, "desc of lv_count");

@@ -29,7 +29,7 @@ MdTable::MdTable (void)
 {
 	const char* me = "MdTable";
 
-	declare (me);
+	sub_type (me);
 
 	declare_prop (me, "vol_uuid",    vol_uuid,    "desc of vol_uuid");
 	declare_prop (me, "vol_name",    vol_name,    "desc of vol_name");

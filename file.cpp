@@ -37,7 +37,7 @@ File::File (void)
 {
 	const char* me = "File";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

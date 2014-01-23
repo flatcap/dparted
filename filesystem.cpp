@@ -39,7 +39,7 @@ Filesystem::Filesystem (void)
 {
 	const char* me = "Filesystem";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

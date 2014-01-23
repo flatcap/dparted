@@ -29,7 +29,7 @@ Volume::Volume (void)
 {
 	const char* me = "Volume";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

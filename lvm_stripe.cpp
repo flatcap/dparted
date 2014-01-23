@@ -28,7 +28,7 @@ LvmStripe::LvmStripe (void)
 {
 	const char* me = "LvmStripe";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

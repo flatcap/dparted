@@ -26,7 +26,7 @@ LvmMetadata::LvmMetadata (void)
 {
 	const char* me = "LvmMetadata";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

@@ -28,7 +28,7 @@ LvmPartition::LvmPartition (void)
 {
 	const char* me = "LvmPartition";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

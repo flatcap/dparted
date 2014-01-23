@@ -36,7 +36,7 @@ Table::Table (void)
 {
 	const char* me = "Table";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

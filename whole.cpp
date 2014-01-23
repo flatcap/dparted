@@ -30,7 +30,7 @@ Whole::Whole (void)
 {
 	const char* me = "Whole";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**

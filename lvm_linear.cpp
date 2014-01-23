@@ -28,7 +28,7 @@ LvmLinear::LvmLinear (void)
 {
 	const char* me = "LvmLinear";
 
-	declare (me);
+	sub_type (me);
 }
 
 /**
