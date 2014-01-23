@@ -50,7 +50,7 @@ execute_command2 (const std::string& command, std::string& input)
 	}
 
 	count = fprintf (file, "%s\n", input.c_str());
-	//log_debug ("wrote %d bytes to command %s\n", count, command.c_str());
+	log_debug ("wrote %d bytes to command %s\n", count, command.c_str());
 
 	if (pclose (file) == -1) {
 		log_error ("pclose failed");	//XXX log_perror

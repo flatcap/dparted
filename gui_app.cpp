@@ -249,7 +249,7 @@ GuiApp::ask (QuestionPtr q)
 	}
 
 	q->result = dialog.run();
-	//std::cout << "question = " << q->result << std::endl;
+	std::cout << "question = " << q->result << std::endl;
 	q->done();
 
 #if 0

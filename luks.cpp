@@ -89,7 +89,7 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
 	l->device      = "/dev/mapper/luks-" + l->uuid;
 
 	//std::cout << "Parent: " << parent->get_device_name() << std::endl;
-	//l->luks_open(parent->get_device_name(), false);
+	l->luks_open(parent->get_device_name(), false);
 
 #if 1
 	log_info ("LUKS:\n");
@@ -106,10 +106,10 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
 	q->question = "for luks device " + l->device;
 	q->answers = { "Cancel", "Done" };
 
-	main_app->ask (q);
+	//main_app->ask (q);
 
 	ContainerPtr c(l);
-	//main_app->queue_add_probe(c);	//XXX do this when we've asked for a password
+	main_app->queue_add_probe(c);	//XXX do this when we've asked for a password
 
 	return c;
 }
@@ -121,6 +121,19 @@ void
 Luks::on_reply (QuestionPtr q)
 {
 	std::cout << "user has answered question" << std::endl;
+}
+
+
+/**
+ * is_luks
+ */
+bool
+Luks::is_luks (void)
+{
+	// device exists?		stat
+	// is luks			cryptsetup isLuks
+	// is already mounted?		cryptsetup status
+	return false;
 }
 
 
@@ -145,8 +158,12 @@ Luks::luks_open (const std::string& parent, bool probe)
 //	cryptsetup isLuks /dev/loop4p6; echo $?
 //		4 (Device /dev/loop4p6 doesn't exist or access denied.)
 
-	std::string command = "cryptsetup open --type luks " + parent + " luks-" + uuid;
+	std::string command = "sudo cryptsetup open --type luks " + parent + " luks-" + uuid;
 	std::cout << "Command: " << command << std::endl;
+
+	std::string password = "password";
+	execute_command2 (command, password);
+	we_opened_this_device = true;
 	return false;
 }
 

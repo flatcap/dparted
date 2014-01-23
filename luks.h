@@ -53,6 +53,7 @@ protected:
 	Luks (void);
 
 	void on_reply (QuestionPtr q);
+	bool is_luks (void);
 
 	bool we_opened_this_device = false;
 
