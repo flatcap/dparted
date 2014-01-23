@@ -15,8 +15,8 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _DPARTED_H_
-#define _DPARTED_H_
+#ifndef _WINDOW_H_
+#define _WINDOW_H_
 
 #include "gtkmm/applicationwindow.h"
 #include <gtkmm/box.h>
@@ -36,13 +36,13 @@
 class Container;
 
 /**
- * class DParted
+ * class Window
  */
-class DParted : public Gtk::ApplicationWindow
+class Window : public Gtk::ApplicationWindow
 {
 public:
-	DParted();
-	virtual ~DParted();
+	Window();
+	virtual ~Window();
 
 	void set_data (GfxContainerPtr c);
 	bool set_focus (GfxContainerPtr cont);
@@ -100,5 +100,5 @@ private:
 };
 
 
-#endif // _DPARTED_H_
+#endif // _WINDOW_H_
 

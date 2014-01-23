@@ -9,7 +9,7 @@ digraph app {
 	main [ label="Main" fillcolor=white ];
 
 	theme         [ label="Theme"         fillcolor=pink ];
-	dparted       [ label="DParted"       fillcolor=pink ];
+	window        [ label="Window"        fillcolor=pink ];
 	drawing_area  [ label="Drawing Area"  fillcolor=pink ];
 	tree_view     [ label="Tree View"     fillcolor=pink ];
 
@@ -32,9 +32,9 @@ digraph app {
 	app -> theme;
 	cfg2 -> theme [ dir=back ];
 
-	app -> dparted;
-	dparted -> drawing_area;
-	dparted -> tree_view;
+	app -> window;
+	window -> drawing_area;
+	window -> tree_view;
 
 	drawing_area -> cont_t:nw;
 	tree_view -> cont_t:nw;

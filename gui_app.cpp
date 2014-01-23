@@ -30,7 +30,7 @@
 
 #include "app.h"
 #include "gui_app.h"
-#include "dparted.h"
+#include "window.h"
 #include "log.h"
 #include "log_trace.h"
 
@@ -116,8 +116,8 @@ GuiApp::on_activate()
 	//LOG_TRACE;
 	Gtk::Application::on_activate();
 
-	DParted* dp = new DParted();
-	add_window (*dp);	// App now owns DParted
+	Window* dp = new Window();
+	add_window (*dp);	// App now owns Window
 	dp->show();
 
 #if 0
@@ -201,7 +201,7 @@ GuiApp::menu_about (void)
 
 	Gtk::AboutDialog about;
 
-	about.set_name ("DParted");
+	about.set_name ("Window");
 	about.set_program_name ("dparted");
 	about.set_version ("0.1");
 	about.set_logo_icon_name ("dparted");

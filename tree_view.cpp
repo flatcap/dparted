@@ -20,7 +20,7 @@
 
 #include "tree_view.h"
 #include "log_trace.h"
-#include "dparted.h"
+#include "window.h"
 
 /**
  * TreeView
@@ -342,7 +342,7 @@ void TreeView::on_selection_changed()
 	GfxContainerPtr c = row[m_Columns.col_gfx_container];
 	//std::cout << "sel: " << c << std::endl;
 
-	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	dp->set_focus (c);
 }
 
@@ -400,9 +400,9 @@ TreeView::on_menu_select (int option)
 bool
 TreeView::get_coords (int& x, int& y)
 {
-	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		std::cout << "No DParted" << std::endl;
+		std::cout << "No Window" << std::endl;
 		return false;
 	}
 
@@ -419,7 +419,7 @@ TreeView::get_coords (int& x, int& y)
 
 	int ox = 0;
 	int oy = 0;
-	w->get_origin (ox, oy);		// Coords of DParted's main window (inside chrome)
+	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
 	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
 	if (!window) {

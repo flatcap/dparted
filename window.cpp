@@ -22,15 +22,15 @@
 #include <iostream>
 
 #include "gui_app.h"
-#include "dparted.h"
+#include "window.h"
 #include "drawing_area.h"
 #include "log.h"
 #include "log_trace.h"
 
 /**
- * Dparted
+ * Window
  */
-DParted::DParted()
+Window::Window()
 {
 	set_title ("DParted");
 
@@ -47,15 +47,15 @@ DParted::DParted()
 
 	add_events (Gdk::KEY_PRESS_MASK | Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 #if 0
-	signal_button_press_event().connect (sigc::mem_fun (*this, &DParted::on_mouse_click));
+	signal_button_press_event().connect (sigc::mem_fun (*this, &Window::on_mouse_click));
 #endif
 
 	eventbox.set_events (Gdk::KEY_PRESS_MASK);
 	eventbox.signal_key_press_event().connect (sigc::mem_fun (drawingarea, &DrawingArea::on_keypress), false);
 
-	signal_realize().connect (sigc::mem_fun (*this, &DParted::my_realize));
-	signal_realize().connect (sigc::mem_fun (*this, &DParted::my_show));
-	Glib::signal_idle().connect (sigc::mem_fun (*this, &DParted::my_idle));
+	signal_realize().connect (sigc::mem_fun (*this, &Window::my_realize));
+	signal_realize().connect (sigc::mem_fun (*this, &Window::my_show));
+	Glib::signal_idle().connect (sigc::mem_fun (*this, &Window::my_idle));
 
 	set_default_icon_name ("dparted");
 
@@ -85,9 +85,9 @@ DParted::DParted()
 }
 
 /**
- * ~DParted
+ * ~Window
  */
-DParted::~DParted()
+Window::~Window()
 {
 }
 
@@ -96,7 +96,7 @@ DParted::~DParted()
  * my_realize
  */
 void
-DParted::my_realize (void)
+Window::my_realize (void)
 {
 	//LOG_TRACE;
 	drawingarea.grab_focus();
@@ -106,7 +106,7 @@ DParted::my_realize (void)
  * my_show
  */
 void
-DParted::my_show (void)
+Window::my_show (void)
 {
 	//LOG_TRACE;
 }
@@ -115,7 +115,7 @@ DParted::my_show (void)
  * my_idle
  */
 bool
-DParted::my_idle (void)
+Window::my_idle (void)
 {
 #if 1
 	std::vector<std::string> files;
@@ -134,9 +134,9 @@ DParted::my_idle (void)
  * on_mouse_click
  */
 bool
-DParted::on_mouse_click (GdkEventButton* event)
+Window::on_mouse_click (GdkEventButton* event)
 {
-	//std::cout << "DParted: mouse click: (" << event->x << "," << event->y << ")\n";
+	//std::cout << "Window: mouse click: (" << event->x << "," << event->y << ")\n";
 	return true;
 }
 
@@ -147,7 +147,7 @@ DParted::on_mouse_click (GdkEventButton* event)
  *	   false - focus is the same
  */
 bool
-DParted::set_focus (GfxContainerPtr cont)
+Window::set_focus (GfxContainerPtr cont)
 {
 	if (!cont)
 		return false;
@@ -172,7 +172,7 @@ DParted::set_focus (GfxContainerPtr cont)
  * get_focus
  */
 GfxContainerPtr
-DParted::get_focus (void)
+Window::get_focus (void)
 {
 	return focus;
 }
@@ -181,7 +181,7 @@ DParted::get_focus (void)
  * set_data
  */
 void
-DParted::set_data (GfxContainerPtr c)
+Window::set_data (GfxContainerPtr c)
 {
 	treeview.init_treeview(c);
 	drawingarea.set_data(c);
@@ -202,34 +202,34 @@ DParted::set_data (GfxContainerPtr c)
  * init_menubar
  */
 void
-DParted::init_menubar (Gtk::Box& box)
+Window::init_menubar (Gtk::Box& box)
 {
 	//Create actions for menus and toolbars:
 	Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
 
-	refActionGroup->add_action ("newstandard", sigc::mem_fun (*this, &DParted::on_menu_file_new_generic));
-	refActionGroup->add_action ("newfoo",      sigc::mem_fun (*this, &DParted::on_menu_file_new_generic));
-	refActionGroup->add_action ("newgoo",      sigc::mem_fun (*this, &DParted::on_menu_file_new_generic));
+	refActionGroup->add_action ("newstandard", sigc::mem_fun (*this, &Window::on_menu_file_new_generic));
+	refActionGroup->add_action ("newfoo",      sigc::mem_fun (*this, &Window::on_menu_file_new_generic));
+	refActionGroup->add_action ("newgoo",      sigc::mem_fun (*this, &Window::on_menu_file_new_generic));
 
-	refActionGroup->add_action ("quit",        sigc::mem_fun (*this, &DParted::on_menu_file_quit));
+	refActionGroup->add_action ("quit",        sigc::mem_fun (*this, &Window::on_menu_file_quit));
 
-	refActionGroup->add_action ("copy",        sigc::mem_fun (*this, &DParted::on_menu_others));
-	refActionGroup->add_action ("paste",       sigc::mem_fun (*this, &DParted::on_menu_others));
-	refActionGroup->add_action ("something",   sigc::mem_fun (*this, &DParted::on_menu_others));
+	refActionGroup->add_action ("copy",        sigc::mem_fun (*this, &Window::on_menu_others));
+	refActionGroup->add_action ("paste",       sigc::mem_fun (*this, &Window::on_menu_others));
+	refActionGroup->add_action ("something",   sigc::mem_fun (*this, &Window::on_menu_others));
 
 	//Choices menus, to demonstrate Radio items,
 	//using our convenience methods for string and int radio values:
-	m_refChoice      = refActionGroup->add_action_radio_string  ("choice",      sigc::mem_fun (*this, &DParted::on_menu_choices),       "a");
-	m_refChoiceOther = refActionGroup->add_action_radio_integer ("choiceother", sigc::mem_fun (*this, &DParted::on_menu_choices_other), 1);
-	m_refToggle      = refActionGroup->add_action_bool          ("sometoggle",  sigc::mem_fun (*this, &DParted::on_menu_toggle),        false);
+	m_refChoice      = refActionGroup->add_action_radio_string  ("choice",      sigc::mem_fun (*this, &Window::on_menu_choices),       "a");
+	m_refChoiceOther = refActionGroup->add_action_radio_integer ("choiceother", sigc::mem_fun (*this, &Window::on_menu_choices_other), 1);
+	m_refToggle      = refActionGroup->add_action_bool          ("sometoggle",  sigc::mem_fun (*this, &Window::on_menu_toggle),        false);
 
-	m_refViewGfx     = refActionGroup->add_action_bool ("view.gfx",     sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 1), true);
-	m_refViewTree    = refActionGroup->add_action_bool ("view.tree",    sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 2), true);
-	m_refViewToolbar = refActionGroup->add_action_bool ("view.toolbar", sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 3), true);
-	m_refViewStatus  = refActionGroup->add_action_bool ("view.status",  sigc::bind<int> (sigc::mem_fun (*this, &DParted::on_menu_view), 4), true);
+	m_refViewGfx     = refActionGroup->add_action_bool ("view.gfx",     sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 1), true);
+	m_refViewTree    = refActionGroup->add_action_bool ("view.tree",    sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 2), true);
+	m_refViewToolbar = refActionGroup->add_action_bool ("view.toolbar", sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 3), true);
+	m_refViewStatus  = refActionGroup->add_action_bool ("view.status",  sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 4), true);
 
 	//Help menu:
-	refActionGroup->add_action ("about", sigc::mem_fun (*this, &DParted::on_menu_others));
+	refActionGroup->add_action ("about", sigc::mem_fun (*this, &Window::on_menu_others));
 
 	insert_action_group ("example", refActionGroup);
 
@@ -394,7 +394,7 @@ DParted::init_menubar (Gtk::Box& box)
  * on_menu_choices
  */
 void
-DParted::on_menu_choices (const Glib::ustring& parameter)
+Window::on_menu_choices (const Glib::ustring& parameter)
 {
 	//The radio action's state does not change automatically:
 	m_refChoice->change_state (parameter);
@@ -412,7 +412,7 @@ DParted::on_menu_choices (const Glib::ustring& parameter)
  * on_menu_choices_other
  */
 void
-DParted::on_menu_choices_other (int parameter)
+Window::on_menu_choices_other (int parameter)
 {
 	//The radio action's state does not change automatically:
 	m_refChoiceOther->change_state (parameter);
@@ -430,7 +430,7 @@ DParted::on_menu_choices_other (int parameter)
  * on_menu_file_new_generic
  */
 void
-DParted::on_menu_file_new_generic (void)
+Window::on_menu_file_new_generic (void)
 {
 	std::cout << "A File|New menu item was selected." << std::endl;
 }
@@ -439,7 +439,7 @@ DParted::on_menu_file_new_generic (void)
  * on_menu_file_quit
  */
 void
-DParted::on_menu_file_quit (void)
+Window::on_menu_file_quit (void)
 {
 	bool ask_user = true;
 	bool quit_app = false;
@@ -471,7 +471,7 @@ DParted::on_menu_file_quit (void)
  * on_menu_others
  */
 void
-DParted::on_menu_others (void)
+Window::on_menu_others (void)
 {
 	std::cout << "A menu item was selected." << std::endl;
 }
@@ -480,7 +480,7 @@ DParted::on_menu_others (void)
  * on_menu_toggle
  */
 void
-DParted::on_menu_toggle (void)
+Window::on_menu_toggle (void)
 {
 	bool active = false;
 	m_refToggle->get_state (active);
@@ -502,7 +502,7 @@ DParted::on_menu_toggle (void)
  * on_menu_view
  */
 void
-DParted::on_menu_view (int option)
+Window::on_menu_view (int option)
 {
 	std::cout << "on_menu_view: " << option << std::endl;
 
@@ -551,7 +551,7 @@ DParted::on_menu_view (int option)
  * init_shortcuts
  */
 void
-DParted::init_shortcuts (void)
+Window::init_shortcuts (void)
 {
 	std::vector<std::pair<int,int>> keys = {
 		{ 0,                 GDK_KEY_Left   },
@@ -577,7 +577,7 @@ DParted::init_shortcuts (void)
 	for (auto k : keys) {
 		//std::cout << "Keypress: " << k.first << " : " << k.second << std::endl;
 		Gtk::MenuItem* i = manage (new Gtk::MenuItem());
-		i->signal_activate().connect (sigc::bind<int,int> (sigc::mem_fun (*this, &DParted::on_keypress), k.first, k.second));
+		i->signal_activate().connect (sigc::bind<int,int> (sigc::mem_fun (*this, &Window::on_keypress), k.first, k.second));
 		i->add_accelerator ("activate", accel, k.second, (Gdk::ModifierType) k.first, Gtk::ACCEL_VISIBLE);
 		i->show();
 		m_fake_menu.append (*i);
@@ -591,7 +591,7 @@ DParted::init_shortcuts (void)
  * on_keypress
  */
 void
-DParted::on_keypress (int modifier, int key)
+Window::on_keypress (int modifier, int key)
 {
 	std::cout << "Keypress: " << modifier << " : " << (char) key << std::endl;
 

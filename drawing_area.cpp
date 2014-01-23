@@ -31,7 +31,7 @@
 #include "utils.h"
 #include "log_trace.h"
 #include "gui_app.h"
-#include "dparted.h"
+#include "window.h"
 #include "table.h"
 
 const double ARC_N = 3*M_PI_2;	// Compass points in radians
@@ -931,7 +931,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 
-	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 
 	for (const auto& rg : vRange) {
 		const Rect& r = rg.r;
@@ -1408,9 +1408,9 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
 
-	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		std::cout << "No DParted" << std::endl;
+		std::cout << "No Window" << std::endl;
 		return false;
 	}
 
@@ -1462,9 +1462,9 @@ DrawingArea::on_focus_in (GdkEventFocus* event)
 {
 	//LOG_TRACE;
 
-	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		std::cout << "No DParted" << std::endl;
+		std::cout << "No Window" << std::endl;
 		return false;
 	}
 	GfxContainerPtr c = dp->get_focus();
@@ -1637,9 +1637,9 @@ DrawingArea::on_menu_select (int option)
 bool
 DrawingArea::get_coords (int& x, int& y)
 {
-	DParted *dp = reinterpret_cast<DParted*> (get_toplevel());
+	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		std::cout << "No DParted" << std::endl;
+		std::cout << "No Window" << std::endl;
 		return false;
 	}
 
@@ -1656,7 +1656,7 @@ DrawingArea::get_coords (int& x, int& y)
 
 	int ox = 0;
 	int oy = 0;
-	w->get_origin (ox, oy);		// Coords of DParted's main window (inside chrome)
+	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
 	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
 	if (!window) {
@@ -1666,7 +1666,7 @@ DrawingArea::get_coords (int& x, int& y)
 	int tx = 0;
 	int ty = 0;
 	if (!translate_coordinates (*window, 0, 0, tx, ty)) {
-		return false;		// Coords of DrawingArea within DParted's window
+		return false;		// Coords of DrawingArea within Window's window
 	}
 
 	Rect r = get_rect(c);		// Size and shape of selected container
