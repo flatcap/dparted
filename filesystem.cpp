@@ -32,6 +32,8 @@
 #include "main.h"
 #include "app.h"
 
+#include "ext_fs.h"
+
 /**
  * Filesystem
  */
@@ -90,15 +92,15 @@ Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	FilesystemPtr f;
 
 	//XXX reorder by likelihood
-	     if ((f = get_btrfs    (buffer, bufsize))) {}
-	else if ((f = get_ext2     (buffer, bufsize))) {}
-	else if ((f = get_ext3     (buffer, bufsize))) {}
-	else if ((f = get_ext4     (buffer, bufsize))) {}
-	else if ((f = get_ntfs     (buffer, bufsize))) {}
-	else if ((f = get_reiserfs (buffer, bufsize))) {}
-	else if ((f = get_swap     (buffer, bufsize))) {}
-	else if ((f = get_vfat     (buffer, bufsize))) {}
-	else if ((f = get_xfs      (buffer, bufsize))) {}
+	     if ((f =        get_btrfs    (buffer, bufsize))) {}
+	else if ((f = ExtFs::get_ext2     (parent, buffer, bufsize))) {}
+	else if ((f = ExtFs::get_ext3     (parent, buffer, bufsize))) {}
+	else if ((f = ExtFs::get_ext4     (parent, buffer, bufsize))) {}
+	else if ((f =        get_ntfs     (buffer, bufsize))) {}
+	else if ((f =        get_reiserfs (buffer, bufsize))) {}
+	else if ((f =        get_swap     (buffer, bufsize))) {}
+	else if ((f =        get_vfat     (buffer, bufsize))) {}
+	else if ((f =        get_xfs      (buffer, bufsize))) {}
 
 	if (f) {
 		//log_info ("volume: %s (%s), child: %s\n", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
@@ -107,6 +109,15 @@ Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	}
 
 	return f;
+}
+
+/**
+ * get_mounted_usage
+ */
+bool
+Filesystem::get_mounted_usage (ContainerPtr parent)
+{
+	return false;
 }
 
 

@@ -15,43 +15,34 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _FILESYSTEM_H
-#define _FILESYSTEM_H
+#ifndef _EXT_FS_H_
+#define _EXT_FS_H_
 
-#include <string>
-#include <memory>
+#include "filesystem.h"
 
-#include "container.h"
+class ExtFs;
 
-class Filesystem;
-class Visitor;
-
-typedef std::shared_ptr<Filesystem> FilesystemPtr;
+typedef std::shared_ptr<ExtFs> ExtFsPtr;
 
 /**
- * class Filesystem
+ * class ExtFs
  */
-class Filesystem : public Container
+class ExtFs : public Filesystem
 {
 public:
-	virtual ~Filesystem() = default;
-	static FilesystemPtr create (void);
-	virtual bool accept (Visitor& v);
-	bool get_mounted_usage (ContainerPtr parent);
+	virtual ~ExtFs() = default;
+	static ExtFsPtr create (void);
 
-	static FilesystemPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
-
-public:
-	//properties
+	void get_ext_header (ContainerPtr parent);
+	static ExtFsPtr get_ext2 (ContainerPtr parent, unsigned char* buffer, int bufsize);
+	static ExtFsPtr get_ext3 (ContainerPtr parent, unsigned char* buffer, int bufsize);
+	static ExtFsPtr get_ext4 (ContainerPtr parent, unsigned char* buffer, int bufsize);
 
 protected:
-	Filesystem (void);
-
-private:
-	long ext2_get_usage (void);
+	ExtFs (void);
 
 };
 
 
-#endif // _FILESYSTEM_H
+#endif // _EXT_FS_H_
 

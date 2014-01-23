@@ -16,113 +16,9 @@
  */
 
 #include "filesystem.h"
+#include "log_trace.h"
 
 #if 0
-/**
- * ext2_get_usage
- */
-long
-Filesystem::ext2_get_usage (void)
-{
-	std::ostringstream build;
-	std::string dev = device;
-	std::string command;
-	std::string output;
-	long block_size = 512;
-	long bfree = 0;
-
-	if (parent_offset != 0) {
-		//log_debug ("create loop device\n");
-		build << "losetup /dev/loop16 " << device << " -o " << parent_offset;
-		command = build.str();
-		execute_command3 (command, output);
-		//log_debug ("command = %s\n", command.c_str());
-		//execute_command1 ("losetup /dev/loop16 ", output);
-		dev = "/dev/loop16";
-	}
-
-	if (dev.empty())	//XXX shouldn't happen
-		return 0;
-
-	// do something
-	command = "tune2fs -l " + dev;
-	//log_debug ("command = %s\n", command.c_str());
-
-	execute_command3 (command, output);
-	//log_debug ("result = \n%s\n", output.c_str());
-
-	//interpret results
-	std::string tmp;
-	size_t pos1 = std::string::npos;
-	size_t pos2 = std::string::npos;
-
-	//log_debug ("volume:\n");
-
-	pos1 = output.find ("Filesystem volume name:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 23);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		//log_debug ("\tname = '%s'\n", tmp.c_str());
-	}
-
-	pos1 = output.find ("Filesystem UUID:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 16);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		//log_debug ("\tuuid = '%s'\n", tmp.c_str());
-	}
-
-	pos1 = output.find ("Block size:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 11);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		StringNum s (tmp.c_str());
-		block_size = s;
-		//log_debug ("\tblock size = %ld\n", block_size);
-	}
-
-	pos1 = output.find ("Block count:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 12);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		//log_debug ("\tblock count = %s\n", tmp.c_str());
-	}
-
-	pos1 = output.find ("Free blocks:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 12);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		StringNum s (tmp.c_str());
-		bfree = (long) s * block_size;
-		//log_debug ("\tfree blocks = %s\n", tmp.c_str());
-		//log_debug ("\tbytes free = %lld\n", bfree);
-	}
-
-	if (parent_offset != 0) {
-		command = "losetup -d /dev/loop16";
-		execute_command3 (command, output);
-		//log_debug ("dismantle loop device\n");
-		//log_debug ("command = %s\n", command.c_str());
-		//log_debug ("\n");
-	}
-
-	return bfree;
-}
-
-#endif
-
-#if 0
-ext2,3,4	tune2fs -l {device}
 btrfs		btrfs filesystem show {uuid}
 ntfs		ntfsinfo -m {device}
 swap		swapon -s (if mounted, else 0)
@@ -139,65 +35,18 @@ get_mounted_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
-	if (f->device.empty())
+	if (f->get_device_name().empty())
 		return false;
 
 	return false;
 }
+
 
 /**
  * get_btrfs_usage
  */
 bool
 get_btrfs_usage (FilesystemPtr f)
-{
-	if (!f)
-		return false;
-	if (f->device.empty())
-		return false;
-	if (get_mounted_usage(f))
-		return true;
-
-	return false;
-}
-
-/**
- * get_ext2_usage
- */
-bool
-get_ext2_usage (FilesystemPtr f)
-{
-	if (!f)
-		return false;
-	if (f->device.empty())
-		return false;
-	if (get_mounted_usage(f))
-		return true;
-
-	return false;
-}
-
-/**
- * get_ext3_usage
- */
-bool
-get_ext3_usage (FilesystemPtr f)
-{
-	if (!f)
-		return false;
-	if (f->device.empty())
-		return false;
-	if (get_mounted_usage(f))
-		return true;
-
-	return false;
-}
-
-/**
- * get_ext4_usage
- */
-bool
-get_ext4_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;

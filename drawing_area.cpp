@@ -316,6 +316,7 @@ checker_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, int ch
 void
 draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, const std::string& text)
 {
+	//XXX need to escape <>'s etc in label
 	cr->save();
 	draw_border (cr, shape);				// Set clipping area
 	cr->clip();
@@ -1319,10 +1320,11 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		fill_area (cr, inside, background);
 
 		if (usage) {
-			Rect usage = inside;
-			usage.w = usage.w * 2 / 3;
+			Rect r_usage = inside;
+			double d = (double) cont->bytes_used / (double) cont->bytes_size;
+			r_usage.w = r_usage.w * d;
 			cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
-			draw_border (cr, usage);
+			draw_border (cr, r_usage);
 			cr->fill();
 		}
 		if (!label.empty()) {

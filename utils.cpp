@@ -126,7 +126,7 @@ execute_command3 (const std::string& command, std::string& output)
 
 	output.clear();
 	for (auto it : v) {
-		output += it;
+		output += it + "\n";
 	}
 
 	return count;

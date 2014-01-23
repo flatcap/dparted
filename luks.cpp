@@ -91,7 +91,7 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
 	//std::cout << "Parent: " << parent->get_device_name() << std::endl;
 	l->luks_open(parent->get_device_name(), false);
 
-#if 1
+#if 0
 	log_info ("LUKS:\n");
 	log_info ("\tversion:     %d\n", l->version);		//XXX wrong endian (version == 1)
 	log_info ("\tcipher name: %s\n", l->cipher_name.c_str());

@@ -26,39 +26,6 @@
 #include "utils.h"
 
 /**
- * get_ext_common
- */
-void
-get_ext_common (FilesystemPtr& f, unsigned char* buffer, int bufsize)
-{
-	if (!f)
-		return;
-	if (!buffer)
-		return;
-
-	f->name = (char*) (buffer+0x478);
-	f->uuid = read_uuid1 (buffer + 0x468);
-
-	int block_size = *(int*) (buffer + 0x418);
-	block_size = (1 << (block_size+10));		// 2^(10+ value at 0x18)
-
-	long blocks_total = *(int*) (buffer + 0x404);
-	long blocks_free  = *(int*) (buffer + 0x40C);
-
-	f->block_size = block_size;
-	f->bytes_size = blocks_total * block_size;
-	f->bytes_used = (blocks_total - blocks_free) * block_size;
-
-#if 0
-	log_info ("%s\n", f->name.c_str());
-	log_info ("\tblock = %d\n", block_size);
-	log_info ("\tsize = %ld\n",      f->bytes_size);
-	log_info ("\tused = %ld (%ld)\n", f->bytes_used, (f->bytes_used*100/f->bytes_size));
-#endif
-}
-
-
-/**
  * get_btrfs
  */
 FilesystemPtr
@@ -78,60 +45,6 @@ get_btrfs (unsigned char* buffer, int bufsize)
 	f->bytes_used = *(long*) (buffer + 0x10078);
 
 	get_btrfs_usage(f);
-	return f;
-}
-
-/**
- * get_ext2
- */
-FilesystemPtr
-get_ext2 (unsigned char* buffer, int bufsize)
-{
-	if (!identify_ext2 (buffer, bufsize))
-		return nullptr;
-
-	FilesystemPtr f  = Filesystem::create();
-	f->sub_type ("ext2");
-
-	get_ext_common (f, buffer, bufsize);
-
-	get_ext2_usage(f);
-	return f;
-}
-
-/**
- * get_ext3
- */
-FilesystemPtr
-get_ext3 (unsigned char* buffer, int bufsize)
-{
-	if (!identify_ext3 (buffer, bufsize))
-		return nullptr;
-
-	FilesystemPtr f  = Filesystem::create();
-	f->sub_type ("ext3");
-
-	get_ext_common (f, buffer, bufsize);
-
-	get_ext3_usage(f);
-	return f;
-}
-
-/**
- * get_ext4
- */
-FilesystemPtr
-get_ext4 (unsigned char* buffer, int bufsize)
-{
-	if (!identify_ext4 (buffer, bufsize))
-		return nullptr;
-
-	FilesystemPtr f  = Filesystem::create();
-	f->sub_type ("ext4");
-
-	get_ext_common (f, buffer, bufsize);
-
-	get_ext4_usage(f);
 	return f;
 }
 
