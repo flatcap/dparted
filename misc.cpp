@@ -138,7 +138,7 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 		//log_error ("probe empty\n");
 		m = Misc::create();
 		m->name = "zero";
-	} else if (is_random (buffer, bufsize)) {
+	} else { //if (is_random (buffer, bufsize)) {
 		//log_error ("probe random\n");
 		m = Misc::create();
 		m->name = "random";

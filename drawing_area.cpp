@@ -1323,9 +1323,11 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 			Rect r_usage = inside;
 			double d = (double) cont->bytes_used / (double) cont->bytes_size;
 			r_usage.w = r_usage.w * d;
-			cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
-			draw_border (cr, r_usage);
-			cr->fill();
+			if (r_usage.w > 1) {
+				cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
+				draw_border (cr, r_usage);
+				cr->fill();
+			}
 		}
 		if (!label.empty()) {
 			draw_text (cr, shape, label);

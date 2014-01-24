@@ -76,7 +76,31 @@ Window::Window()
 					inner_box.pack_start (treeview,    true,  true);
 		outer_box.pack_end (statusbar, false, false);
 
+	//-------------------------------------
+
+	bool tb = true;
+	bool gx = true;
+	bool tv = true;
+	bool sb = true;
+	ConfigFilePtr cfg = gui_app->get_config();
+	if (cfg) {
+		try { tb = cfg->get_bool ("display.tool_bar");   } catch (const char *msg) { std::cout << "notb\n"; }
+		try { gx = cfg->get_bool ("display.graphics");   } catch (const char *msg) { std::cout << "nogx\n"; }
+		try { tv = cfg->get_bool ("display.tree_view");  } catch (const char *msg) { std::cout << "notv\n"; }
+		try { sb = cfg->get_bool ("display.status_bar"); } catch (const char *msg) { std::cout << "nosb\n"; }
+	}
+
 	show_all_children();
+
+	printf ("%d,%d,%d,%d\n", tb, gx, tv, sb);
+	if (!tb)
+		toolbar->hide();
+	if (!gx)
+		drawingarea.hide();
+	if (!tv)
+		treeview.hide();
+	if (!sb)
+		statusbar.hide();
 
 #if 0
 	Glib::RefPtr<Gtk::Settings> s = get_settings();
