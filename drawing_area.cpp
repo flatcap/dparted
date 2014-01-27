@@ -311,12 +311,27 @@ checker_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, int ch
 
 
 /**
+ * escape_text
+ */
+void
+escape_text (std::string &text)
+{
+	size_t pos = text.find_first_of ("<>");
+	while (pos != std::string::npos) {
+		if (text[pos] == '<')
+			text.replace (pos, 1, "&#60;");
+		else
+			text.replace (pos, 1, "&#62;");
+		pos = text.find_first_of ("<>", pos+2);
+	}
+}
+
+/**
  * draw_text - write some text into an area
  */
 void
-draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, const std::string& text)
+draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, std::string text)
 {
-	//XXX need to escape <>'s etc in label
 	cr->save();
 	draw_border (cr, shape);				// Set clipping area
 	cr->clip();
@@ -330,7 +345,8 @@ draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, const std::strin
 	font.set_size (11 * Pango::SCALE);		//THEME - icon label size
 	layout->set_font_description (font);
 
-	layout->set_text (text);
+	escape_text (text);
+	layout->set_markup (text);
 
 	int tw = 0;
 	int th = 0;
@@ -1179,17 +1195,15 @@ DrawingArea::set_focus (GfxContainerPtr& c)
 bool
 DrawingArea::on_textview_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
-	std::stringstream ss;
-
 	if (menu_active)
 		return false;
 
 	GfxContainerPtr c = get_focus (x, y);
 	if (c) {
-		//ss << "<b>" << c->name << "</b> (" << c->uuid << ")";
-		ss << "<b>" << c->get_tooltip() << "</b>";
-
-		tooltip->set_markup (ss.str());
+		std::string text = c->get_tooltip();
+		escape_text (text);
+		text = "<b>" + text + "</b>";
+		tooltip->set_markup (text);
 		tooltip->set_icon_from_icon_name ("dialog-information", Gtk::ICON_SIZE_MENU);
 
 		return true;
