@@ -291,9 +291,8 @@ GuiApp::notify (Message& m)
 void
 GuiApp::properties (GfxContainerPtr c)
 {
-	Properties p (c);
-	p.show_all();
-	p.run();
+	Properties* p = new Properties(c, get_active_window());
+	p->show();
 }
 
 /**

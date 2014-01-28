@@ -308,7 +308,7 @@ BaseDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& 
 	}
 
 	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
-		log_info ("draw_box: too narrow\n");
+		//log_info ("draw_box: too narrow\n");
 		return;
 	}
 

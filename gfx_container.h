@@ -82,9 +82,10 @@ public:
 	int get_index (const GfxContainerPtr& me);
 	int get_depth (void);
 
+	ContainerPtr get_container (void);
+
 protected:
 	GfxContainer (void);
-	ContainerPtr get_container (void);
 	std::string process_label (const std::string& label_template);
 	GfxContainerPtr get_smart (void);
 

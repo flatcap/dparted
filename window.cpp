@@ -54,7 +54,7 @@ Window::Window()
 	eventbox.signal_key_press_event().connect (sigc::mem_fun (drawingarea, &DrawingArea::on_keypress), false);
 
 	signal_realize().connect (sigc::mem_fun (*this, &Window::my_realize));
-	signal_realize().connect (sigc::mem_fun (*this, &Window::my_show));
+	signal_show().connect (sigc::mem_fun (*this, &Window::my_show));
 	Glib::signal_idle().connect (sigc::mem_fun (*this, &Window::my_idle));
 
 	set_default_icon_name ("dparted");
@@ -213,7 +213,8 @@ Window::set_data (GfxContainerPtr c)
 	int height = 0;
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
-	move (1920+1366-width, 768-height);
+	//move (1920+1366-width, 768-height);
+	move (1920-width, 0);
 	//move (1366-width, 0);
 }
 

@@ -482,7 +482,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 
-	std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 
 	for (const auto& rg : vRange) {
@@ -965,7 +965,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
 
-	std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		std::cout << "No Window" << std::endl;
@@ -1027,7 +1027,7 @@ DrawingArea::on_focus_in (GdkEventFocus* event)
 {
 	//LOG_TRACE;
 
-	std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		std::cout << "No Window" << std::endl;
@@ -1235,7 +1235,7 @@ DrawingArea::on_menu_select (int option)
 {
 	//LOG_TRACE;
 	if (option == 1) {
-		std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+		//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 		Window *dp = reinterpret_cast<Window*> (get_toplevel());
 		if (!dp) {
 			std::cout << "No Window" << std::endl;
@@ -1259,7 +1259,7 @@ DrawingArea::on_menu_select (int option)
 bool
 DrawingArea::get_coords (int& x, int& y)
 {
-	std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		std::cout << "No Window" << std::endl;
@@ -1281,7 +1281,7 @@ DrawingArea::get_coords (int& x, int& y)
 	int oy = 0;
 	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
-	std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
 	if (!window) {
 		return false;

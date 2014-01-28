@@ -19,6 +19,8 @@
 #define _PROPERTIES_H_
 
 #include <gtkmm/dialog.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/textview.h>
 
 #include "gfx_container.h"
 #include "prop_drawing_area.h"
@@ -29,16 +31,30 @@
 class Properties : public Gtk::Dialog
 {
 public:
-	Properties (GfxContainerPtr c);
+	Properties (GfxContainerPtr c, Gtk::Window* w);
 	virtual ~Properties();
 
 protected:
-	//virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
+#if 0
+	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
+	virtual bool on_event (GdkEvent* event);
+	void my_realize (void);
+#endif
+	void my_show (void);
 
-	PropDrawingArea da;
+	void on_dialog_response (int response_id);
+	bool on_parent_delete (GdkEventAny* event);
+	void on_close (void);
+
+	PropDrawingArea drawing;
+	Gtk::ScrolledWindow scrolled;
+	Gtk::TextView textview;
+	Glib::RefPtr<Gtk::TextBuffer> textbuffer;
+	Gtk::Button close;
 
 	GfxContainerPtr container;
 };
+
 
 #endif // _PROPERTIES_H_
 
