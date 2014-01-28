@@ -159,7 +159,7 @@ Luks::luks_open (const std::string& parent, bool probe)
 //		4 (Device /dev/loop4p6 doesn't exist or access denied.)
 
 	std::string command = "sudo cryptsetup open --type luks " + parent + " luks-" + uuid;
-	std::cout << "Command: " << command << std::endl;
+	//std::cout << "Command: " << command << std::endl;
 
 	std::string password = "password";
 	execute_command2 (command, password);

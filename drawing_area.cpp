@@ -34,26 +34,12 @@
 #include "window.h"
 #include "table.h"
 
-const double ARC_N = 3*M_PI_2;	// Compass points in radians
-const double ARC_E = 0*M_PI_2;
-const double ARC_S = 1*M_PI_2;
-const double ARC_W = 2*M_PI_2;
-
-const int GAP         =   3;	// Space between partitions
-const int RADIUS      =   8;	// Curve radius of corners
-const int SIDES       =   2;	// Width of sides and base
-const int TAB_WIDTH   =  10;	// Space in left side-bar
-const int BLOCK_WIDTH =  24;	// Placeholder for icons
-const int DA_HEIGHT   = 100;	// Graphical display height in pixels
-
 /**
  * DrawingArea
  */
 DrawingArea::DrawingArea()
 	//Glib::ObjectBase ("MyDrawingArea")
 {
-	//set_size_request (800, 77);
-	set_size_request (400, DA_HEIGHT*3);
 	set_hexpand (true);
 	set_vexpand (false);
 	set_can_focus (true);
@@ -88,7 +74,7 @@ DrawingArea::~DrawingArea()
 }
 
 
-#if 1
+#if 0
 /**
  * operator<< - serialise a Rect
  */
@@ -98,16 +84,6 @@ operator<< (std::ostream& stream, const Rect& r)
 	stream << "[" << r.x << "," << r.y << "," << r.w << "," << r.h << "]";
 
 	return stream;
-}
-
-/**
- * set_colour
- */
-void set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk::RGBA& rgba)
-{
-	if (!cr)
-		return;
-	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
 }
 
 /**
@@ -235,45 +211,10 @@ draw_grid_log (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, long max_siz
 #endif
 
 /**
- * draw_border - sketch out curved rectangle
- */
-void
-draw_border (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
-{
-	const int& r = RADIUS;
-	const int& x = shape.x;
-	const int& y = shape.y;
-	const int& w = shape.w;
-	const int& h = shape.h;
-
-	cr->move_to (x, y+r);
-	cr->arc (x+  r, y+  r, r, ARC_W, ARC_N);
-	cr->arc (x+w-r, y+  r, r, ARC_N, ARC_E);
-	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
-	cr->close_path();
-}
-
-/**
- * fill_area - fill rounded rectangle
- */
-void
-fill_area (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour)
-{
-	cr->save();
-	set_colour (cr, colour);
-
-	draw_border (cr, shape);
-
-	cr->fill();
-	cr->restore();
-}
-
-/**
  * fill_rect - fill rectangle
  */
 void
-fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour)
+DrawingArea::fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour)
 {
 	cr->save();
 	set_colour (cr, colour);
@@ -284,96 +225,12 @@ fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk
 	cr->restore();
 }
 
-/**
- * checker_rect - checker rect
- */
-void
-checker_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, int check_size)
-{
-	const int& s = check_size;
-	const int& x = shape.x;
-	const int& y = shape.y;
-	const int& w = shape.w;
-	const int& h = shape.h;
-
-	for (int i = 0; i <= w; i += s) {
-		for (int j = 0; j <= h; j += s) {
-			if (((i+j)/s)&1)
-				cr->set_source_rgba (0.8, 0.8, 0.8, 1.0);
-			else
-				cr->set_source_rgba (0.6, 0.6, 0.6, 1.0);
-
-			cr->rectangle (x+i, y+j, s, s);
-			cr->fill();
-		}
-	}
-}
-
-
-/**
- * escape_text
- */
-void
-escape_text (std::string &text)
-{
-	size_t pos = text.find_first_of ("<>");
-	while (pos != std::string::npos) {
-		if (text[pos] == '<')
-			text.replace (pos, 1, "&#60;");
-		else
-			text.replace (pos, 1, "&#62;");
-		pos = text.find_first_of ("<>", pos+2);
-	}
-}
-
-/**
- * draw_text - write some text into an area
- */
-void
-draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, std::string text)
-{
-	cr->save();
-	draw_border (cr, shape);				// Set clipping area
-	cr->clip();
-
-	Pango::FontDescription font;
-	font.set_family ("Liberation Sans Bold");	//THEME - icon label font
-
-	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
-	layout->set_font_description (font);
-
-	font.set_size (11 * Pango::SCALE);		//THEME - icon label size
-	layout->set_font_description (font);
-
-	escape_text (text);
-	layout->set_markup (text);
-
-	int tw = 0;
-	int th = 0;
-	layout->get_pixel_size (tw, th);
-
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - icon label colour
-
-	//int left = std::max (GAP, (shape.w - tw) / 2);
-	//printf ("left = %d\n", left);
-	//cr->move_to (shape.x + left, shape.y + shape.h - th);	// align to bottom
-	cr->move_to (shape.x + SIDES, shape.y + RADIUS);	// align to top
-
-#if 0
-	layout->set_width (Pango::SCALE * (shape.w - 4));
-	layout->set_ellipsize (Pango::ELLIPSIZE_END);
-#endif
-	layout->update_from_cairo_context (cr);
-	layout->show_in_cairo_context (cr);
-
-	cr->restore();
-}
 
 /**
  * draw_focus - 2px dashed black/white line
  */
 void
-draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool primary)
+DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool primary)
 {
 	static int start = 0;
 	std::vector<double> dashes = {5,5};
@@ -409,7 +266,7 @@ draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool pri
  * draw_gradient - apply light shading to an area
  */
 void
-draw_gradient (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape)
+DrawingArea::draw_gradient (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape)
 {
 	const int& x = shape.x;
 	const int& y = shape.y;
@@ -433,119 +290,6 @@ draw_gradient (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape)
 	cr->restore();
 }
 
-
-/**
- * draw_corner - solid ne/nw/se/sw convex/concave corner
- */
-void draw_corner (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, bool north, bool east, bool convex)
-{
-	const int& r = RADIUS;
-	const int& x = shape.x;
-	const int& y = shape.y;
-	const int& w = shape.w;
-	const int& h = shape.h;
-
-	cr->save();
-	cr->rectangle (x, y, w, h);
-	cr->clip();
-
-	if (north) {
-		if (east) {
-			if (convex) {
-				// North-East concave
-				cr->arc (x+w-r, y+r, r, ARC_N, ARC_E);
-				cr->rel_line_to (-r, 0);
-				cr->rel_line_to (0, r);
-			} else {
-				// North-East convex
-				cr->arc (x+w-r, y+r, r, ARC_N, ARC_E);
-				cr->rel_line_to (0, -r);
-				cr->rel_line_to (-r, 0);
-			}
-		} else {
-			if (convex) {
-				// North-West concave
-				cr->arc (x+r, y+r, r, ARC_W, ARC_N);
-				cr->rel_line_to (0, r);
-				cr->rel_line_to (-r, 0);
-			} else {
-				// North-West convex
-				cr->arc (x+r, y+r, r, ARC_W, ARC_N);
-				cr->rel_line_to (-r, 0);
-				cr->rel_line_to (0, r);
-			}
-		}
-	} else {
-		if (east) {
-			if (convex) {
-				// South-East concave
-				cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-				cr->rel_line_to (0, -r);
-				cr->rel_line_to (r, 0);
-			} else {
-				// South-East convex
-				cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
-				cr->rel_line_to (r, 0);
-				cr->rel_line_to (0, -r);
-			}
-		} else {
-			if (convex) {
-				// South-West concave
-				cr->arc (x+r, y+h-r, r, ARC_S, ARC_W);
-				cr->rel_line_to (r, 0);
-				cr->rel_line_to (0, r);
-			} else {
-				// South-West convex
-				cr->arc (x+r, y+h-r, r, ARC_S, ARC_W);
-				cr->rel_line_to (0, r);
-				cr->rel_line_to (r, 0);
-			}
-		}
-	}
-
-	cr->fill();
-	cr->restore();
-}
-
-/**
- * draw_arc - draw a corner line (90 degrees) se/sw
- */
-void draw_arc (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, bool east)
-{
-	const int& r = RADIUS;
-	const int& x = shape.x;
-	const int& y = shape.y;
-	const int& w = shape.w;
-	const int& h = shape.h;
-
-	cr->save();
-	cr->set_line_width (SIDES+1);
-
-	if (east) {
-		// South-East
-		cr->move_to (x+w-r, y+h);
-		cr->rel_line_to (0, -r);
-		cr->rel_line_to (r, 0);
-		cr->rel_line_to (0, r);
-		cr->close_path();
-		cr->clip();
-
-		cr->arc (x+w-r-(SIDES), y+h-r-SIDES, r+(SIDES/2)+1, ARC_E, ARC_S);
-	} else {
-		// South-West
-		cr->move_to (x, y+h);
-		cr->rel_line_to (0, -r);
-		cr->rel_line_to (r, 0);
-		cr->rel_line_to (0, r);
-		cr->close_path();
-		cr->clip();
-
-		cr->arc (x+r+SIDES, y+h-r-SIDES, r+(SIDES/2)+1, ARC_S, ARC_W);
-	}
-
-	cr->stroke();
-	cr->restore();
-}
 
 
 /**
@@ -608,227 +352,6 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	vRange.push_front ({shape, cont});
 }
 
-/**
- * draw_box - draw a rounded rectangle
- */
-void
-DrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& inside)
-{
-	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_box: too short\n");
-		return;
-	}
-
-	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
-		log_info ("draw_box: too narrow\n");
-		std::cout << cont << std::endl;
-		return;
-	}
-
-	const int& x = shape.x;
-	const int& y = shape.y;
-	const int& w = shape.w;
-	const int& h = shape.h;
-
-	draw_corner (cr, shape, true,  false, true);		// Top left corner(1)
-	draw_corner (cr, shape, true,  true,  true);		// Top right corner(3)
-
-	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
-	draw_arc (cr, shape, false);				// Thin bottom left corner (13)
-
-	cr->set_line_width (RADIUS);				// Thick top bar(2)
-	cr->move_to (x+RADIUS, y+(RADIUS/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin left bar(4)
-	cr->move_to (x+(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin right bar(8)
-	cr->move_to (x+w-(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin bottom bar (10)
-	cr->move_to (x+RADIUS, y+h-(SIDES/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	inside = { x+SIDES, y+RADIUS, w-(SIDES*2), h-RADIUS-SIDES };
-
-	draw_corner (cr, inside, true, false, false);		// Top left inner corner(6)
-	draw_corner (cr, inside, true, true,  false);		// Top right inner corner(7)
-
-	vRange.push_front ({shape, cont});
-}
-
-/**
- * draw_iconbox - draw a rounded rectangle with a handy tab
- */
-void
-DrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside)
-{
-	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_iconbox: too short\n");
-		return;
-	}
-
-	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
-		log_info ("draw_iconbox: too narrow\n");
-		std::cout << cont << std::endl;
-		return;
-	}
-
-	const int& x = shape.x;
-	const int& y = shape.y;
-	const int& w = shape.w;
-	const int& h = shape.h;
-
-	draw_corner (cr, shape, true,  false, true);		// Top left corner(1)
-	draw_corner (cr, shape, true,  true,  true);		// Top right corner(3)
-	draw_corner (cr, shape, false, false, true);		// Bottom left corner(9)
-
-	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
-
-	cr->set_line_width (RADIUS);				// Thick top bar(2)
-	cr->move_to (x+RADIUS, y+(RADIUS/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin left bar(4)
-	cr->move_to (x+(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin right bar(8)
-	cr->move_to (x+w-(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin bottom bar (10)
-	cr->move_to (x+RADIUS, y+h-(SIDES/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->move_to (x+SIDES, y+RADIUS);			// Tab block(5)
-	cr->rel_line_to (BLOCK_WIDTH+SIDES, 0);
-	cr->rel_line_to (0, h-RADIUS-SIDES);
-	cr->rel_line_to (-BLOCK_WIDTH+RADIUS-(SIDES*2), 0);
-	cr->rel_line_to (0, -RADIUS+SIDES);
-	cr->rel_line_to (-RADIUS+SIDES, 0);
-	cr->close_path();
-	cr->fill();
-
-	inside = { x+BLOCK_WIDTH+(SIDES*2), y+RADIUS, w-BLOCK_WIDTH-(SIDES*3), h-RADIUS-SIDES };
-
-	draw_corner (cr, inside, false, false, false);		// Bottom left inner corner (11)
-	draw_corner (cr, inside, true,  false, false);		// Top left inner corner(6)
-	draw_corner (cr, inside, true,  true,  false);		// Top right inner corner(7)
-
-	tab = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
-
-	vRange.push_front ({shape, cont});
-}
-
-/**
- * draw_tabbox - draw a rounded rectangle with a handy tab
- */
-void
-DrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside)
-{
-	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_tabbox: too short\n");
-		return;
-	}
-
-	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
-		log_info ("draw_tabbox: too narrow\n");
-		std::cout << cont << std::endl;
-		return;
-	}
-
-	const int& x = shape.x;
-	const int& y = shape.y;
-	const int& w = shape.w;
-	const int& h = shape.h;
-
-	draw_corner (cr, shape, true,  false, true);		// Top left corner(1)
-	draw_corner (cr, shape, true,  true,  true);		// Top right corner(3)
-	draw_corner (cr, shape, false, false, true);		// Bottom left corner(9)
-
-	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
-
-	cr->set_line_width (RADIUS);				// Thick top bar(2)
-	cr->move_to (x+RADIUS, y+(RADIUS/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin left bar(4)
-	cr->move_to (x+(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin right bar(8)
-	cr->move_to (x+w-(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin bottom bar (10)
-	cr->move_to (x+RADIUS, y+h-(SIDES/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->move_to (x+SIDES, y+RADIUS);			// Tab block(5)
-	cr->rel_line_to (TAB_WIDTH+SIDES, 0);
-	cr->rel_line_to (0, h-RADIUS-SIDES);
-	cr->rel_line_to (-TAB_WIDTH+RADIUS-(SIDES*2), 0);
-	cr->rel_line_to (0, -RADIUS+SIDES);
-	cr->rel_line_to (-RADIUS+SIDES, 0);
-	cr->close_path();
-	cr->fill();
-
-	inside = { x+TAB_WIDTH+(SIDES*2), y+RADIUS, w-TAB_WIDTH-(SIDES*3), h-RADIUS-SIDES };
-
-	draw_corner (cr, inside, false, false, false);		// Bottom left inner corner (11)
-	draw_corner (cr, inside, true,  false, false);		// Top left inner corner(6)
-	draw_corner (cr, inside, true,  true,  false);		// Top right inner corner(7)
-
-	tab = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
-
-	vRange.push_front ({shape, cont});
-}
-
-
-/**
- * draw_icon
- */
-void
-DrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Glib::RefPtr<Gdk::Pixbuf> icon, const Rect& shape, Rect& below)
-{
-	Rect work = shape;
-
-	if (!icon)
-		return;
-
-	cr->save();
-
-	work.x += ((work.w - icon->get_width()) / 2);	// Centre the icon
-
-	Gdk::Cairo::set_source_pixbuf (cr, icon, work.x, work.y);
-	work.w = icon->get_width();
-	work.h = icon->get_height();
-	//log_info ("icon %d,%d\n", work.w, work.h);
-
-	cr->rectangle (work.x, work.y, work.w, work.h);
-	cr->fill();
-	cr->restore();
-	//draw_edge (cr, work, "red");
-
-	below = { shape.x, shape.y + (work.h + GAP), shape.w, shape.h - (work.h + GAP) };
-}
-
 
 /**
  * on_draw
@@ -853,10 +376,16 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	draw_grid_linear (cr, shape, m_c->bytes_size);
 	fill_rect (cr, shape, "white");
 #endif
-	shape.h = DA_HEIGHT;
-	for (auto c : top_level->children) {
-		draw_container (cr, c, shape);
-		shape.y += DA_HEIGHT;
+	shape.h = cont_height;
+	if (top_level->name == "dummy") {
+		for (auto c : top_level->children) {
+			//if (c->type == "Loop") {
+				draw_container (cr, c, shape);
+				shape.y += cont_height;
+			//}
+		}
+	} else {
+		draw_container (cr, top_level, shape);
 	}
 
 	return true;
@@ -943,11 +472,17 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 {
 	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
+	if (event->type == GDK_2BUTTON_PRESS) {
+		on_menu_select (1);		// Properties
+		return true;			// We handled the event
+	}
+
 	if (event->type != GDK_BUTTON_PRESS)
 		return false;			// We haven't handled the event
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 
+	std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 
 	for (const auto& rg : vRange) {
@@ -1144,6 +679,8 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 void
 DrawingArea::set_data (GfxContainerPtr& c)
 {
+	BaseDrawingArea::set_data (c);
+
 	// check we've been given a top level object?
 
 	if (!c)
@@ -1151,10 +688,9 @@ DrawingArea::set_data (GfxContainerPtr& c)
 
 	// invalidate window
 	unsigned int children = c->children.size();
-	set_size_request (600, DA_HEIGHT * children);
+	children = 2;
+	set_size_request (500, cont_height * children);
 
-	top_level = c;
-	//top_level->dump();
 }
 
 /**
@@ -1290,7 +826,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		Rect below;
 		vRange.push_front ({shape, cont});
 		//std::cout << "Icon: " << icon << std::endl;
-		draw_icon (cr, cont, icon, box, below);
+		draw_icon (cr, icon, box, below);
 		draw_text (cr, box2, name);
 
 		inside = right;
@@ -1307,14 +843,15 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	} else if (display == "iconbox") {	// A box containing a small icon
 		Rect tab;
 		set_colour (cr, colour);
-		draw_iconbox (cr, cont, shape, tab, inside);
+		draw_iconbox (cr, shape, tab, inside);
+		vRange.push_front ({shape, cont});
 
 		Glib::RefPtr<Gdk::Pixbuf> icon;
 
 		icon = gui_app->get_theme()->get_icon ("table");
-		draw_icon (cr, cont, icon,  tab, tab);
+		draw_icon (cr, icon,  tab, tab);
 		icon = gui_app->get_theme()->get_icon ("shield");
-		draw_icon (cr, cont, icon, tab, tab);
+		draw_icon (cr, icon, tab, tab);
 
 		/* theme
 		 *	icon
@@ -1329,7 +866,8 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		 */
 	} else if (display == "box") {		// A simple coloured box
 		set_colour (cr, colour);
-		draw_box (cr, cont, shape, inside);
+		draw_box (cr, shape, inside);
+		vRange.push_front ({shape, cont});
 
 		fill_area (cr, inside, background);
 
@@ -1355,7 +893,8 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	} else if (display == "tabbox") {	// A coloured box with a handy tab
 		set_colour (cr, colour);
 		Rect tab;
-		draw_tabbox (cr, cont, shape, tab, inside);
+		draw_tabbox (cr, shape, tab, inside);
+		vRange.push_front ({shape, cont});
 		/* theme
 		 *	colour
 		 *	background
@@ -1426,6 +965,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
 
+	std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		std::cout << "No Window" << std::endl;
@@ -1441,6 +981,13 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 	int x = 0;
 	int y = 0;
 	switch (ev->keyval) {
+		case GDK_KEY_Return:	// 65293 (0xFF0D)
+			//std::cout << "state = " << ev->state << std::endl;
+			if (ev->state & GDK_MOD1_MASK) {	// Alt-Enter
+				on_menu_select (1);	// properties
+				handled = true;
+			}
+			break;
 		case GDK_KEY_Menu:	// 65383 (0xFF67)
 			get_coords (x, y);
 			popup_menu (x, y);
@@ -1480,6 +1027,7 @@ DrawingArea::on_focus_in (GdkEventFocus* event)
 {
 	//LOG_TRACE;
 
+	std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		std::cout << "No Window" << std::endl;
@@ -1505,6 +1053,45 @@ DrawingArea::on_focus_out (GdkEventFocus* event)
 {
 	//LOG_TRACE;
 	return true;
+}
+
+
+/**
+ * set_cont_height
+ */
+void
+DrawingArea::set_cont_height (int height)
+{
+	cont_height = height;
+	//XXX invalidate
+}
+
+/**
+ * get_cont_height
+ */
+int
+DrawingArea::get_cont_height (void)
+{
+	return cont_height;
+}
+
+/**
+ * set_cont_recurse
+ */
+void
+DrawingArea::set_cont_recurse (int recurse)
+{
+	cont_recurse = recurse;
+	//XXX invalidate
+}
+
+/**
+ * get_cont_recurse
+ */
+bool
+DrawingArea::get_cont_recurse (void)
+{
+	return cont_recurse;
 }
 
 
@@ -1590,7 +1177,7 @@ DrawingArea::up (GfxContainerPtr c)
 		return nullptr;
 
 	Rect r = get_rect(c);
-	r.y = ((r.y/DA_HEIGHT) * DA_HEIGHT) - (DA_HEIGHT/2);
+	r.y = ((r.y/cont_height) * cont_height) - (cont_height/2);
 	return get_focus (r.x, r.y);
 }
 
@@ -1604,7 +1191,7 @@ DrawingArea::down (GfxContainerPtr c)
 		return nullptr;
 
 	Rect r = get_rect(c);
-	r.y = ((r.y/DA_HEIGHT) * DA_HEIGHT) + DA_HEIGHT + (DA_HEIGHT/2);
+	r.y = ((r.y/cont_height) * cont_height) + cont_height + (cont_height/2);
 	return get_focus (r.x, r.y);
 }
 
@@ -1616,10 +1203,11 @@ DrawingArea::down (GfxContainerPtr c)
 void
 DrawingArea::setup_popup (void)
 {
-	Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem ("_Edit", true));
+	Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem ("_Properties", true));
 	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), 1));
 	m_Menu_Popup.append (*item);
 
+#if 0
 	item = Gtk::manage (new Gtk::MenuItem ("_Process", true));
 	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), 2));
 	m_Menu_Popup.append (*item);
@@ -1627,6 +1215,7 @@ DrawingArea::setup_popup (void)
 	item = Gtk::manage (new Gtk::MenuItem ("_Remove", true));
 	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), 3));
 	m_Menu_Popup.append (*item);
+#endif
 
 	m_Menu_Popup.accelerate (*this);
 	m_Menu_Popup.show_all();
@@ -1644,7 +1233,22 @@ DrawingArea::setup_popup (void)
 void
 DrawingArea::on_menu_select (int option)
 {
-	LOG_TRACE;
+	//LOG_TRACE;
+	if (option == 1) {
+		std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+		Window *dp = reinterpret_cast<Window*> (get_toplevel());
+		if (!dp) {
+			std::cout << "No Window" << std::endl;
+			return;
+		}
+		GfxContainerPtr c = dp->get_focus();
+		if (!c) {
+			//std::cout << "No focus" << std::endl;
+			return;
+		}
+
+		gui_app->properties (c);
+	}
 }
 
 /**
@@ -1655,6 +1259,7 @@ DrawingArea::on_menu_select (int option)
 bool
 DrawingArea::get_coords (int& x, int& y)
 {
+	std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		std::cout << "No Window" << std::endl;
@@ -1676,6 +1281,7 @@ DrawingArea::get_coords (int& x, int& y)
 	int oy = 0;
 	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
+	std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
 	if (!window) {
 		return false;

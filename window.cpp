@@ -92,15 +92,11 @@ Window::Window()
 
 	show_all_children();
 
-	printf ("%d,%d,%d,%d\n", tb, gx, tv, sb);
-	if (!tb)
-		toolbar->hide();
-	if (!gx)
-		drawingarea.hide();
-	if (!tv)
-		treeview.hide();
-	if (!sb)
-		statusbar.hide();
+	//printf ("%d,%d,%d,%d\n", tb, gx, tv, sb);
+	toolbar->set_visible (tb);
+	drawingarea.set_visible (gx);
+	treeview.set_visible (tv);
+	statusbar.set_visible (sb);
 
 #if 0
 	Glib::RefPtr<Gtk::Settings> s = get_settings();
@@ -247,7 +243,7 @@ Window::init_menubar (Gtk::Box& box)
 	m_refChoiceOther = refActionGroup->add_action_radio_integer ("choiceother", sigc::mem_fun (*this, &Window::on_menu_choices_other), 1);
 	m_refToggle      = refActionGroup->add_action_bool          ("sometoggle",  sigc::mem_fun (*this, &Window::on_menu_toggle),        false);
 
-	m_refViewGfx     = refActionGroup->add_action_bool ("view.gfx",     sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 1), true);
+	m_refViewGfx     = refActionGroup->add_action_bool ("view.gfx",     sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 1), true);	//XXX these need to match the config values
 	m_refViewTree    = refActionGroup->add_action_bool ("view.tree",    sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 2), true);
 	m_refViewToolbar = refActionGroup->add_action_bool ("view.toolbar", sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 3), true);
 	m_refViewStatus  = refActionGroup->add_action_bool ("view.status",  sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 4), true);

@@ -24,26 +24,36 @@
 
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/builder.h>
+#include <gtkmm/menu.h>
 
 #include "gfx_container.h"
+#include "base_drawing_area.h"
 
-typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
 typedef struct { Rect r; GfxContainerPtr p; } Range;
 
 /**
  * class DrawingArea
  */
-class DrawingArea : public Gtk::DrawingArea
+class DrawingArea : public BaseDrawingArea
 {
 public:
 	DrawingArea();
 	virtual ~DrawingArea();
 
-	void set_data (GfxContainerPtr& c);
+	virtual void set_data (GfxContainerPtr& c);
+
+	virtual void set_cont_height (int height);
+	virtual int  get_cont_height (void);
+
+	void set_cont_recurse (int recurse);
+	bool get_cont_recurse (void);
 
 	bool on_keypress (GdkEventKey* ev);
 	void set_focus (GfxContainerPtr& c);
+
 protected:
+	bool cont_recurse = true;
+
 	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
 
 	bool on_mouse_motion (GdkEventMotion* event);
@@ -61,12 +71,12 @@ protected:
 
 private:
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape);
-	void draw_icon      (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Glib::RefPtr<Gdk::Pixbuf> icon, const Rect& shape, Rect& below);
 
 	void draw_block   (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right);
-	void draw_box     (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& inside);
-	void draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
-	void draw_tabbox  (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& inside);
+
+	void fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour);
+	void draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool primary);
+	void draw_gradient (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape);
 
 	Rect get_rect (GfxContainerPtr g);
 	bool is_visible (const GfxContainerPtr& c);
@@ -80,7 +90,6 @@ private:
 
 	bool mouse_close = false;
 
-	GfxContainerPtr top_level;
 	Gtk::Menu m_fake_menu;
 
 	// POPUP

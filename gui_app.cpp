@@ -33,6 +33,7 @@
 #include "window.h"
 #include "log.h"
 #include "log_trace.h"
+#include "properties.h"
 
 GuiAppPtr gui_app;
 
@@ -283,6 +284,17 @@ GuiApp::notify (Message& m)
 	return false;
 }
 
+
+/**
+ * properties
+ */
+void
+GuiApp::properties (GfxContainerPtr c)
+{
+	Properties p (c);
+	p.show_all();
+	p.run();
+}
 
 /**
  * get_theme
