@@ -75,6 +75,8 @@ Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
 	tabs.set_tab (1, Pango::TabAlign::TAB_LEFT, width+30);
 	textview.set_tabs (tabs);
 
+	tabstop = width + 30;
+
 	Gtk::TextBuffer::iterator iter = textbuffer->get_iter_at_offset(0);
 
 	iter = textbuffer->insert_with_tag (iter, "Properties:\n", "heading");
@@ -163,6 +165,14 @@ Properties::on_parent_delete (GdkEventAny* event)
 void
 Properties::on_close (void)
 {
+#if 0
+	tabstop += 20;
+
+	Pango::TabArray tabs (2, true);
+	tabs.set_tab (0, Pango::TabAlign::TAB_LEFT, 20);
+	tabs.set_tab (1, Pango::TabAlign::TAB_LEFT, tabstop);
+	textview.set_tabs (tabs);
+#endif
 	delete this;
 }
 
