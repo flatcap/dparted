@@ -1,0 +1,76 @@
+Block count			NUM
+Block size			NUM
+Blocks per group		NUM
+Check interval			NUM (STRING)
+Default directory hash		legacy half_md4 tea
+Default mount options		acl block_validity bsdgroups debug discard journal_data journal_data_ordered journal_data_writeback nobarrier nodelalloc uid16 user_xattr (none)
+Directory Hash Seed		UUID
+Errors behavior			Continue, Remount read-only, Panic, Unknown (continue)
+Filesystem created		DATE_TIME
+Filesystem features		64bit bigalloc compression dirdata dir_index dir_nlink dir_prealloc ea_inode extent extents extra_isize ext_attr filetype flex_bg has_journal huge_file imagic_inodes inline_data journal_dev large_dir large_file lazy_bg metadata_csum meta_bg mmp needs_recovery quota replica resize_inode snapshot_bitmap sparse_super uninit_bg uninit_groups (none)
+Filesystem flags		signed_directory_hash unsigned_directory_hash test_filesystem (none)
+Filesystem magic number		0xEF53
+Filesystem OS type		Linux, Hurd, Masix, FreeBSD, Lites, (unknown os)
+Filesystem revision #		NUM (dynamic) (original) (unknown)
+Filesystem state		clean, not clean, with errors
+Filesystem UUID			UUID
+Filesystem volume name		<none>
+First block			NUM
+First inode			NUM
+Flex block group size		NUM
+Fragment size			NUM
+Fragments per group		NUM
+Free blocks			NUM
+Free inodes			NUM
+Inode blocks per group		NUM
+Inode count			NUM
+Inode size			NUM
+Inodes per group		NUM
+Journal backup			inode blocks, type NUM
+Journal inode			NUM
+Last checked			DATE_TIME
+Last mount time			DATE_TIME, n/a
+Last mounted on			<not available>
+Last write time			DATE_TIME
+Lifetime writes			NUM MB/GB/TB/PB
+Maximum mount count		NUM
+Mount count			NUM
+Reserved block count		NUM
+Reserved blocks gid		NUM
+Reserved blocks uid		NUM
+Reserved GDT blocks		NUM
+
+Checksum			HEX8
+Checksum type			crc32c, unknown
+Cluster size			= Fragment size
+Clusters per group		= Fragments per group
+Desired extra isize		NUM
+First error block #		NUM
+First error function		STRING
+First error inode #		NUM
+First error line #		NUM
+First error time		DATE_TIME
+First meta block group		NUM
+FS Error count			NUM
+Group descriptor size		NUM
+Group quota inode		NUM
+Journal device			HEX4
+Journal UUID			UUID
+Last error block #		NUM
+Last error function		STRING
+Last error inode #		NUM
+Last error line #		NUM
+Last error time			DATE_TIME
+MMP block number		NUM
+MMP update interval		NUM
+Mount options			STRING
+Next check after		DATE_TIME
+Overhead blocks			NUM
+RAID stride			NUM
+RAID stripe width		NUM
+Required extra isize		NUM
+Snapshot ID			NUM
+Snapshot inode			NUM
+Snapshot list head		NUM
+Snapshot reserved blocks	NUM
+User quota inode		NUM
