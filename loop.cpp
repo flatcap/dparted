@@ -163,10 +163,10 @@ Loop::losetup (std::vector <std::string>& output, std::string device)
 	}
 
 	output.clear();
-	if (execute_command1 (command, output) < 0) {
-		//XXX distinguish between zero loop devices and an error
+	//XXX distinguish between zero loop devices and an error
+	execute_command1 (command, output);
+	if (output.empty())
 		return false;
-	}
 
 	return true;
 }

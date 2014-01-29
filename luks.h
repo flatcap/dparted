@@ -53,7 +53,8 @@ protected:
 	Luks (void);
 
 	void on_reply (QuestionPtr q);
-	bool is_luks (void);
+	bool is_luks (const std::string& device);
+	bool is_mounted (const std::string& device);
 
 	bool we_opened_this_device = false;
 

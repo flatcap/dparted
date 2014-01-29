@@ -38,7 +38,7 @@ unsigned int
 execute_command2 (const std::string& command, std::string& input)
 {
 	FILE* file = nullptr;
-	int count = 0;
+	//int count = 0;
 
 	//XXX log command and output
 
@@ -49,15 +49,16 @@ execute_command2 (const std::string& command, std::string& input)
 		return -1;
 	}
 
-	count = fprintf (file, "%s\n", input.c_str());
+	//count = fprintf (file, "%s\n", input.c_str());
 	//log_debug ("wrote %d bytes to command %s\n", count, command.c_str());
 
-	if (pclose (file) == -1) {
+	int retcode = pclose (file);
+	if (retcode == -1) {
 		log_error ("pclose failed");	//XXX log_perror
 		return -1;
 	}
 
-	return count;
+	return retcode;
 }
 
 /**
@@ -110,7 +111,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 		return -1;
 	}
 
-	return output.size();
+	return retcode;
 }
 
 /**
@@ -120,16 +121,16 @@ unsigned int
 execute_command3 (const std::string& command, std::string& output)
 {
 	std::vector<std::string> v;
-	int count;
+	unsigned int retcode;
 
-	count = execute_command1 (command, v);
+	retcode = execute_command1 (command, v);
 
 	output.clear();
 	for (auto it : v) {
 		output += it + "\n";
 	}
 
-	return count;
+	return retcode;
 }
 
 /**

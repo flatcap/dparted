@@ -125,15 +125,47 @@ Luks::on_reply (QuestionPtr q)
 
 
 /**
+ * is_mounted
+ */
+bool
+Luks::is_mounted (const std::string& device)
+{
+	std::string command = "sudo cryptsetup status " + device;
+	//std::cout << "Command: " << command << std::endl;
+
+	std::string output;
+	int retcode = execute_command3 (command, output);
+	//XXX log the output if it exists
+
+	// Return codes:
+	//	0	YES a luks device
+	//	256	NO not a luks device
+	//	1024	INVALID device (doesn't exist or access denied)
+	return (retcode == 0);
+}
+
+/**
  * is_luks
  */
 bool
-Luks::is_luks (void)
+Luks::is_luks (const std::string& device)
 {
-	// device exists?		stat
+	// device exists?		stat			somebody else's problem
 	// is luks			cryptsetup isLuks
 	// is already mounted?		cryptsetup status
-	return false;
+
+	std::string command = "sudo cryptsetup isLuks " + device;
+	//std::cout << "Command: " << command << std::endl;
+
+	std::string output;
+	int retcode = execute_command3 (command, output);
+	//XXX log the output if it exists
+
+	// Return codes:
+	//	0	YES a luks device
+	//	256	NO not a luks device
+	//	1024	INVALID device (doesn't exist or access denied)
+	return (retcode == 0);
 }
 
 
@@ -157,6 +189,15 @@ Luks::luks_open (const std::string& parent, bool probe)
 //
 //	cryptsetup isLuks /dev/loop4p6; echo $?
 //		4 (Device /dev/loop4p6 doesn't exist or access denied.)
+
+	if (!is_luks (parent))
+		return false;
+
+	std::string mapper = "/dev/mapper/luks-" + uuid;
+
+	//XXX check that the luks device matches the parent device
+	if (is_mounted (mapper))
+		return true;
 
 	std::string command = "sudo cryptsetup open --type luks " + parent + " luks-" + uuid;
 	//std::cout << "Command: " << command << std::endl;

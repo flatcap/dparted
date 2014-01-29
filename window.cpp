@@ -35,7 +35,7 @@ Window::Window()
 	set_title ("DParted");
 
 	// set_size_request (1360, 70*3);
-	set_size_request (800, 700);
+	set_size_request (800, 400);
 	// set_default_size (1439, 800);
 
 	scrolledwindow.set_hexpand (true);
@@ -213,8 +213,8 @@ Window::set_data (GfxContainerPtr c)
 	int height = 0;
 	get_size (width, height);
 	//log_info ("width = %d, height = %d\n", width, height);
-	//move (1920+1366-width, 768-height);
-	move (1920-width, 0);
+	move (1920+1366-width, 768-height);
+	//move (1920-width, 0);
 	//move (1366-width, 0);
 }
 

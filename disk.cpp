@@ -185,10 +185,9 @@ Disk::find_devices (ContainerPtr& list)
 	std::string command = "lsblk -b -P -e 7";
 	std::vector<std::string> output;
 	std::string error;
-	unsigned int count;
 
-	count = execute_command1 (command, output);
-	if (count < 0)
+	execute_command1 (command, output);
+	if (output.empty())
 		return 0;
 
 	//log_debug ("%s\n", output.c_str());
@@ -204,7 +203,7 @@ Disk::find_devices (ContainerPtr& list)
 	std::map<std::string,StringNum> tags;
 	int added = 0;
 
-	//log_debug ("%d lines\n", count);
+	//log_debug ("%d lines\n", output.size());
 
 	for (auto line : output) {
 		parse_tagged_line (line, " ", tags);
@@ -309,10 +308,10 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 	command += " | grep 'TYPE=\"disk\"'";
 
 	output.clear();
-	if (execute_command1 (command, output) < 0) {
-		//XXX distinguish between zero loop devices and an error
+	//XXX distinguish between zero loop devices and an error
+	execute_command1 (command, output);
+	if (output.empty())
 		return false;
-	}
 
 	return true;
 }
