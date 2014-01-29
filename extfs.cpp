@@ -21,7 +21,7 @@
 #include <algorithm>
 #include <cstring>
 
-#include "ext_fs.h"
+#include "extfs.h"
 #include "utils.h"
 #include "log_trace.h"
 

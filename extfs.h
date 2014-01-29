@@ -15,8 +15,8 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _EXT_FS_H_
-#define _EXT_FS_H_
+#ifndef _EXTFS_H_
+#define _EXTFS_H_
 
 #include "filesystem.h"
 
@@ -45,5 +45,5 @@ protected:
 };
 
 
-#endif // _EXT_FS_H_
+#endif // _EXTFS_H_
 

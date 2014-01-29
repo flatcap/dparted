@@ -32,7 +32,7 @@
 #include "main.h"
 #include "app.h"
 
-#include "ext_fs.h"
+#include "extfs.h"
 #include "btrfs.h"
 
 /**
