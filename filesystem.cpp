@@ -33,6 +33,7 @@
 #include "app.h"
 
 #include "ext_fs.h"
+#include "btrfs.h"
 
 /**
  * Filesystem
@@ -92,7 +93,7 @@ Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	FilesystemPtr f;
 
 	//XXX reorder by likelihood
-	     if ((f =        get_btrfs    (buffer, bufsize))) {}
+	     if ((f = Btrfs::get_btrfs    (parent, buffer, bufsize))) {}
 	else if ((f = ExtFs::get_ext2     (parent, buffer, bufsize))) {}
 	else if ((f = ExtFs::get_ext3     (parent, buffer, bufsize))) {}
 	else if ((f = ExtFs::get_ext4     (parent, buffer, bufsize))) {}

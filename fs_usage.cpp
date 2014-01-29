@@ -19,7 +19,6 @@
 #include "log_trace.h"
 
 #if 0
-btrfs		btrfs filesystem show {uuid}
 ntfs		ntfsinfo -m {device}
 swap		swapon -s (if mounted, else 0)
 reiserfs	reiserfstune {device}
@@ -41,22 +40,6 @@ get_mounted_usage (FilesystemPtr f)
 	return false;
 }
 
-
-/**
- * get_btrfs_usage
- */
-bool
-get_btrfs_usage (FilesystemPtr f)
-{
-	if (!f)
-		return false;
-	if (f->device.empty())
-		return false;
-	if (get_mounted_usage(f))
-		return true;
-
-	return false;
-}
 
 /**
  * get_ntfs_usage

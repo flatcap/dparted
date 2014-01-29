@@ -26,29 +26,6 @@
 #include "utils.h"
 
 /**
- * get_btrfs
- */
-FilesystemPtr
-get_btrfs (unsigned char* buffer, int bufsize)
-{
-	if (!identify_btrfs (buffer, bufsize))
-		return nullptr;
-
-	//log_info ("bufsize = %d, want %d\n", bufsize, 0x10140);
-	FilesystemPtr f  = Filesystem::create();
-	f->sub_type ("btrfs");
-
-	f->name = (char*) (buffer+0x1012B);
-	f->uuid = read_uuid1 (buffer + 0x10020);
-
-	f->bytes_size = *(long*) (buffer + 0x10070);
-	f->bytes_used = *(long*) (buffer + 0x10078);
-
-	get_btrfs_usage(f);
-	return f;
-}
-
-/**
  * get_ntfs
  */
 FilesystemPtr

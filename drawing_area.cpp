@@ -688,7 +688,7 @@ DrawingArea::set_data (GfxContainerPtr& c)
 
 	// invalidate window
 	unsigned int children = c->children.size();
-	children = 1;
+	children = 4;
 	set_size_request (500, cont_height * children);
 
 }

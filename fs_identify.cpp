@@ -21,15 +21,6 @@
 #include "log_trace.h"
 
 /**
- * identify_btrfs
- */
-bool
-identify_btrfs (unsigned char* buffer, int bufsize)
-{
-	return (strncmp ((char*) buffer+65600, "_BHRfS_M", 8) == 0);
-}
-
-/**
  * identify_gpt
  */
 bool

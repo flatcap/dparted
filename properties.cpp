@@ -241,10 +241,10 @@ Properties::my_show (void)
 			iter = textbuffer->insert_with_tag (iter, owner + "\n", "heading");
 		}
 
-		std::string line = "\t" + p->desc + "\t" + (std::string) *p + "\n";
-		iter = textbuffer->insert (iter, line);
+		iter = textbuffer->insert_with_tag (iter, "\t" + p->desc + "\t", "bold");
+		iter = textbuffer->insert          (iter, (std::string) *p + "\n");
 
-		lo->set_text (p->desc);			// Expand the tabs to fit the data
+		lo->set_text ("<b>"+p->desc+"</b>");			// Expand the tabs to fit the data
 		lo->get_pixel_size (width, height);
 		if (width > tab2) {
 			tab2 = width;

@@ -15,35 +15,35 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _EXT_FS_H_
-#define _EXT_FS_H_
+#ifndef _BTRFS_H_
+#define _BTRFS_H_
 
 #include "filesystem.h"
 
-class ExtFs;
+class Btrfs;
 
-typedef std::shared_ptr<ExtFs> ExtFsPtr;
+typedef std::shared_ptr<Btrfs> BtrfsPtr;
 
 /**
- * class ExtFs
+ * class Btrfs
  */
-class ExtFs : public Filesystem
+class Btrfs : public Filesystem
 {
 public:
-	virtual ~ExtFs() = default;
-	static ExtFsPtr create (void);
+	virtual ~Btrfs() = default;
+	static BtrfsPtr create (void);
 
-	void get_ext_sb (ContainerPtr parent);
-	static ExtFsPtr get_ext2 (ContainerPtr parent, unsigned char* buffer, int bufsize);
-	static ExtFsPtr get_ext3 (ContainerPtr parent, unsigned char* buffer, int bufsize);
-	static ExtFsPtr get_ext4 (ContainerPtr parent, unsigned char* buffer, int bufsize);
+	static BtrfsPtr get_btrfs (ContainerPtr parent, unsigned char* buffer, int bufsize);
 
 protected:
-	ExtFs (void);
+	Btrfs (void);
+
+	bool get_btrfs_usage (void);
+	void get_btrfs_sb (ContainerPtr c);
 
 	std::vector<std::string> more_props;
 };
 
 
-#endif // _EXT_FS_H_
+#endif // _BTRFS_H_
 

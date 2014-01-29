@@ -16,10 +16,10 @@
  */
 
 #include <iostream>
-#include <sstream>
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <cstring>
 
 #include "ext_fs.h"
 #include "utils.h"
@@ -48,7 +48,7 @@ ExtFs::create (void)
 /**
  * parse_line
  */
-bool
+static bool
 parse_line (const std::string& line, std::string& key, std::string& value)
 {
 	// 23 chars, colon, 2+ spaces, value
@@ -103,7 +103,7 @@ make_key (std::string desc)
 }
 
 /**
- * tune2fs (const std::string& dev)
+ * tune2fs
  */
 std::map<std::string,std::string>
 tune2fs (const std::string& dev)
@@ -138,10 +138,10 @@ tune2fs (const std::string& dev)
 
 
 /**
- * get_ext_header
+ * get_ext_sb - super block
  */
 void
-ExtFs::get_ext_header (ContainerPtr parent)
+ExtFs::get_ext_sb (ContainerPtr parent)
 {
 	//XXX return bool -- a quick match on the sb might not be enough -- tune2fs could fail
 	if (!parent)
@@ -228,7 +228,7 @@ ExtFs::get_ext2 (ContainerPtr parent, unsigned char* buffer, int bufsize)
 	if (b1 && b2) {
 		e = create();
 		e->sub_type ("ext2");
-		e->get_ext_header (parent);
+		e->get_ext_sb (parent);
 		e->get_mounted_usage (parent);
 	}
 	return e;
@@ -249,7 +249,7 @@ ExtFs::get_ext3 (ContainerPtr parent, unsigned char* buffer, int bufsize)
 	if (b1 && b2 && b3 && b4) {
 		e = create();
 		e->sub_type ("ext3");
-		e->get_ext_header (parent);
+		e->get_ext_sb (parent);
 		e->get_mounted_usage (parent);
 	}
 	return e;
@@ -271,7 +271,7 @@ ExtFs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int bufsize)
 	if (b1 && b2 && ((b3 && b5) || b4)) {
 		e = create();
 		e->sub_type ("ext4");
-		e->get_ext_header (parent);
+		e->get_ext_sb (parent);
 		e->get_mounted_usage (parent);
 	}
 	return e;
