@@ -62,26 +62,6 @@ Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
 	heading->property_scale() = Pango::SCALE_LARGE;
 
 #if 0
-	Glib::RefPtr<Pango::Context> ctx = textview.get_pango_context();
-	Glib::RefPtr<Pango::Layout> lo = Pango::Layout::create (ctx);
-	lo->set_markup ("<b>mmmmmmmmmmmmm</b>");
-
-	int width = 0;
-	int height = 0;
-	lo->get_pixel_size (width, height);
-	std::cout << "width = " << width << ", height = " << height << std::endl;
-
-	Pango::TabArray tabs (2, true);
-	tabs.set_tab (0, Pango::TabAlign::TAB_LEFT, 20);
-	tabs.set_tab (1, Pango::TabAlign::TAB_LEFT, width+30);
-	textview.set_tabs (tabs);
-
-	tabstop = width + 30;
-
-	Gtk::TextBuffer::iterator iter = textbuffer->get_iter_at_offset(0);
-#endif
-
-#if 0
 	iter = textbuffer->insert_with_tag (iter, "Properties:\n", "heading");
 	iter = textbuffer->insert_with_tag (iter, "\ta", "bold");
 	iter = textbuffer->insert (iter, "\tb\n");
@@ -213,6 +193,18 @@ Properties::my_realize (void)
 }
 
 #endif
+
+/**
+ * prop_sort
+ */
+bool
+prop_sort (const PPtr& lhs, const PPtr& rhs)
+{
+	if (lhs->owner != rhs->owner)
+		return (lhs->owner < rhs->owner);
+	return (lhs->name < rhs->name);
+}
+
 /**
  * my_show
  */
@@ -228,12 +220,41 @@ Properties::my_show (void)
 
 	std::vector<PPtr> props (c->get_all_props());
 
+	std::sort (props.begin(), props.end(), prop_sort);
+
+	int tab1 = 0;
+	int tab2 = 0;
+	int width = 0;
+	int height = 0;
+
+	Glib::RefPtr<Pango::Context> ctx = textview.get_pango_context();
+	Glib::RefPtr<Pango::Layout> lo = Pango::Layout::create (ctx);
+	lo->set_text ("mmmm");
+	lo->get_pixel_size (width, height);
+	tab1 = width;		// set indent to 4em
+
 	Gtk::TextBuffer::iterator iter = textbuffer->get_iter_at_offset(0);
-	iter = textbuffer->insert (iter, "Props:\n");
+	std::string owner;
 	for (auto p : props) {
-		std::string line = p->owner + " : " + p->name + " = " + (std::string) *p + "\n";
+		if (owner != p->owner) {
+			owner = p->owner;
+			iter = textbuffer->insert_with_tag (iter, owner + "\n", "heading");
+		}
+
+		std::string line = "\t" + p->desc + "\t" + (std::string) *p + "\n";
 		iter = textbuffer->insert (iter, line);
+
+		lo->set_text (p->desc);			// Expand the tabs to fit the data
+		lo->get_pixel_size (width, height);
+		if (width > tab2) {
+			tab2 = width;
+		}
 	}
+
+	Pango::TabArray tabs (2, true);
+	tabs.set_tab (0, Pango::TabAlign::TAB_LEFT, tab1);
+	tabs.set_tab (1, Pango::TabAlign::TAB_LEFT, tab1+tab2+10);
+	textview.set_tabs (tabs);
 }
 
 

@@ -53,8 +53,6 @@ protected:
 	Gtk::Button close;
 
 	GfxContainerPtr container;
-
-	int tabstop = 0;
 };
 
 
