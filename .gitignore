@@ -5,16 +5,12 @@
 /watcher*
 /todo
 
-# generated deps
+## generated deps
 /.dep
 /.obj
 gmon.out
 
 # work dirs
 /backup
-/gfx2
 /gtk
 /html
-/question
-/variant
-/visitor

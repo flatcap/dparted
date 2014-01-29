@@ -614,7 +614,7 @@ Window::init_shortcuts (void)
 void
 Window::on_keypress (int modifier, int key)
 {
-	std::cout << "Keypress: " << modifier << " : " << (char) key << std::endl;
+	//std::cout << "Keypress: " << modifier << " : " << (char) key << std::endl;
 
 	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q'))
 		hide();

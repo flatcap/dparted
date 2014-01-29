@@ -130,7 +130,7 @@ Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
  */
 Properties::~Properties()
 {
-	LOG_TRACE;
+	//LOG_TRACE;
 }
 
 
