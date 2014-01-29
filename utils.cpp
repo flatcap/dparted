@@ -32,7 +32,7 @@
 #include "log_trace.h"
 
 /**
- * execute_command2
+ * execute_command2 - input (string)
  */
 unsigned int
 execute_command2 (const std::string& command, std::string& input)
@@ -61,7 +61,7 @@ execute_command2 (const std::string& command, std::string& input)
 }
 
 /**
- * execute_command1
+ * execute_command1 - output (vector<string>)
  */
 unsigned int
 execute_command1 (const std::string& command, std::vector<std::string>& output)
@@ -114,7 +114,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 }
 
 /**
- * execute_command3
+ * execute_command3 - output (string)
  */
 unsigned int
 execute_command3 (const std::string& command, std::string& output)

@@ -17,6 +17,9 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
+#include <map>
+#include <algorithm>
 
 #include "ext_fs.h"
 #include "utils.h"
@@ -43,11 +46,103 @@ ExtFs::create (void)
 
 
 /**
+ * parse_line
+ */
+bool
+parse_line (const std::string& line, std::string& key, std::string& value)
+{
+	// 23 chars, colon, 2+ spaces, value
+	// ^[a-z #]+:  +[^ ].*$
+	// find ":  "
+	size_t pos;
+	std::string k;
+	std::string v;
+
+	pos = line.find_first_of (':');
+	if ((pos == std::string::npos) || (pos < 1))
+		return false;
+
+	k = line.substr (0, pos);
+	v = line.substr (pos);
+
+	pos = v.find_first_not_of (" 	", 1);	// Space, Tab
+	if (pos == std::string::npos)
+		return false;
+
+	key   = k;
+	value = v.substr (pos);
+	return true;
+}
+
+/**
+ * make_key
+ */
+std::string
+make_key (std::string desc)
+{
+	// Lower case
+	std::transform (desc.begin(), desc.end(), desc.begin(), ::tolower);
+
+	// # -> number
+	size_t pos = desc.find_first_of ('#');
+	if (pos != std::string::npos) {
+		desc.replace (pos, 1, "number");
+	}
+
+	// space -> underscore
+	pos = -1;
+	do {
+		pos = desc.find_first_of (' ', pos+1);
+		if (pos != std::string::npos) {
+			desc[pos] = '_';
+		}
+
+	} while (pos != std::string::npos);
+
+	return "extfs_" + desc;
+}
+
+/**
+ * tune2fs (const std::string& dev)
+ */
+std::map<std::string,std::string>
+tune2fs (const std::string& dev)
+{
+	std::string command;
+	std::vector<std::string> output;
+	std::map<std::string,std::string> results;
+
+	command = "tune2fs -l " + dev;
+	execute_command1 (command, output);
+
+	std::string key;
+	std::string value;
+
+	//printf ("keys:\n");
+	for (auto line : output) {
+		if (line.substr (0, 7) == "tune2fs")
+			continue;
+
+		if (!parse_line (line, key, value)) {
+			std::cout << "Failed: " << line << std::endl;
+			continue;
+		}
+
+		//printf ("\t>>%s<<\n", key.c_str());
+		results[key] = value;
+	}
+	//printf ("\n");
+
+	return results;
+}
+
+/**
  * get_ext_header
  */
 void
 ExtFs::get_ext_header (ContainerPtr parent)
 {
+	//XXX return bool -- a quick match on the sb might not be enough -- tune2fs could fail
 	if (!parent)
 		return;
 
@@ -55,79 +150,68 @@ ExtFs::get_ext_header (ContainerPtr parent)
 	if (dev.empty())	//XXX shouldn't happen
 		return;
 
-	std::string command;
-	std::string output;
-
-	// do something
-	command = "tune2fs -l " + dev;
-	//log_debug ("command = %s\n", command.c_str());
-
-	execute_command3 (command, output);
-	//log_debug ("result = \n%s\n", output.c_str());
-
-	//interpret results
-	std::string tmp;
-	size_t pos1 = std::string::npos;
-	size_t pos2 = std::string::npos;
-
-	//log_debug ("volume:\n");
-
-	pos1 = output.find ("Filesystem volume name:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 23);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		//log_debug ("\tname = '%s'\n", tmp.c_str());
-		name = tmp;	//XXX could be "<none>" if there's no label
+	std::map<std::string,std::string> info = tune2fs (dev);
+	if (info.empty()) {
+		std::cout << "tune2fs failed" << std::endl;
+		return;
 	}
 
-	pos1 = output.find ("Filesystem UUID:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 16);
-		pos2 = output.find_first_of ("\n\r", pos1);
+	std::map<std::string,std::string>::iterator it;
 
-		tmp = output.substr (pos1, pos2 - pos1);
-		//log_debug ("\tuuid = '%s'\n", tmp.c_str());
-		uuid = tmp;
+	it = info.find ("Filesystem volume name");
+	if (it != std::end (info)) {
+		name = (*it).second;
+		if (name == "<none>") {
+			name.clear();
+		}
+		info.erase (it);
 	}
 
-	pos1 = output.find ("Block size:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 11);
-		pos2 = output.find_first_of ("\n\r", pos1);
+	it = info.find ("Filesystem UUID");
+	if (it != std::end (info)) {
+		uuid = (*it).second;
+		info.erase (it);
+	}
 
-		tmp = output.substr (pos1, pos2 - pos1);
-		StringNum s (tmp);
+	it = info.find ("Block size");
+	if (it != std::end (info)) {
+		StringNum s ((*it).second);
 		block_size = s;
-		//log_debug ("\tblock size = %ld\n", block_size);
+		info.erase (it);
 	}
 
-	pos1 = output.find ("Block count:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 12);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		//log_debug ("\tblock count = %s\n", tmp.c_str());
-		StringNum s (tmp);
+	it = info.find ("Block count");
+	if (it != std::end (info)) {
+		StringNum s ((*it).second);
 		bytes_size = s;
 		bytes_size *= block_size;
+		info.erase (it);
 	}
 
-	pos1 = output.find ("Free blocks:");
-	if (pos1 != std::string::npos) {
-		pos1 = output.find_first_not_of (" ", pos1 + 12);
-		pos2 = output.find_first_of ("\n\r", pos1);
-
-		tmp = output.substr (pos1, pos2 - pos1);
-		StringNum s (tmp);
-		//log_debug ("\tfree blocks = %s\n", tmp.c_str());
-
+	it = info.find ("Free blocks");
+	if (it != std::end (info)) {
+		StringNum s ((*it).second);
 		bytes_used = s;
 		bytes_used *= block_size;
 		bytes_used = bytes_size - bytes_used;
+		info.erase (it);
 	}
+
+#if 1
+	// declare everything else
+	const char* me = "ExtFs";
+	more_props.reserve (info.size());	// if this vector is reallocated the app will die
+	//printf ("Props:\n");
+	for (auto i : info) {
+		std::string desc  = i.first;
+		std::string key   = make_key (desc);
+		std::string value = i.second;
+		//printf ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
+
+		more_props.push_back (value);
+		declare_prop (me, key.c_str(), more_props.back(), desc.c_str());
+	}
+#endif
 }
 
 /**
@@ -157,8 +241,8 @@ ExtFs::get_ext3 (ContainerPtr parent, unsigned char* buffer, int bufsize)
 {
 	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = (*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal
-	bool b3 = (*(unsigned int*) (buffer + 0x460) < 0x0000040);
-	bool b4 = (*(unsigned int*) (buffer + 0x464) < 0x0000008);
+	bool b3 = (*(unsigned int*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
+	bool b4 = (*(unsigned int*) (buffer + 0x464) < 0x0000008);	// Small RO_COMPAT
 
 	ExtFsPtr e;
 	if (b1 && b2 && b3 && b4) {
@@ -178,9 +262,9 @@ ExtFs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int bufsize)
 {
 	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = (*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal
-	bool b3 = (*(unsigned int*) (buffer + 0x460) < 0x0000040);
-	bool b4 = (*(unsigned int*) (buffer + 0x460) > 0x000003f);
-	bool b5 = (*(unsigned int*) (buffer + 0x464) > 0x0000007);
+	bool b3 = (*(unsigned int*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
+	bool b4 = (*(unsigned int*) (buffer + 0x460) > 0x000003f);	// Large INCOMPAT
+	bool b5 = (*(unsigned int*) (buffer + 0x464) > 0x0000007);	// Large RO_COMPAT
 
 	ExtFsPtr e;
 	if (b1 && b2 && ((b3 && b5) || b4)) {

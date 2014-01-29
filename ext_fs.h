@@ -41,6 +41,7 @@ public:
 protected:
 	ExtFs (void);
 
+	std::vector<std::string> more_props;
 };
 
 

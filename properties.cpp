@@ -61,6 +61,7 @@ Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
 	heading->property_weight() = Pango::WEIGHT_BOLD;
 	heading->property_scale() = Pango::SCALE_LARGE;
 
+#if 0
 	Glib::RefPtr<Pango::Context> ctx = textview.get_pango_context();
 	Glib::RefPtr<Pango::Layout> lo = Pango::Layout::create (ctx);
 	lo->set_markup ("<b>mmmmmmmmmmmmm</b>");
@@ -78,7 +79,9 @@ Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
 	tabstop = width + 30;
 
 	Gtk::TextBuffer::iterator iter = textbuffer->get_iter_at_offset(0);
+#endif
 
+#if 0
 	iter = textbuffer->insert_with_tag (iter, "Properties:\n", "heading");
 	iter = textbuffer->insert_with_tag (iter, "\ta", "bold");
 	iter = textbuffer->insert (iter, "\tb\n");
@@ -97,6 +100,7 @@ Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
 	iter = textbuffer->insert_with_tag (iter, "\t       77777\n", "fixed");
 	iter = textbuffer->insert_with_tag (iter, "\t        8888\n", "fixed");
 	iter = textbuffer->insert_with_tag (iter, "\t         999\n", "fixed");
+#endif
 
 	Gtk::ButtonBox* bb = get_action_area();
 	bb->pack_start (close, Gtk::PACK_SHRINK);
@@ -227,7 +231,6 @@ Properties::my_show (void)
 	Gtk::TextBuffer::iterator iter = textbuffer->get_iter_at_offset(0);
 	iter = textbuffer->insert (iter, "Props:\n");
 	for (auto p : props) {
-
 		std::string line = p->owner + " : " + p->name + " = " + (std::string) *p + "\n";
 		iter = textbuffer->insert (iter, line);
 	}

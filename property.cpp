@@ -36,7 +36,7 @@ BaseProperty::operator std::string (void)
 		case BaseProperty::Tag::t_u64:		return std::to_string (operator uint64_t());
 		case BaseProperty::Tag::t_s64:		return std::to_string (operator int64_t());
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}
@@ -62,7 +62,7 @@ BaseProperty::operator double (void)
 		case BaseProperty::Tag::t_u64:
 		case BaseProperty::Tag::t_s64:		throw std::runtime_error ("property: wrong type");
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}
@@ -87,7 +87,7 @@ BaseProperty::operator bool (void)
 		case BaseProperty::Tag::t_u64:		return (operator uint64_t() != 0);
 		case BaseProperty::Tag::t_s64:		return (operator int64_t()  != 0);
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}
@@ -114,7 +114,7 @@ BaseProperty::operator uint8_t (void)
 		case BaseProperty::Tag::t_u64:
 		case BaseProperty::Tag::t_s64:		throw std::runtime_error ("property: too big");
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}
@@ -141,7 +141,7 @@ BaseProperty::operator int8_t (void)
 		case BaseProperty::Tag::t_u64:
 		case BaseProperty::Tag::t_s64:		throw std::runtime_error ("property: too big");
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}
@@ -168,7 +168,7 @@ BaseProperty::operator uint16_t (void)
 		case BaseProperty::Tag::t_u64:
 		case BaseProperty::Tag::t_s64:		throw std::runtime_error ("property: too big");
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}
@@ -195,7 +195,7 @@ BaseProperty::operator int16_t (void)
 		case BaseProperty::Tag::t_u64:
 		case BaseProperty::Tag::t_s64:		throw std::runtime_error ("property: too big");
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}
@@ -222,7 +222,7 @@ BaseProperty::operator uint32_t (void)
 		case BaseProperty::Tag::t_u64:
 		case BaseProperty::Tag::t_s64:		throw std::runtime_error ("property: too big");
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}
@@ -249,7 +249,7 @@ BaseProperty::operator int32_t (void)
 		case BaseProperty::Tag::t_u64:
 		case BaseProperty::Tag::t_s64:		throw std::runtime_error ("property: too big");
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}
@@ -275,7 +275,7 @@ BaseProperty::operator uint64_t (void)
 		case BaseProperty::Tag::t_string:
 		case BaseProperty::Tag::t_double:	throw std::runtime_error ("property: wrong type");
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}
@@ -301,7 +301,7 @@ BaseProperty::operator int64_t (void)
 		case BaseProperty::Tag::t_string:
 		case BaseProperty::Tag::t_double:	throw std::runtime_error ("property: wrong type");
 
-		case BaseProperty::Tag::t_unset:		throw std::runtime_error ("property: not set");
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
 		default:				throw std::runtime_error ("property: unknown type");
 	}

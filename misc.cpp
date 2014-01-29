@@ -78,6 +78,7 @@ is_empty (unsigned char* buffer, int bufsize)
 	return true;
 }
 
+#if 0
 /**
  * is_random
  */
@@ -100,6 +101,7 @@ is_random (unsigned char* buffer, int bufsize)
 	return ((mean > 125) && (mean < 130));
 }
 
+#endif
 
 /**
  * probe
