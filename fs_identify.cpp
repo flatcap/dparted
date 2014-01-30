@@ -59,6 +59,9 @@ identify_swap (unsigned char* buffer, int bufsize)
 		!strncmp ((char*) buffer+4086, "SWAP-SPACE",           10) ||
 		!strncmp ((char*) buffer+4076, "SWAPSPACE2S1SUSPEND",  19) ||
 		!strncmp ((char*) buffer+4076, "SWAPSPACE2LINHIB0001", 20));
+
+	//XXX 65526	string	SWAPSPACE2	Linux/ppc swap file
+	//XXX 16374	string	SWAPSPACE2	Linux/ia64 swap file
 }
 
 /**

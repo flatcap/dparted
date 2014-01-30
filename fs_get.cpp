@@ -44,6 +44,7 @@ get_reiserfs (unsigned char* buffer, int bufsize)
 	unsigned int blocks_total = *(unsigned int*) (buffer + 0x10000);
 	unsigned int blocks_free  = *(unsigned int*) (buffer + 0x10004);
 
+	f->block_size = block_size;
 	f->bytes_size = (blocks_total * block_size);
 	f->bytes_used = (blocks_total - blocks_free) * block_size;
 
@@ -65,10 +66,11 @@ get_swap (unsigned char* buffer, int bufsize)
 	std::string uuid     = read_uuid1 (buffer + 0x40C);
 	std::string vol_name = (char*) (buffer+0x41C);
 	long size = 0;
+	long block = 0;
 
 	if (!strncmp ((char*) buffer+4086, "SWAPSPACE2", 10)) {
-		// implies 4K pages
-		size = *(long*) (buffer + 0x404) * 4096;
+		block = 4096;
+		size  = *(long*) (buffer + 0x404) * block;
 	}
 
 	FilesystemPtr f  = Filesystem::create();
@@ -77,6 +79,7 @@ get_swap (unsigned char* buffer, int bufsize)
 	f->name = vol_name;
 	f->uuid = uuid;
 	f->bytes_size = size;
+	f->block_size = block;
 
 	get_swap_usage(f);
 	return f;
@@ -114,6 +117,8 @@ get_vfat (unsigned char* buffer, int bufsize)
 	int sect_clust = buffer[0x0D];
 	int clusters   = sectors / sect_clust;
 	int free_clust = 0;
+
+	f->block_size = sect_clust * 512;
 
 	if ((sect_fat * 512) <= bufsize) {
 		short int* ptr = (short int*) (buffer + (512*reserved));
@@ -161,6 +166,7 @@ get_xfs (unsigned char* buffer, int bufsize)
 	blocks_total = be64toh (blocks_total);
 	blocks_free  = be64toh (blocks_free);
 
+	f->block_size = block_size;
 	f->bytes_size = blocks_total * block_size;
 	f->bytes_used = (blocks_total - blocks_free) * block_size;
 
