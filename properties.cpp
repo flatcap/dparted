@@ -200,8 +200,13 @@ Properties::my_realize (void)
 bool
 prop_sort (const PPtr& lhs, const PPtr& rhs)
 {
-	if (lhs->owner != rhs->owner)
+	if (lhs->owner != rhs->owner) {
+		if (lhs->owner == "Container")		// Force Container to be first
+			return true;
+		if (rhs->owner == "Container")
+			return false;
 		return (lhs->owner < rhs->owner);
+	}
 	return (lhs->name < rhs->name);
 }
 

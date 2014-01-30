@@ -83,14 +83,15 @@ LvmGroup::accept (Visitor& v)
 /**
  * lvm_pvs
  */
-void
-lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
+int
+LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 {
 	//LOG_TRACE;
 
 	std::string command;
 	std::vector<std::string> output;
 	std::map<std::string,StringNum> tags;
+	int added = 0;
 
 	/* Output fields from the 'pvs' command:
          * dev_size          - LVM2_DEV_SIZE          - Size of underlying device in current units.
@@ -148,6 +149,7 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 			//g->missing = true;
 			ContainerPtr c(g);
 			pieces->just_add_child(c);
+			added++;
 		}
 
 		std::string pv_uuid = tags["LVM2_PV_UUID"];
@@ -159,6 +161,7 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 			//t->missing = true;
 			ContainerPtr c(t);
 			pieces->just_add_child(c);
+			added++;
 		}
 
 		ContainerPtr c(t);
@@ -188,6 +191,7 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 			//v->missing = true;
 			ContainerPtr c(v);
 			pieces->just_add_child(c);
+			added++;
 
 			if (lv_attr[0] == '-') {
 				// Not an image.  Therefore, it's a top-level entity.
@@ -239,14 +243,14 @@ lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
 	log_info ("------------------------------------------------------------\n");
 #endif
-
+	return added;
 }
 
 /**
  * lvm_vgs
  */
 void
-lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
+LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 {
 	//LOG_TRACE;
 
@@ -319,7 +323,7 @@ lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
  * lvm_lvs
  */
 void
-lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
+LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 {
 	//LOG_TRACE;
 
@@ -550,9 +554,10 @@ LvmGroup::discover (ContainerPtr& top_level)
 		pieces->just_add_child(i);
 	}
 
-	lvm_pvs (pieces, deps);
-	lvm_vgs (pieces, deps);
-	lvm_lvs (pieces, deps);
+	if (lvm_pvs (pieces, deps) > 0) {
+		lvm_vgs (pieces, deps);
+		lvm_lvs (pieces, deps);
+	}
 
 #if 0
 	log_info ("Pieces (%ld)\n", pieces->get_children().size());
