@@ -1,0 +1,14 @@
+
+xfs_db -c uuid /dev/loop3p9
+
+	UUID = f225de64-28ca-4ae1-b43c-51eda23c4222
+
+xfs_db -c version /dev/loop3p9
+
+	versionnum [0xb4b4+0xa] = V4,ATTR,NLINK,ALIGN,DIRV2,LOGV2,EXTFLG,MOREBITS,ATTR2,LAZYSBCOUNT
+
+xfs_admin -lu /dev/loop3p9
+
+	label = "xfs_label"
+	UUID = f225de64-28ca-4ae1-b43c-51eda23c4222
+
