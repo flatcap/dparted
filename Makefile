@@ -28,7 +28,7 @@ OUT	= dparted
 OBJ_SRC	+= block.cpp container.cpp disk.cpp extended.cpp file.cpp filesystem.cpp gpt.cpp loop.cpp lvm_group.cpp \
 	   lvm_linear.cpp lvm_metadata.cpp lvm_mirror.cpp lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp \
 	   lvm_volume.cpp md_group.cpp md_table.cpp misc.cpp msdos.cpp partition.cpp table.cpp volume.cpp whole.cpp \
-	   luks.cpp extfs.cpp btrfs.cpp
+	   luks.cpp extfs.cpp btrfs.cpp ntfs.cpp
 
 # Library - Non-graphical miscellany
 LIB_SRC	+= app.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp log.cpp \

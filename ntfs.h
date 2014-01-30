@@ -15,15 +15,35 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _FS_USAGE_H_
-#define _FS_USAGE_H_
+#ifndef _NTFS_H_
+#define _NTFS_H_
 
 #include "filesystem.h"
 
-bool get_reiserfs_usage (FilesystemPtr f);
-bool get_swap_usage     (FilesystemPtr f);
-bool get_vfat_usage     (FilesystemPtr f);
-bool get_xfs_usage      (FilesystemPtr f);
+class Ntfs;
 
-#endif // _FS_USAGE_H_
+typedef std::shared_ptr<Ntfs> NtfsPtr;
+
+/**
+ * class Ntfs
+ */
+class Ntfs : public Filesystem
+{
+public:
+	virtual ~Ntfs() = default;
+	static NtfsPtr create (void);
+
+	static NtfsPtr get_ntfs (ContainerPtr parent, unsigned char* buffer, int bufsize);
+
+protected:
+	Ntfs (void);
+
+	bool get_ntfs_usage (void);
+	void get_ntfs_sb (ContainerPtr c);
+
+	std::vector<std::string> more_props;
+};
+
+
+#endif // _NTFS_H_
 

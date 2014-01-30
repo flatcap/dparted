@@ -39,15 +39,6 @@ identify_msdos (unsigned char* buffer, int bufsize)
 }
 
 /**
- * identify_ntfs
- */
-bool
-identify_ntfs (unsigned char* buffer, int bufsize)
-{
-	return (strncmp ((char*) buffer+3, "NTFS    ", 8) == 0);
-}
-
-/**
  * identify_reiserfs
  */
 bool

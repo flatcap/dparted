@@ -26,28 +26,6 @@
 #include "utils.h"
 
 /**
- * get_ntfs
- */
-FilesystemPtr
-get_ntfs (unsigned char* buffer, int bufsize)
-{
-	if (!identify_ntfs (buffer, bufsize))
-		return nullptr;
-
-	std::string uuid = read_uuid2 (buffer + 72);
-	long size = *(long*) (buffer + 40) * 512;
-
-	FilesystemPtr f  = Filesystem::create();
-	f->sub_type ("ntfs");
-
-	f->uuid = uuid;
-	f->bytes_size = size;
-
-	get_ntfs_usage(f);
-	return f;
-}
-
-/**
  * get_reiserfs
  */
 FilesystemPtr

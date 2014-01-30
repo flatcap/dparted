@@ -34,6 +34,7 @@
 
 #include "extfs.h"
 #include "btrfs.h"
+#include "ntfs.h"
 
 /**
  * Filesystem
@@ -97,7 +98,7 @@ Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	else if ((f = ExtFs::get_ext2     (parent, buffer, bufsize))) {}
 	else if ((f = ExtFs::get_ext3     (parent, buffer, bufsize))) {}
 	else if ((f = ExtFs::get_ext4     (parent, buffer, bufsize))) {}
-	else if ((f =        get_ntfs     (buffer, bufsize))) {}
+	else if ((f =  Ntfs::get_ntfs     (parent, buffer, bufsize))) {}
 	else if ((f =        get_reiserfs (buffer, bufsize))) {}
 	else if ((f =        get_swap     (buffer, bufsize))) {}
 	else if ((f =        get_vfat     (buffer, bufsize))) {}

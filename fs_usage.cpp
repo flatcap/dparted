@@ -19,7 +19,6 @@
 #include "log_trace.h"
 
 #if 0
-ntfs		ntfsinfo -m {device}
 swap		swapon -s (if mounted, else 0)
 reiserfs	reiserfstune {device}
 vfat		dosfsck -n {device}
@@ -40,22 +39,6 @@ get_mounted_usage (FilesystemPtr f)
 	return false;
 }
 
-
-/**
- * get_ntfs_usage
- */
-bool
-get_ntfs_usage (FilesystemPtr f)
-{
-	if (!f)
-		return false;
-	if (f->device.empty())
-		return false;
-	if (get_mounted_usage(f))
-		return true;
-
-	return false;
-}
 
 /**
  * get_reiserfs_usage

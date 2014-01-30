@@ -20,11 +20,6 @@
 
 #include "filesystem.h"
 
-FilesystemPtr get_btrfs    (unsigned char* buffer, int bufsize);
-FilesystemPtr get_ext2     (unsigned char* buffer, int bufsize);
-FilesystemPtr get_ext3     (unsigned char* buffer, int bufsize);
-FilesystemPtr get_ext4     (unsigned char* buffer, int bufsize);
-FilesystemPtr get_ntfs     (unsigned char* buffer, int bufsize);
 FilesystemPtr get_reiserfs (unsigned char* buffer, int bufsize);
 FilesystemPtr get_swap     (unsigned char* buffer, int bufsize);
 FilesystemPtr get_vfat     (unsigned char* buffer, int bufsize);

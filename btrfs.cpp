@@ -109,7 +109,7 @@ parse_line (const std::string& line, std::string& key, std::string& value)
 /**
  * make_desc
  */
-std::string
+static std::string
 make_desc (std::string key)
 {
 	// underscore/dot -> space
@@ -193,20 +193,6 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 		return;
 	}
 
-	std::map<std::string,std::string>::iterator it;
-
-#if 0
-	it = info.find ("Filesystem volume name");
-	if (it != std::end (info)) {
-		name = (*it).second;
-		if (name == "<none>") {
-			name.clear();
-		}
-		info.erase (it);
-	}
-#endif
-
-#if 1
 	// declare everything else
 	const char* me = "Btrfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
@@ -220,7 +206,6 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 		more_props.push_back (value);
 		declare_prop (me, key.c_str(), more_props.back(), desc.c_str());
 	}
-#endif
 }
 
 /**
@@ -232,7 +217,6 @@ Btrfs::get_btrfs (ContainerPtr parent, unsigned char* buffer, int bufsize)
 	if (strncmp ((char*) buffer+65600, "_BHRfS_M", 8) != 0)
 		return nullptr;
 
-	//log_info ("bufsize = %d, want %d\n", bufsize, 0x10140);
 	BtrfsPtr b  = Btrfs::create();
 	b->sub_type ("btrfs");
 
