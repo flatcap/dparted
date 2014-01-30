@@ -152,6 +152,10 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	std::string desc;
 	std::string section;
 
+	long clust = -1;	// cluster size
+	long csize = -1;	// total size in clusters
+	long cfree = -1;	// free space in clusters
+
 	//printf ("keys:\n");
 	for (auto line : output) {
 		if (line.empty())
@@ -159,6 +163,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 
 		if (line[0] != '\t') {
 			section = "Ntfs " + line;
+			//XXX trim trailing whitespace
 			continue;
 		}
 
@@ -167,10 +172,26 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 			continue;
 		}
 
+		//XXX clumsy
+		StringNum s (value);
+		     if (desc == "Volume Name")			name  = value;
+		else if (desc == "Cluster Size")		clust = s;
+		else if (desc == "Volume Size in Clusters")	csize = s;
+		else if (desc == "Free Clusters")		cfree = s;
+
 		key = make_key (desc);
 
 		more_props.push_back (value);
 		declare_prop (section.c_str(), key.c_str(), more_props.back(), desc.c_str());
+	}
+
+	//printf ("%ld, %ld, %ld\n", clust, csize, cfree);
+	if ((clust > 0) && (csize > 0) && (cfree > 0)) {
+		block_size = clust;
+		bytes_size = csize * clust;
+		bytes_used = bytes_size - (cfree * clust);
+	} else {
+		//XXX failed to get vital info
 	}
 }
 
@@ -179,13 +200,14 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
  */
 NtfsPtr
 Ntfs::get_ntfs (ContainerPtr parent, unsigned char* buffer, int bufsize)
-{	if (strncmp ((char*) buffer+3, "NTFS    ", 8) != 0)
+{
+	if (strncmp ((char*) buffer+3, "NTFS    ", 8) != 0)
 		return nullptr;
 
 	std::string uuid = read_uuid2 (buffer + 72);
 	long size = *(long*) (buffer + 40) * 512;
 
-	NtfsPtr n  = Ntfs::create();
+	NtfsPtr n = Ntfs::create();
 	n->sub_type ("ntfs");
 
 	n->uuid = uuid;
@@ -194,7 +216,6 @@ Ntfs::get_ntfs (ContainerPtr parent, unsigned char* buffer, int bufsize)
 	n->get_ntfs_sb (parent);
 	n->get_ntfs_usage();
 	return n;
-
 }
 
 
