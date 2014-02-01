@@ -1,5 +1,3 @@
-title Device Activation
-
 participant Idle as I
 participant App as A
 participant Block as B

@@ -1,5 +1,3 @@
-title Luks Activation
-
 participant Idle as I
 participant App as A
 participant Luks as L
