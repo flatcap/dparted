@@ -1,0 +1,56 @@
+title Device Activation
+
+participant Idle as I
+participant App as A
+participant Block as B
+participant Loop as P
+participant Luks as L
+participant Lvm as V
+participant Window as W
+participant User as U
+
+I -> +A: Background
+A -> +B: Discover devices
+B -> B: Scan for devices
+deactivate B
+deactivate A
+
+I -> +A: Background
+A -> +P: Discover devices
+P -> P: Scan for devices
+deactivate P
+deactivate A
+
+I -> +A: Background
+A -> +L: Discover devices
+L -> L: Scan for devices
+note left of L: Device is encrypted
+L -> -A: Q: Luks password?
+deactivate A
+
+I -> +A: Background
+A -> +V: Discover devices
+V -> V: Scan for devices
+note left of V: Device is degraded
+V -> A: Q: Lvm repair volume?
+deactivate V
+deactivate A
+
+I -> +A: Foreground
+A -> +W: Ask: Luks password?
+W -> +U: Ask user
+U -> -W: User reply
+W -> -A: Reply: Luks password
+A -> +L: Reply: Luks password
+L -> -L: Open device
+deactivate A
+
+I -> +A: Foreground
+A -> +W: Ask: Lvm repair volume?
+W -> +U: Ask user
+U -> -W: User reply
+W -> -A: Reply: Lvm repair volume
+A -> +V: Reply: Lvm repair volume
+V -> -V: Repair volume
+deactivate A
+
