@@ -51,6 +51,7 @@ luks.open
 
 lvm.table (lvm pv)
 	lvm.group?
+	lvm.volume?
 	lvm.partition?
 
 lvm.group
@@ -70,15 +71,27 @@ action
 
 loop, gpt, partition, filesystem
 
-	new/filesystem
-	new/partition
-	new/table
-	new/lvm volume
+	create/filesystem
+	create/partition
+	create/table
+	create/lvm.volume
+	create/subvolume
+	create/snapshot
+	create/luks (or an option on create dialog)
+		some containers need to be paired
 
 	delete/filesystem
 	delete/partition
 	delete/table
+	delete/lvm.volume
+	delete/subvolume
+	delete/snapshot
+	delete/luks (or an option on delete dialog)
+		some containers need to be paired
 
+	format as/clear (remove signatures)
+	format as/wipe (zero partition)
+	format as/scrub (destroy data)
 	format as/ext2
 	format as/ext3
 	...
@@ -87,17 +100,27 @@ loop, gpt, partition, filesystem
 	convert to/partition type (primary/logical)
 	convert to/table (msdos/gpt/ldm/lvm)
 
-	set/label
-	set/uuid
-	set/flags
+	edit/label
+	edit/uuid
+	edit/flags
+	edit/parameters -> ext4 manager
 
+	# rename to volume?
 	filesystem/check
 	filesystem/defrag
 	filesystem/rebalance
 	filesystem/mount
 	filesystem/umount
-	filesystem/tune parameters -> ext4 manager
 	filesystem/usage -> mount, baobab
+
+	volume group/extend
+	volume group/reduce
+	volume group/split
+	volume group/merge
+
+	redundancy/add.remove stripe
+	redundancy/add.remove mirror
+	redundancy/break mirror
 
 	copy
 	paste
