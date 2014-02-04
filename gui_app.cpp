@@ -26,6 +26,8 @@
 #include <giomm/menu.h>
 #include <giomm/menuitem.h>
 #include <giomm/application.h>
+#include <gtkmm/radiobutton.h>
+#include <gtkmm/frame.h>
 #include <glibmm.h>
 
 #include "app.h"
@@ -33,7 +35,7 @@
 #include "window.h"
 #include "log.h"
 #include "log_trace.h"
-#include "properties.h"
+#include "properties_dialog.h"
 
 GuiAppPtr gui_app;
 
@@ -45,6 +47,7 @@ GuiApp::GuiApp() :
 {
 	//LOG_TRACE;
 	Glib::set_application_name ("dparted");
+	Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
 }
 
 /**
@@ -52,6 +55,54 @@ GuiApp::GuiApp() :
  */
 GuiApp::~GuiApp()
 {
+}
+
+
+/**
+ * my_idle
+ */
+bool
+GuiApp::my_idle (void)
+{
+	//XXX check that dialog's object hasn't gone away
+	if (passwd) {
+		passwd->set_title ("Password for X");
+		passwd->set_message ("text message");
+		passwd->set_secondary_text ("secondary text");
+		Gtk::Image i;
+		Gtk::Button cancel ("Cancel");
+		i.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+		passwd->set_image(i);
+
+		Gtk::Frame frame ("Password:");
+		Gtk::RadioButton r1 ("Forget it immediately");
+		Gtk::RadioButton r2 ("Remember it until the application closes");
+		Gtk::RadioButton r3 ("Save it to disk (encrypted)");
+		Gtk::CheckButton c1 ("Remember this setting");
+
+		Gtk::RadioButton::Group group = r1.get_group();
+		r2.set_group(group);
+		r3.set_group(group);
+		r2.set_active (true);
+		c1.set_active (true);
+		Gtk::Box box (Gtk::Orientation::ORIENTATION_VERTICAL, 0);
+		frame.add (box);
+		box.pack_start(r1, Gtk::PackOptions::PACK_SHRINK, 0);
+		box.pack_start(r2, Gtk::PackOptions::PACK_SHRINK, 0);
+		box.pack_start(r3, Gtk::PackOptions::PACK_SHRINK, 0);
+		box.pack_start(c1, Gtk::PackOptions::PACK_SHRINK, 0);
+		passwd->get_content_area()->pack_start(frame);
+
+		passwd->get_action_area()->pack_start (cancel);
+		passwd->set_transient_for (*get_active_window());
+		passwd->show_all();
+		passwd->run();
+		passwd = nullptr;
+		return false;	// detach
+	}
+
+	//std::cout << "GuiApp is idle" << std::endl;
+	return true;	// continue
 }
 
 
@@ -275,6 +326,18 @@ GuiApp::ask (QuestionPtr q)
 }
 
 /**
+ * ask_pass
+ */
+bool
+GuiApp::ask_pass (PasswordDialogPtr pw)
+{
+	//Queue it for later
+	passwd = pw;
+	return true;
+}
+
+
+/**
  * notify
  */
 bool
@@ -291,8 +354,9 @@ GuiApp::notify (Message& m)
 void
 GuiApp::properties (GfxContainerPtr c)
 {
-	Properties* p = new Properties(c, get_active_window());
+	PropertiesDialog* p = new PropertiesDialog(c, get_active_window());
 	p->show();
+	//XXX keep weak pointers to PropertiesDialog dialogs
 }
 
 /**

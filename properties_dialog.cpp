@@ -15,13 +15,13 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "properties.h"
+#include "properties_dialog.h"
 #include "log_trace.h"
 
 /**
- * Properties
+ * PropertiesDialog
  */
-Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
+PropertiesDialog::PropertiesDialog (GfxContainerPtr c, Gtk::Window* w) :
 	Gtk::Dialog ("dummy", false),
 	close ("_Close", true),
 	container(c)
@@ -31,7 +31,7 @@ Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
 	if (w) {
 		set_transient_for (*w);
 
-		w->signal_delete_event().connect (sigc::mem_fun (*this, &Properties::on_parent_delete));
+		w->signal_delete_event().connect (sigc::mem_fun (*this, &PropertiesDialog::on_parent_delete));
 	}
 
 	Gtk::Box* ca = get_content_area();
@@ -62,7 +62,7 @@ Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
 	heading->property_scale() = Pango::SCALE_LARGE;
 
 #if 0
-	iter = textbuffer->insert_with_tag (iter, "Properties:\n", "heading");
+	iter = textbuffer->insert_with_tag (iter, "PropertiesDialog:\n", "heading");
 	iter = textbuffer->insert_with_tag (iter, "\ta", "bold");
 	iter = textbuffer->insert (iter, "\tb\n");
 	iter = textbuffer->insert_with_tag (iter, "\tiiiiii", "bold");
@@ -87,7 +87,7 @@ Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
 	bb->set_border_width(5);
 	bb->set_layout (Gtk::BUTTONBOX_END);
 
-	close.signal_clicked().connect (sigc::mem_fun (*this, &Properties::on_close));
+	close.signal_clicked().connect (sigc::mem_fun (*this, &PropertiesDialog::on_close));
 
 	drawing.set_data(c);
 
@@ -95,20 +95,20 @@ Properties::Properties (GfxContainerPtr c, Gtk::Window* w) :
 	//XXX "DParted" from app
 	set_title (c->name + " properties - DParted");
 
-	signal_response().connect (sigc::mem_fun (*this, &Properties::on_dialog_response));
+	signal_response().connect (sigc::mem_fun (*this, &PropertiesDialog::on_dialog_response));
 
 #if 0
-	signal_realize().connect (sigc::mem_fun (*this, &Properties::my_realize));
+	signal_realize().connect (sigc::mem_fun (*this, &PropertiesDialog::my_realize));
 #endif
-	signal_show().connect (sigc::mem_fun (*this, &Properties::my_show));
+	signal_show().connect (sigc::mem_fun (*this, &PropertiesDialog::my_show));
 
 	show_all();
 }
 
 /**
- * ~Properties
+ * ~PropertiesDialog
  */
-Properties::~Properties()
+PropertiesDialog::~PropertiesDialog()
 {
 	//LOG_TRACE;
 }
@@ -118,7 +118,7 @@ Properties::~Properties()
  * on_dialog_response
  */
 void
-Properties::on_dialog_response (int response_id)
+PropertiesDialog::on_dialog_response (int response_id)
 {
 	switch (response_id) {
 		case Gtk::RESPONSE_DELETE_EVENT:
@@ -136,7 +136,7 @@ Properties::on_dialog_response (int response_id)
  * on_parent_delete
  */
 bool
-Properties::on_parent_delete (GdkEventAny* event)
+PropertiesDialog::on_parent_delete (GdkEventAny* event)
 {
 	std::cout << "parent delete\n";
 	delete this;
@@ -147,7 +147,7 @@ Properties::on_parent_delete (GdkEventAny* event)
  * on_close
  */
 void
-Properties::on_close (void)
+PropertiesDialog::on_close (void)
 {
 #if 0
 	tabstop += 20;
@@ -166,7 +166,7 @@ Properties::on_close (void)
  * on_draw
  */
 bool
-Properties::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
+PropertiesDialog::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	LOG_TRACE;
 	//XXX check if the GfxContainer has changed
@@ -177,7 +177,7 @@ Properties::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
  * on_event
  */
 bool
-Properties::on_event (GdkEvent* event)
+PropertiesDialog::on_event (GdkEvent* event)
 {
 	std::cout << "type: " << event->type << std::endl;
 	return false;
@@ -187,7 +187,7 @@ Properties::on_event (GdkEvent* event)
  * my_realize
  */
 void
-Properties::my_realize (void)
+PropertiesDialog::my_realize (void)
 {
 	LOG_TRACE;
 }
@@ -214,7 +214,7 @@ prop_sort (const PPtr& lhs, const PPtr& rhs)
  * my_show
  */
 void
-Properties::my_show (void)
+PropertiesDialog::my_show (void)
 {
 	//LOG_TRACE;
 	ContainerPtr c = container->get_container();
@@ -246,8 +246,13 @@ Properties::my_show (void)
 			iter = textbuffer->insert_with_tag (iter, owner + "\n", "heading");
 		}
 
+		//XXX tmp
+		std::string value = (std::string) *p;
+		if ((owner == "Container") && (p->name == "device") && value.empty()) {
+			value = c->get_device_name();
+		}
 		iter = textbuffer->insert_with_tag (iter, "\t" + p->desc + "\t", "bold");
-		iter = textbuffer->insert          (iter, (std::string) *p + "\n");
+		iter = textbuffer->insert          (iter, value + "\n");
 
 		lo->set_text ("<b>"+p->desc+"</b>");			// Expand the tabs to fit the data
 		lo->get_pixel_size (width, height);

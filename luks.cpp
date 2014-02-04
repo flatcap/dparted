@@ -21,11 +21,13 @@
 #include <functional>
 
 #include "app.h"
+#include "gui_app.h"
 #include "log.h"
 #include "luks.h"
 #include "log_trace.h"
 #include "visitor.h"
 #include "utils.h"
+#include "password_dialog.h"
 
 /**
  * Luks
@@ -100,11 +102,16 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
 	log_info ("\tuuid:        %s\n", l->uuid.c_str());
 #endif
 
+#if 0
 	question_cb_t fn = std::bind(&Luks::on_reply, l, std::placeholders::_1);
 	QuestionPtr q = Question::create (l, fn);
 	q->title = "Enter Password";
 	q->question = "for luks device " + l->device;
 	q->answers = { "Cancel", "Done" };
+#endif
+	PasswordDialogPtr p = PasswordDialog::create();
+	p->title = "Luks";
+	gui_app->ask_pass (p);
 
 	//main_app->ask (q);
 

@@ -32,11 +32,12 @@ OBJ_SRC	+= block.cpp container.cpp disk.cpp extended.cpp file.cpp filesystem.cpp
 
 # Library - Non-graphical miscellany
 LIB_SRC	+= app.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp log.cpp \
-	   prop_visitor.cpp question.cpp utils.cpp property.cpp config.cpp config_file.cpp message.cpp
+	   prop_visitor.cpp question.cpp utils.cpp property.cpp config.cpp config_file.cpp message.cpp action.cpp
 
 # GUI - Graphical objects
 GUI_SRC	+= window.cpp drawing_area.cpp gfx_container.cpp tree_view.cpp theme.cpp gui_app.cpp icon_manager.cpp \
-	   main.cpp default_theme.cpp properties.cpp base_drawing_area.cpp prop_drawing_area.cpp
+	   main.cpp default_theme.cpp properties_dialog.cpp base_drawing_area.cpp prop_drawing_area.cpp \
+	   password_dialog.cpp
 
 SRC	= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
 HDR	= $(SRC:%.cpp=%.h)
@@ -94,7 +95,8 @@ ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
 	quiet=silent_
 endif
 
-$(GUI_OBJ):	CFLAGS += $(GUI_CFLAGS)
+CFLAGS += $(GUI_CFLAGS)
+#$(GUI_OBJ):	CFLAGS += $(GUI_CFLAGS)
 
 all:	$(OBJDIR) $(DEPDIR) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) $(OUT) tags
 

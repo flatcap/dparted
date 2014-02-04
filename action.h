@@ -15,53 +15,26 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _QUESTION_H_
-#define _QUESTION_H_
+#ifndef _ACTION_H_
+#define _ACTION_H_
 
-#include <string>
-#include <vector>
 #include <memory>
-#include <functional>
 
-#include "container.h"
+class Action;
 
-class Question;
+typedef std::shared_ptr<Action> ActionPtr;
 
-typedef std::shared_ptr<Question> QuestionPtr;
-typedef std::function<void(QuestionPtr)> question_cb_t;
-
-class Question
+class Action
 {
 public:
-	virtual ~Question();
-	static QuestionPtr create (ContainerPtr c, question_cb_t fn);
-
-	std::string title;
-	std::string question;
-	std::string help_url;
-
-	int result = -1;
-
-	std::vector<std::string> answers;
-
-	virtual void done (void);
-
-	enum class Type {
-		Question,
-		Information,
-		Error,
-		Password
-	} type = Type::Information;
+	virtual ~Action() = default;
+	static ActionPtr create (void);
 
 protected:
-	Question (void);
+	Action (void);
 
-	ContainerPtr object;
-
-	question_cb_t done_fn = nullptr;
-
-	std::weak_ptr<Question> weak;
+	std::weak_ptr<Action> weak;	//XXX private?
 };
 
-#endif // _QUESTION_H_
+#endif // _ACTION_H_
 

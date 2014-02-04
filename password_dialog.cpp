@@ -15,53 +15,33 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _QUESTION_H_
-#define _QUESTION_H_
+#include "password_dialog.h"
 
-#include <string>
-#include <vector>
-#include <memory>
-#include <functional>
-
-#include "container.h"
-
-class Question;
-
-typedef std::shared_ptr<Question> QuestionPtr;
-typedef std::function<void(QuestionPtr)> question_cb_t;
-
-class Question
+/**
+ * PasswordDialog
+ */
+PasswordDialog::PasswordDialog (const Glib::ustring& message) :
+	Gtk::MessageDialog (message)
 {
-public:
-	virtual ~Question();
-	static QuestionPtr create (ContainerPtr c, question_cb_t fn);
+}
 
-	std::string title;
-	std::string question;
-	std::string help_url;
+/**
+ * ~PasswordDialog
+ */
+PasswordDialog::~PasswordDialog()
+{
+}
 
-	int result = -1;
 
-	std::vector<std::string> answers;
+/**
+ * create
+ */
+PasswordDialogPtr
+PasswordDialog::create (void)
+{
+	PasswordDialogPtr p (new PasswordDialog("hello"));
+	p->weak = p;
 
-	virtual void done (void);
-
-	enum class Type {
-		Question,
-		Information,
-		Error,
-		Password
-	} type = Type::Information;
-
-protected:
-	Question (void);
-
-	ContainerPtr object;
-
-	question_cb_t done_fn = nullptr;
-
-	std::weak_ptr<Question> weak;
-};
-
-#endif // _QUESTION_H_
+	return p;
+}
 

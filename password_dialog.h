@@ -15,53 +15,43 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _QUESTION_H_
-#define _QUESTION_H_
+#ifndef _PASSWORD_DIALOG_H_
+#define _PASSWORD_DIALOG_H_
 
-#include <string>
-#include <vector>
 #include <memory>
-#include <functional>
 
-#include "container.h"
+//#include <gtkmm/dialog.h>
+#include <gtkmm/messagedialog.h>
 
-class Question;
+class PasswordDialog;
 
-typedef std::shared_ptr<Question> QuestionPtr;
-typedef std::function<void(QuestionPtr)> question_cb_t;
+typedef std::shared_ptr<PasswordDialog> PasswordDialogPtr;
 
-class Question
+#if 0
+MessageDialog (
+	Gtk::Window& parent,
+	const Glib::ustring& message,
+	bool use_markup=false,
+	MessageType type=MESSAGE_INFO,
+	ButtonsType buttons=BUTTONS_OK,
+	bool modal=false
+)
+#endif
+
+class PasswordDialog : public Gtk::MessageDialog
 {
 public:
-	virtual ~Question();
-	static QuestionPtr create (ContainerPtr c, question_cb_t fn);
+	PasswordDialog (const Glib::ustring& message);
+	virtual ~PasswordDialog();
+
+	static PasswordDialogPtr create (void);
 
 	std::string title;
-	std::string question;
-	std::string help_url;
-
-	int result = -1;
-
-	std::vector<std::string> answers;
-
-	virtual void done (void);
-
-	enum class Type {
-		Question,
-		Information,
-		Error,
-		Password
-	} type = Type::Information;
 
 protected:
-	Question (void);
+	std::weak_ptr<PasswordDialog> weak;
 
-	ContainerPtr object;
-
-	question_cb_t done_fn = nullptr;
-
-	std::weak_ptr<Question> weak;
 };
 
-#endif // _QUESTION_H_
+#endif // _PASSWORD_DIALOG_H_
 

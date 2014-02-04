@@ -35,7 +35,7 @@ Window::Window()
 	set_title ("DParted");
 
 	// set_size_request (1360, 70*3);
-	set_size_request (800, 400);
+	set_size_request (800, 600);
 	// set_default_size (1439, 800);
 
 	scrolledwindow.set_hexpand (true);

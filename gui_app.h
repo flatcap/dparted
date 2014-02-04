@@ -25,6 +25,7 @@
 #include "gfx_container.h"
 #include "theme.h"
 #include "message.h"
+#include "password_dialog.h"
 
 class GuiApp;
 
@@ -43,7 +44,8 @@ public:
 	GuiApp (void);
 	virtual ~GuiApp();
 
-	virtual bool ask (QuestionPtr q);
+	virtual bool ask      (QuestionPtr q);
+	virtual bool ask_pass (PasswordDialogPtr pw);
 	virtual bool notify (Message& m);
 	virtual void properties (GfxContainerPtr c);
 
@@ -68,9 +70,11 @@ protected:
 	void menu_about       (void);
 	void menu_quit        (void);
 
+	bool my_idle (void);
 	bool on_mouse_click (GdkEventButton* event);
 
 	std::vector<QuestionPtr> vq;
+	PasswordDialogPtr passwd;
 	ThemePtr theme;
 };
 

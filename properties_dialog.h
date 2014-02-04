@@ -15,8 +15,10 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef _PROPERTIES_H_
-#define _PROPERTIES_H_
+#ifndef _PROPERTIES_DIALOG_H_
+#define _PROPERTIES_DIALOG_H_
+
+#include <memory>
 
 #include <gtkmm/dialog.h>
 #include <gtkmm/scrolledwindow.h>
@@ -25,14 +27,17 @@
 #include "gfx_container.h"
 #include "prop_drawing_area.h"
 
+class PropertiesDialog;
+typedef std::shared_ptr<PropertiesDialog> PropertiesDialogPtr;
+
 /**
- * class Properties
+ * class PropertiesDialog
  */
-class Properties : public Gtk::Dialog
+class PropertiesDialog : public Gtk::Dialog
 {
 public:
-	Properties (GfxContainerPtr c, Gtk::Window* w);
-	virtual ~Properties();
+	PropertiesDialog (GfxContainerPtr c, Gtk::Window* w);
+	virtual ~PropertiesDialog();
 
 protected:
 #if 0
@@ -56,5 +61,5 @@ protected:
 };
 
 
-#endif // _PROPERTIES_H_
+#endif // _PROPERTIES_DIALOG_H_
 

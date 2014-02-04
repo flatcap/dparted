@@ -18,7 +18,7 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
-#include "gtkmm/applicationwindow.h"
+#include <gtkmm/applicationwindow.h>
 #include <gtkmm/box.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/menubar.h>
