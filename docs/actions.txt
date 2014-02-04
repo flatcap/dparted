@@ -1,0 +1,108 @@
+gui
+right-click
+find object
+
+while object
+	get actions
+	object = parent
+done
+
+app::register_type
+	X can contain Y
+	i.e. X contains a Misc::Unallocated
+
+block (disk, loop)
+	table
+		msdos
+		gpt
+	filesystem
+		ext2
+		ntfs
+		btrfs
+	lvm.table (lvm pv)
+	luks.closed
+
+table (msdos, gpt)
+	partition (primary)
+	extended.partition (logical)
+
+extended.partition (logical)
+	partition
+
+partiton (primary)
+	filesystem
+	lvm.table (lvm pv)
+	luks.closed
+
+filesystem (ext2, ntfs)
+	[nothing]
+
+filesystem.btrfs
+	subvolume
+	snapshot
+
+luks.closed
+	luks.open
+
+luks.open
+	partition?
+	filesystem
+	lvm.table (lvm pv)
+
+lvm.table (lvm pv)
+	lvm.group?
+	lvm.partition?
+
+lvm.group
+	lvm.volume (linear, stripe, mirror, raid)
+
+lvm.volume
+	filesystem
+	
+empty -> delegate to parent
+
+object -> action list
+
+action
+	object
+	path/name
+	description
+
+loop, gpt, partition, filesystem
+
+	new/filesystem
+	new/partition
+	new/table
+	new/lvm volume
+
+	delete/filesystem
+	delete/partition
+	delete/table
+
+	format as/ext2
+	format as/ext3
+	...
+
+	convert to/btrfs (from ext4)
+	convert to/partition type (primary/logical)
+	convert to/table (msdos/gpt/ldm/lvm)
+
+	set/label
+	set/uuid
+	set/flags
+
+	filesystem/check
+	filesystem/defrag
+	filesystem/rebalance
+	filesystem/mount
+	filesystem/umount
+	filesystem/tune parameters -> ext4 manager
+	filesystem/usage -> mount, baobab
+
+	copy
+	paste
+
+	properties
+
+	resize
+	move
