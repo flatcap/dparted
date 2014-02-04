@@ -758,3 +758,20 @@ Container::get_smart (void)
 }
 
 
+/**
+ * get_actions
+ */
+std::vector<std::string>
+Container::get_actions (void)
+{
+	static int i = 1;
+
+	std::vector<std::string> va;
+
+	va.push_back (std::string ("Container/dummy") + std::to_string (i++));
+	va.push_back (std::string ("Container/foo")   + std::to_string (i++));
+	va.push_back (std::string ("Container/bar")   + std::to_string (i++));
+
+	return va;
+}
+

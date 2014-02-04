@@ -93,10 +93,10 @@ private:
 	Gtk::Menu m_fake_menu;
 
 	// POPUP
-	void setup_popup (void);
-	void on_menu_select (int option);
+	void setup_popup (std::vector<std::string>& actions);
+	void on_menu_select (const std::string& option);
 	bool get_coords (int& x, int& y);
-	void popup_menu (int x, int y);
+	void popup_menu (GfxContainerPtr gfx, int x, int y);
 	bool popup_on_keypress (GdkEventKey* ev);
 	Gtk::Menu m_Menu_Popup;
 	bool menu_active = false;

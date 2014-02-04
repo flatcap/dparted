@@ -99,6 +99,9 @@ public:
 		props[name] = pp;
 	}
 
+	void sub_type (const char* name);
+	std::vector<std::string> get_actions (void);
+
 public:
 	std::string	 name;
 	std::string	 uuid;
@@ -120,12 +123,11 @@ public:
 
 	int		 fd = -1;
 
-	std::weak_ptr<Container> weak;	//XXX private?
-
 	int seqnum = 123;
 
-	void sub_type (const char* name);
 protected:
+	std::weak_ptr<Container> weak;	//XXX private?
+
 	Container (void);
 
 	bool visit_children (Visitor& v);

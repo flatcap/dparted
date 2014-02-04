@@ -65,7 +65,7 @@ bool
 GuiApp::my_idle (void)
 {
 	//XXX check that dialog's object hasn't gone away
-	if (passwd) {
+	if (false && passwd) {
 		passwd->set_title ("Password for X");
 		passwd->set_message ("text message");
 		passwd->set_secondary_text ("secondary text");

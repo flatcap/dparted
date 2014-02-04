@@ -124,6 +124,7 @@ loop, gpt, partition, filesystem
 
 	copy
 	paste
+	paste special
 
 	properties
 

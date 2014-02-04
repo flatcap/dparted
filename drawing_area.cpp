@@ -50,7 +50,7 @@ DrawingArea::DrawingArea()
 	signal_motion_notify_event().connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_motion));
 	signal_leave_notify_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_mouse_leave));
 
-	signal_focus_in_event().connect (sigc::mem_fun (*this, &DrawingArea::on_focus_in));
+	signal_focus_in_event() .connect (sigc::mem_fun (*this, &DrawingArea::on_focus_in));
 	signal_focus_out_event().connect (sigc::mem_fun (*this, &DrawingArea::on_focus_out));
 
 #if 0
@@ -63,7 +63,11 @@ DrawingArea::DrawingArea()
 	set_has_tooltip();	// We'll be handling the tooltips ourself
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &DrawingArea::on_textview_query_tooltip));
 
-	setup_popup();
+	m_Menu_Popup.signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
+
+	// Lambdas to let us know when the popup menu is in use.
+	m_Menu_Popup.signal_show().connect ([this] { menu_active = true;  });
+	m_Menu_Popup.signal_hide().connect ([this] { menu_active = false; });
 }
 
 /**
@@ -473,7 +477,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
 
 	if (event->type == GDK_2BUTTON_PRESS) {
-		on_menu_select (1);		// Properties
+		on_menu_select ("Properties");	// Properties
 		return true;			// We handled the event
 	}
 
@@ -485,6 +489,8 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 
+	GfxContainerPtr selection;
+
 	for (const auto& rg : vRange) {
 		const Rect& r = rg.r;
 
@@ -493,12 +499,13 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 			if (dp->set_focus (rg.p)) {
 				get_window()->invalidate (false);
 			}
+			selection = rg.p;
 			break;
 		}
 	}
 
-	if (event->button == 3) {			// Right-click
-		popup_menu (event->x_root, event->y_root);
+	if ((event->button == 3) && (selection)) {		// Right-click
+		popup_menu (selection, event->x_root, event->y_root);
 	}
 
 	return true;		// We've handled the event
@@ -984,13 +991,13 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 		case GDK_KEY_Return:	// 65293 (0xFF0D)
 			//std::cout << "state = " << ev->state << std::endl;
 			if (ev->state & GDK_MOD1_MASK) {	// Alt-Enter
-				on_menu_select (1);	// properties
+				on_menu_select ("Properties");	// properties
 				handled = true;
 			}
 			break;
 		case GDK_KEY_Menu:	// 65383 (0xFF67)
 			get_coords (x, y);
-			popup_menu (x, y);
+			popup_menu (c, x, y);
 			handled = true;
 			break;
 		case GDK_KEY_Left:	// 65361 (0xFF51)
@@ -1201,40 +1208,31 @@ DrawingArea::down (GfxContainerPtr c)
  * setup_popup
  */
 void
-DrawingArea::setup_popup (void)
+DrawingArea::setup_popup (std::vector<std::string>& actions)
 {
-	Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem ("_Properties", true));
-	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), 1));
-	m_Menu_Popup.append (*item);
+	std::vector<Widget*> items = m_Menu_Popup.get_children();
+	for (auto i : items) {
+		m_Menu_Popup.remove(*i);
+	}
 
-#if 0
-	item = Gtk::manage (new Gtk::MenuItem ("_Process", true));
-	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), 2));
-	m_Menu_Popup.append (*item);
-
-	item = Gtk::manage (new Gtk::MenuItem ("_Remove", true));
-	item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), 3));
-	m_Menu_Popup.append (*item);
-#endif
+	for (auto a : actions) {
+		Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem (a, true));
+		item->signal_activate().connect (sigc::bind<const std::string&> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), a));
+		m_Menu_Popup.append (*item);
+	}
 
 	m_Menu_Popup.accelerate (*this);
 	m_Menu_Popup.show_all();
-
-	m_Menu_Popup.signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
-
-	// Lambdas to let us know when the popup menu is in use.
-	m_Menu_Popup.signal_show().connect ([this] { menu_active = true;  });
-	m_Menu_Popup.signal_hide().connect ([this] { menu_active = false; });
 }
 
 /**
  * on_menu_select
  */
 void
-DrawingArea::on_menu_select (int option)
+DrawingArea::on_menu_select (const std::string& option)
 {
 	//LOG_TRACE;
-	if (option == 1) {
+	if (option == "Properties") {
 		//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 		Window *dp = reinterpret_cast<Window*> (get_toplevel());
 		if (!dp) {
@@ -1312,8 +1310,27 @@ DrawingArea::get_coords (int& x, int& y)
  * popup_menu
  */
 void
-DrawingArea::popup_menu (int x, int y)
+DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 {
+	ContainerPtr c = gfx->get_container();
+	if (!c) {
+		std::cout << "No gfx_container" << std::endl;
+		return;
+	}
+
+	std::vector<std::string> actions = c->get_actions();
+	if (actions.empty()) {
+		std::cout << "No container" << std::endl;
+		return;
+	}
+
+	std::cout << "Actions:" << std::endl;
+	for (auto a : actions) {
+		std::cout << "\t" << a << std::endl;
+	}
+
+	setup_popup (actions);
+
 	// Lamba to position popup menu
 	m_Menu_Popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
 }
