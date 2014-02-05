@@ -102,7 +102,7 @@ GuiApp::my_idle (void)
 	}
 
 	//std::cout << "GuiApp is idle" << std::endl;
-	return true;	// continue
+	return false;	// continue
 }
 
 

@@ -815,3 +815,13 @@ Container::get_actions (void)
 	return va;
 }
 
+/**
+ * perform_action
+ */
+bool
+Container::perform_action (const std::string& action)
+{
+	std::cout << "Perform: " << action << std::endl;
+	return true;
+}
+

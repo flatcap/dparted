@@ -94,7 +94,7 @@ private:
 
 	// POPUP
 	void setup_popup (GfxContainerPtr gfx, std::vector<std::string>& actions);
-	void on_menu_select (GfxContainerPtr gfx, std::string option);
+	void on_menu_select (GfxContainerPtr gfx, std::string action);
 	bool get_coords (int& x, int& y);
 	void popup_menu (GfxContainerPtr gfx, int x, int y);
 	bool popup_on_keypress (GdkEventKey* ev);

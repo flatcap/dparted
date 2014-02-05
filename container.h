@@ -101,6 +101,7 @@ public:
 
 	void sub_type (const char* name);
 	std::vector<std::string> get_actions (void);
+	bool perform_action (const std::string& action);
 
 public:
 	std::string	 name;

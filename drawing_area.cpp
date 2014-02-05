@@ -1256,27 +1256,25 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<std::string>& actions
  * on_menu_select
  */
 void
-DrawingArea::on_menu_select (GfxContainerPtr gfx, std::string option)
+DrawingArea::on_menu_select (GfxContainerPtr gfx, std::string action)
 {
 	//LOG_TRACE;
-	std::cout << "Menu: " << option << " " << gfx << std::endl;
-#if 0
-	if (option == "Properties") {
-		//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
-		Window *dp = reinterpret_cast<Window*> (get_toplevel());
-		if (!dp) {
-			std::cout << "No Window" << std::endl;
-			return;
-		}
-		GfxContainerPtr c = dp->get_focus();
-		if (!c) {
-			//std::cout << "No focus" << std::endl;
-			return;
-		}
 
-		gui_app->properties (c);
+	ContainerPtr c = gfx->get_container();
+	if (!c)
+		return;
+
+	if (action == "Copy") {
+		std::cout << action << std::endl;
+	} else if (action == "Paste") {
+		std::cout << action << std::endl;
+	} else if (action == "Paste Special") {
+		std::cout << action << std::endl;
+	} else if (action == "Properties") {
+		gui_app->properties (gfx);
+	} else {
+		c->perform_action (action);
 	}
-#endif
 }
 
 /**
