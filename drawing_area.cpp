@@ -1220,6 +1220,13 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 	Gtk::Menu*     index_menu = &m_Menu_Popup;
 	Gtk::MenuItem* index_item = nullptr;
 
+	actions.push_back ({ "---",           true });
+	actions.push_back ({ "Copy",          true });
+	actions.push_back ({ "Paste",         true });
+	actions.push_back ({ "Paste Special", true });
+	actions.push_back ({ "---",           true });
+	actions.push_back ({ "Properties",    true });
+
 	for (auto a : actions) {
 		size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
@@ -1246,9 +1253,16 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 			}
 		}
 
-		Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem (key, true));
-		item->signal_activate().connect (sigc::bind<GfxContainerPtr,Action> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), gfx, a));
-		item->set_sensitive (a.enabled);
+		Gtk::MenuItem* item = nullptr;
+
+		if (a.name == "---") {
+			item = Gtk::manage (new Gtk::SeparatorMenuItem());
+		} else {
+			item = Gtk::manage (new Gtk::MenuItem (key, true));
+			item->signal_activate().connect (sigc::bind<GfxContainerPtr,Action> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), gfx, a));
+			item->set_sensitive (a.enabled);
+		}
+
 		index_menu->append (*item);
 		if (a.enabled) {
 #if 0
