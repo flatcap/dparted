@@ -18,22 +18,12 @@
 #ifndef _ACTION_H_
 #define _ACTION_H_
 
-#include <memory>
+#include <string>
 
-class Action;
-
-typedef std::shared_ptr<Action> ActionPtr;
-
-class Action
+struct Action
 {
-public:
-	virtual ~Action() = default;
-	static ActionPtr create (void);
-
-protected:
-	Action (void);
-
-	std::weak_ptr<Action> weak;	//XXX private?
+	std::string name;
+	bool enabled;
 };
 
 #endif // _ACTION_H_

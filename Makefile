@@ -32,7 +32,7 @@ OBJ_SRC	+= block.cpp container.cpp disk.cpp extended.cpp file.cpp filesystem.cpp
 
 # Library - Non-graphical miscellany
 LIB_SRC	+= app.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp log.cpp \
-	   prop_visitor.cpp question.cpp utils.cpp property.cpp config.cpp config_file.cpp message.cpp action.cpp
+	   prop_visitor.cpp question.cpp utils.cpp property.cpp config.cpp config_file.cpp message.cpp
 
 # GUI - Graphical objects
 GUI_SRC	+= window.cpp drawing_area.cpp gfx_container.cpp tree_view.cpp theme.cpp gui_app.cpp icon_manager.cpp \

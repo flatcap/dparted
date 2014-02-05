@@ -497,7 +497,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	}
 
 	if (event->type == GDK_2BUTTON_PRESS) {
-		on_menu_select (selection, "Properties");	// Properties
+		on_menu_select (selection, Action {"Properties"} );	// Properties
 		return true;					// We handled the event
 	}
 
@@ -991,7 +991,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 		case GDK_KEY_Return:	// 65293 (0xFF0D)
 			//std::cout << "state = " << ev->state << std::endl;
 			if (ev->state & GDK_MOD1_MASK) {		// Alt-Enter
-				on_menu_select (c, "Properties");	// properties
+				on_menu_select (c, Action {"Properties"});	// properties
 				handled = true;
 			}
 			break;
@@ -1208,7 +1208,7 @@ DrawingArea::down (GfxContainerPtr c)
  * setup_popup
  */
 void
-DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<std::string>& actions)
+DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 {
 	std::vector<Widget*> items = m_Menu_Popup.get_children();
 	for (auto i : items) {
@@ -1217,46 +1217,61 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<std::string>& actions
 
 	std::string section;
 	std::string key;
-	Gtk::Menu* index = &m_Menu_Popup;
+	Gtk::Menu*     index_menu = &m_Menu_Popup;
+	Gtk::MenuItem* index_item = nullptr;
 
 	for (auto a : actions) {
-		size_t pos = a.find_first_of ('/');
+		size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
 			section.clear();
-			key = a;
-			index = &m_Menu_Popup;
+			key = a.name;
+			index_menu = &m_Menu_Popup;
+			index_item = nullptr;
 		} else {
-			std::string s = a.substr (0, pos);
-			key = a.substr (pos+1);
+			std::string s = a.name.substr (0, pos);
+			key = a.name.substr (pos+1);
 
 			if (section != s) {
 				section = s;
-				index = &m_Menu_Popup;
 
 				Gtk::Menu*     sub_menu = Gtk::manage (new Gtk::Menu());
 				Gtk::MenuItem* sub_item = Gtk::manage (new Gtk::MenuItem (section, true));
 
-				index->append (*sub_item);
+				m_Menu_Popup.append (*sub_item);
 				sub_item->set_submenu (*sub_menu);
+				sub_item->set_sensitive(false);		// default to off
 
-				index = sub_menu;
+				index_menu = sub_menu;
+				index_item = sub_item;
 			}
 		}
 
 		Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem (key, true));
-		item->signal_activate().connect (sigc::bind<GfxContainerPtr,std::string> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), gfx, a));
-		index->append (*item);
+		item->signal_activate().connect (sigc::bind<GfxContainerPtr,Action> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), gfx, a));
+		item->set_sensitive (a.enabled);
+		index_menu->append (*item);
+		if (a.enabled) {
+#if 0
+			index_item->show();
+			item->show();
+#endif
+			if (index_item) {
+				index_item->set_sensitive (true);		// enable the parent, if necessary
+			}
+		}
 	}
 
 	m_Menu_Popup.accelerate (*this);
+#if 1
 	m_Menu_Popup.show_all();
+#endif
 }
 
 /**
  * on_menu_select
  */
 void
-DrawingArea::on_menu_select (GfxContainerPtr gfx, std::string action)
+DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 {
 	//LOG_TRACE;
 
@@ -1264,13 +1279,13 @@ DrawingArea::on_menu_select (GfxContainerPtr gfx, std::string action)
 	if (!c)
 		return;
 
-	if (action == "Copy") {
-		std::cout << action << std::endl;
-	} else if (action == "Paste") {
-		std::cout << action << std::endl;
-	} else if (action == "Paste Special") {
-		std::cout << action << std::endl;
-	} else if (action == "Properties") {
+	if (action.name == "Copy") {
+		std::cout << action.name << std::endl;
+	} else if (action.name == "Paste") {
+		std::cout << action.name << std::endl;
+	} else if (action.name == "Paste Special") {
+		std::cout << action.name << std::endl;
+	} else if (action.name == "Properties") {
 		gui_app->properties (gfx);
 	} else {
 		c->perform_action (action);
@@ -1346,7 +1361,7 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 		return;
 	}
 
-	std::vector<std::string> actions = c->get_actions();
+	std::vector<Action> actions = c->get_actions();
 	if (actions.empty()) {
 		std::cout << "No container" << std::endl;
 		return;

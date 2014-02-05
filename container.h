@@ -29,6 +29,7 @@
 
 #include "property.h"
 #include "mmap.h"
+#include "action.h"
 
 class Container;
 class Visitor;
@@ -100,8 +101,8 @@ public:
 	}
 
 	void sub_type (const char* name);
-	std::vector<std::string> get_actions (void);
-	bool perform_action (const std::string& action);
+	std::vector<Action> get_actions (void);
+	bool perform_action (Action action);
 
 public:
 	std::string	 name;

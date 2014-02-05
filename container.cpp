@@ -38,6 +38,54 @@
 #include "log_trace.h"
 
 /**
+ * Lots of Actions
+ */
+std::vector<Action> cont_actions = {
+	{ "Create/Filesystem",         true },
+	{ "Create/Partition",          true },
+	{ "Create/Table",              true },
+	{ "Create/Lvm Volume",         true },
+	{ "Create/Subvolume",          true },
+	{ "Create/Snapshot",           true },
+	{ "Create/Luks",               true },
+	{ "Delete/Filesystem",         false },
+	{ "Delete/Partition",          false },
+	{ "Delete/Table",              false },
+	{ "Delete/Lvm Volume",         false },
+	{ "Delete/Subvolume",          false },
+	{ "Delete/Snapshot",           false },
+	{ "Delete/Luks",               false },
+	{ "Format as/Clear",           true },
+	{ "Format as/Wipe",            true },
+	{ "Format as/Scrub",           false },
+	{ "Format as/Ext2",            false },
+	{ "Format as/Ext3",            true },
+	{ "Convert to/Btrfs",          true },
+	{ "Convert to/Partition Type", true },
+	{ "Convert to/Table",          true },
+	{ "Edit/Label",                true },
+	{ "Edit/Uuid",                 true },
+	{ "Edit/Flags",                true },
+	{ "Edit/Parameters",           true },
+	{ "Filesystem/Check",          true },
+	{ "Filesystem/Defrag",         true },
+	{ "Filesystem/Rebalance",      true },
+	{ "Filesystem/Mount",          false },
+	{ "Filesystem/Umount",         false },
+	{ "Filesystem/Usage",          false },
+	{ "Volume Group/Extend",       true },
+	{ "Volume Group/Reduce",       true },
+	{ "Volume Group/Split",        true },
+	{ "Volume Group/Merge",        true },
+	{ "Redundancy/Add Stripe",     true },
+	{ "Redundancy/Remove Stripe",  true },
+	{ "Redundancy/Add Mirror",     true },
+	{ "Redundancy/Remove Mirror",  true },
+	{ "Redundancy/Break Mirror",   true }
+};
+
+
+/**
  * Container
  */
 Container::Container (void)
@@ -761,67 +809,20 @@ Container::get_smart (void)
 /**
  * get_actions
  */
-std::vector<std::string>
+std::vector<Action>
 Container::get_actions (void)
 {
-	std::vector<std::string> va;
-
-	va.push_back (std::string ("Create/Filesystem"));
-	va.push_back (std::string ("Create/Partition"));
-	va.push_back (std::string ("Create/Table"));
-	va.push_back (std::string ("Create/Lvm Volume"));
-	va.push_back (std::string ("Create/Subvolume"));
-	va.push_back (std::string ("Create/Snapshot"));
-	va.push_back (std::string ("Create/Luks"));
-	va.push_back (std::string ("Delete/Filesystem"));
-	va.push_back (std::string ("Delete/Partition"));
-	va.push_back (std::string ("Delete/Table"));
-	va.push_back (std::string ("Delete/Lvm Volume"));
-	va.push_back (std::string ("Delete/Subvolume"));
-	va.push_back (std::string ("Delete/Snapshot"));
-	va.push_back (std::string ("Delete/Luks"));
-	va.push_back (std::string ("Format as/Clear"));
-	va.push_back (std::string ("Format as/Wipe"));
-	va.push_back (std::string ("Format as/Scrub"));
-	va.push_back (std::string ("Format as/Ext2"));
-	va.push_back (std::string ("Format as/Ext3"));
-	va.push_back (std::string ("Convert to/Btrfs"));
-	va.push_back (std::string ("Convert to/Partition Type"));
-	va.push_back (std::string ("Convert to/Table"));
-	va.push_back (std::string ("Edit/Label"));
-	va.push_back (std::string ("Edit/Uuid"));
-	va.push_back (std::string ("Edit/Flags"));
-	va.push_back (std::string ("Edit/Parameters"));
-	va.push_back (std::string ("Filesystem/Check"));
-	va.push_back (std::string ("Filesystem/Defrag"));
-	va.push_back (std::string ("Filesystem/Rebalance"));
-	va.push_back (std::string ("Filesystem/Mount"));
-	va.push_back (std::string ("Filesystem/Umount"));
-	va.push_back (std::string ("Filesystem/Usage"));
-	va.push_back (std::string ("Volume Group/Extend"));
-	va.push_back (std::string ("Volume Group/Reduce"));
-	va.push_back (std::string ("Volume Group/Split"));
-	va.push_back (std::string ("Volume Group/Merge"));
-	va.push_back (std::string ("Redundancy/Add Stripe"));
-	va.push_back (std::string ("Redundancy/Remove Stripe"));
-	va.push_back (std::string ("Redundancy/Add Mirror"));
-	va.push_back (std::string ("Redundancy/Remove Mirror"));
-	va.push_back (std::string ("Redundancy/Break Mirror"));
-	va.push_back (std::string ("Copy"));
-	va.push_back (std::string ("Paste"));
-	va.push_back (std::string ("Paste Special"));
-	va.push_back (std::string ("Properties"));
-
-	return va;
+	return cont_actions;
 }
 
 /**
  * perform_action
  */
 bool
-Container::perform_action (const std::string& action)
+Container::perform_action (Action action)
 {
-	std::cout << "Perform: " << action << std::endl;
+	std::cout << "Perform: " << action.name << std::endl;
 	return true;
 }
+
 
