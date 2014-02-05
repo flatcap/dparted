@@ -310,7 +310,7 @@ TreeView::set_focus (GfxContainerPtr& c)
 		return;
 
 	if (c->treepath.empty()) {
-		std::cout << "TreeView: not visible" << std::endl;
+		//std::cout << "TreeView: not visible" << std::endl;
 		treeselection->unselect_all();
 		return;
 	}

@@ -1215,10 +1215,38 @@ DrawingArea::setup_popup (std::vector<std::string>& actions)
 		m_Menu_Popup.remove(*i);
 	}
 
+	std::string section;
+	std::string key;
+	Gtk::Menu* index = &m_Menu_Popup;
+
+	static std::string wibble ("wibble");
 	for (auto a : actions) {
-		Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem (a, true));
-		item->signal_activate().connect (sigc::bind<const std::string&> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), a));
-		m_Menu_Popup.append (*item);
+		size_t pos = a.find_first_of ('/');
+		if (pos == std::string::npos) {
+			section.clear();
+			key = a;
+			index = &m_Menu_Popup;
+		} else {
+			std::string s = a.substr (0, pos);
+			key = a.substr (pos+1);
+
+			if (section != s) {
+				section = s;
+				index = &m_Menu_Popup;
+
+				Gtk::Menu*     sub_menu = Gtk::manage (new Gtk::Menu());
+				Gtk::MenuItem* sub_item = Gtk::manage (new Gtk::MenuItem (section, true));
+
+				index->append (*sub_item);
+				sub_item->set_submenu (*sub_menu);
+
+				index = sub_menu;
+			}
+		}
+
+		Gtk::MenuItem* item = Gtk::manage (new Gtk::MenuItem (key, true));
+		item->signal_activate().connect (sigc::bind<std::string> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), a));
+		index->append (*item);
 	}
 
 	m_Menu_Popup.accelerate (*this);
@@ -1229,9 +1257,11 @@ DrawingArea::setup_popup (std::vector<std::string>& actions)
  * on_menu_select
  */
 void
-DrawingArea::on_menu_select (const std::string& option)
+DrawingArea::on_menu_select (std::string option)
 {
 	//LOG_TRACE;
+	std::cout << "Menu: " << option << std::endl;
+#if 0
 	if (option == "Properties") {
 		//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 		Window *dp = reinterpret_cast<Window*> (get_toplevel());
@@ -1247,6 +1277,7 @@ DrawingArea::on_menu_select (const std::string& option)
 
 		gui_app->properties (c);
 	}
+#endif
 }
 
 /**
@@ -1324,10 +1355,12 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 		return;
 	}
 
+#if 0
 	std::cout << "Actions:" << std::endl;
 	for (auto a : actions) {
 		std::cout << "\t" << a << std::endl;
 	}
+#endif
 
 	setup_popup (actions);
 

@@ -764,13 +764,53 @@ Container::get_smart (void)
 std::vector<std::string>
 Container::get_actions (void)
 {
-	static int i = 1;
-
 	std::vector<std::string> va;
 
-	va.push_back (std::string ("Container/dummy") + std::to_string (i++));
-	va.push_back (std::string ("Container/foo")   + std::to_string (i++));
-	va.push_back (std::string ("Container/bar")   + std::to_string (i++));
+	va.push_back (std::string ("Create/Filesystem"));
+	va.push_back (std::string ("Create/Partition"));
+	va.push_back (std::string ("Create/Table"));
+	va.push_back (std::string ("Create/Lvm Volume"));
+	va.push_back (std::string ("Create/Subvolume"));
+	va.push_back (std::string ("Create/Snapshot"));
+	va.push_back (std::string ("Create/Luks"));
+	va.push_back (std::string ("Delete/Filesystem"));
+	va.push_back (std::string ("Delete/Partition"));
+	va.push_back (std::string ("Delete/Table"));
+	va.push_back (std::string ("Delete/Lvm Volume"));
+	va.push_back (std::string ("Delete/Subvolume"));
+	va.push_back (std::string ("Delete/Snapshot"));
+	va.push_back (std::string ("Delete/Luks"));
+	va.push_back (std::string ("Format as/Clear"));
+	va.push_back (std::string ("Format as/Wipe"));
+	va.push_back (std::string ("Format as/Scrub"));
+	va.push_back (std::string ("Format as/Ext2"));
+	va.push_back (std::string ("Format as/Ext3"));
+	va.push_back (std::string ("Convert to/Btrfs"));
+	va.push_back (std::string ("Convert to/Partition Type"));
+	va.push_back (std::string ("Convert to/Table"));
+	va.push_back (std::string ("Edit/Label"));
+	va.push_back (std::string ("Edit/Uuid"));
+	va.push_back (std::string ("Edit/Flags"));
+	va.push_back (std::string ("Edit/Parameters"));
+	va.push_back (std::string ("Filesystem/Check"));
+	va.push_back (std::string ("Filesystem/Defrag"));
+	va.push_back (std::string ("Filesystem/Rebalance"));
+	va.push_back (std::string ("Filesystem/Mount"));
+	va.push_back (std::string ("Filesystem/Umount"));
+	va.push_back (std::string ("Filesystem/Usage"));
+	va.push_back (std::string ("Volume Group/Extend"));
+	va.push_back (std::string ("Volume Group/Reduce"));
+	va.push_back (std::string ("Volume Group/Split"));
+	va.push_back (std::string ("Volume Group/Merge"));
+	va.push_back (std::string ("Redundancy/Add Stripe"));
+	va.push_back (std::string ("Redundancy/Remove Stripe"));
+	va.push_back (std::string ("Redundancy/Add Mirror"));
+	va.push_back (std::string ("Redundancy/Remove Mirror"));
+	va.push_back (std::string ("Redundancy/Break Mirror"));
+	va.push_back (std::string ("Copy"));
+	va.push_back (std::string ("Paste"));
+	va.push_back (std::string ("Paste Special"));
+	va.push_back (std::string ("Properties"));
 
 	return va;
 }
