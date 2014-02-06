@@ -1,0 +1,56 @@
+
+GParted
+	Refresh devices
+	Devices
+		/dev/loop0
+		/dev/loop1
+	--
+	Quit
+
+Edit
+	Undo last operation
+	Clear all operations
+	Apply all operations
+
+View
+	Device information
+	Pending operations
+	--
+	File system support
+
+Device
+	Create Partition Table
+	Attempt Data Rescue
+
+Partiton
+	New
+	Delete
+	--
+	Resize/Move
+	--
+	Copy
+	Paste
+	--
+	Format to
+		ext2
+		btrfs
+		ntfs
+		...
+	--
+	Mount
+	Unmount
+	Swap on
+	Swap off
+	--
+	Manage flags
+	Check
+	Label
+	New UUID
+	--
+	Information
+
+Help
+	Contents
+	--
+	About
+

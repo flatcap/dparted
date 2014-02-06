@@ -1,0 +1,61 @@
+File
+	Open
+	--
+	Properties
+	--
+	1 Recent doc
+	2 Recent other
+	3 Recent other
+	4 Recent other
+	--
+	Quit
+
+Edit
+	Undo
+	Redo
+	Clear all operations
+	Apply all operations
+	--
+	Cut
+	Copy
+	Paste
+	Paste Special
+	Delete
+	--
+	Find
+	Find next
+	Find previous
+	--
+	Insert
+	Preferences
+
+View
+	Toolbar
+	Graphics
+	Tree view
+	Status bar
+	Log
+	Pending Actions
+	--
+	Fullscreen
+	--
+	Refresh
+	Reload
+
+Insert
+
+Plugins
+	Plugin X
+	Plugin Y
+	--
+	Configure plugins
+
+Help
+	Contents
+	--
+	Report an issue
+	FAQ
+	Community
+	Homepage
+	--
+	About

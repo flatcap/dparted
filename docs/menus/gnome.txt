@@ -1,0 +1,130 @@
+File
+	New
+	Open
+	--
+	Save
+	Save As
+	Save A copy
+	Revert
+	Save version
+	Restore version
+	Versions
+	--
+	Page Setup
+	Print Preview
+	Print
+	Send to
+	--
+	Properties
+	--
+	1 Recent doc
+	2 Recent other
+	3 Recent other
+	4 Recent other
+	--
+	Close
+	Quit
+
+Edit
+	Undo
+	Redo
+	--
+	Cut
+	Copy
+	Paste
+	Paste Special
+	Duplicate
+	Delete
+	--
+	Select all
+	Deselect all
+	--
+	Find
+	Find next
+	Find previous
+	Replace
+	--
+	Insert
+	Preferences
+
+View
+	Toolbar
+	--
+	Icons
+	List
+	Details
+	--
+	Sort by
+	Filter
+	--
+	Zoom in
+	Zoom out
+	Normal size
+	Best fit
+	--
+	Refresh
+	Reload
+
+Insert
+	Page break
+	Date and time
+	Symbool
+	--
+	Sheet
+	Rows
+	Columns
+	--
+	Image
+	Graph
+	--
+	From file
+	External link
+
+Format
+	Style
+	Font
+	Paragraph
+	--
+	Bold
+	Italic
+	Underline
+	--
+	Cells
+	List
+	--
+	Layer
+	Page
+
+Bookmarks
+	Add bookmark
+	Edit bookmarks
+	--
+	1 Bookmark
+	2 Bookmark
+
+Go
+	Back
+	Forward
+	Up
+	--
+	Previous page
+	Next Page
+	Go to page
+	--
+	Home
+	Location
+	--
+	First page
+	Last page
+
+Windows
+	Save all
+	Close all
+	--
+	1 Window
+	2 Window
+
+Help
+	Contents
+	About
+
