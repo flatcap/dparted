@@ -1,0 +1,24 @@
+
+participant Idle as i
+participant User as u
+participant Window as w
+participant Filesystem as f
+participant Object as o
+
+
+u -> +w: Show menu
+w -> +f: Get Actions
+f -> -w: [ActionList]
+note right of w: Popup Menu
+deactivate w
+
+u -> +w: Click "format"
+w -> +f: Format
+f -> o: Backup
+f -> o: Manipulate
+f -> -w: [Object,Action]
+deactivate w
+
+i -> +w: Idle
+note right of w: Refresh
+
