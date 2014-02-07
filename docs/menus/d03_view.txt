@@ -1,0 +1,17 @@
+View
+
+Toolbar
+Graphics
+Tree view
+Status bar
+
+Log
+Pending Actions
+
+Fullscreen
+
+Refresh
+Reload
+
+Theme
+

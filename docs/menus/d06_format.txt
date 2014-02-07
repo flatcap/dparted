@@ -1,0 +1,18 @@
+Format
+
+Wipe...
+Filesystem...
+
+Btrfs...
+Partition Type...
+Table...
+
+remove signatures
+zero partition
+destroy data
+
+btrfs from ext4
+primary/logical
+msdos/gpt/ldm/lvm
+
+Change?

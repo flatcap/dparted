@@ -1,0 +1,7 @@
+Plugins
+
+Plugin X
+Plugin Y
+
+Configure plugins...
+

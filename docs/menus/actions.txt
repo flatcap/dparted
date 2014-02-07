@@ -2,10 +2,7 @@ gui
 right-click
 find object
 
-while object
-	get actions
-	object = parent
-done
+get actions from object and all its parents
 
 app::register_type
 	X can contain Y
@@ -59,7 +56,7 @@ lvm.group
 
 lvm.volume
 	filesystem
-	
+
 empty -> delegate to parent
 
 object -> action list
@@ -68,65 +65,3 @@ action
 	object
 	path/name
 	description
-
-loop, gpt, partition, filesystem
-
-	create/filesystem
-	create/partition
-	create/table
-	create/lvm.volume
-	create/subvolume
-	create/snapshot
-	create/luks (or an option on create dialog)
-		some containers need to be paired
-
-	delete/filesystem
-	delete/partition
-	delete/table
-	delete/lvm.volume
-	delete/subvolume
-	delete/snapshot
-	delete/luks (or an option on delete dialog)
-		some containers need to be paired
-
-	format as/clear (remove signatures)
-	format as/wipe (zero partition)
-	format as/scrub (destroy data)
-	format as/ext2
-	format as/ext3
-	...
-
-	convert to/btrfs (from ext4)
-	convert to/partition type (primary/logical)
-	convert to/table (msdos/gpt/ldm/lvm)
-
-	edit/label
-	edit/uuid
-	edit/flags
-	edit/parameters -> ext4 manager
-
-	# rename to volume?
-	filesystem/check
-	filesystem/defrag
-	filesystem/rebalance
-	filesystem/mount
-	filesystem/umount
-	filesystem/usage -> mount, baobab
-
-	volume group/extend
-	volume group/reduce
-	volume group/split
-	volume group/merge
-
-	redundancy/add.remove stripe
-	redundancy/add.remove mirror
-	redundancy/break mirror
-
-	copy
-	paste
-	paste special
-
-	properties
-
-	resize
-	move

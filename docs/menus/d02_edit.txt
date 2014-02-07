@@ -1,0 +1,18 @@
+Edit
+
+Cut
+Copy
+Paste
+Paste Special...
+
+Undo
+Redo
+Clear all ops
+Apply all ops...
+
+Find...
+Find next
+Find previous
+
+Preferences...
+

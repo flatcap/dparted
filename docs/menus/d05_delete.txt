@@ -1,0 +1,14 @@
+Delete
+
+Filesystem
+Partition
+Table
+
+Encryption
+Lvm Volume
+
+Subvolume
+Snapshot
+
+luks
+

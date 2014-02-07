@@ -1,0 +1,18 @@
+Filesystem
+
+Check
+Defragment
+Rebalance
+
+Resize/Move...
+
+Mount...
+Umount
+Swap on
+Swap off
+
+Usage
+
+mount, baobab
+
+Volume?
