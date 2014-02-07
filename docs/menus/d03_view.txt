@@ -1,4 +1,5 @@
 View
+window
 
 Toolbar
 Graphics
