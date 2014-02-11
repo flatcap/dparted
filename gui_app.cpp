@@ -133,31 +133,12 @@ GuiApp::on_startup (void)
 	menu->append ("_Quit",        "app.quit");
 
 	set_app_menu (menu);
-
-	Glib::RefPtr<Gio::SimpleAction> action;
-
-	action = add_action ("apple",      sigc::mem_fun (*this, &GuiApp::menu_preferences));
-	action = add_action ("banana",     sigc::mem_fun (*this, &GuiApp::menu_preferences));
-	action = add_action ("cherry",     sigc::mem_fun (*this, &GuiApp::menu_preferences));
-	action = add_action ("damson",     sigc::mem_fun (*this, &GuiApp::menu_preferences));
-	action = add_action ("elderberry", sigc::mem_fun (*this, &GuiApp::menu_preferences));
-
-	menu = Gio::Menu::create();
-	Glib::RefPtr<Gio::Menu> sub  = Gio::Menu::create();
-
-	sub->append ("_Apple",      "app.apple");
-	sub->append ("_Banana",     "app.banana");
-	sub->append ("_Cherry",     "app.cherry");
-	sub->append ("_Damson",     "app.damson");
-	sub->append ("_Elderberry", "app.elderberry");
-	menu->append_submenu ("_Fruit", sub);
-
-	set_menubar (menu);
-
+#if 0
 	Gio::ActionMap*                  m = dynamic_cast<Gio::ActionMap*> (this);
 	Glib::RefPtr<Gio::Action>        a = m->lookup_action ("banana");
 	Glib::RefPtr<Gio::SimpleAction>  s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(a);
 	s->set_enabled (false);
+#endif
 }
 
 /**
