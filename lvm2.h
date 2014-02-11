@@ -1,6 +1,8 @@
 #ifndef _LVM2_H_
 #define _LVM2_H_
 
+//XXX copyright? ownership?
+
 #include <cstdint>
 
 /* Fields with the suffix _xl should be xlate'd wherever they appear */
