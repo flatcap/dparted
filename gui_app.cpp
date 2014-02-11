@@ -43,7 +43,7 @@ GuiAppPtr gui_app;
  * GuiApp
  */
 GuiApp::GuiApp() :
-	Gtk::Application ("org.flatcap.test.area", Gio::APPLICATION_HANDLES_OPEN)
+	Gtk::Application ("org.flatcap.test.area", Gio::APPLICATION_HANDLES_OPEN /*| Gio::APPLICATION_HANDLES_COMMAND_LINE*/)
 {
 	//LOG_TRACE;
 	Glib::set_application_name ("dparted");
@@ -117,7 +117,7 @@ GuiApp::on_startup (void)
 
 	Glib::RefPtr<Gtk::IconTheme> theme = Gtk::IconTheme::get_default();
 
-	theme->append_search_path ("/home/flatcap/work/gtk-app/icons");
+	theme->append_search_path ("/home/flatcap/work/gtk-app/icons");		//XXX hard-coded
 
 	add_action ("preferences", sigc::mem_fun (*this, &GuiApp::menu_preferences));
 	add_action ("help",        sigc::mem_fun (*this, &GuiApp::menu_help));
@@ -151,7 +151,7 @@ GuiApp::on_startup (void)
 	sub->append ("_Elderberry", "app.elderberry");
 	menu->append_submenu ("_Fruit", sub);
 
-	//set_menubar (menu);
+	set_menubar (menu);
 
 	Gio::ActionMap*                  m = dynamic_cast<Gio::ActionMap*> (this);
 	Glib::RefPtr<Gio::Action>        a = m->lookup_action ("banana");
@@ -209,6 +209,12 @@ void
 GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
 	//LOG_TRACE;
+	std::cout << "Open files:" << std::endl;
+	for (auto f : files) {
+		std::cout << f->get_uri() << std::endl;
+	}
+
+	std::cout << "hint = " << hint << std::endl << std::endl;
 	Gtk::Application::on_open (files, hint);
 }
 
@@ -229,7 +235,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 void
 GuiApp::menu_preferences (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 }
 
 /**
@@ -238,7 +244,7 @@ GuiApp::menu_preferences (void)
 void
 GuiApp::menu_help (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 }
 
 /**
@@ -281,6 +287,52 @@ void
 GuiApp::menu_quit (void)
 {
 	quit();
+}
+
+
+/**
+ * on_action_file_open
+ */
+void
+GuiApp::on_action_file_open (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_file_close
+ */
+void
+GuiApp::on_action_file_close (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_file_quit
+ */
+void
+GuiApp::on_action_file_quit (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_plugin
+ */
+void
+GuiApp::on_action_plugin (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_help
+ */
+void
+GuiApp::on_action_help (void)
+{
+	LOG_TRACE;
 }
 
 

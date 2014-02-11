@@ -77,11 +77,11 @@ std::vector<Action> cont_actions = {
 	{ "Volume Group/Reduce",       true },
 	{ "Volume Group/Split",        true },
 	{ "Volume Group/Merge",        true },
-	{ "Redundancy/Add Stripe",     true },
-	{ "Redundancy/Remove Stripe",  true },
-	{ "Redundancy/Add Mirror",     true },
-	{ "Redundancy/Remove Mirror",  true },
-	{ "Redundancy/Break Mirror",   true }
+	{ "Redundancy/Add Stripe...",     true },
+	{ "Redundancy/Remove Stripe...",  true },
+	{ "Redundancy/Add Mirror...",     true },
+	{ "Redundancy/Remove Mirror...",  true },
+	{ "Redundancy/Break Mirror...",   true }
 };
 
 

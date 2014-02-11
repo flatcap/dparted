@@ -55,6 +55,12 @@ public:
 	bool set_config (const std::string& filename);
 	bool set_theme  (const std::string& filename);
 
+	void on_action_file_open  (void);
+	void on_action_file_close (void);
+	void on_action_file_quit  (void);
+	void on_action_plugin     (void);
+	void on_action_help       (void);
+
 protected:
 	virtual void on_activate (void);
 	virtual void on_startup  (void);

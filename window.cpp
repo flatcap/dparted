@@ -60,6 +60,7 @@ Window::Window()
 	set_default_icon_name ("dparted");
 
 	init_shortcuts();
+	init_actions();
 
 	outer_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 	outer_box.set_homogeneous (false);
@@ -220,198 +221,6 @@ Window::set_data (GfxContainerPtr c)
 
 
 /**
- * init_menubar
- */
-void
-Window::init_menubar (Gtk::Box& box)
-{
-	//Create actions for menus and toolbars:
-	Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
-
-	refActionGroup->add_action ("newstandard", sigc::mem_fun (*this, &Window::on_menu_file_new_generic));
-	refActionGroup->add_action ("newfoo",      sigc::mem_fun (*this, &Window::on_menu_file_new_generic));
-	refActionGroup->add_action ("newgoo",      sigc::mem_fun (*this, &Window::on_menu_file_new_generic));
-
-	refActionGroup->add_action ("quit",        sigc::mem_fun (*this, &Window::on_menu_file_quit));
-
-	refActionGroup->add_action ("copy",        sigc::mem_fun (*this, &Window::on_menu_others));
-	refActionGroup->add_action ("paste",       sigc::mem_fun (*this, &Window::on_menu_others));
-	refActionGroup->add_action ("something",   sigc::mem_fun (*this, &Window::on_menu_others));
-
-	//Choices menus, to demonstrate Radio items,
-	//using our convenience methods for string and int radio values:
-	m_refChoice      = refActionGroup->add_action_radio_string  ("choice",      sigc::mem_fun (*this, &Window::on_menu_choices),       "a");
-	m_refChoiceOther = refActionGroup->add_action_radio_integer ("choiceother", sigc::mem_fun (*this, &Window::on_menu_choices_other), 1);
-	m_refToggle      = refActionGroup->add_action_bool          ("sometoggle",  sigc::mem_fun (*this, &Window::on_menu_toggle),        false);
-
-	m_refViewGfx     = refActionGroup->add_action_bool ("view.gfx",     sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 1), true);	//XXX these need to match the config values
-	m_refViewTree    = refActionGroup->add_action_bool ("view.tree",    sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 2), true);
-	m_refViewToolbar = refActionGroup->add_action_bool ("view.toolbar", sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 3), true);
-	m_refViewStatus  = refActionGroup->add_action_bool ("view.status",  sigc::bind<int> (sigc::mem_fun (*this, &Window::on_menu_view), 4), true);
-
-	//Help menu:
-	refActionGroup->add_action ("about", sigc::mem_fun (*this, &Window::on_menu_others));
-
-	insert_action_group ("example", refActionGroup);
-
-	m_refBuilder = Gtk::Builder::create();
-
-	//TODO: add_accel_group (m_refBuilder->get_accel_group());
-
-	//Layout the actions in a menubar and toolbar:
-	Glib::ustring ui_info =
-		"<interface>"
-		"	<menu id='menu-example'>"
-		"		<submenu>"
-		"			<attribute name='label' translatable='yes'>_File</attribute>"
-		"			<section>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>New _Standard</attribute>"
-		"					<attribute name='action'>example.newstandard</attribute>"
-		"					<attribute name='accel'>&lt;Primary&gt;n</attribute>"
-		"				</item>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>New _Foo</attribute>"
-		"					<attribute name='action'>example.newfoo</attribute>"
-		"				</item>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>New _Goo</attribute>"
-		"					<attribute name='action'>example.newgoo</attribute>"
-		"				</item>"
-		"			</section>"
-		"			<section>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>_Quit</attribute>"
-		"					<attribute name='action'>example.quit</attribute>"
-		"					<attribute name='accel'>&lt;Primary&gt;q</attribute>"
-		"				</item>"
-		"			</section>"
-		"		</submenu>"
-		"		<submenu>"
-		"			<attribute name='label' translatable='yes'>_Edit</attribute>"
-		"			<section>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>_Copy</attribute>"
-		"					<attribute name='action'>example.copy</attribute>"
-		"					<attribute name='accel'>&lt;Primary&gt;c</attribute>"
-		"				</item>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>_Paste</attribute>"
-		"					<attribute name='action'>example.paste</attribute>"
-		"					<attribute name='accel'>&lt;Primary&gt;v</attribute>"
-		"				</item>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>_Something</attribute>"
-		"					<attribute name='action'>example.something</attribute>"
-		"				</item>"
-		"			</section>"
-		"		</submenu>"
-		"		<submenu>"
-		"			<attribute name='label' translatable='yes'>_View</attribute>"
-		"			<section>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>_Graphics</attribute>"
-		"					<attribute name='action'>example.view.gfx</attribute>"
-		"				</item>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>_Tree View</attribute>"
-		"					<attribute name='action'>example.view.tree</attribute>"
-		"				</item>"
-		"			</section>"
-		"			<section>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>Tool_bar</attribute>"
-		"					<attribute name='action'>example.view.toolbar</attribute>"
-		"				</item>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>_Status bar</attribute>"
-		"					<attribute name='action'>example.view.status</attribute>"
-		"				</item>"
-		"			</section>"
-		"		</submenu>"
-		"		<submenu>"
-		"			<attribute name='label' translatable='yes'>_Choices</attribute>"
-		"			<section>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>Choice _A</attribute>"
-		"					<attribute name='action'>example.choice</attribute>"
-		"					<attribute name='target'>a</attribute>"
-		"				</item>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>Choice _B</attribute>"
-		"					<attribute name='action'>example.choice</attribute>"
-		"					<attribute name='target'>b</attribute>"
-		"				</item>"
-		"			</section>"
-		"		</submenu>"
-		"		<submenu>"
-		"			<attribute name='label' translatable='yes'>_Other Choices</attribute>"
-		"			<section>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>Choice 1</attribute>"
-		"					<attribute name='action'>example.choiceother</attribute>"
-		"					<attribute name='target' type='i'>1</attribute>"
-		"				</item>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>Choice 2</attribute>"
-		"					<attribute name='action'>example.choiceother</attribute>"
-		"					<attribute name='target' type='i'>2</attribute>"
-		"				</item>"
-		"			</section>"
-		"			<section>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>Some Toggle</attribute>"
-		"					<attribute name='action'>example.sometoggle</attribute>"
-		"				</item>"
-		"			</section>"
-		"		</submenu>"
-		"		<submenu>"
-		"			<attribute name='label' translatable='yes'>_Help</attribute>"
-		"			<section>"
-		"				<item>"
-		"					<attribute name='label' translatable='yes'>_About</attribute>"
-		"					<attribute name='action'>example.about</attribute>"
-		"				</item>"
-		"			</section>"
-		"		</submenu>"
-		"	</menu>"
-		"</interface>";
-
-	try {
-		m_refBuilder->add_from_string (ui_info);
-	} catch (const Glib::Error& ex) {
-		std::cerr << "building menus failed: " << ex.what();
-	}
-
-	//Get the menubar and add it to a container widget:
-	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object ("menu-example");
-	Glib::RefPtr<Gio::Menu> gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic (object);
-	if (!gmenu)
-		g_warning ("GMenu not found");
-
-	//Menubar:
-	menubar = Gtk::manage (new Gtk::MenuBar (gmenu));
-	box.pack_start (*menubar, Gtk::PACK_SHRINK);
-
-	//Create the toolbar and add it to a container widget:
-	toolbar = Gtk::manage (new Gtk::Toolbar());
-	Gtk::ToolButton* button = Gtk::manage (new Gtk::ToolButton());
-	button->set_icon_name ("document-new");
-	//We can't do this until we can break the ToolButton ABI: button->set_detailed_action_name ("example.new");
-	gtk_actionable_set_detailed_action_name (GTK_ACTIONABLE (button->gobj()), "example.newstandard");
-	toolbar->add (*button);
-
-	button = Gtk::manage (new Gtk::ToolButton());
-	button->set_icon_name ("application-exit");
-	//We can't do this until we can break the ToolButton ABI: button->set_detailed_action_name ("example.quit");
-	gtk_actionable_set_detailed_action_name (GTK_ACTIONABLE (button->gobj()), "example.quit");
-	toolbar->add (*button);
-
-	box.pack_start (*toolbar, Gtk::PACK_SHRINK);
-}
-
-
-/**
  * on_menu_choices
  */
 void
@@ -568,6 +377,7 @@ Window::on_menu_view (int option)
 	}
 }
 
+
 /**
  * init_shortcuts
  */
@@ -609,6 +419,584 @@ Window::init_shortcuts (void)
 }
 
 /**
+ * init_actions
+ */
+void
+Window::init_actions (void)
+{
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_file = Gio::SimpleActionGroup::create();
+	ag_file->add_action("open",         sigc::mem_fun(*gui_app, &GuiApp::on_action_file_open));
+	ag_file->add_action("close",        sigc::mem_fun(*gui_app, &GuiApp::on_action_file_close));
+	ag_file->add_action("quit",         sigc::mem_fun(*gui_app, &GuiApp::on_action_file_quit));
+	insert_action_group ("file", ag_file);
+
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_edit = Gio::SimpleActionGroup::create();
+	ag_edit->add_action("cut",           sigc::mem_fun(*this, &Window::on_action_edit_cut));
+	ag_edit->add_action("copy",          sigc::mem_fun(*this, &Window::on_action_edit_copy));
+	ag_edit->add_action("paste",         sigc::mem_fun(*this, &Window::on_action_edit_paste));
+	ag_edit->add_action("paste_special", sigc::mem_fun(*this, &Window::on_action_edit_paste_special));
+	ag_edit->add_action("undo",          sigc::mem_fun(*this, &Window::on_action_edit_undo));
+	ag_edit->add_action("redo",          sigc::mem_fun(*this, &Window::on_action_edit_redo));
+	ag_edit->add_action("clear_all_ops", sigc::mem_fun(*this, &Window::on_action_edit_clear_all_ops));
+	ag_edit->add_action("apply_all_ops", sigc::mem_fun(*this, &Window::on_action_edit_apply_all_ops));
+	ag_edit->add_action("find",          sigc::mem_fun(*this, &Window::on_action_edit_find));
+	ag_edit->add_action("find_next",     sigc::mem_fun(*this, &Window::on_action_edit_find_next));
+	ag_edit->add_action("find_previous", sigc::mem_fun(*this, &Window::on_action_edit_find_previous));
+	ag_edit->add_action("preferences",   sigc::mem_fun(*this, &Window::on_action_edit_preferences));
+	insert_action_group ("edit", ag_edit);
+
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_view = Gio::SimpleActionGroup::create();
+	ag_view->add_action("toolbar",         sigc::mem_fun(*this, &Window::on_action_view_toolbar));
+	ag_view->add_action("graphics",        sigc::mem_fun(*this, &Window::on_action_view_graphics));
+	ag_view->add_action("tree_view",       sigc::mem_fun(*this, &Window::on_action_view_tree_view));
+	ag_view->add_action("status_bar",      sigc::mem_fun(*this, &Window::on_action_view_status_bar));
+	ag_view->add_action("log",             sigc::mem_fun(*this, &Window::on_action_view_log));
+	ag_view->add_action("pending_actions", sigc::mem_fun(*this, &Window::on_action_view_pending_actions));
+	ag_view->add_action("fullscreen",      sigc::mem_fun(*this, &Window::on_action_view_fullscreen));
+	ag_view->add_action("refresh",         sigc::mem_fun(*this, &Window::on_action_view_refresh));
+	ag_view->add_action("reload",          sigc::mem_fun(*this, &Window::on_action_view_reload));
+	ag_view->add_action("theme",           sigc::mem_fun(*this, &Window::on_action_view_theme));
+	insert_action_group ("view", ag_view);
+
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_create = Gio::SimpleActionGroup::create();
+	ag_create->add_action("filesystem", sigc::mem_fun(*this, &Window::on_action_create_filesystem));
+	ag_create->add_action("partition",  sigc::mem_fun(*this, &Window::on_action_create_partition));
+	ag_create->add_action("table",      sigc::mem_fun(*this, &Window::on_action_create_table));
+	ag_create->add_action("encryption", sigc::mem_fun(*this, &Window::on_action_create_encryption));
+	ag_create->add_action("lvm_volume", sigc::mem_fun(*this, &Window::on_action_create_lvm_volume));
+	ag_create->add_action("subvolume",  sigc::mem_fun(*this, &Window::on_action_create_subvolume));
+	ag_create->add_action("snapshot",   sigc::mem_fun(*this, &Window::on_action_create_snapshot));
+	insert_action_group ("create", ag_create);
+
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_delete = Gio::SimpleActionGroup::create();
+	ag_delete->add_action("filesystem", sigc::mem_fun(*this, &Window::on_action_delete_filesystem));
+	ag_delete->add_action("partition",  sigc::mem_fun(*this, &Window::on_action_delete_partition));
+	ag_delete->add_action("table",      sigc::mem_fun(*this, &Window::on_action_delete_table));
+	ag_delete->add_action("encryption", sigc::mem_fun(*this, &Window::on_action_delete_encryption));
+	ag_delete->add_action("lvm_volume", sigc::mem_fun(*this, &Window::on_action_delete_lvm_volume));
+	ag_delete->add_action("subvolume",  sigc::mem_fun(*this, &Window::on_action_delete_subvolume));
+	ag_delete->add_action("snapshot",   sigc::mem_fun(*this, &Window::on_action_delete_snapshot));
+	insert_action_group ("delete", ag_delete);
+
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_format = Gio::SimpleActionGroup::create();
+	ag_format->add_action("wipe",           sigc::mem_fun(*this, &Window::on_action_format_wipe));
+	ag_format->add_action("filesystem",     sigc::mem_fun(*this, &Window::on_action_format_filesystem));
+	ag_format->add_action("btrfs",          sigc::mem_fun(*this, &Window::on_action_format_btrfs));
+	ag_format->add_action("partition_type", sigc::mem_fun(*this, &Window::on_action_format_partition_type));
+	ag_format->add_action("table",          sigc::mem_fun(*this, &Window::on_action_format_table));
+	insert_action_group ("format", ag_format);
+
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_manage = Gio::SimpleActionGroup::create();
+	ag_manage->add_action("properties", sigc::mem_fun(*this, &Window::on_action_manage_properties));
+	ag_manage->add_action("label",      sigc::mem_fun(*this, &Window::on_action_manage_label));
+	ag_manage->add_action("uuid",       sigc::mem_fun(*this, &Window::on_action_manage_uuid));
+	ag_manage->add_action("flags",      sigc::mem_fun(*this, &Window::on_action_manage_flags));
+	ag_manage->add_action("parameters", sigc::mem_fun(*this, &Window::on_action_manage_parameters));
+	insert_action_group ("manage", ag_manage);
+
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_filesystem = Gio::SimpleActionGroup::create();
+	ag_filesystem->add_action("check",       sigc::mem_fun(*this, &Window::on_action_filesystem_check));
+	ag_filesystem->add_action("defragment",  sigc::mem_fun(*this, &Window::on_action_filesystem_defragment));
+	ag_filesystem->add_action("rebalance",   sigc::mem_fun(*this, &Window::on_action_filesystem_rebalance));
+	ag_filesystem->add_action("resize_move", sigc::mem_fun(*this, &Window::on_action_filesystem_resize_move));
+	ag_filesystem->add_action("mount",       sigc::mem_fun(*this, &Window::on_action_filesystem_mount));
+	ag_filesystem->add_action("umount",      sigc::mem_fun(*this, &Window::on_action_filesystem_umount));
+	ag_filesystem->add_action("swap_on",     sigc::mem_fun(*this, &Window::on_action_filesystem_swap_on));
+	ag_filesystem->add_action("swap_off",    sigc::mem_fun(*this, &Window::on_action_filesystem_swap_off));
+	ag_filesystem->add_action("usage",       sigc::mem_fun(*this, &Window::on_action_filesystem_usage));
+	insert_action_group ("filesystem", ag_filesystem);
+
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_group = Gio::SimpleActionGroup::create();
+	ag_group->add_action("resize",        sigc::mem_fun(*this, &Window::on_action_group_resize));
+	ag_group->add_action("split",         sigc::mem_fun(*this, &Window::on_action_group_split));
+	ag_group->add_action("merge",         sigc::mem_fun(*this, &Window::on_action_group_merge));
+	ag_group->add_action("add_stripe",    sigc::mem_fun(*this, &Window::on_action_group_add_stripe));
+	ag_group->add_action("remove_stripe", sigc::mem_fun(*this, &Window::on_action_group_remove_stripe));
+	ag_group->add_action("add_mirror",    sigc::mem_fun(*this, &Window::on_action_group_add_mirror));
+	ag_group->add_action("remove_mirror", sigc::mem_fun(*this, &Window::on_action_group_remove_mirror));
+	ag_group->add_action("break_mirror",  sigc::mem_fun(*this, &Window::on_action_group_break_mirror));
+	ag_group->add_action("add_raid",      sigc::mem_fun(*this, &Window::on_action_group_add_raid));
+	ag_group->add_action("remove_raid",   sigc::mem_fun(*this, &Window::on_action_group_remove_raid));
+	insert_action_group ("group", ag_group);
+
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_plugin = Gio::SimpleActionGroup::create();
+	ag_plugin->add_action("x",          sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
+	ag_plugin->add_action("y",          sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
+	ag_plugin->add_action("configure",  sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
+	insert_action_group ("plugin", ag_plugin);
+
+	Glib::RefPtr<Gio::SimpleActionGroup> ag_help = Gio::SimpleActionGroup::create();
+	ag_help->add_action("contents",     sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	ag_help->add_action("whats_this",   sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	ag_help->add_action("report_issue", sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	ag_help->add_action("faq",          sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	ag_help->add_action("community",    sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	ag_help->add_action("homepage",     sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	ag_help->add_action("about",        sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	insert_action_group ("help", ag_help);
+}
+
+/**
+ * init_menubar
+ */
+void
+Window::init_menubar (Gtk::Box& box)
+{
+	m_refBuilder = Gtk::Builder::create();
+
+	//Layout the actions in a menubar and toolbar:
+	Glib::ustring ui_info =
+		"<interface><menu id='menu-example'>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>_File</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Open...</attribute>"
+		"			<attribute name='action'>file.open</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Close</attribute>"
+		"			<attribute name='action'>file.close</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Quit</attribute>"
+		"			<attribute name='action'>file.quit</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>_Edit</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Cut</attribute>"
+		"			<attribute name='action'>edit.cut</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Copy</attribute>"
+		"			<attribute name='action'>edit.copy</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Paste</attribute>"
+		"			<attribute name='action'>edit.paste</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Paste Special...</attribute>"
+		"			<attribute name='action'>edit.paste_special</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Undo</attribute>"
+		"			<attribute name='action'>edit.undo</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Redo</attribute>"
+		"			<attribute name='action'>edit.redo</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Clear all ops</attribute>"
+		"			<attribute name='action'>edit.clear_all_ops</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Apply all ops...</attribute>"
+		"			<attribute name='action'>edit.apply_all_ops</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Find...</attribute>"
+		"			<attribute name='action'>edit.find</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Find next</attribute>"
+		"			<attribute name='action'>edit.find_next</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Find previous</attribute>"
+		"			<attribute name='action'>edit.find_previous</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Preferences...</attribute>"
+		"			<attribute name='action'>edit.preferences</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>_View</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Toolbar</attribute>"
+		"			<attribute name='action'>view.toolbar</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Graphics</attribute>"
+		"			<attribute name='action'>view.graphics</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Tree view</attribute>"
+		"			<attribute name='action'>view.tree_view</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Status bar</attribute>"
+		"			<attribute name='action'>view.status_bar</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Log</attribute>"
+		"			<attribute name='action'>view.log</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Pending Actions</attribute>"
+		"			<attribute name='action'>view.pending_actions</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Fullscreen</attribute>"
+		"			<attribute name='action'>view.fullscreen</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Refresh</attribute>"
+		"			<attribute name='action'>view.refresh</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Reload</attribute>"
+		"			<attribute name='action'>view.reload</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Theme</attribute>"
+		"			<attribute name='action'>view.theme</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>_Create</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Filesystem...</attribute>"
+		"			<attribute name='action'>create.filesystem</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Partition...</attribute>"
+		"			<attribute name='action'>create.partition</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Table...</attribute>"
+		"			<attribute name='action'>create.table</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Encryption...</attribute>"
+		"			<attribute name='action'>create.encryption</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Lvm Volume...</attribute>"
+		"			<attribute name='action'>create.lvm_volume</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Subvolume...</attribute>"
+		"			<attribute name='action'>create.subvolume</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Snapshot...</attribute>"
+		"			<attribute name='action'>create.snapshot</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>_Delete</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Filesystem</attribute>"
+		"			<attribute name='action'>delete.filesystem</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Partition</attribute>"
+		"			<attribute name='action'>delete.partition</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Table</attribute>"
+		"			<attribute name='action'>delete.table</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Encryption</attribute>"
+		"			<attribute name='action'>delete.encryption</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Lvm Volume</attribute>"
+		"			<attribute name='action'>delete.lvm_volume</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Subvolume</attribute>"
+		"			<attribute name='action'>delete.subvolume</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Snapshot</attribute>"
+		"			<attribute name='action'>delete.snapshot</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>F_ormat</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Wipe...</attribute>"
+		"			<attribute name='action'>format.wipe</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Filesystem...</attribute>"
+		"			<attribute name='action'>format.filesystem</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Btrfs...</attribute>"
+		"			<attribute name='action'>format.btrfs</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Partition Type...</attribute>"
+		"			<attribute name='action'>format.partition_type</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Table...</attribute>"
+		"			<attribute name='action'>format.table</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>_Manage</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Properties</attribute>"
+		"			<attribute name='action'>manage.properties</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Label...</attribute>"
+		"			<attribute name='action'>manage.label</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Uuid...</attribute>"
+		"			<attribute name='action'>manage.uuid</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Flags...</attribute>"
+		"			<attribute name='action'>manage.flags</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Parameters...</attribute>"
+		"			<attribute name='action'>manage.parameters</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>File_system</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Check</attribute>"
+		"			<attribute name='action'>filesystem.check</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Defragment</attribute>"
+		"			<attribute name='action'>filesystem.defragment</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Rebalance</attribute>"
+		"			<attribute name='action'>filesystem.rebalance</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Resize/Move...</attribute>"
+		"			<attribute name='action'>filesystem.resize_move</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Mount...</attribute>"
+		"			<attribute name='action'>filesystem.mount</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Umount</attribute>"
+		"			<attribute name='action'>filesystem.umount</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Swap on</attribute>"
+		"			<attribute name='action'>filesystem.swap_on</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Swap off</attribute>"
+		"			<attribute name='action'>filesystem.swap_off</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Usage</attribute>"
+		"			<attribute name='action'>filesystem.usage</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>_Group</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Resize...</attribute>"
+		"			<attribute name='action'>group.resize</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Split...</attribute>"
+		"			<attribute name='action'>group.split</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Merge...</attribute>"
+		"			<attribute name='action'>group.merge</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Add Stripe...</attribute>"
+		"			<attribute name='action'>group.add_stripe</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Remove Stripe...</attribute>"
+		"			<attribute name='action'>group.remove_stripe</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Add Mirror...</attribute>"
+		"			<attribute name='action'>group.add_mirror</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Remove Mirror...</attribute>"
+		"			<attribute name='action'>group.remove_mirror</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Break Mirror...</attribute>"
+		"			<attribute name='action'>group.break_mirror</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Add RAID...</attribute>"
+		"			<attribute name='action'>group.add_raid</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Remove RAID...</attribute>"
+		"			<attribute name='action'>group.remove_raid</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>_Plugin</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Plugin X</attribute>"
+		"			<attribute name='action'>plugin.x</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Plugin Y</attribute>"
+		"			<attribute name='action'>plugin.y</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Configure plugins...</attribute>"
+		"			<attribute name='action'>plugin.configure</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"<submenu>"
+		"	<attribute name='label' translatable='yes'>_Help</attribute>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Contents</attribute>"
+		"			<attribute name='action'>help.contents</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>What's this?</attribute>"
+		"			<attribute name='action'>help.whats_this</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Report an issue</attribute>"
+		"			<attribute name='action'>help.report_issue</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>FAQ</attribute>"
+		"			<attribute name='action'>help.faq</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Community</attribute>"
+		"			<attribute name='action'>help.community</attribute>"
+		"		</item>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>Homepage</attribute>"
+		"			<attribute name='action'>help.homepage</attribute>"
+		"		</item>"
+		"	</section>"
+		"	<section>"
+		"		<item>"
+		"			<attribute name='label' translatable='yes'>About</attribute>"
+		"			<attribute name='action'>help.about</attribute>"
+		"		</item>"
+		"	</section>"
+		"</submenu>"
+		"</menu></interface>";
+
+	try {
+		m_refBuilder->add_from_string (ui_info);
+	} catch (const Glib::Error& ex) {
+		std::cerr << "building menus failed: " << ex.what();
+	}
+
+	//Get the menubar and add it to a container widget:
+	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object ("menu-example");
+	Glib::RefPtr<Gio::Menu> gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic (object);
+	if (!gmenu)
+		g_warning ("GMenu not found");
+
+	//Menubar:
+	menubar = Gtk::manage (new Gtk::MenuBar (gmenu));
+	box.pack_start (*menubar, Gtk::PACK_SHRINK);
+
+	//Create the toolbar and add it to a container widget:
+	toolbar = Gtk::manage (new Gtk::Toolbar());
+	Gtk::ToolButton* button = Gtk::manage (new Gtk::ToolButton());
+	button->set_icon_name ("document-new");
+	//We can't do this until we can break the ToolButton ABI: button->set_detailed_action_name ("example.new");
+	gtk_actionable_set_detailed_action_name (GTK_ACTIONABLE (button->gobj()), "example.newstandard");
+	toolbar->add (*button);
+
+	button = Gtk::manage (new Gtk::ToolButton());
+	button->set_icon_name ("application-exit");
+	//We can't do this until we can break the ToolButton ABI: button->set_detailed_action_name ("example.quit");
+	gtk_actionable_set_detailed_action_name (GTK_ACTIONABLE (button->gobj()), "example.quit");
+	toolbar->add (*button);
+
+	box.pack_start (*toolbar, Gtk::PACK_SHRINK);
+}
+
+
+/**
  * on_keypress
  */
 void
@@ -618,5 +1006,591 @@ Window::on_keypress (int modifier, int key)
 
 	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q'))
 		hide();
+}
+
+
+/**
+ * on_action_edit_cut
+ */
+void
+Window::on_action_edit_cut (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_copy
+ */
+void
+Window::on_action_edit_copy (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_paste
+ */
+void
+Window::on_action_edit_paste (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_paste_special
+ */
+void
+Window::on_action_edit_paste_special (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_undo
+ */
+void
+Window::on_action_edit_undo (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_redo
+ */
+void
+Window::on_action_edit_redo (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_clear_all_ops
+ */
+void
+Window::on_action_edit_clear_all_ops (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_apply_all_ops
+ */
+void
+Window::on_action_edit_apply_all_ops (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_find
+ */
+void
+Window::on_action_edit_find (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_find_next
+ */
+void
+Window::on_action_edit_find_next (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_find_previous
+ */
+void
+Window::on_action_edit_find_previous (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_edit_preferences
+ */
+void
+Window::on_action_edit_preferences (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_view_toolbar
+ */
+void
+Window::on_action_view_toolbar (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_view_graphics
+ */
+void
+Window::on_action_view_graphics (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_view_tree_view
+ */
+void
+Window::on_action_view_tree_view (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_view_status_bar
+ */
+void
+Window::on_action_view_status_bar (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_view_log
+ */
+void
+Window::on_action_view_log (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_view_pending_actions
+ */
+void
+Window::on_action_view_pending_actions (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_view_fullscreen
+ */
+void
+Window::on_action_view_fullscreen (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_view_refresh
+ */
+void
+Window::on_action_view_refresh (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_view_reload
+ */
+void
+Window::on_action_view_reload (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_view_theme
+ */
+void
+Window::on_action_view_theme (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_create_filesystem
+ */
+void
+Window::on_action_create_filesystem (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_create_partition
+ */
+void
+Window::on_action_create_partition (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_create_table
+ */
+void
+Window::on_action_create_table (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_create_encryption
+ */
+void
+Window::on_action_create_encryption (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_create_lvm_volume
+ */
+void
+Window::on_action_create_lvm_volume (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_create_subvolume
+ */
+void
+Window::on_action_create_subvolume (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_create_snapshot
+ */
+void
+Window::on_action_create_snapshot (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_delete_filesystem
+ */
+void
+Window::on_action_delete_filesystem (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_delete_partition
+ */
+void
+Window::on_action_delete_partition (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_delete_table
+ */
+void
+Window::on_action_delete_table (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_delete_encryption
+ */
+void
+Window::on_action_delete_encryption (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_delete_lvm_volume
+ */
+void
+Window::on_action_delete_lvm_volume (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_delete_subvolume
+ */
+void
+Window::on_action_delete_subvolume (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_delete_snapshot
+ */
+void
+Window::on_action_delete_snapshot (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_format_wipe
+ */
+void
+Window::on_action_format_wipe (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_format_filesystem
+ */
+void
+Window::on_action_format_filesystem (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_format_btrfs
+ */
+void
+Window::on_action_format_btrfs (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_format_partition_type
+ */
+void
+Window::on_action_format_partition_type (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_format_table
+ */
+void
+Window::on_action_format_table (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_manage_properties
+ */
+void
+Window::on_action_manage_properties (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_manage_label
+ */
+void
+Window::on_action_manage_label (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_manage_uuid
+ */
+void
+Window::on_action_manage_uuid (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_manage_flags
+ */
+void
+Window::on_action_manage_flags (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_manage_parameters
+ */
+void
+Window::on_action_manage_parameters (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_filesystem_check
+ */
+void
+Window::on_action_filesystem_check (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_filesystem_defragment
+ */
+void
+Window::on_action_filesystem_defragment (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_filesystem_rebalance
+ */
+void
+Window::on_action_filesystem_rebalance (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_filesystem_resize_move
+ */
+void
+Window::on_action_filesystem_resize_move (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_filesystem_mount
+ */
+void
+Window::on_action_filesystem_mount (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_filesystem_umount
+ */
+void
+Window::on_action_filesystem_umount (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_filesystem_swap_on
+ */
+void
+Window::on_action_filesystem_swap_on (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_filesystem_swap_off
+ */
+void
+Window::on_action_filesystem_swap_off (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_filesystem_usage
+ */
+void
+Window::on_action_filesystem_usage (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_group_resize
+ */
+void
+Window::on_action_group_resize (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_group_split
+ */
+void
+Window::on_action_group_split (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_group_merge
+ */
+void
+Window::on_action_group_merge (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_group_add_stripe
+ */
+void
+Window::on_action_group_add_stripe (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_group_remove_stripe
+ */
+void
+Window::on_action_group_remove_stripe (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_group_add_mirror
+ */
+void
+Window::on_action_group_add_mirror (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_group_remove_mirror
+ */
+void
+Window::on_action_group_remove_mirror (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_group_break_mirror
+ */
+void
+Window::on_action_group_break_mirror (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_group_add_raid
+ */
+void
+Window::on_action_group_add_raid (void)
+{
+	LOG_TRACE;
+}
+
+/**
+ * on_action_group_remove_raid
+ */
+void
+Window::on_action_group_remove_raid (void)
+{
+	LOG_TRACE;
 }
 

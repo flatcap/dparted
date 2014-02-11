@@ -1220,14 +1220,17 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 	Gtk::Menu*     index_menu = &m_Menu_Popup;
 	Gtk::MenuItem* index_item = nullptr;
 
+	actions.insert (actions.begin(), { "---",        true });
+	actions.insert (actions.begin(), { "Properties", true });
+
 	actions.push_back ({ "---",           true });
+	actions.push_back ({ "Cut",           true });
 	actions.push_back ({ "Copy",          true });
 	actions.push_back ({ "Paste",         true });
 	actions.push_back ({ "Paste Special", true });
-	actions.push_back ({ "---",           true });
-	actions.push_back ({ "Properties",    true });
 
 	for (auto a : actions) {
+		std::cout << a.name << std::endl;
 		size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
 			section.clear();
@@ -1302,6 +1305,7 @@ DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 	} else if (action.name == "Properties") {
 		gui_app->properties (gfx);
 	} else {
+		//XXX needs to be done in a separate thread in case it takes a white
 		c->perform_action (action);
 	}
 }
