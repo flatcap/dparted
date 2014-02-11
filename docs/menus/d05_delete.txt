@@ -1,5 +1,5 @@
 Delete
-object
+object.delete
 
 Filesystem
 Partition
@@ -11,5 +11,7 @@ Lvm Volume
 Subvolume
 Snapshot
 
+or an option on delete dialog
+some containers need to be paired
 luks
 

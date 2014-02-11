@@ -1,5 +1,5 @@
 Format
-object
+object.format
 
 Wipe...
 Filesystem...

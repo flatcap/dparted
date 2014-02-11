@@ -1,5 +1,5 @@
 Edit
-window
+window.edit
 
 Cut
 Copy
