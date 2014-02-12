@@ -39,6 +39,10 @@
 #include "properties_dialog.h"
 #include "option_group.h"
 
+#include "dot_visitor.h"
+#include "dump_visitor.h"
+#include "prop_visitor.h"
+
 GuiAppPtr gui_app;
 
 /**
@@ -241,6 +245,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	} catch (const Glib::Error& ex) {
 		std::cerr << "Exception parsing command-line: " << ex.what() << std::endl;
 		std::cerr << context.get_help() << std::endl;
+		//XXX if running, don't kill the app
 		return EXIT_FAILURE;
 	}
 
@@ -283,6 +288,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	bool running = !!window;
 
 	if (running && group.quit) {
+		//XXX need to ASK the window to close => WindowPtr
 		delete window;
 		window = nullptr;
 		running = false;
@@ -299,6 +305,12 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 			}
 		}
 
+		//XXX temporaray defaults
+		gui_app->set_config ("config/dparted.conf");
+
+		//XXX temporaray defaults
+		gui_app->set_theme  ("config/theme.conf");
+
 		if (group.theme.size()) {
 			std::cout << "theme:" << std::endl;
 			for (auto t : group.theme) {
@@ -312,6 +324,8 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		}
 	}
 
+	ContainerPtr top_level;
+
 	if (disks.size()) {
 		std::cout << "scan only: ";
 		for (auto d : disks) {
@@ -321,28 +335,49 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 			}
 		}
 		std::cout << std::endl;
+		top_level = main_app->scan (disks);
 	} else {
-		if (!running) {
-			std::cout << "scan all disks" << std::endl;
-			Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
-		}
-	}
-
-	if (group.list) {
-		std::cout << "list objects" << std::endl;
-	}
-
-	if (group.properties) {
-		std::cout << "list properties" << std::endl;
-	}
-
-	if (group.dot) {
-		if (group.separate) {
-			std::cout << "dot (separate)" << std::endl;
+		if (running) {
+			top_level = main_app->get_top_level();	// Default to what's there
 		} else {
-			std::cout << "dot (single)" << std::endl;
+			//std::cout << "scan all disks" << std::endl;
+			//Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
+			top_level = main_app->scan (disks);
 		}
 	}
+
+	if (group.list && top_level) {
+		log_info ("------------------------------------------------------------\n");
+		DumpVisitor dv;
+		top_level->accept (dv);
+		dv.dump();
+		log_info ("------------------------------------------------------------\n");
+	}
+
+	if (group.properties && top_level) {
+		log_info ("------------------------------------------------------------\n");
+		PropVisitor pv;
+		top_level->accept (pv);
+		pv.dump();
+		log_info ("------------------------------------------------------------\n");
+	}
+
+	if (group.dot && top_level) {
+		if (group.separate) {
+			for (auto c : top_level->get_children()) {
+				DotVisitor dv;
+				c->accept (dv);
+				dv.run_dotty();
+			}
+		} else {
+			DotVisitor dv;
+			for (auto c : top_level->get_children()) {
+				c->accept (dv);
+			}
+			dv.run_dotty();
+		}
+	}
+
 
 	show_window();
 

@@ -253,6 +253,9 @@ Window::set_geometry (int x, int y, int w, int h)
 	move (x, y);
 	resize (w, h);
 
+	//printf ("pg = %d\n", parse_geometry ("800x400+200+50"));
+	//printf ("pg = %d\n", parse_geometry ("800x400-0-0"));
+
 	//XXX do something smart with negative x,y?
 #if 0
 	int width = 0;

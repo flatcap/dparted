@@ -52,6 +52,8 @@ public:
 	ContainerPtr scan (const std::vector<std::string>& files);
 	ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
+	ContainerPtr get_top_level (void) { return top_level; } //XXX tmp
+
 protected:
 	ContainerPtr top_level;
 
