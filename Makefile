@@ -37,7 +37,7 @@ LIB_SRC	+= app.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp f
 # GUI - Graphical objects
 GUI_SRC	+= window.cpp drawing_area.cpp gfx_container.cpp tree_view.cpp theme.cpp gui_app.cpp icon_manager.cpp \
 	   main.cpp default_theme.cpp properties_dialog.cpp base_drawing_area.cpp prop_drawing_area.cpp \
-	   password_dialog.cpp
+	   password_dialog.cpp option_group.cpp
 
 SRC	= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
 HDR	= $(SRC:%.cpp=%.h)

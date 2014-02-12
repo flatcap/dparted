@@ -37,6 +37,7 @@
 #include "log.h"
 #include "log_trace.h"
 #include "properties_dialog.h"
+#include "option_group.h"
 
 GuiAppPtr gui_app;
 
@@ -44,11 +45,10 @@ GuiAppPtr gui_app;
  * GuiApp
  */
 GuiApp::GuiApp() :
-	Gtk::Application ("org.flatcap.test.area", Gio::APPLICATION_HANDLES_OPEN /*| Gio::APPLICATION_HANDLES_COMMAND_LINE*/)
+	Gtk::Application ("org.flatcap.test.area", Gio::ApplicationFlags (Gio::APPLICATION_HANDLES_COMMAND_LINE))
 {
 	//LOG_TRACE;
 	Glib::set_application_name ("dparted");
-	Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
 }
 
 /**
@@ -65,6 +65,7 @@ GuiApp::~GuiApp()
 bool
 GuiApp::my_idle (void)
 {
+	//LOG_TRACE;
 	//XXX check that dialog's object hasn't gone away
 	if (false && passwd) {
 		passwd->set_title ("Password for X");
@@ -133,12 +134,6 @@ GuiApp::on_startup (void)
 	menu->append ("_Quit",        "app.quit");
 
 	set_app_menu (menu);
-#if 0
-	Gio::ActionMap*                  m = dynamic_cast<Gio::ActionMap*> (this);
-	Glib::RefPtr<Gio::Action>        a = m->lookup_action ("banana");
-	Glib::RefPtr<Gio::SimpleAction>  s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(a);
-	s->set_enabled (false);
-#endif
 }
 
 /**
@@ -149,10 +144,6 @@ GuiApp::on_activate()
 {
 	//LOG_TRACE;
 	Gtk::Application::on_activate();
-
-	Window* dp = new Window();
-	add_window (*dp);	// App now owns Window
-	dp->show();
 
 #if 0
 	// make all windows visible
@@ -185,6 +176,35 @@ GuiApp::on_window_removed (Gtk::Window* window)
 
 
 /**
+ * create_window
+ */
+void
+GuiApp::create_window (void)
+{
+	//LOG_TRACE;
+
+	if (!window) {
+		window = new Window();
+		add_window (*window);	// App now owns Window
+	}
+}
+
+/**
+ * show_window
+ */
+void
+GuiApp::show_window (void)
+{
+	//LOG_TRACE;
+
+	if (window) {
+		window->show();
+		window->present();
+	}
+}
+
+
+/**
  * on_open
  */
 void
@@ -207,7 +227,127 @@ int
 GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
 {
 	//LOG_TRACE;
-	return Gtk::Application::on_command_line (command_line);
+	int argc = 0;
+	char** argv = command_line->get_arguments (argc);
+
+	Glib::OptionContext context;
+	OptionGroup group;
+	context.set_main_group (group);
+	context.set_summary ("My summary text");
+	context.set_description ("My descriptive text");
+
+	try {
+		context.parse (argc, argv);
+	} catch (const Glib::Error& ex) {
+		std::cerr << "Exception parsing command-line: " << ex.what() << std::endl;
+		std::cerr << context.get_help() << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	std::vector<std::string> disks;			// Mop up any remaining args
+	for (; argc > 1; argc--, argv++) {
+		disks.push_back (argv[1]);
+	}
+
+#if 0
+	std::cout << "values: " << std::endl;
+	std::cout << "\tapp        = " << group.app        << std::endl;
+	std::cout << "\tlist       = " << group.list       << std::endl;
+	std::cout << "\tdot        = " << group.dot        << std::endl;
+	std::cout << "\tseparate   = " << group.separate   << std::endl;
+	std::cout << "\tproperties = " << group.properties << std::endl;
+	std::cout << "\tquit       = " << group.quit       << std::endl;
+	std::cout << "\tx          = " << group.x          << std::endl;
+	std::cout << "\ty          = " << group.y          << std::endl;
+	std::cout << "\tw          = " << group.w          << std::endl;
+	std::cout << "\th          = " << group.h          << std::endl;
+#endif
+
+	if (!group.app && !group.list && !group.properties && !group.dot && !group.quit) {
+		group.app = true;
+	}
+
+	//std::cout << "validate options" << std::endl;
+
+	if (group.separate && !group.dot) {
+		std::cout << "separate without dot" << std::endl;
+	}
+
+	if (!group.app) {
+		if (group.theme.size())
+			std::cout << "theme without app" << std::endl;
+		if ((group.x != -1) || (group.y != -1) || (group.w != -1) || (group.h != -1))
+			std::cout << "coords without app" << std::endl;
+	}
+
+	bool running = !!window;
+
+	if (running && group.quit) {
+		delete window;
+		window = nullptr;
+		running = false;
+	}
+
+	if (group.app) {
+		create_window();
+
+		if (group.config.size()) {
+			std::cout << "config:" << std::endl;
+			for (auto c : group.config) {
+				std::cout << '\t' << c << std::endl;
+				window->load_config (c);
+			}
+		}
+
+		if (group.theme.size()) {
+			std::cout << "theme:" << std::endl;
+			for (auto t : group.theme) {
+				std::cout << '\t' << t << std::endl;
+				window->load_theme (t);
+			}
+		}
+
+		if ((group.x > -1) || (group.y > -1) || (group.w > -1) || (group.h > -1)) {
+			window->set_geometry (group.x, group.y, group.w, group.h);
+		}
+	}
+
+	if (disks.size()) {
+		std::cout << "scan only: ";
+		for (auto d : disks) {
+			std::cout << "\"" << d << "\" ";
+			if (window) {
+				window->load_disk (d);
+			}
+		}
+		std::cout << std::endl;
+	} else {
+		if (!running) {
+			std::cout << "scan all disks" << std::endl;
+			Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
+		}
+	}
+
+	if (group.list) {
+		std::cout << "list objects" << std::endl;
+	}
+
+	if (group.properties) {
+		std::cout << "list properties" << std::endl;
+	}
+
+	if (group.dot) {
+		if (group.separate) {
+			std::cout << "dot (separate)" << std::endl;
+		} else {
+			std::cout << "dot (single)" << std::endl;
+		}
+	}
+
+	show_window();
+
+	return EXIT_SUCCESS;
+
 }
 
 

@@ -49,6 +49,12 @@ public:
 	bool set_focus (GfxContainerPtr cont);
 	GfxContainerPtr get_focus (void);
 
+	void load_config (const std::string& filename);
+	void load_theme  (const std::string& filename);
+	void load_disk   (const std::string& filename);
+
+	void set_geometry (int x, int y, int w, int h);
+
 protected:
 	Gtk::Box		outer_box;	//XXX dynamically create the ones we don't care about?
 	Gtk::MenuBar*		menubar = nullptr;	//do not delete

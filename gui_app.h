@@ -27,6 +27,7 @@
 #include "theme.h"
 #include "message.h"
 #include "password_dialog.h"
+#include "window.h"
 
 class GuiApp;
 
@@ -72,6 +73,9 @@ protected:
 	virtual void on_open         (const type_vec_files& files, const Glib::ustring& hint);
 	virtual int  on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line);
 
+	void create_window (void);
+	void show_window   (void);
+
 	void menu_preferences (void);
 	void menu_help        (void);
 	void menu_about       (void);
@@ -83,6 +87,7 @@ protected:
 	std::vector<QuestionPtr> vq;
 	PasswordDialogPtr passwd;
 	ThemePtr theme;
+	Window* window = nullptr;	// do not delete
 };
 
 

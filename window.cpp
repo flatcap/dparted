@@ -35,9 +35,8 @@ Window::Window()
 {
 	set_title ("DParted");
 
-	// set_size_request (1360, 70*3);
+	//XXX Arbitrary minimum requirement
 	set_size_request (800, 600);
-	// set_default_size (1439, 800);
 
 	scrolledwindow.set_hexpand (true);
 	scrolledwindow.set_vexpand (true);
@@ -207,17 +206,60 @@ Window::set_data (GfxContainerPtr c)
 {
 	treeview.init_treeview(c);
 	drawingarea.set_data(c);
+}
 
-	//std::cout << m_c->children.size() << " children\n";
-	//set_size_request (1362, 77*count+6); //RAR
 
+/**
+ * load_config
+ */
+void
+Window::load_config (const std::string& filename)
+{
+	LOG_TRACE;
+}
+
+/**
+ * load_theme
+ */
+void
+Window::load_theme (const std::string& filename)
+{
+	LOG_TRACE;
+}
+
+/**
+ * load_disk
+ */
+void
+Window::load_disk (const std::string& filename)
+{
+	LOG_TRACE;
+}
+
+/**
+ * set_geometry
+ */
+void
+Window::set_geometry (int x, int y, int w, int h)
+{
+	//LOG_TRACE;
+
+	x = std::max (x, 0);
+	y = std::max (y, 0);
+
+	w = std::max (w, 100);
+	h = std::max (h, 100);
+
+	move (x, y);
+	resize (w, h);
+
+	//XXX do something smart with negative x,y?
+#if 0
 	int width = 0;
 	int height = 0;
 	get_size (width, height);
-	//log_info ("width = %d, height = %d\n", width, height);
 	move (1920+1366-width, 768-height);
-	//move (1920-width, 0);
-	//move (1366-width, 0);
+#endif
 }
 
 
@@ -535,6 +577,11 @@ Window::init_actions (void)
 	ag_help->add_action("homepage",     sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
 	ag_help->add_action("about",        sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
 	insert_action_group ("help", ag_help);
+
+#if 0
+	Glib::RefPtr<Gio::SimpleAction>  s =
+	s->set_enabled (false);
+#endif
 }
 
 /**

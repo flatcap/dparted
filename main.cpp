@@ -17,17 +17,22 @@
  */
 
 #include <iostream>
+#include <memory>
+#if 0
 #include <string>
 #include <vector>
+#endif
 
-#include "app.h"
 #include "gui_app.h"
+#include "log.h"
 
+#if 0
 #include "dot_visitor.h"
 #include "dump_visitor.h"
 #include "prop_visitor.h"
-#include "log.h"
+#endif
 
+#if 0
 /**
  * main
  */
@@ -137,4 +142,26 @@ main (int argc, char* argv[])
 	return 0;
 }
 
+#endif
+
+/**
+ * main
+ */
+int
+main (int argc, char *argv[])
+{
+	log_init ("/dev/stdout");
+
+	gui_app = std::make_shared<GuiApp>();
+	main_app = gui_app;
+
+	//XXX temporaray defaults
+	gui_app->set_config ("config/dparted.conf");
+	gui_app->set_theme  ("config/theme.conf");
+
+	int status = gui_app->run (argc, argv);
+
+	log_close();
+	return status;
+}
 
