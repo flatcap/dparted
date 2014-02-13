@@ -42,6 +42,8 @@ public:
 
 	static FilesystemPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 public:
 	//properties
 

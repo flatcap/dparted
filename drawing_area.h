@@ -50,7 +50,7 @@ public:
 	bool get_cont_recurse (void);
 
 	bool on_keypress (GdkEventKey* ev);
-	void set_focus (GfxContainerPtr& c);
+	void set_focus (GfxContainerPtr& gfx);
 
 protected:
 	bool cont_recurse = true;

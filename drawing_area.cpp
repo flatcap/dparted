@@ -724,12 +724,37 @@ DrawingArea::get_focus (int x, int y)
  * set_focus
  */
 void
-DrawingArea::set_focus (GfxContainerPtr& c)
+DrawingArea::set_focus (GfxContainerPtr& gfx)
 {
-	if (!c)
+	if (!gfx)
 		return;
 
-	//std::cout << "DrawingArea " << c << std::endl;
+	std::cout << gfx << std::endl;
+
+	ContainerPtr c = gfx->get_container();
+	if (!c) {
+		std::cout << "No focus" << std::endl;
+		return;
+	}
+
+	std::vector<Action> actions = c->get_actions();
+	if (actions.empty()) {
+		//std::cout << "No actions" << std::endl;
+		return;
+	}
+
+	//std::cout << "Actions:" << std::endl;
+	for (auto a : actions) {
+		int colour;
+		if (a.enabled)
+			colour = 32;
+		else
+			colour = 31;
+
+		std::cout << "\t" << "\033[01;" << std::to_string (colour) << "m" << a.name << "\033[0m" << std::endl;
+	}
+	std::cout << std::endl;
+
 	get_window()->invalidate (false);
 }
 
@@ -1231,7 +1256,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 	actions.push_back ({ "Paste Special", true });
 
 	for (auto a : actions) {
-		std::cout << a.name << std::endl;
+		//std::cout << a.name << std::endl;
 		size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
 			section.clear();

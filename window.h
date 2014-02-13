@@ -66,6 +66,8 @@ protected:
 	TreeView		treeview;
 	Gtk::Statusbar		statusbar;
 
+	virtual bool on_delete_event (GdkEventAny* event);
+
 	// MENU
 	void init_menubar (Gtk::Box& box);
 	Glib::RefPtr<Gtk::Builder> m_refBuilder;
@@ -104,71 +106,8 @@ protected:
 	GfxContainerPtr focus;
 	std::vector<GfxContainerPtr> selection;
 
-	void on_action_edit_cut               (void);
-	void on_action_edit_copy              (void);
-	void on_action_edit_paste             (void);
-	void on_action_edit_paste_special     (void);
-	void on_action_edit_undo              (void);
-	void on_action_edit_redo              (void);
-	void on_action_edit_clear_all_ops     (void);
-	void on_action_edit_apply_all_ops     (void);
-	void on_action_edit_find              (void);
-	void on_action_edit_find_next         (void);
-	void on_action_edit_find_previous     (void);
-	void on_action_edit_preferences       (void);
-	void on_action_view_toolbar           (void);
-	void on_action_view_graphics          (void);
-	void on_action_view_tree_view         (void);
-	void on_action_view_status_bar        (void);
-	void on_action_view_log               (void);
-	void on_action_view_pending_actions   (void);
-	void on_action_view_fullscreen        (void);
-	void on_action_view_refresh           (void);
-	void on_action_view_reload            (void);
-	void on_action_view_theme             (void);
-	void on_action_create_filesystem      (void);
-	void on_action_create_partition       (void);
-	void on_action_create_table           (void);
-	void on_action_create_encryption      (void);
-	void on_action_create_lvm_volume      (void);
-	void on_action_create_subvolume       (void);
-	void on_action_create_snapshot        (void);
-	void on_action_delete_filesystem      (void);
-	void on_action_delete_partition       (void);
-	void on_action_delete_table           (void);
-	void on_action_delete_encryption      (void);
-	void on_action_delete_lvm_volume      (void);
-	void on_action_delete_subvolume       (void);
-	void on_action_delete_snapshot        (void);
-	void on_action_format_wipe            (void);
-	void on_action_format_filesystem      (void);
-	void on_action_format_btrfs           (void);
-	void on_action_format_partition_type  (void);
-	void on_action_format_table           (void);
-	void on_action_manage_properties      (void);
-	void on_action_manage_label           (void);
-	void on_action_manage_uuid            (void);
-	void on_action_manage_flags           (void);
-	void on_action_manage_parameters      (void);
-	void on_action_filesystem_check       (void);
-	void on_action_filesystem_defragment  (void);
-	void on_action_filesystem_rebalance   (void);
-	void on_action_filesystem_resize_move (void);
-	void on_action_filesystem_mount       (void);
-	void on_action_filesystem_umount      (void);
-	void on_action_filesystem_swap_on     (void);
-	void on_action_filesystem_swap_off    (void);
-	void on_action_filesystem_usage       (void);
-	void on_action_group_resize           (void);
-	void on_action_group_split            (void);
-	void on_action_group_merge            (void);
-	void on_action_group_add_stripe       (void);
-	void on_action_group_remove_stripe    (void);
-	void on_action_group_add_mirror       (void);
-	void on_action_group_remove_mirror    (void);
-	void on_action_group_break_mirror     (void);
-	void on_action_group_add_raid         (void);
-	void on_action_group_remove_raid      (void);
+	void insert_general_actions (std::string section, const std::vector<const char*>& commands);
+	void on_action_general (std::string section, std::string name);
 
 private:
 };

@@ -141,3 +141,31 @@ Filesystem::delete_filesystem (void)
 }
 
 #endif
+
+/**
+ * get_actions
+ */
+std::vector<Action>
+Filesystem::get_actions (void)
+{
+#if 0
+	std::vector<Action> cont_actions = {
+		{ "Create/Filesystem",         true },
+		{ "Create/Partition",          false }
+	};
+	return cont_actions;
+#endif
+	return Container::get_actions();
+}
+
+/**
+ * perform_action
+ */
+bool
+Filesystem::perform_action (Action action)
+{
+	std::cout << "Perform: " << action.name << std::endl;
+	return true;
+}
+
+

@@ -36,7 +36,8 @@ Window::Window()
 	set_title ("DParted");
 
 	//XXX Arbitrary minimum requirement
-	set_size_request (800, 600);
+	//set_size_request (800, 600);
+	resize (800, 600);
 
 	scrolledwindow.set_hexpand (true);
 	scrolledwindow.set_vexpand (true);
@@ -79,10 +80,10 @@ Window::Window()
 
 	//-------------------------------------
 
-	bool tb = true;
+	bool tb = false;
 	bool gx = true;
-	bool tv = true;
-	bool sb = true;
+	bool tv = false;
+	bool sb = false;
 	ConfigFilePtr cfg = gui_app->get_config();
 	if (cfg) {
 		try { tb = cfg->get_bool ("display.tool_bar");   } catch (const char *msg) { std::cout << "notb\n"; }
@@ -130,6 +131,9 @@ void
 Window::my_show (void)
 {
 	//LOG_TRACE;
+	//XXX Arbitrary minimum requirement
+	//set_size_request (800, 600);
+	resize (800, 600);
 }
 
 /**
@@ -147,6 +151,17 @@ Window::my_idle (void)
 	set_data (m_g);
 #endif
 
+	return false;
+}
+
+
+/**
+ * on_delete_event
+ */
+bool
+Window::on_delete_event (GdkEventAny* event)
+{
+	set_show_menubar(false);
 	return false;
 }
 
@@ -465,125 +480,46 @@ Window::init_shortcuts (void)
 }
 
 /**
+ * init_general_actions
+ */
+void
+Window::insert_general_actions (std::string section, const std::vector<const char*>& commands)
+{
+	auto group = Gio::SimpleActionGroup::create();
+	for (auto c : commands) {
+		group->add_action(c, sigc::bind<std::string,std::string> (sigc::mem_fun (*this, &Window::on_action_general), section, c));
+	}
+	insert_action_group (section, group);
+}
+
+/**
  * init_actions
  */
 void
 Window::init_actions (void)
 {
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_file = Gio::SimpleActionGroup::create();
-	ag_file->add_action("open",         sigc::mem_fun(*gui_app, &GuiApp::on_action_file_open));
-	ag_file->add_action("close",        sigc::mem_fun(*gui_app, &GuiApp::on_action_file_close));
-	ag_file->add_action("quit",         sigc::mem_fun(*gui_app, &GuiApp::on_action_file_quit));
-	insert_action_group ("file", ag_file);
+	auto group = Gio::SimpleActionGroup::create();
+	group->add_action("open",  sigc::mem_fun(*gui_app, &GuiApp::on_action_file_open));
+	group->add_action("close", sigc::mem_fun(*gui_app, &GuiApp::on_action_file_close));
+	group->add_action("quit",  sigc::mem_fun(*gui_app, &GuiApp::on_action_file_quit));
+	insert_action_group ("file", group);
 
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_edit = Gio::SimpleActionGroup::create();
-	ag_edit->add_action("cut",           sigc::mem_fun(*this, &Window::on_action_edit_cut));
-	ag_edit->add_action("copy",          sigc::mem_fun(*this, &Window::on_action_edit_copy));
-	ag_edit->add_action("paste",         sigc::mem_fun(*this, &Window::on_action_edit_paste));
-	ag_edit->add_action("paste_special", sigc::mem_fun(*this, &Window::on_action_edit_paste_special));
-	ag_edit->add_action("undo",          sigc::mem_fun(*this, &Window::on_action_edit_undo));
-	ag_edit->add_action("redo",          sigc::mem_fun(*this, &Window::on_action_edit_redo));
-	ag_edit->add_action("clear_all_ops", sigc::mem_fun(*this, &Window::on_action_edit_clear_all_ops));
-	ag_edit->add_action("apply_all_ops", sigc::mem_fun(*this, &Window::on_action_edit_apply_all_ops));
-	ag_edit->add_action("find",          sigc::mem_fun(*this, &Window::on_action_edit_find));
-	ag_edit->add_action("find_next",     sigc::mem_fun(*this, &Window::on_action_edit_find_next));
-	ag_edit->add_action("find_previous", sigc::mem_fun(*this, &Window::on_action_edit_find_previous));
-	ag_edit->add_action("preferences",   sigc::mem_fun(*this, &Window::on_action_edit_preferences));
-	insert_action_group ("edit", ag_edit);
+	insert_general_actions ("edit",       { "cut", "copy", "paste", "paste_special", "undo", "redo", "clear_all_ops", "apply_all_ops", "find", "find_next", "find_previous", "preferences" });
+	insert_general_actions ("view",       { "toolbar", "graphics", "tree_view", "status_bar", "log", "pending_actions", "fullscreen", "refresh", "reload", "theme" });
+	insert_general_actions ("create",     { "filesystem", "partition", "table", "encryption", "lvm_volume", "subvolume", "snapshot" });
+	insert_general_actions ("delete",     { "filesystem", "partition", "table", "encryption", "lvm_volume", "subvolume", "snapshot" });
+	insert_general_actions ("format",     { "wipe", "filesystem", "btrfs", "partition_type", "table" });
+	insert_general_actions ("manage",     { "properties", "label", "uuid", "flags", "parameters" });
+	insert_general_actions ("filesystem", { "check", "defragment", "rebalance", "resize_move", "mount", "umount", "swap_on", "swap_off", "usage" });
+	insert_general_actions ("group",      { "resize", "split", "merge", "add_stripe", "remove_stripe", "add_mirror", "remove_mirror", "break_mirror", "add_raid", "remove_raid" });
+	insert_general_actions ("plugin",     { "x", "y", "configure" });
+	insert_general_actions ("help",       { "contents", "whats_this", "report_issue", "faq", "community", "homepage", "about" });
 
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_view = Gio::SimpleActionGroup::create();
-	ag_view->add_action("toolbar",         sigc::mem_fun(*this, &Window::on_action_view_toolbar));
-	ag_view->add_action("graphics",        sigc::mem_fun(*this, &Window::on_action_view_graphics));
-	ag_view->add_action("tree_view",       sigc::mem_fun(*this, &Window::on_action_view_tree_view));
-	ag_view->add_action("status_bar",      sigc::mem_fun(*this, &Window::on_action_view_status_bar));
-	ag_view->add_action("log",             sigc::mem_fun(*this, &Window::on_action_view_log));
-	ag_view->add_action("pending_actions", sigc::mem_fun(*this, &Window::on_action_view_pending_actions));
-	ag_view->add_action("fullscreen",      sigc::mem_fun(*this, &Window::on_action_view_fullscreen));
-	ag_view->add_action("refresh",         sigc::mem_fun(*this, &Window::on_action_view_refresh));
-	ag_view->add_action("reload",          sigc::mem_fun(*this, &Window::on_action_view_reload));
-	ag_view->add_action("theme",           sigc::mem_fun(*this, &Window::on_action_view_theme));
-	insert_action_group ("view", ag_view);
-
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_create = Gio::SimpleActionGroup::create();
-	ag_create->add_action("filesystem", sigc::mem_fun(*this, &Window::on_action_create_filesystem));
-	ag_create->add_action("partition",  sigc::mem_fun(*this, &Window::on_action_create_partition));
-	ag_create->add_action("table",      sigc::mem_fun(*this, &Window::on_action_create_table));
-	ag_create->add_action("encryption", sigc::mem_fun(*this, &Window::on_action_create_encryption));
-	ag_create->add_action("lvm_volume", sigc::mem_fun(*this, &Window::on_action_create_lvm_volume));
-	ag_create->add_action("subvolume",  sigc::mem_fun(*this, &Window::on_action_create_subvolume));
-	ag_create->add_action("snapshot",   sigc::mem_fun(*this, &Window::on_action_create_snapshot));
-	insert_action_group ("create", ag_create);
-
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_delete = Gio::SimpleActionGroup::create();
-	ag_delete->add_action("filesystem", sigc::mem_fun(*this, &Window::on_action_delete_filesystem));
-	ag_delete->add_action("partition",  sigc::mem_fun(*this, &Window::on_action_delete_partition));
-	ag_delete->add_action("table",      sigc::mem_fun(*this, &Window::on_action_delete_table));
-	ag_delete->add_action("encryption", sigc::mem_fun(*this, &Window::on_action_delete_encryption));
-	ag_delete->add_action("lvm_volume", sigc::mem_fun(*this, &Window::on_action_delete_lvm_volume));
-	ag_delete->add_action("subvolume",  sigc::mem_fun(*this, &Window::on_action_delete_subvolume));
-	ag_delete->add_action("snapshot",   sigc::mem_fun(*this, &Window::on_action_delete_snapshot));
-	insert_action_group ("delete", ag_delete);
-
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_format = Gio::SimpleActionGroup::create();
-	ag_format->add_action("wipe",           sigc::mem_fun(*this, &Window::on_action_format_wipe));
-	ag_format->add_action("filesystem",     sigc::mem_fun(*this, &Window::on_action_format_filesystem));
-	ag_format->add_action("btrfs",          sigc::mem_fun(*this, &Window::on_action_format_btrfs));
-	ag_format->add_action("partition_type", sigc::mem_fun(*this, &Window::on_action_format_partition_type));
-	ag_format->add_action("table",          sigc::mem_fun(*this, &Window::on_action_format_table));
-	insert_action_group ("format", ag_format);
-
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_manage = Gio::SimpleActionGroup::create();
-	ag_manage->add_action("properties", sigc::mem_fun(*this, &Window::on_action_manage_properties));
-	ag_manage->add_action("label",      sigc::mem_fun(*this, &Window::on_action_manage_label));
-	ag_manage->add_action("uuid",       sigc::mem_fun(*this, &Window::on_action_manage_uuid));
-	ag_manage->add_action("flags",      sigc::mem_fun(*this, &Window::on_action_manage_flags));
-	ag_manage->add_action("parameters", sigc::mem_fun(*this, &Window::on_action_manage_parameters));
-	insert_action_group ("manage", ag_manage);
-
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_filesystem = Gio::SimpleActionGroup::create();
-	ag_filesystem->add_action("check",       sigc::mem_fun(*this, &Window::on_action_filesystem_check));
-	ag_filesystem->add_action("defragment",  sigc::mem_fun(*this, &Window::on_action_filesystem_defragment));
-	ag_filesystem->add_action("rebalance",   sigc::mem_fun(*this, &Window::on_action_filesystem_rebalance));
-	ag_filesystem->add_action("resize_move", sigc::mem_fun(*this, &Window::on_action_filesystem_resize_move));
-	ag_filesystem->add_action("mount",       sigc::mem_fun(*this, &Window::on_action_filesystem_mount));
-	ag_filesystem->add_action("umount",      sigc::mem_fun(*this, &Window::on_action_filesystem_umount));
-	ag_filesystem->add_action("swap_on",     sigc::mem_fun(*this, &Window::on_action_filesystem_swap_on));
-	ag_filesystem->add_action("swap_off",    sigc::mem_fun(*this, &Window::on_action_filesystem_swap_off));
-	ag_filesystem->add_action("usage",       sigc::mem_fun(*this, &Window::on_action_filesystem_usage));
-	insert_action_group ("filesystem", ag_filesystem);
-
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_group = Gio::SimpleActionGroup::create();
-	ag_group->add_action("resize",        sigc::mem_fun(*this, &Window::on_action_group_resize));
-	ag_group->add_action("split",         sigc::mem_fun(*this, &Window::on_action_group_split));
-	ag_group->add_action("merge",         sigc::mem_fun(*this, &Window::on_action_group_merge));
-	ag_group->add_action("add_stripe",    sigc::mem_fun(*this, &Window::on_action_group_add_stripe));
-	ag_group->add_action("remove_stripe", sigc::mem_fun(*this, &Window::on_action_group_remove_stripe));
-	ag_group->add_action("add_mirror",    sigc::mem_fun(*this, &Window::on_action_group_add_mirror));
-	ag_group->add_action("remove_mirror", sigc::mem_fun(*this, &Window::on_action_group_remove_mirror));
-	ag_group->add_action("break_mirror",  sigc::mem_fun(*this, &Window::on_action_group_break_mirror));
-	ag_group->add_action("add_raid",      sigc::mem_fun(*this, &Window::on_action_group_add_raid));
-	ag_group->add_action("remove_raid",   sigc::mem_fun(*this, &Window::on_action_group_remove_raid));
-	insert_action_group ("group", ag_group);
-
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_plugin = Gio::SimpleActionGroup::create();
-	ag_plugin->add_action("x",          sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
-	ag_plugin->add_action("y",          sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
-	ag_plugin->add_action("configure",  sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
-	insert_action_group ("plugin", ag_plugin);
-
-	Glib::RefPtr<Gio::SimpleActionGroup> ag_help = Gio::SimpleActionGroup::create();
-	ag_help->add_action("contents",     sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	ag_help->add_action("whats_this",   sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	ag_help->add_action("report_issue", sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	ag_help->add_action("faq",          sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	ag_help->add_action("community",    sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	ag_help->add_action("homepage",     sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	ag_help->add_action("about",        sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	insert_action_group ("help", ag_help);
-
-#if 0
-	Glib::RefPtr<Gio::SimpleAction>  s =
-	s->set_enabled (false);
+#if 1
+	Glib::RefPtr<Gio::Action> a = lookup_action ("filesystem");
+	Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic (a);
+	//s->set_enabled (false);
+	std::cout << "s = " << s << std::endl;
 #endif
 }
 
@@ -788,587 +724,11 @@ Window::on_keypress (int modifier, int key)
 
 
 /**
- * on_action_edit_cut
+ * on_action_general
  */
 void
-Window::on_action_edit_cut (void)
+Window::on_action_general (std::string section, std::string name)
 {
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_copy
- */
-void
-Window::on_action_edit_copy (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_paste
- */
-void
-Window::on_action_edit_paste (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_paste_special
- */
-void
-Window::on_action_edit_paste_special (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_undo
- */
-void
-Window::on_action_edit_undo (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_redo
- */
-void
-Window::on_action_edit_redo (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_clear_all_ops
- */
-void
-Window::on_action_edit_clear_all_ops (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_apply_all_ops
- */
-void
-Window::on_action_edit_apply_all_ops (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_find
- */
-void
-Window::on_action_edit_find (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_find_next
- */
-void
-Window::on_action_edit_find_next (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_find_previous
- */
-void
-Window::on_action_edit_find_previous (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_edit_preferences
- */
-void
-Window::on_action_edit_preferences (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_view_toolbar
- */
-void
-Window::on_action_view_toolbar (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_view_graphics
- */
-void
-Window::on_action_view_graphics (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_view_tree_view
- */
-void
-Window::on_action_view_tree_view (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_view_status_bar
- */
-void
-Window::on_action_view_status_bar (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_view_log
- */
-void
-Window::on_action_view_log (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_view_pending_actions
- */
-void
-Window::on_action_view_pending_actions (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_view_fullscreen
- */
-void
-Window::on_action_view_fullscreen (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_view_refresh
- */
-void
-Window::on_action_view_refresh (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_view_reload
- */
-void
-Window::on_action_view_reload (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_view_theme
- */
-void
-Window::on_action_view_theme (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_create_filesystem
- */
-void
-Window::on_action_create_filesystem (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_create_partition
- */
-void
-Window::on_action_create_partition (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_create_table
- */
-void
-Window::on_action_create_table (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_create_encryption
- */
-void
-Window::on_action_create_encryption (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_create_lvm_volume
- */
-void
-Window::on_action_create_lvm_volume (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_create_subvolume
- */
-void
-Window::on_action_create_subvolume (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_create_snapshot
- */
-void
-Window::on_action_create_snapshot (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_delete_filesystem
- */
-void
-Window::on_action_delete_filesystem (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_delete_partition
- */
-void
-Window::on_action_delete_partition (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_delete_table
- */
-void
-Window::on_action_delete_table (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_delete_encryption
- */
-void
-Window::on_action_delete_encryption (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_delete_lvm_volume
- */
-void
-Window::on_action_delete_lvm_volume (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_delete_subvolume
- */
-void
-Window::on_action_delete_subvolume (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_delete_snapshot
- */
-void
-Window::on_action_delete_snapshot (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_format_wipe
- */
-void
-Window::on_action_format_wipe (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_format_filesystem
- */
-void
-Window::on_action_format_filesystem (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_format_btrfs
- */
-void
-Window::on_action_format_btrfs (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_format_partition_type
- */
-void
-Window::on_action_format_partition_type (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_format_table
- */
-void
-Window::on_action_format_table (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_manage_properties
- */
-void
-Window::on_action_manage_properties (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_manage_label
- */
-void
-Window::on_action_manage_label (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_manage_uuid
- */
-void
-Window::on_action_manage_uuid (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_manage_flags
- */
-void
-Window::on_action_manage_flags (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_manage_parameters
- */
-void
-Window::on_action_manage_parameters (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_filesystem_check
- */
-void
-Window::on_action_filesystem_check (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_filesystem_defragment
- */
-void
-Window::on_action_filesystem_defragment (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_filesystem_rebalance
- */
-void
-Window::on_action_filesystem_rebalance (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_filesystem_resize_move
- */
-void
-Window::on_action_filesystem_resize_move (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_filesystem_mount
- */
-void
-Window::on_action_filesystem_mount (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_filesystem_umount
- */
-void
-Window::on_action_filesystem_umount (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_filesystem_swap_on
- */
-void
-Window::on_action_filesystem_swap_on (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_filesystem_swap_off
- */
-void
-Window::on_action_filesystem_swap_off (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_filesystem_usage
- */
-void
-Window::on_action_filesystem_usage (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_group_resize
- */
-void
-Window::on_action_group_resize (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_group_split
- */
-void
-Window::on_action_group_split (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_group_merge
- */
-void
-Window::on_action_group_merge (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_group_add_stripe
- */
-void
-Window::on_action_group_add_stripe (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_group_remove_stripe
- */
-void
-Window::on_action_group_remove_stripe (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_group_add_mirror
- */
-void
-Window::on_action_group_add_mirror (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_group_remove_mirror
- */
-void
-Window::on_action_group_remove_mirror (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_group_break_mirror
- */
-void
-Window::on_action_group_break_mirror (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_group_add_raid
- */
-void
-Window::on_action_group_add_raid (void)
-{
-	LOG_TRACE;
-}
-
-/**
- * on_action_group_remove_raid
- */
-void
-Window::on_action_group_remove_raid (void)
-{
-	LOG_TRACE;
+	printf ("%s: %s.%s\n", __FUNCTION__, section.c_str(), name.c_str());
 }
 

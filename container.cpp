@@ -49,17 +49,17 @@ std::vector<Action> cont_actions = {
 	{ "Create/Subvolume",          true },
 	{ "Create/Snapshot",           true },
 	{ "Create/Luks",               true },
-	{ "Delete/Filesystem",         false },
-	{ "Delete/Partition",          false },
-	{ "Delete/Table",              false },
-	{ "Delete/Lvm Volume",         false },
-	{ "Delete/Subvolume",          false },
-	{ "Delete/Snapshot",           false },
-	{ "Delete/Luks",               false },
+	{ "Delete/Filesystem",         true },
+	{ "Delete/Partition",          true },
+	{ "Delete/Table",              true },
+	{ "Delete/Lvm Volume",         true },
+	{ "Delete/Subvolume",          true },
+	{ "Delete/Snapshot",           true },
+	{ "Delete/Luks",               true },
 	{ "Format as/Clear",           true },
 	{ "Format as/Wipe",            true },
-	{ "Format as/Scrub",           false },
-	{ "Format as/Ext2",            false },
+	{ "Format as/Scrub",           true },
+	{ "Format as/Ext2",            true },
 	{ "Format as/Ext3",            true },
 	{ "Convert to/Btrfs",          true },
 	{ "Convert to/Partition Type", true },
@@ -71,9 +71,9 @@ std::vector<Action> cont_actions = {
 	{ "Filesystem/Check",          true },
 	{ "Filesystem/Defrag",         true },
 	{ "Filesystem/Rebalance",      true },
-	{ "Filesystem/Mount",          false },
-	{ "Filesystem/Umount",         false },
-	{ "Filesystem/Usage",          false },
+	{ "Filesystem/Mount",          true },
+	{ "Filesystem/Umount",         true },
+	{ "Filesystem/Usage",          true },
 	{ "Volume Group/Extend",       true },
 	{ "Volume Group/Reduce",       true },
 	{ "Volume Group/Split",        true },
@@ -813,6 +813,7 @@ Container::get_smart (void)
 std::vector<Action>
 Container::get_actions (void)
 {
+	//std::vector<Action> cont_actions = { };
 	return cont_actions;
 }
 
@@ -822,7 +823,7 @@ Container::get_actions (void)
 bool
 Container::perform_action (Action action)
 {
-	std::cout << "Perform: " << action.name << std::endl;
+	std::cout << "Container Perform: " << action.name << std::endl;
 	return true;
 }
 

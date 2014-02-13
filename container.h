@@ -102,8 +102,9 @@ public:
 	}
 
 	void sub_type (const char* name);
-	std::vector<Action> get_actions (void);
-	bool perform_action (Action action);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	std::string	 name;
