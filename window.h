@@ -19,6 +19,9 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
+#include <string>
+#include <map>
+
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/box.h>
 #include <gtkmm/eventbox.h>
@@ -109,7 +112,7 @@ protected:
 	void insert_general_actions (std::string section, const std::vector<const char*>& commands);
 	void on_action_general (std::string section, std::string name);
 
-	std::vector<Glib::RefPtr<Gio::Action>> vact;
+	std::map<std::string,Glib::RefPtr<Gio::SimpleAction>> action_map;
 
 private:
 };

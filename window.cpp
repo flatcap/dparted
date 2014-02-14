@@ -487,7 +487,9 @@ Window::insert_general_actions (std::string section, const std::vector<const cha
 {
 	for (auto c : commands) {
 		std::string name = section + "." + c;
-		vact.push_back (add_action(name, sigc::bind<std::string,std::string> (sigc::mem_fun (*this, &Window::on_action_general), section, c)));
+		Glib::RefPtr<Gio::Action> a = add_action(name, sigc::bind<std::string,std::string> (sigc::mem_fun (*this, &Window::on_action_general), section, c));
+		Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic (a);
+		action_map[name] = s;
 	}
 }
 
@@ -534,6 +536,13 @@ Window::init_actions (void)
 	a->reference();		//XXX seems to be a bug in Gtk+/Gtkmm
 	Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic (a);
 	s->set_enabled (false);
+#endif
+#if 0
+	for (auto a : action_map) {
+		if (a.first[7] < 'n')
+			a.second->set_enabled (false);
+		//std::cout << a.first << std::endl;
+	}
 #endif
 }
 
