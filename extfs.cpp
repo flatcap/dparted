@@ -279,3 +279,35 @@ ExtFs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int bufsize)
 }
 
 
+/**
+ * get_actions
+ */
+std::vector<Action>
+ExtFs::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "create.filesystem", true },
+	};
+
+	std::vector<Action> cont_actions = Filesystem::get_actions();
+
+	actions.insert (std::end (actions), std::begin (cont_actions), std::end (cont_actions));
+
+	return actions;
+}
+
+/**
+ * perform_action
+ */
+bool
+ExtFs::perform_action (Action action)
+{
+	if (action.name == "create.filesystem") {
+		std::cout << "ExtFs perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Filesystem::perform_action (action);
+	}
+}
+

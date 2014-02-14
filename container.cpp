@@ -813,7 +813,11 @@ Container::get_smart (void)
 std::vector<Action>
 Container::get_actions (void)
 {
-	//std::vector<Action> cont_actions = { };
+	// LOG_TRACE;
+	std::vector<Action> cont_actions = {
+		{ "create.table", true },
+	};
+
 	return cont_actions;
 }
 
@@ -823,8 +827,13 @@ Container::get_actions (void)
 bool
 Container::perform_action (Action action)
 {
-	std::cout << "Container Perform: " << action.name << std::endl;
-	return true;
+	if (action.name == "create.table") {
+		std::cout << "Container perform: " << action.name << std::endl;
+		return true;
+	} else {
+		std::cout << "Unknown action: " << action.name << std::endl;
+		return false;
+	}
 }
 
 

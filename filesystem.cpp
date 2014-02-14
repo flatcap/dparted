@@ -148,14 +148,16 @@ Filesystem::delete_filesystem (void)
 std::vector<Action>
 Filesystem::get_actions (void)
 {
-#if 0
-	std::vector<Action> cont_actions = {
-		{ "Create/Filesystem",         true },
-		{ "Create/Partition",          false }
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "create.partition", true }
 	};
-	return cont_actions;
-#endif
-	return Container::get_actions();
+
+	std::vector<Action> cont_actions = Container::get_actions();
+
+	actions.insert (std::end (actions), std::begin (cont_actions), std::end (cont_actions));
+
+	return actions;
 }
 
 /**
@@ -164,8 +166,12 @@ Filesystem::get_actions (void)
 bool
 Filesystem::perform_action (Action action)
 {
-	std::cout << "Perform: " << action.name << std::endl;
-	return true;
+	if (action.name == "create.partition") {
+		std::cout << "Filesystem perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Container::perform_action (action);
+	}
 }
 
 

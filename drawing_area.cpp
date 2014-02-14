@@ -743,6 +743,14 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 		return;
 	}
 
+	Window *dp = reinterpret_cast<Window*> (get_toplevel());
+	if (!dp) {
+		std::cout << "No Window" << std::endl;
+		return;
+	}
+
+	dp->set_actions (actions);
+
 #if 0
 	std::cout << "Actions:" << std::endl;
 	for (auto a : actions) {

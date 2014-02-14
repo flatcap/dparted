@@ -21,6 +21,7 @@
 #include <giomm/simpleactiongroup.h>
 
 #include <iostream>
+#include <algorithm>
 
 #include "gui_app.h"
 #include "window.h"
@@ -734,6 +735,27 @@ Window::init_menubar (Gtk::Box& box)
 
 
 /**
+ * set_actions
+ */
+void
+Window::set_actions (std::vector<Action>& list)
+{
+	for (auto a : action_map) {			// First, disable all the actions
+		a.second->set_enabled (false);
+	}
+
+	for (auto a : list) {				// Then selectively enable the ones we want
+		auto it = action_map.find (a.name);
+		if (it != std::end (action_map)) {
+			std::cout << "Enable: " << a.name << std::endl;
+			it->second->set_enabled (true);
+		} else {
+			std::cout << "Can't find " << a.name << std::endl;
+		}
+	}
+}
+
+/**
  * on_keypress
  */
 void
@@ -755,5 +777,19 @@ void
 Window::on_action_general (std::string section, std::string name)
 {
 	printf ("%s: %s.%s\n", __FUNCTION__, section.c_str(), name.c_str());
+
+	if (!focus) {
+		std::cout << "no focus" << std::endl;
+		return;
+	}
+
+	ContainerPtr c = focus->get_container();
+	if (!c) {
+		std::cout << "no container" << std::endl;
+		return;
+	}
+
+	Action a = { section + '.' + name, true };
+	c->perform_action (a);
 }
 

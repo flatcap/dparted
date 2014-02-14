@@ -39,6 +39,9 @@ public:
 	static ExtFsPtr get_ext3 (ContainerPtr parent, unsigned char* buffer, int bufsize);
 	static ExtFsPtr get_ext4 (ContainerPtr parent, unsigned char* buffer, int bufsize);
 
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
+
 protected:
 	ExtFs (void);
 
