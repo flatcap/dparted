@@ -737,7 +737,18 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 		return;
 	}
 
-	std::vector<Action> actions = c->get_actions();
+	std::vector<Action> actions;
+
+	for (; c; c = c->parent.lock()) {
+		std::cout << c->type.back() << std::endl;
+		auto tmp = c->get_actions();
+		actions.insert (std::end (actions), std::begin (tmp), std::end (tmp));
+		for (auto t : tmp) {
+			std::cout << '\t' << t.name << std::endl;
+		}
+	}
+	std::cout << std::endl;
+
 	if (actions.empty()) {
 		//std::cout << "No actions" << std::endl;
 		//return;

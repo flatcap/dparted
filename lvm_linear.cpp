@@ -66,7 +66,7 @@ LvmLinear::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.lvmlinear", true },
 	};
 
 	std::vector<Action> parent_actions = LvmVolume::get_actions();
@@ -82,12 +82,11 @@ LvmLinear::get_actions (void)
 bool
 LvmLinear::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.lvmlinear") {
 		std::cout << "LvmLinear perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return LvmVolume::perform_action (action);
 	}
 }
 

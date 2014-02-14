@@ -85,7 +85,7 @@ LvmMetadata::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.lvmmetadata", true },
 	};
 
 	std::vector<Action> parent_actions = LvmLinear::get_actions();
@@ -101,12 +101,11 @@ LvmMetadata::get_actions (void)
 bool
 LvmMetadata::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.lvmmetadata") {
 		std::cout << "LvmMetadata perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return LvmLinear::perform_action (action);
 	}
 }
 

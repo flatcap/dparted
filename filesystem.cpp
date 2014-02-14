@@ -150,7 +150,7 @@ Filesystem::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.filesystem", true },
 	};
 
 	std::vector<Action> parent_actions = Container::get_actions();
@@ -166,7 +166,7 @@ Filesystem::get_actions (void)
 bool
 Filesystem::perform_action (Action action)
 {
-	if (action.name == "create.partition") {
+	if (action.name == "dummy.filesystem") {
 		std::cout << "Filesystem perform: " << action.name << std::endl;
 		return true;
 	} else {

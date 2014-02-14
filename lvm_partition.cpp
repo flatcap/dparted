@@ -66,7 +66,7 @@ LvmPartition::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.lvmpartition", true },
 	};
 
 	std::vector<Action> parent_actions = Partition::get_actions();
@@ -82,12 +82,11 @@ LvmPartition::get_actions (void)
 bool
 LvmPartition::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.lvmpartition") {
 		std::cout << "LvmPartition perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Partition::perform_action (action);
 	}
 }
 

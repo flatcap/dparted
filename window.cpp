@@ -530,6 +530,8 @@ Window::init_actions (void)
 	insert_general_actions ("filesystem", { "check", "defragment", "rebalance", "resize_move", "mount", "umount", "swap_on", "swap_off", "usage" });
 	insert_general_actions ("group",      { "resize", "split", "merge", "add_stripe", "remove_stripe", "add_mirror", "remove_mirror", "break_mirror", "add_raid", "remove_raid" });
 
+	insert_general_actions ("dummy",      { "block", "btrfs", "container", "disk", "extended", "extfs", "file", "filesystem", "gpt", "loop", "luks", "lvmgroup", "lvmlinear", "lvmmetadata", "lvmmirror", "lvmpartition", "lvmraid", "lvmstripe", "lvmtable", "lvmvolume", "mdgroup", "mdtable", "misc", "msdos", "ntfs", "partition", "table", "volume", "whole" });
+
 #if 0
 	Glib::RefPtr<Gio::Action> a;
 	a = lookup_action ("edit.cut");
@@ -682,6 +684,39 @@ Window::init_menubar (Gtk::Box& box)
 		"		<item> <attribute name='label' translatable='yes'>Remove RAID...</attribute>       <attribute name='action'>win.group.remove_raid</attribute>      </item>"
 		"	</section>"
 		"</submenu><submenu>"
+		"	<attribute name='label' translatable='yes'>D_ummy</attribute>"
+		"	<section>"
+		"		<item> <attribute name='label' translatable='yes'>block</attribute>        <attribute name='action'>win.dummy.block</attribute>        </item>"
+		"		<item> <attribute name='label' translatable='yes'>btrfs</attribute>        <attribute name='action'>win.dummy.btrfs</attribute>        </item>"
+		"		<item> <attribute name='label' translatable='yes'>container</attribute>    <attribute name='action'>win.dummy.container</attribute>    </item>"
+		"		<item> <attribute name='label' translatable='yes'>disk</attribute>         <attribute name='action'>win.dummy.disk</attribute>         </item>"
+		"		<item> <attribute name='label' translatable='yes'>extended</attribute>     <attribute name='action'>win.dummy.extended</attribute>     </item>"
+		"		<item> <attribute name='label' translatable='yes'>extfs</attribute>        <attribute name='action'>win.dummy.extfs</attribute>        </item>"
+		"		<item> <attribute name='label' translatable='yes'>file</attribute>         <attribute name='action'>win.dummy.file</attribute>         </item>"
+		"		<item> <attribute name='label' translatable='yes'>filesystem</attribute>   <attribute name='action'>win.dummy.filesystem</attribute>   </item>"
+		"		<item> <attribute name='label' translatable='yes'>gpt</attribute>          <attribute name='action'>win.dummy.gpt</attribute>          </item>"
+		"		<item> <attribute name='label' translatable='yes'>loop</attribute>         <attribute name='action'>win.dummy.loop</attribute>         </item>"
+		"		<item> <attribute name='label' translatable='yes'>luks</attribute>         <attribute name='action'>win.dummy.luks</attribute>         </item>"
+		"		<item> <attribute name='label' translatable='yes'>lvmgroup</attribute>     <attribute name='action'>win.dummy.lvmgroup</attribute>     </item>"
+		"		<item> <attribute name='label' translatable='yes'>lvmlinear</attribute>    <attribute name='action'>win.dummy.lvmlinear</attribute>    </item>"
+		"		<item> <attribute name='label' translatable='yes'>lvmmetadata</attribute>  <attribute name='action'>win.dummy.lvmmetadata</attribute>  </item>"
+		"		<item> <attribute name='label' translatable='yes'>lvmmirror</attribute>    <attribute name='action'>win.dummy.lvmmirror</attribute>    </item>"
+		"		<item> <attribute name='label' translatable='yes'>lvmpartition</attribute> <attribute name='action'>win.dummy.lvmpartition</attribute> </item>"
+		"		<item> <attribute name='label' translatable='yes'>lvmraid</attribute>      <attribute name='action'>win.dummy.lvmraid</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>lvmstripe</attribute>    <attribute name='action'>win.dummy.lvmstripe</attribute>    </item>"
+		"		<item> <attribute name='label' translatable='yes'>lvmtable</attribute>     <attribute name='action'>win.dummy.lvmtable</attribute>     </item>"
+		"		<item> <attribute name='label' translatable='yes'>lvmvolume</attribute>    <attribute name='action'>win.dummy.lvmvolume</attribute>    </item>"
+		"		<item> <attribute name='label' translatable='yes'>mdgroup</attribute>      <attribute name='action'>win.dummy.mdgroup</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>mdtable</attribute>      <attribute name='action'>win.dummy.mdtable</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>misc</attribute>         <attribute name='action'>win.dummy.misc</attribute>         </item>"
+		"		<item> <attribute name='label' translatable='yes'>msdos</attribute>        <attribute name='action'>win.dummy.msdos</attribute>        </item>"
+		"		<item> <attribute name='label' translatable='yes'>ntfs</attribute>         <attribute name='action'>win.dummy.ntfs</attribute>         </item>"
+		"		<item> <attribute name='label' translatable='yes'>partition</attribute>    <attribute name='action'>win.dummy.partition</attribute>    </item>"
+		"		<item> <attribute name='label' translatable='yes'>table</attribute>        <attribute name='action'>win.dummy.table</attribute>        </item>"
+		"		<item> <attribute name='label' translatable='yes'>volume</attribute>       <attribute name='action'>win.dummy.volume</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>whole</attribute>        <attribute name='action'>win.dummy.whole</attribute>        </item>"
+		"	</section>"
+		"</submenu><submenu>"
 		"	<attribute name='label' translatable='yes'>_Plugin</attribute>"
 		"	<section>"
 		"		<item> <attribute name='label' translatable='yes'>Plugin X</attribute>             <attribute name='action'>plugin.x</attribute>               </item>"
@@ -746,7 +781,7 @@ Window::set_actions (std::vector<Action>& list)
 	for (auto a : list) {				// Then selectively enable the ones we want
 		auto it = action_map.find (a.name);
 		if (it != std::end (action_map)) {
-			std::cout << "Enable: " << a.name << std::endl;
+			//std::cout << "Enable: " << a.name << std::endl;
 			it->second->set_enabled (true);
 		} else {
 			std::cout << "Can't find " << a.name << std::endl;
@@ -791,4 +826,5 @@ Window::on_action_general (std::string section, std::string name)
 	Action a = { section + '.' + name, true };
 	c->perform_action (a);
 }
+
 

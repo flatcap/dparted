@@ -199,7 +199,7 @@ Gpt::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.gpt", true },
 	};
 
 	std::vector<Action> parent_actions = Table::get_actions();
@@ -215,12 +215,11 @@ Gpt::get_actions (void)
 bool
 Gpt::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.gpt") {
 		std::cout << "Gpt perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Table::perform_action (action);
 	}
 }
 

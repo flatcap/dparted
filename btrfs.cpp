@@ -24,6 +24,7 @@
 
 #include "btrfs.h"
 #include "utils.h"
+#include "log_trace.h"
 
 /**
  * Btrfs
@@ -242,7 +243,7 @@ Btrfs::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.btrfs", true },
 	};
 
 	std::vector<Action> parent_actions = Filesystem::get_actions();
@@ -258,12 +259,11 @@ Btrfs::get_actions (void)
 bool
 Btrfs::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.btrfs") {
 		std::cout << "Btrfs perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Filesystem::perform_action (action);
 	}
 }
 

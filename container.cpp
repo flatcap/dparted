@@ -815,7 +815,7 @@ Container::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.table", true },
+		{ "dummy.container", true },
 	};
 
 	return actions;
@@ -827,7 +827,7 @@ Container::get_actions (void)
 bool
 Container::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.container") {
 		std::cout << "Container perform: " << action.name << std::endl;
 		return true;
 	} else {

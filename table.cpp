@@ -184,7 +184,7 @@ Table::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.table", true },
 	};
 
 	std::vector<Action> parent_actions = Container::get_actions();
@@ -200,12 +200,11 @@ Table::get_actions (void)
 bool
 Table::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.table") {
 		std::cout << "Table perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Container::perform_action (action);
 	}
 }
 

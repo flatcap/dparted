@@ -365,7 +365,7 @@ LvmTable::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.lvmtable", true },
 	};
 
 	std::vector<Action> parent_actions = Table::get_actions();
@@ -381,12 +381,11 @@ LvmTable::get_actions (void)
 bool
 LvmTable::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.lvmtable") {
 		std::cout << "LvmTable perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Table::perform_action (action);
 	}
 }
 

@@ -173,7 +173,7 @@ LvmVolume::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.lvmvolume", true },
 	};
 
 	std::vector<Action> parent_actions = Volume::get_actions();
@@ -189,12 +189,11 @@ LvmVolume::get_actions (void)
 bool
 LvmVolume::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.lvmvolume") {
 		std::cout << "LvmVolume perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Volume::perform_action (action);
 	}
 }
 

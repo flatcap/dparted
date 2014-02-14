@@ -287,7 +287,7 @@ ExtFs::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.extfs", true },
 	};
 
 	std::vector<Action> parent_actions = Filesystem::get_actions();
@@ -303,7 +303,7 @@ ExtFs::get_actions (void)
 bool
 ExtFs::perform_action (Action action)
 {
-	if (action.name == "create.filesystem") {
+	if (action.name == "dummy.extfs") {
 		std::cout << "ExtFs perform: " << action.name << std::endl;
 		return true;
 	} else {

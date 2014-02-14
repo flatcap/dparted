@@ -228,7 +228,7 @@ Ntfs::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.ntfs", true },
 	};
 
 	std::vector<Action> parent_actions = Filesystem::get_actions();
@@ -244,12 +244,11 @@ Ntfs::get_actions (void)
 bool
 Ntfs::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.ntfs") {
 		std::cout << "Ntfs perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Filesystem::perform_action (action);
 	}
 }
 

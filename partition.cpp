@@ -69,7 +69,7 @@ Partition::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.partition", true },
 	};
 
 	std::vector<Action> parent_actions = Container::get_actions();
@@ -85,12 +85,11 @@ Partition::get_actions (void)
 bool
 Partition::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.partition") {
 		std::cout << "Partition perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Container::perform_action (action);
 	}
 }
 

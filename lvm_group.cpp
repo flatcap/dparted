@@ -603,7 +603,7 @@ LvmGroup::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.lvmgroup", true },
 	};
 
 	std::vector<Action> parent_actions = Whole::get_actions();
@@ -619,12 +619,11 @@ LvmGroup::get_actions (void)
 bool
 LvmGroup::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.lvmgroup") {
 		std::cout << "LvmGroup perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Whole::perform_action (action);
 	}
 }
 

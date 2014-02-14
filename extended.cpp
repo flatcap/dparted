@@ -200,7 +200,7 @@ Extended::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.extended", true },
 	};
 
 	std::vector<Action> parent_actions = Msdos::get_actions();
@@ -216,12 +216,11 @@ Extended::get_actions (void)
 bool
 Extended::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.extended") {
 		std::cout << "Extended perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Msdos::perform_action (action);
 	}
 }
 

@@ -234,7 +234,7 @@ Msdos::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.msdos", true },
 	};
 
 	std::vector<Action> parent_actions = Table::get_actions();
@@ -250,12 +250,11 @@ Msdos::get_actions (void)
 bool
 Msdos::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.msdos") {
 		std::cout << "Msdos perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Table::perform_action (action);
 	}
 }
 

@@ -168,7 +168,7 @@ Misc::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.misc", true },
 	};
 
 	std::vector<Action> parent_actions = Container::get_actions();
@@ -184,12 +184,11 @@ Misc::get_actions (void)
 bool
 Misc::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.misc") {
 		std::cout << "Misc perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Container::perform_action (action);
 	}
 }
 

@@ -146,7 +146,7 @@ File::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.file", true },
 	};
 
 	std::vector<Action> parent_actions = Block::get_actions();
@@ -162,12 +162,11 @@ File::get_actions (void)
 bool
 File::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.file") {
 		std::cout << "File perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Block::perform_action (action);
 	}
 }
 

@@ -137,7 +137,7 @@ MdGroup::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		//{ "create.filesystem", true },
+		{ "dummy.mdgroup", true },
 	};
 
 	std::vector<Action> parent_actions = Whole::get_actions();
@@ -153,12 +153,11 @@ MdGroup::get_actions (void)
 bool
 MdGroup::perform_action (Action action)
 {
-	if (action.name == "create.table") {
+	if (action.name == "dummy.mdgroup") {
 		std::cout << "MdGroup perform: " << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
+		return Whole::perform_action (action);
 	}
 }
 
