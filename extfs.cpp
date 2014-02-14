@@ -287,12 +287,12 @@ ExtFs::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "create.filesystem", true },
+		//{ "create.filesystem", true },
 	};
 
-	std::vector<Action> cont_actions = Filesystem::get_actions();
+	std::vector<Action> parent_actions = Filesystem::get_actions();
 
-	actions.insert (std::end (actions), std::begin (cont_actions), std::end (cont_actions));
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
 	return actions;
 }
@@ -310,4 +310,5 @@ ExtFs::perform_action (Action action)
 		return Filesystem::perform_action (action);
 	}
 }
+
 

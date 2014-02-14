@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "volume.h"
+#include "action.h"
 
 class LvmVolume;
 class Visitor;
@@ -41,6 +42,9 @@ public:
 	virtual void add_child (ContainerPtr& child);
 
 	virtual ContainerPtr find (const std::string& uuid);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	std::string	lv_attr;

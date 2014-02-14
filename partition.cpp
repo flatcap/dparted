@@ -61,3 +61,37 @@ Partition::accept (Visitor& v)
 	return visit_children(v);
 }
 
+/**
+ * get_actions
+ */
+std::vector<Action>
+Partition::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		//{ "create.filesystem", true },
+	};
+
+	std::vector<Action> parent_actions = Container::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+/**
+ * perform_action
+ */
+bool
+Partition::perform_action (Action action)
+{
+	if (action.name == "create.table") {
+		std::cout << "Partition perform: " << action.name << std::endl;
+		return true;
+	} else {
+		std::cout << "Unknown action: " << action.name << std::endl;
+		return false;
+	}
+}
+
+

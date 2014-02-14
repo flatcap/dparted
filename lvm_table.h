@@ -24,6 +24,7 @@
 
 #include "table.h"
 #include "lvm_group.h"
+#include "action.h"
 
 class LvmTable;
 class Visitor;
@@ -43,6 +44,9 @@ public:
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 	virtual void add_child (ContainerPtr& child);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	// my volume

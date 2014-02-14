@@ -154,7 +154,7 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 
 	m->name = "msdos";
 	m->bytes_size = parent->bytes_size;
-	m->device = parent->device;
+	//m->device = parent->device;	//XXX only for partitions, main body should inherit
 	m->parent_offset = 0;
 
 	ContainerPtr c(m);
@@ -189,8 +189,8 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 		ContainerPtr c;
 
 		std::ostringstream part_name;
-		part_name << m->device;
-		char last = m->device[m->device.length()-1];
+		part_name << parent->device;
+		char last = parent->device[parent->device.length()-1];
 		if (isdigit (last)) {
 			part_name << 'p';
 		}
@@ -223,6 +223,40 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 	m->fill_space();		// optional
 
 	return m;
+}
+
+
+/**
+ * get_actions
+ */
+std::vector<Action>
+Msdos::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		//{ "create.filesystem", true },
+	};
+
+	std::vector<Action> parent_actions = Table::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+/**
+ * perform_action
+ */
+bool
+Msdos::perform_action (Action action)
+{
+	if (action.name == "create.table") {
+		std::cout << "Msdos perform: " << action.name << std::endl;
+		return true;
+	} else {
+		std::cout << "Unknown action: " << action.name << std::endl;
+		return false;
+	}
 }
 
 

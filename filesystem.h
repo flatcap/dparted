@@ -23,6 +23,7 @@
 #include <memory>
 
 #include "container.h"
+#include "action.h"
 
 class Filesystem;
 class Visitor;
@@ -44,6 +45,7 @@ public:
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+
 public:
 	//properties
 

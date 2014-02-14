@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "lvm_volume.h"
+#include "action.h"
 
 class LvmMirror;
 class Visitor;
@@ -40,6 +41,9 @@ public:
 
 	virtual void add_child    (ContainerPtr child);
 	virtual void delete_child (ContainerPtr child);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 #if 0

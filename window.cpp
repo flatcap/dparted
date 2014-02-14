@@ -38,7 +38,6 @@ Window::Window()
 
 	//XXX Arbitrary minimum requirement
 	//set_size_request (800, 600);
-	resize (800, 600);
 
 	scrolledwindow.set_hexpand (true);
 	scrolledwindow.set_vexpand (true);
@@ -134,7 +133,7 @@ Window::my_show (void)
 	//LOG_TRACE;
 	//XXX Arbitrary minimum requirement
 	//set_size_request (800, 600);
-	resize (800, 600);
+	resize (800, 250);
 }
 
 /**

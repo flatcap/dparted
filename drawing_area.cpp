@@ -696,7 +696,7 @@ DrawingArea::set_data (GfxContainerPtr& c)
 
 	// invalidate window
 	unsigned int children = c->children.size();
-	children = 4;
+	children = 3;
 	set_size_request (500, cont_height * children);
 
 }
@@ -740,7 +740,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	std::vector<Action> actions = c->get_actions();
 	if (actions.empty()) {
 		//std::cout << "No actions" << std::endl;
-		return;
+		//return;
 	}
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
@@ -1259,11 +1259,13 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 	actions.insert (actions.begin(), { "---",        true });
 	actions.insert (actions.begin(), { "Properties", true });
 
+#if 0
 	actions.push_back ({ "---",           true });
 	actions.push_back ({ "Cut",           true });
 	actions.push_back ({ "Copy",          true });
 	actions.push_back ({ "Paste",         true });
 	actions.push_back ({ "Paste Special", true });
+#endif
 
 	for (auto a : actions) {
 		//std::cout << a.name << std::endl;
@@ -1417,8 +1419,8 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 
 	std::vector<Action> actions = c->get_actions();
 	if (actions.empty()) {
-		std::cout << "No container" << std::endl;
-		return;
+		//std::cout << "No actions" << std::endl;
+		//return;
 	}
 
 #if 0

@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "partition.h"
+#include "action.h"
 
 class LvmPartition;
 class Visitor;
@@ -37,6 +38,9 @@ public:
 	virtual ~LvmPartition() = default;
 	static LvmPartitionPtr create (void);
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 #if 0

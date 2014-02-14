@@ -20,6 +20,7 @@
 #define _BTRFS_H_
 
 #include "filesystem.h"
+#include "action.h"
 
 class Btrfs;
 
@@ -35,6 +36,12 @@ public:
 	static BtrfsPtr create (void);
 
 	static BtrfsPtr get_btrfs (ContainerPtr parent, unsigned char* buffer, int bufsize);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
+
+public:
+	//properties
 
 protected:
 	Btrfs (void);

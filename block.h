@@ -23,6 +23,7 @@
 #include <memory>
 
 #include "container.h"
+#include "action.h"
 
 class Block;
 class Visitor;
@@ -38,6 +39,9 @@ public:
 	virtual ~Block() = default;
 	static BlockPtr create (void);
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	int kernel_major = 0;	//XXX rename device major

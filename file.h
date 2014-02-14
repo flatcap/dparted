@@ -24,6 +24,7 @@
 #include <memory>
 
 #include "block.h"
+#include "action.h"
 
 class File;
 class Visitor;
@@ -42,6 +43,9 @@ public:
 
 	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	//properties

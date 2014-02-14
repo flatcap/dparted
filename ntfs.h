@@ -20,6 +20,7 @@
 #define _NTFS_H_
 
 #include "filesystem.h"
+#include "action.h"
 
 class Ntfs;
 
@@ -35,6 +36,12 @@ public:
 	static NtfsPtr create (void);
 
 	static NtfsPtr get_ntfs (ContainerPtr parent, unsigned char* buffer, int bufsize);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
+
+public:
+	//properties
 
 protected:
 	Ntfs (void);

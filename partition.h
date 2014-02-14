@@ -24,6 +24,7 @@
 
 #include "container.h"
 #include "volume.h"
+#include "action.h"
 
 class Partition;
 class Visitor;
@@ -39,6 +40,9 @@ public:
 	virtual ~Partition() = default;
 	static PartitionPtr create (void);
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	int ptype = 0;

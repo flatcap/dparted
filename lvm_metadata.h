@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "lvm_linear.h"
+#include "action.h"
 
 class LvmMetadata;
 class Visitor;
@@ -39,6 +40,9 @@ public:
 	virtual bool accept (Visitor& v);
 
 	virtual void add_child (ContainerPtr& child);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	//properties

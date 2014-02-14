@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "whole.h"
+#include "action.h"
 
 class LvmGroup;
 class LvmTable;
@@ -42,6 +43,9 @@ public:
 	//virtual void add_segment (ContainerPtr& seg);
 
 	static void discover (ContainerPtr& top_level);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	long		pv_count = 0;	//XXX put this in seg_count in Whole

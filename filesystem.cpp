@@ -150,12 +150,12 @@ Filesystem::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "create.partition", true }
+		//{ "create.filesystem", true },
 	};
 
-	std::vector<Action> cont_actions = Container::get_actions();
+	std::vector<Action> parent_actions = Container::get_actions();
 
-	actions.insert (std::end (actions), std::begin (cont_actions), std::end (cont_actions));
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
 	return actions;
 }

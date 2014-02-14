@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "whole.h"
+#include "action.h"
 
 class Volume;
 class Visitor;
@@ -37,6 +38,9 @@ public:
 	virtual ~Volume() = default;
 	static VolumePtr create (void);
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	//properties

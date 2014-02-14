@@ -23,6 +23,7 @@
 #include <memory>
 
 #include "container.h"
+#include "action.h"
 
 class Table;
 class Visitor;
@@ -40,6 +41,9 @@ public:
 	virtual bool accept (Visitor& v);
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	//properties

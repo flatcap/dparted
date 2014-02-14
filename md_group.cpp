@@ -129,3 +129,37 @@ mdadm /dev/md1 --create --verbose --level=linear --raid-devices=3 /dev/loop{0,1,
 mdadm /dev/md1 --create --verbose --level=linear -raid-devices=2 /dev/loop{0,1,2}
 #endif
 
+/**
+ * get_actions
+ */
+std::vector<Action>
+MdGroup::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		//{ "create.filesystem", true },
+	};
+
+	std::vector<Action> parent_actions = Whole::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+/**
+ * perform_action
+ */
+bool
+MdGroup::perform_action (Action action)
+{
+	if (action.name == "create.table") {
+		std::cout << "MdGroup perform: " << action.name << std::endl;
+		return true;
+	} else {
+		std::cout << "Unknown action: " << action.name << std::endl;
+		return false;
+	}
+}
+
+

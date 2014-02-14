@@ -24,6 +24,7 @@
 #include <memory>
 
 #include "container.h"
+#include "action.h"
 
 class Visitor;
 class Whole;
@@ -41,6 +42,9 @@ public:
 	virtual bool accept (Visitor& v);
 
 	virtual void add_segment (ContainerPtr seg);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	// seg_count - LVM2_SEG_COUNT

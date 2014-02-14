@@ -24,6 +24,7 @@
 
 #include "partition.h"
 #include "question.h"
+#include "action.h"
 
 class Luks;
 
@@ -43,6 +44,9 @@ public:
 
 	bool luks_open (const std::string& parent, bool probe);
 	bool luks_close (void);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	int         version;

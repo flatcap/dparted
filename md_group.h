@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "whole.h"
+#include "action.h"
 
 class MdGroup;
 class MdTable;
@@ -40,6 +41,9 @@ public:
 	virtual bool accept (Visitor& v);
 
 	static void discover (ContainerPtr& top_level);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	//properties

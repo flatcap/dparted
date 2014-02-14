@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "lvm_volume.h"
+#include "action.h"
 
 class LvmLinear;
 class Visitor;
@@ -37,6 +38,9 @@ public:
 	virtual ~LvmLinear() = default;
 	static LvmLinearPtr create (void);
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	//properties

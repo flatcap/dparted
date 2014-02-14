@@ -23,6 +23,7 @@
 #include <memory>
 
 #include "msdos.h"
+#include "action.h"
 
 class Extended;
 class Visitor;
@@ -40,6 +41,9 @@ public:
 	virtual bool accept (Visitor& v);
 
 	static ExtendedPtr probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 public:
 	//properties

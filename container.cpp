@@ -814,11 +814,11 @@ std::vector<Action>
 Container::get_actions (void)
 {
 	// LOG_TRACE;
-	std::vector<Action> cont_actions = {
-		{ "create.table", true },
+	std::vector<Action> actions = {
+		//{ "create.table", true },
 	};
 
-	return cont_actions;
+	return actions;
 }
 
 /**
