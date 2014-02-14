@@ -109,6 +109,8 @@ protected:
 	void insert_general_actions (std::string section, const std::vector<const char*>& commands);
 	void on_action_general (std::string section, std::string name);
 
+	std::vector<Glib::RefPtr<Gio::Action>> vact;
+
 private:
 };
 

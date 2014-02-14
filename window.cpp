@@ -485,11 +485,10 @@ Window::init_shortcuts (void)
 void
 Window::insert_general_actions (std::string section, const std::vector<const char*>& commands)
 {
-	auto group = Gio::SimpleActionGroup::create();
 	for (auto c : commands) {
-		group->add_action(c, sigc::bind<std::string,std::string> (sigc::mem_fun (*this, &Window::on_action_general), section, c));
+		std::string name = section + "." + c;
+		vact.push_back (add_action(name, sigc::bind<std::string,std::string> (sigc::mem_fun (*this, &Window::on_action_general), section, c)));
 	}
-	insert_action_group (section, group);
 }
 
 /**
@@ -504,6 +503,22 @@ Window::init_actions (void)
 	group->add_action("quit",  sigc::mem_fun(*gui_app, &GuiApp::on_action_file_quit));
 	insert_action_group ("file", group);
 
+	group = Gio::SimpleActionGroup::create();
+	group->add_action("x",          sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
+	group->add_action("y",          sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
+	group->add_action("configure",  sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
+	insert_action_group ("plugin", group);
+
+	group = Gio::SimpleActionGroup::create();
+	group->add_action("contents",     sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	group->add_action("whats_this",   sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	group->add_action("report_issue", sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	group->add_action("faq",          sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	group->add_action("community",    sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	group->add_action("homepage",     sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	group->add_action("about",        sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	insert_action_group ("help", group);
+
 	insert_general_actions ("edit",       { "cut", "copy", "paste", "paste_special", "undo", "redo", "clear_all_ops", "apply_all_ops", "find", "find_next", "find_previous", "preferences" });
 	insert_general_actions ("view",       { "toolbar", "graphics", "tree_view", "status_bar", "log", "pending_actions", "fullscreen", "refresh", "reload", "theme" });
 	insert_general_actions ("create",     { "filesystem", "partition", "table", "encryption", "lvm_volume", "subvolume", "snapshot" });
@@ -512,14 +527,13 @@ Window::init_actions (void)
 	insert_general_actions ("manage",     { "properties", "label", "uuid", "flags", "parameters" });
 	insert_general_actions ("filesystem", { "check", "defragment", "rebalance", "resize_move", "mount", "umount", "swap_on", "swap_off", "usage" });
 	insert_general_actions ("group",      { "resize", "split", "merge", "add_stripe", "remove_stripe", "add_mirror", "remove_mirror", "break_mirror", "add_raid", "remove_raid" });
-	insert_general_actions ("plugin",     { "x", "y", "configure" });
-	insert_general_actions ("help",       { "contents", "whats_this", "report_issue", "faq", "community", "homepage", "about" });
 
-#if 1
-	Glib::RefPtr<Gio::Action> a = lookup_action ("filesystem");
+#if 0
+	Glib::RefPtr<Gio::Action> a;
+	a = lookup_action ("edit.cut");
+	a->reference();		//XXX seems to be a bug in Gtk+/Gtkmm
 	Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic (a);
-	//s->set_enabled (false);
-	std::cout << "s = " << s << std::endl;
+	s->set_enabled (false);
 #endif
 }
 
@@ -545,118 +559,118 @@ Window::init_menubar (Gtk::Box& box)
 		"</submenu><submenu>"
 		"	<attribute name='label' translatable='yes'>_Edit</attribute>"
 		"	<section>"
-		"		<item> <attribute name='label' translatable='yes'>Cut</attribute>                  <attribute name='action'>edit.cut</attribute>               </item>"
-		"		<item> <attribute name='label' translatable='yes'>Copy</attribute>                 <attribute name='action'>edit.copy</attribute>              </item>"
-		"		<item> <attribute name='label' translatable='yes'>Paste</attribute>                <attribute name='action'>edit.paste</attribute>             </item>"
-		"		<item> <attribute name='label' translatable='yes'>Paste Special...</attribute>     <attribute name='action'>edit.paste_special</attribute>     </item>"
+		"		<item> <attribute name='label' translatable='yes'>Cut</attribute>                  <attribute name='action'>win.edit.cut</attribute>               </item>"
+		"		<item> <attribute name='label' translatable='yes'>Copy</attribute>                 <attribute name='action'>win.edit.copy</attribute>              </item>"
+		"		<item> <attribute name='label' translatable='yes'>Paste</attribute>                <attribute name='action'>win.edit.paste</attribute>             </item>"
+		"		<item> <attribute name='label' translatable='yes'>Paste Special...</attribute>     <attribute name='action'>win.edit.paste_special</attribute>     </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Undo</attribute>                 <attribute name='action'>edit.undo</attribute>              </item>"
-		"		<item> <attribute name='label' translatable='yes'>Redo</attribute>                 <attribute name='action'>edit.redo</attribute>              </item>"
-		"		<item> <attribute name='label' translatable='yes'>Clear all ops</attribute>        <attribute name='action'>edit.clear_all_ops</attribute>     </item>"
-		"		<item> <attribute name='label' translatable='yes'>Apply all ops...</attribute>     <attribute name='action'>edit.apply_all_ops</attribute>     </item>"
+		"		<item> <attribute name='label' translatable='yes'>Undo</attribute>                 <attribute name='action'>win.edit.undo</attribute>              </item>"
+		"		<item> <attribute name='label' translatable='yes'>Redo</attribute>                 <attribute name='action'>win.edit.redo</attribute>              </item>"
+		"		<item> <attribute name='label' translatable='yes'>Clear all ops</attribute>        <attribute name='action'>win.edit.clear_all_ops</attribute>     </item>"
+		"		<item> <attribute name='label' translatable='yes'>Apply all ops...</attribute>     <attribute name='action'>win.edit.apply_all_ops</attribute>     </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Find...</attribute>              <attribute name='action'>edit.find</attribute>              </item>"
-		"		<item> <attribute name='label' translatable='yes'>Find next</attribute>            <attribute name='action'>edit.find_next</attribute>         </item>"
-		"		<item> <attribute name='label' translatable='yes'>Find previous</attribute>        <attribute name='action'>edit.find_previous</attribute>     </item>"
+		"		<item> <attribute name='label' translatable='yes'>Find...</attribute>              <attribute name='action'>win.edit.find</attribute>              </item>"
+		"		<item> <attribute name='label' translatable='yes'>Find next</attribute>            <attribute name='action'>win.edit.find_next</attribute>         </item>"
+		"		<item> <attribute name='label' translatable='yes'>Find previous</attribute>        <attribute name='action'>win.edit.find_previous</attribute>     </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Preferences...</attribute>       <attribute name='action'>edit.preferences</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>Preferences...</attribute>       <attribute name='action'>win.edit.preferences</attribute>       </item>"
 		"	</section>"
 		"</submenu><submenu>"
 		"	<attribute name='label' translatable='yes'>_View</attribute>"
 		"	<section>"
-		"		<item> <attribute name='label' translatable='yes'>Toolbar</attribute>              <attribute name='action'>view.toolbar</attribute>           </item>"
-		"		<item> <attribute name='label' translatable='yes'>Graphics</attribute>             <attribute name='action'>view.graphics</attribute>          </item>"
-		"		<item> <attribute name='label' translatable='yes'>Tree view</attribute>            <attribute name='action'>view.tree_view</attribute>         </item>"
-		"		<item> <attribute name='label' translatable='yes'>Status bar</attribute>           <attribute name='action'>view.status_bar</attribute>        </item>"
+		"		<item> <attribute name='label' translatable='yes'>Toolbar</attribute>              <attribute name='action'>win.view.toolbar</attribute>           </item>"
+		"		<item> <attribute name='label' translatable='yes'>Graphics</attribute>             <attribute name='action'>win.view.graphics</attribute>          </item>"
+		"		<item> <attribute name='label' translatable='yes'>Tree view</attribute>            <attribute name='action'>win.view.tree_view</attribute>         </item>"
+		"		<item> <attribute name='label' translatable='yes'>Status bar</attribute>           <attribute name='action'>win.view.status_bar</attribute>        </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Log</attribute>                  <attribute name='action'>view.log</attribute>               </item>"
-		"		<item> <attribute name='label' translatable='yes'>Pending Actions</attribute>      <attribute name='action'>view.pending_actions</attribute>   </item>"
+		"		<item> <attribute name='label' translatable='yes'>Log</attribute>                  <attribute name='action'>win.view.log</attribute>               </item>"
+		"		<item> <attribute name='label' translatable='yes'>Pending Actions</attribute>      <attribute name='action'>win.view.pending_actions</attribute>   </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Fullscreen</attribute>           <attribute name='action'>view.fullscreen</attribute>        </item>"
+		"		<item> <attribute name='label' translatable='yes'>Fullscreen</attribute>           <attribute name='action'>win.view.fullscreen</attribute>        </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Refresh</attribute>              <attribute name='action'>view.refresh</attribute>           </item>"
-		"		<item> <attribute name='label' translatable='yes'>Reload</attribute>               <attribute name='action'>view.reload</attribute>            </item>"
+		"		<item> <attribute name='label' translatable='yes'>Refresh</attribute>              <attribute name='action'>win.view.refresh</attribute>           </item>"
+		"		<item> <attribute name='label' translatable='yes'>Reload</attribute>               <attribute name='action'>win.view.reload</attribute>            </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Theme</attribute>                <attribute name='action'>view.theme</attribute>             </item>"
+		"		<item> <attribute name='label' translatable='yes'>Theme</attribute>                <attribute name='action'>win.view.theme</attribute>             </item>"
 		"	</section>"
 		"</submenu><submenu>"
 		"	<attribute name='label' translatable='yes'>_Create</attribute>"
 		"	<section>"
-		"		<item> <attribute name='label' translatable='yes'>Filesystem...</attribute>        <attribute name='action'>create.filesystem</attribute>      </item>"
-		"		<item> <attribute name='label' translatable='yes'>Partition...</attribute>         <attribute name='action'>create.partition</attribute>       </item>"
-		"		<item> <attribute name='label' translatable='yes'>Table...</attribute>             <attribute name='action'>create.table</attribute>           </item>"
+		"		<item> <attribute name='label' translatable='yes'>Filesystem...</attribute>        <attribute name='action'>win.create.filesystem</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Partition...</attribute>         <attribute name='action'>win.create.partition</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>Table...</attribute>             <attribute name='action'>win.create.table</attribute>           </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Encryption...</attribute>        <attribute name='action'>create.encryption</attribute>      </item>"
-		"		<item> <attribute name='label' translatable='yes'>Lvm Volume...</attribute>        <attribute name='action'>create.lvm_volume</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Encryption...</attribute>        <attribute name='action'>win.create.encryption</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Lvm Volume...</attribute>        <attribute name='action'>win.create.lvm_volume</attribute>      </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Subvolume...</attribute>         <attribute name='action'>create.subvolume</attribute>       </item>"
-		"		<item> <attribute name='label' translatable='yes'>Snapshot...</attribute>          <attribute name='action'>create.snapshot</attribute>        </item>"
+		"		<item> <attribute name='label' translatable='yes'>Subvolume...</attribute>         <attribute name='action'>win.create.subvolume</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>Snapshot...</attribute>          <attribute name='action'>win.create.snapshot</attribute>        </item>"
 		"	</section>"
 		"</submenu><submenu>"
 		"	<attribute name='label' translatable='yes'>_Delete</attribute>"
 		"	<section>"
-		"		<item> <attribute name='label' translatable='yes'>Filesystem</attribute>           <attribute name='action'>delete.filesystem</attribute>      </item>"
-		"		<item> <attribute name='label' translatable='yes'>Partition</attribute>            <attribute name='action'>delete.partition</attribute>       </item>"
-		"		<item> <attribute name='label' translatable='yes'>Table</attribute>                <attribute name='action'>delete.table</attribute>           </item>"
+		"		<item> <attribute name='label' translatable='yes'>Filesystem</attribute>           <attribute name='action'>win.delete.filesystem</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Partition</attribute>            <attribute name='action'>win.delete.partition</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>Table</attribute>                <attribute name='action'>win.delete.table</attribute>           </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Encryption</attribute>           <attribute name='action'>delete.encryption</attribute>      </item>"
-		"		<item> <attribute name='label' translatable='yes'>Lvm Volume</attribute>           <attribute name='action'>delete.lvm_volume</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Encryption</attribute>           <attribute name='action'>win.delete.encryption</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Lvm Volume</attribute>           <attribute name='action'>win.delete.lvm_volume</attribute>      </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Subvolume</attribute>            <attribute name='action'>delete.subvolume</attribute>       </item>"
-		"		<item> <attribute name='label' translatable='yes'>Snapshot</attribute>             <attribute name='action'>delete.snapshot</attribute>        </item>"
+		"		<item> <attribute name='label' translatable='yes'>Subvolume</attribute>            <attribute name='action'>win.delete.subvolume</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>Snapshot</attribute>             <attribute name='action'>win.delete.snapshot</attribute>        </item>"
 		"	</section>"
 		"</submenu><submenu>"
 		"	<attribute name='label' translatable='yes'>F_ormat</attribute>"
 		"	<section>"
-		"		<item> <attribute name='label' translatable='yes'>Wipe...</attribute>              <attribute name='action'>format.wipe</attribute>            </item>"
-		"		<item> <attribute name='label' translatable='yes'>Filesystem...</attribute>        <attribute name='action'>format.filesystem</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Wipe...</attribute>              <attribute name='action'>win.format.wipe</attribute>            </item>"
+		"		<item> <attribute name='label' translatable='yes'>Filesystem...</attribute>        <attribute name='action'>win.format.filesystem</attribute>      </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Btrfs...</attribute>             <attribute name='action'>format.btrfs</attribute>           </item>"
-		"		<item> <attribute name='label' translatable='yes'>Partition Type...</attribute>    <attribute name='action'>format.partition_type</attribute>  </item>"
-		"		<item> <attribute name='label' translatable='yes'>Table...</attribute>             <attribute name='action'>format.table</attribute>           </item>"
+		"		<item> <attribute name='label' translatable='yes'>Btrfs...</attribute>             <attribute name='action'>win.format.btrfs</attribute>           </item>"
+		"		<item> <attribute name='label' translatable='yes'>Partition Type...</attribute>    <attribute name='action'>win.format.partition_type</attribute>  </item>"
+		"		<item> <attribute name='label' translatable='yes'>Table...</attribute>             <attribute name='action'>win.format.table</attribute>           </item>"
 		"	</section>"
 		"</submenu><submenu>"
 		"	<attribute name='label' translatable='yes'>_Manage</attribute>"
 		"	<section>"
-		"		<item> <attribute name='label' translatable='yes'>Properties</attribute>           <attribute name='action'>manage.properties</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Properties</attribute>           <attribute name='action'>win.manage.properties</attribute>      </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Label...</attribute>             <attribute name='action'>manage.label</attribute>           </item>"
-		"		<item> <attribute name='label' translatable='yes'>Uuid...</attribute>              <attribute name='action'>manage.uuid</attribute>            </item>"
-		"		<item> <attribute name='label' translatable='yes'>Flags...</attribute>             <attribute name='action'>manage.flags</attribute>           </item>"
-		"		<item> <attribute name='label' translatable='yes'>Parameters...</attribute>        <attribute name='action'>manage.parameters</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Label...</attribute>             <attribute name='action'>win.manage.label</attribute>           </item>"
+		"		<item> <attribute name='label' translatable='yes'>Uuid...</attribute>              <attribute name='action'>win.manage.uuid</attribute>            </item>"
+		"		<item> <attribute name='label' translatable='yes'>Flags...</attribute>             <attribute name='action'>win.manage.flags</attribute>           </item>"
+		"		<item> <attribute name='label' translatable='yes'>Parameters...</attribute>        <attribute name='action'>win.manage.parameters</attribute>      </item>"
 		"	</section>"
 		"</submenu><submenu>"
 		"	<attribute name='label' translatable='yes'>File_system</attribute>"
 		"	<section>"
-		"		<item> <attribute name='label' translatable='yes'>Check</attribute>                <attribute name='action'>filesystem.check</attribute>       </item>"
-		"		<item> <attribute name='label' translatable='yes'>Defragment</attribute>           <attribute name='action'>filesystem.defragment</attribute>  </item>"
-		"		<item> <attribute name='label' translatable='yes'>Rebalance</attribute>            <attribute name='action'>filesystem.rebalance</attribute>   </item>"
+		"		<item> <attribute name='label' translatable='yes'>Check</attribute>                <attribute name='action'>win.filesystem.check</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>Defragment</attribute>           <attribute name='action'>win.filesystem.defragment</attribute>  </item>"
+		"		<item> <attribute name='label' translatable='yes'>Rebalance</attribute>            <attribute name='action'>win.filesystem.rebalance</attribute>   </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Resize/Move...</attribute>       <attribute name='action'>filesystem.resize_move</attribute> </item>"
+		"		<item> <attribute name='label' translatable='yes'>Resize/Move...</attribute>       <attribute name='action'>win.filesystem.resize_move</attribute> </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Mount...</attribute>             <attribute name='action'>filesystem.mount</attribute>       </item>"
-		"		<item> <attribute name='label' translatable='yes'>Umount</attribute>               <attribute name='action'>filesystem.umount</attribute>      </item>"
-		"		<item> <attribute name='label' translatable='yes'>Swap on</attribute>              <attribute name='action'>filesystem.swap_on</attribute>     </item>"
-		"		<item> <attribute name='label' translatable='yes'>Swap off</attribute>             <attribute name='action'>filesystem.swap_off</attribute>    </item>"
+		"		<item> <attribute name='label' translatable='yes'>Mount...</attribute>             <attribute name='action'>win.filesystem.mount</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>Umount</attribute>               <attribute name='action'>win.filesystem.umount</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Swap on</attribute>              <attribute name='action'>win.filesystem.swap_on</attribute>     </item>"
+		"		<item> <attribute name='label' translatable='yes'>Swap off</attribute>             <attribute name='action'>win.filesystem.swap_off</attribute>    </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Usage</attribute>                <attribute name='action'>filesystem.usage</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>Usage</attribute>                <attribute name='action'>win.filesystem.usage</attribute>       </item>"
 		"	</section>"
 		"</submenu><submenu>"
 		"	<attribute name='label' translatable='yes'>_Group</attribute>"
 		"	<section>"
-		"		<item> <attribute name='label' translatable='yes'>Resize...</attribute>            <attribute name='action'>group.resize</attribute>           </item>"
-		"		<item> <attribute name='label' translatable='yes'>Split...</attribute>             <attribute name='action'>group.split</attribute>            </item>"
-		"		<item> <attribute name='label' translatable='yes'>Merge...</attribute>             <attribute name='action'>group.merge</attribute>            </item>"
+		"		<item> <attribute name='label' translatable='yes'>Resize...</attribute>            <attribute name='action'>win.group.resize</attribute>           </item>"
+		"		<item> <attribute name='label' translatable='yes'>Split...</attribute>             <attribute name='action'>win.group.split</attribute>            </item>"
+		"		<item> <attribute name='label' translatable='yes'>Merge...</attribute>             <attribute name='action'>win.group.merge</attribute>            </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Add Stripe...</attribute>        <attribute name='action'>group.add_stripe</attribute>       </item>"
-		"		<item> <attribute name='label' translatable='yes'>Remove Stripe...</attribute>     <attribute name='action'>group.remove_stripe</attribute>    </item>"
+		"		<item> <attribute name='label' translatable='yes'>Add Stripe...</attribute>        <attribute name='action'>win.group.add_stripe</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>Remove Stripe...</attribute>     <attribute name='action'>win.group.remove_stripe</attribute>    </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Add Mirror...</attribute>        <attribute name='action'>group.add_mirror</attribute>       </item>"
-		"		<item> <attribute name='label' translatable='yes'>Remove Mirror...</attribute>     <attribute name='action'>group.remove_mirror</attribute>    </item>"
-		"		<item> <attribute name='label' translatable='yes'>Break Mirror...</attribute>      <attribute name='action'>group.break_mirror</attribute>     </item>"
+		"		<item> <attribute name='label' translatable='yes'>Add Mirror...</attribute>        <attribute name='action'>win.group.add_mirror</attribute>       </item>"
+		"		<item> <attribute name='label' translatable='yes'>Remove Mirror...</attribute>     <attribute name='action'>win.group.remove_mirror</attribute>    </item>"
+		"		<item> <attribute name='label' translatable='yes'>Break Mirror...</attribute>      <attribute name='action'>win.group.break_mirror</attribute>     </item>"
 		"	</section><section>"
-		"		<item> <attribute name='label' translatable='yes'>Add RAID...</attribute>          <attribute name='action'>group.add_raid</attribute>         </item>"
-		"		<item> <attribute name='label' translatable='yes'>Remove RAID...</attribute>       <attribute name='action'>group.remove_raid</attribute>      </item>"
+		"		<item> <attribute name='label' translatable='yes'>Add RAID...</attribute>          <attribute name='action'>win.group.add_raid</attribute>         </item>"
+		"		<item> <attribute name='label' translatable='yes'>Remove RAID...</attribute>       <attribute name='action'>win.group.remove_raid</attribute>      </item>"
 		"	</section>"
 		"</submenu><submenu>"
 		"	<attribute name='label' translatable='yes'>_Plugin</attribute>"
@@ -718,8 +732,10 @@ Window::on_keypress (int modifier, int key)
 {
 	//std::cout << "Keypress: " << modifier << " : " << (char) key << std::endl;
 
-	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q'))
+	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q')) {
+		set_show_menubar(false);
 		hide();
+	}
 }
 
 

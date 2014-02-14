@@ -729,7 +729,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	if (!gfx)
 		return;
 
-	std::cout << gfx << std::endl;
+	//std::cout << gfx << std::endl;
 
 	ContainerPtr c = gfx->get_container();
 	if (!c) {
@@ -743,7 +743,8 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 		return;
 	}
 
-	//std::cout << "Actions:" << std::endl;
+#if 0
+	std::cout << "Actions:" << std::endl;
 	for (auto a : actions) {
 		int colour;
 		if (a.enabled)
@@ -754,6 +755,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 		std::cout << "\t" << "\033[01;" << std::to_string (colour) << "m" << a.name << "\033[0m" << std::endl;
 	}
 	std::cout << std::endl;
+#endif
 
 	get_window()->invalidate (false);
 }
