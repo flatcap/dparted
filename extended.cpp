@@ -102,7 +102,7 @@ Extended::probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, lon
 		return nullptr;
 
 	MiscPtr res1 = Misc::create();
-	res1->name          = "reserved";
+	res1->name          = "Reserved";
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition

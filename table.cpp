@@ -137,7 +137,8 @@ Table::fill_space (void)
 			log_debug ("\tpartition %12lld -> %12lld    %8s -> %8s\n", c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str(), s2.c_str());
 #endif
 			MiscPtr m = Misc::create();
-			m->name = "unallocated";
+			m->name = "Unallocated";
+			m->sub_type ("Unallocated");
 			m->parent_offset = upto;
 			m->bytes_size = (c->parent_offset - upto);
 			m->bytes_used = 0;
@@ -151,7 +152,8 @@ Table::fill_space (void)
 	//log_debug ("upto = %lld, size = %lld\n", upto, bytes_size);
 	if (upto < bytes_size) {
 		MiscPtr m = Misc::create();
-		m->name = "unallocated";
+		m->name = "Unallocated";
+		m->sub_type ("Unallocated");
 		m->parent_offset = upto;
 		m->bytes_size = (bytes_size - upto);
 		m->bytes_used = 0;
