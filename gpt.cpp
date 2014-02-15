@@ -18,6 +18,10 @@
 
 #include <cstring>
 #include <sstream>
+#include <vector>
+#include <utility>
+#include <iostream>
+#include <iterator>
 
 #include "app.h"
 #include "gpt.h"
@@ -67,6 +71,52 @@ Gpt::accept (Visitor& v)
 
 
 /**
+ * delete_region
+ */
+void
+delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
+{
+	// std::cout << "delete: (" << start << "," << finish << "): ";
+	for (auto it = std::begin (region); it != std::end (region); it++) {
+		if (finish < (*it).first)
+			continue;
+
+		if (start > (*it).second)
+			continue;
+
+		/* xxxx = Delete, <--> = Remainder
+		 * 1 |xxxxxxxxxxx|	 s &  f		delete entire region
+		 * 2 |xxx<------>|	 s & !f		move start
+		 * 3 |<------>xxx|	!s &  f		move end
+		 * 4 |<-->xxx<-->|	!s & !f		split region
+		 */
+		if (start == (*it).first) {
+			if (finish == (*it).second) {		//1
+				// std::cout << "1\n";
+				region.erase (it);
+				break;
+			} else {				//2
+				// std::cout << "2\n";
+				(*it).first = finish;
+				break;
+			}
+		} else {
+			if (finish == (*it).second) {		//3
+				// std::cout << "3\n";
+				(*it).second = start;
+				break;
+			} else {				//4
+				// std::cout << "4\n";
+				int end = (*it).second;
+				(*it).second = start;
+				region.insert (it+1, { finish, end });
+				break;
+			}
+		}
+	}
+}
+
+/**
  * probe
  */
 ContainerPtr
@@ -88,6 +138,8 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 
 	GptPtr g = create();
 
+	std::vector<std::pair<int,int>> empty = { { 0, (parent->bytes_size/512)-1 } };
+
 	g->name = "gpt";
 	g->bytes_size = parent->bytes_size;
 	g->bytes_used = 0;
@@ -106,14 +158,16 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 
 #if 0
 	MiscPtr res1 = Misc::create();
-	res1->name          = "reserved";
+	res1->name          = "Reserved";
+	res1->sub_type ("Reserved");
 	res1->bytes_size    = 512 * 34;		//align (512 * 34, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
 	g->add_child (res1);		// change to add_reserved?
 
 	MiscPtr res2 = Misc::create();
-	res2->name          = "reserved";
+	res2->name          = "Reserved";
+	res2->sub_type ("Reserved");
 	res2->bytes_size    = 512 * 33;		//align (512 * 33, 1024*1024);
 	res2->bytes_used    = res2->bytes_size;
 	res2->parent_offset = g->bytes_size - res2->bytes_size;		// End of the partition
@@ -137,6 +191,8 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 	p->add_child (fs);
 	return g;
 #endif
+	std::string device = g->get_device_name();
+
 	for (int i = 0; i < 128; i++, buffer += 128) {
 		if (*(long*) (buffer+32) == 0)
 			continue;			// Skip empty slots
@@ -148,7 +204,6 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 		//p->part_type_uuid = read_guid (buffer+0);
 
 		std::ostringstream part_name;
-		std::string device = g->get_device_name();
 		part_name << device;
 		if (isdigit (device.back())) {
 			part_name << 'p';
@@ -158,6 +213,10 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 
 		long start  = *(long*) (buffer+32);
 		long finish = *(long*) (buffer+40);
+
+		//printf ("%2d: %9ld -%9ld  %10ld  %ld\n", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
+
+		delete_region (empty, start-1, finish);
 
 		p->parent_offset = start * 512;
 		p->bytes_size = (finish - start + 1) * 512;
@@ -182,6 +241,26 @@ Gpt::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer
 		g->add_child(c);
 		main_app->queue_add_probe(c);
 	}
+
+	for (auto r : empty) {
+		//printf ("(%d,%d) ", r.first, r.second);
+
+		MiscPtr m = Misc::create();
+		m->bytes_size = (r.second-r.first+1);	m->bytes_size    *= 512;	//XXX avoid overflow (for now)
+		m->parent_offset = r.first;		m->parent_offset *= 512;
+		if (r.first == 0) {
+			m->name = "Reserved";
+			m->sub_type ("Reserved");
+			m->bytes_used = m->bytes_size;
+		} else {
+			m->name = "Unallocated";
+			m->sub_type ("Unallocated");
+			m->bytes_used = 0;
+		}
+		g->add_child (m);		// change to add_reserved?
+	}
+	//printf ("\n");
+
 
 #if 0
 	g->fill_space();		// optional

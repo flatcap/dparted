@@ -82,7 +82,7 @@ Window::Window()
 
 	bool tb = false;
 	bool gx = true;
-	bool tv = false;
+	bool tv = true;
 	bool sb = false;
 	ConfigFilePtr cfg = gui_app->get_config();
 	if (cfg) {
