@@ -22,13 +22,11 @@
 #include <functional>
 
 #include "app.h"
-#include "gui_app.h"
 #include "log.h"
 #include "luks.h"
 #include "log_trace.h"
 #include "visitor.h"
 #include "utils.h"
-#include "password_dialog.h"
 
 /**
  * Luks
@@ -110,9 +108,11 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
 	q->question = "for luks device " + l->device;
 	q->answers = { "Cancel", "Done" };
 #endif
+#if 0
 	PasswordDialogPtr p = PasswordDialog::create();
 	p->title = "Luks";
 	gui_app->ask_pass (p);
+#endif
 
 	//main_app->ask (q);
 
