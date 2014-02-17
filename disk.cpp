@@ -284,7 +284,7 @@ Disk::find_device (const std::string& dev)
 	// iterate through my children
 	if (device.compare (0, dev_len, dev, 0, dev_len) == 0) {
 		//log_debug ("similar\n");
-		return Block::find_device (dev);
+		return Device::find_device (dev);
 	}
 
 	return nullptr;
@@ -372,7 +372,7 @@ Disk::get_actions (void)
 		{ "dummy.disk", true },
 	};
 
-	std::vector<Action> parent_actions = Block::get_actions();
+	std::vector<Action> parent_actions = Device::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -389,7 +389,7 @@ Disk::perform_action (Action action)
 		std::cout << "Disk perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Block::perform_action (action);
+		return Device::perform_action (action);
 	}
 }
 

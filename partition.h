@@ -22,7 +22,7 @@
 #include <string>
 #include <memory>
 
-#include "container.h"
+#include "device.h"
 #include "volume.h"
 #include "action.h"
 
@@ -34,7 +34,7 @@ typedef std::shared_ptr<Partition> PartitionPtr;
 /**
  * class Partition
  */
-class Partition : public Container
+class Partition : public Device
 {
 public:
 	virtual ~Partition() = default;

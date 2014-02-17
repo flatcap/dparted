@@ -69,10 +69,10 @@ File::accept (Visitor& v)
 
 #if 0
 /**
- * find_devices
+ * find_containers
  */
 bool
-File::find_devices (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
+File::find_containers (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
 {
 	FilePtr f = File::create();
 #if 0
@@ -91,7 +91,7 @@ File::find_devices (const std::string& name, int fd, struct stat& st, ContainerP
 	log_debug ("ctime   = %ld\n",     st.st_ctim.tv_sec);
 #endif
 
-	f->device        = name;
+	f->container        = name;
 	f->parent_offset = 0;
 	f->bytes_size    = st.st_size;
 	f->bytes_used    = 0;
@@ -134,7 +134,7 @@ File::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	/* dir:
 	 *	Search for files: *.img
 	 * file:
-	 *	We create, and manage, a loop device for this file
+	 *	We create, and manage, a loop container for this file
 	 */
 }
 
@@ -149,7 +149,7 @@ File::get_actions (void)
 		{ "dummy.file", true },
 	};
 
-	std::vector<Action> parent_actions = Block::get_actions();
+	std::vector<Action> parent_actions = Container::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -166,7 +166,7 @@ File::perform_action (Action action)
 		std::cout << "File perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Block::perform_action (action);
+		return Container::perform_action (action);
 	}
 }
 

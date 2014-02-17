@@ -16,47 +16,42 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _WHOLE_H_
-#define _WHOLE_H_
+#ifndef _MD_PARTITION_H_
+#define _MD_PARTITION_H_
 
-#include <string>
-#include <vector>
 #include <memory>
 
-#include "container.h"
+#include "piece.h"
 #include "action.h"
 
+class MdPartition;
 class Visitor;
-class Whole;
 
-typedef std::shared_ptr<Whole> WholePtr;
+typedef std::shared_ptr<MdPartition> MdPartitionPtr;
 
 /**
- * class Whole
+ * class MdPartition
  */
-class Whole : public virtual Container
+class MdPartition : public Piece
 {
 public:
-	virtual ~Whole() = default;
-	static WholePtr create (void);
+	virtual ~MdPartition() = default;
+	static MdPartitionPtr create (void);
 	virtual bool accept (Visitor& v);
-
-	virtual void add_segment (ContainerPtr seg);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
 public:
-	// seg_count - LVM2_SEG_COUNT
-	std::vector<ContainerPtr> segments;
+	//properties
 
 protected:
-	Whole (void);
+	MdPartition (void);
 
 private:
 
 };
 
 
-#endif // _WHOLE_H_
+#endif // _MD_PARTITION_H_
 

@@ -23,7 +23,7 @@
 #include <queue>
 #include <memory>
 
-#include "block.h"
+#include "device.h"
 #include "action.h"
 
 class Loop;
@@ -34,7 +34,7 @@ typedef std::shared_ptr<Loop> LoopPtr;
 /**
  * class Loop
  */
-class Loop : public Block
+class Loop : public Device
 {
 public:
 	virtual ~Loop() = default;

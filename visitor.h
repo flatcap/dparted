@@ -21,8 +21,8 @@
 
 #include <memory>
 
-#include "block.h"
 #include "container.h"
+#include "device.h"
 #include "disk.h"
 #include "extended.h"
 #include "file.h"
@@ -60,13 +60,13 @@ public:
 	virtual bool visit (ContainerPtr c) = 0;
 
 	//XXX move the dirty inheritance stuff elsewhere? (hideous dependency problem)
-	virtual bool visit (BlockPtr        b) { return visit (std::dynamic_pointer_cast<Container>(b)); }
-	virtual bool visit (DiskPtr         d) { return visit (std::dynamic_pointer_cast<Block>    (d)); }
+	virtual bool visit (DevicePtr       d) { return visit (std::dynamic_pointer_cast<Container>(d)); }
+	virtual bool visit (DiskPtr         d) { return visit (std::dynamic_pointer_cast<Device>   (d)); }
 	virtual bool visit (ExtendedPtr     e) { return visit (std::dynamic_pointer_cast<Msdos>    (e)); }
-	virtual bool visit (FilePtr         f) { return visit (std::dynamic_pointer_cast<Block>    (f)); }
+	virtual bool visit (FilePtr         f) { return visit (std::dynamic_pointer_cast<Device>   (f)); }
 	virtual bool visit (FilesystemPtr   f) { return visit (std::dynamic_pointer_cast<Container>(f)); }
 	virtual bool visit (GptPtr          g) { return visit (std::dynamic_pointer_cast<Table>    (g)); }
-	virtual bool visit (LoopPtr         l) { return visit (std::dynamic_pointer_cast<Block>    (l)); }
+	virtual bool visit (LoopPtr         l) { return visit (std::dynamic_pointer_cast<Device>   (l)); }
 	virtual bool visit (LuksPtr         l) { return visit (std::dynamic_pointer_cast<Partition>(l)); }
 	virtual bool visit (LvmGroupPtr     l) { return visit (std::dynamic_pointer_cast<Whole>    (l)); }
 	virtual bool visit (LvmLinearPtr    l) { return visit (std::dynamic_pointer_cast<LvmVolume>(l)); }

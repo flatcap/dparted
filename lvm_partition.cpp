@@ -69,7 +69,7 @@ LvmPartition::get_actions (void)
 		{ "dummy.lvmpartition", true },
 	};
 
-	std::vector<Action> parent_actions = Partition::get_actions();
+	std::vector<Action> parent_actions = Piece::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -86,7 +86,7 @@ LvmPartition::perform_action (Action action)
 		std::cout << "LvmPartition perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Partition::perform_action (action);
+		return Piece::perform_action (action);
 	}
 }
 

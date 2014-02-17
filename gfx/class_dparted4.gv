@@ -6,23 +6,23 @@ digraph G
 
 	Container      [ fillcolor="#FFFFFF" ];
 
-	Table          [ fillcolor="#B4A0F3" ];
-	Msdos          [ fillcolor="#B4A0F3" ];
 	Extended       [ fillcolor="#B4A0F3" ];
 	Gpt            [ fillcolor="#B4A0F3" ];
 	LvmTable       [ fillcolor="#B4A0F3" ];
 	MdTable        [ fillcolor="#B4A0F3" ];
+	Msdos          [ fillcolor="#B4A0F3" ];
+	Table          [ fillcolor="#B4A0F3" ];
 
-	Filesystem     [ fillcolor="#FFFFCC" ];
-	Ext4           [ fillcolor="#FFFFCC" ];
 	Btrfs          [ fillcolor="#FFFFCC" ];
+	Ext4           [ fillcolor="#FFFFCC" ];
+	Filesystem     [ fillcolor="#FFFFCC" ];
 	Ntfs           [ fillcolor="#FFFFCC" ];
 
-	BtrfsSubvolume [ label="Subvolume" fontcolor=white style=dashed penwidth=1 ];
 	BtrfsSnapshot  [ label="Snapshot"  fontcolor=white style=dashed penwidth=1 ];
+	BtrfsSubvolume [ label="Subvolume" fontcolor=white style=dashed penwidth=1 ];
 
-	Whole          [ fillcolor="#2BDCFF" ];
 	Volume         [ fillcolor="#2BDCFF:#FFB6C1" gradientangle=90 ];
+	Whole          [ fillcolor="#2BDCFF" ];
 
 	LvmLinear      [ fillcolor="#DAA520" ];
 	LvmMetadata    [ fillcolor="#DAA520" ];
@@ -32,34 +32,34 @@ digraph G
 	LvmVolume      [ fillcolor="#DAA520" ];
 
 	Device         [ fillcolor="#FFB6C1" ];
-	Partition      [ fillcolor="#FFB6C1" ];
-	LuksOpen       [ fillcolor="#FFB6C1" ];
 	LuksClosed     [ fillcolor="#FFB6C1" ];
+	LuksOpen       [ fillcolor="#FFB6C1" ];
+	Partition      [ fillcolor="#FFB6C1" ];
 
 	Disk           [ fillcolor="#FFB6C1" ];
 	Loop           [ fillcolor="#FFB6C1" ];
 
 	Misc           [ fillcolor="#DC4C46" ];
-	Zero           [ fillcolor="#DC4C46" ];
 	Random         [ fillcolor="#DC4C46" ];
 	Reserved       [ fillcolor="#DC4C46" ];
 	Unallocated    [ fillcolor="#DC4C46" ];
+	Zero           [ fillcolor="#DC4C46" ];
 
-	Piece          [ fillcolor="#B0D0B0" ];
 	LvmPartition   [ fillcolor="#B0D0B0" ];
 	MdPartition    [ fillcolor="#B0D0B0" ];
+	Piece          [ fillcolor="#B0D0B0" ];
 
 	LvmGroup       [ fillcolor="#2BDCFF" ];
 	MdGroup        [ fillcolor="#2BDCFF" ];
 
 	File           [ fillcolor="#00FF00" ];
 
-	Filesystem -> Container;
-	Table      -> Container;
-	Whole      -> Container;
 	Device     -> Container;
+	Filesystem -> Container;
 	Misc       -> Container;
 	Piece      -> Container;
+	Table      -> Container;
+	Whole      -> Container;
 
 	File       -> Container;
 
@@ -80,8 +80,8 @@ digraph G
 		color = transparent;
 
 		Ext4                 -> Filesystem;
-		Btrfs                -> Filesystem;
 		Ntfs                 -> Filesystem;
+		Btrfs                -> Filesystem;
 
 		BtrfsSubvolume       -> Btrfs [ style=dashed ];
 		BtrfsSnapshot        -> Btrfs [ style=dashed ];

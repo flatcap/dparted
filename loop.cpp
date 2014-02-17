@@ -254,7 +254,7 @@ Loop::get_actions (void)
 		{ "dummy.loop", true },
 	};
 
-	std::vector<Action> parent_actions = Block::get_actions();
+	std::vector<Action> parent_actions = Device::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -271,7 +271,7 @@ Loop::perform_action (Action action)
 		std::cout << "Loop perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Block::perform_action (action);
+		return Device::perform_action (action);
 	}
 }
 

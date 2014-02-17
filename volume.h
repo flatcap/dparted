@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "whole.h"
+#include "device.h"
 #include "action.h"
 
 class Volume;
@@ -32,7 +33,9 @@ typedef std::shared_ptr<Volume> VolumePtr;
 /**
  * class Volume
  */
-class Volume : public Whole
+class Volume :
+	public Whole,
+	public Device
 {
 public:
 	virtual ~Volume() = default;

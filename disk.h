@@ -24,7 +24,7 @@
 #include <queue>
 #include <memory>
 
-#include "block.h"
+#include "device.h"
 #include "action.h"
 
 class Disk;
@@ -35,7 +35,7 @@ typedef std::shared_ptr<Disk> DiskPtr;
 /**
  * class Disk
  */
-class Disk : public Block
+class Disk : public Device
 {
 public:
 	virtual ~Disk() = default;

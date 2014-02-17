@@ -37,10 +37,10 @@ Luks::Luks (void)
 
 	sub_type (me);
 
-	declare_prop (me, "version",     ptype, "desc of version");
-	declare_prop (me, "cipher_name", ptype, "desc of cipher_name");
-	declare_prop (me, "cipher_mode", ptype, "desc of cipher_mode");
-	declare_prop (me, "hash_spec",   ptype, "desc of hash_spec");
+	declare_prop (me, "version",     version,     "desc of version");
+	declare_prop (me, "cipher_name", cipher_name, "desc of cipher_name");
+	declare_prop (me, "cipher_mode", cipher_mode, "desc of cipher_mode");
+	declare_prop (me, "hash_spec",   hash_spec,   "desc of hash_spec");
 }
 
 /**
@@ -310,7 +310,7 @@ Luks::get_actions (void)
 		{ "dummy.luks", true },
 	};
 
-	std::vector<Action> parent_actions = Partition::get_actions();
+	std::vector<Action> parent_actions = Device::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -327,7 +327,7 @@ Luks::perform_action (Action action)
 		std::cout << "Luks perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Partition::perform_action (action);
+		return Device::perform_action (action);
 	}
 }
 

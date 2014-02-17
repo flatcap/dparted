@@ -22,7 +22,7 @@
 #include <string>
 #include <memory>
 
-#include "partition.h"
+#include "device.h"
 #include "question.h"
 #include "action.h"
 
@@ -33,7 +33,7 @@ typedef std::shared_ptr<Luks> LuksPtr;
 /**
  * class Luks
  */
-class Luks : public Partition
+class Luks : public Device
 {
 public:
 	virtual ~Luks() = default;

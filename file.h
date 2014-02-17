@@ -23,7 +23,7 @@
 #include <queue>
 #include <memory>
 
-#include "block.h"
+#include "container.h"
 #include "action.h"
 
 class File;
@@ -34,7 +34,7 @@ typedef std::shared_ptr<File> FilePtr;
 /**
  * class File
  */
-class File : public Block
+class File : public Container
 {
 public:
 	virtual ~File() = default;

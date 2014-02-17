@@ -16,36 +16,50 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <fcntl.h>
+#include <linux/fs.h>
+#include <linux/kdev_t.h>
+#include <linux/major.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 #include <sstream>
 #include <string>
 
+#include "device.h"
+#include "disk.h"
+#include "file.h"
 #include "log.h"
-#include "partition.h"
+#include "loop.h"
+#include "main.h"
 #include "log_trace.h"
 #include "visitor.h"
 
 /**
- * Partition
+ * Device
  */
-Partition::Partition (void)
+Device::Device (void)
 {
-	const char* me = "Partition";
+	const char* me = "Device";
 
 	sub_type (me);
 
-	declare_prop (me, "ptype", ptype, "desc of ptype");
+	declare_prop (me, "kernel_major", kernel_major, "desc of kernel_major");
+	declare_prop (me, "kernel_minor", kernel_minor, "desc of kernel_minor");
 }
 
 /**
  * create
  */
-PartitionPtr
-Partition::create (void)
+DevicePtr
+Device::create (void)
 {
-	PartitionPtr p (new Partition());
-	p->weak = p;
+	DevicePtr b (new Device());
+	b->weak = b;
 
-	return p;
+	return b;
 }
 
 
@@ -53,26 +67,27 @@ Partition::create (void)
  * accept
  */
 bool
-Partition::accept (Visitor& v)
+Device::accept (Visitor& v)
 {
-	PartitionPtr p = std::dynamic_pointer_cast<Partition> (get_smart());
-	if (!v.visit(p))
+	DevicePtr b = std::dynamic_pointer_cast<Device> (get_smart());
+	if (!v.visit(b))
 		return false;
 	return visit_children(v);
 }
+
 
 /**
  * get_actions
  */
 std::vector<Action>
-Partition::get_actions (void)
+Device::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.partition", true },
+		{ "dummy.device", true },
 	};
 
-	std::vector<Action> parent_actions = Device::get_actions();
+	std::vector<Action> parent_actions = Container::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -83,13 +98,13 @@ Partition::get_actions (void)
  * perform_action
  */
 bool
-Partition::perform_action (Action action)
+Device::perform_action (Action action)
 {
-	if (action.name == "dummy.partition") {
-		std::cout << "Partition perform: " << action.name << std::endl;
+	if (action.name == "dummy.device") {
+		std::cout << "Device perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Device::perform_action (action);
+		return Container::perform_action (action);
 	}
 }
 

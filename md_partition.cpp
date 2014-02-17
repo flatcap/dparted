@@ -16,50 +16,32 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <fcntl.h>
-#include <linux/fs.h>
-#include <linux/kdev_t.h>
-#include <linux/major.h>
-#include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-
 #include <sstream>
-#include <string>
 
-#include "block.h"
-#include "disk.h"
-#include "file.h"
-#include "log.h"
-#include "loop.h"
-#include "main.h"
+#include "md_partition.h"
 #include "log_trace.h"
 #include "visitor.h"
 
 /**
- * Block
+ * MdPartition
  */
-Block::Block (void)
+MdPartition::MdPartition (void)
 {
-	const char* me = "Block";
+	const char* me = "MdPartition";
 
 	sub_type (me);
-
-	declare_prop (me, "kernel_major", kernel_major, "desc of kernel_major");
-	declare_prop (me, "kernel_minor", kernel_minor, "desc of kernel_minor");
 }
 
 /**
  * create
  */
-BlockPtr
-Block::create (void)
+MdPartitionPtr
+MdPartition::create (void)
 {
-	BlockPtr b (new Block());
-	b->weak = b;
+	MdPartitionPtr m (new MdPartition());
+	m->weak = m;
 
-	return b;
+	return m;
 }
 
 
@@ -67,10 +49,10 @@ Block::create (void)
  * accept
  */
 bool
-Block::accept (Visitor& v)
+MdPartition::accept (Visitor& v)
 {
-	BlockPtr b = std::dynamic_pointer_cast<Block> (get_smart());
-	if (!v.visit(b))
+	MdPartitionPtr m = std::dynamic_pointer_cast<MdPartition> (get_smart());
+	if (!v.visit(m))
 		return false;
 	return visit_children(v);
 }
@@ -80,14 +62,14 @@ Block::accept (Visitor& v)
  * get_actions
  */
 std::vector<Action>
-Block::get_actions (void)
+MdPartition::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.block", true },
+		{ "dummy.mdpartition", true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> parent_actions = Piece::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -98,13 +80,13 @@ Block::get_actions (void)
  * perform_action
  */
 bool
-Block::perform_action (Action action)
+MdPartition::perform_action (Action action)
 {
-	if (action.name == "dummy.block") {
-		std::cout << "Block perform: " << action.name << std::endl;
+	if (action.name == "dummy.mdpartition") {
+		std::cout << "MdPartition perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Container::perform_action (action);
+		return Piece::perform_action (action);
 	}
 }
 

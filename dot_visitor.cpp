@@ -24,7 +24,7 @@
 #include "loop.h"
 #include "gpt.h"
 #include "whole.h"
-#include "block.h"
+#include "device.h"
 #include "partition.h"
 #include "filesystem.h"
 #include "luks.h"
@@ -90,7 +90,7 @@ DotVisitor::visit_leave (void)
 std::string
 get_colour (ContainerPtr c)
 {
-	if (c->is_a ("Block"))       return "#aaffaa";
+	if (c->is_a ("Device"))      return "#aaffaa";
 	if (c->is_a ("Filesystem"))  return "#bbffff";
 	if (c->is_a ("LvmMetadata")) return "#bbffff";
 	if (c->is_a ("Table"))       return "#ffbbbb";
@@ -343,13 +343,13 @@ dot_container (std::shared_ptr<T> t)
 }
 
 /**
- * dot_block
+ * dot_device
  */
 template <class T>
 std::string
-dot_block (std::shared_ptr<T> t)
+dot_device (std::shared_ptr<T> t)
 {
-	BlockPtr b(t);
+	DevicePtr b(t);
 	if (!b)
 		return "";
 
@@ -375,7 +375,7 @@ dot_disk (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_block(d);
+	output << dot_device(d);
 
 	//output << dot_row ("hw_cylinders",   hw_cylinders);
 	//output << dot_row ("hw_heads",       hw_heads);
@@ -405,7 +405,7 @@ dot_file (std::shared_ptr<T> t)
 
 	// no specifics for now
 
-	output << dot_block(f);
+	output << dot_device(f);
 
 	return output.str();
 }
@@ -424,7 +424,7 @@ dot_loop (std::shared_ptr<T> t)
 	std::stringstream output;
 	std::stringstream mm;
 
-	output << dot_block(l);
+	output << dot_device(l);
 
 	std::string flags;
 	if (l->autoclear)	flags += ", autoclear";
@@ -1004,7 +1004,7 @@ DotVisitor::visit (LoopPtr l)
 
 	std::stringstream mm;
 
-	output << dot_block (std::dynamic_pointer_cast<Block>(l));
+	output << dot_device (std::dynamic_pointer_cast<Device>(l));
 
 	std::string flags;
 	if (l->autoclear)	flags += ", autoclear";
@@ -1181,7 +1181,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 		dot << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << missing << "</b></font></td></tr>\n";
 
-		if (type == "block")         { dot << dot_block        (c); }
+		if (type == "block")         { dot << dot_device        (c); }
 		//...
 
 		dot << "</table>>];\n";

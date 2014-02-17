@@ -21,7 +21,7 @@
 
 #include <memory>
 
-#include "partition.h"
+#include "piece.h"
 #include "action.h"
 
 class LvmPartition;
@@ -32,7 +32,7 @@ typedef std::shared_ptr<LvmPartition> LvmPartitionPtr;
 /**
  * class LvmPartition
  */
-class LvmPartition : public Partition
+class LvmPartition : public Piece
 {
 public:
 	virtual ~LvmPartition() = default;
