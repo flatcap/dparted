@@ -89,7 +89,7 @@ private:
 
 	std::deque<Range> vRange;
 
-	bool mouse_close = false;
+	//bool mouse_close = false;
 
 	Gtk::Menu m_fake_menu;
 

@@ -65,7 +65,7 @@ protected:
 	void init_icons (void);
 
 private:
-	int seqnum = 0;
+	//int seqnum = 0;
 
 };
 

@@ -17,8 +17,9 @@
  */
 
 #include <gtkmm/stock.h>
-#include <gtkmm.h>
 #include <giomm/simpleactiongroup.h>
+#include <glibmm.h>
+#include <giomm/menu.h>
 
 #include <iostream>
 #include <algorithm>

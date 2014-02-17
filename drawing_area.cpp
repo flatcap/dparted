@@ -17,10 +17,10 @@
  */
 
 #include <unistd.h>
-#include <gtkmm.h>
 #include <pangomm.h>
 #include <stdlib.h>
-#include <gdk/gdkwindow.h>
+#include <gdk/gdk.h>
+#include <gtkmm/separatormenuitem.h>
 
 #include <cmath>
 #include <cstdlib>

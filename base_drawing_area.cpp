@@ -16,7 +16,7 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtkmm.h>
+#include <gdkmm.h>
 
 #include "base_drawing_area.h"
 #include "log.h"

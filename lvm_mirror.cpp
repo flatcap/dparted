@@ -63,7 +63,7 @@ LvmMirror::accept (Visitor& v)
  * add_child
  */
 void
-LvmMirror::add_child (ContainerPtr child)
+LvmMirror::add_child (ContainerPtr& child)
 {
 	/* Check:
 	 *	available space
@@ -119,7 +119,7 @@ LvmMirror::add_child (ContainerPtr child)
  * delete_child
  */
 void
-LvmMirror::delete_child (ContainerPtr child)
+LvmMirror::delete_child (ContainerPtr& child)
 {
 }
 

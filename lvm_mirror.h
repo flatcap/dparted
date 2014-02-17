@@ -39,8 +39,8 @@ public:
 	static LvmMirrorPtr create (void);
 	virtual bool accept (Visitor& v);
 
-	virtual void add_child    (ContainerPtr child);
-	virtual void delete_child (ContainerPtr child);
+	virtual void add_child    (ContainerPtr& child);
+	virtual void delete_child (ContainerPtr& child);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);

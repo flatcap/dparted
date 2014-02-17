@@ -19,7 +19,7 @@
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
 #include <glibmm/fileutils.h>
-#include <gtkmm.h>
+#include <cairomm/cairomm.h>
 
 #include <map>
 #include <iostream>
@@ -253,7 +253,7 @@ Theme::read_file (const std::string& filename)
 	cf = ConfigFile::read_file (filename);
 	if (!cf) {
 		//notify the user
-		return false;
+		return nullptr;
 	}
 
 	if (tp->config_file) {
