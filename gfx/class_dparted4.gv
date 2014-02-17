@@ -1,0 +1,135 @@
+digraph G
+{
+	graph [ rankdir="RL" bgcolor="#002200", color=white nodesep=0.1 ranksep=0.5 ];
+	node  [ shape=record fontsize=12 style=filled color=white width="1.0" height="0.25" fixedsize=true penwidth=0 ];
+	edge  [ penwidth=1.0 color="#CCCCCC" arrowsize=0.5 ];
+
+	Container      [ fillcolor="#FFFFFF" ];
+
+	Table          [ fillcolor="#B4A0F3" ];
+	Msdos          [ fillcolor="#B4A0F3" ];
+	Extended       [ fillcolor="#B4A0F3" ];
+	Gpt            [ fillcolor="#B4A0F3" ];
+	LvmTable       [ fillcolor="#B4A0F3" ];
+	MdTable        [ fillcolor="#B4A0F3" ];
+
+	Filesystem     [ fillcolor="#FFFFCC" ];
+	Ext4           [ fillcolor="#FFFFCC" ];
+	Btrfs          [ fillcolor="#FFFFCC" ];
+	Ntfs           [ fillcolor="#FFFFCC" ];
+
+	BtrfsSubvolume [ label="Subvolume" fontcolor=white style=dashed penwidth=1 ];
+	BtrfsSnapshot  [ label="Snapshot"  fontcolor=white style=dashed penwidth=1 ];
+
+	Whole          [ fillcolor="#2BDCFF" ];
+	Volume         [ fillcolor="#2BDCFF:#FFB6C1" gradientangle=90 ];
+
+	LvmLinear      [ fillcolor="#DAA520" ];
+	LvmMetadata    [ fillcolor="#DAA520" ];
+	LvmMirror      [ fillcolor="#DAA520" ];
+	LvmRaid        [ fillcolor="#DAA520" ];
+	LvmStripe      [ fillcolor="#DAA520" ];
+	LvmVolume      [ fillcolor="#DAA520" ];
+
+	Device         [ fillcolor="#FFB6C1" ];
+	Partition      [ fillcolor="#FFB6C1" ];
+	LuksOpen       [ fillcolor="#FFB6C1" ];
+	LuksClosed     [ fillcolor="#FFB6C1" ];
+
+	Disk           [ fillcolor="#FFB6C1" ];
+	Loop           [ fillcolor="#FFB6C1" ];
+
+	Misc           [ fillcolor="#DC4C46" ];
+	Zero           [ fillcolor="#DC4C46" ];
+	Random         [ fillcolor="#DC4C46" ];
+	Reserved       [ fillcolor="#DC4C46" ];
+	Unallocated    [ fillcolor="#DC4C46" ];
+
+	Piece          [ fillcolor="#B0D0B0" ];
+	LvmPartition   [ fillcolor="#B0D0B0" ];
+	MdPartition    [ fillcolor="#B0D0B0" ];
+
+	LvmGroup       [ fillcolor="#2BDCFF" ];
+	MdGroup        [ fillcolor="#2BDCFF" ];
+
+	File           [ fillcolor="#00FF00" ];
+
+	Filesystem -> Container;
+	Table      -> Container;
+	Whole      -> Container;
+	Device     -> Container;
+	Misc       -> Container;
+	Piece      -> Container;
+
+	File       -> Container;
+
+	LvmVolume  -> Volume;
+
+	subgraph cluster_1 {
+		color = transparent;
+
+		Extended             -> Msdos;
+
+		Gpt                  -> Table;
+		LvmTable             -> Table;
+		MdTable              -> Table;
+		Msdos                -> Table;
+	}
+
+	subgraph cluster_2 {
+		color = transparent;
+
+		Ext4                 -> Filesystem;
+		Btrfs                -> Filesystem;
+		Ntfs                 -> Filesystem;
+
+		BtrfsSubvolume       -> Btrfs [ style=dashed ];
+		BtrfsSnapshot        -> Btrfs [ style=dashed ];
+	}
+
+	subgraph cluster_3 {
+		color = transparent;
+
+		Zero                 -> Misc;
+		Random               -> Misc;
+		Reserved             -> Misc;
+		Unallocated          -> Misc;
+	}
+
+	subgraph cluster_4 {
+		color = transparent;
+
+		LvmPartition         -> Piece;
+		MdPartition          -> Piece;
+	}
+
+	subgraph cluster_5 {
+		color = transparent;
+
+		LvmMetadata          -> LvmLinear;
+		LvmLinear            -> LvmVolume;
+		LvmMirror            -> LvmVolume;
+		LvmRaid              -> LvmVolume;
+		LvmStripe            -> LvmVolume;
+	}
+
+	subgraph cluster_6 {
+		color = transparent;
+
+		LvmGroup             -> Whole;
+		MdGroup              -> Whole;
+		Volume               -> Whole;
+	}
+
+	subgraph cluster_7 {
+		color = transparent;
+
+		Partition            -> Device;
+		LuksOpen             -> Device;
+		LuksClosed           -> Device;
+		Disk                 -> Device;
+		Loop                 -> Device;
+		Volume               -> Device;
+	}
+}
+
