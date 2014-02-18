@@ -31,7 +31,7 @@ struct compare
 {
 	bool operator() (const MmapPtr& a, const MmapPtr& b)
 	{
-		long ao, as, bo, bs;
+		long ao = 0, as = 0, bo = 0, bs = 0;
 		std::tie (ao, as, std::ignore) = *a;
 		std::tie (bo, bs, std::ignore) = *b;
 

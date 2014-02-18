@@ -666,8 +666,8 @@ Container::get_children (void)
  */
 void deleter (Mmap* m)
 {
-	long  size;
-	void* ptr;
+	long  size = 0;
+	void* ptr = nullptr;
 
 	std::tie (std::ignore, size, ptr) = *m;
 

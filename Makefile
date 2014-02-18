@@ -17,6 +17,7 @@
 # along with DParted.  If not, see <http://www.gnu.org/licenses/>.
 
 CC	= clang++
+SCAN	= scan-build
 RM	= rm -fr
 MKDIR	= mkdir -p
 

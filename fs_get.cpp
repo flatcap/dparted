@@ -123,9 +123,12 @@ get_vfat (unsigned char* buffer, int bufsize)
 
 	if ((sect_fat * 512) <= bufsize) {
 		short int* ptr = (short int*) (buffer + (512*reserved));
+#if 0
+		//XXX not stored anywhere
 		if (sect_fat == 0) {
 			sect_fat = *(int*) (buffer + 0x24);
 		}
+#endif
 
 		for (int i = 0; i < clusters; i++) {
 			if (ptr[i] == 0) {

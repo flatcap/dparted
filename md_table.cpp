@@ -104,12 +104,12 @@ is_mdtable (unsigned char* buffer)
  * probe
  */
 ContainerPtr
-MdTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int bufsize)
+MdTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	//LOG_TRACE;
 
 	buffer  += 4096;	// Ignore the first 4KiB
-	bufsize -= 4096;
+	//bufsize -= 4096;
 
 	if (!is_mdtable (buffer))
 		return nullptr;
