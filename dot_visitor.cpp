@@ -90,13 +90,14 @@ DotVisitor::visit_leave (void)
 std::string
 get_colour (ContainerPtr c)
 {
-	if (c->is_a ("Device"))      return "#aaffaa";
-	if (c->is_a ("Filesystem"))  return "#bbffff";
-	if (c->is_a ("LvmMetadata")) return "#bbffff";
-	if (c->is_a ("Table"))       return "#ffbbbb";
-	if (c->is_a ("Partition"))   return "#ffffdd";
-	if (c->is_a ("Whole"))       return "#ccccff";
-	if (c->is_a ("Misc"))        return "orange";
+	if (c->is_a ("Container"))  return "#FFFFFF";
+	if (c->is_a ("Table"))      return "#FFFFCC";
+	if (c->is_a ("Device"))     return "#FFB6C1";
+	if (c->is_a ("Whole"))      return "#2BDCFF";
+	if (c->is_a ("Filesystem")) return "#B4A0F3";
+	if (c->is_a ("Piece"))      return "#B0D0B0";
+	if (c->is_a ("File"))       return "#00FF00";
+	if (c->is_a ("Misc"))       return "#DC4C46";
 
 	return "white";
 }
@@ -405,7 +406,7 @@ dot_file (std::shared_ptr<T> t)
 
 	// no specifics for now
 
-	output << dot_device(f);
+	output << dot_container(f);
 
 	return output.str();
 }
@@ -595,6 +596,7 @@ dot_extended (std::shared_ptr<T> t)
 	std::stringstream output;
 
 	output << dot_msdos(e);
+	output << dot_device(e);	//XXX argh!
 
 	// no specifics for now
 
@@ -616,7 +618,7 @@ dot_partition (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_container(p);
+	output << dot_device(p);
 
 	// no specifics for now
 
@@ -636,7 +638,7 @@ dot_luks (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_container(l);
+	output << dot_device(l);
 
 	output << dot_row ("version"    , l->version);
 	output << dot_row ("cipher_name", l->cipher_name);
@@ -704,6 +706,7 @@ dot_volume (std::shared_ptr<T> t)
 	std::stringstream output;
 
 	output << dot_whole(v);
+	output << dot_device(v);	//XXX argh
 
 	// no specifics for now
 
@@ -870,50 +873,6 @@ dot_lvm_mirror (std::shared_ptr<T> t)
 }
 
 /**
- * dot_lvm_partition
- */
-template <class T>
-std::string
-dot_lvm_partition (std::shared_ptr<T> t)
-{
-	LvmPartitionPtr l(t);
-	if (!l)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_partition(l);
-
-#if 0
-	output << dot_row ("dev_size",		l->dev_size);
-	output << dot_row ("pe_start",		l->pe_start);
-	output << dot_row ("pv_attr",		l->pv_attr);
-	output << dot_row ("pv_count",		l->pv_count);
-	output << dot_row ("pv_free",		l->pv_free);
-	output << dot_row ("pv_name",		l->pv_name);
-	output << dot_row ("pv_pe_alloc",	l->pv_pe_alloc);
-	output << dot_row ("pv_pe_count",	l->pv_pe_count);
-	output << dot_row ("pv_size",		l->pv_size);
-	output << dot_row ("pv_used",		l->pv_used);
-	output << dot_row ("pv_uuid",		l->pv_uuid);
-
-	output << dot_row ("pvseg_size",	l->pvseg_size);
-	output << dot_row ("pvseg_start",	l->pvseg_start);
-
-	output << dot_row ("lv_name",		p->lv_name);
-	output << dot_row ("lv_type",		p->lv_type);
-	output << dot_row ("lv_uuid",		p->lv_uuid);
-
-	output << dot_row ("vg_extent",		p->vg_extent);
-	output << dot_row ("vg_name",		p->vg_name);
-	output << dot_row ("vg_seqno",		p->vg_seqno);
-	output << dot_row ("vg_uuid",		p->vg_uuid);
-#endif
-
-	return output.str();
-}
-
-/**
  * dot_lvm_raid
  */
 template <class T>
@@ -953,6 +912,150 @@ dot_lvm_stripe (std::shared_ptr<T> t)
 	return output.str();
 }
 
+/**
+ * dot_btrfs
+ */
+template <class T>
+std::string
+dot_btrfs  (std::shared_ptr<T> t)
+{
+	BtrfsPtr b(t);
+	if (!b)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_filesystem(b);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+/**
+ * dot_extfs
+ */
+template <class T>
+std::string
+dot_extfs  (std::shared_ptr<T> t)
+{
+	NtfsPtr e(t);
+	if (!e)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_filesystem(e);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+/**
+ * dot_ntfs
+ */
+template <class T>
+std::string
+dot_ntfs  (std::shared_ptr<T> t)
+{
+	NtfsPtr n(t);
+	if (!n)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_filesystem(n);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+/**
+ * dot_piece
+ */
+template <class T>
+std::string
+dot_piece  (std::shared_ptr<T> t)
+{
+	PiecePtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_container(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+/**
+ * dot_md_partition
+ */
+template <class T>
+std::string
+dot_md_partition  (std::shared_ptr<T> t)
+{
+	MdPartitionPtr m(t);
+	if (!m)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_piece(m);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+/**
+ * dot_lvm_partition
+ */
+template <class T>
+std::string
+dot_lvm_partition (std::shared_ptr<T> t)
+{
+	LvmPartitionPtr l(t);
+	if (!l)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_piece(l);
+
+#if 0
+	output << dot_row ("dev_size",		l->dev_size);
+	output << dot_row ("pe_start",		l->pe_start);
+	output << dot_row ("pv_attr",		l->pv_attr);
+	output << dot_row ("pv_count",		l->pv_count);
+	output << dot_row ("pv_free",		l->pv_free);
+	output << dot_row ("pv_name",		l->pv_name);
+	output << dot_row ("pv_pe_alloc",	l->pv_pe_alloc);
+	output << dot_row ("pv_pe_count",	l->pv_pe_count);
+	output << dot_row ("pv_size",		l->pv_size);
+	output << dot_row ("pv_used",		l->pv_used);
+	output << dot_row ("pv_uuid",		l->pv_uuid);
+
+	output << dot_row ("pvseg_size",	l->pvseg_size);
+	output << dot_row ("pvseg_start",	l->pvseg_start);
+
+	output << dot_row ("lv_name",		p->lv_name);
+	output << dot_row ("lv_type",		p->lv_type);
+	output << dot_row ("lv_uuid",		p->lv_uuid);
+
+	output << dot_row ("vg_extent",		p->vg_extent);
+	output << dot_row ("vg_name",		p->vg_name);
+	output << dot_row ("vg_seqno",		p->vg_seqno);
+	output << dot_row ("vg_uuid",		p->vg_uuid);
+#endif
+
+	return output.str();
+}
+
 
 /**
  * visit (ContainerPtr)
@@ -960,7 +1063,7 @@ dot_lvm_stripe (std::shared_ptr<T> t)
 bool
 DotVisitor::visit (ContainerPtr c)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	output << "\n";
 	output << "// " << (void*) c.get() << "\n";
 
@@ -990,7 +1093,7 @@ DotVisitor::visit (ContainerPtr c)
 bool
 DotVisitor::visit (LoopPtr l)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	output << "\n";
 	output << "// " << (void*) l.get() << "\n";
 
@@ -1064,7 +1167,7 @@ DotVisitor::visit (LoopPtr l)
 bool
 DotVisitor::visit (GptPtr g)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	output << "\n";
 	output << "// " << (void*) g.get() << "\n";
 
@@ -1089,12 +1192,72 @@ DotVisitor::visit (GptPtr g)
 }
 
 /**
+ * visit (MsdosPtr)
+ */
+bool
+DotVisitor::visit (MsdosPtr m)
+{
+	LOG_TRACE;
+	output << "\n";
+	output << "// " << (void*) m.get() << "\n";
+
+	std::string name = m->name;
+	if (name.empty()) {
+		name = "UNKNOWN";
+	}
+
+	output << "obj_" << (void*) m.get() << " [fillcolor=\"#ffc0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) m.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << m.use_count() << "</b></font></td></tr>\n";
+
+	output << dot_msdos(m);
+
+	output << "</table>>];\n";
+
+#if 1
+	if (parents.size() > 0)
+		output << "obj_" << parents.top() << " -> obj_" << (void*) m.get() << ";\n";
+#endif
+
+	return true;
+}
+
+/**
+ * visit (MiscPtr)
+ */
+bool
+DotVisitor::visit (MiscPtr m)
+{
+	LOG_TRACE;
+	output << "\n";
+	output << "// " << (void*) m.get() << "\n";
+
+	std::string name = m->name;
+	if (name.empty()) {
+		name = "UNKNOWN";
+	}
+
+	output << "obj_" << (void*) m.get() << " [fillcolor=\"#ffc0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) m.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << m.use_count() << "</b></font></td></tr>\n";
+
+	output << dot_misc(m);
+
+	output << "</table>>];\n";
+
+#if 1
+	if (parents.size() > 0)
+		output << "obj_" << parents.top() << " -> obj_" << (void*) m.get() << ";\n";
+#endif
+
+	return true;
+}
+
+/**
  * visit (PartitionPtr)
  */
 bool
 DotVisitor::visit (PartitionPtr p)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	output << "\n";
 	output << "// " << (void*) p.get() << "\n";
 
@@ -1124,7 +1287,7 @@ DotVisitor::visit (PartitionPtr p)
 bool
 DotVisitor::visit (FilesystemPtr f)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	output << "\n";
 	output << "// " << (void*) f.get() << "\n";
 

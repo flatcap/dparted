@@ -22,23 +22,23 @@
 #include "filesystem.h"
 #include "action.h"
 
-class ExtFs;
+class Extfs;
 
-typedef std::shared_ptr<ExtFs> ExtFsPtr;
+typedef std::shared_ptr<Extfs> ExtfsPtr;
 
 /**
- * class ExtFs
+ * class Extfs
  */
-class ExtFs : public Filesystem
+class Extfs : public Filesystem
 {
 public:
-	virtual ~ExtFs() = default;
-	static ExtFsPtr create (void);
+	virtual ~Extfs() = default;
+	static ExtfsPtr create (void);
 
 	void get_ext_sb (ContainerPtr parent);
-	static ExtFsPtr get_ext2 (ContainerPtr parent, unsigned char* buffer, int bufsize);
-	static ExtFsPtr get_ext3 (ContainerPtr parent, unsigned char* buffer, int bufsize);
-	static ExtFsPtr get_ext4 (ContainerPtr parent, unsigned char* buffer, int bufsize);
+	static ExtfsPtr get_ext2 (ContainerPtr parent, unsigned char* buffer, int bufsize);
+	static ExtfsPtr get_ext3 (ContainerPtr parent, unsigned char* buffer, int bufsize);
+	static ExtfsPtr get_ext4 (ContainerPtr parent, unsigned char* buffer, int bufsize);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
@@ -47,7 +47,7 @@ public:
 	//properties
 
 protected:
-	ExtFs (void);
+	Extfs (void);
 
 	std::vector<std::string> more_props;
 };

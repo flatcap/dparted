@@ -96,9 +96,9 @@ Filesystem::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent)
 
 	//XXX reorder by likelihood
 	     if ((f = Btrfs::get_btrfs    (parent, buffer, bufsize))) {}
-	else if ((f = ExtFs::get_ext2     (parent, buffer, bufsize))) {}
-	else if ((f = ExtFs::get_ext3     (parent, buffer, bufsize))) {}
-	else if ((f = ExtFs::get_ext4     (parent, buffer, bufsize))) {}
+	else if ((f = Extfs::get_ext2     (parent, buffer, bufsize))) {}
+	else if ((f = Extfs::get_ext3     (parent, buffer, bufsize))) {}
+	else if ((f = Extfs::get_ext4     (parent, buffer, bufsize))) {}
 	else if ((f =  Ntfs::get_ntfs     (parent, buffer, bufsize))) {}
 	else if ((f =        get_reiserfs (buffer, bufsize))) {}
 	else if ((f =        get_swap     (buffer, bufsize))) {}

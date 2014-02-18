@@ -27,25 +27,25 @@ OBJDIR	= .obj
 OUT	= dparted
 
 # Core Objects
-OBJ_SRC	+= device.cpp container.cpp disk.cpp extended.cpp file.cpp filesystem.cpp gpt.cpp loop.cpp lvm_group.cpp \
-	   lvm_linear.cpp lvm_metadata.cpp lvm_mirror.cpp lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp \
-	   lvm_volume.cpp md_group.cpp md_table.cpp misc.cpp msdos.cpp partition.cpp table.cpp volume.cpp whole.cpp \
-	   luks.cpp extfs.cpp btrfs.cpp ntfs.cpp piece.cpp md_partition.cpp
+OBJ_SRC	+= btrfs.cpp container.cpp device.cpp disk.cpp extended.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp \
+	   loop.cpp luks.cpp lvm_group.cpp lvm_linear.cpp lvm_metadata.cpp lvm_mirror.cpp lvm_partition.cpp \
+	   lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp md_group.cpp md_partition.cpp md_table.cpp \
+	   misc.cpp msdos.cpp ntfs.cpp partition.cpp piece.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
-LIB_SRC	+= app.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp log.cpp \
-	   prop_visitor.cpp question.cpp utils.cpp property.cpp config.cpp config_file.cpp message.cpp
+LIB_SRC	+= app.cpp config.cpp config_file.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp \
+	   fs_usage.cpp log.cpp message.cpp property.cpp prop_visitor.cpp question.cpp utils.cpp
 
 # GUI - Graphical objects
-GUI_SRC	+= window.cpp drawing_area.cpp gfx_container.cpp tree_view.cpp theme.cpp gui_app.cpp icon_manager.cpp \
-	   main.cpp default_theme.cpp properties_dialog.cpp base_drawing_area.cpp prop_drawing_area.cpp \
-	   password_dialog.cpp option_group.cpp
+GUI_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp gui_app.cpp icon_manager.cpp \
+	   main.cpp option_group.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp \
+	   tree_view.cpp window.cpp
 
 SRC	= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
 HDR	= $(SRC:%.cpp=%.h)
 
 # Misc header files
-HDR	+= log_trace.h lvm2.h mmap.h stringnum.h visitor.h config_manager.h
+HDR	+= config_manager.h log_trace.h lvm2.h mmap.h stringnum.h visitor.h
 
 OBJ_OBJ	= $(OBJ_SRC:%.cpp=$(OBJDIR)/%.o)
 LIB_OBJ	= $(LIB_SRC:%.cpp=$(OBJDIR)/%.o)

@@ -27,19 +27,19 @@
 #include "log_trace.h"
 
 /**
- * ExtFs
+ * Extfs
  */
-ExtFs::ExtFs (void)
+Extfs::Extfs (void)
 {
 }
 
 /**
  * create
  */
-ExtFsPtr
-ExtFs::create (void)
+ExtfsPtr
+Extfs::create (void)
 {
-	ExtFsPtr e (new ExtFs());
+	ExtfsPtr e (new Extfs());
 	e->weak = e;
 
 	return e;
@@ -142,7 +142,7 @@ tune2fs (const std::string& dev)
  * get_ext_sb - super block
  */
 void
-ExtFs::get_ext_sb (ContainerPtr parent)
+Extfs::get_ext_sb (ContainerPtr parent)
 {
 	//XXX return bool -- a quick match on the sb might not be enough -- tune2fs could fail
 	if (!parent)
@@ -201,7 +201,7 @@ ExtFs::get_ext_sb (ContainerPtr parent)
 
 #if 1
 	// declare everything else
-	const char* me = "ExtFs";
+	const char* me = "Extfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
 	//printf ("Props:\n");
 	for (auto i : info) {
@@ -219,13 +219,13 @@ ExtFs::get_ext_sb (ContainerPtr parent)
 /**
  * get_ext2
  */
-ExtFsPtr
-ExtFs::get_ext2 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
+ExtfsPtr
+Extfs::get_ext2 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = !(*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal
 
-	ExtFsPtr e;
+	ExtfsPtr e;
 	if (b1 && b2) {
 		e = create();
 		e->sub_type ("ext2");
@@ -238,15 +238,15 @@ ExtFs::get_ext2 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize)
 /**
  * get_ext3
  */
-ExtFsPtr
-ExtFs::get_ext3 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
+ExtfsPtr
+Extfs::get_ext3 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = (*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal
 	bool b3 = (*(unsigned int*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
 	bool b4 = (*(unsigned int*) (buffer + 0x464) < 0x0000008);	// Small RO_COMPAT
 
-	ExtFsPtr e;
+	ExtfsPtr e;
 	if (b1 && b2 && b3 && b4) {
 		e = create();
 		e->sub_type ("ext3");
@@ -259,8 +259,8 @@ ExtFs::get_ext3 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize)
 /**
  * get_ext4
  */
-ExtFsPtr
-ExtFs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
+ExtfsPtr
+Extfs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = (*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal
@@ -268,7 +268,7 @@ ExtFs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize)
 	bool b4 = (*(unsigned int*) (buffer + 0x460) > 0x000003f);	// Large INCOMPAT
 	bool b5 = (*(unsigned int*) (buffer + 0x464) > 0x0000007);	// Large RO_COMPAT
 
-	ExtFsPtr e;
+	ExtfsPtr e;
 	if (b1 && b2 && ((b3 && b5) || b4)) {
 		e = create();
 		e->sub_type ("ext4");
@@ -283,7 +283,7 @@ ExtFs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize)
  * get_actions
  */
 std::vector<Action>
-ExtFs::get_actions (void)
+Extfs::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
@@ -301,10 +301,10 @@ ExtFs::get_actions (void)
  * perform_action
  */
 bool
-ExtFs::perform_action (Action action)
+Extfs::perform_action (Action action)
 {
 	if (action.name == "dummy.extfs") {
-		std::cout << "ExtFs perform: " << action.name << std::endl;
+		std::cout << "Extfs perform: " << action.name << std::endl;
 		return true;
 	} else {
 		return Filesystem::perform_action (action);

@@ -23,6 +23,7 @@
 #include <memory>
 
 #include "msdos.h"
+#include "device.h"
 #include "action.h"
 
 class Extended;
@@ -33,7 +34,9 @@ typedef std::shared_ptr<Extended> ExtendedPtr;
 /**
  * class Extended
  */
-class Extended : public Msdos
+class Extended :
+	public Msdos,
+	public Device
 {
 public:
 	virtual ~Extended() = default;

@@ -33,7 +33,7 @@ typedef std::shared_ptr<Table> TablePtr;
 /**
  * class Table
  */
-class Table : public Container
+class Table : public virtual Container
 {
 public:
 	virtual ~Table() = default;
