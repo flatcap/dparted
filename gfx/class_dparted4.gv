@@ -39,20 +39,20 @@ digraph G
 	Disk           [ fillcolor="#FFB6C1" ];
 	Loop           [ fillcolor="#FFB6C1" ];
 
+	LvmPartition   [ fillcolor="#B0D0B0" ];
+	MdPartition    [ fillcolor="#B0D0B0" ];
+	Piece          [ fillcolor="#B0D0B0" ];
+
+	File           [ fillcolor="#00FF00" ];
+
 	Misc           [ fillcolor="#DC4C46" ];
 	Random         [ fillcolor="#DC4C46" ];
 	Reserved       [ fillcolor="#DC4C46" ];
 	Unallocated    [ fillcolor="#DC4C46" ];
 	Zero           [ fillcolor="#DC4C46" ];
 
-	LvmPartition   [ fillcolor="#B0D0B0" ];
-	MdPartition    [ fillcolor="#B0D0B0" ];
-	Piece          [ fillcolor="#B0D0B0" ];
-
 	LvmGroup       [ fillcolor="#2BDCFF" ];
 	MdGroup        [ fillcolor="#2BDCFF" ];
-
-	File           [ fillcolor="#00FF00" ];
 
 	Device     -> Container;
 	Filesystem -> Container;
