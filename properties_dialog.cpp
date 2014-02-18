@@ -137,7 +137,7 @@ PropertiesDialog::on_dialog_response (int response_id)
  * on_parent_delete
  */
 bool
-PropertiesDialog::on_parent_delete (GdkEventAny* event)
+PropertiesDialog::on_parent_delete (GdkEventAny* UNUSED(event))
 {
 	std::cout << "parent delete\n";
 	delete this;

@@ -42,7 +42,7 @@ DumpVisitor::~DumpVisitor()
  * visit_enter
  */
 bool
-DumpVisitor::visit_enter (ContainerPtr& c)
+DumpVisitor::visit_enter (ContainerPtr& UNUSED(c))
 {
 	indent++;
 	return true;

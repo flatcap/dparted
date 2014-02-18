@@ -73,7 +73,7 @@ Extended::accept (Visitor& v)
  * probe
  */
 ExtendedPtr
-Extended::probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size)
+Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, long offset, long size)
 {
 	//LOG_TRACE;
 	ExtendedPtr ext;

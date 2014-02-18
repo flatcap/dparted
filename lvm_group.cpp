@@ -251,7 +251,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
  * lvm_vgs
  */
 void
-LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
+LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& UNUSED(deps))
 {
 	//LOG_TRACE;
 

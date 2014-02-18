@@ -47,6 +47,7 @@
 #include "table.h"
 #include "volume.h"
 #include "whole.h"
+#include "log_trace.h"
 
 /**
  * class Visitor
@@ -54,7 +55,7 @@
 class Visitor
 {
 public:
-	virtual bool visit_enter (ContainerPtr& c) { return true; }
+	virtual bool visit_enter (ContainerPtr& UNUSED(c)) { return true; }
 	virtual bool visit_leave (void)            { return true; }
 
 	virtual bool visit (ContainerPtr c) = 0;

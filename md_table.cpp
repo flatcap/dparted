@@ -104,7 +104,7 @@ is_mdtable (unsigned char* buffer)
  * probe
  */
 ContainerPtr
-MdTable::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize)
+MdTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int bufsize)
 {
 	//LOG_TRACE;
 

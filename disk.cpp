@@ -266,7 +266,7 @@ Disk::get_block_size (void)
  * get_device_space
  */
 unsigned int
-Disk::get_device_space (std::map<long, long>& spaces)
+Disk::get_device_space (std::map<long, long>& UNUSED(spaces))
 {
 	return 0;
 }
@@ -345,7 +345,7 @@ Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
  * identify
  */
 void
-Disk::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st)
+Disk::identify (ContainerPtr& top_level, const char* name, int UNUSED(fd), struct stat& UNUSED(st))
 {
 	//LOG_TRACE;
 	std::vector<std::string> output;

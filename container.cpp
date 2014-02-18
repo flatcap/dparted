@@ -235,7 +235,7 @@ Container::delete_child (ContainerPtr& child)
  * move_child
  */
 void
-Container::move_child (ContainerPtr& child, long offset, long size)
+Container::move_child (ContainerPtr& UNUSED(child), long UNUSED(offset), long UNUSED(size))
 {
 }
 

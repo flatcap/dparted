@@ -119,7 +119,7 @@ LvmMirror::add_child (ContainerPtr& child)
  * delete_child
  */
 void
-LvmMirror::delete_child (ContainerPtr& child)
+LvmMirror::delete_child (ContainerPtr& UNUSED(child))
 {
 }
 

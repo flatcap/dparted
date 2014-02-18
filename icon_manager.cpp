@@ -17,6 +17,7 @@
  */
 
 #include "icon_manager.h"
+#include "log_trace.h"
 
 IconManager::IconManager (void)
 {
@@ -27,7 +28,7 @@ IconManager::~IconManager()
 }
 
 Glib::RefPtr<Gdk::Pixbuf>
-IconManager::get_icon (const std::string& name, int w, int h)
+IconManager::get_icon (const std::string& UNUSED(name), int UNUSED(w), int UNUSED(h))
 {
 	return Glib::RefPtr<Gdk::Pixbuf> (nullptr);
 }

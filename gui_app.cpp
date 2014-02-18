@@ -550,7 +550,7 @@ GuiApp::ask_pass (PasswordDialogPtr pw)
  * notify
  */
 bool
-GuiApp::notify (Message& m)
+GuiApp::notify (Message& UNUSED(m))
 {
 	// Might need to queue these until we're ready to confront the user
 	return false;

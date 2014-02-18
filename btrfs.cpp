@@ -214,7 +214,7 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
  * get_btrfs
  */
 BtrfsPtr
-Btrfs::get_btrfs (ContainerPtr parent, unsigned char* buffer, int bufsize)
+Btrfs::get_btrfs (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	if (strncmp ((char*) buffer+65600, "_BHRfS_M", 8) != 0)
 		return nullptr;

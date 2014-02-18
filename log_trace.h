@@ -23,6 +23,8 @@
 
 #include "log.h"
 
+#define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
+
 //XXX keep a global depth counter?
 //XXX tie into general logging (indent results)?
 

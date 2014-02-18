@@ -160,7 +160,7 @@ Window::my_idle (void)
  * on_delete_event
  */
 bool
-Window::on_delete_event (GdkEventAny* event)
+Window::on_delete_event (GdkEventAny* UNUSED(event))
 {
 	set_show_menubar(false);
 	return false;
@@ -171,7 +171,7 @@ Window::on_delete_event (GdkEventAny* event)
  * on_mouse_click
  */
 bool
-Window::on_mouse_click (GdkEventButton* event)
+Window::on_mouse_click (GdkEventButton* UNUSED(event))
 {
 	//std::cout << "Window: mouse click: (" << event->x << "," << event->y << ")\n";
 	return true;
@@ -229,7 +229,7 @@ Window::set_data (GfxContainerPtr c)
  * load_config
  */
 void
-Window::load_config (const std::string& filename)
+Window::load_config (const std::string& UNUSED(filename))
 {
 	LOG_TRACE;
 }
@@ -238,7 +238,7 @@ Window::load_config (const std::string& filename)
  * load_theme
  */
 void
-Window::load_theme (const std::string& filename)
+Window::load_theme (const std::string& UNUSED(filename))
 {
 	LOG_TRACE;
 }
@@ -247,7 +247,7 @@ Window::load_theme (const std::string& filename)
  * load_disk
  */
 void
-Window::load_disk (const std::string& filename)
+Window::load_disk (const std::string& UNUSED(filename))
 {
 	LOG_TRACE;
 }
@@ -343,7 +343,7 @@ Window::on_menu_file_quit (void)
 
 	if (ask_user) {
 		ContainerPtr c;
-		QuestionPtr q = Question::create (c, [] (QuestionPtr q) { std::cout << "reply\n"; } );
+		QuestionPtr q = Question::create (c, [] (QuestionPtr UNUSED(q)) { std::cout << "reply\n"; } );
 		q->title = "Quit Application?";
 		q->question = "Are you sure?";
 		q->answers = { "No", "Yes" };

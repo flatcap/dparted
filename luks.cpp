@@ -72,7 +72,7 @@ Luks::accept (Visitor& v)
  * probe
  */
 ContainerPtr
-Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize)
+Luks::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	const char* signature = "LUKS\xBA\xBE";
 
@@ -126,7 +126,7 @@ Luks::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffe
  * on_reply
  */
 void
-Luks::on_reply (QuestionPtr q)
+Luks::on_reply (QuestionPtr UNUSED(q))
 {
 	std::cout << "user has answered question" << std::endl;
 }
@@ -181,7 +181,7 @@ Luks::is_luks (const std::string& device)
  * luks_open
  */
 bool
-Luks::luks_open (const std::string& parent, bool probe)
+Luks::luks_open (const std::string& parent, bool UNUSED(probe))
 {
 //	cryptsetup open --type luks /dev/loop4p5 luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
 //		/dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116

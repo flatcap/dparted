@@ -37,6 +37,7 @@
 #include "loop.h"
 #include "log.h"
 #include "lvm_group.h"
+#include "log_trace.h"
 
 AppPtr main_app;
 
@@ -75,7 +76,7 @@ App::ask (QuestionPtr q)
  * notify
  */
 bool
-App::notify (Message& m)
+App::notify (Message& UNUSED(m))
 {
 	// Might need to queue these until we're ready to confront the user
 	return false;

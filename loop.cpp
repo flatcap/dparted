@@ -203,7 +203,7 @@ Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
  * identify
  */
 void
-Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st)
+Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& UNUSED(st))
 {
 	//LOG_TRACE;
 

@@ -437,7 +437,7 @@ dump_range (const std::deque<Range>& vRange)
  * on_mouse_motion
  */
 bool
-DrawingArea::on_mouse_motion (GdkEventMotion* event)
+DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
 {
 	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")\n";
 
@@ -458,7 +458,7 @@ DrawingArea::on_mouse_motion (GdkEventMotion* event)
  * on_mouse_leave
  */
 bool
-DrawingArea::on_mouse_leave (GdkEventCrossing* event)
+DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
 {
 #if 0
 	if (mouse_close) {
@@ -498,7 +498,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	}
 
 	if (event->type == GDK_2BUTTON_PRESS) {
-		on_menu_select (selection, Action {"Properties"} );	// Properties
+		on_menu_select (selection, Action {"Properties", true } );	// Properties
 		return true;					// We handled the event
 	}
 
@@ -783,7 +783,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
  * on_textview_query_tooltip
  */
 bool
-DrawingArea::on_textview_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
+DrawingArea::on_textview_query_tooltip (int x, int y, bool UNUSED(keyboard_tooltip), const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
 	if (menu_active)
 		return false;
@@ -1038,7 +1038,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 		case GDK_KEY_Return:	// 65293 (0xFF0D)
 			//std::cout << "state = " << ev->state << std::endl;
 			if (ev->state & GDK_MOD1_MASK) {		// Alt-Enter
-				on_menu_select (c, Action {"Properties"});	// properties
+				on_menu_select (c, Action {"Properties", true });	// properties
 				handled = true;
 			}
 			break;
@@ -1077,7 +1077,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
  * on_focus_in
  */
 bool
-DrawingArea::on_focus_in (GdkEventFocus* event)
+DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 {
 	//LOG_TRACE;
 
@@ -1103,7 +1103,7 @@ DrawingArea::on_focus_in (GdkEventFocus* event)
  * on_focus_out
  */
 bool
-DrawingArea::on_focus_out (GdkEventFocus* event)
+DrawingArea::on_focus_out (GdkEventFocus* UNUSED(event))
 {
 	//LOG_TRACE;
 	return true;

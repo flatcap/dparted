@@ -77,7 +77,7 @@ Filesystem::accept (Visitor& v)
  * probe
  */
 FilesystemPtr
-Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
+Filesystem::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent)
 {
 	//LOG_TRACE;
 
@@ -118,7 +118,7 @@ Filesystem::probe (ContainerPtr& top_level, ContainerPtr& parent)
  * get_mounted_usage
  */
 bool
-Filesystem::get_mounted_usage (ContainerPtr parent)
+Filesystem::get_mounted_usage (ContainerPtr UNUSED(parent))
 {
 	return false;
 }

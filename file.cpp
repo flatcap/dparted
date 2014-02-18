@@ -108,7 +108,7 @@ File::find_containers (const std::string& name, int fd, struct stat& st, Contain
  * discover
  */
 void
-File::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
+File::discover (ContainerPtr& UNUSED(top_level), std::queue<ContainerPtr>& UNUSED(probe_queue))
 {
 	//LOG_TRACE;
 
@@ -127,7 +127,7 @@ File::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
  * identify
  */
 void
-File::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st)
+File::identify (ContainerPtr& UNUSED(top_level), const char* UNUSED(name), int UNUSED(fd), struct stat& UNUSED(st))
 {
 	//LOG_TRACE;
 

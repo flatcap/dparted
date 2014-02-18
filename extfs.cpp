@@ -220,7 +220,7 @@ ExtFs::get_ext_sb (ContainerPtr parent)
  * get_ext2
  */
 ExtFsPtr
-ExtFs::get_ext2 (ContainerPtr parent, unsigned char* buffer, int bufsize)
+ExtFs::get_ext2 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = !(*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal
@@ -239,7 +239,7 @@ ExtFs::get_ext2 (ContainerPtr parent, unsigned char* buffer, int bufsize)
  * get_ext3
  */
 ExtFsPtr
-ExtFs::get_ext3 (ContainerPtr parent, unsigned char* buffer, int bufsize)
+ExtFs::get_ext3 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = (*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal
@@ -260,7 +260,7 @@ ExtFs::get_ext3 (ContainerPtr parent, unsigned char* buffer, int bufsize)
  * get_ext4
  */
 ExtFsPtr
-ExtFs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int bufsize)
+ExtFs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
 	bool b2 = (*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal

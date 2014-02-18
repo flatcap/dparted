@@ -71,7 +71,7 @@ MdGroup::accept (Visitor& v)
  * discover
  */
 void
-MdGroup::discover (ContainerPtr& top_level)
+MdGroup::discover (ContainerPtr& UNUSED(top_level))
 {
 	LOG_TRACE;
 

@@ -17,6 +17,7 @@
  */
 
 #include "question.h"
+#include "log_trace.h"
 
 /**
  * Question
@@ -37,7 +38,7 @@ Question::~Question()
  * create
  */
 QuestionPtr
-Question::create (ContainerPtr c, question_cb_t fn)
+Question::create (ContainerPtr UNUSED(c), question_cb_t fn)
 {
 	QuestionPtr q (new Question());
 	q->weak = q;

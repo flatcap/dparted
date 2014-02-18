@@ -380,7 +380,7 @@ TreeView::setup_popup (void)
  * on_menu_select
  */
 void
-TreeView::on_menu_select (int option)
+TreeView::on_menu_select (int UNUSED(option))
 {
 	std::cout << "A popup menu item was selected.\n";
 

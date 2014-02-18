@@ -200,7 +200,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
  * get_ntfs
  */
 NtfsPtr
-Ntfs::get_ntfs (ContainerPtr parent, unsigned char* buffer, int bufsize)
+Ntfs::get_ntfs (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	if (strncmp ((char*) buffer+3, "NTFS    ", 8) != 0)
 		return nullptr;

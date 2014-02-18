@@ -41,7 +41,7 @@ PropVisitor::~PropVisitor()
  * visit_enter
  */
 bool
-PropVisitor::visit_enter (ContainerPtr& c)
+PropVisitor::visit_enter (ContainerPtr& UNUSED(c))
 {
 	indent++;
 	return true;

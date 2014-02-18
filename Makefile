@@ -1,19 +1,20 @@
 ##
 # Copyright (c) 2014 Richard Russon (FlatCap)
 #
-# This program is free software; you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free Software
-# Foundation; either version 2 of the License, or (at your option) any later
-# version.
+# This file is part of DParted.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for
-# more details.
+# DParted is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-# You should have received a copy of the GNU General Public License along with
-# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-# Place - Suite 330, Boston, MA 02111-1307, USA.
+# DParted is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with DParted.  If not, see <http://www.gnu.org/licenses/>.
 
 CC	= clang++
 RM	= rm -fr
@@ -49,8 +50,12 @@ OBJ_OBJ	= $(OBJ_SRC:%.cpp=$(OBJDIR)/%.o)
 LIB_OBJ	= $(LIB_SRC:%.cpp=$(OBJDIR)/%.o)
 GUI_OBJ	= $(GUI_SRC:%.cpp=$(OBJDIR)/%.o)
 
-CFLAGS	+= -std=c++11 -pedantic
-CFLAGS	+= -g -Wall
+CFLAGS	+= -std=c++11
+CFLAGS	+= -g
+CFLAGS	+= -Wall
+CFLAGS	+= -Wextra
+CFLAGS	+= -Wpedantic
+#CFLAGS	+= -fcolor-diagnostics
 
 #CFLAGS	+= -pg -fprofile-arcs -ftest-coverage
 
@@ -73,6 +78,7 @@ GUI_CFLAGS	+= -DHB_DISABLE_DEPRECATED
 GUI_CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
 GUI_CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 
+# bug in ccache
 GUI_CFLAGS	+= -Qunused-arguments
 
 #GUI_CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
@@ -119,7 +125,7 @@ tags:	$(SRC) $(HDR)
 # ----------------------------------------------------------------------------
 
 quiet_cmd_CC	= CC	$<
-      cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@ && (											\
+      cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@ #&& (											\
 		  $(CC) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;						\
 		  cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp;										\
 		  sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d;	\
