@@ -45,6 +45,9 @@ public:
 	virtual bool visit (MsdosPtr      p);
 	virtual bool visit (PartitionPtr  p);
 
+	template <class T>
+	std::string parent_link (std::shared_ptr<T> t);
+
 	std::string get_output (void);
 	void run_dotty (void);
 
