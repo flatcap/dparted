@@ -75,7 +75,6 @@ DotVisitor::visit_leave (void)
 std::string
 get_colour (ContainerPtr c)
 {
-	if (c->is_a ("Container"))  return "#FFFFFF";
 	if (c->is_a ("Table"))      return "#FFFFCC";
 	if (c->is_a ("Device"))     return "#FFB6C1";
 	if (c->is_a ("Whole"))      return "#2BDCFF";
@@ -83,6 +82,7 @@ get_colour (ContainerPtr c)
 	if (c->is_a ("Piece"))      return "#B0D0B0";
 	if (c->is_a ("File"))       return "#00FF00";
 	if (c->is_a ("Misc"))       return "#DC4C46";
+	if (c->is_a ("Container"))  return "#FFFFFF";
 
 	return "white";
 }
@@ -979,7 +979,9 @@ DotVisitor::visit (ContainerPtr c)
 		name = "UNKNOWN";
 	}
 
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"#c0c0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+	std::string colour = get_colour (c);
+
+	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << "</b></font></td></tr>\n";
 
 	output << dot_container(c);
@@ -1008,7 +1010,9 @@ DotVisitor::visit (LoopPtr l)
 		name = "UNKNOWN";
 	}
 
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"#ffc0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+	std::string colour = get_colour (c);
+
+	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << l.use_count() << "</b></font></td></tr>\n";
 
 	std::stringstream mm;
@@ -1080,7 +1084,9 @@ DotVisitor::visit (GptPtr g)
 		name = "UNKNOWN";
 	}
 
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"#ffc0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+	std::string colour = get_colour (c);
+
+	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << g.use_count() << "</b></font></td></tr>\n";
 
 	output << dot_gpt(g);
@@ -1108,7 +1114,9 @@ DotVisitor::visit (MsdosPtr m)
 		name = "UNKNOWN";
 	}
 
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"#ffc0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+	std::string colour = get_colour (c);
+
+	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << m.use_count() << "</b></font></td></tr>\n";
 
 	output << dot_msdos(m);
@@ -1136,7 +1144,9 @@ DotVisitor::visit (MiscPtr m)
 		name = "UNKNOWN";
 	}
 
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"#ffc0c0\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+	std::string colour = get_colour (c);
+
+	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << m.use_count() << "</b></font></td></tr>\n";
 
 	output << dot_misc(m);
@@ -1164,7 +1174,9 @@ DotVisitor::visit (PartitionPtr p)
 		name = "UNKNOWN";
 	}
 
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"#d0d080\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+	std::string colour = get_colour (c);
+
+	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << p.use_count() << "</b></font></td></tr>\n";
 
 	output << dot_partition(p);
@@ -1192,7 +1204,9 @@ DotVisitor::visit (FilesystemPtr f)
 		name = "UNKNOWN";
 	}
 
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"#80c080\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+	std::string colour = get_colour (c);
+
+	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << f.use_count() << "</b></font></td></tr>\n";
 
 	output << dot_filesystem(f);
