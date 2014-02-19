@@ -30,9 +30,6 @@ class Visitor;
 
 typedef std::shared_ptr<Gpt> GptPtr;
 
-/**
- * class Gpt
- */
 class Gpt : public Table
 {
 public:

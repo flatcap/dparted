@@ -22,24 +22,15 @@
 
 #include "container.h"
 
-/**
- * PropVisitor
- */
 PropVisitor::PropVisitor (void)
 {
 }
 
-/**
- * ~PropVisitor
- */
 PropVisitor::~PropVisitor()
 {
 }
 
 
-/**
- * visit_enter
- */
 bool
 PropVisitor::visit_enter (ContainerPtr& UNUSED(c))
 {
@@ -47,9 +38,6 @@ PropVisitor::visit_enter (ContainerPtr& UNUSED(c))
 	return true;
 }
 
-/**
- * visit_leave
- */
 bool
 PropVisitor::visit_leave (void)
 {
@@ -79,9 +67,6 @@ PropVisitor::visit (ContainerPtr c)
 }
 
 
-/**
- * dump
- */
 void
 PropVisitor::dump (void)
 {

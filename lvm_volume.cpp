@@ -22,9 +22,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * LvmVolume
- */
 LvmVolume::LvmVolume (void)
 {
 	const char* me = "LvmVolume";
@@ -41,9 +38,6 @@ LvmVolume::LvmVolume (void)
 	declare_prop (me, "seg_start_pe", seg_start_pe, "desc of seg_start_pe");
 }
 
-/**
- * create
- */
 LvmVolumePtr
 LvmVolume::create (void)
 {
@@ -54,9 +48,6 @@ LvmVolume::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 LvmVolume::accept (Visitor& v)
 {
@@ -67,9 +58,6 @@ LvmVolume::accept (Visitor& v)
 }
 
 
-/**
- * add_child
- */
 void
 LvmVolume::add_child (ContainerPtr& child)
 {
@@ -108,9 +96,6 @@ LvmVolume::add_child (ContainerPtr& child)
 	}
 }
 
-/**
- * find
- */
 ContainerPtr
 LvmVolume::find (const std::string& search)
 {
@@ -165,9 +150,6 @@ LvmVolume::find (const std::string& search)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 LvmVolume::get_actions (void)
 {
@@ -183,9 +165,6 @@ LvmVolume::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 LvmVolume::perform_action (Action action)
 {

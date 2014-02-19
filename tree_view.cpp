@@ -23,9 +23,6 @@
 #include "log_trace.h"
 #include "window.h"
 
-/**
- * TreeView
- */
 TreeView::TreeView (void)
 {
 	setup_popup();
@@ -34,17 +31,11 @@ TreeView::TreeView (void)
 	set_activate_on_single_click (true);
 }
 
-/**
- * ~TreeView
- */
 TreeView::~TreeView()
 {
 }
 
 
-/**
- * on_button_press_event
- */
 bool
 TreeView::on_button_press_event (GdkEventButton* event)
 {
@@ -73,9 +64,6 @@ TreeView::on_button_press_event (GdkEventButton* event)
 	return return_value;
 }
 
-/**
- * get_colour_as_pixbuf
- */
 Glib::RefPtr<Gdk::Pixbuf>
 get_colour_as_pixbuf (int size, Gdk::RGBA colour)
 {
@@ -99,9 +87,6 @@ get_colour_as_pixbuf (int size, Gdk::RGBA colour)
 	return pixbuf;
 }
 
-/**
- * tree_add_row
- */
 void
 TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 {
@@ -162,9 +147,6 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 	}
 }
 
-/**
- * init_treeview
- */
 void
 TreeView::init_treeview (GfxContainerPtr& c)
 {
@@ -262,9 +244,6 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	//expand_all();
 }
 
-/**
- * on_query_tooltip
- */
 bool
 TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
@@ -300,9 +279,6 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 	return true;
 }
 
-/**
- * set_focus
- */
 void
 TreeView::set_focus (GfxContainerPtr& c)
 {
@@ -328,9 +304,6 @@ TreeView::set_focus (GfxContainerPtr& c)
 	scroll_to_row (path);
 }
 
-/**
- * on_selection_changed
- */
 void TreeView::on_selection_changed()
 {
 	//LOG_TRACE;
@@ -349,9 +322,6 @@ void TreeView::on_selection_changed()
 
 
 // POPUP
-/**
- * setup_popup
- */
 void
 TreeView::setup_popup (void)
 {
@@ -376,9 +346,6 @@ TreeView::setup_popup (void)
 	signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::on_keypress));
 }
 
-/**
- * on_menu_select
- */
 void
 TreeView::on_menu_select (int UNUSED(option))
 {
@@ -453,9 +420,6 @@ TreeView::get_coords (int& x, int& y)
 	return true;
 }
 
-/**
- * popup_menu
- */
 void
 TreeView::popup_menu (int x, int y)
 {
@@ -463,9 +427,6 @@ TreeView::popup_menu (int x, int y)
 	m_Menu_Popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
 }
 
-/**
- * popup_on_keypress
- */
 bool
 TreeView::popup_on_keypress (GdkEventKey* ev)
 {
@@ -477,9 +438,6 @@ TreeView::popup_on_keypress (GdkEventKey* ev)
 	return false;
 }
 
-/**
- * on_keypress
- */
 bool
 TreeView::on_keypress (GdkEventKey* event)
 {

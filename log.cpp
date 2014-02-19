@@ -27,9 +27,6 @@
 //static unsigned int log_level = ~0;
 static FILE* file = nullptr;
 
-/**
- * log
- */
 __attribute__ ((format (printf, 1, 0)))
 static int
 log (const char* format, va_list args)
@@ -48,9 +45,6 @@ log (const char* format, va_list args)
 }
 
 
-/**
- * log_debug
- */
 __attribute__ ((format (printf, 1, 2)))
 int
 log_debug (const char* format, ...)
@@ -70,9 +64,6 @@ log_debug (const char* format, ...)
 	return retval;
 }
 
-/**
- * log_error
- */
 __attribute__ ((format (printf, 1, 2)))
 int
 log_error (const char* format, ...)
@@ -92,9 +83,6 @@ log_error (const char* format, ...)
 	return retval;
 }
 
-/**
- * log_info
- */
 __attribute__ ((format (printf, 1, 2)))
 int
 log_info (const char* format, ...)
@@ -114,9 +102,6 @@ log_info (const char* format, ...)
 	return retval;
 }
 
-/**
- * log_trace
- */
 __attribute__ ((format (printf, 1, 2)))
 int
 log_trace (const char* format, ...)
@@ -138,9 +123,6 @@ log_trace (const char* format, ...)
 }
 
 
-/**
- * log_init
- */
 bool
 log_init (const char* name)
 {
@@ -154,9 +136,6 @@ log_init (const char* name)
 	return (file != nullptr);
 }
 
-/**
- * log_close
- */
 void
 log_close (void)
 {
@@ -168,9 +147,6 @@ log_close (void)
 
 
 #if 0
-/**
- * log_set_level
- */
 unsigned int
 log_set_level (unsigned int level)
 {
@@ -179,9 +155,6 @@ log_set_level (unsigned int level)
 	return old;
 }
 
-/**
- * log_get_level
- */
 unsigned int
 log_get_level (void)
 {

@@ -39,9 +39,6 @@
 
 class Container;
 
-/**
- * class Window
- */
 class Window : public Gtk::ApplicationWindow
 {
 public:

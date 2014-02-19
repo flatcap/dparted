@@ -23,24 +23,15 @@
 #include "container.h"
 #include "log_trace.h"
 
-/**
- * DumpVisitor
- */
 DumpVisitor::DumpVisitor (void)
 {
 }
 
-/**
- * ~DumpVisitor
- */
 DumpVisitor::~DumpVisitor()
 {
 }
 
 
-/**
- * visit_enter
- */
 bool
 DumpVisitor::visit_enter (ContainerPtr& UNUSED(c))
 {
@@ -48,9 +39,6 @@ DumpVisitor::visit_enter (ContainerPtr& UNUSED(c))
 	return true;
 }
 
-/**
- * visit_leave
- */
 bool
 DumpVisitor::visit_leave (void)
 {
@@ -104,9 +92,6 @@ DumpVisitor::visit (LvmVolumePtr l)
 }
 
 
-/**
- * dump
- */
 void
 DumpVisitor::dump (void)
 {

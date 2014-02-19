@@ -29,9 +29,6 @@ class Visitor;
 
 typedef std::shared_ptr<LvmRaid> LvmRaidPtr;
 
-/**
- * class LvmRaid
- */
 class LvmRaid : public LvmVolume
 {
 public:

@@ -28,9 +28,6 @@
 #include "visitor.h"
 #include "utils.h"
 
-/**
- * Luks
- */
 Luks::Luks (void)
 {
 	const char* me = "Luks";
@@ -43,9 +40,6 @@ Luks::Luks (void)
 	declare_prop (me, "hash_spec",   hash_spec,   "desc of hash_spec");
 }
 
-/**
- * create
- */
 LuksPtr
 Luks::create (void)
 {
@@ -56,9 +50,6 @@ Luks::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Luks::accept (Visitor& v)
 {
@@ -68,9 +59,6 @@ Luks::accept (Visitor& v)
 	return visit_children(v);
 }
 
-/**
- * probe
- */
 ContainerPtr
 Luks::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -122,9 +110,6 @@ Luks::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned cha
 	return c;
 }
 
-/**
- * on_reply
- */
 void
 Luks::on_reply (QuestionPtr UNUSED(q))
 {
@@ -132,9 +117,6 @@ Luks::on_reply (QuestionPtr UNUSED(q))
 }
 
 
-/**
- * is_mounted
- */
 bool
 Luks::is_mounted (const std::string& device)
 {
@@ -152,9 +134,6 @@ Luks::is_mounted (const std::string& device)
 	return (retcode == 0);
 }
 
-/**
- * is_luks
- */
 bool
 Luks::is_luks (const std::string& device)
 {
@@ -177,9 +156,6 @@ Luks::is_luks (const std::string& device)
 }
 
 
-/**
- * luks_open
- */
 bool
 Luks::luks_open (const std::string& parent, bool UNUSED(probe))
 {
@@ -216,9 +192,6 @@ Luks::luks_open (const std::string& parent, bool UNUSED(probe))
 	return false;
 }
 
-/**
- * luks_close
- */
 bool
 Luks::luks_close (void)
 {
@@ -299,9 +272,6 @@ Key Slot 6: DISABLED
 Key Slot 7: DISABLED
 #endif
 
-/**
- * get_actions
- */
 std::vector<Action>
 Luks::get_actions (void)
 {
@@ -317,9 +287,6 @@ Luks::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Luks::perform_action (Action action)
 {

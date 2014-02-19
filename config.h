@@ -30,9 +30,6 @@ class Config;
 
 typedef std::shared_ptr<Config> ConfigPtr;
 
-/**
- * class Config
- */
 class Config
 {
 public:

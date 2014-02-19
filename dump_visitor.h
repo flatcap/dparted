@@ -23,9 +23,6 @@
 
 #include "visitor.h"
 
-/**
- * class DumpVisitor
- */
 class DumpVisitor : public Visitor
 {
 public:

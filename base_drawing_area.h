@@ -36,9 +36,6 @@ const int SIDES       =   2;	// Width of sides and base
 const int TAB_WIDTH   =  10;	// Space in left side-bar
 const int BLOCK_WIDTH =  24;	// Placeholder for icons
 
-/**
- * class BaseDrawingArea
- */
 class BaseDrawingArea : public Gtk::DrawingArea
 {
 public:

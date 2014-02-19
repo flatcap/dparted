@@ -26,9 +26,6 @@ class Btrfs;
 
 typedef std::shared_ptr<Btrfs> BtrfsPtr;
 
-/**
- * class Btrfs
- */
 class Btrfs : public Filesystem
 {
 public:

@@ -24,9 +24,6 @@
 
 #include <glibmm/optiongroup.h>
 
-/**
- * class OptionGroup
- */
 class OptionGroup : public Glib::OptionGroup
 {
 public:

@@ -19,16 +19,10 @@
 #include "message.h"
 
 #if 0
-/**
- * Message
- */
 Message::Message (void)
 {
 }
 
-/**
- * ~Message
- */
 Message::~Message()
 {
 }

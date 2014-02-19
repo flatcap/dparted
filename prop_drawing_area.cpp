@@ -19,24 +19,15 @@
 #include "prop_drawing_area.h"
 #include "gui_app.h"
 
-/**
- * PropDrawingArea
- */
 PropDrawingArea::PropDrawingArea (void)
 {
 }
 
-/**
- * ~PropDrawingArea
- */
 PropDrawingArea::~PropDrawingArea()
 {
 }
 
 
-/**
- * set_data
- */
 void
 PropDrawingArea::set_data (GfxContainerPtr& c)
 {
@@ -44,9 +35,6 @@ PropDrawingArea::set_data (GfxContainerPtr& c)
 	set_size_request (500, cont_height/2);
 }
 
-/**
- * on_draw
- */
 bool
 PropDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
@@ -71,9 +59,6 @@ PropDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 }
 
 
-/**
- * draw_container
- */
 void
 PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape)
 {

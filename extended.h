@@ -31,9 +31,6 @@ class Visitor;
 
 typedef std::shared_ptr<Extended> ExtendedPtr;
 
-/**
- * class Extended
- */
 class Extended :
 	public Msdos,
 	public Device

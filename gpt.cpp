@@ -34,9 +34,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Gpt
- */
 Gpt::Gpt (void)
 {
 	const char* me = "Gpt";
@@ -44,9 +41,6 @@ Gpt::Gpt (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 GptPtr
 Gpt::create (void)
 {
@@ -57,9 +51,6 @@ Gpt::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Gpt::accept (Visitor& v)
 {
@@ -70,9 +61,6 @@ Gpt::accept (Visitor& v)
 }
 
 
-/**
- * delete_region
- */
 void
 delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 {
@@ -116,9 +104,6 @@ delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 	}
 }
 
-/**
- * probe
- */
 ContainerPtr
 Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -270,9 +255,6 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Gpt::get_actions (void)
 {
@@ -288,9 +270,6 @@ Gpt::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Gpt::perform_action (Action action)
 {

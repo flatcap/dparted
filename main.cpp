@@ -22,9 +22,6 @@
 #include "gui_app.h"
 #include "log.h"
 
-/**
- * main
- */
 int
 main (int argc, char *argv[])
 {

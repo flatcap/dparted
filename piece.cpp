@@ -27,9 +27,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Piece
- */
 Piece::Piece (void)
 {
 	const char* me = "Piece";
@@ -37,9 +34,6 @@ Piece::Piece (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 PiecePtr
 Piece::create (void)
 {
@@ -50,9 +44,6 @@ Piece::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Piece::accept (Visitor& v)
 {
@@ -63,9 +54,6 @@ Piece::accept (Visitor& v)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Piece::get_actions (void)
 {
@@ -81,9 +69,6 @@ Piece::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Piece::perform_action (Action action)
 {

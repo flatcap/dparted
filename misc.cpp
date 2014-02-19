@@ -28,9 +28,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Misc
- */
 Misc::Misc (void)
 {
 	const char* me = "Misc";
@@ -38,9 +35,6 @@ Misc::Misc (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 MiscPtr
 Misc::create (void)
 {
@@ -51,9 +45,6 @@ Misc::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Misc::accept (Visitor& v)
 {
@@ -64,9 +55,6 @@ Misc::accept (Visitor& v)
 }
 
 
-/**
- * is_empty
- */
 static bool
 is_empty (unsigned char* buffer, int bufsize)
 {
@@ -80,9 +68,6 @@ is_empty (unsigned char* buffer, int bufsize)
 }
 
 #if 0
-/**
- * is_random
- */
 static bool
 is_random (unsigned char* buffer, int bufsize)
 {
@@ -104,9 +89,6 @@ is_random (unsigned char* buffer, int bufsize)
 
 #endif
 
-/**
- * probe
- */
 ContainerPtr
 Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 {
@@ -162,9 +144,6 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Misc::get_actions (void)
 {
@@ -180,9 +159,6 @@ Misc::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Misc::perform_action (Action action)
 {

@@ -31,9 +31,6 @@ class Whole;
 
 typedef std::shared_ptr<Whole> WholePtr;
 
-/**
- * class Whole
- */
 class Whole : public virtual Container
 {
 public:

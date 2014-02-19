@@ -29,9 +29,6 @@ class BaseProperty;
 
 typedef std::shared_ptr<BaseProperty> PPtr;
 
-/**
- * class BaseProperty
- */
 class BaseProperty
 {
 public:
@@ -97,9 +94,6 @@ public:
 };
 
 
-/**
- * template class Property
- */
 template <typename T>
 class Property : public BaseProperty
 {

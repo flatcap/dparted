@@ -21,33 +21,21 @@
 #include "base_drawing_area.h"
 #include "log.h"
 
-/**
- * BaseDrawingArea
- */
 BaseDrawingArea::BaseDrawingArea (void)
 {
 }
 
-/**
- * ~BaseDrawingArea
- */
 BaseDrawingArea::~BaseDrawingArea()
 {
 }
 
 
-/**
- * on_draw
- */
 bool
 BaseDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	return Gtk::DrawingArea::on_draw (cr);
 }
 
-/**
- * set_data
- */
 void
 BaseDrawingArea::set_data (GfxContainerPtr& c)
 {
@@ -55,18 +43,12 @@ BaseDrawingArea::set_data (GfxContainerPtr& c)
 	//top_level->dump();
 }
 
-/**
- * set_cont_height
- */
 void
 BaseDrawingArea::set_cont_height (int height)
 {
 	cont_height = height;
 }
 
-/**
- * get_cont_height
- */
 int
 BaseDrawingArea::get_cont_height (void)
 {
@@ -113,9 +95,6 @@ BaseDrawingArea::fill_area (const Cairo::RefPtr<Cairo::Context>& cr, const Rect&
 	cr->restore();
 }
 
-/**
- * set_colour
- */
 void
 BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk::RGBA& rgba)
 {
@@ -187,9 +166,6 @@ BaseDrawingArea::draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape,
 	cr->restore();
 }
 
-/**
- * draw_icon
- */
 void
 BaseDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, Glib::RefPtr<Gdk::Pixbuf> icon, const Rect& shape, Rect& below)
 {
@@ -216,9 +192,6 @@ BaseDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, Glib::RefPt
 }
 
 
-/**
- * escape_text
- */
 void
 BaseDrawingArea::escape_text (std::string &text)
 {

@@ -29,9 +29,6 @@ class Visitor;
 
 typedef std::shared_ptr<LvmMetadata> LvmMetadataPtr;
 
-/**
- * class LvmMetadata
- */
 class LvmMetadata : public LvmLinear
 {
 public:

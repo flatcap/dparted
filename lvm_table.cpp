@@ -31,9 +31,6 @@
 #include "utils.h"
 #include "visitor.h"
 
-/**
- * LvmTable
- */
 LvmTable::LvmTable (void)
 {
 	const char* me = "LvmTable";
@@ -45,9 +42,6 @@ LvmTable::LvmTable (void)
 	declare_prop (me, "metadata_size", metadata_size, "desc of metadata_size");
 }
 
-/**
- * create
- */
 LvmTablePtr
 LvmTable::create (void)
 {
@@ -58,9 +52,6 @@ LvmTable::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 LvmTable::accept (Visitor& v)
 {
@@ -71,9 +62,6 @@ LvmTable::accept (Visitor& v)
 }
 
 
-/**
- * read_uuid_string
- */
 std::string
 read_uuid_string (char* buffer)
 {
@@ -93,9 +81,6 @@ read_uuid_string (char* buffer)
 }
 
 
-/**
- * get_label_header
- */
 static struct label_header*
 get_label_header (unsigned char* buffer)
 {
@@ -114,9 +99,6 @@ get_label_header (unsigned char* buffer)
 	return lh;
 }
 
-/**
- * get_pv_header
- */
 static struct pv_header*
 get_pv_header (unsigned char* buffer)
 {
@@ -129,9 +111,6 @@ get_pv_header (unsigned char* buffer)
 	return ph;
 }
 
-/**
- * get_mda_header
- */
 static struct mda_header*
 get_mda_header (unsigned char* buffer)
 {
@@ -151,9 +130,6 @@ get_mda_header (unsigned char* buffer)
 }
 
 #if 0
-/**
- * get_seq_num
- */
 static int
 get_seq_num (const std::string& config)
 {
@@ -172,9 +148,6 @@ get_seq_num (const std::string& config)
 }
 
 #endif
-/**
- * get_vol_name
- */
 static std::string
 get_vol_name (const std::string& config)
 {
@@ -188,9 +161,6 @@ get_vol_name (const std::string& config)
 
 
 #if 0
-/**
- * format_config
- */
 static void
 format_config (std::string& config)
 {
@@ -230,9 +200,6 @@ format_config (std::string& config)
 }
 
 #endif
-/**
- * probe
- */
 ContainerPtr
 LvmTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int bufsize)
 {
@@ -334,9 +301,6 @@ LvmTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned
 }
 
 
-/**
- * add_child
- */
 void
 LvmTable::add_child (ContainerPtr& child)
 {
@@ -357,9 +321,6 @@ LvmTable::add_child (ContainerPtr& child)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 LvmTable::get_actions (void)
 {
@@ -375,9 +336,6 @@ LvmTable::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 LvmTable::perform_action (Action action)
 {

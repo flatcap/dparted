@@ -22,9 +22,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * MdPartition
- */
 MdPartition::MdPartition (void)
 {
 	const char* me = "MdPartition";
@@ -32,9 +29,6 @@ MdPartition::MdPartition (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 MdPartitionPtr
 MdPartition::create (void)
 {
@@ -45,9 +39,6 @@ MdPartition::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 MdPartition::accept (Visitor& v)
 {
@@ -58,9 +49,6 @@ MdPartition::accept (Visitor& v)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 MdPartition::get_actions (void)
 {
@@ -76,9 +64,6 @@ MdPartition::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 MdPartition::perform_action (Action action)
 {

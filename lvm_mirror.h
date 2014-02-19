@@ -29,9 +29,6 @@ class Visitor;
 
 typedef std::shared_ptr<LvmMirror> LvmMirrorPtr;
 
-/**
- * class LvmMirror
- */
 class LvmMirror : public LvmVolume
 {
 public:

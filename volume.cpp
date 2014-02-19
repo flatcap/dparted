@@ -23,9 +23,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Volume
- */
 Volume::Volume (void)
 {
 	const char* me = "Volume";
@@ -33,9 +30,6 @@ Volume::Volume (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 VolumePtr
 Volume::create (void)
 {
@@ -46,9 +40,6 @@ Volume::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Volume::accept (Visitor& v)
 {
@@ -58,9 +49,6 @@ Volume::accept (Visitor& v)
 	return visit_children(v);
 }
 
-/**
- * get_actions
- */
 std::vector<Action>
 Volume::get_actions (void)
 {
@@ -76,9 +64,6 @@ Volume::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Volume::perform_action (Action action)
 {

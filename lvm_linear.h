@@ -29,9 +29,6 @@ class Visitor;
 
 typedef std::shared_ptr<LvmLinear> LvmLinearPtr;
 
-/**
- * class LvmLinear
- */
 class LvmLinear : public LvmVolume
 {
 public:

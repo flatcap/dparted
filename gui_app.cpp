@@ -45,9 +45,6 @@
 
 GuiAppPtr gui_app;
 
-/**
- * GuiApp
- */
 GuiApp::GuiApp (void) :
 	Gtk::Application ("org.flatcap.test.area", Gio::ApplicationFlags (Gio::APPLICATION_HANDLES_COMMAND_LINE))
 {
@@ -55,17 +52,11 @@ GuiApp::GuiApp (void) :
 	Glib::set_application_name ("dparted");
 }
 
-/**
- * ~GuiApp
- */
 GuiApp::~GuiApp()
 {
 }
 
 
-/**
- * my_idle
- */
 bool
 GuiApp::my_idle (void)
 {
@@ -112,9 +103,6 @@ GuiApp::my_idle (void)
 }
 
 
-/**
- * on_startup
- */
 void
 GuiApp::on_startup (void)
 {
@@ -140,9 +128,6 @@ GuiApp::on_startup (void)
 	set_app_menu (menu);
 }
 
-/**
- * on_activate
- */
 void
 GuiApp::on_activate()
 {
@@ -158,9 +143,6 @@ GuiApp::on_activate()
 }
 
 
-/**
- * on_window_added
- */
 void
 GuiApp::on_window_added (Gtk::Window* window)
 {
@@ -168,9 +150,6 @@ GuiApp::on_window_added (Gtk::Window* window)
 	Gtk::Application::on_window_added (window);
 }
 
-/**
- * on_window_removed
- */
 void
 GuiApp::on_window_removed (Gtk::Window* window)
 {
@@ -179,9 +158,6 @@ GuiApp::on_window_removed (Gtk::Window* window)
 }
 
 
-/**
- * create_window
- */
 void
 GuiApp::create_window (void)
 {
@@ -193,9 +169,6 @@ GuiApp::create_window (void)
 	}
 }
 
-/**
- * show_window
- */
 void
 GuiApp::show_window (void)
 {
@@ -208,9 +181,6 @@ GuiApp::show_window (void)
 }
 
 
-/**
- * on_open
- */
 void
 GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
@@ -224,9 +194,6 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 	Gtk::Application::on_open (files, hint);
 }
 
-/**
- * on_command_line
- */
 int
 GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
 {
@@ -386,27 +353,18 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 }
 
 
-/**
- * menu_preferences
- */
 void
 GuiApp::menu_preferences (void)
 {
 	LOG_TRACE;
 }
 
-/**
- * menu_help
- */
 void
 GuiApp::menu_help (void)
 {
 	LOG_TRACE;
 }
 
-/**
- * menu_about
- */
 void
 GuiApp::menu_about (void)
 {
@@ -437,9 +395,6 @@ GuiApp::menu_about (void)
 	about.run();
 }
 
-/**
- * menu_quit
- */
 void
 GuiApp::menu_quit (void)
 {
@@ -447,45 +402,30 @@ GuiApp::menu_quit (void)
 }
 
 
-/**
- * on_action_file_open
- */
 void
 GuiApp::on_action_file_open (void)
 {
 	LOG_TRACE;
 }
 
-/**
- * on_action_file_close
- */
 void
 GuiApp::on_action_file_close (void)
 {
 	LOG_TRACE;
 }
 
-/**
- * on_action_file_quit
- */
 void
 GuiApp::on_action_file_quit (void)
 {
 	LOG_TRACE;
 }
 
-/**
- * on_action_plugin
- */
 void
 GuiApp::on_action_plugin (void)
 {
 	LOG_TRACE;
 }
 
-/**
- * on_action_help
- */
 void
 GuiApp::on_action_help (void)
 {
@@ -493,9 +433,6 @@ GuiApp::on_action_help (void)
 }
 
 
-/**
- * ask
- */
 bool
 GuiApp::ask (QuestionPtr q)
 {
@@ -534,9 +471,6 @@ GuiApp::ask (QuestionPtr q)
 	return true;
 }
 
-/**
- * ask_pass
- */
 bool
 GuiApp::ask_pass (PasswordDialogPtr pw)
 {
@@ -546,9 +480,6 @@ GuiApp::ask_pass (PasswordDialogPtr pw)
 }
 
 
-/**
- * notify
- */
 bool
 GuiApp::notify (Message& UNUSED(m))
 {
@@ -557,9 +488,6 @@ GuiApp::notify (Message& UNUSED(m))
 }
 
 
-/**
- * properties
- */
 void
 GuiApp::properties (GfxContainerPtr c)
 {
@@ -568,9 +496,6 @@ GuiApp::properties (GfxContainerPtr c)
 	//XXX keep weak pointers to PropertiesDialog dialogs
 }
 
-/**
- * get_theme
- */
 ThemePtr
 GuiApp::get_theme (void)
 {
@@ -578,9 +503,6 @@ GuiApp::get_theme (void)
 }
 
 
-/**
- * set_config
- */
 bool
 GuiApp::set_config (const std::string& filename)
 {
@@ -592,9 +514,6 @@ GuiApp::set_config (const std::string& filename)
 	return true;
 }
 
-/**
- * set_theme
- */
 bool
 GuiApp::set_theme (const std::string& filename)
 {

@@ -26,9 +26,6 @@ vfat		dosfsck -n {device}
 xfs		xfs_db {device}, sb, p
 #endif
 
-/**
- * get_mounted_usage
- */
 bool
 get_mounted_usage (FilesystemPtr f)
 {
@@ -41,9 +38,6 @@ get_mounted_usage (FilesystemPtr f)
 }
 
 
-/**
- * get_reiserfs_usage
- */
 bool
 get_reiserfs_usage (FilesystemPtr f)
 {
@@ -57,9 +51,6 @@ get_reiserfs_usage (FilesystemPtr f)
 	return false;
 }
 
-/**
- * get_swap_usage
- */
 bool
 get_swap_usage (FilesystemPtr f)
 {
@@ -73,9 +64,6 @@ get_swap_usage (FilesystemPtr f)
 	return false;
 }
 
-/**
- * get_vfat_usage
- */
 bool
 get_vfat_usage (FilesystemPtr f)
 {
@@ -89,9 +77,6 @@ get_vfat_usage (FilesystemPtr f)
 	return false;
 }
 
-/**
- * get_xfs_usage
- */
 bool
 get_xfs_usage (FilesystemPtr f)
 {

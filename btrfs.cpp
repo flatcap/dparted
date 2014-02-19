@@ -26,16 +26,10 @@
 #include "utils.h"
 #include "log_trace.h"
 
-/**
- * Btrfs
- */
 Btrfs::Btrfs (void)
 {
 }
 
-/**
- * create
- */
 BtrfsPtr
 Btrfs::create (void)
 {
@@ -46,9 +40,6 @@ Btrfs::create (void)
 }
 
 
-/**
- * get_btrfs_usage
- */
 bool
 Btrfs::get_btrfs_usage (void)
 {
@@ -61,9 +52,6 @@ Btrfs::get_btrfs_usage (void)
 	return false;
 }
 
-/**
- * parse_header
- */
 bool
 parse_header (const std::string& header, std::string& dev)
 {
@@ -80,9 +68,6 @@ parse_header (const std::string& header, std::string& dev)
 	return true;
 }
 
-/**
- * parse_line
- */
 static bool
 parse_line (const std::string& line, std::string& key, std::string& value)
 {
@@ -108,9 +93,6 @@ parse_line (const std::string& line, std::string& key, std::string& value)
 	return true;
 }
 
-/**
- * make_desc
- */
 static std::string
 make_desc (std::string key)
 {
@@ -128,9 +110,6 @@ make_desc (std::string key)
 	return key;
 }
 
-/**
- * btrfs_show_super
- */
 std::map<std::string,std::string>
 btrfs_show_super (const std::string& dev)
 {
@@ -175,9 +154,6 @@ btrfs_show_super (const std::string& dev)
 	return results;
 }
 
-/**
- * get_btrfs_sb
- */
 void
 Btrfs::get_btrfs_sb (ContainerPtr parent)
 {
@@ -210,9 +186,6 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 	}
 }
 
-/**
- * get_btrfs
- */
 BtrfsPtr
 Btrfs::get_btrfs (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -235,9 +208,6 @@ Btrfs::get_btrfs (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Btrfs::get_actions (void)
 {
@@ -253,9 +223,6 @@ Btrfs::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Btrfs::perform_action (Action action)
 {

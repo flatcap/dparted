@@ -22,9 +22,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * LvmPartition
- */
 LvmPartition::LvmPartition (void)
 {
 	const char* me = "LvmPartition";
@@ -32,9 +29,6 @@ LvmPartition::LvmPartition (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 LvmPartitionPtr
 LvmPartition::create (void)
 {
@@ -45,9 +39,6 @@ LvmPartition::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 LvmPartition::accept (Visitor& v)
 {
@@ -58,9 +49,6 @@ LvmPartition::accept (Visitor& v)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 LvmPartition::get_actions (void)
 {
@@ -76,9 +64,6 @@ LvmPartition::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 LvmPartition::perform_action (Action action)
 {

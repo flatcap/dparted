@@ -37,9 +37,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Device
- */
 Device::Device (void)
 {
 	const char* me = "Device";
@@ -50,9 +47,6 @@ Device::Device (void)
 	declare_prop (me, "kernel_minor", kernel_minor, "desc of kernel_minor");
 }
 
-/**
- * create
- */
 DevicePtr
 Device::create (void)
 {
@@ -63,9 +57,6 @@ Device::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Device::accept (Visitor& v)
 {
@@ -76,9 +67,6 @@ Device::accept (Visitor& v)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Device::get_actions (void)
 {
@@ -94,9 +82,6 @@ Device::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Device::perform_action (Action action)
 {

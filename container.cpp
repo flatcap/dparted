@@ -38,9 +38,6 @@
 #include "visitor.h"
 #include "log_trace.h"
 
-/**
- * Lots of Actions
- */
 std::vector<Action> cont_actions = {
 	{ "Create/Filesystem",         true },
 	{ "Create/Partition",          true },
@@ -86,9 +83,6 @@ std::vector<Action> cont_actions = {
 };
 
 
-/**
- * Container
- */
 Container::Container (void)
 {
 	const char* me = "Container";
@@ -104,9 +98,6 @@ Container::Container (void)
 	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used");
 }
 
-/**
- * ~Container
- */
 Container::~Container()
 {
 	if (fd >= 0) {
@@ -115,9 +106,6 @@ Container::~Container()
 	}
 }
 
-/**
- * create
- */
 ContainerPtr
 Container::create (void)
 {
@@ -128,9 +116,6 @@ Container::create (void)
 }
 
 
-/**
- * visit_children
- */
 bool
 Container::visit_children (Visitor& v)
 {
@@ -149,9 +134,6 @@ Container::visit_children (Visitor& v)
 	return true;
 }
 
-/**
- * accept
- */
 bool
 Container::accept (Visitor& v)
 {
@@ -162,9 +144,6 @@ Container::accept (Visitor& v)
 }
 
 
-/**
- * add_child
- */
 void
 Container::add_child (ContainerPtr& child)
 {
@@ -206,9 +185,6 @@ Container::add_child (ContainerPtr& child)
 	child->parent = get_smart();
 }
 
-/**
- * just_add_child
- */
 void
 Container::just_add_child (ContainerPtr& child)
 {
@@ -217,9 +193,6 @@ Container::just_add_child (ContainerPtr& child)
 	//log_debug ("just: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 }
 
-/**
- * delete_child
- */
 void
 Container::delete_child (ContainerPtr& child)
 {
@@ -231,18 +204,12 @@ Container::delete_child (ContainerPtr& child)
 	}
 }
 
-/**
- * move_child
- */
 void
 Container::move_child (ContainerPtr& UNUSED(child), long UNUSED(offset), long UNUSED(size))
 {
 }
 
 
-/**
- * get_fd
- */
 int
 Container::get_fd (void)
 {
@@ -271,9 +238,6 @@ Container::get_fd (void)
 	return newfd;
 }
 
-/**
- * get_block_size
- */
 long
 Container::get_block_size (void)
 {
@@ -288,9 +252,6 @@ Container::get_block_size (void)
 	return -1;
 }
 
-/**
- * get_device_name
- */
 std::string
 Container::get_device_name (void)
 {
@@ -305,18 +266,12 @@ Container::get_device_name (void)
 		return "UNKNOWN";
 }
 
-/**
- * get_parent_offset
- */
 long
 Container::get_parent_offset (void)
 {
 	return parent_offset;
 }
 
-/**
- * get_device_space
- */
 unsigned int
 Container::get_device_space (std::map<long, long>& spaces)
 {
@@ -329,27 +284,18 @@ Container::get_device_space (std::map<long, long>& spaces)
 }
 
 
-/**
- * get_size_total
- */
 long
 Container::get_size_total (void)
 {
 	return bytes_size;
 }
 
-/**
- * get_size_used
- */
 long
 Container::get_size_used (void)
 {
 	return bytes_used;
 }
 
-/**
- * get_size_free
- */
 long
 Container::get_size_free (void)
 {
@@ -357,9 +303,6 @@ Container::get_size_free (void)
 }
 
 
-/**
- * find_device
- */
 ContainerPtr
 Container::find_device (const std::string& dev)
 {
@@ -384,9 +327,6 @@ Container::find_device (const std::string& dev)
 	return match;
 }
 
-/**
- * find_name
- */
 ContainerPtr
 Container::find_name (const std::string& search)
 {
@@ -405,9 +345,6 @@ Container::find_name (const std::string& search)
 	return item;
 }
 
-/**
- * find_type
- */
 void
 Container::find_type (const std::string& type, std::vector<ContainerPtr>& results)
 {
@@ -421,9 +358,6 @@ Container::find_type (const std::string& type, std::vector<ContainerPtr>& result
 	}
 }
 
-/**
- * find_uuid
- */
 ContainerPtr
 Container::find_uuid (const std::string& search)
 {
@@ -449,9 +383,6 @@ Container::find_uuid (const std::string& search)
 	return item;
 }
 
-/**
- * find
- */
 ContainerPtr
 Container::find (const std::string& search)
 {
@@ -485,9 +416,6 @@ Container::find (const std::string& search)
 }
 
 
-/**
- * get_buffer
- */
 unsigned char*
 Container::get_buffer (long offset, long size)
 {
@@ -561,9 +489,6 @@ Container::get_buffer (long offset, long size)
 	return ((unsigned char*) buf) + adjust;
 }
 
-/**
- * close_buffer
- */
 void
 Container::close_buffer (unsigned char* buffer, long size)
 {
@@ -618,9 +543,6 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 }
 
 
-/**
- * is_a
- */
 bool
 Container::is_a (const std::string& t)
 {
@@ -636,9 +558,6 @@ Container::is_a (const std::string& t)
 	return false;
 }
 
-/**
- * sub_type
- */
 void
 Container::sub_type (const char* n)
 {
@@ -647,9 +566,6 @@ Container::sub_type (const char* n)
 }
 
 
-/**
- * get_children
- */
 std::vector<ContainerPtr>&
 Container::get_children (void)
 {
@@ -661,9 +577,6 @@ Container::get_children (void)
 }
 
 
-/**
- * deleter
- */
 void deleter (Mmap* m)
 {
 	long  size = 0;
@@ -677,9 +590,6 @@ void deleter (Mmap* m)
 	delete m;
 }
 
-/**
- * insert
- */
 void
 Container::insert (long offset, long size, void* ptr)
 {
@@ -687,9 +597,6 @@ Container::insert (long offset, long size, void* ptr)
 }
 
 
-/**
- * get_path
- */
 std::string
 Container::get_path (void)
 {
@@ -704,9 +611,6 @@ Container::get_path (void)
 	return path;
 }
 
-/**
- * get_property
- */
 std::string
 Container::get_property (const std::string& propname)
 {
@@ -749,9 +653,6 @@ Container::get_property (const std::string& propname)
 }
 
 
-/**
- * get_prop_names
- */
 std::vector<std::string>
 Container::get_prop_names (void)
 {
@@ -763,9 +664,6 @@ Container::get_prop_names (void)
 	return names;
 }
 
-/**
- * get_prop
- */
 PPtr
 Container::get_prop (const std::string& name)
 {
@@ -774,9 +672,6 @@ Container::get_prop (const std::string& name)
 	return props[name];
 }
 
-/**
- * get_all_props
- */
 std::vector<PPtr>
 Container::get_all_props (void)
 {
@@ -791,9 +686,6 @@ Container::get_all_props (void)
 }
 
 
-/**
- * get_smart
- */
 ContainerPtr
 Container::get_smart (void)
 {
@@ -808,9 +700,6 @@ Container::get_smart (void)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Container::get_actions (void)
 {
@@ -822,9 +711,6 @@ Container::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Container::perform_action (Action action)
 {

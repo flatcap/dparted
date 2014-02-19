@@ -29,9 +29,6 @@ class ConfigManager;
 
 typedef std::shared_ptr<ConfigManager> ConfigManagerPtr;
 
-/**
- * class ConfigManager
- */
 class ConfigManager
 {
 public:

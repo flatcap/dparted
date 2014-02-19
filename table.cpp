@@ -30,9 +30,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Table
- */
 Table::Table (void)
 {
 	const char* me = "Table";
@@ -40,9 +37,6 @@ Table::Table (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 TablePtr
 Table::create (void)
 {
@@ -53,9 +47,6 @@ Table::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Table::accept (Visitor& v)
 {
@@ -66,9 +57,6 @@ Table::accept (Visitor& v)
 }
 
 
-/**
- * probe
- */
 ContainerPtr
 Table::probe (ContainerPtr& top_level, ContainerPtr& parent)
 {
@@ -101,9 +89,6 @@ Table::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	return nullptr;
 }
 
-/**
- * fill_space
- */
 long
 Table::fill_space (void)
 {
@@ -178,9 +163,6 @@ Table::fill_space (void)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Table::get_actions (void)
 {
@@ -196,9 +178,6 @@ Table::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Table::perform_action (Action action)
 {

@@ -29,9 +29,6 @@ class Visitor;
 
 typedef std::shared_ptr<MdPartition> MdPartitionPtr;
 
-/**
- * class MdPartition
- */
 class MdPartition : public Piece
 {
 public:

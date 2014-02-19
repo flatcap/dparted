@@ -31,9 +31,6 @@ class Visitor;
 
 typedef std::shared_ptr<Loop> LoopPtr;
 
-/**
- * class Loop
- */
 class Loop : public Device
 {
 public:

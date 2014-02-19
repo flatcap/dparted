@@ -40,9 +40,6 @@
 #include "visitor.h"
 #include "dump_visitor.h"
 
-/**
- * LvmGroup
- */
 LvmGroup::LvmGroup (void)
 {
 	const char* me = "LvmGroup";
@@ -55,9 +52,6 @@ LvmGroup::LvmGroup (void)
 	declare_prop (me, "vg_attr",  vg_attr,  "desc of vg_attr");
 }
 
-/**
- * create
- */
 LvmGroupPtr
 LvmGroup::create (void)
 {
@@ -68,9 +62,6 @@ LvmGroup::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 LvmGroup::accept (Visitor& v)
 {
@@ -81,9 +72,6 @@ LvmGroup::accept (Visitor& v)
 }
 
 
-/**
- * lvm_pvs
- */
 int
 LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 {
@@ -247,9 +235,6 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 	return added;
 }
 
-/**
- * lvm_vgs
- */
 void
 LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& UNUSED(deps))
 {
@@ -259,8 +244,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 	std::vector<std::string> output;
 	std::map<std::string,StringNum> tags;
 
-	/*
-	 * LVM2_VG_NAME=shuffle
+	/* LVM2_VG_NAME=shuffle
 	 * LVM2_PV_COUNT=1
 	 * LVM2_LV_COUNT=1
 	 * LVM2_VG_ATTR=wz--n-
@@ -320,9 +304,6 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 }
 
-/**
- * lvm_lvs
- */
 void
 LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 {
@@ -332,8 +313,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 	std::vector<std::string> output;
 	std::map<std::string,StringNum> tags;
 
-	/*
-	 * LVM2_VG_UUID=Usi3h1-mPFH-Z7kS-JNdQ-lron-H8CN-6dyTsC
+	/* LVM2_VG_UUID=Usi3h1-mPFH-Z7kS-JNdQ-lron-H8CN-6dyTsC
 	 * LVM2_VG_NAME=shuffle
 	 * LVM2_LV_NAME=jigsaw
 	 * LVM2_LV_ATTR=-wi-a-
@@ -536,9 +516,6 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 }
 
 
-/**
- * discover
- */
 void
 LvmGroup::discover (ContainerPtr& top_level)
 {
@@ -595,9 +572,6 @@ LvmGroup::discover (ContainerPtr& top_level)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 LvmGroup::get_actions (void)
 {
@@ -613,9 +587,6 @@ LvmGroup::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 LvmGroup::perform_action (Action action)
 {

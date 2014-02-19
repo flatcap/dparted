@@ -30,9 +30,6 @@ class Visitor;
 
 typedef std::shared_ptr<LvmGroup> LvmGroupPtr;
 
-/**
- * class LvmGroup
- */
 class LvmGroup : public Whole
 {
 public:

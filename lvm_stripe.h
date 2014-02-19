@@ -29,9 +29,6 @@ class Visitor;
 
 typedef std::shared_ptr<LvmStripe> LvmStripePtr;
 
-/**
- * class LvmStripe
- */
 class LvmStripe : public LvmVolume
 {
 public:

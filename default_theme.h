@@ -24,9 +24,6 @@
 
 #include "theme.h"
 
-/**
- * class DefaultTheme
- */
 class DefaultTheme : public Theme
 {
 public:

@@ -25,23 +25,14 @@
 #include "config_file.h"
 #include "stringnum.h"
 
-/**
- * ConfigFile
- */
 ConfigFile::ConfigFile (void)
 {
 }
 
-/**
- * ~ConfigFile
- */
 ConfigFile::~ConfigFile()
 {
 }
 
-/**
- * create
- */
 ConfigFilePtr
 ConfigFile::create (void)
 {
@@ -52,9 +43,6 @@ ConfigFile::create (void)
 }
 
 
-/**
- * get_value
- */
 std::string
 get_value (const libconfig::Setting& s)
 {
@@ -80,9 +68,6 @@ get_value (const libconfig::Setting& s)
 	}
 }
 
-/**
- * parse_config
- */
 void
 parse_config (const libconfig::Setting& setting, std::map<std::string,std::string>& config)
 {
@@ -103,18 +88,12 @@ parse_config (const libconfig::Setting& setting, std::map<std::string,std::strin
 }
 
 
-/**
- * is_valid
- */
 bool ConfigFile::is_valid (void)
 {
 	return valid;
 }
 
 
-/**
- * read_file
- */
 ConfigFilePtr
 ConfigFile::read_file (const std::string& filename)
 {
@@ -140,9 +119,6 @@ ConfigFile::read_file (const std::string& filename)
 	return cf;
 }
 
-/**
- * dump_config
- */
 void
 ConfigFile::dump_config (void)
 {
@@ -153,18 +129,12 @@ ConfigFile::dump_config (void)
 }
 
 
-/**
- * exists
- */
 bool ConfigFile::exists (const std::string& name)
 {
 	return (config.count (name) > 0);
 }
 
 
-/**
- * get_bool
- */
 bool
 ConfigFile::get_bool (const std::string& name)
 {
@@ -177,9 +147,6 @@ ConfigFile::get_bool (const std::string& name)
 	return (value == "true");
 }
 
-/**
- * get_u32
- */
 uint32_t
 ConfigFile::get_u32 (const std::string& name)
 {
@@ -191,9 +158,6 @@ ConfigFile::get_u32 (const std::string& name)
 	return (uint32_t) value;
 }
 
-/**
- * get_s32
- */
 int32_t
 ConfigFile::get_s32 (const std::string& name)
 {
@@ -205,9 +169,6 @@ ConfigFile::get_s32 (const std::string& name)
 	return (int32_t) value;
 }
 
-/**
- * get_u64
- */
 uint64_t
 ConfigFile::get_u64 (const std::string& name)
 {
@@ -219,9 +180,6 @@ ConfigFile::get_u64 (const std::string& name)
 	return (uint64_t) value;
 }
 
-/**
- * get_s64
- */
 int64_t
 ConfigFile::get_s64 (const std::string& name)
 {
@@ -233,9 +191,6 @@ ConfigFile::get_s64 (const std::string& name)
 	return (int64_t) value;
 }
 
-/**
- * get_double
- */
 double
 ConfigFile::get_double (const std::string& name)
 {
@@ -247,9 +202,6 @@ ConfigFile::get_double (const std::string& name)
 	return (double) value;
 }
 
-/**
- * get_string
- */
 std::string
 ConfigFile::get_string (const std::string& name)
 {
@@ -259,9 +211,6 @@ ConfigFile::get_string (const std::string& name)
 	return config[name];
 }
 
-/**
- * get_strings
- */
 std::vector<std::string>
 ConfigFile::get_strings (const std::string& name)
 {

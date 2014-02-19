@@ -26,16 +26,10 @@
 #include "utils.h"
 #include "log_trace.h"
 
-/**
- * Extfs
- */
 Extfs::Extfs (void)
 {
 }
 
-/**
- * create
- */
 ExtfsPtr
 Extfs::create (void)
 {
@@ -46,9 +40,6 @@ Extfs::create (void)
 }
 
 
-/**
- * parse_line
- */
 static bool
 parse_line (const std::string& line, std::string& key, std::string& value)
 {
@@ -75,9 +66,6 @@ parse_line (const std::string& line, std::string& key, std::string& value)
 	return true;
 }
 
-/**
- * make_key
- */
 std::string
 make_key (std::string desc)
 {
@@ -103,9 +91,6 @@ make_key (std::string desc)
 	return "extfs_" + desc;
 }
 
-/**
- * tune2fs
- */
 std::map<std::string,std::string>
 tune2fs (const std::string& dev)
 {
@@ -216,9 +201,6 @@ Extfs::get_ext_sb (ContainerPtr parent)
 #endif
 }
 
-/**
- * get_ext2
- */
 ExtfsPtr
 Extfs::get_ext2 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -235,9 +217,6 @@ Extfs::get_ext2 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize)
 	return e;
 }
 
-/**
- * get_ext3
- */
 ExtfsPtr
 Extfs::get_ext3 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -256,9 +235,6 @@ Extfs::get_ext3 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize)
 	return e;
 }
 
-/**
- * get_ext4
- */
 ExtfsPtr
 Extfs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -279,9 +255,6 @@ Extfs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Extfs::get_actions (void)
 {
@@ -297,9 +270,6 @@ Extfs::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Extfs::perform_action (Action action)
 {

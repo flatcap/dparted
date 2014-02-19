@@ -37,9 +37,6 @@
 #include "btrfs.h"
 #include "ntfs.h"
 
-/**
- * Filesystem
- */
 Filesystem::Filesystem (void)
 {
 	const char* me = "Filesystem";
@@ -47,9 +44,6 @@ Filesystem::Filesystem (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 FilesystemPtr
 Filesystem::create (void)
 {
@@ -60,9 +54,6 @@ Filesystem::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Filesystem::accept (Visitor& v)
 {
@@ -73,9 +64,6 @@ Filesystem::accept (Visitor& v)
 }
 
 
-/**
- * probe
- */
 FilesystemPtr
 Filesystem::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent)
 {
@@ -114,9 +102,6 @@ Filesystem::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent)
 	return f;
 }
 
-/**
- * get_mounted_usage
- */
 bool
 Filesystem::get_mounted_usage (ContainerPtr UNUSED(parent))
 {
@@ -125,9 +110,6 @@ Filesystem::get_mounted_usage (ContainerPtr UNUSED(parent))
 
 
 #if 0
-/**
- * delete_filesystem
- */
 void
 Filesystem::delete_filesystem (void)
 {
@@ -142,9 +124,6 @@ Filesystem::delete_filesystem (void)
 
 #endif
 
-/**
- * get_actions
- */
 std::vector<Action>
 Filesystem::get_actions (void)
 {
@@ -160,9 +139,6 @@ Filesystem::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Filesystem::perform_action (Action action)
 {

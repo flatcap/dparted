@@ -22,9 +22,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * LvmLinear
- */
 LvmLinear::LvmLinear (void)
 {
 	const char* me = "LvmLinear";
@@ -32,9 +29,6 @@ LvmLinear::LvmLinear (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 LvmLinearPtr
 LvmLinear::create (void)
 {
@@ -45,9 +39,6 @@ LvmLinear::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 LvmLinear::accept (Visitor& v)
 {
@@ -58,9 +49,6 @@ LvmLinear::accept (Visitor& v)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 LvmLinear::get_actions (void)
 {
@@ -76,9 +64,6 @@ LvmLinear::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 LvmLinear::perform_action (Action action)
 {

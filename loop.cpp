@@ -29,9 +29,6 @@
 #include "stringnum.h"
 #include "visitor.h"
 
-/**
- * Loop
- */
 Loop::Loop (void)
 {
 	const char* me = "Loop";
@@ -52,9 +49,6 @@ Loop::Loop (void)
 	declare_prop (me, "deleted",    deleted,    "desc of deleted");
 }
 
-/**
- * create
- */
 LoopPtr
 Loop::create (const std::string& losetup)
 {
@@ -115,9 +109,6 @@ Loop::create (const std::string& losetup)
 }
 
 
-/**
- * accept
- */
 bool
 Loop::accept (Visitor& v)
 {
@@ -128,9 +119,6 @@ Loop::accept (Visitor& v)
 }
 
 
-/**
- * losetup
- */
 bool
 Loop::losetup (std::vector <std::string>& output, std::string device)
 {
@@ -172,9 +160,6 @@ Loop::losetup (std::vector <std::string>& output, std::string device)
 	return true;
 }
 
-/**
- * discover
- */
 void
 Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 {
@@ -199,9 +184,6 @@ Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 	}
 }
 
-/**
- * identify
- */
 void
 Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& UNUSED(st))
 {
@@ -243,9 +225,6 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Loop::get_actions (void)
 {
@@ -261,9 +240,6 @@ Loop::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Loop::perform_action (Action action)
 {

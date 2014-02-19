@@ -34,9 +34,6 @@
 //#define LOG_TRACE		do {} while (0)
 //#endif
 
-/**
- * class LogTrace
- */
 class LogTrace
 {
 public:

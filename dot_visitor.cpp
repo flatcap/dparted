@@ -34,9 +34,6 @@
 #include "log_trace.h"
 #include "utils.h"
 
-/**
- * DotVisitor
- */
 DotVisitor::DotVisitor (void)
 {
 	output << "digraph disks {\n";
@@ -46,17 +43,11 @@ DotVisitor::DotVisitor (void)
 	output << "\n";
 }
 
-/**
- * ~DotVisitor
- */
 DotVisitor::~DotVisitor()
 {
 }
 
 
-/**
- * visit_enter
- */
 bool
 DotVisitor::visit_enter (ContainerPtr& c)
 {
@@ -66,9 +57,6 @@ DotVisitor::visit_enter (ContainerPtr& c)
 	return true;
 }
 
-/**
- * visit_leave
- */
 bool
 DotVisitor::visit_leave (void)
 {
@@ -84,9 +72,6 @@ DotVisitor::visit_leave (void)
 }
 
 
-/**
- * get_colour
- */
 std::string
 get_colour (ContainerPtr c)
 {
@@ -279,9 +264,6 @@ dot_row (const char* name, ContainerPtr value)
 }
 
 
-/**
- * parent_link
- */
 template <class T>
 std::string
 DotVisitor::parent_link (std::shared_ptr<T> t)
@@ -297,9 +279,6 @@ DotVisitor::parent_link (std::shared_ptr<T> t)
 }
 
 
-/**
- * dot_container
- */
 template <class T>
 std::string
 dot_container (std::shared_ptr<T> t)
@@ -361,9 +340,6 @@ dot_container (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_device
- */
 template <class T>
 std::string
 dot_device (std::shared_ptr<T> t)
@@ -381,9 +357,6 @@ dot_device (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_disk
- */
 template <class T>
 std::string
 dot_disk (std::shared_ptr<T> t)
@@ -409,9 +382,6 @@ dot_disk (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_file
- */
 template <class T>
 std::string
 dot_file (std::shared_ptr<T> t)
@@ -429,9 +399,6 @@ dot_file (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_loop
- */
 template <class T>
 std::string
 dot_loop (std::shared_ptr<T> t)
@@ -490,9 +457,6 @@ dot_loop (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_table
- */
 template <class T>
 std::string
 dot_table (std::shared_ptr<T> t)
@@ -510,9 +474,6 @@ dot_table (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_gpt
- */
 template <class T>
 std::string
 dot_gpt (std::shared_ptr<T> t)
@@ -530,9 +491,6 @@ dot_gpt (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_lvm_table
- */
 template <class T>
 std::string
 dot_lvm_table (std::shared_ptr<T> t)
@@ -552,9 +510,6 @@ dot_lvm_table (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_md_table
- */
 template <class T>
 std::string
 dot_md_table (std::shared_ptr<T> t)
@@ -580,9 +535,6 @@ dot_md_table (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_msdos
- */
 template <class T>
 std::string
 dot_msdos (std::shared_ptr<T> t)
@@ -600,9 +552,6 @@ dot_msdos (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_extended
- */
 template <class T>
 std::string
 dot_extended (std::shared_ptr<T> t)
@@ -623,9 +572,6 @@ dot_extended (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_partition
- */
 template <class T>
 std::string
 dot_partition (std::shared_ptr<T> t)
@@ -643,9 +589,6 @@ dot_partition (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_luks
- */
 template <class T>
 std::string
 dot_luks (std::shared_ptr<T> t)
@@ -666,9 +609,6 @@ dot_luks (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_filesystem
- */
 template <class T>
 std::string
 dot_filesystem (std::shared_ptr<T> t)
@@ -684,9 +624,6 @@ dot_filesystem (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_whole
- */
 template <class T>
 std::string
 dot_whole (std::shared_ptr<T> t)
@@ -710,9 +647,6 @@ dot_whole (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_volume
- */
 template <class T>
 std::string
 dot_volume (std::shared_ptr<T> t)
@@ -731,9 +665,6 @@ dot_volume (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_md_group
- */
 template <class T>
 std::string
 dot_md_group (std::shared_ptr<T> t)
@@ -751,9 +682,6 @@ dot_md_group (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_misc
- */
 template <class T>
 std::string
 dot_misc (std::shared_ptr<T> t)
@@ -771,9 +699,6 @@ dot_misc (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_lvm_group
- */
 template <class T>
 std::string
 dot_lvm_group (std::shared_ptr<T> t)
@@ -794,9 +719,6 @@ dot_lvm_group (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_lvm_volume
- */
 template <class T>
 std::string
 dot_lvm_volume (std::shared_ptr<T> t)
@@ -830,9 +752,6 @@ dot_lvm_volume (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_lvm_linear
- */
 template <class T>
 std::string
 dot_lvm_linear (std::shared_ptr<T> t)
@@ -850,9 +769,6 @@ dot_lvm_linear (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_lvm_metadata
- */
 template <class T>
 std::string
 dot_lvm_metadata (std::shared_ptr<T> t)
@@ -870,9 +786,6 @@ dot_lvm_metadata (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_lvm_mirror
- */
 template <class T>
 std::string
 dot_lvm_mirror (std::shared_ptr<T> t)
@@ -890,9 +803,6 @@ dot_lvm_mirror (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_lvm_raid
- */
 template <class T>
 std::string
 dot_lvm_raid (std::shared_ptr<T> t)
@@ -910,9 +820,6 @@ dot_lvm_raid (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_lvm_stripe
- */
 template <class T>
 std::string
 dot_lvm_stripe (std::shared_ptr<T> t)
@@ -930,9 +837,6 @@ dot_lvm_stripe (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_btrfs
- */
 template <class T>
 std::string
 dot_btrfs  (std::shared_ptr<T> t)
@@ -950,9 +854,6 @@ dot_btrfs  (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_extfs
- */
 template <class T>
 std::string
 dot_extfs  (std::shared_ptr<T> t)
@@ -970,9 +871,6 @@ dot_extfs  (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_ntfs
- */
 template <class T>
 std::string
 dot_ntfs  (std::shared_ptr<T> t)
@@ -990,9 +888,6 @@ dot_ntfs  (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_piece
- */
 template <class T>
 std::string
 dot_piece  (std::shared_ptr<T> t)
@@ -1010,9 +905,6 @@ dot_piece  (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_md_partition
- */
 template <class T>
 std::string
 dot_md_partition  (std::shared_ptr<T> t)
@@ -1030,9 +922,6 @@ dot_md_partition  (std::shared_ptr<T> t)
 	return output.str();
 }
 
-/**
- * dot_lvm_partition
- */
 template <class T>
 std::string
 dot_lvm_partition (std::shared_ptr<T> t)
@@ -1317,9 +1206,6 @@ DotVisitor::visit (FilesystemPtr f)
 
 
 #if 0
-/**
- * dump_dot_inner
- */
 static std::string
 dump_dot_inner (const std::vector <ContainerPtr>& v)
 {
@@ -1414,9 +1300,6 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 
 #endif
 
-/**
- * get_output
- */
 std::string
 DotVisitor::get_output (void)
 {
@@ -1427,9 +1310,6 @@ DotVisitor::get_output (void)
 }
 
 
-/**
- * run_dotty
- */
 void
 DotVisitor::run_dotty (void)
 {

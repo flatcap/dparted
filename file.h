@@ -31,9 +31,6 @@ class Visitor;
 
 typedef std::shared_ptr<File> FilePtr;
 
-/**
- * class File
- */
 class File : public Container
 {
 public:

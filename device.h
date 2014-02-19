@@ -30,9 +30,6 @@ class Visitor;
 
 typedef std::shared_ptr<Device> DevicePtr;
 
-/**
- * class Device
- */
 class Device : public virtual Container
 {
 public:

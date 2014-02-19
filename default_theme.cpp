@@ -21,9 +21,6 @@
 
 #include "default_theme.h"
 
-/**
- * DefaultTheme
- */
 DefaultTheme::DefaultTheme (void)
 {
 #if 0
@@ -40,9 +37,6 @@ DefaultTheme::DefaultTheme (void)
 #endif
 }
 
-/**
- * ~DefaultTheme
- */
 DefaultTheme::~DefaultTheme()
 {
 }

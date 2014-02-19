@@ -24,9 +24,6 @@
 
 #include "gfx_container.h"
 
-/**
- * class TreeView
- */
 class TreeView : public Gtk::TreeView
 {
 public:

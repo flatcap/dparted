@@ -19,24 +19,15 @@
 #include "question.h"
 #include "log_trace.h"
 
-/**
- * Question
- */
 Question::Question (void)
 {
 }
 
-/**
- * ~Question
- */
 Question::~Question()
 {
 }
 
 
-/**
- * create
- */
 QuestionPtr
 Question::create (ContainerPtr UNUSED(c), question_cb_t fn)
 {
@@ -47,9 +38,6 @@ Question::create (ContainerPtr UNUSED(c), question_cb_t fn)
 	return q;
 }
 
-/**
- * done
- */
 void
 Question::done (void)
 {

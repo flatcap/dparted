@@ -29,25 +29,16 @@
 #include "theme.h"
 #include "log_trace.h"
 
-/**
- * Theme
- */
 Theme::Theme (void)
 {
 	init_icons();
 }
 
-/**
- * ~Theme
- */
 Theme::~Theme()
 {
 }
 
 
-/**
- * add_colour
- */
 bool
 Theme::add_colour (const std::string& name, const std::string& colour)
 {
@@ -59,9 +50,6 @@ Theme::add_colour (const std::string& name, const std::string& colour)
 	return false;
 }
 
-/**
- * get_colour
- */
 Gdk::RGBA
 Theme::get_colour (const std::string& name)
 {
@@ -81,9 +69,6 @@ Theme::get_colour (const std::string& name)
 }
 
 
-/**
- * init_icons
- */
 void
 Theme::init_icons (void)
 {
@@ -101,9 +86,6 @@ Theme::init_icons (void)
 	add_icon ("warning", "/usr/share/icons/gnome/24x24/status/dialog-warning.png");
 }
 
-/**
- * add_icon
- */
 Glib::RefPtr<Gdk::Pixbuf>
 Theme::add_icon (const std::string& name, const std::string& filename)
 {
@@ -121,9 +103,6 @@ Theme::add_icon (const std::string& name, const std::string& filename)
 }
 
 
-/**
- * create_missing_pixbuf
- */
 Glib::RefPtr<Gdk::Pixbuf>
 Theme::create_missing_pixbuf (int size)
 {
@@ -155,9 +134,6 @@ Theme::create_missing_pixbuf (int size)
 	return pixbuf;
 }
 
-/**
- * get_icon
- */
 Glib::RefPtr<Gdk::Pixbuf>
 Theme::get_icon (const std::string& name)
 {
@@ -231,18 +207,12 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 }
 
 
-/**
- * is_valid
- */
 bool
 Theme::is_valid (void)
 {
 	return true;
 }
 
-/**
- * read_file
- */
 ThemePtr
 Theme::read_file (const std::string& filename)
 {

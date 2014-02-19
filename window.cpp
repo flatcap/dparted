@@ -30,9 +30,6 @@
 #include "log.h"
 #include "log_trace.h"
 
-/**
- * Window
- */
 Window::Window (void)
 {
 	set_title ("DParted");
@@ -107,17 +104,11 @@ Window::Window (void)
 #endif
 }
 
-/**
- * ~Window
- */
 Window::~Window()
 {
 }
 
 
-/**
- * my_realize
- */
 void
 Window::my_realize (void)
 {
@@ -125,9 +116,6 @@ Window::my_realize (void)
 	drawingarea.grab_focus();
 }
 
-/**
- * my_show
- */
 void
 Window::my_show (void)
 {
@@ -137,9 +125,6 @@ Window::my_show (void)
 	resize (800, 250);
 }
 
-/**
- * my_idle
- */
 bool
 Window::my_idle (void)
 {
@@ -156,9 +141,6 @@ Window::my_idle (void)
 }
 
 
-/**
- * on_delete_event
- */
 bool
 Window::on_delete_event (GdkEventAny* UNUSED(event))
 {
@@ -167,9 +149,6 @@ Window::on_delete_event (GdkEventAny* UNUSED(event))
 }
 
 
-/**
- * on_mouse_click
- */
 bool
 Window::on_mouse_click (GdkEventButton* UNUSED(event))
 {
@@ -205,18 +184,12 @@ Window::set_focus (GfxContainerPtr cont)
 	return true;
 }
 
-/**
- * get_focus
- */
 GfxContainerPtr
 Window::get_focus (void)
 {
 	return focus;
 }
 
-/**
- * set_data
- */
 void
 Window::set_data (GfxContainerPtr c)
 {
@@ -225,36 +198,24 @@ Window::set_data (GfxContainerPtr c)
 }
 
 
-/**
- * load_config
- */
 void
 Window::load_config (const std::string& UNUSED(filename))
 {
 	LOG_TRACE;
 }
 
-/**
- * load_theme
- */
 void
 Window::load_theme (const std::string& UNUSED(filename))
 {
 	LOG_TRACE;
 }
 
-/**
- * load_disk
- */
 void
 Window::load_disk (const std::string& UNUSED(filename))
 {
 	LOG_TRACE;
 }
 
-/**
- * set_geometry
- */
 void
 Window::set_geometry (int x, int y, int w, int h)
 {
@@ -282,9 +243,6 @@ Window::set_geometry (int x, int y, int w, int h)
 }
 
 
-/**
- * on_menu_choices
- */
 void
 Window::on_menu_choices (const Glib::ustring& parameter)
 {
@@ -300,9 +258,6 @@ Window::on_menu_choices (const Glib::ustring& parameter)
 	std::cout << message << std::endl;
 }
 
-/**
- * on_menu_choices_other
- */
 void
 Window::on_menu_choices_other (int parameter)
 {
@@ -318,18 +273,12 @@ Window::on_menu_choices_other (int parameter)
 	std::cout << message << std::endl;
 }
 
-/**
- * on_menu_file_new_generic
- */
 void
 Window::on_menu_file_new_generic (void)
 {
 	std::cout << "A File|New menu item was selected." << std::endl;
 }
 
-/**
- * on_menu_file_quit
- */
 void
 Window::on_menu_file_quit (void)
 {
@@ -359,18 +308,12 @@ Window::on_menu_file_quit (void)
 	}
 }
 
-/**
- * on_menu_others
- */
 void
 Window::on_menu_others (void)
 {
 	std::cout << "A menu item was selected." << std::endl;
 }
 
-/**
- * on_menu_toggle
- */
 void
 Window::on_menu_toggle (void)
 {
@@ -390,9 +333,6 @@ Window::on_menu_toggle (void)
 	std::cout << message << std::endl;
 }
 
-/**
- * on_menu_view
- */
 void
 Window::on_menu_view (int option)
 {
@@ -440,9 +380,6 @@ Window::on_menu_view (int option)
 }
 
 
-/**
- * init_shortcuts
- */
 void
 Window::init_shortcuts (void)
 {
@@ -480,9 +417,6 @@ Window::init_shortcuts (void)
 
 }
 
-/**
- * init_general_actions
- */
 void
 Window::insert_general_actions (std::string section, const std::vector<const char*>& commands)
 {
@@ -494,9 +428,6 @@ Window::insert_general_actions (std::string section, const std::vector<const cha
 	}
 }
 
-/**
- * init_actions
- */
 void
 Window::init_actions (void)
 {
@@ -549,9 +480,6 @@ Window::init_actions (void)
 #endif
 }
 
-/**
- * init_menubar
- */
 void
 Window::init_menubar (Gtk::Box& box)
 {
@@ -769,9 +697,6 @@ Window::init_menubar (Gtk::Box& box)
 }
 
 
-/**
- * set_actions
- */
 void
 Window::set_actions (std::vector<Action>& list)
 {
@@ -790,9 +715,6 @@ Window::set_actions (std::vector<Action>& list)
 	}
 }
 
-/**
- * on_keypress
- */
 void
 Window::on_keypress (int modifier, int key)
 {
@@ -805,9 +727,6 @@ Window::on_keypress (int modifier, int key)
 }
 
 
-/**
- * on_action_general
- */
 void
 Window::on_action_general (std::string section, std::string name)
 {

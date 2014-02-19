@@ -30,9 +30,6 @@ class Visitor;
 
 typedef std::shared_ptr<Table> TablePtr;
 
-/**
- * class Table
- */
 class Table : public virtual Container
 {
 public:

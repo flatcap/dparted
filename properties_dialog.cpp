@@ -19,9 +19,6 @@
 #include "properties_dialog.h"
 #include "log_trace.h"
 
-/**
- * PropertiesDialog
- */
 PropertiesDialog::PropertiesDialog (GfxContainerPtr c, Gtk::Window* w) :
 	Gtk::Dialog ("dummy", false),
 	close ("_Close", true),
@@ -106,18 +103,12 @@ PropertiesDialog::PropertiesDialog (GfxContainerPtr c, Gtk::Window* w) :
 	show_all();
 }
 
-/**
- * ~PropertiesDialog
- */
 PropertiesDialog::~PropertiesDialog()
 {
 	//LOG_TRACE;
 }
 
 
-/**
- * on_dialog_response
- */
 void
 PropertiesDialog::on_dialog_response (int response_id)
 {
@@ -133,9 +124,6 @@ PropertiesDialog::on_dialog_response (int response_id)
 	delete this;
 }
 
-/**
- * on_parent_delete
- */
 bool
 PropertiesDialog::on_parent_delete (GdkEventAny* UNUSED(event))
 {
@@ -144,9 +132,6 @@ PropertiesDialog::on_parent_delete (GdkEventAny* UNUSED(event))
 	return false;
 }
 
-/**
- * on_close
- */
 void
 PropertiesDialog::on_close (void)
 {
@@ -163,9 +148,6 @@ PropertiesDialog::on_close (void)
 
 
 #if 0
-/**
- * on_draw
- */
 bool
 PropertiesDialog::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
@@ -174,9 +156,6 @@ PropertiesDialog::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	return Gtk::Dialog::on_draw (cr);
 }
 
-/**
- * on_event
- */
 bool
 PropertiesDialog::on_event (GdkEvent* event)
 {
@@ -184,9 +163,6 @@ PropertiesDialog::on_event (GdkEvent* event)
 	return false;
 }
 
-/**
- * my_realize
- */
 void
 PropertiesDialog::my_realize (void)
 {
@@ -195,9 +171,6 @@ PropertiesDialog::my_realize (void)
 
 #endif
 
-/**
- * prop_sort
- */
 bool
 prop_sort (const PPtr& lhs, const PPtr& rhs)
 {
@@ -211,9 +184,6 @@ prop_sort (const PPtr& lhs, const PPtr& rhs)
 	return (lhs->name < rhs->name);
 }
 
-/**
- * my_show
- */
 void
 PropertiesDialog::my_show (void)
 {

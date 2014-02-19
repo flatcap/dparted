@@ -23,9 +23,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * LvmMirror
- */
 LvmMirror::LvmMirror (void)
 {
 	const char* me = "LvmMirror";
@@ -33,9 +30,6 @@ LvmMirror::LvmMirror (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 LvmMirrorPtr
 LvmMirror::create (void)
 {
@@ -46,9 +40,6 @@ LvmMirror::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 LvmMirror::accept (Visitor& v)
 {
@@ -59,9 +50,6 @@ LvmMirror::accept (Visitor& v)
 }
 
 
-/**
- * add_child
- */
 void
 LvmMirror::add_child (ContainerPtr& child)
 {
@@ -115,18 +103,12 @@ LvmMirror::add_child (ContainerPtr& child)
 	LvmVolume::add_child (child);
 }
 
-/**
- * delete_child
- */
 void
 LvmMirror::delete_child (ContainerPtr& UNUSED(child))
 {
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 LvmMirror::get_actions (void)
 {
@@ -142,9 +124,6 @@ LvmMirror::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 LvmMirror::perform_action (Action action)
 {

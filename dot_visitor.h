@@ -25,9 +25,6 @@
 
 #include "visitor.h"
 
-/**
- * class DotVisitor
- */
 class DotVisitor : public Visitor
 {
 public:

@@ -38,9 +38,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Msdos
- */
 Msdos::Msdos (void)
 {
 	const char* me = "Msdos";
@@ -48,9 +45,6 @@ Msdos::Msdos (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 MsdosPtr
 Msdos::create (void)
 {
@@ -61,9 +55,6 @@ Msdos::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Msdos::accept (Visitor& v)
 {
@@ -74,9 +65,6 @@ Msdos::accept (Visitor& v)
 }
 
 
-/**
- * read_chs
- */
 void
 Msdos::read_chs (unsigned char* buffer, int* cylinder, int* head, int* sector)
 {
@@ -88,9 +76,6 @@ Msdos::read_chs (unsigned char* buffer, int* cylinder, int* head, int* sector)
 	*cylinder = buffer[2] + ((buffer[1] & 0xC0) << 2);
 }
 
-/**
- * read_partition
- */
 bool
 Msdos::read_partition (unsigned char* buffer, int index, struct partition* part)
 {
@@ -117,9 +102,6 @@ Msdos::read_partition (unsigned char* buffer, int index, struct partition* part)
 	return true;
 }
 
-/**
- * read_table
- */
 unsigned int
 Msdos::read_table (unsigned char* buffer, int UNUSED(bufsize), long UNUSED(offset), std::vector<struct partition>& vp)
 {
@@ -136,9 +118,6 @@ Msdos::read_table (unsigned char* buffer, int UNUSED(bufsize), long UNUSED(offse
 }
 
 
-/**
- * probe
- */
 ContainerPtr
 Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize)
 {
@@ -227,9 +206,6 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Msdos::get_actions (void)
 {
@@ -245,9 +221,6 @@ Msdos::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Msdos::perform_action (Action action)
 {

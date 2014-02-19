@@ -29,9 +29,6 @@ class Visitor;
 
 typedef std::shared_ptr<LvmVolume> LvmVolumePtr;
 
-/**
- * class LvmVolume
- */
 class LvmVolume : public Volume
 {
 public:

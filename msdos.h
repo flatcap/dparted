@@ -30,18 +30,12 @@ class Visitor;
 
 typedef std::shared_ptr<Msdos> MsdosPtr;
 
-/**
- * struct partition
- */
 struct partition {
 	long start;
 	long size;
 	int type;
 };
 
-/**
- * class Msdos
- */
 class Msdos : public Table
 {
 public:

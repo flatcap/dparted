@@ -32,9 +32,6 @@ class Visitor;
 
 typedef std::shared_ptr<Disk> DiskPtr;
 
-/**
- * class Disk
- */
 class Disk : public Device
 {
 public:

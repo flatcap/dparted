@@ -29,9 +29,6 @@ class Visitor;
 
 typedef std::shared_ptr<LvmPartition> LvmPartitionPtr;
 
-/**
- * class LvmPartition
- */
 class LvmPartition : public Piece
 {
 public:

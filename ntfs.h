@@ -26,9 +26,6 @@ class Ntfs;
 
 typedef std::shared_ptr<Ntfs> NtfsPtr;
 
-/**
- * class Ntfs
- */
 class Ntfs : public Filesystem
 {
 public:

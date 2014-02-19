@@ -20,23 +20,14 @@
 #include "gui_app.h"
 #include "log.h"
 
-/**
- * GfxContainer
- */
 GfxContainer::GfxContainer (void)
 {
 }
 
-/**
- * ~GfxContainer
- */
 GfxContainer::~GfxContainer()
 {
 }
 
-/**
- * GfxContainer
- */
 GfxContainerPtr
 GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 {
@@ -58,9 +49,6 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 }
 
 
-/**
- * get_container
- */
 ContainerPtr
 GfxContainer::get_container (void)
 {
@@ -87,9 +75,6 @@ GfxContainer::get_container (void)
 	return c;
 }
 
-/**
- * sync
- */
 bool
 GfxContainer::sync (void)
 {
@@ -109,9 +94,6 @@ GfxContainer::sync (void)
 	return true;
 }
 
-/**
- * init
- */
 bool
 GfxContainer::init (ContainerPtr c)
 {
@@ -203,9 +185,6 @@ bool find_subst (const std::string& text, std::string& tag, size_t& start, size_
 }
 
 
-/**
- * process_label
- */
 std::string
 GfxContainer::process_label (const std::string& label_template)
 {
@@ -232,9 +211,6 @@ GfxContainer::process_label (const std::string& label_template)
 	return l;
 }
 
-/**
- * update_info
- */
 bool GfxContainer::update_info (void)
 {
 	ContainerPtr c = get_container();
@@ -247,9 +223,6 @@ bool GfxContainer::update_info (void)
 	return true;
 }
 
-/**
- * dump
- */
 void
 GfxContainer::dump (void)
 {
@@ -282,9 +255,6 @@ GfxContainer::dump (void)
 }
 
 
-/**
- * set_focus
- */
 bool
 GfxContainer::set_focus (bool focus)
 {
@@ -294,35 +264,23 @@ GfxContainer::set_focus (bool focus)
 	return true;
 }
 
-/**
- * get_focus
- */
 bool
 GfxContainer::get_focus (void)
 {
 	return focussed;
 }
 
-/**
- * add_to_selection
- */
 void
 GfxContainer::add_to_selection (void)
 {
 }
 
-/**
- * remove_from_selection
- */
 void
 GfxContainer::remove_from_selection (void)
 {
 }
 
 
-/**
- * process_colour
- */
 Gdk::RGBA
 GfxContainer::process_colour (const std::string& str)
 {
@@ -340,9 +298,6 @@ GfxContainer::process_colour (const std::string& str)
 	throw "bad colour: " + str;
 }
 
-/**
- * process_icon
- */
 Glib::RefPtr<Gdk::Pixbuf>
 GfxContainer::process_icon (const std::string& str)
 {
@@ -358,9 +313,6 @@ GfxContainer::process_icon (const std::string& str)
 	return pb;
 }
 
-/**
- * process_bool
- */
 bool
 GfxContainer::process_bool (const std::string& str)
 {
@@ -371,9 +323,6 @@ GfxContainer::process_bool (const std::string& str)
 }
 
 
-/**
- * get_tooltip
- */
 std::string
 GfxContainer::get_tooltip (void)
 {
@@ -388,9 +337,6 @@ GfxContainer::get_tooltip (void)
 	return tt;
 }
 
-/**
- * mouse_event
- */
 bool GfxContainer::mouse_event (void)
 {
 	//std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -415,9 +361,6 @@ operator<< (std::ostream& stream, const GfxContainerPtr& g)
 }
 
 
-/**
- * get_smart
- */
 GfxContainerPtr
 GfxContainer::get_smart (void)
 {
@@ -432,9 +375,6 @@ GfxContainer::get_smart (void)
 }
 
 
-/**
- * get_index
- */
 int
 GfxContainer::get_index (const GfxContainerPtr& me)
 {
@@ -451,9 +391,6 @@ GfxContainer::get_index (const GfxContainerPtr& me)
 	return -1;
 }
 
-/**
- * get_depth
- */
 int
 GfxContainer::get_depth (void)
 {
@@ -468,9 +405,6 @@ GfxContainer::get_depth (void)
 	return depth;
 }
 
-/**
- * get_left
- */
 GfxContainerPtr
 GfxContainer::get_left (void)
 {
@@ -500,9 +434,6 @@ GfxContainer::get_left (void)
 	return prev;
 }
 
-/**
- * get_right
- */
 GfxContainerPtr
 GfxContainer::get_right (void)
 {

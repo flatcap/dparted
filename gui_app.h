@@ -35,9 +35,6 @@ typedef std::shared_ptr<GuiApp> GuiAppPtr;
 
 extern GuiAppPtr gui_app;
 
-/**
- * class GuiApp
- */
 class GuiApp :
 	public App,
 	public Gtk::Application

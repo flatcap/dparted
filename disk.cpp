@@ -34,9 +34,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Disk
- */
 Disk::Disk (void)
 {
 	const char* me = "Disk";
@@ -55,9 +52,6 @@ Disk::Disk (void)
 	declare_prop (me, "mounts",         mounts,         "desc of mounts");
 }
 
-/**
- * create
- */
 DiskPtr
 Disk::create (void)
 {
@@ -67,9 +61,6 @@ Disk::create (void)
 	return d;
 }
 
-/**
- * create
- */
 DiskPtr
 Disk::create (const std::string& lsblk)
 {
@@ -100,9 +91,6 @@ Disk::create (const std::string& lsblk)
 }
 
 
-/**
- * accept
- */
 bool
 Disk::accept (Visitor& v)
 {
@@ -114,9 +102,6 @@ Disk::accept (Visitor& v)
 
 
 #if 0
-/**
- * find_devices_old
- */
 bool
 Disk::find_devices_old (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
 {
@@ -175,9 +160,6 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	//close (fd);	// XXX or keep it for later?
 #endif
 
-/**
- * find_devices
- */
 unsigned int
 Disk::find_devices (ContainerPtr& list)
 {
@@ -253,18 +235,12 @@ Disk::find_devices (ContainerPtr& list)
 }
 
 
-/**
- * get_block_size
- */
 long
 Disk::get_block_size (void)
 {
 	return 0;
 }
 
-/**
- * get_device_space
- */
 unsigned int
 Disk::get_device_space (std::map<long, long>& UNUSED(spaces))
 {
@@ -272,9 +248,6 @@ Disk::get_device_space (std::map<long, long>& UNUSED(spaces))
 }
 
 
-/**
- * find_device
- */
 ContainerPtr
 Disk::find_device (const std::string& dev)
 {
@@ -291,9 +264,6 @@ Disk::find_device (const std::string& dev)
 }
 
 
-/**
- * lsblk
- */
 bool
 Disk::lsblk (std::vector <std::string>& output, std::string device)
 {
@@ -317,9 +287,6 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 	return true;
 }
 
-/**
- * discover
- */
 void
 Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 {
@@ -341,9 +308,6 @@ Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 	}
 }
 
-/**
- * identify
- */
 void
 Disk::identify (ContainerPtr& top_level, const char* name, int UNUSED(fd), struct stat& UNUSED(st))
 {
@@ -361,9 +325,6 @@ Disk::identify (ContainerPtr& top_level, const char* name, int UNUSED(fd), struc
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Disk::get_actions (void)
 {
@@ -379,9 +340,6 @@ Disk::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Disk::perform_action (Action action)
 {

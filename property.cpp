@@ -18,9 +18,6 @@
 
 #include "property.h"
 
-/**
- * string
- */
 BaseProperty::operator std::string (void)
 {
 	switch (type) {
@@ -43,9 +40,6 @@ BaseProperty::operator std::string (void)
 	}
 }
 
-/**
- * double
- */
 BaseProperty::operator double (void)
 {
 	switch (type) {
@@ -69,9 +63,6 @@ BaseProperty::operator double (void)
 	}
 }
 
-/**
- * bool
- */
 BaseProperty::operator bool (void)
 {
 	switch (type) {
@@ -94,9 +85,6 @@ BaseProperty::operator bool (void)
 	}
 }
 
-/**
- * uint8_t
- */
 BaseProperty::operator uint8_t (void)
 {
 	switch (type) {
@@ -121,9 +109,6 @@ BaseProperty::operator uint8_t (void)
 	}
 }
 
-/**
- * int8_t
- */
 BaseProperty::operator int8_t (void)
 {
 	switch (type) {
@@ -148,9 +133,6 @@ BaseProperty::operator int8_t (void)
 	}
 }
 
-/**
- * uint16_t
- */
 BaseProperty::operator uint16_t (void)
 {
 	switch (type) {
@@ -175,9 +157,6 @@ BaseProperty::operator uint16_t (void)
 	}
 }
 
-/**
- * int16_t
- */
 BaseProperty::operator int16_t (void)
 {
 	switch (type) {
@@ -202,9 +181,6 @@ BaseProperty::operator int16_t (void)
 	}
 }
 
-/**
- * uint32_t
- */
 BaseProperty::operator uint32_t (void)
 {
 	switch (type) {
@@ -229,9 +205,6 @@ BaseProperty::operator uint32_t (void)
 	}
 }
 
-/**
- * int32_t
- */
 BaseProperty::operator int32_t (void)
 {
 	switch (type) {
@@ -256,9 +229,6 @@ BaseProperty::operator int32_t (void)
 	}
 }
 
-/**
- * uint64_t
- */
 BaseProperty::operator uint64_t (void)
 {
 	switch (type) {
@@ -282,9 +252,6 @@ BaseProperty::operator uint64_t (void)
 	}
 }
 
-/**
- * int64_t
- */
 BaseProperty::operator int64_t (void)
 {
 	switch (type) {

@@ -32,9 +32,6 @@ class Visitor;
 
 typedef std::shared_ptr<Piece> PiecePtr;
 
-/**
- * class Piece
- */
 class Piece : public Container
 {
 public:

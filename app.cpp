@@ -41,24 +41,15 @@
 
 AppPtr main_app;
 
-/**
- * App
- */
 App::App (void)
 {
 }
 
-/**
- * ~App
- */
 App::~App()
 {
 }
 
 
-/**
- * ask
- */
 bool
 App::ask (QuestionPtr q)
 {
@@ -72,9 +63,6 @@ App::ask (QuestionPtr q)
 	return false;
 }
 
-/**
- * notify
- */
 bool
 App::notify (Message& UNUSED(m))
 {
@@ -83,9 +71,6 @@ App::notify (Message& UNUSED(m))
 }
 
 
-/**
- * set_config
- */
 bool
 App::set_config (const std::string& filename)
 {
@@ -107,9 +92,6 @@ App::set_config (const std::string& filename)
 	return true;
 }
 
-/**
- * get_config
- */
 ConfigFilePtr
 App::get_config (void)
 {
@@ -117,9 +99,6 @@ App::get_config (void)
 }
 
 
-/**
- * queue_add_probe
- */
 void
 App::queue_add_probe (ContainerPtr& item)
 {
@@ -134,9 +113,6 @@ App::queue_add_probe (ContainerPtr& item)
 
 
 #if 0
-/**
- * mounts_get_list
- */
 unsigned int
 mounts_get_list (ContainerPtr& mounts)
 {
@@ -156,9 +132,6 @@ mounts_get_list (ContainerPtr& mounts)
 }
 
 #endif
-/**
- * probe
- */
 ContainerPtr
 App::probe (ContainerPtr& top_level, ContainerPtr& parent)
 {
@@ -185,9 +158,6 @@ App::probe (ContainerPtr& top_level, ContainerPtr& parent)
 }
 
 
-/**
- * scan
- */
 ContainerPtr
 App::scan (const std::vector<std::string>& files)
 {

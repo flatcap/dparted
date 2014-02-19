@@ -21,27 +21,18 @@
 #include "log.h"
 #include "log_trace.h"
 
-/**
- * identify_gpt
- */
 bool
 identify_gpt (unsigned char* buffer, int UNUSED(bufsize))
 {
 	return (strncmp ((char*) buffer+512, "EFI PART", 8) == 0);
 }
 
-/**
- * identify_msdos
- */
 bool
 identify_msdos (unsigned char* buffer, int UNUSED(bufsize))
 {
 	return (*(unsigned short int*) (buffer+510) == 0xAA55);
 }
 
-/**
- * identify_reiserfs
- */
 bool
 identify_reiserfs (unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -50,9 +41,6 @@ identify_reiserfs (unsigned char* buffer, int UNUSED(bufsize))
 		!strncmp ((char*) buffer+65588, "ReIsEr3Fs", 9));
 }
 
-/**
- * identify_swap
- */
 bool
 identify_swap (unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -65,9 +53,6 @@ identify_swap (unsigned char* buffer, int UNUSED(bufsize))
 	//XXX 16374	string	SWAPSPACE2	Linux/ia64 swap file
 }
 
-/**
- * identify_vfat
- */
 bool
 identify_vfat (unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -86,27 +71,18 @@ identify_vfat (unsigned char* buffer, int UNUSED(bufsize))
 		((buffer[16] > 0) || (buffer[16] < 5)));
 }
 
-/**
- * identify_xfs
- */
 bool
 identify_xfs (unsigned char* buffer, int UNUSED(bufsize))
 {
 	return (strncmp ((char*) buffer, "XFSB", 4) == 0);
 }
 
-/**
- * identify_lvm
- */
 bool
 identify_lvm (unsigned char* buffer, int UNUSED(bufsize))
 {
 	return (strncmp ((char*) buffer+536, "LVM2 001", 8) == 0);
 }
 
-/**
- * identify_lvm_mlog
- */
 bool
 identify_lvm_mlog (unsigned char* buffer, int UNUSED(bufsize))
 {

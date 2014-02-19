@@ -20,9 +20,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * LvmMetadata
- */
 LvmMetadata::LvmMetadata (void)
 {
 	const char* me = "LvmMetadata";
@@ -30,9 +27,6 @@ LvmMetadata::LvmMetadata (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 LvmMetadataPtr
 LvmMetadata::create (void)
 {
@@ -43,9 +37,6 @@ LvmMetadata::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 LvmMetadata::accept (Visitor& v)
 {
@@ -56,9 +47,6 @@ LvmMetadata::accept (Visitor& v)
 }
 
 
-/**
- * add_child
- */
 void
 LvmMetadata::add_child (ContainerPtr& child)
 {
@@ -77,9 +65,6 @@ LvmMetadata::add_child (ContainerPtr& child)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 LvmMetadata::get_actions (void)
 {
@@ -95,9 +80,6 @@ LvmMetadata::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 LvmMetadata::perform_action (Action action)
 {

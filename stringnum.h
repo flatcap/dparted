@@ -23,9 +23,6 @@
 #include <string>
 #include <inttypes.h>
 
-/**
- * class StringNum
- */
 class StringNum : public std::string
 {
 public:

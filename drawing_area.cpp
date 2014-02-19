@@ -35,9 +35,6 @@
 #include "window.h"
 #include "table.h"
 
-/**
- * DrawingArea
- */
 DrawingArea::DrawingArea (void)
 	//Glib::ObjectBase ("MyDrawingArea")
 {
@@ -71,9 +68,6 @@ DrawingArea::DrawingArea (void)
 	m_Menu_Popup.signal_hide().connect ([this] { menu_active = false; });
 }
 
-/**
- * ~DrawingArea
- */
 DrawingArea::~DrawingArea()
 {
 }
@@ -205,9 +199,6 @@ draw_grid_linear (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, long max_
 	cr->restore();
 }
 
-/**
- * draw_grid_log
- */
 void
 draw_grid_log (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, long max_size)
 {
@@ -358,9 +349,6 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 }
 
 
-/**
- * on_draw
- */
 bool
 DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
@@ -398,9 +386,6 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 
 #if 0
-/**
- * on_timeout
- */
 bool
 DrawingArea::on_timeout (int timer_number)
 {
@@ -413,9 +398,6 @@ DrawingArea::on_timeout (int timer_number)
 #endif
 
 #if 0
-/**
- * dump_range
- */
 void
 dump_range (const std::deque<Range>& vRange)
 {
@@ -433,9 +415,6 @@ dump_range (const std::deque<Range>& vRange)
 }
 
 #endif
-/**
- * on_mouse_motion
- */
 bool
 DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
 {
@@ -454,9 +433,6 @@ DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
 	return true;
 }
 
-/**
- * on_mouse_leave
- */
 bool
 DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
 {
@@ -469,9 +445,6 @@ DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
 	return true;
 }
 
-/**
- * on_mouse_click
- */
 bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
@@ -514,9 +487,6 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 
 #if 0
-/**
- * draw_container_examples
- */
 void
 draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr cont, Rect shape, Rect* right)
 {
@@ -639,9 +609,6 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 #endif
 }
 
-/**
- * get_protective
- */
 TablePtr
 DrawingArea::get_protective (GfxContainerPtr& c)
 {
@@ -681,9 +648,6 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 
 #endif
 
-/**
- * set_data
- */
 void
 DrawingArea::set_data (GfxContainerPtr& c)
 {
@@ -701,9 +665,6 @@ DrawingArea::set_data (GfxContainerPtr& c)
 
 }
 
-/**
- * get_focus
- */
 GfxContainerPtr
 DrawingArea::get_focus (int x, int y)
 {
@@ -720,9 +681,6 @@ DrawingArea::get_focus (int x, int y)
 	return match;
 }
 
-/**
- * set_focus
- */
 void
 DrawingArea::set_focus (GfxContainerPtr& gfx)
 {
@@ -779,9 +737,6 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	get_window()->invalidate (false);
 }
 
-/**
- * on_textview_query_tooltip
- */
 bool
 DrawingArea::on_textview_query_tooltip (int x, int y, bool UNUSED(keyboard_tooltip), const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
@@ -987,9 +942,6 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 }
 
 
-/**
- * get_rect
- */
 Rect
 DrawingArea::get_rect (GfxContainerPtr g)
 {
@@ -1006,9 +958,6 @@ DrawingArea::get_rect (GfxContainerPtr g)
 	return r;
 }
 
-/**
- * on_keypress
- */
 bool
 DrawingArea::on_keypress (GdkEventKey* ev)
 {
@@ -1073,9 +1022,6 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 }
 
 
-/**
- * on_focus_in
- */
 bool
 DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 {
@@ -1099,9 +1045,6 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 	return true;
 }
 
-/**
- * on_focus_out
- */
 bool
 DrawingArea::on_focus_out (GdkEventFocus* UNUSED(event))
 {
@@ -1110,9 +1053,6 @@ DrawingArea::on_focus_out (GdkEventFocus* UNUSED(event))
 }
 
 
-/**
- * set_cont_height
- */
 void
 DrawingArea::set_cont_height (int height)
 {
@@ -1120,18 +1060,12 @@ DrawingArea::set_cont_height (int height)
 	//XXX invalidate
 }
 
-/**
- * get_cont_height
- */
 int
 DrawingArea::get_cont_height (void)
 {
 	return cont_height;
 }
 
-/**
- * set_cont_recurse
- */
 void
 DrawingArea::set_cont_recurse (int recurse)
 {
@@ -1139,9 +1073,6 @@ DrawingArea::set_cont_recurse (int recurse)
 	//XXX invalidate
 }
 
-/**
- * get_cont_recurse
- */
 bool
 DrawingArea::get_cont_recurse (void)
 {
@@ -1149,9 +1080,6 @@ DrawingArea::get_cont_recurse (void)
 }
 
 
-/**
- * is_visible
- */
 bool
 DrawingArea::is_visible (const GfxContainerPtr& c)
 {
@@ -1172,9 +1100,6 @@ DrawingArea::is_visible (const GfxContainerPtr& c)
 	return false;
 }
 
-/**
- * left
- */
 GfxContainerPtr
 DrawingArea::left (GfxContainerPtr c)
 {
@@ -1195,9 +1120,6 @@ DrawingArea::left (GfxContainerPtr c)
 	return c;
 }
 
-/**
- * right
- */
 GfxContainerPtr
 DrawingArea::right (GfxContainerPtr c)
 {
@@ -1221,9 +1143,6 @@ DrawingArea::right (GfxContainerPtr c)
 	return nullptr;
 }
 
-/**
- * up
- */
 GfxContainerPtr
 DrawingArea::up (GfxContainerPtr c)
 {
@@ -1235,9 +1154,6 @@ DrawingArea::up (GfxContainerPtr c)
 	return get_focus (r.x, r.y);
 }
 
-/**
- * down
- */
 GfxContainerPtr
 DrawingArea::down (GfxContainerPtr c)
 {
@@ -1251,9 +1167,6 @@ DrawingArea::down (GfxContainerPtr c)
 
 
 // POPUP
-/**
- * setup_popup
- */
 void
 DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 {
@@ -1333,9 +1246,6 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 #endif
 }
 
-/**
- * on_menu_select
- */
 void
 DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 {
@@ -1416,9 +1326,6 @@ DrawingArea::get_coords (int& x, int& y)
 	return true;
 }
 
-/**
- * popup_menu
- */
 void
 DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 {
@@ -1447,9 +1354,6 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 	m_Menu_Popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
 }
 
-/**
- * popup_on_keypress
- */
 bool
 DrawingArea::popup_on_keypress (GdkEventKey* ev)
 {

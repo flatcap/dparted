@@ -23,9 +23,6 @@
 #include "utils.h"
 #include "visitor.h"
 
-/**
- * MdTable
- */
 MdTable::MdTable (void)
 {
 	const char* me = "MdTable";
@@ -43,9 +40,6 @@ MdTable::MdTable (void)
 	declare_prop (me, "data_size",   data_size,   "desc of data_size");
 }
 
-/**
- * create
- */
 MdTablePtr
 MdTable::create (void)
 {
@@ -56,9 +50,6 @@ MdTable::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 MdTable::accept (Visitor& v)
 {
@@ -69,9 +60,6 @@ MdTable::accept (Visitor& v)
 }
 
 
-/**
- * read_uuid
- */
 std::string
 read_uuid_string (unsigned char* buffer)
 {
@@ -84,9 +72,6 @@ read_uuid_string (unsigned char* buffer)
 }
 
 
-/**
- * is_mdtable
- */
 static bool
 is_mdtable (unsigned char* buffer)
 {
@@ -100,9 +85,6 @@ is_mdtable (unsigned char* buffer)
 }
 
 
-/**
- * probe
- */
 ContainerPtr
 MdTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -163,9 +145,6 @@ MdTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned 
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 MdTable::get_actions (void)
 {
@@ -181,9 +160,6 @@ MdTable::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 MdTable::perform_action (Action action)
 {

@@ -31,9 +31,6 @@ class Visitor;
 
 typedef std::shared_ptr<LvmTable> LvmTablePtr;
 
-/**
- * class LvmTable
- */
 class LvmTable : public Table
 {
 public:

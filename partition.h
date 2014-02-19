@@ -31,9 +31,6 @@ class Visitor;
 
 typedef std::shared_ptr<Partition> PartitionPtr;
 
-/**
- * class Partition
- */
 class Partition : public Device
 {
 public:

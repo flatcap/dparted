@@ -31,9 +31,6 @@
 class PropertiesDialog;
 typedef std::shared_ptr<PropertiesDialog> PropertiesDialogPtr;
 
-/**
- * class PropertiesDialog
- */
 class PropertiesDialog : public Gtk::Dialog
 {
 public:

@@ -31,9 +31,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * MdGroup
- */
 MdGroup::MdGroup (void)
 {
 	const char* me = "MdGroup";
@@ -41,9 +38,6 @@ MdGroup::MdGroup (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 MdGroupPtr
 MdGroup::create (void)
 {
@@ -54,9 +48,6 @@ MdGroup::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 MdGroup::accept (Visitor& v)
 {
@@ -67,9 +58,6 @@ MdGroup::accept (Visitor& v)
 }
 
 
-/**
- * discover
- */
 void
 MdGroup::discover (ContainerPtr& UNUSED(top_level))
 {
@@ -129,9 +117,6 @@ mdadm /dev/md1 --create --verbose --level=linear --raid-devices=3 /dev/loop{0,1,
 mdadm /dev/md1 --create --verbose --level=linear -raid-devices=2 /dev/loop{0,1,2}
 #endif
 
-/**
- * get_actions
- */
 std::vector<Action>
 MdGroup::get_actions (void)
 {
@@ -147,9 +132,6 @@ MdGroup::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 MdGroup::perform_action (Action action)
 {

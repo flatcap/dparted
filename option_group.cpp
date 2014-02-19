@@ -20,9 +20,6 @@
 
 #include "option_group.h"
 
-/**
- * OptionGroup
- */
 OptionGroup::OptionGroup (void) :
 	Glib::OptionGroup ("dparted", "Options for DParted", "Options to configure DParted")
 {

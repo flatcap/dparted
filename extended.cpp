@@ -33,9 +33,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Extended
- */
 Extended::Extended (void)
 {
 	const char* me = "Extended";
@@ -43,9 +40,6 @@ Extended::Extended (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 ExtendedPtr
 Extended::create (void)
 {
@@ -56,9 +50,6 @@ Extended::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Extended::accept (Visitor& v)
 {
@@ -69,9 +60,6 @@ Extended::accept (Visitor& v)
 }
 
 
-/**
- * probe
- */
 ExtendedPtr
 Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, long offset, long size)
 {
@@ -192,9 +180,6 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, long off
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Extended::get_actions (void)
 {
@@ -210,9 +195,6 @@ Extended::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Extended::perform_action (Action action)
 {

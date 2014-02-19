@@ -135,9 +135,6 @@ execute_command3 (const std::string& command, std::string& output)
 	return retcode;
 }
 
-/**
- * get_size
- */
 std::string
 get_size (long size)
 {
@@ -170,9 +167,6 @@ get_size (long size)
 	return buffer;
 }
 
-/**
- * extract_number
- */
 long
 extract_number (const std::string& text, unsigned int& index)
 {
@@ -187,9 +181,6 @@ extract_number (const std::string& text, unsigned int& index)
 	return strtoll (num.c_str(), nullptr, 10);
 }
 
-/**
- * extract_quoted_string
- */
 std::string
 extract_quoted_string (const std::string& text, unsigned int& index)
 {
@@ -207,9 +198,6 @@ extract_quoted_string (const std::string& text, unsigned int& index)
 	return text.substr (start, finish - start);
 }
 
-/**
- * extract_bare_string
- */
 std::string
 extract_bare_string (const std::string& text, unsigned int& index)
 {
@@ -224,9 +212,6 @@ extract_bare_string (const std::string& text, unsigned int& index)
 	return text.substr (start, finish - start);
 }
 
-/**
- * extract_quoted_long
- */
 long
 extract_quoted_long (const std::string& text, unsigned int& index)
 {
@@ -243,9 +228,6 @@ extract_quoted_long (const std::string& text, unsigned int& index)
 	return strtol (tmp.c_str(), nullptr, 10);
 }
 
-/**
- * extract_quoted_long_long
- */
 long
 extract_quoted_long_long (const std::string& text, unsigned int& index)
 {
@@ -262,9 +244,6 @@ extract_quoted_long_long (const std::string& text, unsigned int& index)
 	return strtoll (tmp.c_str(), nullptr, 10);
 }
 
-/**
- * extract_dev_range
- */
 int
 extract_dev_range (const std::string& text, std::string& device, int& start, int& finish, int element /* = 0 */)
 {
@@ -287,9 +266,6 @@ extract_dev_range (const std::string& text, std::string& device, int& start, int
 	return 0;
 }
 
-/**
- * explode
- */
 unsigned int
 explode (const char* separators, const std::string& input, std::vector<std::string>& parts)
 {
@@ -324,9 +300,6 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 	return parts.size();
 }
 
-/**
- * explode
- */
 unsigned int
 explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max)
 {
@@ -372,9 +345,6 @@ explode_n (const char* separators, const std::string& input, std::vector<std::st
 	return parts.size();
 }
 
-/**
- * parse_tagged_line
- */
 unsigned int
 parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map /* = true */)
 {
@@ -419,9 +389,6 @@ parse_tagged_line (const std::string& line, const char* separators, std::map<std
 	return tags.size();
 }
 
-/**
- * read_file_line
- */
 std::string
 read_file_line (const std::string& filename)
 {
@@ -436,9 +403,6 @@ read_file_line (const std::string& filename)
 	return line;
 }
 
-/**
- * read_uuid1
- */
 std::string
 read_uuid1 (unsigned char* buffer)
 {
@@ -455,9 +419,6 @@ read_uuid1 (unsigned char* buffer)
 	return ss.str();
 }
 
-/**
- * read_uuid2
- */
 std::string
 read_uuid2 (unsigned char* buffer)
 {
@@ -472,9 +433,6 @@ read_uuid2 (unsigned char* buffer)
 	return ss.str();
 }
 
-/**
- * read_uuid3
- */
 std::string
 read_uuid3 (unsigned char* buffer)
 {
@@ -492,9 +450,6 @@ read_uuid3 (unsigned char* buffer)
 }
 
 
-/**
- * dump_hex
- */
 void
 dump_hex (unsigned char* buffer, int bufsize)
 {
@@ -506,9 +461,6 @@ dump_hex (unsigned char* buffer, int bufsize)
 	}
 }
 
-/**
- * dump_hex2
- */
 void
 dump_hex2 (void* buf, int start, int length)
 {
@@ -563,9 +515,6 @@ dump_hex2 (void* buf, int start, int length)
 	}
 }
 
-/**
- * align
- */
 long
 align (long num, long round)
 {

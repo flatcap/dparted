@@ -23,9 +23,6 @@
 
 #include "visitor.h"
 
-/**
- * class PropVisitor
- */
 class PropVisitor : public Visitor
 {
 public:

@@ -23,9 +23,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * LvmRaid
- */
 LvmRaid::LvmRaid (void)
 {
 	const char* me = "LvmRaid";
@@ -33,9 +30,6 @@ LvmRaid::LvmRaid (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 LvmRaidPtr
 LvmRaid::create (void)
 {
@@ -46,9 +40,6 @@ LvmRaid::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 LvmRaid::accept (Visitor& v)
 {
@@ -59,9 +50,6 @@ LvmRaid::accept (Visitor& v)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 LvmRaid::get_actions (void)
 {
@@ -77,9 +65,6 @@ LvmRaid::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 LvmRaid::perform_action (Action action)
 {

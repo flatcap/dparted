@@ -33,9 +33,6 @@ typedef std::shared_ptr<App> AppPtr;
 
 extern AppPtr main_app;
 
-/**
- * class App
- */
 class App
 {
 public:

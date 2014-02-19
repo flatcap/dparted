@@ -18,25 +18,16 @@
 
 #include "password_dialog.h"
 
-/**
- * PasswordDialog
- */
 PasswordDialog::PasswordDialog (const Glib::ustring& message) :
 	Gtk::MessageDialog (message)
 {
 }
 
-/**
- * ~PasswordDialog
- */
 PasswordDialog::~PasswordDialog()
 {
 }
 
 
-/**
- * create
- */
 PasswordDialogPtr
 PasswordDialog::create (void)
 {

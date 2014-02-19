@@ -30,9 +30,6 @@ class Visitor;
 
 typedef std::shared_ptr<Volume> VolumePtr;
 
-/**
- * class Volume
- */
 class Volume :
 	public Whole,
 	public Device

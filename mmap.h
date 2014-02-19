@@ -24,9 +24,6 @@ typedef std::tuple<long,long,void*> Mmap;	// offset, size, ptr
 typedef std::shared_ptr<Mmap>       MmapPtr;	// Mmap smart pointer
 typedef std::set<MmapPtr,compare>   MmapSet;	// sorted set of Mmaps
 
-/**
- * functor compare
- */
 struct compare
 {
 	bool operator() (const MmapPtr& a, const MmapPtr& b)

@@ -26,9 +26,6 @@
 #include "filesystem.h"
 #include "utils.h"
 
-/**
- * get_reiserfs
- */
 FilesystemPtr
 get_reiserfs (unsigned char* buffer, int bufsize)
 {
@@ -55,9 +52,6 @@ get_reiserfs (unsigned char* buffer, int bufsize)
 	return f;
 }
 
-/**
- * get_swap
- */
 FilesystemPtr
 get_swap (unsigned char* buffer, int bufsize)
 {
@@ -86,9 +80,6 @@ get_swap (unsigned char* buffer, int bufsize)
 	return f;
 }
 
-/**
- * get_vfat
- */
 FilesystemPtr
 get_vfat (unsigned char* buffer, int bufsize)
 {
@@ -147,9 +138,6 @@ get_vfat (unsigned char* buffer, int bufsize)
 	return f;
 }
 
-/**
- * get_xfs
- */
 FilesystemPtr
 get_xfs (unsigned char* buffer, int bufsize)
 {

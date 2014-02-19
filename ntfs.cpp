@@ -26,16 +26,10 @@
 #include "utils.h"
 #include "log_trace.h"
 
-/**
- * Ntfs
- */
 Ntfs::Ntfs (void)
 {
 }
 
-/**
- * create
- */
 NtfsPtr
 Ntfs::create (void)
 {
@@ -46,9 +40,6 @@ Ntfs::create (void)
 }
 
 
-/**
- * get_ntfs_usage
- */
 bool
 Ntfs::get_ntfs_usage (void)
 {
@@ -61,9 +52,6 @@ Ntfs::get_ntfs_usage (void)
 	return false;
 }
 
-/**
- * parse_line
- */
 static bool
 parse_line (std::string line, std::string& key, std::string& value)
 {
@@ -103,9 +91,6 @@ parse_line (std::string line, std::string& key, std::string& value)
 	return true;
 }
 
-/**
- * make_key
- */
 static std::string
 make_key (std::string desc)
 {
@@ -126,9 +111,6 @@ make_key (std::string desc)
 }
 
 
-/**
- * get_ntfs_sb
- */
 void
 Ntfs::get_ntfs_sb (ContainerPtr parent)
 {
@@ -196,9 +178,6 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	}
 }
 
-/**
- * get_ntfs
- */
 NtfsPtr
 Ntfs::get_ntfs (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 {
@@ -220,9 +199,6 @@ Ntfs::get_ntfs (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Ntfs::get_actions (void)
 {
@@ -238,9 +214,6 @@ Ntfs::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Ntfs::perform_action (Action action)
 {

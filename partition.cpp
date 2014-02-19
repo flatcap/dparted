@@ -24,9 +24,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Partition
- */
 Partition::Partition (void)
 {
 	const char* me = "Partition";
@@ -36,9 +33,6 @@ Partition::Partition (void)
 	declare_prop (me, "ptype", ptype, "desc of ptype");
 }
 
-/**
- * create
- */
 PartitionPtr
 Partition::create (void)
 {
@@ -49,9 +43,6 @@ Partition::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Partition::accept (Visitor& v)
 {
@@ -61,9 +52,6 @@ Partition::accept (Visitor& v)
 	return visit_children(v);
 }
 
-/**
- * get_actions
- */
 std::vector<Action>
 Partition::get_actions (void)
 {
@@ -79,9 +67,6 @@ Partition::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Partition::perform_action (Action action)
 {

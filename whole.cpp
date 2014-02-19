@@ -24,9 +24,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * Whole
- */
 Whole::Whole (void)
 {
 	const char* me = "Whole";
@@ -34,9 +31,6 @@ Whole::Whole (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 WholePtr
 Whole::create (void)
 {
@@ -47,9 +41,6 @@ Whole::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 Whole::accept (Visitor& v)
 {
@@ -60,9 +51,6 @@ Whole::accept (Visitor& v)
 }
 
 
-/**
- * add_segment
- */
 void
 Whole::add_segment (ContainerPtr seg)
 {
@@ -86,9 +74,6 @@ Whole::add_segment (ContainerPtr seg)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 Whole::get_actions (void)
 {
@@ -104,9 +89,6 @@ Whole::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 Whole::perform_action (Action action)
 {

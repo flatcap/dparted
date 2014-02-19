@@ -26,9 +26,6 @@ class Extfs;
 
 typedef std::shared_ptr<Extfs> ExtfsPtr;
 
-/**
- * class Extfs
- */
 class Extfs : public Filesystem
 {
 public:

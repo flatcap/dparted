@@ -54,9 +54,6 @@
 #include "whole.h"
 #include "log_trace.h"
 
-/**
- * class Visitor
- */
 class Visitor
 {
 public:

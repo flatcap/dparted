@@ -30,9 +30,6 @@ class Visitor;
 
 typedef std::shared_ptr<MdGroup> MdGroupPtr;
 
-/**
- * class MdGroup
- */
 class MdGroup : public Whole
 {
 public:

@@ -22,9 +22,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * LvmStripe
- */
 LvmStripe::LvmStripe (void)
 {
 	const char* me = "LvmStripe";
@@ -32,9 +29,6 @@ LvmStripe::LvmStripe (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 LvmStripePtr
 LvmStripe::create (void)
 {
@@ -45,9 +39,6 @@ LvmStripe::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 LvmStripe::accept (Visitor& v)
 {
@@ -58,9 +49,6 @@ LvmStripe::accept (Visitor& v)
 }
 
 
-/**
- * get_actions
- */
 std::vector<Action>
 LvmStripe::get_actions (void)
 {
@@ -76,9 +64,6 @@ LvmStripe::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 LvmStripe::perform_action (Action action)
 {

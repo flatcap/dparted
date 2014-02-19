@@ -32,9 +32,6 @@
 
 typedef struct { Rect r; GfxContainerPtr p; } Range;
 
-/**
- * class DrawingArea
- */
 class DrawingArea : public BaseDrawingArea
 {
 public:

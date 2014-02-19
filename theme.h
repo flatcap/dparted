@@ -32,9 +32,6 @@ class Theme;
 
 typedef std::shared_ptr<Theme> ThemePtr;
 
-/**
- * class Theme
- */
 class Theme
 {
 public:

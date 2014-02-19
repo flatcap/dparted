@@ -31,9 +31,6 @@
 #include "log_trace.h"
 #include "visitor.h"
 
-/**
- * File
- */
 File::File (void)
 {
 	const char* me = "File";
@@ -41,9 +38,6 @@ File::File (void)
 	sub_type (me);
 }
 
-/**
- * create
- */
 FilePtr
 File::create (void)
 {
@@ -54,9 +48,6 @@ File::create (void)
 }
 
 
-/**
- * accept
- */
 bool
 File::accept (Visitor& v)
 {
@@ -68,9 +59,6 @@ File::accept (Visitor& v)
 
 
 #if 0
-/**
- * find_containers
- */
 bool
 File::find_containers (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
 {
@@ -104,9 +92,6 @@ File::find_containers (const std::string& name, int fd, struct stat& st, Contain
 
 #endif
 
-/**
- * discover
- */
 void
 File::discover (ContainerPtr& UNUSED(top_level), std::queue<ContainerPtr>& UNUSED(probe_queue))
 {
@@ -123,9 +108,6 @@ File::discover (ContainerPtr& UNUSED(top_level), std::queue<ContainerPtr>& UNUSE
 	//	dir  => add dir/*.img
 }
 
-/**
- * identify
- */
 void
 File::identify (ContainerPtr& UNUSED(top_level), const char* UNUSED(name), int UNUSED(fd), struct stat& UNUSED(st))
 {
@@ -138,9 +120,6 @@ File::identify (ContainerPtr& UNUSED(top_level), const char* UNUSED(name), int U
 	 */
 }
 
-/**
- * get_actions
- */
 std::vector<Action>
 File::get_actions (void)
 {
@@ -156,9 +135,6 @@ File::get_actions (void)
 	return actions;
 }
 
-/**
- * perform_action
- */
 bool
 File::perform_action (Action action)
 {

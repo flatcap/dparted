@@ -30,9 +30,6 @@ class Visitor;
 
 typedef std::shared_ptr<Misc> MiscPtr;
 
-/**
- * class Misc
- */
 class Misc : public Container
 {
 public:

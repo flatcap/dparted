@@ -30,9 +30,6 @@ class Luks;
 
 typedef std::shared_ptr<Luks> LuksPtr;
 
-/**
- * class Luks
- */
 class Luks : public Device
 {
 public:

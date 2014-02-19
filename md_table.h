@@ -30,9 +30,6 @@ class Visitor;
 
 typedef std::shared_ptr<MdTable> MdTablePtr;
 
-/**
- * class MdTable
- */
 class MdTable : public Table
 {
 public:
