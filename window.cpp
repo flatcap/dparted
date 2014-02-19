@@ -33,7 +33,7 @@
 /**
  * Window
  */
-Window::Window()
+Window::Window (void)
 {
 	set_title ("DParted");
 

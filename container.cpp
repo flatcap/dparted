@@ -777,7 +777,8 @@ Container::get_prop (const std::string& name)
 /**
  * get_all_props
  */
-std::vector<PPtr> Container::get_all_props (void)
+std::vector<PPtr>
+Container::get_all_props (void)
 {
 	std::vector<PPtr> vv;
 

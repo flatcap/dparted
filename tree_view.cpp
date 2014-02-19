@@ -26,7 +26,7 @@
 /**
  * TreeView
  */
-TreeView::TreeView()
+TreeView::TreeView (void)
 {
 	setup_popup();
 

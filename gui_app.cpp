@@ -48,7 +48,7 @@ GuiAppPtr gui_app;
 /**
  * GuiApp
  */
-GuiApp::GuiApp() :
+GuiApp::GuiApp (void) :
 	Gtk::Application ("org.flatcap.test.area", Gio::ApplicationFlags (Gio::APPLICATION_HANDLES_COMMAND_LINE))
 {
 	//LOG_TRACE;
@@ -162,7 +162,7 @@ GuiApp::on_activate()
  * on_window_added
  */
 void
-GuiApp::on_window_added  (Gtk::Window* window)
+GuiApp::on_window_added (Gtk::Window* window)
 {
 	//LOG_TRACE;
 	Gtk::Application::on_window_added (window);

@@ -38,7 +38,7 @@
 /**
  * DrawingArea
  */
-DrawingArea::DrawingArea()
+DrawingArea::DrawingArea (void)
 	//Glib::ObjectBase ("MyDrawingArea")
 {
 	set_hexpand (true);

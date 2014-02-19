@@ -36,17 +36,14 @@ digraph G
 	LvmStripe      [ fillcolor="#DAA520" ];
 	LvmVolume      [ fillcolor="#DAA520" ];
 
-	/*
 	MdLinear       [ fillcolor="#A5DA20" ];
 	MdMirror       [ fillcolor="#A5DA20" ];
 	MdRaid         [ fillcolor="#A5DA20" ];
 	MdStripe       [ fillcolor="#A5DA20" ];
 	MdVolume       [ fillcolor="#A5DA20" ];
-	*/
 
 	Device         [ fillcolor="#FFB6C1" ];
-	LuksClosed     [ fillcolor="#FFB6C1" ];
-	LuksOpen       [ fillcolor="#FFB6C1" ];
+	Luks           [ fillcolor="#FFB6C1" ];
 	Partition      [ fillcolor="#FFB6C1" ];
 
 	Disk           [ fillcolor="#FFB6C1" ];
@@ -77,7 +74,7 @@ digraph G
 	File       -> Container;
 
 	LvmVolume  -> Volume;
-	//MdVolume   -> Volume;
+	MdVolume   -> Volume;
 
 	Extended   -> Device;
 
@@ -133,7 +130,6 @@ digraph G
 		LvmStripe            -> LvmVolume;
 	}
 
-	/*
 	subgraph cluster_6 {
 		color = transparent;
 
@@ -142,7 +138,6 @@ digraph G
 		MdRaid               -> MdVolume;
 		MdStripe             -> MdVolume;
 	}
-	*/
 
 	subgraph cluster_7 {
 		color = transparent;
@@ -156,8 +151,7 @@ digraph G
 		color = transparent;
 
 		Partition            -> Device;
-		LuksOpen             -> Device;
-		LuksClosed           -> Device;
+		Luks                 -> Device;
 		Disk                 -> Device;
 		Loop                 -> Device;
 		Volume               -> Device;

@@ -23,7 +23,7 @@
 /**
  * OptionGroup
  */
-OptionGroup::OptionGroup() :
+OptionGroup::OptionGroup (void) :
 	Glib::OptionGroup ("dparted", "Options for DParted", "Options to configure DParted")
 {
 	Glib::OptionEntry entry01; entry01.set_short_name ('a'); entry01.set_long_name ("app");        entry01.set_description ("Run the graphical application (default)");          add_entry          (entry01, app);

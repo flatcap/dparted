@@ -32,7 +32,7 @@
 /**
  * Theme
  */
-Theme::Theme()
+Theme::Theme (void)
 {
 	init_icons();
 }
