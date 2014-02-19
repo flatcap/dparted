@@ -19,6 +19,8 @@
 #ifndef _PROP_DRAWING_AREA_H_
 #define _PROP_DRAWING_AREA_H_
 
+#include <cairomm/cairomm.h>
+
 #include "base_drawing_area.h"
 
 class PropDrawingArea : public BaseDrawingArea

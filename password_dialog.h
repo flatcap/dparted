@@ -21,7 +21,6 @@
 
 #include <memory>
 
-//#include <gtkmm/dialog.h>
 #include <gtkmm/messagedialog.h>
 
 class PasswordDialog;

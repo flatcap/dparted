@@ -1166,7 +1166,6 @@ DrawingArea::down (GfxContainerPtr c)
 }
 
 
-// POPUP
 void
 DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 {

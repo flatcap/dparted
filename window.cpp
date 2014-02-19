@@ -462,7 +462,7 @@ Window::init_actions (void)
 	insert_general_actions ("filesystem", { "check", "defragment", "rebalance", "resize_move", "mount", "umount", "swap_on", "swap_off", "usage" });
 	insert_general_actions ("group",      { "resize", "split", "merge", "add_stripe", "remove_stripe", "add_mirror", "remove_mirror", "break_mirror", "add_raid", "remove_raid" });
 
-	insert_general_actions ("dummy",      { "block", "btrfs", "container", "disk", "extended", "extfs", "file", "filesystem", "gpt", "loop", "luks", "lvmgroup", "lvmlinear", "lvmmetadata", "lvmmirror", "lvmpartition", "lvmraid", "lvmstripe", "lvmtable", "lvmvolume", "mdgroup", "mdtable", "misc", "msdos", "ntfs", "partition", "table", "volume", "whole" });
+	insert_general_actions ("dummy",      { "device", "btrfs", "container", "disk", "extended", "extfs", "file", "filesystem", "gpt", "loop", "luks", "lvmgroup", "lvmlinear", "lvmmetadata", "lvmmirror", "lvmpartition", "lvmraid", "lvmstripe", "lvmtable", "lvmvolume", "mdgroup", "mdtable", "misc", "msdos", "ntfs", "partition", "table", "volume", "whole" });
 
 #if 0
 	Glib::RefPtr<Gio::Action> a;

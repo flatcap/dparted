@@ -55,7 +55,8 @@ public:
 
 	void set_geometry (int x, int y, int w, int h);
 
-	void set_actions (std::vector<Action>& list); 
+	void set_actions (std::vector<Action>& list);
+
 protected:
 	Gtk::Box		outer_box;	//XXX dynamically create the ones we don't care about?
 	Gtk::MenuBar*		menubar = nullptr;	//do not delete

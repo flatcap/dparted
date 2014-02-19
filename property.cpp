@@ -16,6 +16,9 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <string>
+#include <stdexcept>
+
 #include "property.h"
 
 BaseProperty::operator std::string (void)

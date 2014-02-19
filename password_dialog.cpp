@@ -16,6 +16,8 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <glibmm.h>
+
 #include "password_dialog.h"
 
 PasswordDialog::PasswordDialog (const Glib::ustring& message) :
