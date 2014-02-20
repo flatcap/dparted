@@ -758,6 +758,26 @@ DrawingArea::on_textview_query_tooltip (int x, int y, bool UNUSED(keyboard_toolt
 }
 
 
+bool
+is_empty (const GfxContainerPtr& c)
+{
+	if (!c)
+		return true;
+
+	int children = c->children.empty();
+	if (children == 0)
+		return true;
+
+	if (children > 1)
+		return false;
+
+	GfxContainerPtr child = c->children[0];
+	if (child->get_container()->is_a ("Misc"))
+		return true;
+
+	return false;
+}
+
 /**
  * draw_container - recursively draw a set of containers
  */
@@ -799,7 +819,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	}
 
 	if (display == "empty") {		// Only display if there's no children
-		if (children.empty()) {
+		if (is_empty (cont)) {
 			display = "box";
 		}
 	}
@@ -1094,7 +1114,7 @@ DrawingArea::is_visible (const GfxContainerPtr& c)
 	if ((display == "box") || (display == "icon") || (display == "iconbox") || (display == "tabbox"))
 		return true;
 
-	if ((display == "empty") && (c->children.empty()))
+	if ((display == "empty") && is_empty(c))
 		return true;
 
 	return false;

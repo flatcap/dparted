@@ -154,15 +154,14 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, long off
 
 				c->parent_offset = table_offset + part.start - ext->parent_offset;
 
-				std::ostringstream part_name;
-				part_name << parent->device;
-				char last = parent->device[parent->device.length()-1];
-				if (isdigit (last)) {
-					part_name << 'p';
+				std::string part_name = parent->get_device_name();
+				//XXX check part_name isn't empty
+				if (isdigit (part_name.back())) {
+					part_name += 'p';
 				}
-				part_name << (loop+5);
+				part_name += std::to_string (loop+5);
 
-				c->device = part_name.str();
+				c->device = part_name;
 
 				ext->add_child(c);
 				main_app->queue_add_probe(c);
