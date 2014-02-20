@@ -100,12 +100,12 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 		free (ptr);
 	} while (count > 0);
 
-	/*
+#if 0
 	   XXX correct way to check return code
 	int ret = pclose (fd);
 	if (WIFEXITED(ret))
 		  log_info ("%d\n", WEXITSTATUS(ret));
-	*/
+#endif
 	int retcode = pclose (file);
 	//log_info ("command %s returned %d\n", command.c_str(), retcode);
 	if (retcode == -1) {

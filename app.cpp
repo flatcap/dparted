@@ -23,7 +23,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
 #include <linux/major.h>
 #include <linux/fs.h>
 #include <linux/kdev_t.h>

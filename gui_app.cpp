@@ -210,8 +210,8 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	try {
 		context.parse (argc, argv);
 	} catch (const Glib::Error& ex) {
-		std::cerr << "Exception parsing command-line: " << ex.what() << std::endl;
-		std::cerr << context.get_help() << std::endl;
+		std::cout << "Exception parsing command-line: " << ex.what() << std::endl;
+		std::cout << context.get_help() << std::endl;
 		//XXX if running, don't kill the app
 		return EXIT_FAILURE;
 	}

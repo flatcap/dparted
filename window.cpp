@@ -672,7 +672,7 @@ Window::init_menubar (Gtk::Box& box)
 	try {
 		m_refBuilder->add_from_string (ui_info);
 	} catch (const Glib::Error& ex) {
-		std::cerr << "building menus failed: " << ex.what();
+		std::cout << "building menus failed: " << ex.what();
 	}
 
 	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object ("dparted-menu");

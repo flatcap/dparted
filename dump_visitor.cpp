@@ -19,7 +19,6 @@
 #include <iostream>
 
 #include "dump_visitor.h"
-
 #include "container.h"
 #include "log_trace.h"
 

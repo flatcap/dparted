@@ -170,7 +170,6 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	 *	        `-- loop0p2	vfat	green	vfat_label
 	 */
 
-
 	//Add the TreeView's view columns:
 	Gtk::TreeView::Column* col = nullptr;
 
@@ -304,7 +303,8 @@ TreeView::set_focus (GfxContainerPtr& c)
 	scroll_to_row (path);
 }
 
-void TreeView::on_selection_changed()
+void
+TreeView::on_selection_changed()
 {
 	//LOG_TRACE;
 
@@ -321,7 +321,6 @@ void TreeView::on_selection_changed()
 }
 
 
-// POPUP
 void
 TreeView::setup_popup (void)
 {

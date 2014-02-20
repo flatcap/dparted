@@ -148,7 +148,8 @@ GfxContainer::init (ContainerPtr c)
 /**
  * find_subst - get the position of a {tag}
  */
-bool find_subst (const std::string& text, std::string& tag, size_t& start, size_t& stop)
+bool
+find_subst (const std::string& text, std::string& tag, size_t& start, size_t& stop)
 {
 	//XXX on failure, point start at error
 	const char* valid = "abcdefghijklmnopqrstuvwxyz_";

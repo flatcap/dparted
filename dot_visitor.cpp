@@ -19,7 +19,6 @@
 #include <iostream>
 
 #include "dot_visitor.h"
-
 #include "container.h"
 #include "loop.h"
 #include "gpt.h"
@@ -30,7 +29,6 @@
 #include "luks.h"
 #include "lvm_group.h"
 #include "lvm_volume.h"
-
 #include "log_trace.h"
 #include "utils.h"
 
@@ -638,6 +636,7 @@ dot_whole (std::shared_ptr<T> t)
 	output << dot_container (std::dynamic_pointer_cast<Container>(w));
 
 	if (count > 0) {
+		std::cout << count << " segments" << std::endl;
 		output << dot_row ("segments", count);
 		for (auto i : w->segments) {
 			output << dot_row ("", i);

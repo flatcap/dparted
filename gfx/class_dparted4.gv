@@ -13,19 +13,6 @@ digraph G
 	Msdos          [ fillcolor="#FFFFCC" ];
 	Extended       [ fillcolor="#FFFFCC:#FFB6C1" gradientangle=270 ];
 
-	Btrfs          [ fillcolor="#B4A0F3" ];
-	Extfs          [ fillcolor="#B4A0F3" ];
-	Filesystem     [ fillcolor="#B4A0F3" ];
-	Ntfs           [ fillcolor="#B4A0F3" ];
-
-	Reiserfs       [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	Swap           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	Vfat           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	Xfs            [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-
-	BtrfsSnapshot  [ label="Snapshot"  color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	BtrfsSubvolume [ label="Subvolume" color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-
 	Volume         [ fillcolor="#2BDCFF:#FFB6C1" gradientangle=90 ];
 	Whole          [ fillcolor="#2BDCFF" ];
 
@@ -52,6 +39,23 @@ digraph G
 	LvmPartition   [ fillcolor="#B0D0B0" ];
 	MdPartition    [ fillcolor="#B0D0B0" ];
 	Piece          [ fillcolor="#B0D0B0" ];
+
+	Btrfs          [ fillcolor="#B4A0F3" ];
+	Extfs          [ fillcolor="#B4A0F3" ];
+	Filesystem     [ fillcolor="#B4A0F3" ];
+	Ntfs           [ fillcolor="#B4A0F3" ];
+
+	Ext2  [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+	Ext3  [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+	Ext4  [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+
+	Reiserfs       [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+	Swap           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+	Vfat           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+	Xfs            [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+
+	BtrfsSnapshot  [ label="Snapshot"  color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+	BtrfsSubvolume [ label="Subvolume" color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
 
 	File           [ fillcolor="#00FF00" ];
 
@@ -99,6 +103,10 @@ digraph G
 		Swap                 -> Filesystem;
 		Vfat                 -> Filesystem;
 		Xfs                  -> Filesystem;
+
+		Ext2                 -> Extfs;
+		Ext3                 -> Extfs;
+		Ext4                 -> Extfs;
 
 		BtrfsSubvolume       -> Btrfs;
 		BtrfsSnapshot        -> Btrfs;

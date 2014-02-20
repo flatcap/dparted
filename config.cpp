@@ -134,7 +134,8 @@ Config::Config (int64_t value) :
 /**
  * operator= (reference)
  */
-Config& Config::operator= (const Config& v)
+Config&
+Config::operator= (const Config& v)
 {
 	if ((type == v.type) || (type == Tag::t_unset)) {
 		type    = v.type;
@@ -150,7 +151,8 @@ Config& Config::operator= (const Config& v)
 /**
  * operator= (move)
  */
-Config& Config::operator= (Config&& v)
+Config&
+Config::operator= (Config&& v)
 {
 	if ((type == v.type) || (type == Tag::t_unset)) {
 		std::swap (type,    v.type);
@@ -167,7 +169,8 @@ Config& Config::operator= (Config&& v)
 /**
  * operator= (std::string)
  */
-Config& Config::operator= (std::string value)
+Config&
+Config::operator= (std::string value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:
@@ -185,7 +188,8 @@ Config& Config::operator= (std::string value)
 /**
  * operator= (double)
  */
-Config& Config::operator= (double value)
+Config&
+Config::operator= (double value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:
@@ -203,7 +207,8 @@ Config& Config::operator= (double value)
 /**
  * operator= (bool)
  */
-Config& Config::operator= (bool value)
+Config&
+Config::operator= (bool value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:
@@ -221,7 +226,8 @@ Config& Config::operator= (bool value)
 /**
  * operator= (uint8_t)
  */
-Config& Config::operator= (uint8_t value)
+Config&
+Config::operator= (uint8_t value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:
@@ -239,7 +245,8 @@ Config& Config::operator= (uint8_t value)
 /**
  * operator= (int8_t)
  */
-Config& Config::operator= (int8_t value)
+Config&
+Config::operator= (int8_t value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:
@@ -257,7 +264,8 @@ Config& Config::operator= (int8_t value)
 /**
  * operator= (uint16_t)
  */
-Config& Config::operator= (uint16_t value)
+Config&
+Config::operator= (uint16_t value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:
@@ -275,7 +283,8 @@ Config& Config::operator= (uint16_t value)
 /**
  * operator= (int16_t)
  */
-Config& Config::operator= (int16_t value)
+Config&
+Config::operator= (int16_t value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:
@@ -293,7 +302,8 @@ Config& Config::operator= (int16_t value)
 /**
  * operator= (uint32_t)
  */
-Config& Config::operator= (uint32_t value)
+Config&
+Config::operator= (uint32_t value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:
@@ -311,7 +321,8 @@ Config& Config::operator= (uint32_t value)
 /**
  * operator= (int32_t)
  */
-Config& Config::operator= (int32_t value)
+Config&
+Config::operator= (int32_t value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:
@@ -329,7 +340,8 @@ Config& Config::operator= (int32_t value)
 /**
  * operator= (uint64_t)
  */
-Config& Config::operator= (uint64_t value)
+Config&
+Config::operator= (uint64_t value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:
@@ -347,7 +359,8 @@ Config& Config::operator= (uint64_t value)
 /**
  * operator= (int64_t)
  */
-Config& Config::operator= (int64_t value)
+Config&
+Config::operator= (int64_t value)
 {
 	switch (type) {
 		case Config::Tag::t_unset:

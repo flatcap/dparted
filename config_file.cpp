@@ -88,7 +88,8 @@ parse_config (const libconfig::Setting& setting, std::map<std::string,std::strin
 }
 
 
-bool ConfigFile::is_valid (void)
+bool
+ConfigFile::is_valid (void)
 {
 	return valid;
 }
@@ -129,7 +130,8 @@ ConfigFile::dump_config (void)
 }
 
 
-bool ConfigFile::exists (const std::string& name)
+bool
+ConfigFile::exists (const std::string& name)
 {
 	return (config.count (name) > 0);
 }
