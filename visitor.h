@@ -64,7 +64,6 @@ public:
 
 	//XXX move the dirty inheritance stuff elsewhere? (hideous dependency problem)
 	virtual bool visit (BtrfsPtr        p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
-	virtual bool visit (DevicePtr       p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
 	virtual bool visit (DiskPtr         p) { return visit (std::dynamic_pointer_cast<Device>    (p)); }
 	virtual bool visit (ExtfsPtr        p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
 	virtual bool visit (FilePtr         p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
@@ -95,6 +94,13 @@ public:
 	// Multiple inheritance
 	virtual bool visit (ExtendedPtr     p) { return (visit (std::dynamic_pointer_cast<Msdos>(p)) && visit (std::dynamic_pointer_cast<Device>(p))); }
 	virtual bool visit (VolumePtr       p) { return (visit (std::dynamic_pointer_cast<Whole>(p)) && visit (std::dynamic_pointer_cast<Device>(p))); }
+
+	virtual bool visit (DevicePtr       p) {
+		if ((p->is_a ("Whole")) || (p->is_a ("Table")))
+			return true;
+		else
+			return visit (std::dynamic_pointer_cast<Container> (p));
+	}
 };
 
 
