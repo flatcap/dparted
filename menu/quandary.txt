@@ -1,0 +1,111 @@
+
+Loop.Gpt.Partition.Extfs
+          Container.Device.Loop
+          Container.Table.Gpt
+          Container.Partition
+          Container.Filesystem.Extfs
+
+Extfs
+          extfs                            filesystem.check      Check the filesystem for errors
+                                           filesystem.defrag     Defragment the filesystem
+                                           filesystem.convert    Convert to btrfs
+                                           delete.filesystem     Wipe the filesystem
+          filesystem                       nothing               -
+          container                        manage.properties     Properties dialog
+
+Partition
+          partition                        format.partition_type Convert to different partition type
+                                           delete.partition      Delete the partition
+          container                        manage.properties     Properties dialog
+
+Gpt
+          gpt                              delete.table          Wipe out table
+                                           xxx                   Sort table
+          table                            xxx                   Convert to different table type
+          container                        manage.properties     Properties dialog
+
+Loop
+          loop                             delete.loop           Detach loop device
+          block                            create.filesystem(*)  Create a filesystem
+                                           create.table(+)       Create a table
+          container                        manage.properties     Properties dialog
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Loop.Gpt.Partition.Zero
+          Container.Device.Loop
+          Container.Table.Gpt
+          Container.Partition
+          Container.Misc.Zero
+
+Zero
+          zero                             nothing               -
+          misc                             nothing               -
+          container                        manage.properties     Properties dialog
+
+Partition
+          partition                        create.filesystem(*)  Create a filesystem
+                                           format.partition_type Convert to different partition type
+                                           delete.partition      Delete the partition
+          container                        manage.properties     Properties dialog
+
+Gpt
+          gpt                              delete.table          Wipe out table
+                                           xxx                   Sort table
+          table                            xxx                   Convert to different table type
+          container                        manage.properties     Properties dialog
+
+Loop
+          loop                             delete.loop           Detach loop device
+          block                            create.filesystem(*)  Create a filesystem
+                                           create.table(+)       Create a table
+          container                        manage.properties     Properties dialog
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Loop.Gpt.Zero
+          Container.Device.Loop
+          Container.Table.Gpt
+          Container.Misc.Zero
+
+Zero
+          zero                             nothing               -
+          misc                             nothing               -
+          container                        manage.properties     Properties dialog
+
+Gpt
+          gpt                              delete.table          Wipe out table
+                                           xxx                   Sort table
+          table                            xxx                   Convert to different table type
+                                           create.filesystem(*)  Create a filesystem                 Can't happen directly
+                                           create.partition(!)   Create a partition
+          container                        manage.properties     Properties dialog
+
+Loop
+          loop                             delete.loop           Detach loop device
+          block                            nothing               -
+          container                        manage.properties     Properties dialog
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Loop.Zero
+          Container.Device.Loop
+          Container.Misc.Zero
+
+Zero
+          zero                             nothing               -
+          misc                             nothing               -
+          container                        manage.properties     Properties dialog
+
+Loop
+          loop                             delete.loop           Detach loop device
+          block                            create.filesystem(*)  Create a filesystem                 Directly, or indirectly (table, partition, filesystem)
+                                           create.partition(!)   Create a partition                  Can't happen directly
+                                           create.table(+)       Create a table
+          container                        manage.properties     Properties dialog
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+*         App has register of filesystems                        e.g. ext4, ntfs, vfat
++         App has register of tables                             e.g. msdos, gpt, luks (closed)
+!         Table has register of partitions                       e.g. primary, logical, extended

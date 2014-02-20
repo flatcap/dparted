@@ -1,0 +1,57 @@
+create
+	create.filesystem
+	create.partition
+	create.table
+	create.lvm_volume
+	--
+	create.encryption
+	--
+	create.subvolume
+	create.snapshot
+	--
+	create.redundancy
+delete
+	delete.filesystem
+	delete.partition
+	delete.table
+	delete.lvm_volume
+	--
+	delete.encryption
+	--
+	delete.subvolume
+	delete.snapshot
+	--
+	delete.redundancy
+format
+	format.wipe
+	format.filesystem
+	format.btrfs
+	format.partition_type
+	format.table
+manage
+	manage.properties
+	manage.label
+	manage.uuid
+	manage.flags
+	manage.parameters
+filesystem
+	filesystem.check
+	filesystem.defragment
+	filesystem.rebalance
+	filesystem.resize_move
+	filesystem.mount
+	filesystem.umount
+	filesystem.swap_on
+	filesystem.swap_off
+	filesystem.usage
+group
+	group.resize
+	group.split
+	group.merge
+	group.add_stripe
+	group.remove_stripe
+	group.add_mirror
+	group.remove_mirror
+	group.break_mirror
+	group.add_raid
+	group.remove_raid
