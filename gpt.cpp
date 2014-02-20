@@ -141,7 +141,7 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char
 	// Then once a non-aligned partition is deleted
 	// it would be replaced by an aligned partition.
 
-#if 0
+#if 1
 	MiscPtr res1 = Misc::create();
 	res1->name          = "Reserved";
 	res1->sub_type ("Reserved");
@@ -157,44 +157,32 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char
 	res2->bytes_used    = res2->bytes_size;
 	res2->parent_offset = g->bytes_size - res2->bytes_size;		// End of the partition
 	g->add_child (res2);
+
+	delete_region (empty, 0, 33);
+
+	long sect_offset = (g->bytes_size - res2->bytes_size) / 512;
+	delete_region (empty, sect_offset, sect_offset+32);
 #endif
-
-	//log_debug ("res1 = %lld\n", res1->bytes_size);
-	//log_debug ("res2 = %lld\n", res2->bytes_size);
-
-	//std::cout << g << "\n";
 
 	buffer += 1024;	//bufsize -= 1024; for range checking
-#if 0
-	p = new Partition();
-	p->bytes_size = g->bytes_size / 2;
-	p->parent_offset = g->bytes_size / 4;
-	g->add_child(p);
-	FilesystemPtr fs = Filesystem::create();
-	fs->bytes_size = p->bytes_size;
-	fs->parent_offset = 0;
-	p->add_child (fs);
-	return g;
-#endif
+
 	std::string device = g->get_device_name();
 
 	for (int i = 0; i < 128; i++, buffer += 128) {
 		if (*(long*) (buffer+32) == 0)
 			continue;			// Skip empty slots
 
-		//log_debug ("new Partition %d\n", i);
 		PartitionPtr p = Partition::create();
 		p->bytes_used = 0;
 		p->uuid = read_uuid1 (buffer+16);
 		//p->part_type_uuid = read_guid (buffer+0);
 
-		std::ostringstream part_name;
-		part_name << device;
+		std::string part_name = device;
 		if (isdigit (device.back())) {
-			part_name << 'p';
+			part_name += 'p';
 		}
-		part_name << (i+1);
-		p->device = part_name.str();
+		part_name += std::to_string (i+1);
+		p->device = part_name;
 
 		long start  = *(long*) (buffer+32);
 		long finish = *(long*) (buffer+40);
