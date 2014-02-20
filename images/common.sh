@@ -102,7 +102,8 @@ function create_loop()
 # Create a sparse image
 function create_image()
 {
-	local IMAGE="/mnt/space/test/$1.img"
+	#local IMAGE="/mnt/space/test/$1.img"
+	local IMAGE="$1.img"
 
 	[ $# = 1 ] || return
 

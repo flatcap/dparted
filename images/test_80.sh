@@ -43,13 +43,13 @@ function test_80()
 	lvremove -f /dev/$VOLUME/junk > /dev/null;					[ $? = 0 ] || error || return
 
 	mke2fs -q -t ext4 -L "$VOLUME stripe2" /dev/$VOLUME/stripe2 > /dev/null;	[ $? = 0 ] || error || return
-	mke2fs -q -t ext4 -L "$VOLUME root"    /dev/$VOLUME/root > /dev/null;		[ $? = 0 ] || error || return
+	mke2fs -q -t ext4 -L "$VOLUME root"    /dev/$VOLUME/root    > /dev/null;	[ $? = 0 ] || error || return
 	mkntfs -Q         -L "$VOLUME mirror3" /dev/$VOLUME/mirror3 > /dev/null;	[ $? = 0 ] || error || return
-	mke2fs -q -t ext4 -L "$VOLUME home"    /dev/$VOLUME/home > /dev/null;		[ $? = 0 ] || error || return
+	mke2fs -q -t ext4 -L "$VOLUME home"    /dev/$VOLUME/home    > /dev/null;	[ $? = 0 ] || error || return
 	mkntfs -Q         -L "$VOLUME stripe3" /dev/$VOLUME/stripe3 > /dev/null;	[ $? = 0 ] || error || return
-	mkntfs -Q         -L "$VOLUME tv"      /dev/$VOLUME/tv > /dev/null;		[ $? = 0 ] || error || return
+	mkntfs -Q         -L "$VOLUME tv"      /dev/$VOLUME/tv      > /dev/null;	[ $? = 0 ] || error || return
 	mke2fs -q -t ext4 -L "$VOLUME mirror2" /dev/$VOLUME/mirror2 > /dev/null;	[ $? = 0 ] || error || return
-	mke2fs -q -t ext4 -L "$VOLUME data"    /dev/$VOLUME/data > /dev/null;		[ $? = 0 ] || error || return
+	mke2fs -q -t ext4 -L "$VOLUME data"    /dev/$VOLUME/data    > /dev/null;	[ $? = 0 ] || error || return
 
 	#lvs --all -o lv_name,vg_name,lv_attr,lv_size,lv_uuid,lv_path,lv_kernel_major,lv_kernel_minor,seg_count $VOLUME
 

@@ -764,7 +764,7 @@ is_empty (const GfxContainerPtr& c)
 	if (!c)
 		return true;
 
-	int children = c->children.empty();
+	int children = c->children.size();
 	if (children == 0)
 		return true;
 
