@@ -1,46 +1,44 @@
 digraph G
 {
-	graph [ rankdir="RL" bgcolor="#002200", color=white nodesep=0.1 ranksep=0.5 ];
-	node  [ shape=record fontsize=12 style=filled color=white width="1.0" height="0.25" fixedsize=true penwidth=0 ];
-	edge  [ penwidth=1.0 color="#CCCCCC" arrowsize=0.5 ];
+	graph [
+		rankdir="RL"
+		bgcolor=black
+		color=white
+		nodesep=0.1
+		ranksep=0.5
+	];
+	node [
+		shape=Mrecord
+		fontsize=12
+		style=filled
+		color=white
+		width="1.0"
+		height="0.25"
+		fixedsize=true
+		penwidth=0
+	];
+
+	edge [
+		penwidth=1.0
+		color="#888888"
+		arrowsize=0.5
+	];
 
 	Container      [ fillcolor="#FFFFFF" ];
+
+	Block          [ fillcolor="#FFB6C1" ];
+	Luks           [ fillcolor="#FFB6C1" /*penwidth=2 color=red*/ ]; // device
+	Partition      [ fillcolor="#FFB6C1" /*penwidth=2 color=red*/ ]; // device
+	Disk           [ fillcolor="#FFB6C1" /*penwidth=2 color=red*/ ]; // device
+	Loop           [ fillcolor="#FFB6C1" /*penwidth=2 color=red*/ ]; // device
+	File           [ fillcolor="#FFB6C1" ];
 
 	Table          [ fillcolor="#FFFFCC" ];
 	Gpt            [ fillcolor="#FFFFCC" ];
 	LvmTable       [ fillcolor="#FFFFCC" ];
 	MdTable        [ fillcolor="#FFFFCC" ];
 	Msdos          [ fillcolor="#FFFFCC" ];
-	Extended       [ fillcolor="#FFFFCC" ];
-
-	Block          [ fillcolor="#FFB6C1" ];
-	Luks           [ fillcolor="#FFB6C1" ];
-	Partition      [ fillcolor="#FFB6C1" ];
-	Disk           [ fillcolor="#FFB6C1" ];
-	Loop           [ fillcolor="#FFB6C1" ];
-	File           [ fillcolor="#FFB6C1" ];
-
-	Volume         [ fillcolor="#2BDCFF" ];
-	Whole          [ fillcolor="#2BDCFF" ];
-	LvmGroup       [ fillcolor="#2BDCFF" ];
-	MdGroup        [ fillcolor="#2BDCFF" ];
-
-	LvmLinear      [ fillcolor="#DAA520" ];
-	LvmMetadata    [ fillcolor="#DAA520" ];
-	LvmMirror      [ fillcolor="#DAA520" ];
-	LvmRaid        [ fillcolor="#DAA520" ];
-	LvmStripe      [ fillcolor="#DAA520" ];
-	LvmVolume      [ fillcolor="#DAA520" ];
-
-	MdLinear       [ fillcolor="#A5DA20" ];
-	MdMirror       [ fillcolor="#A5DA20" ];
-	MdRaid         [ fillcolor="#A5DA20" ];
-	MdStripe       [ fillcolor="#A5DA20" ];
-	MdVolume       [ fillcolor="#A5DA20" ];
-
-	LvmPartition   [ fillcolor="#B0D0B0" ];
-	MdPartition    [ fillcolor="#B0D0B0" ];
-	Piece          [ fillcolor="#B0D0B0" ];
+	Extended       [ fillcolor="#FFFFCC" /*penwidth=2 color=red*/ ]; // device
 
 	Btrfs          [ fillcolor="#B4A0F3" ];
 	Extfs          [ fillcolor="#B4A0F3" ];
@@ -59,7 +57,30 @@ digraph G
 	BtrfsSnapshot  [ label="Snapshot"  color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
 	BtrfsSubvolume [ label="Subvolume" color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
 
+	LvmPartition   [ fillcolor="#B0D0B0" ];
+	MdPartition    [ fillcolor="#B0D0B0" ];
+	Piece          [ fillcolor="#B0D0B0" ];
+
+	Volume         [ fillcolor="#2BDCFF" /*penwidth=2 color=red*/ ]; // device
+	Whole          [ fillcolor="#2BDCFF" ];
+	LvmGroup       [ fillcolor="#2BDCFF" ];
+	MdGroup        [ fillcolor="#2BDCFF" ];
+
+	LvmLinear      [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
+	LvmMetadata    [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
+	LvmMirror      [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
+	LvmRaid        [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
+	LvmStripe      [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
+	LvmVolume      [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
+
+	MdLinear       [ fillcolor="#A5DA20" /*penwidth=2 color=red*/ ]; // device
+	MdMirror       [ fillcolor="#A5DA20" /*penwidth=2 color=red*/ ]; // device
+	MdRaid         [ fillcolor="#A5DA20" /*penwidth=2 color=red*/ ]; // device
+	MdStripe       [ fillcolor="#A5DA20" /*penwidth=2 color=red*/ ]; // device
+	MdVolume       [ fillcolor="#A5DA20" /*penwidth=2 color=red*/ ]; // device
+
 	Misc           [ fillcolor="#DC4C46" ];
+
 	Random         [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
 	Reserved       [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
 	Unallocated    [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
