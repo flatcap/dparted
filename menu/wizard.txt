@@ -1,0 +1,47 @@
+Tabbed wizard
+     _________   _____________   ______________   ________
+____/ Table ✓ \_/ Partition ✓ \_/ Filesystem ✗ \_/ Review \____
+
+Table:
+	( ) Msdos - default PC
+	(*) Gpt   - advanced PC
+	( ) Lvm   - Linux
+	( ) Md    - Multiple Disks
+	( ) Ldm   - Windows
+
+Partition:
+	Rule:
+		( ) Primary only
+		(*) Three primary, then logical
+		( ) Two primary, then logical
+		( ) One primary, then logical
+		( ) Logical only
+		( ) Let me choose
+
+	Choice
+		(*) Primary
+		( ) Extended
+		( ) Logical
+
+Filesystem:
+	[<---size--->....]
+	Space before X MiB
+	Size         Y MiB
+	Space after  Z MiB
+	Alignment    a MiB
+
+	Filesystem: Ext2/3/4
+		    Btrfs
+		    Ntfs
+
+	Specifics:
+		Label:      ________
+		Block size: ________
+		Reserved:   ________
+		UUID:       __________________
+
+Common:
+	[X] Remember my choice
+
+	[Defaults] [Cancel] [Next] [OK]
+

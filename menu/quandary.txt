@@ -4,16 +4,16 @@ Loop.Zero
 	Container.Misc.Zero
 
 Zero
-	zero				nothing		-
-	misc				nothing		-
-	container			manage.properties	Properties dialog
+	zero		nothing			-
+	misc		nothing			-
+	container	manage.properties	Properties dialog
 
 Loop
-	loop				delete.loop		Detach loop device
-	block				create.filesystem(*)	Create a filesystem		Directly, or indirectly (table, partition, filesystem)
-					create.partition(!)	Create a partition		Can't happen directly
-					create.table(+)	Create a table
-	container			manage.properties	Properties dialog
+	loop		delete.loop		Detach loop device
+	block		create.filesystem(*)	Create a filesystem		Directly, or indirectly (table, partition, filesystem)
+			create.partition(!)	Create a partition		Can't happen directly
+			create.table(+)		Create a table
+	container	manage.properties	Properties dialog
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -23,22 +23,22 @@ Loop.Gpt.Zero
 	Container.Misc.Zero
 
 Zero
-	zero				nothing		-
-	misc				nothing		-
-	container			manage.properties	Properties dialog
+	zero		nothing			-
+	misc		nothing			-
+	container	manage.properties	Properties dialog
 
 Gpt
-	gpt				delete.table		Wipe out table
-					xxx			Sort table
-	table				xxx			Convert to different table type
-					create.filesystem(*)	Create a filesystem		Can't happen directly
-					create.partition(!)	Create a partition
-	container			manage.properties	Properties dialog
+	gpt		delete.table		Wipe out table
+			xxx			Sort table
+	table		xxx			Convert to different table type
+			create.filesystem(*)	Create a filesystem		Can't happen directly
+			create.partition(!)	Create a partition
+	container	manage.properties	Properties dialog
 
 Loop
-	loop				delete.loop		Detach loop device
-	block				nothing		-
-	container			manage.properties	Properties dialog
+	loop		delete.loop		Detach loop device
+	block		nothing			-
+	container	manage.properties	Properties dialog
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -49,27 +49,27 @@ Loop.Gpt.Partition.Zero
 	Container.Misc.Zero
 
 Zero
-	zero				nothing		-
-	misc				nothing		-
-	container			manage.properties	Properties dialog
+	zero		nothing			-
+	misc		nothing			-
+	container	manage.properties	Properties dialog
 
 Partition
-	partition			create.filesystem(*)	Create a filesystem
-					format.partition_type	Convert to different partition type
-					delete.partition	Delete the partition
-	container			manage.properties	Properties dialog
+	partition	create.filesystem(*)	Create a filesystem
+			format.partition_type	Convert to different partition type
+			delete.partition	Delete the partition
+	container	manage.properties	Properties dialog
 
 Gpt
-	gpt				delete.table		Wipe out table
-					xxx			Sort table
-	table				xxx			Convert to different table type
-	container			manage.properties	Properties dialog
+	gpt		delete.table		Wipe out table
+			xxx			Sort table
+	table		xxx			Convert to different table type
+	container	manage.properties	Properties dialog
 
 Loop
-	loop				delete.loop		Detach loop device
-	block				create.filesystem(*)	Create a filesystem
-					create.table(+)		Create a table
-	container			manage.properties	Properties dialog
+	loop		delete.loop		Detach loop device
+	block		create.filesystem(*)	Create a filesystem
+			create.table(+)		Create a table
+	container	manage.properties	Properties dialog
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -80,30 +80,30 @@ Loop.Gpt.Partition.Ext4
 	Container.Filesystem.Extfs.Ext4
 
 Ext4
-	ext4				xxx			Something journally
-	extfs				filesystem.check	Check the filesystem for errors
-					filesystem.defrag	Defragment the filesystem
-					filesystem.convert	Convert to btrfs
-					delete.filesystem	Wipe the filesystem
-	filesystem			nothing		-
-	container			manage.properties	Properties dialog
+	ext4		xxx			Something journally
+	extfs		filesystem.check	Check the filesystem for errors
+			filesystem.defrag	Defragment the filesystem
+			filesystem.convert	Convert to btrfs
+			delete.filesystem	Wipe the filesystem
+	filesystem	nothing			-
+	container	manage.properties	Properties dialog
 
 Partition
-	partition			format.partition_type Convert to different partition type
-					delete.partition	Delete the partition
-	container			manage.properties	Properties dialog
+	partition	format.partition_type	Convert to different partition type
+			delete.partition	Delete the partition
+	container	manage.properties	Properties dialog
 
 Gpt
-	gpt				delete.table		Wipe out table
-					xxx			Sort table
-	table				xxx			Convert to different table type
-	container			manage.properties	Properties dialog
+	gpt		delete.table		Wipe out table
+			xxx			Sort table
+	table		xxx			Convert to different table type
+	container	manage.properties	Properties dialog
 
 Loop
-	loop				delete.loop		Detach loop device
-	block				create.filesystem(*)	Create a filesystem
-					create.table(+)	Create a table
-	container			manage.properties	Properties dialog
+	loop		delete.loop		Detach loop device
+	block		create.filesystem(*)	Create a filesystem
+			create.table(+)		Create a table
+	container	manage.properties	Properties dialog
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
