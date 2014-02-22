@@ -28,6 +28,8 @@
 #include <tuple>
 #include <utility>
 
+#include <sys/types.h>
+
 #include "property.h"
 #include "mmap.h"
 #include "action.h"
@@ -104,15 +106,18 @@ public:
 	virtual bool perform_action (Action action);
 
 public:
-	std::string	 name;
-	std::string	 uuid;
+	std::string	name;
+	std::string	uuid;
 
-	std::string	 device;
-	long		 parent_offset = 0;
+	std::string	device;	// These don't belong here, but the alternative is multiple inheritance
+	dev_t		device_major;
+	dev_t		device_minor;
 
-	long		 block_size = 0;
-	long		 bytes_size = 0;
-	long		 bytes_used = 0;
+	long		parent_offset = 0;
+
+	long		block_size = 0;
+	long		bytes_size = 0;
+	long		bytes_used = 0;
 
 	ContainerPtr	 whole;
 
