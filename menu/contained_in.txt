@@ -1,12 +1,12 @@
 container
 volume
 whole
-	N/A
+	n/a
 
 (block)
 disk
 file
-	TOP
+	top
 
 loop
 	file
@@ -30,7 +30,7 @@ xfs
 (table)
 gpt
 msdos
-luks(closed)
+luks
 lvmtable
 mdtable
 	(block)
@@ -40,9 +40,6 @@ mdtable
 
 extended
 	msdos
-
-luks(closed)
-	luks(open)
 
 misc
 	(block)
@@ -60,7 +57,7 @@ partition
 
 lvmgroup
 mdgroup
-	TOP
+	top
 
 (lvmvolume)
 lvmlinear

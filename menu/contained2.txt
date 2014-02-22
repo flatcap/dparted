@@ -1,0 +1,345 @@
+Virtual
+	Block
+	Container
+	Filesystem
+	Group
+	Misc
+	Table
+	Volume
+	Whole
+	Extfs
+	MdVolume
+	LvmVolume
+	Partition
+
+------------------------------------------------------
+Disk
+	Table
+		Msdos
+		Gpt
+		LvmTable
+		MdTable
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+Loop
+	Table
+		Msdos
+		Gpt
+		LvmTable
+		MdTable
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+File
+	Loop
+------------------------------------------------------
+Msdos
+	Partition
+	Extended
+	Misc
+		Unallocated
+		Reserved
+		Alignment
+
+------------------------------------------------------
+Extended
+	Partition
+	Misc
+		Unallocated
+		Reserved
+		Alignment
+
+------------------------------------------------------
+Gpt
+	Partition
+	Misc
+		Unallocated
+		Reserved
+		Alignment
+
+------------------------------------------------------
+LvmTable
+	Partition
+		LvmPartition
+	Misc
+		Unallocated
+		Reserved
+		Alignment
+
+------------------------------------------------------
+MdTable
+	Partition
+		MdPartition
+	Misc
+		Unallocated
+		Reserved
+		Alignment
+
+------------------------------------------------------
+LvmPartition
+	NOTHING
+------------------------------------------------------
+MdPartition
+	NOTHING
+------------------------------------------------------
+Btrfs
+	Btrfs (Snapshot)
+	Btrfs (Subvolume)
+------------------------------------------------------
+Ntfs
+	NOTHING
+------------------------------------------------------
+Ext2
+	NOTHING
+------------------------------------------------------
+Ext3
+	NOTHING
+------------------------------------------------------
+Ext4
+	NOTHING
+------------------------------------------------------
+Reiserfs
+	NOTHING
+------------------------------------------------------
+Swap
+	NOTHING
+------------------------------------------------------
+Vfat
+	NOTHING
+------------------------------------------------------
+Xfs
+	NOTHING
+------------------------------------------------------
+Reserved
+	NOTHING
+------------------------------------------------------
+Alignment
+	NOTHING
+------------------------------------------------------
+Unallocated
+	NOTHING
+------------------------------------------------------
+Zero
+	NOTHING
+------------------------------------------------------
+Random
+	NOTHING
+------------------------------------------------------
+LvmGroup
+	LvmVolume
+		LvmLinear
+			LvmMetadata
+		LvmMirror
+		LvmRaid
+		LvmStripe
+------------------------------------------------------
+MdGroup
+	MdVolume
+		MdLinear
+		MdMirror
+		MdRaid
+		MdStripe
+------------------------------------------------------
+LvmLinear
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+LvmMetadata
+	NOTHING
+------------------------------------------------------
+LvmMirror
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+LvmRaid
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+LvmStripe
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+MdLinear
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+MdMirror
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+MdRaid
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+MdStripe
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+Partition
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Luks
+------------------------------------------------------
+Luks
+	Filesystem
+		Extfs
+			Ext2
+			Ext3
+			Ext4
+		Btrfs
+		Ntfs
+		Reiserfs
+		Swap
+		Vfat
+		Xfs
+	Misc
+		Zero
+		Random
+	Table
+		LvmTable
+		MdTable
+------------------------------------------------------
+

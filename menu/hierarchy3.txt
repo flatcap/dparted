@@ -1,0 +1,49 @@
+`-- Container
+    |-- Block
+    |   |-- Disk
+    |   |-- File
+    |   `-- Loop
+    |-- Filesystem
+    |   |-- Btrfs
+    |   |   |-- Snapshot
+    |   |   `-- Subvolume
+    |   |-- Extfs
+    |   |   |-- Ext2
+    |   |   |-- Ext3
+    |   |   `-- Ext4
+    |   |-- Ntfs
+    |   |-- Reiserfs
+    |   |-- Swap
+    |   |-- Vfat
+    |   `-- Xfs
+    |-- Misc
+    |   |-- Luks
+    |   |-- Random
+    |   |-- Reserved
+    |   |-- Unallocated
+    |   `-- Zero
+    |-- Partition
+    |   |-- LvmPartition
+    |   `-- MdPartition
+    |-- Table
+    |   |-- Gpt
+    |   |-- LvmTable
+    |   |-- MdTable
+    |   `-- Msdos
+    |       `-- Extended
+    `-- Whole
+        |-- Group
+        |   |-- LvmGroup
+        |   `-- MdGroup
+        `-- Volume
+            |-- LvmLinear
+            |   `-- LvmMetadata
+            |-- LvmMirror
+            |-- LvmRaid
+            |-- LvmStripe
+            |-- LvmVolume
+            |-- MdLinear
+            |-- MdMirror
+            |-- MdRaid
+            |-- MdStripe
+            `-- MdVolume
