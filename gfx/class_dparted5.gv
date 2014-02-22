@@ -7,47 +7,54 @@ digraph G
 		nodesep=0.1
 		ranksep=0.5
 	];
+
 	node [
 		shape=Mrecord
 		fontsize=12
 		style=filled
-		color=white
-		width="1.0"
+		width="1.1"
 		height="0.25"
 		fixedsize=true
-		penwidth=0
+		penwidth=0.0
 	];
 
 	edge [
 		penwidth=1.0
-		color="#888888"
+		color="#A0A0A0"
 		arrowsize=0.5
 	];
 
-	Container      [ fillcolor="#FFFFFF" ];
+	Container      [ fillcolor="#C0C0C0" ];
 
-	Block          [ fillcolor="#FFB6C1" ];
-	Luks           [ fillcolor="#FFB6C1" /*penwidth=2 color=red*/ ]; // device
-	Partition      [ fillcolor="#FFB6C1" /*penwidth=2 color=red*/ ]; // device
-	Disk           [ fillcolor="#FFB6C1" /*penwidth=2 color=red*/ ]; // device
-	Loop           [ fillcolor="#FFB6C1" /*penwidth=2 color=red*/ ]; // device
+	Block          [ fillcolor="#FFB6C1" penwidth=2 color=red ];
+	Disk           [ fillcolor="#FFB6C1" ];
+	Loop           [ fillcolor="#FFB6C1" ];
 	File           [ fillcolor="#FFB6C1" ];
 
 	Table          [ fillcolor="#FFFFCC" ];
+	Msdos          [ fillcolor="#FFFFCC" ];
+	Extended       [ fillcolor="#FFFFCC" ];
 	Gpt            [ fillcolor="#FFFFCC" ];
 	LvmTable       [ fillcolor="#FFFFCC" ];
 	MdTable        [ fillcolor="#FFFFCC" ];
-	Msdos          [ fillcolor="#FFFFCC" ];
-	Extended       [ fillcolor="#FFFFCC" /*penwidth=2 color=red*/ ]; // device
 
-	Btrfs          [ fillcolor="#B4A0F3" ];
-	Extfs          [ fillcolor="#B4A0F3" ];
+	Partition      [ fillcolor="#B0D0B0" ];
+	MsdosPartition [ fillcolor="#B0D0B0" ];
+	GptPartition   [ fillcolor="#B0D0B0" ];
+	LvmPartition   [ fillcolor="#B0D0B0" ];
+	MdPartition    [ fillcolor="#B0D0B0" ];
+
+	MsdosPrimary   [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
+	MsdosLogical   [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
+
 	Filesystem     [ fillcolor="#B4A0F3" ];
+	Extfs          [ fillcolor="#B4A0F3" ];
+	Btrfs          [ fillcolor="#B4A0F3" ];
 	Ntfs           [ fillcolor="#B4A0F3" ];
 
-	Ext2  [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	Ext3  [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	Ext4  [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+	Ext2           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+	Ext3           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
+	Ext4           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
 
 	Reiserfs       [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
 	Swap           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
@@ -57,39 +64,39 @@ digraph G
 	BtrfsSnapshot  [ label="Snapshot"  color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
 	BtrfsSubvolume [ label="Subvolume" color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
 
-	LvmPartition   [ fillcolor="#B0D0B0" ];
-	MdPartition    [ fillcolor="#B0D0B0" ];
-	Piece          [ fillcolor="#B0D0B0" ];
+	Misc           [ fillcolor="#DC4C46" ];
 
-	Volume         [ fillcolor="#2BDCFF" /*penwidth=2 color=red*/ ]; // device
+	Reserved       [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
+	Alignment      [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
+	Unallocated    [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
+	Zero           [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
+	Random         [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
+
+	Luks           [ fillcolor="#DC4C46" penwidth=2 color=green ];
+
+	Volume         [ fillcolor="#2BDCFF" penwidth=2 color=red ];
 	Whole          [ fillcolor="#2BDCFF" ];
+	Group          [ fillcolor="#2BDCFF" penwidth=2 color=red ];
 	LvmGroup       [ fillcolor="#2BDCFF" ];
 	MdGroup        [ fillcolor="#2BDCFF" ];
 
-	LvmLinear      [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
-	LvmMetadata    [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
-	LvmMirror      [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
-	LvmRaid        [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
-	LvmStripe      [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
-	LvmVolume      [ fillcolor="#DAA520" /*penwidth=2 color=red*/ ]; // device
+	LvmLinear      [ fillcolor="#DAA520" ];
+	LvmMetadata    [ fillcolor="#DAA520" ];
+	LvmMirror      [ fillcolor="#DAA520" ];
+	LvmRaid        [ fillcolor="#DAA520" ];
+	LvmStripe      [ fillcolor="#DAA520" ];
+	LvmVolume      [ fillcolor="#DAA520" ];
 
-	MdLinear       [ fillcolor="#A5DA20" /*penwidth=2 color=red*/ ]; // device
-	MdMirror       [ fillcolor="#A5DA20" /*penwidth=2 color=red*/ ]; // device
-	MdRaid         [ fillcolor="#A5DA20" /*penwidth=2 color=red*/ ]; // device
-	MdStripe       [ fillcolor="#A5DA20" /*penwidth=2 color=red*/ ]; // device
-	MdVolume       [ fillcolor="#A5DA20" /*penwidth=2 color=red*/ ]; // device
-
-	Misc           [ fillcolor="#DC4C46" ];
-
-	Random         [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
-	Reserved       [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
-	Unallocated    [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
-	Zero           [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
+	MdLinear       [ fillcolor="#A5DA20" ];
+	MdMirror       [ fillcolor="#A5DA20" ];
+	MdRaid         [ fillcolor="#A5DA20" ];
+	MdStripe       [ fillcolor="#A5DA20" ];
+	MdVolume       [ fillcolor="#A5DA20" ];
 
 	Block      -> Container;
 	Filesystem -> Container;
 	Misc       -> Container;
-	Piece      -> Container;
+	Partition  -> Container;
 	Table      -> Container;
 	Whole      -> Container;
 
@@ -132,14 +139,20 @@ digraph G
 		Zero                 -> Misc;
 		Random               -> Misc;
 		Reserved             -> Misc;
+		Alignment            -> Misc;
 		Unallocated          -> Misc;
 	}
 
 	subgraph cluster_4 {
 		color = transparent;
 
-		LvmPartition         -> Piece;
-		MdPartition          -> Piece;
+		MsdosPartition       -> Partition;
+		GptPartition         -> Partition;
+		LvmPartition         -> Partition;
+		MdPartition          -> Partition;
+
+		MsdosPrimary         -> MsdosPartition;
+		MsdosLogical         -> MsdosPartition;
 	}
 
 	subgraph cluster_5 {
@@ -164,19 +177,20 @@ digraph G
 	subgraph cluster_7 {
 		color = transparent;
 
-		LvmGroup             -> Whole;
-		MdGroup              -> Whole;
+		LvmGroup             -> Group;
+		MdGroup              -> Group;
+		Group                -> Whole;
 		Volume               -> Whole;
 	}
 
 	subgraph cluster_8 {
 		color = transparent;
 
-		Partition            -> Block;
-		Luks                 -> Block;
 		Disk                 -> Block;
 		Loop                 -> Block;
 		File                 -> Block;
 	}
+
+	Luks -> Misc;
 }
 

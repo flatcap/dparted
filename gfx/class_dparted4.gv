@@ -1,8 +1,29 @@
 digraph G
 {
-	graph [ rankdir="RL" bgcolor="#002200", color=white nodesep=0.1 ranksep=0.5 ];
-	node  [ shape=record fontsize=12 style=filled color=white width="1.0" height="0.25" fixedsize=true penwidth=0 ];
-	edge  [ penwidth=1.0 color="#CCCCCC" arrowsize=0.5 ];
+	graph [
+		rankdir="RL"
+		bgcolor=black
+		color=white
+		nodesep=0.1
+		ranksep=0.5
+	];
+
+	node [
+		shape=Mrecord
+		fontsize=12
+		style=filled
+		color=white
+		width="1.0"
+		height="0.25"
+		fixedsize=true
+		penwidth=0
+	];
+
+	edge [
+		penwidth=1.0
+		color="#888888"
+		arrowsize=0.5
+	];
 
 	Container      [ fillcolor="#FFFFFF" ];
 
