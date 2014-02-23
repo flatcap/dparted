@@ -1,17 +1,17 @@
 Virtual
 	Block
 	Container
+	Extfs
 	Filesystem
 	Group
+	LvmVolume
+	MdVolume
 	Misc
+	Partition
 	Table
 	Volume
 	Whole
-	Extfs
-	MdVolume
-	LvmVolume
-	Partition
-
+	Wrapper
 ------------------------------------------------------
 Disk
 	Table
@@ -33,7 +33,8 @@ Disk
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 Loop
 	Table
@@ -55,53 +56,52 @@ Loop
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 File
 	Loop
 ------------------------------------------------------
 Msdos
 	Partition
+		MsdosPartition
 	Extended
-	Misc
-		Unallocated
+	Space
 		Reserved
 		Alignment
-
+		Unallocated
 ------------------------------------------------------
 Extended
 	Partition
-	Misc
-		Unallocated
+		MsdosPartition
+	Space
 		Reserved
 		Alignment
-
+		Unallocated
 ------------------------------------------------------
 Gpt
 	Partition
-	Misc
-		Unallocated
+		GptPartition
+	Space
 		Reserved
 		Alignment
-
+		Unallocated
 ------------------------------------------------------
 LvmTable
 	Partition
 		LvmPartition
-	Misc
-		Unallocated
+	Space
 		Reserved
 		Alignment
-
+		Unallocated
 ------------------------------------------------------
 MdTable
 	Partition
 		MdPartition
-	Misc
-		Unallocated
+	Space
 		Reserved
 		Alignment
-
+		Unallocated
 ------------------------------------------------------
 LvmPartition
 	NOTHING
@@ -182,7 +182,8 @@ LvmLinear
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 LvmMetadata
 	NOTHING
@@ -202,7 +203,8 @@ LvmMirror
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 LvmRaid
 	Filesystem
@@ -219,7 +221,8 @@ LvmRaid
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 LvmStripe
 	Filesystem
@@ -236,7 +239,8 @@ LvmStripe
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 MdLinear
 	Filesystem
@@ -253,7 +257,8 @@ MdLinear
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 MdMirror
 	Filesystem
@@ -270,7 +275,8 @@ MdMirror
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 MdRaid
 	Filesystem
@@ -287,7 +293,8 @@ MdRaid
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 MdStripe
 	Filesystem
@@ -304,7 +311,8 @@ MdStripe
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 Partition
 	Filesystem
@@ -321,7 +329,8 @@ Partition
 	Misc
 		Zero
 		Random
-	Luks
+	Wrapper
+		Luks
 ------------------------------------------------------
 Luks
 	Filesystem
@@ -342,4 +351,3 @@ Luks
 		LvmTable
 		MdTable
 ------------------------------------------------------
-

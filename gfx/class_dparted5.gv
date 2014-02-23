@@ -44,9 +44,6 @@ digraph G
 	LvmPartition   [ fillcolor="#B0D0B0" ];
 	MdPartition    [ fillcolor="#B0D0B0" ];
 
-	MsdosPrimary   [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
-	MsdosLogical   [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
-
 	Filesystem     [ fillcolor="#B4A0F3" ];
 	Extfs          [ fillcolor="#B4A0F3" ];
 	Btrfs          [ fillcolor="#B4A0F3" ];
@@ -64,15 +61,20 @@ digraph G
 	BtrfsSnapshot  [ label="Snapshot"  color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
 	BtrfsSubvolume [ label="Subvolume" color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
 
+	Space          [ fillcolor="#F080FF" ];
+
+	Reserved       [ color="#F080FF" fontcolor=white style=solid penwidth=1 ];
+	Alignment      [ color="#F080FF" fontcolor=white style=solid penwidth=1 ];
+	Unallocated    [ color="#F080FF" fontcolor=white style=solid penwidth=1 ];
+
 	Misc           [ fillcolor="#DC4C46" ];
 
-	Reserved       [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
-	Alignment      [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
-	Unallocated    [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
 	Zero           [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
 	Random         [ color="#DC4C46" fontcolor=white style=solid penwidth=1 ];
 
-	Luks           [ fillcolor="#DC4C46" penwidth=2 color=green ];
+	Wrapper        [ color="#80FF80" fontcolor=white style=solid penwidth=1 ];
+
+	Luks           [ fillcolor="#80FF80" ];
 
 	Volume         [ fillcolor="#2BDCFF" penwidth=2 color=red ];
 	Whole          [ fillcolor="#2BDCFF" ];
@@ -81,11 +83,12 @@ digraph G
 	MdGroup        [ fillcolor="#2BDCFF" ];
 
 	LvmLinear      [ fillcolor="#DAA520" ];
-	LvmMetadata    [ fillcolor="#DAA520" ];
 	LvmMirror      [ fillcolor="#DAA520" ];
 	LvmRaid        [ fillcolor="#DAA520" ];
 	LvmStripe      [ fillcolor="#DAA520" ];
 	LvmVolume      [ fillcolor="#DAA520" ];
+
+	LvmMetadata    [ color="#DAA520" fontcolor=white style=solid penwidth=1 ];
 
 	MdLinear       [ fillcolor="#A5DA20" ];
 	MdMirror       [ fillcolor="#A5DA20" ];
@@ -97,8 +100,10 @@ digraph G
 	Filesystem -> Container;
 	Misc       -> Container;
 	Partition  -> Container;
+	Space      -> Container;
 	Table      -> Container;
 	Whole      -> Container;
+	Wrapper    -> Container;
 
 	LvmVolume  -> Volume;
 	MdVolume   -> Volume;
@@ -136,26 +141,28 @@ digraph G
 	subgraph cluster_3 {
 		color = transparent;
 
-		Zero                 -> Misc;
-		Random               -> Misc;
-		Reserved             -> Misc;
-		Alignment            -> Misc;
-		Unallocated          -> Misc;
+		Reserved             -> Space;
+		Alignment            -> Space;
+		Unallocated          -> Space;
 	}
 
 	subgraph cluster_4 {
+		color = transparent;
+
+		Zero                 -> Misc;
+		Random               -> Misc;
+	}
+
+	subgraph cluster_5 {
 		color = transparent;
 
 		MsdosPartition       -> Partition;
 		GptPartition         -> Partition;
 		LvmPartition         -> Partition;
 		MdPartition          -> Partition;
-
-		MsdosPrimary         -> MsdosPartition;
-		MsdosLogical         -> MsdosPartition;
 	}
 
-	subgraph cluster_5 {
+	subgraph cluster_6 {
 		color = transparent;
 
 		LvmMetadata          -> LvmLinear;
@@ -165,7 +172,7 @@ digraph G
 		LvmStripe            -> LvmVolume;
 	}
 
-	subgraph cluster_6 {
+	subgraph cluster_7 {
 		color = transparent;
 
 		MdLinear             -> MdVolume;
@@ -174,7 +181,7 @@ digraph G
 		MdStripe             -> MdVolume;
 	}
 
-	subgraph cluster_7 {
+	subgraph cluster_8 {
 		color = transparent;
 
 		LvmGroup             -> Group;
@@ -183,7 +190,7 @@ digraph G
 		Volume               -> Whole;
 	}
 
-	subgraph cluster_8 {
+	subgraph cluster_9 {
 		color = transparent;
 
 		Disk                 -> Block;
@@ -191,6 +198,10 @@ digraph G
 		File                 -> Block;
 	}
 
-	Luks -> Misc;
+	subgraph cluster_10 {
+		color = transparent;
+
+		Luks                 -> Wrapper;
+	}
 }
 
