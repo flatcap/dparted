@@ -31,76 +31,76 @@ digraph G
 		<tr><td>▲</td><td align="left">GUI Top-Level</td></tr>
 	      </table> > ]
 
-	Container      [ fillcolor="#FFFFFF" label="Container"        ];
+	Container      [ fillcolor="#FFFFFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Container</td><td>&nbsp;</td></tr> </table> > ]
 
-	Block          [ fillcolor="#FFB6C1" label="Block ▲"          ];
-	Disk           [ fillcolor="#FFB6C1" label="Disk ★"           ];
-	Loop           [ fillcolor="#FFB6C1" label="Loop ★"           ];
-	File           [ fillcolor="#FFB6C1" label="File"             ];
+	Block          [ fillcolor="#FFB6C1"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Block</td><td>▲</td></tr> </table> > ]
+	Disk           [ fillcolor="#FFB6C1"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Disk</td><td>★</td></tr> </table> > ]
+	Loop           [ fillcolor="#FFB6C1"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Loop</td><td>★</td></tr> </table> > ]
+	File           [ fillcolor="#FFB6C1"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">File</td><td>&nbsp;</td></tr> </table> > ]
 
-	Table          [ fillcolor="#FFFFCC" label="Table"            ];
-	Msdos          [ fillcolor="#FFFFCC" label="Msdos"            ];
-	Extended       [ fillcolor="#FFFFCC" label="Extended ★"       ];
-	Gpt            [ fillcolor="#FFFFCC" label="Gpt"              ];
-	LvmTable       [ fillcolor="#FFFFCC" label="LvmTable"         ];
-	MdTable        [ fillcolor="#FFFFCC" label="MdTable"          ];
+	Table          [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Table</td><td>&nbsp;</td></tr> </table> > ]
+	Msdos          [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Msdos</td><td>&nbsp;</td></tr> </table> > ]
+	Extended       [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Extended</td><td>★</td></tr> </table> > ]
+	Gpt            [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Gpt</td><td>&nbsp;</td></tr> </table> > ]
+	LvmTable       [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmTable</td><td>&nbsp;</td></tr> </table> > ]
+	MdTable        [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdTable</td><td>&nbsp;</td></tr> </table> > ]
 
-	Partition      [ fillcolor="#B0D0B0" label="Partition"        ];
-	MsdosPartition [ fillcolor="#B0D0B0" label="MsdosPartition ★" ];
-	GptPartition   [ fillcolor="#B0D0B0" label="GptPartition ★"   ];
-	LvmPartition   [ fillcolor="#B0D0B0" label="LvmPartition ★"   ];
-	MdPartition    [ fillcolor="#B0D0B0" label="MdPartition ★"    ];
+	Partition      [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Partition</td><td>&nbsp;</td></tr> </table> > ]
+	MsdosPartition [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MsdosPartition</td><td>★</td></tr> </table> > ]
+	GptPartition   [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">GptPartition</td><td>★</td></tr> </table> > ]
+	LvmPartition   [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmPartition</td><td>★</td></tr> </table> > ]
+	MdPartition    [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdPartition</td><td>★</td></tr> </table> > ]
 
-	Space          [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label="Space"            ];
-	Reserved       [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label="Reserved"         ];
-	Alignment      [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label="Alignment"        ];
-	Unallocated    [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label="Unallocated"      ];
+	Space          [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Space</td><td>&nbsp;</td></tr> </table> > ]
+	Reserved       [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Reserved</td><td>&nbsp;</td></tr> </table> > ]
+	Alignment      [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Alignment</td><td>&nbsp;</td></tr> </table> > ]
+	Unallocated    [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Unallocated</td><td>&nbsp;</td></tr> </table> > ]
 
-	Filesystem     [ fillcolor="#B4A0F3" label="Filesystem"       ];
-	Extfs          [ fillcolor="#B4A0F3" label="Extfs"            ];
-	Btrfs          [ fillcolor="#B4A0F3" label="Btrfs"            ];
-	Ntfs           [ fillcolor="#B4A0F3" label="Ntfs"             ];
+	Filesystem     [ fillcolor="#B4A0F3"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Filesystem</td><td>&nbsp;</td></tr> </table> > ]
+	Extfs          [ fillcolor="#B4A0F3"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Extfs</td><td>&nbsp;</td></tr> </table> > ]
+	Btrfs          [ fillcolor="#B4A0F3"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Btrfs</td><td>&nbsp;</td></tr> </table> > ]
+	Ntfs           [ fillcolor="#B4A0F3"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Ntfs</td><td>&nbsp;</td></tr> </table> > ]
 
-	Ext2           [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Ext2"             ];
-	Ext3           [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Ext3"             ];
-	Ext4           [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Ext4"             ];
+	Ext2           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Ext2</td><td>&nbsp;</td></tr> </table> > ]
+	Ext3           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Ext3</td><td>&nbsp;</td></tr> </table> > ]
+	Ext4           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Ext4</td><td>&nbsp;</td></tr> </table> > ]
 
-	Reiserfs       [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Reiserfs"         ];
-	Swap           [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Swap"             ];
-	Vfat           [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Vfat"             ];
-	Xfs            [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Xfs"              ];
+	Reiserfs       [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Reiserfs</td><td>&nbsp;</td></tr> </table> > ]
+	Swap           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Swap</td><td>&nbsp;</td></tr> </table> > ]
+	Vfat           [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Vfat</td><td>&nbsp;</td></tr> </table> > ]
+	Xfs            [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Xfs</td><td>&nbsp;</td></tr> </table> > ]
 
-	BtrfsSnapshot  [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Snapshot"         ];
-	BtrfsSubvolume [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Subvolume"        ];
+	BtrfsSnapshot  [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">BtrfsSnapshot</td><td>&nbsp;</td></tr> </table> > ]
+	BtrfsSubvolume [ color="#B4A0F3" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">BtrfsSubvolume</td><td>&nbsp;</td></tr> </table> > ]
 
-	Misc           [ fillcolor="#DC4C46" label="Misc"             ];
+	Misc           [ fillcolor="#DC4C46"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Misc</td><td>&nbsp;</td></tr> </table> > ]
 
-	Zero           [ color    ="#DC4C46" fontcolor=white style=solid penwidth=1 label="Zero"             ];
-	Random         [ color    ="#DC4C46" fontcolor=white style=solid penwidth=1 label="Random"           ];
+	Zero           [ color="#DC4C46" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Zero</td><td>&nbsp;</td></tr> </table> > ]
+	Random         [ color="#DC4C46" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Random</td><td>&nbsp;</td></tr> </table> > ]
 
-	Wrapper        [ color    ="#80FF80" fontcolor=white style=solid penwidth=1 label="Wrapper"          ];
+	Wrapper        [ color="#80FF80" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Wrapper</td><td>&nbsp;</td></tr> </table> > ]
 
-	Luks           [ fillcolor="#80FF80" label="Luks"             ];
+	Luks           [ fillcolor="#80FF80"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Luks</td><td>&nbsp;</td></tr> </table> > ]
 
-	Volume         [ fillcolor="#2BDCFF" label="Volume ▲"         ];
-	Whole          [ fillcolor="#2BDCFF" label="Whole"            ];
-	Group          [ fillcolor="#2BDCFF" label="Group▲"           ];
-	LvmGroup       [ fillcolor="#2BDCFF" label="LvmGroup"         ];
-	MdGroup        [ fillcolor="#2BDCFF" label="MdGroup"          ];
+	Volume         [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Volume</td><td>▲</td></tr> </table> > ]
+	Whole          [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Whole</td><td>&nbsp;</td></tr> </table> > ]
+	Group          [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Group</td><td>▲</td></tr> </table> > ]
+	LvmGroup       [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmGroup</td><td>&nbsp;</td></tr> </table> > ]
+	MdGroup        [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdGroup</td><td>&nbsp;</td></tr> </table> > ]
 
-	LvmLinear      [ fillcolor="#DAA520" label="LvmLinear ★"      ];
-	LvmMirror      [ fillcolor="#DAA520" label="LvmMirror ★"      ];
-	LvmRaid        [ fillcolor="#DAA520" label="LvmRaid ★"        ];
-	LvmStripe      [ fillcolor="#DAA520" label="LvmStripe ★"      ];
-	LvmVolume      [ fillcolor="#DAA520" label="LvmVolume"        ];
+	LvmLinear      [ fillcolor="#DAA520"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmLinear</td><td>★</td></tr> </table> > ]
+	LvmMirror      [ fillcolor="#DAA520"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmMirror</td><td>★</td></tr> </table> > ]
+	LvmRaid        [ fillcolor="#DAA520"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmRaid</td><td>★</td></tr> </table> > ]
+	LvmStripe      [ fillcolor="#DAA520"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmStripe</td><td>★</td></tr> </table> > ]
+	LvmVolume      [ fillcolor="#DAA520"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmVolume</td><td>&nbsp;</td></tr> </table> > ]
 
-	LvmMetadata    [ color    ="#DAA520" fontcolor=white style=solid penwidth=1 label="LvmMetadata"      ];
+	LvmMetadata    [ color="#DAA520" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmMetadata</td><td>&nbsp;</td></tr> </table> > ]
 
-	MdLinear       [ fillcolor="#A5DA20" label="MdLinear ★"       ];
-	MdMirror       [ fillcolor="#A5DA20" label="MdMirror ★"       ];
-	MdRaid         [ fillcolor="#A5DA20" label="MdRaid ★"         ];
-	MdStripe       [ fillcolor="#A5DA20" label="MdStripe ★"       ];
-	MdVolume       [ fillcolor="#A5DA20" label="MdVolume"         ];
+	MdLinear       [ fillcolor="#A5DA20"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdLinear</td><td>★</td></tr> </table> > ]
+	MdMirror       [ fillcolor="#A5DA20"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdMirror</td><td>★</td></tr> </table> > ]
+	MdRaid         [ fillcolor="#A5DA20"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdRaid</td><td>★</td></tr> </table> > ]
+	MdStripe       [ fillcolor="#A5DA20"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdStripe</td><td>★</td></tr> </table> > ]
+	MdVolume       [ fillcolor="#A5DA20"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdVolume</td><td>&nbsp;</td></tr> </table> > ]
 
 	Block      -> Container;
 	Filesystem -> Container;
