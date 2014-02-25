@@ -53,7 +53,7 @@ LIB_OBJ	= $(LIB_SRC:%.cpp=$(OBJDIR)/%.o)
 GUI_OBJ	= $(GUI_SRC:%.cpp=$(OBJDIR)/%.o)
 
 CFLAGS	+= -std=c++11
-CFLAGS	+= -g
+CFLAGS	+= -ggdb
 CFLAGS	+= -Wall
 CFLAGS	+= -Wextra
 CFLAGS	+= -Wpedantic
