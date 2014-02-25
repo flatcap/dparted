@@ -20,20 +20,19 @@
 #define _LVM_RAID_H_
 
 #include <memory>
+#include <vector>
 
 #include "lvm_volume.h"
-#include "action.h"
 
 class LvmRaid;
-class Visitor;
 
 typedef std::shared_ptr<LvmRaid> LvmRaidPtr;
 
 class LvmRaid : public LvmVolume
 {
 public:
-	virtual ~LvmRaid() = default;
 	static LvmRaidPtr create (void);
+	virtual ~LvmRaid();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -48,7 +47,6 @@ protected:
 private:
 
 };
-
 
 #endif // _LVM_RAID_H_
 

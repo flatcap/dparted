@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "lvm_partition.h"
+#include "action.h"
 #include "log_trace.h"
 #include "visitor.h"
 
@@ -29,13 +30,17 @@ LvmPartition::LvmPartition (void)
 	sub_type (me);
 }
 
+LvmPartition::~LvmPartition()
+{
+}
+
 LvmPartitionPtr
 LvmPartition::create (void)
 {
-	LvmPartitionPtr l (new LvmPartition());
-	l->weak = l;
+	LvmPartitionPtr p (new LvmPartition());
+	p->weak = p;
 
-	return l;
+	return p;
 }
 
 
@@ -54,10 +59,10 @@ LvmPartition::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.lvmpartition", true },
+		{ "dummy.lvm_partition", true },
 	};
 
-	std::vector<Action> parent_actions = Piece::get_actions();
+	std::vector<Action> parent_actions = Partition::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -67,11 +72,11 @@ LvmPartition::get_actions (void)
 bool
 LvmPartition::perform_action (Action action)
 {
-	if (action.name == "dummy.lvmpartition") {
+	if (action.name == "dummy.lvm_partition") {
 		std::cout << "LvmPartition perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Piece::perform_action (action);
+		return Partition::perform_action (action);
 	}
 }
 

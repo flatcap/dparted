@@ -16,27 +16,24 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _LVM_METADATA_H_
-#define _LVM_METADATA_H_
+#ifndef _MD_STRIPE_H_
+#define _MD_STRIPE_H_
 
 #include <memory>
+#include <vector>
 
-#include "lvm_linear.h"
-#include "action.h"
+#include "md_volume.h"
 
-class LvmMetadata;
-class Visitor;
+class MdStripe;
 
-typedef std::shared_ptr<LvmMetadata> LvmMetadataPtr;
+typedef std::shared_ptr<MdStripe> MdStripePtr;
 
-class LvmMetadata : public LvmLinear
+class MdStripe : public MdVolume
 {
 public:
-	virtual ~LvmMetadata() = default;
-	static LvmMetadataPtr create (void);
+	static MdStripePtr create (void);
+	virtual ~MdStripe();
 	virtual bool accept (Visitor& v);
-
-	virtual void add_child (ContainerPtr& child);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
@@ -45,12 +42,8 @@ public:
 	//properties
 
 protected:
-	LvmMetadata (void);
-
-private:
-
+	MdStripe (void);
 };
 
-
-#endif // _LVM_METADATA_H_
+#endif // _MD_STRIPE_H_
 

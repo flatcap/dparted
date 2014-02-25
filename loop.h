@@ -19,41 +19,39 @@
 #ifndef _LOOP_H_
 #define _LOOP_H_
 
-#include <string>
-#include <queue>
 #include <memory>
+#include <queue>
+#include <string>
+#include <vector>
 
-#include "device.h"
-#include "action.h"
+#include "block.h"
 
 class Loop;
-class Visitor;
 
 typedef std::shared_ptr<Loop> LoopPtr;
 
-class Loop : public Device
+class Loop : public Block
 {
 public:
-	virtual ~Loop() = default;
 	static LoopPtr create (const std::string& losetup);
+	virtual ~Loop();
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 	static bool losetup  (std::vector <std::string>& output, std::string device = std::string());
 	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
-	virtual std::vector<Action> get_actions (void);
-	virtual bool perform_action (Action action);
-
 public:
-	// Backing file
-	std::string	file_name;
+	//properties
+	std::string	file_name;		// Backing file
 	long		file_inode = 0;
 	int		file_major = 0;
 	int		file_minor = 0;
 
-	// Loop device
-	int		loop_major = 0;
+	int		loop_major = 0;		// Loop device
 	int		loop_minor = 0;
 	long		offset     = 0;
 	long		sizelimit  = 0;
@@ -68,7 +66,6 @@ protected:
 private:
 
 };
-
 
 #endif // _LOOP_H_
 

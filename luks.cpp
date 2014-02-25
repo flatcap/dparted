@@ -21,17 +21,19 @@
 #include <cstring>
 #include <functional>
 
+#include "luks.h"
+#include "action.h"
 #include "app.h"
 #include "log.h"
-#include "luks.h"
 #include "log_trace.h"
-#include "visitor.h"
 #include "utils.h"
+#include "visitor.h"
 
 Luks::Luks (void)
 {
 	const char* me = "Luks";
 
+	sub_type ("Wrapper");	// Fake base class (for now)
 	sub_type (me);
 
 	declare_prop (me, "version",     version,     "desc of version");
@@ -40,13 +42,17 @@ Luks::Luks (void)
 	declare_prop (me, "hash_spec",   hash_spec,   "desc of hash_spec");
 }
 
+Luks::~Luks()
+{
+}
+
 LuksPtr
 Luks::create (void)
 {
-	LuksPtr l (new Luks());
-	l->weak = l;
+	LuksPtr p (new Luks());
+	p->weak = p;
 
-	return l;
+	return p;
 }
 
 
@@ -58,6 +64,34 @@ Luks::accept (Visitor& v)
 		return false;
 	return visit_children(v);
 }
+
+
+std::vector<Action>
+Luks::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.luks", true },
+	};
+
+	std::vector<Action> parent_actions = Container::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Luks::perform_action (Action action)
+{
+	if (action.name == "dummy.luks") {
+		std::cout << "Luks perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Container::perform_action (action);
+	}
+}
+
 
 ContainerPtr
 Luks::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int UNUSED(bufsize))
@@ -271,31 +305,4 @@ Key Slot 5: DISABLED
 Key Slot 6: DISABLED
 Key Slot 7: DISABLED
 #endif
-
-std::vector<Action>
-Luks::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.luks", true },
-	};
-
-	std::vector<Action> parent_actions = Device::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Luks::perform_action (Action action)
-{
-	if (action.name == "dummy.luks") {
-		std::cout << "Luks perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Device::perform_action (action);
-	}
-}
-
 

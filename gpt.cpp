@@ -23,15 +23,16 @@
 #include <iostream>
 #include <iterator>
 
-#include "app.h"
 #include "gpt.h"
+#include "action.h"
+#include "app.h"
+#include "filesystem.h"
 #include "log.h"
+#include "log_trace.h"
 #include "main.h"
 #include "misc.h"
 #include "partition.h"
 #include "utils.h"
-#include "filesystem.h"
-#include "log_trace.h"
 #include "visitor.h"
 
 Gpt::Gpt (void)
@@ -41,13 +42,17 @@ Gpt::Gpt (void)
 	sub_type (me);
 }
 
+Gpt::~Gpt()
+{
+}
+
 GptPtr
 Gpt::create (void)
 {
-	GptPtr g (new Gpt());
-	g->weak = g;
+	GptPtr p (new Gpt());
+	p->weak = p;
 
-	return g;
+	return p;
 }
 
 
@@ -58,6 +63,33 @@ Gpt::accept (Visitor& v)
 	if (!v.visit(g))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+Gpt::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.gpt", true },
+	};
+
+	std::vector<Action> parent_actions = Table::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Gpt::perform_action (Action action)
+{
+	if (action.name == "dummy.gpt") {
+		std::cout << "Gpt perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Table::perform_action (action);
+	}
 }
 
 
@@ -240,33 +272,6 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char
 #endif
 
 	return g;
-}
-
-
-std::vector<Action>
-Gpt::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.gpt", true },
-	};
-
-	std::vector<Action> parent_actions = Table::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Gpt::perform_action (Action action)
-{
-	if (action.name == "dummy.gpt") {
-		std::cout << "Gpt perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Table::perform_action (action);
-	}
 }
 
 

@@ -16,41 +16,40 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DEVICE_H_
-#define _DEVICE_H_
+#ifndef _BLOCK_H_
+#define _BLOCK_H_
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "container.h"
-#include "action.h"
 
-class Device;
-class Visitor;
+class Block;
 
-typedef std::shared_ptr<Device> DevicePtr;
+typedef std::shared_ptr<Block> BlockPtr;
 
-class Device : public virtual Container
+class Block : public Container
 {
 public:
-	virtual ~Device() = default;
-	static DevicePtr create (void);
+	static BlockPtr create (void);
+	virtual ~Block();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
 public:
-	int kernel_major = 0;	//XXX rename device major
+	//properties
+	int kernel_major = 0;	//XXX rename block major
 	int kernel_minor = 0;
 
 protected:
-	Device (void);
+	Block (void);
 
 private:
 
 };
 
-
-#endif // _DEVICE_H_
+#endif // _BLOCK_H_
 

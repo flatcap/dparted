@@ -19,28 +19,27 @@
 #ifndef _GPT_H
 #define _GPT_H
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "table.h"
-#include "action.h"
 
 class Gpt;
-class Visitor;
 
 typedef std::shared_ptr<Gpt> GptPtr;
 
 class Gpt : public Table
 {
 public:
-	virtual ~Gpt() = default;
 	static GptPtr create (void);
+	virtual ~Gpt();
 	virtual bool accept (Visitor& v);
-
-	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+
+	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 public:
 	//properties
@@ -51,7 +50,6 @@ protected:
 private:
 
 };
-
 
 #endif // _GPT_H
 

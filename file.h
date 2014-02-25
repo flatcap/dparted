@@ -19,30 +19,29 @@
 #ifndef _FILE_H_
 #define _FILE_H_
 
-#include <string>
-#include <queue>
 #include <memory>
+#include <queue>
+#include <string>
+#include <vector>
 
 #include "container.h"
-#include "action.h"
 
 class File;
-class Visitor;
 
 typedef std::shared_ptr<File> FilePtr;
 
 class File : public Container
 {
 public:
-	virtual ~File() = default;
 	static FilePtr create (void);
+	virtual ~File();
 	virtual bool accept (Visitor& v);
-
-	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
-	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+
+	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
+	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
 public:
 	//properties
@@ -53,7 +52,6 @@ protected:
 private:
 
 };
-
 
 #endif // _FILE_H_
 

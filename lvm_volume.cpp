@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "lvm_volume.h"
+#include "action.h"
 #include "log_trace.h"
 #include "visitor.h"
 
@@ -38,13 +39,17 @@ LvmVolume::LvmVolume (void)
 	declare_prop (me, "seg_start_pe", seg_start_pe, "desc of seg_start_pe");
 }
 
+LvmVolume::~LvmVolume()
+{
+}
+
 LvmVolumePtr
 LvmVolume::create (void)
 {
-	LvmVolumePtr l (new LvmVolume());
-	l->weak = l;
+	LvmVolumePtr p (new LvmVolume());
+	p->weak = p;
 
-	return l;
+	return p;
 }
 
 
@@ -55,6 +60,33 @@ LvmVolume::accept (Visitor& v)
 	if (!v.visit(l))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+LvmVolume::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.lvm_volume", true },
+	};
+
+	std::vector<Action> parent_actions = Volume::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+LvmVolume::perform_action (Action action)
+{
+	if (action.name == "dummy.lvm_volume") {
+		std::cout << "LvmVolume perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Volume::perform_action (action);
+	}
 }
 
 
@@ -147,33 +179,6 @@ LvmVolume::find (const std::string& search)
 	}
 
 	return Whole::find (search);
-}
-
-
-std::vector<Action>
-LvmVolume::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.lvmvolume", true },
-	};
-
-	std::vector<Action> parent_actions = Volume::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-LvmVolume::perform_action (Action action)
-{
-	if (action.name == "dummy.lvmvolume") {
-		std::cout << "LvmVolume perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Volume::perform_action (action);
-	}
 }
 
 

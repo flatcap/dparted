@@ -16,30 +16,22 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <sstream>
-#include <string>
-
-#include "whole.h"
+#include "group.h"
 #include "action.h"
-#include "log.h"
-#include "log_trace.h"
 #include "visitor.h"
 
-Whole::Whole (void)
-{
-	const char* me = "Whole";
-
-	sub_type (me);
-}
-
-Whole::~Whole()
+Group::Group (void)
 {
 }
 
-WholePtr
-Whole::create (void)
+Group::~Group()
 {
-	WholePtr p (new Whole());
+}
+
+GroupPtr
+Group::create (void)
+{
+	GroupPtr p (new Group());
 	p->weak = p;
 
 	return p;
@@ -47,24 +39,24 @@ Whole::create (void)
 
 
 bool
-Whole::accept (Visitor& v)
+Group::accept (Visitor& v)
 {
-	WholePtr w = std::dynamic_pointer_cast<Whole> (get_smart());
-	if (!v.visit(w))
+	GroupPtr b = std::dynamic_pointer_cast<Group> (get_smart());
+	if (!v.visit(b))
 		return false;
 	return visit_children(v);
 }
 
 
 std::vector<Action>
-Whole::get_actions (void)
+Group::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.whole", true },
+		{ "dummy.group", true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> parent_actions = Whole::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -72,37 +64,14 @@ Whole::get_actions (void)
 }
 
 bool
-Whole::perform_action (Action action)
+Group::perform_action (Action action)
 {
-	if (action.name == "dummy.whole") {
-		std::cout << "Whole perform: " << action.name << std::endl;
+	if (action.name == "dummy.group") {
+		std::cout << "Group perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Container::perform_action (action);
+		return Whole::perform_action (action);
 	}
-}
-
-
-void
-Whole::add_segment (ContainerPtr seg)
-{
-	bool inserted = false;
-
-	for (auto i = segments.begin(); i != segments.end(); i++) {
-		if ((*i) == seg)
-			return;
-		if ((*i)->parent_offset > seg->parent_offset) {
-			segments.insert (i, seg);
-			inserted = true;
-			break;
-		}
-	}
-
-	if (!inserted) {
-		segments.push_back (seg);
-	}
-
-	seg->whole = get_smart();
 }
 
 

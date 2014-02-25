@@ -24,9 +24,10 @@
 #include <iostream>
 #include <algorithm>
 
-#include "gui_app.h"
 #include "window.h"
+#include "action.h"
 #include "drawing_area.h"
+#include "gui_app.h"
 #include "log.h"
 #include "log_trace.h"
 

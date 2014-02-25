@@ -23,9 +23,12 @@
 #include <string>
 #include <algorithm>
 
-#include "app.h"
-#include "log.h"
 #include "lvm_group.h"
+#include "action.h"
+#include "app.h"
+#include "dump_visitor.h"
+#include "log.h"
+#include "log_trace.h"
 #include "lvm_linear.h"
 #include "lvm_mirror.h"
 #include "lvm_partition.h"
@@ -33,12 +36,9 @@
 #include "lvm_stripe.h"
 #include "lvm_table.h"
 #include "lvm_volume.h"
-#include "lvm_metadata.h"
 #include "main.h"
 #include "utils.h"
-#include "log_trace.h"
 #include "visitor.h"
-#include "dump_visitor.h"
 
 LvmGroup::LvmGroup (void)
 {
@@ -52,13 +52,17 @@ LvmGroup::LvmGroup (void)
 	declare_prop (me, "vg_attr",  vg_attr,  "desc of vg_attr");
 }
 
+LvmGroup::~LvmGroup()
+{
+}
+
 LvmGroupPtr
 LvmGroup::create (void)
 {
-	LvmGroupPtr l (new LvmGroup());
-	l->weak = l;
+	LvmGroupPtr p (new LvmGroup());
+	p->weak = p;
 
-	return l;
+	return p;
 }
 
 
@@ -69,6 +73,33 @@ LvmGroup::accept (Visitor& v)
 	if (!v.visit(l))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+LvmGroup::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.lvm_group", true },
+	};
+
+	std::vector<Action> parent_actions = Group::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+LvmGroup::perform_action (Action action)
+{
+	if (action.name == "dummy.lvm_group") {
+		std::cout << "LvmGroup perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Group::perform_action (action);
+	}
 }
 
 
@@ -163,7 +194,8 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			std::string lv_attr = tags["LVM2_LV_ATTR"];
 			if ((lv_attr[0] == 'e') || (lv_attr[0] == 'l')) {
 				//log_info ("not a real volume %s\n", lv_uuid.c_str());
-				v = LvmMetadata::create();
+				v = LvmLinear::create();
+				v->sub_type ("LvmMetadata");
 			} else if (segtype == "linear") {
 				v = LvmLinear::create();
 			} else if (segtype == "striped") {
@@ -569,33 +601,6 @@ LvmGroup::discover (ContainerPtr& top_level)
 		top_level->just_add_child(i);
 	}
 #endif
-}
-
-
-std::vector<Action>
-LvmGroup::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.lvmgroup", true },
-	};
-
-	std::vector<Action> parent_actions = Whole::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-LvmGroup::perform_action (Action action)
-{
-	if (action.name == "dummy.lvmgroup") {
-		std::cout << "LvmGroup perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Whole::perform_action (action);
-	}
 }
 
 

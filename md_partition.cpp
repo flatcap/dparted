@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "md_partition.h"
+#include "action.h"
 #include "log_trace.h"
 #include "visitor.h"
 
@@ -29,13 +30,17 @@ MdPartition::MdPartition (void)
 	sub_type (me);
 }
 
+MdPartition::~MdPartition()
+{
+}
+
 MdPartitionPtr
 MdPartition::create (void)
 {
-	MdPartitionPtr m (new MdPartition());
-	m->weak = m;
+	MdPartitionPtr p (new MdPartition());
+	p->weak = p;
 
-	return m;
+	return p;
 }
 
 
@@ -54,10 +59,10 @@ MdPartition::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.mdpartition", true },
+		{ "dummy.md_partition", true },
 	};
 
-	std::vector<Action> parent_actions = Piece::get_actions();
+	std::vector<Action> parent_actions = Partition::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -67,11 +72,11 @@ MdPartition::get_actions (void)
 bool
 MdPartition::perform_action (Action action)
 {
-	if (action.name == "dummy.mdpartition") {
+	if (action.name == "dummy.md_partition") {
 		std::cout << "MdPartition perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Piece::perform_action (action);
+		return Partition::perform_action (action);
 	}
 }
 

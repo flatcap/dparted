@@ -19,28 +19,27 @@
 #ifndef _TABLE_H_
 #define _TABLE_H_
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "container.h"
-#include "action.h"
 
 class Table;
-class Visitor;
 
 typedef std::shared_ptr<Table> TablePtr;
 
-class Table : public virtual Container
+class Table : public Container
 {
 public:
-	virtual ~Table() = default;
 	static TablePtr create (void);
+	virtual ~Table();
 	virtual bool accept (Visitor& v);
-
-	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+
+	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 public:
 	//properties
@@ -53,7 +52,6 @@ protected:
 private:
 
 };
-
 
 #endif // _TABLE_H_
 

@@ -23,12 +23,13 @@
 #include <string>
 #include <algorithm>
 
-#include "log.h"
-#include "md_table.h"
 #include "md_group.h"
-#include "main.h"
-#include "utils.h"
+#include "action.h"
+#include "log.h"
 #include "log_trace.h"
+#include "main.h"
+#include "md_table.h"
+#include "utils.h"
 #include "visitor.h"
 
 MdGroup::MdGroup (void)
@@ -38,13 +39,17 @@ MdGroup::MdGroup (void)
 	sub_type (me);
 }
 
+MdGroup::~MdGroup()
+{
+}
+
 MdGroupPtr
 MdGroup::create (void)
 {
-	MdGroupPtr m (new MdGroup());
-	m->weak = m;
+	MdGroupPtr p (new MdGroup());
+	p->weak = p;
 
-	return m;
+	return p;
 }
 
 
@@ -55,6 +60,33 @@ MdGroup::accept (Visitor& v)
 	if (!v.visit(m))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+MdGroup::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.md_group", true },
+	};
+
+	std::vector<Action> parent_actions = Group::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+MdGroup::perform_action (Action action)
+{
+	if (action.name == "dummy.md_group") {
+		std::cout << "MdGroup perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Group::perform_action (action);
+	}
 }
 
 
@@ -116,31 +148,4 @@ mdadm /dev/md1 --create --verbose --level=linear --raid-devices=2 /dev/loop{0,1,
 mdadm /dev/md1 --create --verbose --level=linear --raid-devices=3 /dev/loop{0,1,2}
 mdadm /dev/md1 --create --verbose --level=linear -raid-devices=2 /dev/loop{0,1,2}
 #endif
-
-std::vector<Action>
-MdGroup::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.mdgroup", true },
-	};
-
-	std::vector<Action> parent_actions = Whole::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-MdGroup::perform_action (Action action)
-{
-	if (action.name == "dummy.mdgroup") {
-		std::cout << "MdGroup perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Whole::perform_action (action);
-	}
-}
-
 

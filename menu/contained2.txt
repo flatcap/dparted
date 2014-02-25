@@ -1,17 +1,18 @@
 Virtual
-	Block
 	Container
-	Extfs
-	Filesystem
-	Group
-	LvmVolume
-	MdVolume
-	Misc
-	Partition
-	Table
-	Volume
-	Whole
-	Wrapper
+		Block
+		Filesystem
+			Extfs
+		Misc
+		Partition
+			Space
+		Table
+		Whole
+			Group
+			Volume
+				LvmVolume
+				MdVolume
+		Wrapper
 ------------------------------------------------------
 Disk
 	Table
@@ -65,43 +66,43 @@ File
 Msdos
 	Partition
 		MsdosPartition
+		Space
+			Reserved
+			Alignment
+			Unallocated
 	Extended
-	Space
-		Reserved
-		Alignment
-		Unallocated
 ------------------------------------------------------
 Extended
 	Partition
 		MsdosPartition
-	Space
-		Reserved
-		Alignment
-		Unallocated
+		Space
+			Reserved
+			Alignment
+			Unallocated
 ------------------------------------------------------
 Gpt
 	Partition
 		GptPartition
-	Space
-		Reserved
-		Alignment
-		Unallocated
+		Space
+			Reserved
+			Alignment
+			Unallocated
 ------------------------------------------------------
 LvmTable
 	Partition
 		LvmPartition
-	Space
-		Reserved
-		Alignment
-		Unallocated
+		Space
+			Reserved
+			Alignment
+			Unallocated
 ------------------------------------------------------
 MdTable
 	Partition
 		MdPartition
-	Space
-		Reserved
-		Alignment
-		Unallocated
+		Space
+			Reserved
+			Alignment
+			Unallocated
 ------------------------------------------------------
 LvmPartition
 	NOTHING

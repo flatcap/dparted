@@ -23,14 +23,15 @@
 #include <sstream>
 #include <string>
 
-#include "app.h"
 #include "extended.h"
+#include "action.h"
+#include "app.h"
 #include "log.h"
+#include "log_trace.h"
 #include "main.h"
 #include "misc.h"
 #include "partition.h"
 #include "utils.h"
-#include "log_trace.h"
 #include "visitor.h"
 
 Extended::Extended (void)
@@ -40,13 +41,17 @@ Extended::Extended (void)
 	sub_type (me);
 }
 
+Extended::~Extended()
+{
+}
+
 ExtendedPtr
 Extended::create (void)
 {
-	ExtendedPtr e (new Extended());
-	e->weak = e;
+	ExtendedPtr p (new Extended());
+	p->weak = p;
 
-	return e;
+	return p;
 }
 
 
@@ -57,6 +62,33 @@ Extended::accept (Visitor& v)
 	if (!v.visit(e))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+Extended::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.extended", true },
+	};
+
+	std::vector<Action> parent_actions = Msdos::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Extended::perform_action (Action action)
+{
+	if (action.name == "dummy.extended") {
+		std::cout << "Extended perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Msdos::perform_action (action);
+	}
 }
 
 
@@ -176,33 +208,6 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, long off
 	free (buffer);
 #endif
 	return ext;
-}
-
-
-std::vector<Action>
-Extended::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.extended", true },
-	};
-
-	std::vector<Action> parent_actions = Msdos::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Extended::perform_action (Action action)
-{
-	if (action.name == "dummy.extended") {
-		std::cout << "Extended perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Msdos::perform_action (action);
-	}
 }
 
 

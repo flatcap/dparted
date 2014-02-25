@@ -21,20 +21,20 @@
 
 #include <iostream>
 #include <map>
-#include <string>
-#include <vector>
 #include <memory>
 #include <set>
+#include <string>
 #include <tuple>
 #include <utility>
+#include <vector>
 
 #include <sys/types.h>
 
 #include "property.h"
 #include "mmap.h"
-#include "action.h"
 
 class Container;
+struct Action;
 class Visitor;
 
 typedef std::shared_ptr<Container> ContainerPtr;
@@ -42,9 +42,12 @@ typedef std::shared_ptr<Container> ContainerPtr;
 class Container
 {
 public:
-	virtual ~Container();
 	static ContainerPtr create (void);
+	virtual ~Container();
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 	virtual void add_child      (ContainerPtr& child);
 	virtual void just_add_child (ContainerPtr& child);
@@ -102,10 +105,8 @@ public:
 
 	void sub_type (const char* name);
 
-	virtual std::vector<Action> get_actions (void);
-	virtual bool perform_action (Action action);
-
 public:
+	//properties
 	std::string	name;
 	std::string	uuid;
 
@@ -132,9 +133,9 @@ public:
 	int seqnum = 123;
 
 protected:
-	std::weak_ptr<Container> weak;	//XXX private?
-
 	Container (void);
+
+	std::weak_ptr<Container> weak;	//XXX private?
 
 	bool visit_children (Visitor& v);
 
@@ -150,7 +151,6 @@ protected:
 private:
 
 };
-
 
 #endif // _CONTAINER_H_
 

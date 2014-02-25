@@ -20,26 +20,27 @@
 #define _LVM_PARTITION_H_
 
 #include <memory>
+#include <string>
+#include <vector>
 
-#include "piece.h"
-#include "action.h"
+#include "partition.h"
 
 class LvmPartition;
-class Visitor;
 
 typedef std::shared_ptr<LvmPartition> LvmPartitionPtr;
 
-class LvmPartition : public Piece
+class LvmPartition : public Partition
 {
 public:
-	virtual ~LvmPartition() = default;
 	static LvmPartitionPtr create (void);
+	virtual ~LvmPartition();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
 public:
+	//properties
 #if 0
 	long		dev_size;	// 5368709120
 	long		pe_start;	// 1048576
@@ -73,7 +74,6 @@ protected:
 private:
 
 };
-
 
 #endif // _LVM_PARTITION_H_
 

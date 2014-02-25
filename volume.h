@@ -20,23 +20,19 @@
 #define _VOLUME_H_
 
 #include <memory>
+#include <vector>
 
 #include "whole.h"
-#include "device.h"
-#include "action.h"
 
 class Volume;
-class Visitor;
 
 typedef std::shared_ptr<Volume> VolumePtr;
 
-class Volume :
-	public Whole,
-	public Device
+class Volume : public Whole
 {
 public:
-	virtual ~Volume() = default;
 	static VolumePtr create (void);
+	virtual ~Volume();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -51,7 +47,6 @@ protected:
 private:
 
 };
-
 
 #endif // _VOLUME_H_
 

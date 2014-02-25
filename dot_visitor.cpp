@@ -23,7 +23,7 @@
 #include "loop.h"
 #include "gpt.h"
 #include "whole.h"
-#include "device.h"
+#include "block.h"
 #include "partition.h"
 #include "filesystem.h"
 #include "luks.h"
@@ -74,7 +74,7 @@ std::string
 get_colour (ContainerPtr c)
 {
 	if (c->is_a ("Table"))      return "#FFFFCC";
-	if (c->is_a ("Device"))     return "#FFB6C1";
+	if (c->is_a ("Block"))      return "#FFB6C1";
 	if (c->is_a ("Whole"))      return "#2BDCFF";
 	if (c->is_a ("Filesystem")) return "#B4A0F3";
 	if (c->is_a ("Piece"))      return "#B0D0B0";
@@ -340,9 +340,9 @@ dot_container (std::shared_ptr<T> t)
 
 template <class T>
 std::string
-dot_device (std::shared_ptr<T> t)
+dot_block (std::shared_ptr<T> t)
 {
-	DevicePtr b(t);
+	BlockPtr b(t);
 	if (!b)
 		return "";
 
@@ -365,7 +365,7 @@ dot_disk (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_device(d);
+	output << dot_block(d);
 
 	//output << dot_row ("hw_cylinders",   hw_cylinders);
 	//output << dot_row ("hw_heads",       hw_heads);
@@ -408,7 +408,7 @@ dot_loop (std::shared_ptr<T> t)
 	std::stringstream output;
 	std::stringstream mm;
 
-	output << dot_device(l);
+	output << dot_block(l);
 
 	std::string flags;
 	if (l->autoclear)	flags += ", autoclear";
@@ -561,7 +561,6 @@ dot_extended (std::shared_ptr<T> t)
 	std::stringstream output;
 
 	output << dot_msdos(e);
-	output << dot_device(e);	//XXX argh!
 
 	// no specifics for now
 
@@ -580,7 +579,7 @@ dot_partition (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_device(p);
+	output << dot_container(p);
 
 	// no specifics for now
 
@@ -597,7 +596,7 @@ dot_luks (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_device(l);
+	output << dot_container(l);
 
 	output << dot_row ("version"    , l->version);
 	output << dot_row ("cipher_name", l->cipher_name);
@@ -657,7 +656,6 @@ dot_volume (std::shared_ptr<T> t)
 	std::stringstream output;
 
 	output << dot_whole(v);
-	output << dot_device(v);	//XXX argh
 
 	// no specifics for now
 
@@ -770,23 +768,6 @@ dot_lvm_linear (std::shared_ptr<T> t)
 
 template <class T>
 std::string
-dot_lvm_metadata (std::shared_ptr<T> t)
-{
-	LvmMetadataPtr l(t);
-	if (!l)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_lvm_linear(l);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
 dot_lvm_mirror (std::shared_ptr<T> t)
 {
 	LvmMirrorPtr l(t);
@@ -889,23 +870,6 @@ dot_ntfs  (std::shared_ptr<T> t)
 
 template <class T>
 std::string
-dot_piece  (std::shared_ptr<T> t)
-{
-	PiecePtr p(t);
-	if (!p)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_container(p);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
 dot_md_partition  (std::shared_ptr<T> t)
 {
 	MdPartitionPtr m(t);
@@ -914,7 +878,7 @@ dot_md_partition  (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_piece(m);
+	output << dot_partition(m);
 
 	// no specifics for now
 
@@ -931,7 +895,7 @@ dot_lvm_partition (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_piece(l);
+	output << dot_partition(l);
 
 #if 0
 	output << dot_row ("dev_size",		l->dev_size);
@@ -1016,7 +980,7 @@ DotVisitor::visit (LoopPtr l)
 
 	std::stringstream mm;
 
-	output << dot_device (std::dynamic_pointer_cast<Device>(l));
+	output << dot_block (std::dynamic_pointer_cast<Block>(l));
 
 	std::string flags;
 	if (l->autoclear)	flags += ", autoclear";
@@ -1247,7 +1211,7 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 		dot << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << missing << "</b></font></td></tr>\n";
 
-		if (type == "block")         { dot << dot_device        (c); }
+		if (type == "block")         { dot << dot_block        (c); }
 		//...
 
 		dot << "</table>>];\n";
@@ -1269,15 +1233,6 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 				for (auto w2 : w->segments) {
 					dot << "obj_" << (void*) w << " -> obj_" << (void*) w2 << " [constraint=false style=dashed];\n";
 				}
-			}
-		}
-#endif
-
-#if 1
-		if (c->is_a ("LvmMetadata")) {
-			LvmVolumePtr m = std::dynamic_pointer_cast<LvmVolume>(c);
-			if (m && m->sibling) {
-				dot << "obj_" << (void*) m->sibling.get() << " -> obj_" << (void*) m.get() << " [constraint=false style=dashed dir=none];\n";
 			}
 		}
 #endif

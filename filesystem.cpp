@@ -21,20 +21,21 @@
 #include <string>
 
 #include "filesystem.h"
-#include "fs_identify.h"
+#include "action.h"
+#include "app.h"
+#include "btrfs.h"
+#include "extfs.h"
 #include "fs_get.h"
+#include "fs_identify.h"
 #include "log.h"
+#include "log_trace.h"
+#include "main.h"
+#include "ntfs.h"
 #include "partition.h"
+#include "question.h"
 #include "stringnum.h"
 #include "utils.h"
-#include "log_trace.h"
 #include "visitor.h"
-#include "question.h"
-#include "main.h"
-#include "app.h"
-#include "extfs.h"
-#include "btrfs.h"
-#include "ntfs.h"
 
 Filesystem::Filesystem (void)
 {
@@ -43,13 +44,17 @@ Filesystem::Filesystem (void)
 	sub_type (me);
 }
 
+Filesystem::~Filesystem()
+{
+}
+
 FilesystemPtr
 Filesystem::create (void)
 {
-	FilesystemPtr f (new Filesystem());
-	f->weak = f;
+	FilesystemPtr p (new Filesystem());
+	p->weak = p;
 
-	return f;
+	return p;
 }
 
 
@@ -60,6 +65,33 @@ Filesystem::accept (Visitor& v)
 	if (!v.visit(f))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+Filesystem::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.filesystem", true },
+	};
+
+	std::vector<Action> parent_actions = Container::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Filesystem::perform_action (Action action)
+{
+	if (action.name == "dummy.filesystem") {
+		std::cout << "Filesystem perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Container::perform_action (action);
+	}
 }
 
 
@@ -122,31 +154,4 @@ Filesystem::delete_filesystem (void)
 }
 
 #endif
-
-std::vector<Action>
-Filesystem::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.filesystem", true },
-	};
-
-	std::vector<Action> parent_actions = Container::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Filesystem::perform_action (Action action)
-{
-	if (action.name == "dummy.filesystem") {
-		std::cout << "Filesystem perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Container::perform_action (action);
-	}
-}
-
 

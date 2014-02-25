@@ -23,20 +23,63 @@
 #include <cstring>
 
 #include "btrfs.h"
-#include "utils.h"
+#include "action.h"
 #include "log_trace.h"
+#include "utils.h"
+#include "visitor.h"
 
 Btrfs::Btrfs (void)
+{
+}
+
+Btrfs::~Btrfs()
 {
 }
 
 BtrfsPtr
 Btrfs::create (void)
 {
-	BtrfsPtr b (new Btrfs());
-	b->weak = b;
+	BtrfsPtr p (new Btrfs());
+	p->weak = p;
 
-	return b;
+	return p;
+}
+
+
+bool
+Btrfs::accept (Visitor& v)
+{
+	BtrfsPtr b = std::dynamic_pointer_cast<Btrfs> (get_smart());
+	if (!v.visit(b))
+		return false;
+	return visit_children(v);
+}
+
+
+std::vector<Action>
+Btrfs::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.btrfs", true },
+	};
+
+	std::vector<Action> parent_actions = Filesystem::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Btrfs::perform_action (Action action)
+{
+	if (action.name == "dummy.btrfs") {
+		std::cout << "Btrfs perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Filesystem::perform_action (action);
+	}
 }
 
 
@@ -205,33 +248,6 @@ Btrfs::get_btrfs (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize
 	b->get_btrfs_sb (parent);
 	b->get_btrfs_usage();
 	return b;
-}
-
-
-std::vector<Action>
-Btrfs::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.btrfs", true },
-	};
-
-	std::vector<Action> parent_actions = Filesystem::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Btrfs::perform_action (Action action)
-{
-	if (action.name == "dummy.btrfs") {
-		std::cout << "Btrfs perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Filesystem::perform_action (action);
-	}
 }
 
 

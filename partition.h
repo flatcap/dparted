@@ -19,29 +19,29 @@
 #ifndef _PARTITION_H_
 #define _PARTITION_H_
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
-#include "device.h"
+#include "container.h"
 #include "volume.h"
-#include "action.h"
 
 class Partition;
-class Visitor;
 
 typedef std::shared_ptr<Partition> PartitionPtr;
 
-class Partition : public Device
+class Partition : public Container
 {
 public:
-	virtual ~Partition() = default;
 	static PartitionPtr create (void);
+	virtual ~Partition();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
 public:
+	//properties
 	int ptype = 0;
 
 	VolumePtr volume;
@@ -56,7 +56,6 @@ protected:
 private:
 
 };
-
 
 #endif // _PARTITION_H_
 

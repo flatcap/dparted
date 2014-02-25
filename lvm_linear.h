@@ -20,20 +20,19 @@
 #define _LVM_LINEAR_H_
 
 #include <memory>
+#include <vector>
 
 #include "lvm_volume.h"
-#include "action.h"
 
 class LvmLinear;
-class Visitor;
 
 typedef std::shared_ptr<LvmLinear> LvmLinearPtr;
 
 class LvmLinear : public LvmVolume
 {
 public:
-	virtual ~LvmLinear() = default;
 	static LvmLinearPtr create (void);
+	virtual ~LvmLinear();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -48,7 +47,6 @@ protected:
 private:
 
 };
-
 
 #endif // _LVM_LINEAR_H_
 

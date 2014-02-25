@@ -19,29 +19,28 @@
 #ifndef _FILESYSTEM_H
 #define _FILESYSTEM_H
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "container.h"
-#include "action.h"
 
 class Filesystem;
-class Visitor;
 
 typedef std::shared_ptr<Filesystem> FilesystemPtr;
 
 class Filesystem : public Container
 {
 public:
-	virtual ~Filesystem() = default;
 	static FilesystemPtr create (void);
+	virtual ~Filesystem();
 	virtual bool accept (Visitor& v);
-	bool get_mounted_usage (ContainerPtr parent);
-
-	static FilesystemPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+
+	static FilesystemPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
+	bool get_mounted_usage (ContainerPtr parent);
 
 public:
 	//properties
@@ -53,7 +52,6 @@ private:
 	long ext2_get_usage (void);
 
 };
-
 
 #endif // _FILESYSTEM_H
 

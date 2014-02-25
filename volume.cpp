@@ -18,8 +18,9 @@
 
 #include <sstream>
 
-#include "log.h"
 #include "volume.h"
+#include "action.h"
+#include "log.h"
 #include "log_trace.h"
 #include "visitor.h"
 
@@ -30,13 +31,17 @@ Volume::Volume (void)
 	sub_type (me);
 }
 
+Volume::~Volume()
+{
+}
+
 VolumePtr
 Volume::create (void)
 {
-	VolumePtr v (new Volume());
-	v->weak = v;
+	VolumePtr p (new Volume());
+	p->weak = p;
 
-	return v;
+	return p;
 }
 
 
@@ -48,6 +53,7 @@ Volume::accept (Visitor& v)
 		return false;
 	return visit_children(v);
 }
+
 
 std::vector<Action>
 Volume::get_actions (void)

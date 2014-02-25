@@ -20,7 +20,6 @@
 #include <cstring>
 
 #include "log.h"
-#include "lvm_table.h"
 #include "utils.h"
 #include "log_trace.h"
 #include "main.h"
@@ -28,6 +27,8 @@
 #include "lvm_partition.h"
 #include "lvm2.h"
 
+#include "lvm_table.h"
+#include "action.h"
 #include "utils.h"
 #include "visitor.h"
 
@@ -42,13 +43,17 @@ LvmTable::LvmTable (void)
 	declare_prop (me, "metadata_size", metadata_size, "desc of metadata_size");
 }
 
+LvmTable::~LvmTable()
+{
+}
+
 LvmTablePtr
 LvmTable::create (void)
 {
-	LvmTablePtr l (new LvmTable());
-	l->weak = l;
+	LvmTablePtr p (new LvmTable());
+	p->weak = p;
 
-	return l;
+	return p;
 }
 
 
@@ -59,6 +64,33 @@ LvmTable::accept (Visitor& v)
 	if (!v.visit(l))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+LvmTable::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.lvm_table", true },
+	};
+
+	std::vector<Action> parent_actions = Table::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+LvmTable::perform_action (Action action)
+{
+	if (action.name == "dummy.lvm_table") {
+		std::cout << "LvmTable perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Table::perform_action (action);
+	}
 }
 
 
@@ -318,33 +350,6 @@ LvmTable::add_child (ContainerPtr& child)
 	dump_hex2 (child->mmap_buffer, 0, 4096);
 	printf ("\n");
 #endif
-}
-
-
-std::vector<Action>
-LvmTable::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.lvmtable", true },
-	};
-
-	std::vector<Action> parent_actions = Table::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-LvmTable::perform_action (Action action)
-{
-	if (action.name == "dummy.lvmtable") {
-		std::cout << "LvmTable perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Table::perform_action (action);
-	}
 }
 
 

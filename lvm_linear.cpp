@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "lvm_linear.h"
+#include "action.h"
 #include "log_trace.h"
 #include "visitor.h"
 
@@ -29,13 +30,17 @@ LvmLinear::LvmLinear (void)
 	sub_type (me);
 }
 
+LvmLinear::~LvmLinear()
+{
+}
+
 LvmLinearPtr
 LvmLinear::create (void)
 {
-	LvmLinearPtr l (new LvmLinear());
-	l->weak = l;
+	LvmLinearPtr p (new LvmLinear());
+	p->weak = p;
 
-	return l;
+	return p;
 }
 
 
@@ -54,7 +59,7 @@ LvmLinear::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.lvmlinear", true },
+		{ "dummy.lvm_linear", true },
 	};
 
 	std::vector<Action> parent_actions = LvmVolume::get_actions();
@@ -67,12 +72,11 @@ LvmLinear::get_actions (void)
 bool
 LvmLinear::perform_action (Action action)
 {
-	if (action.name == "dummy.lvmlinear") {
+	if (action.name == "dummy.lvm_linear") {
 		std::cout << "LvmLinear perform: " << action.name << std::endl;
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);
 	}
 }
-
 

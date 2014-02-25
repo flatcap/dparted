@@ -16,30 +16,22 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <sstream>
-#include <string>
-
-#include "whole.h"
+#include "md_raid.h"
 #include "action.h"
-#include "log.h"
-#include "log_trace.h"
 #include "visitor.h"
 
-Whole::Whole (void)
-{
-	const char* me = "Whole";
-
-	sub_type (me);
-}
-
-Whole::~Whole()
+MdRaid::MdRaid (void)
 {
 }
 
-WholePtr
-Whole::create (void)
+MdRaid::~MdRaid()
 {
-	WholePtr p (new Whole());
+}
+
+MdRaidPtr
+MdRaid::create (void)
+{
+	MdRaidPtr p (new MdRaid());
 	p->weak = p;
 
 	return p;
@@ -47,24 +39,24 @@ Whole::create (void)
 
 
 bool
-Whole::accept (Visitor& v)
+MdRaid::accept (Visitor& v)
 {
-	WholePtr w = std::dynamic_pointer_cast<Whole> (get_smart());
-	if (!v.visit(w))
+	MdRaidPtr b = std::dynamic_pointer_cast<MdRaid> (get_smart());
+	if (!v.visit(b))
 		return false;
 	return visit_children(v);
 }
 
 
 std::vector<Action>
-Whole::get_actions (void)
+MdRaid::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.whole", true },
+		{ "dummy.md_raid", true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> parent_actions = MdVolume::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -72,37 +64,14 @@ Whole::get_actions (void)
 }
 
 bool
-Whole::perform_action (Action action)
+MdRaid::perform_action (Action action)
 {
-	if (action.name == "dummy.whole") {
-		std::cout << "Whole perform: " << action.name << std::endl;
+	if (action.name == "dummy.md_raid") {
+		std::cout << "MdRaid perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Container::perform_action (action);
+		return MdVolume::perform_action (action);
 	}
-}
-
-
-void
-Whole::add_segment (ContainerPtr seg)
-{
-	bool inserted = false;
-
-	for (auto i = segments.begin(); i != segments.end(); i++) {
-		if ((*i) == seg)
-			return;
-		if ((*i)->parent_offset > seg->parent_offset) {
-			segments.insert (i, seg);
-			inserted = true;
-			break;
-		}
-	}
-
-	if (!inserted) {
-		segments.push_back (seg);
-	}
-
-	seg->whole = get_smart();
 }
 
 

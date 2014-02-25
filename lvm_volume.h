@@ -20,30 +20,31 @@
 #define _LVM_VOLUME_H_
 
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "volume.h"
-#include "action.h"
 
 class LvmVolume;
-class Visitor;
 
 typedef std::shared_ptr<LvmVolume> LvmVolumePtr;
 
 class LvmVolume : public Volume
 {
 public:
-	virtual ~LvmVolume() = default;
 	static LvmVolumePtr create (void);
+	virtual ~LvmVolume();
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 	virtual void add_child (ContainerPtr& child);
 
 	virtual ContainerPtr find (const std::string& uuid);
 
-	virtual std::vector<Action> get_actions (void);
-	virtual bool perform_action (Action action);
-
 public:
+	//properties
 	std::string	lv_attr;
 	long		kernel_major = -1;
 	long		kernel_minor = -1;
@@ -67,7 +68,6 @@ protected:
 private:
 
 };
-
 
 #endif // _LVM_VOLUME_H_
 

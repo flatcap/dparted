@@ -19,14 +19,13 @@
 #ifndef _MSDOS_H
 #define _MSDOS_H
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "table.h"
-#include "action.h"
 
 class Msdos;
-class Visitor;
 
 typedef std::shared_ptr<Msdos> MsdosPtr;
 
@@ -39,14 +38,14 @@ struct partition {
 class Msdos : public Table
 {
 public:
-	virtual ~Msdos() = default;
 	static MsdosPtr create (void);
+	virtual ~Msdos();
 	virtual bool accept (Visitor& v);
-
-	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+
+	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 public:
 	//properties
@@ -61,7 +60,6 @@ protected:
 private:
 
 };
-
 
 #endif // _MSDOS_H
 

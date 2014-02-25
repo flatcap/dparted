@@ -20,25 +20,27 @@
 #define _DISK_H_
 
 #include <map>
-#include <string>
-#include <queue>
 #include <memory>
+#include <queue>
+#include <string>
+#include <vector>
 
-#include "device.h"
-#include "action.h"
+#include "block.h"
 
 class Disk;
-class Visitor;
 
 typedef std::shared_ptr<Disk> DiskPtr;
 
-class Disk : public Device
+class Disk : public Block
 {
 public:
-	virtual ~Disk() = default;
 	static DiskPtr create (void);
 	static DiskPtr create (const std::string& lsblk);
+	virtual ~Disk();
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 	virtual long          get_block_size (void);
 	virtual unsigned int  get_device_space (std::map<long, long>& spaces);
@@ -51,16 +53,8 @@ public:
 	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
 	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
 
-	virtual std::vector<Action> get_actions (void);
-	virtual bool perform_action (Action action);
-
 public:
-	//std::string	model;
-	//std::string	path;
-	//int		type;
-	//long		sector_size;
-	//long		phys_sector_size;
-	//long	length;
+	//properties
 	bool		read_only      = false;
 	int		hw_cylinders   = 0;
 	int		hw_heads       = 0;
@@ -70,6 +64,12 @@ public:
 	int		bios_sectors   = 0;
 	int		host           = 0;
 	int		did            = 0;
+	//std::string	model;
+	//std::string	path;
+	//int		type;
+	//long		sector_size;
+	//long		phys_sector_size;
+	//long	length;
 
 	std::string mounts;	//XXX vector
 
@@ -79,7 +79,6 @@ protected:
 private:
 
 };
-
 
 #endif // _DISK_H_
 

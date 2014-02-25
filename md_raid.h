@@ -16,42 +16,34 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _BTRFS_H_
-#define _BTRFS_H_
+#ifndef _MD_RAID_H_
+#define _MD_RAID_H_
 
 #include <memory>
-#include <string>
 #include <vector>
 
-#include "filesystem.h"
+#include "md_volume.h"
 
-class Btrfs;
+class MdRaid;
 
-typedef std::shared_ptr<Btrfs> BtrfsPtr;
+typedef std::shared_ptr<MdRaid> MdRaidPtr;
 
-class Btrfs : public Filesystem
+class MdRaid : public MdVolume
 {
 public:
-	static BtrfsPtr create (void);
-	virtual ~Btrfs();
+	static MdRaidPtr create (void);
+	virtual ~MdRaid();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static BtrfsPtr get_btrfs (ContainerPtr parent, unsigned char* buffer, int bufsize);
-
 public:
 	//properties
 
 protected:
-	Btrfs (void);
-
-	bool get_btrfs_usage (void);
-	void get_btrfs_sb (ContainerPtr c);
-
-	std::vector<std::string> more_props;
+	MdRaid (void);
 };
 
-#endif // _BTRFS_H_
+#endif // _MD_RAID_H_
 

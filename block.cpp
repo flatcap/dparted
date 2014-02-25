@@ -16,64 +16,71 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "lvm_metadata.h"
+#include <fcntl.h>
+#include <linux/fs.h>
+#include <linux/kdev_t.h>
+#include <linux/major.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include <sstream>
+#include <string>
+
+#include "block.h"
+#include "action.h"
+#include "disk.h"
+#include "file.h"
+#include "log.h"
 #include "log_trace.h"
+#include "loop.h"
+#include "main.h"
 #include "visitor.h"
 
-LvmMetadata::LvmMetadata (void)
+Block::Block (void)
 {
-	const char* me = "LvmMetadata";
+	const char* me = "Block";
 
 	sub_type (me);
+
+	declare_prop (me, "kernel_major", kernel_major, "desc of kernel_major");
+	declare_prop (me, "kernel_minor", kernel_minor, "desc of kernel_minor");
 }
 
-LvmMetadataPtr
-LvmMetadata::create (void)
+Block::~Block()
 {
-	LvmMetadataPtr l (new LvmMetadata());
-	l->weak = l;
+}
 
-	return l;
+BlockPtr
+Block::create (void)
+{
+	BlockPtr p (new Block());
+	p->weak = p;
+
+	return p;
 }
 
 
 bool
-LvmMetadata::accept (Visitor& v)
+Block::accept (Visitor& v)
 {
-	LvmMetadataPtr l = std::dynamic_pointer_cast<LvmMetadata> (get_smart());
-	if (!v.visit(l))
+	BlockPtr b = std::dynamic_pointer_cast<Block> (get_smart());
+	if (!v.visit(b))
 		return false;
 	return visit_children(v);
 }
 
 
-void
-LvmMetadata::add_child (ContainerPtr& child)
-{
-	if (!child)
-		return;
-
-	if (child->is_a ("LvmVolume")) {
-		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (child);
-		sibling = v;
-		v->sibling = get_smart();
-	} else {
-		// probably a partition
-		add_segment (child);
-		//log_debug ("segment: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
-	}
-}
-
-
 std::vector<Action>
-LvmMetadata::get_actions (void)
+Block::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.lvmmetadata", true },
+		{ "dummy.block", true },
 	};
 
-	std::vector<Action> parent_actions = LvmLinear::get_actions();
+	std::vector<Action> parent_actions = Container::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -81,13 +88,13 @@ LvmMetadata::get_actions (void)
 }
 
 bool
-LvmMetadata::perform_action (Action action)
+Block::perform_action (Action action)
 {
-	if (action.name == "dummy.lvmmetadata") {
-		std::cout << "LvmMetadata perform: " << action.name << std::endl;
+	if (action.name == "dummy.block") {
+		std::cout << "Block perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return LvmLinear::perform_action (action);
+		return Container::perform_action (action);
 	}
 }
 

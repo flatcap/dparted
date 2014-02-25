@@ -19,28 +19,27 @@
 #ifndef _MISC_H
 #define _MISC_H
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "container.h"
-#include "action.h"
 
 class Misc;
-class Visitor;
 
 typedef std::shared_ptr<Misc> MiscPtr;
 
 class Misc : public Container
 {
 public:
-	virtual ~Misc() = default;
 	static MiscPtr create (void);
+	virtual ~Misc();
 	virtual bool accept (Visitor& v);
-
-	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+
+	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
 public:
 	//properties
@@ -51,7 +50,6 @@ protected:
 private:
 
 };
-
 
 #endif // _MISC_H
 

@@ -21,12 +21,13 @@
 #include <unistd.h>
 #include <sstream>
 
-#include "app.h"
 #include "loop.h"
+#include "action.h"
+#include "app.h"
 #include "log_trace.h"
-#include "utils.h"
 #include "main.h"
 #include "stringnum.h"
+#include "utils.h"
 #include "visitor.h"
 
 Loop::Loop (void)
@@ -47,6 +48,10 @@ Loop::Loop (void)
 	declare_prop (me, "partscan",   partscan,   "desc of partscan");
 	declare_prop (me, "read_only",  read_only,  "desc of read_only");
 	declare_prop (me, "deleted",    deleted,    "desc of deleted");
+}
+
+Loop::~Loop()
+{
 }
 
 LoopPtr
@@ -116,6 +121,33 @@ Loop::accept (Visitor& v)
 	if (!v.visit(l))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+Loop::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.loop", true },
+	};
+
+	std::vector<Action> parent_actions = Block::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Loop::perform_action (Action action)
+{
+	if (action.name == "dummy.loop") {
+		std::cout << "Loop perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Block::perform_action (action);
+	}
 }
 
 
@@ -222,33 +254,6 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	ContainerPtr c(l);
 	top_level->just_add_child(c);
 	main_app->queue_add_probe(c);	// queue the container for action
-}
-
-
-std::vector<Action>
-Loop::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.loop", true },
-	};
-
-	std::vector<Action> parent_actions = Device::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Loop::perform_action (Action action)
-{
-	if (action.name == "dummy.loop") {
-		std::cout << "Loop perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Device::perform_action (action);
-	}
 }
 
 

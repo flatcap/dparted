@@ -19,8 +19,11 @@
 #ifndef _EXTFS_H_
 #define _EXTFS_H_
 
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "filesystem.h"
-#include "action.h"
 
 class Extfs;
 
@@ -29,16 +32,17 @@ typedef std::shared_ptr<Extfs> ExtfsPtr;
 class Extfs : public Filesystem
 {
 public:
-	virtual ~Extfs() = default;
 	static ExtfsPtr create (void);
+	virtual ~Extfs();
+	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 	void get_ext_sb (ContainerPtr parent);
 	static ExtfsPtr get_ext2 (ContainerPtr parent, unsigned char* buffer, int bufsize);
 	static ExtfsPtr get_ext3 (ContainerPtr parent, unsigned char* buffer, int bufsize);
 	static ExtfsPtr get_ext4 (ContainerPtr parent, unsigned char* buffer, int bufsize);
-
-	virtual std::vector<Action> get_actions (void);
-	virtual bool perform_action (Action action);
 
 public:
 	//properties
@@ -48,7 +52,6 @@ protected:
 
 	std::vector<std::string> more_props;
 };
-
 
 #endif // _EXTFS_H_
 

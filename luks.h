@@ -19,33 +19,34 @@
 #ifndef _LUKS_H_
 #define _LUKS_H_
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
-#include "device.h"
+#include "container.h"
 #include "question.h"
-#include "action.h"
 
 class Luks;
 
 typedef std::shared_ptr<Luks> LuksPtr;
 
-class Luks : public Device
+class Luks : public Container
 {
 public:
-	virtual ~Luks() = default;
 	static LuksPtr create (void);
+	virtual ~Luks();
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 	bool luks_open (const std::string& parent, bool probe);
 	bool luks_close (void);
 
-	virtual std::vector<Action> get_actions (void);
-	virtual bool perform_action (Action action);
-
 public:
+	//properties
 	int         version;
 	std::string cipher_name;
 	std::string cipher_mode;
@@ -63,7 +64,6 @@ protected:
 private:
 
 };
-
 
 #endif // _LUKS_H_
 

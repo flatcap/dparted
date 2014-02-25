@@ -28,12 +28,13 @@
 #include <sstream>
 
 #include "drawing_area.h"
-#include "log.h"
-#include "utils.h"
-#include "log_trace.h"
+#include "action.h"
 #include "gui_app.h"
-#include "window.h"
+#include "log.h"
+#include "log_trace.h"
 #include "table.h"
+#include "utils.h"
+#include "window.h"
 
 DrawingArea::DrawingArea (void)
 	//Glib::ObjectBase ("MyDrawingArea")

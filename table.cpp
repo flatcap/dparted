@@ -19,15 +19,16 @@
 #include <sstream>
 #include <string>
 
+#include "table.h"
+#include "action.h"
 #include "gpt.h"
 #include "log.h"
-#include "misc.h"
-#include "msdos.h"
-#include "table.h"
+#include "log_trace.h"
 #include "lvm_table.h"
 #include "md_table.h"
+#include "misc.h"
+#include "msdos.h"
 #include "utils.h"
-#include "log_trace.h"
 #include "visitor.h"
 
 Table::Table (void)
@@ -37,13 +38,17 @@ Table::Table (void)
 	sub_type (me);
 }
 
+Table::~Table()
+{
+}
+
 TablePtr
 Table::create (void)
 {
-	TablePtr t (new Table());
-	t->weak = t;
+	TablePtr p (new Table());
+	p->weak = p;
 
-	return t;
+	return p;
 }
 
 
@@ -54,6 +59,33 @@ Table::accept (Visitor& v)
 	if (!v.visit(t))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+Table::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.table", true },
+	};
+
+	std::vector<Action> parent_actions = Container::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Table::perform_action (Action action)
+{
+	if (action.name == "dummy.table") {
+		std::cout << "Table perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Container::perform_action (action);
+	}
 }
 
 
@@ -160,33 +192,6 @@ Table::fill_space (void)
 #endif
 
 	return 0;
-}
-
-
-std::vector<Action>
-Table::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.table", true },
-	};
-
-	std::vector<Action> parent_actions = Container::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Table::perform_action (Action action)
-{
-	if (action.name == "dummy.table") {
-		std::cout << "Table perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Container::perform_action (action);
-	}
 }
 
 

@@ -16,42 +16,34 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _BTRFS_H_
-#define _BTRFS_H_
+#ifndef _MSDOS_PARTITION_H_
+#define _MSDOS_PARTITION_H_
 
 #include <memory>
-#include <string>
 #include <vector>
 
-#include "filesystem.h"
+#include "partition.h"
 
-class Btrfs;
+class MsdosPartition;
 
-typedef std::shared_ptr<Btrfs> BtrfsPtr;
+typedef std::shared_ptr<MsdosPartition> MsdosPartitionPtr;
 
-class Btrfs : public Filesystem
+class MsdosPartition : public Partition
 {
 public:
-	static BtrfsPtr create (void);
-	virtual ~Btrfs();
+	static MsdosPartitionPtr create (void);
+	virtual ~MsdosPartition();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static BtrfsPtr get_btrfs (ContainerPtr parent, unsigned char* buffer, int bufsize);
-
 public:
 	//properties
 
 protected:
-	Btrfs (void);
-
-	bool get_btrfs_usage (void);
-	void get_btrfs_sb (ContainerPtr c);
-
-	std::vector<std::string> more_props;
+	MsdosPartition (void);
 };
 
-#endif // _BTRFS_H_
+#endif // _MSDOS_PARTITION_H_
 

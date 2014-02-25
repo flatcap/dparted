@@ -16,51 +16,32 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <fcntl.h>
-#include <linux/fs.h>
-#include <linux/kdev_t.h>
-#include <linux/major.h>
-#include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-#include <sstream>
-#include <string>
-
-#include "device.h"
-#include "disk.h"
-#include "file.h"
-#include "log.h"
-#include "loop.h"
-#include "main.h"
-#include "log_trace.h"
+#include "md_linear.h"
+#include "action.h"
 #include "visitor.h"
 
-Device::Device (void)
+MdLinear::MdLinear (void)
 {
-	const char* me = "Device";
-
-	sub_type (me);
-
-	declare_prop (me, "kernel_major", kernel_major, "desc of kernel_major");
-	declare_prop (me, "kernel_minor", kernel_minor, "desc of kernel_minor");
 }
 
-DevicePtr
-Device::create (void)
+MdLinear::~MdLinear()
 {
-	DevicePtr b (new Device());
-	b->weak = b;
+}
 
-	return b;
+MdLinearPtr
+MdLinear::create (void)
+{
+	MdLinearPtr p (new MdLinear());
+	p->weak = p;
+
+	return p;
 }
 
 
 bool
-Device::accept (Visitor& v)
+MdLinear::accept (Visitor& v)
 {
-	DevicePtr b = std::dynamic_pointer_cast<Device> (get_smart());
+	MdLinearPtr b = std::dynamic_pointer_cast<MdLinear> (get_smart());
 	if (!v.visit(b))
 		return false;
 	return visit_children(v);
@@ -68,14 +49,14 @@ Device::accept (Visitor& v)
 
 
 std::vector<Action>
-Device::get_actions (void)
+MdLinear::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.device", true },
+		{ "dummy.md_linear", true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> parent_actions = MdVolume::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -83,13 +64,13 @@ Device::get_actions (void)
 }
 
 bool
-Device::perform_action (Action action)
+MdLinear::perform_action (Action action)
 {
-	if (action.name == "dummy.device") {
-		std::cout << "Device perform: " << action.name << std::endl;
+	if (action.name == "dummy.md_linear") {
+		std::cout << "MdLinear perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Container::perform_action (action);
+		return MdVolume::perform_action (action);
 	}
 }
 

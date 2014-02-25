@@ -23,20 +23,63 @@
 #include <cstring>
 
 #include "ntfs.h"
-#include "utils.h"
+#include "action.h"
 #include "log_trace.h"
+#include "utils.h"
+#include "visitor.h"
 
 Ntfs::Ntfs (void)
+{
+}
+
+Ntfs::~Ntfs()
 {
 }
 
 NtfsPtr
 Ntfs::create (void)
 {
-	NtfsPtr n (new Ntfs());
-	n->weak = n;
+	NtfsPtr p (new Ntfs());
+	p->weak = p;
 
-	return n;
+	return p;
+}
+
+
+bool
+Ntfs::accept (Visitor& v)
+{
+	NtfsPtr b = std::dynamic_pointer_cast<Ntfs> (get_smart());
+	if (!v.visit(b))
+		return false;
+	return visit_children(v);
+}
+
+
+std::vector<Action>
+Ntfs::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.ntfs", true },
+	};
+
+	std::vector<Action> parent_actions = Filesystem::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Ntfs::perform_action (Action action)
+{
+	if (action.name == "dummy.ntfs") {
+		std::cout << "Ntfs perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Filesystem::perform_action (action);
+	}
 }
 
 
@@ -196,33 +239,6 @@ Ntfs::get_ntfs (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize))
 	n->get_ntfs_sb (parent);
 	n->get_ntfs_usage();
 	return n;
-}
-
-
-std::vector<Action>
-Ntfs::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.ntfs", true },
-	};
-
-	std::vector<Action> parent_actions = Filesystem::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Ntfs::perform_action (Action action)
-{
-	if (action.name == "dummy.ntfs") {
-		std::cout << "Ntfs perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Filesystem::perform_action (action);
-	}
 }
 
 

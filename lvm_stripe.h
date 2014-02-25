@@ -20,20 +20,19 @@
 #define _LVM_STRIPE_H_
 
 #include <memory>
+#include <vector>
 
 #include "lvm_volume.h"
-#include "action.h"
 
 class LvmStripe;
-class Visitor;
 
 typedef std::shared_ptr<LvmStripe> LvmStripePtr;
 
 class LvmStripe : public LvmVolume
 {
 public:
-	virtual ~LvmStripe() = default;
 	static LvmStripePtr create (void);
+	virtual ~LvmStripe();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -48,7 +47,6 @@ protected:
 private:
 
 };
-
 
 #endif // _LVM_STRIPE_H_
 

@@ -19,32 +19,33 @@
 #ifndef _LVM_GROUP_H_
 #define _LVM_GROUP_H_
 
+#include <map>
 #include <memory>
+#include <string>
+#include <vector>
 
-#include "whole.h"
-#include "action.h"
+#include "group.h"
 
 class LvmGroup;
-class LvmTable;
-class Visitor;
 
 typedef std::shared_ptr<LvmGroup> LvmGroupPtr;
 
-class LvmGroup : public Whole
+class LvmGroup : public Group
 {
 public:
-	virtual ~LvmGroup() = default;
 	static LvmGroupPtr create (void);
+	virtual ~LvmGroup();
 	virtual bool accept (Visitor& v);
+
+	virtual std::vector<Action> get_actions (void);
+	virtual bool perform_action (Action action);
 
 	//virtual void add_segment (ContainerPtr& seg);
 
 	static void discover (ContainerPtr& top_level);
 
-	virtual std::vector<Action> get_actions (void);
-	virtual bool perform_action (Action action);
-
 public:
+	//properties
 	long		pv_count = 0;	//XXX put this in seg_count in Whole
 	long		lv_count = 0;	//XXX this matches children.size()
 	long		vg_seqno = 0;
@@ -63,7 +64,6 @@ protected:
 private:
 
 };
-
 
 #endif // _LVM_GROUP_H_
 

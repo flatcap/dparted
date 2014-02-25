@@ -19,30 +19,30 @@
 #ifndef _MD_TABLE_H_
 #define _MD_TABLE_H_
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "table.h"
-#include "action.h"
 
 class MdTable;
-class Visitor;
 
 typedef std::shared_ptr<MdTable> MdTablePtr;
 
 class MdTable : public Table
 {
 public:
-	virtual ~MdTable() = default;
 	static MdTablePtr create (void);
+	virtual ~MdTable();
 	virtual bool accept (Visitor& v);
-
-	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
+	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
+
 public:
+	//properties
 	std::string	vol_uuid;
 	std::string	vol_name;
 	int		raid_type;
@@ -59,7 +59,6 @@ protected:
 private:
 
 };
-
 
 #endif // _MD_TABLE_H_
 

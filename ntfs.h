@@ -19,8 +19,11 @@
 #ifndef _NTFS_H_
 #define _NTFS_H_
 
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "filesystem.h"
-#include "action.h"
 
 class Ntfs;
 
@@ -29,13 +32,14 @@ typedef std::shared_ptr<Ntfs> NtfsPtr;
 class Ntfs : public Filesystem
 {
 public:
-	virtual ~Ntfs() = default;
 	static NtfsPtr create (void);
-
-	static NtfsPtr get_ntfs (ContainerPtr parent, unsigned char* buffer, int bufsize);
+	virtual ~Ntfs();
+	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+
+	static NtfsPtr get_ntfs (ContainerPtr parent, unsigned char* buffer, int bufsize);
 
 public:
 	//properties
@@ -48,7 +52,6 @@ protected:
 
 	std::vector<std::string> more_props;
 };
-
 
 #endif // _NTFS_H_
 

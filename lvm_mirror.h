@@ -20,41 +20,41 @@
 #define _LVM_MIRROR_H_
 
 #include <memory>
+#include <vector>
 
 #include "lvm_volume.h"
-#include "action.h"
 
 class LvmMirror;
-class Visitor;
 
 typedef std::shared_ptr<LvmMirror> LvmMirrorPtr;
 
 class LvmMirror : public LvmVolume
 {
 public:
-	virtual ~LvmMirror() = default;
 	static LvmMirrorPtr create (void);
+	virtual ~LvmMirror();
 	virtual bool accept (Visitor& v);
-
-	virtual void add_child    (ContainerPtr& child);
-	virtual void delete_child (ContainerPtr& child);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
+	virtual void add_child    (ContainerPtr& child);
+	virtual void delete_child (ContainerPtr& child);
+
 public:
+	//properties
+
+protected:
+	LvmMirror (void);
+
 #if 0
 	std::vector<ContainerPtr> mirrors;
 	ContainerPtr log;
 #endif
 
-protected:
-	LvmMirror (void);
-
 private:
 
 };
-
 
 #endif // _LVM_MIRROR_H_
 

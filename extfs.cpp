@@ -23,20 +23,63 @@
 #include <cstring>
 
 #include "extfs.h"
-#include "utils.h"
+#include "action.h"
 #include "log_trace.h"
+#include "utils.h"
+#include "visitor.h"
 
 Extfs::Extfs (void)
+{
+}
+
+Extfs::~Extfs()
 {
 }
 
 ExtfsPtr
 Extfs::create (void)
 {
-	ExtfsPtr e (new Extfs());
-	e->weak = e;
+	ExtfsPtr p (new Extfs());
+	p->weak = p;
 
-	return e;
+	return p;
+}
+
+
+bool
+Extfs::accept (Visitor& v)
+{
+	ExtfsPtr b = std::dynamic_pointer_cast<Extfs> (get_smart());
+	if (!v.visit(b))
+		return false;
+	return visit_children(v);
+}
+
+
+std::vector<Action>
+Extfs::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.extfs", true },
+	};
+
+	std::vector<Action> parent_actions = Filesystem::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Extfs::perform_action (Action action)
+{
+	if (action.name == "dummy.extfs") {
+		std::cout << "Extfs perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Filesystem::perform_action (action);
+	}
 }
 
 
@@ -252,33 +295,6 @@ Extfs::get_ext4 (ContainerPtr parent, unsigned char* buffer, int UNUSED(bufsize)
 		e->get_mounted_usage (parent);
 	}
 	return e;
-}
-
-
-std::vector<Action>
-Extfs::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.extfs", true },
-	};
-
-	std::vector<Action> parent_actions = Filesystem::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Extfs::perform_action (Action action)
-{
-	if (action.name == "dummy.extfs") {
-		std::cout << "Extfs perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Filesystem::perform_action (action);
-	}
 }
 
 

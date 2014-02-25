@@ -16,42 +16,34 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _BTRFS_H_
-#define _BTRFS_H_
+#ifndef _MD_LINEAR_H_
+#define _MD_LINEAR_H_
 
 #include <memory>
-#include <string>
 #include <vector>
 
-#include "filesystem.h"
+#include "md_volume.h"
 
-class Btrfs;
+class MdLinear;
 
-typedef std::shared_ptr<Btrfs> BtrfsPtr;
+typedef std::shared_ptr<MdLinear> MdLinearPtr;
 
-class Btrfs : public Filesystem
+class MdLinear : public MdVolume
 {
 public:
-	static BtrfsPtr create (void);
-	virtual ~Btrfs();
+	static MdLinearPtr create (void);
+	virtual ~MdLinear();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static BtrfsPtr get_btrfs (ContainerPtr parent, unsigned char* buffer, int bufsize);
-
 public:
 	//properties
 
 protected:
-	Btrfs (void);
-
-	bool get_btrfs_usage (void);
-	void get_btrfs_sb (ContainerPtr c);
-
-	std::vector<std::string> more_props;
+	MdLinear (void);
 };
 
-#endif // _BTRFS_H_
+#endif // _MD_LINEAR_H_
 

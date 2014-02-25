@@ -32,11 +32,12 @@
 #include <algorithm>
 
 #include "container.h"
-#include "whole.h"
+#include "action.h"
 #include "log.h"
+#include "log_trace.h"
 #include "utils.h"
 #include "visitor.h"
-#include "log_trace.h"
+#include "whole.h"
 
 std::vector<Action> cont_actions = {
 	{ "Create/Filesystem",         true },
@@ -109,10 +110,10 @@ Container::~Container()
 ContainerPtr
 Container::create (void)
 {
-	ContainerPtr c (new Container());
-	c->weak = c;
+	ContainerPtr p (new Container());
+	p->weak = p;
 
-	return c;
+	return p;
 }
 
 
@@ -141,6 +142,30 @@ Container::accept (Visitor& v)
 	if (!v.visit(c))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+Container::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.container", true },
+	};
+
+	return actions;
+}
+
+bool
+Container::perform_action (Action action)
+{
+	if (action.name == "dummy.container") {
+		std::cout << "Container perform: " << action.name << std::endl;
+		return true;
+	} else {
+		std::cout << "Unknown action: " << action.name << std::endl;
+		return false;
+	}
 }
 
 
@@ -697,30 +722,6 @@ Container::get_smart (void)
 		weak = c;
 	}
 	return weak.lock();
-}
-
-
-std::vector<Action>
-Container::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.container", true },
-	};
-
-	return actions;
-}
-
-bool
-Container::perform_action (Action action)
-{
-	if (action.name == "dummy.container") {
-		std::cout << "Container perform: " << action.name << std::endl;
-		return true;
-	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
-		return false;
-	}
 }
 
 

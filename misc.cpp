@@ -19,13 +19,14 @@
 #include <cstring>
 #include <sstream>
 
-#include "log.h"
-#include "main.h"
 #include "misc.h"
+#include "action.h"
+#include "log.h"
+#include "log_trace.h"
 #include "luks.h"
+#include "main.h"
 #include "partition.h"
 #include "utils.h"
-#include "log_trace.h"
 #include "visitor.h"
 
 Misc::Misc (void)
@@ -35,13 +36,17 @@ Misc::Misc (void)
 	sub_type (me);
 }
 
+Misc::~Misc()
+{
+}
+
 MiscPtr
 Misc::create (void)
 {
-	MiscPtr m (new Misc());
-	m->weak = m;
+	MiscPtr p (new Misc());
+	p->weak = p;
 
-	return m;
+	return p;
 }
 
 
@@ -52,6 +57,33 @@ Misc::accept (Visitor& v)
 	if (!v.visit(m))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+Misc::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.misc", true },
+	};
+
+	std::vector<Action> parent_actions = Container::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Misc::perform_action (Action action)
+{
+	if (action.name == "dummy.misc") {
+		std::cout << "Misc perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Container::perform_action (action);
+	}
 }
 
 
@@ -141,33 +173,6 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	}
 
 	return m;
-}
-
-
-std::vector<Action>
-Misc::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.misc", true },
-	};
-
-	std::vector<Action> parent_actions = Container::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Misc::perform_action (Action action)
-{
-	if (action.name == "dummy.misc") {
-		std::cout << "Misc perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Container::perform_action (action);
-	}
 }
 
 

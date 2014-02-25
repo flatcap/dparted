@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "lvm_raid.h"
+#include "action.h"
 #include "log.h"
 #include "log_trace.h"
 #include "visitor.h"
@@ -30,13 +31,17 @@ LvmRaid::LvmRaid (void)
 	sub_type (me);
 }
 
+LvmRaid::~LvmRaid()
+{
+}
+
 LvmRaidPtr
 LvmRaid::create (void)
 {
-	LvmRaidPtr l (new LvmRaid());
-	l->weak = l;
+	LvmRaidPtr p (new LvmRaid());
+	p->weak = p;
 
-	return l;
+	return p;
 }
 
 
@@ -55,7 +60,7 @@ LvmRaid::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.lvmraid", true },
+		{ "dummy.lvm_raid", true },
 	};
 
 	std::vector<Action> parent_actions = LvmVolume::get_actions();
@@ -68,7 +73,7 @@ LvmRaid::get_actions (void)
 bool
 LvmRaid::perform_action (Action action)
 {
-	if (action.name == "dummy.lvmraid") {
+	if (action.name == "dummy.lvm_raid") {
 		std::cout << "LvmRaid perform: " << action.name << std::endl;
 		return true;
 	} else {

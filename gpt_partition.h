@@ -16,27 +16,23 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _PIECE_H_
-#define _PIECE_H_
+#ifndef _GPT_PARTITION_H_
+#define _GPT_PARTITION_H_
 
-#include <map>
-#include <string>
-#include <queue>
 #include <memory>
+#include <vector>
 
-#include "container.h"
-#include "action.h"
+#include "partition.h"
 
-class Piece;
-class Visitor;
+class GptPartition;
 
-typedef std::shared_ptr<Piece> PiecePtr;
+typedef std::shared_ptr<GptPartition> GptPartitionPtr;
 
-class Piece : public Container
+class GptPartition : public Partition
 {
 public:
-	virtual ~Piece() = default;
-	static PiecePtr create (void);
+	static GptPartitionPtr create (void);
+	virtual ~GptPartition();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -46,12 +42,8 @@ public:
 	//properties
 
 protected:
-	Piece (void);
-
-private:
-
+	GptPartition (void);
 };
 
-
-#endif // _PIECE_H_
+#endif // _GPT_PARTITION_H_
 

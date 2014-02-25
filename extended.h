@@ -19,31 +19,27 @@
 #ifndef _EXTENDED_H
 #define _EXTENDED_H
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "msdos.h"
-#include "device.h"
-#include "action.h"
 
 class Extended;
-class Visitor;
 
 typedef std::shared_ptr<Extended> ExtendedPtr;
 
-class Extended :
-	public Msdos,
-	public Device
+class Extended : public Msdos
 {
 public:
-	virtual ~Extended() = default;
 	static ExtendedPtr create (void);
+	virtual ~Extended();
 	virtual bool accept (Visitor& v);
-
-	static ExtendedPtr probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+
+	static ExtendedPtr probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size);
 
 public:
 	//properties
@@ -54,7 +50,6 @@ protected:
 private:
 
 };
-
 
 #endif // _EXTENDED_H
 

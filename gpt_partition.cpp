@@ -16,50 +16,44 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cstring>
-#include <sstream>
-
-#include "log.h"
-#include "main.h"
-#include "piece.h"
-#include "luks.h"
-#include "utils.h"
-#include "log_trace.h"
+#include "gpt_partition.h"
+#include "action.h"
 #include "visitor.h"
 
-Piece::Piece (void)
+GptPartition::GptPartition (void)
 {
-	const char* me = "Piece";
-
-	sub_type (me);
 }
 
-PiecePtr
-Piece::create (void)
+GptPartition::~GptPartition()
 {
-	PiecePtr m (new Piece());
-	m->weak = m;
+}
 
-	return m;
+GptPartitionPtr
+GptPartition::create (void)
+{
+	GptPartitionPtr p (new GptPartition());
+	p->weak = p;
+
+	return p;
 }
 
 
 bool
-Piece::accept (Visitor& v)
+GptPartition::accept (Visitor& v)
 {
-	PiecePtr m = std::dynamic_pointer_cast<Piece> (get_smart());
-	if (!v.visit(m))
+	GptPartitionPtr b = std::dynamic_pointer_cast<GptPartition> (get_smart());
+	if (!v.visit(b))
 		return false;
 	return visit_children(v);
 }
 
 
 std::vector<Action>
-Piece::get_actions (void)
+GptPartition::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.piece", true },
+		{ "dummy.gpt_partition", true },
 	};
 
 	std::vector<Action> parent_actions = Container::get_actions();
@@ -70,10 +64,10 @@ Piece::get_actions (void)
 }
 
 bool
-Piece::perform_action (Action action)
+GptPartition::perform_action (Action action)
 {
-	if (action.name == "dummy.piece") {
-		std::cout << "Piece perform: " << action.name << std::endl;
+	if (action.name == "dummy.gpt_partition") {
+		std::cout << "GptPartition perform: " << action.name << std::endl;
 		return true;
 	} else {
 		return Container::perform_action (action);

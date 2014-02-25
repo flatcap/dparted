@@ -19,31 +19,30 @@
 #ifndef _WHOLE_H_
 #define _WHOLE_H_
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 #include "container.h"
-#include "action.h"
 
-class Visitor;
 class Whole;
 
 typedef std::shared_ptr<Whole> WholePtr;
 
-class Whole : public virtual Container
+class Whole : public Container
 {
 public:
-	virtual ~Whole() = default;
 	static WholePtr create (void);
+	virtual ~Whole();
 	virtual bool accept (Visitor& v);
-
-	virtual void add_segment (ContainerPtr seg);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
+	virtual void add_segment (ContainerPtr seg);
+
 public:
+	//properties
 	// seg_count - LVM2_SEG_COUNT
 	std::vector<ContainerPtr> segments;
 
@@ -53,7 +52,6 @@ protected:
 private:
 
 };
-
 
 #endif // _WHOLE_H_
 

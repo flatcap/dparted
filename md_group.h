@@ -20,27 +20,25 @@
 #define _MD_GROUP_H_
 
 #include <memory>
+#include <vector>
 
-#include "whole.h"
-#include "action.h"
+#include "group.h"
 
 class MdGroup;
-class MdTable;
-class Visitor;
 
 typedef std::shared_ptr<MdGroup> MdGroupPtr;
 
-class MdGroup : public Whole
+class MdGroup : public Group
 {
 public:
-	virtual ~MdGroup() = default;
 	static MdGroupPtr create (void);
+	virtual ~MdGroup();
 	virtual bool accept (Visitor& v);
-
-	static void discover (ContainerPtr& top_level);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+
+	static void discover (ContainerPtr& top_level);
 
 public:
 	//properties
@@ -51,7 +49,6 @@ protected:
 private:
 
 };
-
 
 #endif // _MD_GROUP_H_
 

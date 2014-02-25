@@ -27,15 +27,16 @@
 #include <sstream>
 #include <string>
 
+#include "msdos.h"
+#include "action.h"
 #include "app.h"
 #include "extended.h"
 #include "log.h"
+#include "log_trace.h"
 #include "main.h"
 #include "misc.h"
-#include "msdos.h"
 #include "partition.h"
 #include "utils.h"
-#include "log_trace.h"
 #include "visitor.h"
 
 Msdos::Msdos (void)
@@ -45,13 +46,17 @@ Msdos::Msdos (void)
 	sub_type (me);
 }
 
+Msdos::~Msdos()
+{
+}
+
 MsdosPtr
 Msdos::create (void)
 {
-	MsdosPtr m (new Msdos());
-	m->weak = m;
+	MsdosPtr p (new Msdos());
+	p->weak = p;
 
-	return m;
+	return p;
 }
 
 
@@ -62,6 +67,33 @@ Msdos::accept (Visitor& v)
 	if (!v.visit(m))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+Msdos::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.msdos", true },
+	};
+
+	std::vector<Action> parent_actions = Table::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Msdos::perform_action (Action action)
+{
+	if (action.name == "dummy.msdos") {
+		std::cout << "Msdos perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Table::perform_action (action);
+	}
 }
 
 
@@ -203,33 +235,6 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 	m->fill_space();		// optional
 
 	return m;
-}
-
-
-std::vector<Action>
-Msdos::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.msdos", true },
-	};
-
-	std::vector<Action> parent_actions = Table::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Msdos::perform_action (Action action)
-{
-	if (action.name == "dummy.msdos") {
-		std::cout << "Msdos perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Table::perform_action (action);
-	}
 }
 
 

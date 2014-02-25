@@ -19,6 +19,7 @@
 #include <string>
 
 #include "md_table.h"
+#include "action.h"
 #include "log_trace.h"
 #include "utils.h"
 #include "visitor.h"
@@ -40,13 +41,17 @@ MdTable::MdTable (void)
 	declare_prop (me, "data_size",   data_size,   "desc of data_size");
 }
 
+MdTable::~MdTable()
+{
+}
+
 MdTablePtr
 MdTable::create (void)
 {
-	MdTablePtr m (new MdTable());
-	m->weak = m;
+	MdTablePtr p (new MdTable());
+	p->weak = p;
 
-	return m;
+	return p;
 }
 
 
@@ -57,6 +62,33 @@ MdTable::accept (Visitor& v)
 	if (!v.visit(m))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+MdTable::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.md_table", true },
+	};
+
+	std::vector<Action> parent_actions = Table::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+MdTable::perform_action (Action action)
+{
+	if (action.name == "dummy.md_table") {
+		std::cout << "MdTable perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Table::perform_action (action);
+	}
 }
 
 
@@ -142,33 +174,6 @@ MdTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned 
 	parent->add_child(c);
 
 	return t;
-}
-
-
-std::vector<Action>
-MdTable::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.mdtable", true },
-	};
-
-	std::vector<Action> parent_actions = Table::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-MdTable::perform_action (Action action)
-{
-	if (action.name == "dummy.mdtable") {
-		std::cout << "MdTable perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Table::perform_action (action);
-	}
 }
 
 

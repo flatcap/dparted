@@ -20,20 +20,19 @@
 #define _MD_PARTITION_H_
 
 #include <memory>
+#include <vector>
 
-#include "piece.h"
-#include "action.h"
+#include "partition.h"
 
 class MdPartition;
-class Visitor;
 
 typedef std::shared_ptr<MdPartition> MdPartitionPtr;
 
-class MdPartition : public Piece
+class MdPartition : public Partition
 {
 public:
-	virtual ~MdPartition() = default;
 	static MdPartitionPtr create (void);
+	virtual ~MdPartition();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -48,7 +47,6 @@ protected:
 private:
 
 };
-
 
 #endif // _MD_PARTITION_H_
 

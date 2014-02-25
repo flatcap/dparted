@@ -26,12 +26,13 @@
 #include <sstream>
 #include <string>
 
-#include "app.h"
 #include "disk.h"
+#include "action.h"
+#include "app.h"
 #include "log.h"
+#include "log_trace.h"
 #include "main.h"
 #include "utils.h"
-#include "log_trace.h"
 #include "visitor.h"
 
 Disk::Disk (void)
@@ -52,13 +53,17 @@ Disk::Disk (void)
 	declare_prop (me, "mounts",         mounts,         "desc of mounts");
 }
 
+Disk::~Disk()
+{
+}
+
 DiskPtr
 Disk::create (void)
 {
-	DiskPtr d (new Disk());
-	d->weak = d;
+	DiskPtr p (new Disk());
+	p->weak = p;
 
-	return d;
+	return p;
 }
 
 DiskPtr
@@ -98,6 +103,33 @@ Disk::accept (Visitor& v)
 	if (!v.visit(d))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+Disk::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.disk", true },
+	};
+
+	std::vector<Action> parent_actions = Block::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+Disk::perform_action (Action action)
+{
+	if (action.name == "dummy.disk") {
+		std::cout << "Disk perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Block::perform_action (action);
+	}
 }
 
 
@@ -257,7 +289,7 @@ Disk::find_device (const std::string& dev)
 	// iterate through my children
 	if (device.compare (0, dev_len, dev, 0, dev_len) == 0) {
 		//log_debug ("similar\n");
-		return Device::find_device (dev);
+		return Block::find_device (dev);
 	}
 
 	return nullptr;
@@ -322,33 +354,6 @@ Disk::identify (ContainerPtr& top_level, const char* name, int UNUSED(fd), struc
 	ContainerPtr c(d);
 	top_level->just_add_child(c);
 	main_app->queue_add_probe(c);	// queue the container for action
-}
-
-
-std::vector<Action>
-Disk::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.disk", true },
-	};
-
-	std::vector<Action> parent_actions = Device::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-Disk::perform_action (Action action)
-{
-	if (action.name == "dummy.disk") {
-		std::cout << "Disk perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Device::perform_action (action);
-	}
 }
 
 

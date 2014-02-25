@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "lvm_stripe.h"
+#include "action.h"
 #include "log_trace.h"
 #include "visitor.h"
 
@@ -29,13 +30,17 @@ LvmStripe::LvmStripe (void)
 	sub_type (me);
 }
 
+LvmStripe::~LvmStripe()
+{
+}
+
 LvmStripePtr
 LvmStripe::create (void)
 {
-	LvmStripePtr l (new LvmStripe());
-	l->weak = l;
+	LvmStripePtr p (new LvmStripe());
+	p->weak = p;
 
-	return l;
+	return p;
 }
 
 
@@ -54,7 +59,7 @@ LvmStripe::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.lvmstripe", true },
+		{ "dummy.lvm_stripe", true },
 	};
 
 	std::vector<Action> parent_actions = LvmVolume::get_actions();
@@ -67,12 +72,11 @@ LvmStripe::get_actions (void)
 bool
 LvmStripe::perform_action (Action action)
 {
-	if (action.name == "dummy.lvmstripe") {
+	if (action.name == "dummy.lvm_stripe") {
 		std::cout << "LvmStripe perform: " << action.name << std::endl;
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);
 	}
 }
-
 

@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "lvm_mirror.h"
+#include "action.h"
 #include "log.h"
 #include "log_trace.h"
 #include "visitor.h"
@@ -30,13 +31,17 @@ LvmMirror::LvmMirror (void)
 	sub_type (me);
 }
 
+LvmMirror::~LvmMirror()
+{
+}
+
 LvmMirrorPtr
 LvmMirror::create (void)
 {
-	LvmMirrorPtr l (new LvmMirror());
-	l->weak = l;
+	LvmMirrorPtr p (new LvmMirror());
+	p->weak = p;
 
-	return l;
+	return p;
 }
 
 
@@ -47,6 +52,33 @@ LvmMirror::accept (Visitor& v)
 	if (!v.visit(l))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+LvmMirror::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.lvm_mirror", true },
+	};
+
+	std::vector<Action> parent_actions = LvmVolume::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+LvmMirror::perform_action (Action action)
+{
+	if (action.name == "dummy.lvm_mirror") {
+		std::cout << "LvmMirror perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return LvmVolume::perform_action (action);
+	}
 }
 
 
@@ -106,33 +138,6 @@ LvmMirror::add_child (ContainerPtr& child)
 void
 LvmMirror::delete_child (ContainerPtr& UNUSED(child))
 {
-}
-
-
-std::vector<Action>
-LvmMirror::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.lvmmirror", true },
-	};
-
-	std::vector<Action> parent_actions = LvmVolume::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-LvmMirror::perform_action (Action action)
-{
-	if (action.name == "dummy.lvmmirror") {
-		std::cout << "LvmMirror perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return LvmVolume::perform_action (action);
-	}
 }
 
 

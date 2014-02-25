@@ -26,9 +26,10 @@
 #include <string>
 
 #include "file.h"
+#include "action.h"
 #include "log.h"
-#include "main.h"
 #include "log_trace.h"
+#include "main.h"
 #include "visitor.h"
 
 File::File (void)
@@ -38,13 +39,17 @@ File::File (void)
 	sub_type (me);
 }
 
+File::~File()
+{
+}
+
 FilePtr
 File::create (void)
 {
-	FilePtr f (new File());
-	f->weak = f;
+	FilePtr p (new File());
+	p->weak = p;
 
-	return f;
+	return p;
 }
 
 
@@ -55,6 +60,33 @@ File::accept (Visitor& v)
 	if (!v.visit(f))
 		return false;
 	return visit_children(v);
+}
+
+
+std::vector<Action>
+File::get_actions (void)
+{
+	// LOG_TRACE;
+	std::vector<Action> actions = {
+		{ "dummy.file", true },
+	};
+
+	std::vector<Action> parent_actions = Container::get_actions();
+
+	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+
+	return actions;
+}
+
+bool
+File::perform_action (Action action)
+{
+	if (action.name == "dummy.file") {
+		std::cout << "File perform: " << action.name << std::endl;
+		return true;
+	} else {
+		return Container::perform_action (action);
+	}
 }
 
 
@@ -119,31 +151,4 @@ File::identify (ContainerPtr& UNUSED(top_level), const char* UNUSED(name), int U
 	 *	We create, and manage, a loop container for this file
 	 */
 }
-
-std::vector<Action>
-File::get_actions (void)
-{
-	// LOG_TRACE;
-	std::vector<Action> actions = {
-		{ "dummy.file", true },
-	};
-
-	std::vector<Action> parent_actions = Container::get_actions();
-
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
-
-	return actions;
-}
-
-bool
-File::perform_action (Action action)
-{
-	if (action.name == "dummy.file") {
-		std::cout << "File perform: " << action.name << std::endl;
-		return true;
-	} else {
-		return Container::perform_action (action);
-	}
-}
-
 

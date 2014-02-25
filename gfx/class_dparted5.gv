@@ -24,7 +24,7 @@ digraph G
 		arrowsize=0.5
 	];
 
-	Container      [ fillcolor="#C0C0C0" ];
+	Container      [ fillcolor="#FFFFFF" ];
 
 	Block          [ fillcolor="#FFB6C1" penwidth=2 color=red ];
 	Disk           [ fillcolor="#FFB6C1" ];
@@ -44,6 +44,11 @@ digraph G
 	LvmPartition   [ fillcolor="#B0D0B0" ];
 	MdPartition    [ fillcolor="#B0D0B0" ];
 
+	Space          [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
+	Reserved       [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
+	Alignment      [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
+	Unallocated    [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
+
 	Filesystem     [ fillcolor="#B4A0F3" ];
 	Extfs          [ fillcolor="#B4A0F3" ];
 	Btrfs          [ fillcolor="#B4A0F3" ];
@@ -60,12 +65,6 @@ digraph G
 
 	BtrfsSnapshot  [ label="Snapshot"  color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
 	BtrfsSubvolume [ label="Subvolume" color="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-
-	Space          [ fillcolor="#F080FF" ];
-
-	Reserved       [ color="#F080FF" fontcolor=white style=solid penwidth=1 ];
-	Alignment      [ color="#F080FF" fontcolor=white style=solid penwidth=1 ];
-	Unallocated    [ color="#F080FF" fontcolor=white style=solid penwidth=1 ];
 
 	Misc           [ fillcolor="#DC4C46" ];
 
@@ -100,7 +99,6 @@ digraph G
 	Filesystem -> Container;
 	Misc       -> Container;
 	Partition  -> Container;
-	Space      -> Container;
 	Table      -> Container;
 	Whole      -> Container;
 	Wrapper    -> Container;
@@ -141,28 +139,26 @@ digraph G
 	subgraph cluster_3 {
 		color = transparent;
 
-		Reserved             -> Space;
-		Alignment            -> Space;
-		Unallocated          -> Space;
-	}
-
-	subgraph cluster_4 {
-		color = transparent;
-
 		Zero                 -> Misc;
 		Random               -> Misc;
 	}
 
-	subgraph cluster_5 {
+	subgraph cluster_4 {
 		color = transparent;
 
 		MsdosPartition       -> Partition;
 		GptPartition         -> Partition;
 		LvmPartition         -> Partition;
 		MdPartition          -> Partition;
+
+		Space                -> Partition;
+		Reserved             -> Space;
+		Alignment            -> Space;
+		Unallocated          -> Space;
+
 	}
 
-	subgraph cluster_6 {
+	subgraph cluster_5 {
 		color = transparent;
 
 		LvmMetadata          -> LvmLinear;
@@ -172,7 +168,7 @@ digraph G
 		LvmStripe            -> LvmVolume;
 	}
 
-	subgraph cluster_7 {
+	subgraph cluster_6 {
 		color = transparent;
 
 		MdLinear             -> MdVolume;
@@ -181,7 +177,7 @@ digraph G
 		MdStripe             -> MdVolume;
 	}
 
-	subgraph cluster_8 {
+	subgraph cluster_7 {
 		color = transparent;
 
 		LvmGroup             -> Group;
@@ -190,7 +186,7 @@ digraph G
 		Volume               -> Whole;
 	}
 
-	subgraph cluster_9 {
+	subgraph cluster_8 {
 		color = transparent;
 
 		Disk                 -> Block;
@@ -198,7 +194,7 @@ digraph G
 		File                 -> Block;
 	}
 
-	subgraph cluster_10 {
+	subgraph cluster_9 {
 		color = transparent;
 
 		Luks                 -> Wrapper;
