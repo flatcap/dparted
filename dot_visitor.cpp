@@ -281,55 +281,55 @@ template <class T>
 std::string
 dot_container (std::shared_ptr<T> t)
 {
-	ContainerPtr c(t);
-	if (!c)
+	ContainerPtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 
-	std::string uuid_short = c->uuid;
+	std::string uuid_short = p->uuid;
 
 	if ((uuid_short.size() > 8) && (uuid_short[0] != '/')) {
-		uuid_short = c->uuid.substr (0, 6) + "...";
+		uuid_short = p->uuid.substr (0, 6) + "...";
 	}
 
-	output << dot_row ("type",          c->type.back());
-	//output << dot_row ("name",          c->name);
+	output << dot_row ("type",          p->type.back());
+	//output << dot_row ("name",          p->name);
 	output << dot_row ("uuid",          uuid_short); //XXX temp
-	if (c->device.empty()) {
-		if (c->is_a ("Whole")) {
+	if (p->device.empty()) {
+		if (p->is_a ("Whole")) {
 			output << dot_row ("device", "[segments]");
 		} else {
 			output << dot_row ("device", "[inherit]");
 		}
 	} else {
-		output << dot_row ("device", c->device);
+		output << dot_row ("device", p->device);
 	}
 
-	output << dot_row ("fd",       c->fd);
-	output << dot_row ("parent_offset", c->parent_offset);
-	if (c->block_size) {
-		output << dot_row ("block_size",    c->block_size);
+	output << dot_row ("fd",       p->fd);
+	output << dot_row ("parent_offset", p->parent_offset);
+	if (p->block_size) {
+		output << dot_row ("block_size",    p->block_size);
 	} else {
 		output << dot_row ("block_size",    "[inherit]");
 	}
-	output << dot_row ("bytes_size",    c->bytes_size);
-	output << dot_row ("bytes_used",    c->bytes_used);
-	output << dot_row ("bytes_free",    c->bytes_size - c->bytes_used);
+	output << dot_row ("bytes_size",    p->bytes_size);
+	output << dot_row ("bytes_used",    p->bytes_used);
+	output << dot_row ("bytes_free",    p->bytes_size - p->bytes_used);
 #if 0
-	ContainerPtr cwhole = c->whole;
+	ContainerPtr cwhole = p->whole;
 	output << dot_row ("whole",         cwhole);		//XXX what's this doing here?
 #endif
-	//output << dot_row ("parent",        c->parent);
+	//output << dot_row ("parent",        p->parent);
 
-	if (c->missing)
-		output << dot_row ("missing", c->missing);
+	if (p->missing)
+		output << dot_row ("missing", p->missing);
 
 #if 0
-	unsigned int count = c->children.size();
+	unsigned int count = p->children.size();
 	if (count > 0) {
 		output << dot_row ("children", count);
-		for (auto i : c->children) {
+		for (auto i : p->children) {
 			output << dot_row ("", i);
 		}
 	}
@@ -342,13 +342,13 @@ template <class T>
 std::string
 dot_block (std::shared_ptr<T> t)
 {
-	BlockPtr b(t);
-	if (!b)
+	BlockPtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 
-	output << dot_container(b);
+	output << dot_container(p);
 
 	// no specifics for now
 
@@ -359,13 +359,13 @@ template <class T>
 std::string
 dot_disk (std::shared_ptr<T> t)
 {
-	DiskPtr d(t);
-	if (!d)
+	DiskPtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 
-	output << dot_block(d);
+	output << dot_block(p);
 
 	//output << dot_row ("hw_cylinders",   hw_cylinders);
 	//output << dot_row ("hw_heads",       hw_heads);
@@ -384,15 +384,15 @@ template <class T>
 std::string
 dot_file (std::shared_ptr<T> t)
 {
-	FilePtr f(t);
-	if (!f)
+	FilePtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 
-	// no specifics for now
+	output << dot_container(p);
 
-	output << dot_container(f);
+	// no specifics for now
 
 	return output.str();
 }
@@ -401,20 +401,20 @@ template <class T>
 std::string
 dot_loop (std::shared_ptr<T> t)
 {
-	LoopPtr l(t);
-	if (!l)
+	LoopPtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 	std::stringstream mm;
 
-	output << dot_block(l);
+	output << dot_block(p);
 
 	std::string flags;
-	if (l->autoclear)	flags += ", autoclear";
-	if (l->partscan)	flags += ", partscan";
-	if (l->deleted)		flags += ", deleted";
-	if (l->read_only)	flags += ", read only";
+	if (p->autoclear)	flags += ", autoclear";
+	if (p->partscan)	flags += ", partscan";
+	if (p->deleted)		flags += ", deleted";
+	if (p->read_only)	flags += ", read only";
 	if (flags.empty()) {
 		flags = "n/a";
 	} else {
@@ -422,34 +422,34 @@ dot_loop (std::shared_ptr<T> t)
 	}
 
 	// Backing file
-	output << dot_row ("file_name",		l->file_name);
+	output << dot_row ("file_name",		p->file_name);
 #if 1
-	mm << l->file_major << ":" << l->file_minor;
+	mm << p->file_major << ":" << p->file_minor;
 	output << dot_row ("file maj:min",	mm);
 #else
-	output << dot_row ("file_major",	l->file_major);
-	output << dot_row ("file_minor",	l->file_minor);
+	output << dot_row ("file_major",	p->file_major);
+	output << dot_row ("file_minor",	p->file_minor);
 #endif
-	output << dot_row ("file_inode",	l->file_inode);
+	output << dot_row ("file_inode",	p->file_inode);
 
 	// Loop device
 #if 1
 	mm.str ("");
-	mm << l->loop_major << ":" << l->loop_minor;
+	mm << p->loop_major << ":" << p->loop_minor;
 	output << dot_row ("loop maj:min",	mm);
 #else
-	output << dot_row ("loop_major",	l->loop_major);
-	output << dot_row ("loop_minor",	l->loop_minor);
+	output << dot_row ("loop_major",	p->loop_major);
+	output << dot_row ("loop_minor",	p->loop_minor);
 #endif
-	output << dot_row ("offset",		l->offset);
-	output << dot_row ("sizelimit",		l->sizelimit);
+	output << dot_row ("offset",		p->offset);
+	output << dot_row ("sizelimit",		p->sizelimit);
 
 	output << dot_row ("flags",		flags);
 #if 0
-	output << dot_row ("autoclear",		l->autoclear);
-	output << dot_row ("partscan",		l->partscan);
-	output << dot_row ("read_only",		l->read_only);
-	output << dot_row ("deleted",		l->deleted);
+	output << dot_row ("autoclear",		p->autoclear);
+	output << dot_row ("partscan",		p->partscan);
+	output << dot_row ("read_only",		p->read_only);
+	output << dot_row ("deleted",		p->deleted);
 #endif
 
 	return output.str();
@@ -476,13 +476,13 @@ template <class T>
 std::string
 dot_gpt (std::shared_ptr<T> t)
 {
-	GptPtr g(t);
-	if (!g)
+	GptPtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 
-	output << dot_table(g);
+	output << dot_table(p);
 
 	// no specifics for now
 
@@ -491,59 +491,15 @@ dot_gpt (std::shared_ptr<T> t)
 
 template <class T>
 std::string
-dot_lvm_table (std::shared_ptr<T> t)
-{
-	LvmTablePtr l(t);
-	if (!l)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_table (std::dynamic_pointer_cast<Table>(t));
-
-	output << dot_row ("metadata_size", t->metadata_size);
-	output << dot_row ("pv_attr",       t->pv_attr);
-	//output << dot_row ("config",   t->config);
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_md_table (std::shared_ptr<T> t)
-{
-	MdTablePtr m(t);
-	if (!m)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_table (std::dynamic_pointer_cast<Table>(t));
-
-	output << dot_row ("vol_uuid",    t->vol_uuid);
-	output << dot_row ("vol_name",    t->vol_name);
-	output << dot_row ("raid_type",   t->raid_type);
-	output << dot_row ("raid_layout", t->raid_layout);
-	output << dot_row ("raid_disks",  t->raid_disks);
-	output << dot_row ("chunk_size",  t->chunk_size);
-	output << dot_row ("chunks_used", t->chunks_used);
-	output << dot_row ("data_offset", t->data_offset);
-	output << dot_row ("data_size",   t->data_size);
-
-	return output.str();
-}
-
-template <class T>
-std::string
 dot_msdos (std::shared_ptr<T> t)
 {
-	MsdosPtr m(t);
-	if (!m)
+	MsdosPtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 
-	output << dot_table(m);
+	output << dot_table(p);
 
 	// no specifics for now
 
@@ -554,17 +510,61 @@ template <class T>
 std::string
 dot_extended (std::shared_ptr<T> t)
 {
-	ExtendedPtr e(t);
-	if (!e)
+	ExtendedPtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 
-	output << dot_msdos(e);
+	output << dot_msdos(p);
 
 	// no specifics for now
 
 	//XXX how? output << "{ rank=same obj_" << (void*) this << " obj_" << parent << " }\n";
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_lvm_table (std::shared_ptr<T> t)
+{
+	LvmTablePtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_table(p);
+
+	output << dot_row ("metadata_size", p->metadata_size);
+	output << dot_row ("pv_attr",       p->pv_attr);
+	//output << dot_row ("config",        p->config);
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_md_table (std::shared_ptr<T> t)
+{
+	MdTablePtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_table(p);
+
+	output << dot_row ("vol_uuid",    p->vol_uuid);
+	output << dot_row ("vol_name",    p->vol_name);
+	output << dot_row ("raid_type",   p->raid_type);
+	output << dot_row ("raid_layout", p->raid_layout);
+	output << dot_row ("raid_disks",  p->raid_disks);
+	output << dot_row ("chunk_size",  p->chunk_size);
+	output << dot_row ("chunks_used", p->chunks_used);
+	output << dot_row ("data_offset", p->data_offset);
+	output << dot_row ("data_size",   p->data_size);
 
 	return output.str();
 }
@@ -588,74 +588,15 @@ dot_partition (std::shared_ptr<T> t)
 
 template <class T>
 std::string
-dot_luks (std::shared_ptr<T> t)
+dot_msdos_partition (std::shared_ptr<T> t)
 {
-	LuksPtr l(t);
-	if (!l)
+	MsdosPartitionPtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 
-	output << dot_container(l);
-
-	output << dot_row ("version"    , l->version);
-	output << dot_row ("cipher_name", l->cipher_name);
-	output << dot_row ("cipher_mode", l->cipher_mode);
-	output << dot_row ("hash_spec"  , l->hash_spec);
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_filesystem (std::shared_ptr<T> t)
-{
-	FilesystemPtr f(t);
-	if (!f)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_container(f);
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_whole (std::shared_ptr<T> t)
-{
-	WholePtr w(t);
-	if (!w)
-		return "";
-
-	std::stringstream output;
-	unsigned int count = w->segments.size();
-
-	output << dot_container (std::dynamic_pointer_cast<Container>(w));
-
-	if (count > 0) {
-		std::cout << count << " segments" << std::endl;
-		output << dot_row ("segments", count);
-		for (auto i : w->segments) {
-			output << dot_row ("", i);
-		}
-	}
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_volume (std::shared_ptr<T> t)
-{
-	VolumePtr v(t);
-	if (!v)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_whole(v);
+	output << dot_partition(p);
 
 	// no specifics for now
 
@@ -664,221 +605,15 @@ dot_volume (std::shared_ptr<T> t)
 
 template <class T>
 std::string
-dot_md_group (std::shared_ptr<T> t)
+dot_gpt_partition (std::shared_ptr<T> t)
 {
-	MdGroupPtr m(t);
-	if (!m)
+	GptPartitionPtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 
-	output << dot_whole(m);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_misc (std::shared_ptr<T> t)
-{
-	MiscPtr m(t);
-	if (!m)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_container(m);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_lvm_group (std::shared_ptr<T> t)
-{
-	LvmGroupPtr l(t);
-	if (!l)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_whole(l);
-
-	output << dot_row ("pv_count", l->pv_count);
-	output << dot_row ("lv_count", l->lv_count);
-	output << dot_row ("vg_attr",  l->vg_attr);
-	output << dot_row ("vg_seqno", l->vg_seqno);
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_lvm_volume (std::shared_ptr<T> t)
-{
-	LvmVolumePtr l(t);
-	if (!l)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_volume(l);
-
-	unsigned int count = l->metadata.size();
-	if (count > 0) {
-		output << dot_row ("metadata", count);
-		for (auto i : l->metadata) {
-			output << dot_row ("", i);
-		}
-	}
-
-	count = l->subvols.size();
-	if (count > 0) {
-		output << dot_row ("subvols", count);
-		for (auto i : l->subvols) {
-			output << dot_row ("", i);
-		}
-	}
-
-	output << dot_row ("sibling", l->sibling);
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_lvm_linear (std::shared_ptr<T> t)
-{
-	LvmLinearPtr l(t);
-	if (!l)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_lvm_volume(l);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_lvm_mirror (std::shared_ptr<T> t)
-{
-	LvmMirrorPtr l(t);
-	if (!l)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_lvm_volume(l);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_lvm_raid (std::shared_ptr<T> t)
-{
-	LvmRaidPtr l(t);
-	if (!l)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_lvm_volume(l);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_lvm_stripe (std::shared_ptr<T> t)
-{
-	LvmStripePtr l(t);
-	if (!l)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_lvm_volume(l);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_btrfs  (std::shared_ptr<T> t)
-{
-	BtrfsPtr b(t);
-	if (!b)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_filesystem(b);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_extfs  (std::shared_ptr<T> t)
-{
-	NtfsPtr e(t);
-	if (!e)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_filesystem(e);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_ntfs  (std::shared_ptr<T> t)
-{
-	NtfsPtr n(t);
-	if (!n)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_filesystem(n);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_md_partition  (std::shared_ptr<T> t)
-{
-	MdPartitionPtr m(t);
-	if (!m)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_partition(m);
+	output << dot_partition(p);
 
 	// no specifics for now
 
@@ -889,29 +624,29 @@ template <class T>
 std::string
 dot_lvm_partition (std::shared_ptr<T> t)
 {
-	LvmPartitionPtr l(t);
-	if (!l)
+	LvmPartitionPtr p(t);
+	if (!p)
 		return "";
 
 	std::stringstream output;
 
-	output << dot_partition(l);
+	output << dot_partition(p);
 
 #if 0
-	output << dot_row ("dev_size",		l->dev_size);
-	output << dot_row ("pe_start",		l->pe_start);
-	output << dot_row ("pv_attr",		l->pv_attr);
-	output << dot_row ("pv_count",		l->pv_count);
-	output << dot_row ("pv_free",		l->pv_free);
-	output << dot_row ("pv_name",		l->pv_name);
-	output << dot_row ("pv_pe_alloc",	l->pv_pe_alloc);
-	output << dot_row ("pv_pe_count",	l->pv_pe_count);
-	output << dot_row ("pv_size",		l->pv_size);
-	output << dot_row ("pv_used",		l->pv_used);
-	output << dot_row ("pv_uuid",		l->pv_uuid);
+	output << dot_row ("dev_size",		p->dev_size);
+	output << dot_row ("pe_start",		p->pe_start);
+	output << dot_row ("pv_attr",		p->pv_attr);
+	output << dot_row ("pv_count",		p->pv_count);
+	output << dot_row ("pv_free",		p->pv_free);
+	output << dot_row ("pv_name",		p->pv_name);
+	output << dot_row ("pv_pe_alloc",	p->pv_pe_alloc);
+	output << dot_row ("pv_pe_count",	p->pv_pe_count);
+	output << dot_row ("pv_size",		p->pv_size);
+	output << dot_row ("pv_used",		p->pv_used);
+	output << dot_row ("pv_uuid",		p->pv_uuid);
 
-	output << dot_row ("pvseg_size",	l->pvseg_size);
-	output << dot_row ("pvseg_start",	l->pvseg_start);
+	output << dot_row ("pvseg_size",	p->pvseg_size);
+	output << dot_row ("pvseg_start",	p->pvseg_start);
 
 	output << dot_row ("lv_name",		p->lv_name);
 	output << dot_row ("lv_type",		p->lv_type);
@@ -922,6 +657,409 @@ dot_lvm_partition (std::shared_ptr<T> t)
 	output << dot_row ("vg_seqno",		p->vg_seqno);
 	output << dot_row ("vg_uuid",		p->vg_uuid);
 #endif
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_md_partition (std::shared_ptr<T> t)
+{
+	MdPartitionPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_partition(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_filesystem (std::shared_ptr<T> t)
+{
+	FilesystemPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_container(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_ntfs (std::shared_ptr<T> t)
+{
+	NtfsPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_filesystem(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_extfs (std::shared_ptr<T> t)
+{
+	ExtfsPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_filesystem(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_btrfs (std::shared_ptr<T> t)
+{
+	BtrfsPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_filesystem(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_misc (std::shared_ptr<T> t)
+{
+	MiscPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_container(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_luks (std::shared_ptr<T> t)
+{
+	LuksPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_container(p);
+
+	output << dot_row ("version"    , p->version);
+	output << dot_row ("cipher_name", p->cipher_name);
+	output << dot_row ("cipher_mode", p->cipher_mode);
+	output << dot_row ("hash_spec"  , p->hash_spec);
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_whole (std::shared_ptr<T> t)
+{
+	WholePtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+	unsigned int count = p->segments.size();
+
+	output << dot_container(p);
+
+	if (count > 0) {
+		std::cout << count << " segments" << std::endl;
+		output << dot_row ("segments", count);
+		for (auto i : p->segments) {
+			output << dot_row ("", i);
+		}
+	}
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_group (std::shared_ptr<T> t)
+{
+	GroupPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_whole(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_lvm_group (std::shared_ptr<T> t)
+{
+	LvmGroupPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_group(p);
+
+	output << dot_row ("pv_count", p->pv_count);
+	output << dot_row ("lv_count", p->lv_count);
+	output << dot_row ("vg_attr",  p->vg_attr);
+	output << dot_row ("vg_seqno", p->vg_seqno);
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_md_group (std::shared_ptr<T> t)
+{
+	MdGroupPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_group(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_volume (std::shared_ptr<T> t)
+{
+	VolumePtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_whole(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_lvm_volume (std::shared_ptr<T> t)
+{
+	LvmVolumePtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_volume(p);
+
+	unsigned int count = p->metadata.size();
+	if (count > 0) {
+		output << dot_row ("metadata", count);
+		for (auto i : p->metadata) {
+			output << dot_row ("", i);
+		}
+	}
+
+	count = p->subvols.size();
+	if (count > 0) {
+		output << dot_row ("subvols", count);
+		for (auto i : p->subvols) {
+			output << dot_row ("", i);
+		}
+	}
+
+	output << dot_row ("sibling", p->sibling);
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_lvm_linear (std::shared_ptr<T> t)
+{
+	LvmLinearPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_lvm_volume(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_lvm_mirror (std::shared_ptr<T> t)
+{
+	LvmMirrorPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_lvm_volume(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_lvm_raid (std::shared_ptr<T> t)
+{
+	LvmRaidPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_lvm_volume(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_lvm_stripe (std::shared_ptr<T> t)
+{
+	LvmStripePtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_lvm_volume(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_md_volume (std::shared_ptr<T> t)
+{
+	MdVolumePtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_volume(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_md_linear (std::shared_ptr<T> t)
+{
+	MdLinearPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_md_volume(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_md_mirror (std::shared_ptr<T> t)
+{
+	MdMirrorPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_md_volume(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_md_raid (std::shared_ptr<T> t)
+{
+	MdRaidPtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_md_volume(p);
+
+	// no specifics for now
+
+	return output.str();
+}
+
+template <class T>
+std::string
+dot_md_stripe (std::shared_ptr<T> t)
+{
+	MdStripePtr p(t);
+	if (!p)
+		return "";
+
+	std::stringstream output;
+
+	output << dot_md_volume(p);
+
+	// no specifics for now
 
 	return output.str();
 }
