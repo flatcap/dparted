@@ -12,7 +12,7 @@ digraph G
 		shape="Mrecord"
 		fontsize="12"
 		style="filled"
-		width="1.2"
+		width="1.3"
 		height="0.25"
 		fixedsize="true"
 		penwidth="0.0"
@@ -31,76 +31,76 @@ digraph G
 		<tr><td>▲</td><td align="left">GUI Top-Level</td></tr>
 	      </table> > ]
 
-	Container      [ label="Container"        fillcolor="#FFFFFF" ];
-                                                
-	Block          [ label="Block ▲"          fillcolor="#FFB6C1" ];
-	Disk           [ label="Disk ★"           fillcolor="#FFB6C1" ];
-	Loop           [ label="Loop ★"           fillcolor="#FFB6C1" ];
-	File           [ label="File"             fillcolor="#FFB6C1" ];
-                                                
-	Table          [ label="Table"            fillcolor="#FFFFCC" ];
-	Msdos          [ label="Msdos"            fillcolor="#FFFFCC" ];
-	Extended       [ label="Extended ★"       fillcolor="#FFFFCC" ];
-	Gpt            [ label="Gpt"              fillcolor="#FFFFCC" ];
-	LvmTable       [ label="LvmTable"         fillcolor="#FFFFCC" ];
-	MdTable        [ label="MdTable"          fillcolor="#FFFFCC" ];
+	Container      [ fillcolor="#FFFFFF" label="Container"        ];
 
-	Partition      [ label="Partition"        fillcolor="#B0D0B0" ];
-	MsdosPartition [ label="MsdosPartition ★" fillcolor="#B0D0B0" ];
-	GptPartition   [ label="GptPartition ★"   fillcolor="#B0D0B0" ];
-	LvmPartition   [ label="LvmPartition ★"   fillcolor="#B0D0B0" ];
-	MdPartition    [ label="MdPartition ★"    fillcolor="#B0D0B0" ];
+	Block          [ fillcolor="#FFB6C1" label="Block ▲"          ];
+	Disk           [ fillcolor="#FFB6C1" label="Disk ★"           ];
+	Loop           [ fillcolor="#FFB6C1" label="Loop ★"           ];
+	File           [ fillcolor="#FFB6C1" label="File"             ];
 
-	Space          [ label="Space"            color    ="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
-	Reserved       [ label="Reserved"         color    ="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
-	Alignment      [ label="Alignment"        color    ="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
-	Unallocated    [ label="Unallocated"      color    ="#B0D0B0" fontcolor=white style=solid penwidth=1 ];
-                                                
-	Filesystem     [ label="Filesystem"       fillcolor="#B4A0F3" ];
-	Extfs          [ label="Extfs"            fillcolor="#B4A0F3" ];
-	Btrfs          [ label="Btrfs"            fillcolor="#B4A0F3" ];
-	Ntfs           [ label="Ntfs"             fillcolor="#B4A0F3" ];
-                                                
-	Ext2           [ label="Ext2"             color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	Ext3           [ label="Ext3"             color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	Ext4           [ label="Ext4"             color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-                                                
-	Reiserfs       [ label="Reiserfs"         color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	Swap           [ label="Swap"             color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	Vfat           [ label="Vfat"             color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	Xfs            [ label="Xfs"              color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-                                                
-	BtrfsSnapshot  [ label="Snapshot"         color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-	BtrfsSubvolume [ label="Subvolume"        color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 ];
-                                                
-	Misc           [ label="Misc"             fillcolor="#DC4C46" ];
-                                                
-	Zero           [ label="Zero"             color    ="#DC4C46" fontcolor=white style=solid penwidth=1 ];
-	Random         [ label="Random"           color    ="#DC4C46" fontcolor=white style=solid penwidth=1 ];
-                                                
-	Wrapper        [ label="Wrapper"          color    ="#80FF80" fontcolor=white style=solid penwidth=1 ];
-                                                
-	Luks           [ label="Luks"             fillcolor="#80FF80" ];
-                                                
-	Volume         [ label="Volume ▲"         fillcolor="#2BDCFF" ];
-	Whole          [ label="Whole"            fillcolor="#2BDCFF" ];
-	Group          [ label="Group▲"           fillcolor="#2BDCFF" ];
-	LvmGroup       [ label="LvmGroup"         fillcolor="#2BDCFF" ];
-	MdGroup        [ label="MdGroup"          fillcolor="#2BDCFF" ];
-                                                
-	LvmLinear      [ label="LvmLinear ★"      fillcolor="#DAA520" ];
-	LvmMirror      [ label="LvmMirror ★"      fillcolor="#DAA520" ];
-	LvmRaid        [ label="LvmRaid ★"        fillcolor="#DAA520" ];
-	LvmStripe      [ label="LvmStripe ★"      fillcolor="#DAA520" ];
-	LvmVolume      [ label="LvmVolume"        fillcolor="#DAA520" ];
+	Table          [ fillcolor="#FFFFCC" label="Table"            ];
+	Msdos          [ fillcolor="#FFFFCC" label="Msdos"            ];
+	Extended       [ fillcolor="#FFFFCC" label="Extended ★"       ];
+	Gpt            [ fillcolor="#FFFFCC" label="Gpt"              ];
+	LvmTable       [ fillcolor="#FFFFCC" label="LvmTable"         ];
+	MdTable        [ fillcolor="#FFFFCC" label="MdTable"          ];
 
-	LvmMetadata    [ label="LvmMetadata"      color    ="#DAA520" fontcolor=white style=solid penwidth=1 ];
+	Partition      [ fillcolor="#B0D0B0" label="Partition"        ];
+	MsdosPartition [ fillcolor="#B0D0B0" label="MsdosPartition ★" ];
+	GptPartition   [ fillcolor="#B0D0B0" label="GptPartition ★"   ];
+	LvmPartition   [ fillcolor="#B0D0B0" label="LvmPartition ★"   ];
+	MdPartition    [ fillcolor="#B0D0B0" label="MdPartition ★"    ];
 
-	MdLinear       [ label="MdLinear ★"       fillcolor="#A5DA20" ];
-	MdMirror       [ label="MdMirror ★"       fillcolor="#A5DA20" ];
-	MdRaid         [ label="MdRaid ★"         fillcolor="#A5DA20" ];
-	MdStripe       [ label="MdStripe ★"       fillcolor="#A5DA20" ];
-	MdVolume       [ label="MdVolume"         fillcolor="#A5DA20" ];
+	Space          [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label="Space"            ];
+	Reserved       [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label="Reserved"         ];
+	Alignment      [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label="Alignment"        ];
+	Unallocated    [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label="Unallocated"      ];
+
+	Filesystem     [ fillcolor="#B4A0F3" label="Filesystem"       ];
+	Extfs          [ fillcolor="#B4A0F3" label="Extfs"            ];
+	Btrfs          [ fillcolor="#B4A0F3" label="Btrfs"            ];
+	Ntfs           [ fillcolor="#B4A0F3" label="Ntfs"             ];
+
+	Ext2           [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Ext2"             ];
+	Ext3           [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Ext3"             ];
+	Ext4           [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Ext4"             ];
+
+	Reiserfs       [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Reiserfs"         ];
+	Swap           [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Swap"             ];
+	Vfat           [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Vfat"             ];
+	Xfs            [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Xfs"              ];
+
+	BtrfsSnapshot  [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Snapshot"         ];
+	BtrfsSubvolume [ color    ="#B4A0F3" fontcolor=white style=solid penwidth=1 label="Subvolume"        ];
+
+	Misc           [ fillcolor="#DC4C46" label="Misc"             ];
+
+	Zero           [ color    ="#DC4C46" fontcolor=white style=solid penwidth=1 label="Zero"             ];
+	Random         [ color    ="#DC4C46" fontcolor=white style=solid penwidth=1 label="Random"           ];
+
+	Wrapper        [ color    ="#80FF80" fontcolor=white style=solid penwidth=1 label="Wrapper"          ];
+
+	Luks           [ fillcolor="#80FF80" label="Luks"             ];
+
+	Volume         [ fillcolor="#2BDCFF" label="Volume ▲"         ];
+	Whole          [ fillcolor="#2BDCFF" label="Whole"            ];
+	Group          [ fillcolor="#2BDCFF" label="Group▲"           ];
+	LvmGroup       [ fillcolor="#2BDCFF" label="LvmGroup"         ];
+	MdGroup        [ fillcolor="#2BDCFF" label="MdGroup"          ];
+
+	LvmLinear      [ fillcolor="#DAA520" label="LvmLinear ★"      ];
+	LvmMirror      [ fillcolor="#DAA520" label="LvmMirror ★"      ];
+	LvmRaid        [ fillcolor="#DAA520" label="LvmRaid ★"        ];
+	LvmStripe      [ fillcolor="#DAA520" label="LvmStripe ★"      ];
+	LvmVolume      [ fillcolor="#DAA520" label="LvmVolume"        ];
+
+	LvmMetadata    [ color    ="#DAA520" fontcolor=white style=solid penwidth=1 label="LvmMetadata"      ];
+
+	MdLinear       [ fillcolor="#A5DA20" label="MdLinear ★"       ];
+	MdMirror       [ fillcolor="#A5DA20" label="MdMirror ★"       ];
+	MdRaid         [ fillcolor="#A5DA20" label="MdRaid ★"         ];
+	MdStripe       [ fillcolor="#A5DA20" label="MdStripe ★"       ];
+	MdVolume       [ fillcolor="#A5DA20" label="MdVolume"         ];
 
 	Block      -> Container;
 	Filesystem -> Container;
