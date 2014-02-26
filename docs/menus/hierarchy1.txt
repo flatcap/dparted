@@ -1,36 +1,39 @@
 Container
 	Block
 		Disk
-		Loop
 		File
-	Table
-		Msdos
-			Extended
-		Gpt
-		LvmTable
-		MdTable
-	Partition
-		LvmPartition
-		MdPartition
+		Loop
 	Filesystem
+		Btrfs
+			Snapshot
+			Subvolume
 		Extfs
 			Ext2
 			Ext3
 			Ext4
-		Btrfs
-			Snapshot
-			Subvolume
 		Ntfs
 		Reiserfs
 		Swap
 		Vfat
 		Xfs
 	Misc
-		Reserved
-		Unallocated
-		Zero
 		Random
-		Luks
+		Zero
+	Partition
+		GptPartition
+		LvmPartition
+		MdPartition
+		MsdosPartition
+		Space
+			Alignment
+			Reserved
+			Unallocated
+	Table
+		Gpt
+		LvmTable
+		MdTable
+		Msdos
+			Extended
 	Whole
 		Group
 			LvmGroup
@@ -47,3 +50,5 @@ Container
 				MdMirror
 				MdRaid
 				MdStripe
+	Wrapper
+		Luks

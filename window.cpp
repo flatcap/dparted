@@ -463,7 +463,7 @@ Window::init_actions (void)
 	insert_general_actions ("filesystem", { "check", "defragment", "rebalance", "resize_move", "mount", "umount", "swap_on", "swap_off", "usage" });
 	insert_general_actions ("group",      { "resize", "split", "merge", "add_stripe", "remove_stripe", "add_mirror", "remove_mirror", "break_mirror", "add_raid", "remove_raid" });
 
-	insert_general_actions ("dummy",      { "device", "btrfs", "container", "disk", "extended", "extfs", "file", "filesystem", "gpt", "loop", "luks", "lvmgroup", "lvmlinear", "lvmmetadata", "lvmmirror", "lvmpartition", "lvmraid", "lvmstripe", "lvmtable", "lvmvolume", "mdgroup", "mdtable", "misc", "msdos", "ntfs", "partition", "table", "volume", "whole" });
+	insert_general_actions ("dummy",      { "alignment", "block", "btrfs", "container", "disk", "ext2", "ext3", "ext4", "extended", "extfs", "file", "filesystem", "gpt", "gpt_partition", "group", "loop", "luks", "lvm_group", "lvm_linear", "lvm_metadata", "lvm_mirror", "lvm_partition", "lvm_raid", "lvm_stripe", "lvm_table", "lvm_volume", "md_group", "md_linear", "md_mirror", "md_partition", "md_raid", "md_stripe", "md_table", "md_volume", "misc", "msdos", "msdos_partition", "ntfs", "partition", "random", "reiserfs", "reserved", "snapshot", "space", "subvolume", "swap", "table", "unallocated", "vfat", "volume", "whole", "wrapper", "xfs", "zero" });
 
 #if 0
 	Glib::RefPtr<Gio::Action> a;

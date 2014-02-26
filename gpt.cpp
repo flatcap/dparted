@@ -204,7 +204,7 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char
 		if (*(long*) (buffer+32) == 0)
 			continue;			// Skip empty slots
 
-		MsdosPartitionPtr p = MsdosPartitionPtr::create();
+		MsdosPartitionPtr p = MsdosPartition::create();
 		p->bytes_used = 0;
 		p->uuid = read_uuid1 (buffer+16);
 		//p->part_type_uuid = read_guid (buffer+0);
