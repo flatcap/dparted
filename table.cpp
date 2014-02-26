@@ -26,8 +26,8 @@
 #include "log_trace.h"
 #include "lvm_table.h"
 #include "md_table.h"
-#include "misc.h"
 #include "msdos.h"
+#include "partition.h"
 #include "utils.h"
 #include "visitor.h"
 
@@ -153,14 +153,15 @@ Table::fill_space (void)
 			s2 = get_size (c->parent_offset + c->bytes_size);
 			log_debug ("\tpartition %12lld -> %12lld    %8s -> %8s\n", c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str(), s2.c_str());
 #endif
-			MiscPtr m = Misc::create();
-			m->name = "Unallocated";
-			m->sub_type ("Unallocated");
-			m->parent_offset = upto;
-			m->bytes_size = (c->parent_offset - upto);
-			m->bytes_used = 0;
+			PartitionPtr p = Partition::create();
+			p->name = "Unallocated";
+			p->sub_type ("Space");
+			p->sub_type ("Unallocated");
+			p->parent_offset = upto;
+			p->bytes_size = (c->parent_offset - upto);
+			p->bytes_used = 0;
 
-			vm.push_back(m);
+			vm.push_back(p);
 
 			upto = c->parent_offset + c->bytes_size;
 		}
@@ -168,13 +169,14 @@ Table::fill_space (void)
 
 	//log_debug ("upto = %lld, size = %lld\n", upto, bytes_size);
 	if (upto < bytes_size) {
-		MiscPtr m = Misc::create();
-		m->name = "Unallocated";
-		m->sub_type ("Unallocated");
-		m->parent_offset = upto;
-		m->bytes_size = (bytes_size - upto);
-		m->bytes_used = 0;
-		vm.push_back(m);
+		PartitionPtr p = Partition::create();
+		p->name = "Unallocated";
+		p->sub_type ("Space");
+		p->sub_type ("Unallocated");
+		p->parent_offset = upto;
+		p->bytes_size = (bytes_size - upto);
+		p->bytes_used = 0;
+		vm.push_back(p);
 	}
 
 #if 1

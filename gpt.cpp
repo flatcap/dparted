@@ -30,7 +30,6 @@
 #include "log.h"
 #include "log_trace.h"
 #include "main.h"
-#include "misc.h"
 #include "msdos_partition.h"
 #include "utils.h"
 #include "visitor.h"
@@ -174,16 +173,18 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char
 	// it would be replaced by an aligned partition.
 
 #if 1
-	MiscPtr res1 = Misc::create();
+	PartitionPtr res1 = Partition::create();
 	res1->name          = "Reserved";
+	res1->sub_type ("Space");
 	res1->sub_type ("Reserved");
 	res1->bytes_size    = 512 * 34;		//align (512 * 34, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
 	g->add_child (res1);		// change to add_reserved?
 
-	MiscPtr res2 = Misc::create();
+	PartitionPtr res2 = Partition::create();
 	res2->name          = "Reserved";
+	res2->sub_type ("Space");
 	res2->sub_type ("Reserved");
 	res2->bytes_size    = 512 * 33;		//align (512 * 33, 1024*1024);
 	res2->bytes_used    = res2->bytes_size;
@@ -250,19 +251,21 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char
 	for (auto r : empty) {
 		//printf ("(%d,%d) ", r.first, r.second);
 
-		MiscPtr m = Misc::create();
-		m->bytes_size = (r.second-r.first+1);	m->bytes_size    *= 512;	//XXX avoid overflow (for now)
-		m->parent_offset = r.first;		m->parent_offset *= 512;
+		PartitionPtr p = Partition::create();
+		p->bytes_size = (r.second-r.first+1);	p->bytes_size    *= 512;	//XXX avoid overflow (for now)
+		p->parent_offset = r.first;		p->parent_offset *= 512;
 		if (r.first == 0) {
-			m->name = "Reserved";
-			m->sub_type ("Reserved");
-			m->bytes_used = m->bytes_size;
+			p->name = "Reserved";
+			p->sub_type ("Space");
+			p->sub_type ("Reserved");
+			p->bytes_used = p->bytes_size;
 		} else {
-			m->name = "Unallocated";
-			m->sub_type ("Unallocated");
-			m->bytes_used = 0;
+			p->name = "Unallocated";
+			p->sub_type ("Space");
+			p->sub_type ("Unallocated");
+			p->bytes_used = 0;
 		}
-		g->add_child (m);		// change to add_reserved?
+		g->add_child (p);		// change to add_reserved?
 	}
 	//printf ("\n");
 

@@ -10,6 +10,7 @@ Zero
 
 Loop
 	loop		delete.loop		Detach loop device
+			resize.loop		Resize loop device
 	block		create.filesystem(*)	Create a filesystem		Directly, or indirectly (table, partition, filesystem)
 			create.partition(!)	Create a partition		Can't happen directly
 			create.table(+)		Create a table

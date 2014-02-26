@@ -45,3 +45,5 @@ Common:
 
 	[Defaults] [Cancel] [Next] [OK]
 
+Default to the first incomplete page.
+	=> user might only need click ok

@@ -29,7 +29,6 @@
 #include "log.h"
 #include "log_trace.h"
 #include "main.h"
-#include "misc.h"
 #include "msdos_partition.h"
 #include "utils.h"
 #include "visitor.h"
@@ -121,8 +120,9 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, long off
 	if (!buffer)
 		return nullptr;
 
-	MiscPtr res1 = Misc::create();
+	PartitionPtr res1 = Partition::create();
 	res1->name          = "Reserved";
+	res1->sub_type ("Space");
 	res1->sub_type ("Reserved");
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
