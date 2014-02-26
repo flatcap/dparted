@@ -31,7 +31,7 @@
 #include "log_trace.h"
 #include "main.h"
 #include "misc.h"
-#include "partition.h"
+#include "msdos_partition.h"
 #include "utils.h"
 #include "visitor.h"
 
@@ -204,7 +204,7 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char
 		if (*(long*) (buffer+32) == 0)
 			continue;			// Skip empty slots
 
-		PartitionPtr p = Partition::create();
+		MsdosPartitionPtr p = MsdosPartitionPtr::create();
 		p->bytes_used = 0;
 		p->uuid = read_uuid1 (buffer+16);
 		//p->part_type_uuid = read_guid (buffer+0);

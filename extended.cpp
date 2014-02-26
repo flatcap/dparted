@@ -30,7 +30,7 @@
 #include "log_trace.h"
 #include "main.h"
 #include "misc.h"
-#include "partition.h"
+#include "msdos_partition.h"
 #include "utils.h"
 #include "visitor.h"
 
@@ -123,6 +123,7 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, long off
 
 	MiscPtr res1 = Misc::create();
 	res1->name          = "Reserved";
+	res1->sub_type ("Reserved");
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
@@ -177,7 +178,7 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, long off
 			if ((part.type == 0x05) || (part.type == 0x0F)) {
 				table_offset = offset + part.start;
 			} else {
-				c = Partition::create();
+				c = MsdosPartition::create();
 				c->name = "partition";
 				c->bytes_size = part.size;
 

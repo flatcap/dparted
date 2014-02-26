@@ -139,7 +139,7 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 
 	ContainerPtr c;
 
-	c = Luks::probe (top_level, parent, buffer, bufsize);
+	c = Luks::probe (top_level, parent, buffer, bufsize);	//RAR
 	if (c) {
 		parent->add_child(c);
 

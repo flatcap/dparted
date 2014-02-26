@@ -56,7 +56,7 @@ GptPartition::get_actions (void)
 		{ "dummy.gpt_partition", true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> parent_actions = Partition::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -70,7 +70,7 @@ GptPartition::perform_action (Action action)
 		std::cout << "GptPartition perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Container::perform_action (action);
+		return Partition::perform_action (action);
 	}
 }
 

@@ -110,11 +110,11 @@ LvmVolume::add_child (ContainerPtr& child)
 	} else if (child->is_a ("LvmPartition")) {
 		//log_info ("PARTITION %s\n", child->name.c_str());
 		add_segment (child);
-		//Whole::add_child (child);
+		//Volume::add_child (child);
 		child->whole = get_smart();
 	} else {
 		// filesystem
-		Whole::add_child (child);
+		Volume::add_child (child);
 
 #if 0
 		for (auto i : subvols) {
@@ -178,7 +178,7 @@ LvmVolume::find (const std::string& search)
 			return sibling;
 	}
 
-	return Whole::find (search);
+	return Volume::find (search);
 }
 
 

@@ -594,7 +594,7 @@ Container::sub_type (const char* n)
 std::vector<ContainerPtr>&
 Container::get_children (void)
 {
-	//log_info ("container::get_children\n");
+	//LOG_TRACE;
 	if (children.empty() && whole)
 		return whole->get_children();	//XXX ARGH! don't want derived class in here
 
