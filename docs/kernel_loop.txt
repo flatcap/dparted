@@ -1,2 +1,0 @@
-kernel cmdline
-GRUB_CMDLINE_LINUX="loop.max_loop=16 loop.max_part=15"
