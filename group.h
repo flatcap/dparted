@@ -28,6 +28,9 @@ class Group;
 
 typedef std::shared_ptr<Group> GroupPtr;
 
+/**
+ * class Group - A named set of Volume objects
+ */
 class Group : public Whole
 {
 public:

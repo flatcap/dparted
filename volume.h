@@ -28,6 +28,9 @@ class Volume;
 
 typedef std::shared_ptr<Volume> VolumePtr;
 
+/**
+ * class Volume - An ordered, named, set of Partition objects
+ */
 class Volume : public Whole
 {
 public:

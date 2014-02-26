@@ -39,6 +39,9 @@ class Visitor;
 
 typedef std::shared_ptr<Container> ContainerPtr;
 
+/**
+ * class Container - Base class for all containers
+ */
 class Container
 {
 public:

@@ -29,6 +29,9 @@ class Filesystem;
 
 typedef std::shared_ptr<Filesystem> FilesystemPtr;
 
+/**
+ * class Filesystem - The actual object containing your files
+ */
 class Filesystem : public Container
 {
 public:

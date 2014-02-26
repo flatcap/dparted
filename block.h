@@ -29,6 +29,9 @@ class Block;
 
 typedef std::shared_ptr<Block> BlockPtr;
 
+/**
+ * class Block - Mass storage device
+ */
 class Block : public Container
 {
 public:

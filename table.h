@@ -29,6 +29,9 @@ class Table;
 
 typedef std::shared_ptr<Table> TablePtr;
 
+/**
+ * class Table - Divides a Block into Partition objects
+ */
 class Table : public Container
 {
 public:

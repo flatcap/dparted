@@ -30,6 +30,9 @@ class Partition;
 
 typedef std::shared_ptr<Partition> PartitionPtr;
 
+/**
+ * class Partition - A subdivision of a Block
+ */
 class Partition : public Container
 {
 public:

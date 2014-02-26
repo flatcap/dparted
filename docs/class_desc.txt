@@ -1,7 +1,0 @@
-Container	Base class for all objects
-Block		Mass storage device
-Table		Divides a block into partitions
-Filesystem	The actual object containing your files
-Partition	A section of a block
-Group		A named set of volumes
-Volume		An ordered, named, set of partitions
