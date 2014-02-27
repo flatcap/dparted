@@ -270,3 +270,28 @@ move partitions different distances from zero
 T60-66 !protective, protective
 T6* missing lvm tabframe
 
+Fold partition + extended?
+
+Icons
+	Segment		Jigsaw piece
+	Stripe		diagonally striped box
+	Raid5		5 in box
+	Raid10		10 in box
+	Redundancy	+ in box or overlapping squares
+	Mirror		Reflected object
+
+"+" button in gfx view to highlight siblings?
+	how to activate it from the keyboard?
+
+gpt has children
+	bool protective
+		table object
+		partition object
+LVM 0xEE
+LDM 0x42
+
+What's the visual difference between
+	Disk/LvmTable
+	Disk/LvmTable/LvmGroup
+	Disk/LvmTable/LvmGroup/LvmVolume
+
