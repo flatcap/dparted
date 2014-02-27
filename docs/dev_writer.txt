@@ -1,0 +1,18 @@
+Dev Writer
+
+Write an identifying label to every (unused) sector of a block device
+
+Sector contains:
+	Magic
+	UUID
+	file X, sector Y
+	loop P, sector Q
+	partition A, sector B,
+	segment L, sector L
+	fs F, sector G
+	filler file H, sector I
+	(zero)
+	UUID (CRC)
+
+mmap %age completion
+

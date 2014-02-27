@@ -1,0 +1,158 @@
+default theme has: colours, labels, icons -> DefaultTheme object?
+	table = "/usr/share/icons/table.png"
+who populates the default theme?  -- GuiApp?
+	deriving => fine-grained custom colours, etc
+need to be able to _revert_ to default theme
+
+Menu - Theme
+	Default -> object
+	Zany -> load_file & icons, etc
+	B&w  -> load_file & icons, etc
+
+Missing icons, invalid colours, invalid options
+	App.QueueMessages()
+	App.Message() * n
+	App.FlushQueue()
+		Coalesce if titles are the same, e.g.
+			Error reading theme files
+
+
+config_file	table = "/usr/share/..."
+		colour = "cyan"
+		block.icon = "table"
+theme		table -> pixbuf
+		colour = RGBA
+gfx_container	icon -> pixbuf
+		colour = RGBA
+
+if theme seqnum incremented => gfx_container.retheme()
+if new theme, build new gfx_container tree then subst?
+
+Objects - backup
+	alter contents
+	create
+	delete
+	move
+	resize
+
+Timestamp the timeline
+	lose the changes from the last n minutes?
+Follow the datea/parts -> optimisations
+	offer to reorder to save time?
+Use volume redundancy info to save time
+IBackup interface on Container
+Pool of *all* versions of *all* objects, ref-counted
+Operations queue (of IBackups)
+Deque undo/*redo*! iterator keeps current state
+Anything but redo trashes future states
+
+delete item: add to pool, remove from parent
+alter (contained): add to pool
+
+backup -> serialize???
+
+Variant
+	int
+	float
+	string
+
+set by type
+get by type
+coerce to type
+	string, promoted type
+
+ctor (def, copy, move, typed)
+cast (int, float, string)
+operator(=,<<)
+
+If I'm only looking for Variant attrs - don't need get/set method
+e.g. dot visitor
+	get_parent
+	get_attrs -> const vector<Variant>&
+		valid while you have a ContainerPtr
+
+find by name	not uniq
+find by uuid	uniq to device (hopefully)
+
+deque
+	work commit		begin()
+	now (redo exists)	iter
+	now (no redo)		end()
+
+Tasks
+	resizefs 5GB to 15GB
+		resize part
+		resize luks
+		resize lvmpv
+		resize lvmvol
+		resize ext4
+ONE TRANSACTION (with sub transactions) in TimeLine
+
+Dialog
+/--------------------------------------\
+|Pending Actions:                      |
++--------------------------------------+
+|Description    | Command              |
++--------------------------------------+
+|resizefs       | cryptsetup ...       |
+|	part    |                      |
+|	[luks]  |                      |
+|	pv      |                      |
+|	vol     |                      |
+|	ext4    |                      |
+\--------------------------------------/
+
+[XXX] = highlight
+select resizefs and it will display *all* the sub commands
+
+Options:
+	display
+	handle
+	container
+	icon
+	size (log|linear|fixed|min)
+	label (interior)
+	title (exterior)
+Colours:
+	border
+	fill
+	etc
+	shading
+Inheritance
+	Class hierarchy
+
+
+manage updates using backup mechanism to sync
+
+
+segments
+	lvm_group, lvm_table		sort by device name of table, offset n/a
+	lvm_volume, lvm_partition	sort by offset within volume
+
+add_segment
+	group::pvs group->table
+		metadata add_child	} add_segment?
+		volume add_child	}
+
+loop device relies on a disk+file
+	point loop to Disk object, file object
+	what does the file object do?
+File's parents, Disk? FS?
+Parent objects may not be part of our view
+	user excluded
+
+btrfs:
+	one volume, multivolume
+	raid0, raid1, raid10, raid5, raid6
+		data, metadata
+	no subvolumes, mant subvolumes
+	no snapshots, many snapshots
+
+gfx - multiple selection
+	=> tristate (yes,no,parent)?
+	select object => select children?
+Selection menu option
+	put a tickbox on every visible object
+	does this work for keyboard, still?
+
+
