@@ -1,0 +1,39 @@
+gui
+
+cmdline
+	partition converter
+		option to partially convert
+		i.e. leave /boot alone
+
+	what does /proc/partitions say on a virtual machine?
+		xen
+		kvm
+		vmware
+		etc
+
+	disk -> SMART
+
+	look at http://disktype.sourceforge.net/ and gpart (recovery)
+
+	script to turn existing partition table into a image_build script
+	e.g.
+		copy_table.sh /dev/sda
+	creates
+		sda_image.sh
+	builds
+		/dev/loop0
+	with matching
+		partition table
+		partition layout
+		filesystems
+		%age file usage (fallocate)
+
+	partition_clone program to save a sparse image of the same
+
+	debug: dump image/disk metadata, compress it, mail it
+
+	vm image script: image to loopmount command
+		include offset
+		include sizelimit
+		readonly? ro
+

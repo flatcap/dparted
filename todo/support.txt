@@ -1,0 +1,47 @@
+support for loop mounted partitions / devices (especially for VMs)
+
+support MS LBA extended partition 0x0f
+
+block devices
+files
+filesystems
+tables
+encryption
+raid
+
+for each block list all the subtypes supported and all the types understood but not handled
+
+Tables
+	msdos
+		linear
+		count <= 4
+	msdos extended
+		linear
+	gpt
+		linear
+		count <= 128
+	lvm
+		linear
+		striped
+		raid
+	ldm
+		linear
+		striped
+		raid
+	btrfs
+		linear
+		raid
+
+	sgi - read-only
+	sun - read-only
+
+for conversion between tables we also need to know how much space is reserved
+before the first partition
+
+msdos (recent), msdos extended (recent), gpt, lvm
+	all have their first partition at 1MiB
+
+if lvm only contains simple partitions, it could be converted to an msdos table
+
+fdisk cat create SGI and Sun partition tables
+

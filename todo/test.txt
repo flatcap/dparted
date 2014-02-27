@@ -1,0 +1,210 @@
+test suite
+	images - prereq for high-numbered loops in shell script
+
+	images/scripts
+		on success, print a list of partitions on each loop device
+		only cleanup OUR work
+		use cronic to mask working
+
+	test lvconvert -- break mirrors, etc
+
+	lvcreate for mirrors -- especially the test script
+		Specifying the optional argument --nosync will cause the creation of
+		the mirror to skip the initial resynchronization.  Any  data written
+		afterwards will be mirrored, but the original contents will not be
+		copied.  This is useful for skipping a potentially long and resource
+		intensive initial sync of an empty device.
+
+	fix image creation tools to:
+		 check that enough loops exist
+		 pick a loop device and use that one
+		 destroy should look for the image name in losetup -a
+
+	test vm image -- mini-fedora gui + many test volumes
+		(or script to create the volumes)
+
+	test cases
+	scripts, fold error conditions:
+		LOOP="$(create_loop $FUNCNAME)"
+		[ -n "$LOOP" ] || error || return
+	becomes
+		LOOP="$(create_loop $FUNCNAME)" || error || return
+
+	trying reversing the lvm sort field to test the code assembly
+		sort -R on cmd output (build into utils!)
+
+	test script create options
+		-v verbose
+		-d delete
+
+	run
+		"every possible action"
+	against
+		"every possible object"
+		be it container or free space
+
+test cases
+	raid10 = mirrored stripes, i.e.
+		1 mirror that contains (a log and)
+		4 stripes that contain
+		8 linear volumes
+
+	pvmove [device] -> shift data off device if possible
+
+	cope with sparse partition tables
+		/dev/sda{1,2,4] exist sda3 is missing
+
+	test for luks device containing lvm (std fedora install)
+
+	vgsplit	split volume group into separate vg's
+	vgmerge join two vg's into one
+		doing this and messing around with partitions and pv's
+		would allow us to transfer a single volume between vg's
+
+	ldm examples / support
+
+	where does btrfs fit in? need examples
+
+	btrfs example images
+
+	what happens to my objects if a simple lvm volume is extended, mirrored, striped, etc?
+
+	create list of all actions
+	decide what underlying commands will be executed
+	decide how that will affect the object hierarchy
+	decide the minimum number of objects to refresh
+
+	fs convert
+		requires asking destination fs for action
+		actions for ext2
+			convert to btrfs
+		should we ask btrfs for actions on other fs?
+	part scheme convert
+	lvm convert
+	encrypt / decrypt
+	rescue
+
+	lvm -> add mirror, stripe, break mirror
+
+	create test case with lots of duplicate names
+	duplicate uuids too?
+
+	disk
+		contents
+			empty
+			partition table, but no partitions
+			partition table, some partitions
+			lvm ident
+			filesystem
+		actions
+			information
+			create partition table
+				msdos
+				gpt
+				lvm
+			delete partition table
+			rescue partitions / data
+
+	partition
+		contents
+			empty
+			filesystem
+			partition (extended)
+			lvm ident
+		actions
+			information
+			create partition
+			delete partition
+			move partition
+			resize partition
+			copy partition
+			paste partition
+			edit flags
+
+	filesystem
+		contents
+			recognised
+			not recognised
+		actions
+			label partition
+			format partition
+			check partition
+			delete filesystem
+
+		actions
+			check
+			info
+			mount
+			unmount
+			format
+			wipe
+			label
+			set uuid
+			set flags
+
+	tests
+		multiple lvm volume groups on a single disk
+		(in different partitions)
+
+	test cases for LDM, md
+
+	need test cases for differently-sized disks
+	test display strategies
+		disk: linear, logorithmic
+		partition: linear, logorithmic
+
+	distinguish between wide/narrow stripes
+		4 disks, 4 stripes (A + B + C + D)
+		4 disks, 2 stripes (A + B), (C + D)
+
+	run on non-toplevel, e.g. sda2 (still works?)
+
+	vm files -> duplicate lvm volume names
+		create dummy lvm config for each -- separation
+		not necessary -- use filter
+
+	test images
+
+	along with each test image
+	need a broken image testing every "if (!x)" in the entire program
+	fuzzing tool?
+		corrupt tables
+		zero lengths
+		size overruns
+		read failed
+		command not found
+		command output corrupt
+
+fuzzing
+
+gui
+	fixed test images
+	1920x1080 screen
+	visual comparison
+		too theme dependent
+	exclude chrome
+		will help, but still too variable
+
+test mode
+	realistic progress / ETA timings
+
+	demo version, outputs commands, but does nothing
+		for review purposes
+
+	dparted --test
+	lots of sample disks to play with
+	non-destructive, but persistant (across runs) -- save to config file, etc
+	reset menu item
+	[X] extra realism -- take ages to perform moves!
+
+	BIG ICON = safe to play
+	test mode fixes the theme -- sizes, colours, fonts, etc
+	lie about device names too -- all "/dev/sda"
+	make the output easily cut'n'pasteable
+
+	build-in test mode into gui
+		create some loop devices
+		create some demo partitions, volumes, etc
+
+	test-mode  -- some simple, medium & complex playthings
+

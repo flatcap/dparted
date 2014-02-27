@@ -1,0 +1,108 @@
+context-specific
+tooltips
+
+preferences dialog is complicated
+	on help double the width and explain each option
+	with examples
+
+about
+	author
+	version
+	thanks
+	paypal
+	homepage
+
+faq
+	list of *all* objects & *all* possible actions
+		basis of help manual
+
+gui
+	intro
+		about
+		why
+		safe mode
+
+	support
+		feature matrix
+
+	basic panels
+		what they represent
+
+	navigation
+		accessing menus
+		between panels
+		selecting items
+			left-click / tree-select
+			menus / right-click
+
+	actions
+		minimise options
+			only actions that apply to all objects
+		maximise options
+			all actions that could apply to any object
+		checkboxes on actions (optional)
+
+	action queue
+		saves up actions
+		undo/redo
+		command window
+			contains all the command line that will be executed
+		nothing done until
+			commit clicked
+			confirm clicked
+
+	working
+		live display as operations proceed
+		commands ticked off
+		time
+			elapsed
+			remaining
+
+	"What's this" button
+		click on item of interest
+		displays full breakdown of what, where, etc
+
+	panel details
+		diagram (gfx)
+		tree view (list)
+		mounts
+		paths
+	comments on docs a la mysql
+
+recipes
+	create some space to share with windows
+
+	make my home directory bigger
+
+	simple steps to follow
+
+	offer rescue advice -- mount -o X ...
+
+	make disk bigger -- look for available space, e.g. lvm
+		suggest actions
+
+	create a liklihood-metric for each recipe
+		suggest most likely first, e.g.
+		this disk is full (and space exists): resize disk?
+
+command line
+	app
+	tools
+
+library
+	scanning api
+	plugin api
+
+example code
+	c
+	c++
+	perl
+	python
+
+todo list
+	testing
+	translations ui/docs/faq
+	all the code/docs/etc I need help with
+	answer all my questions
+	custom gfx: icons, logo, etc
+

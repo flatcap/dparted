@@ -1,0 +1,371 @@
+library
+	change declare "lvm_volume" to "LvmVolume"?
+
+	if !identified run file(1)
+
+	check for pre-requisites on startup
+		[X] always?
+		which rpm(s) are needed
+
+	scan for other OSs
+		Am I a Windows user?
+		Will affect questions asked of the user
+
+	list of custom signals
+
+	treeiter on container
+
+	option for scanning
+		ignore empty (don't give me object for empty spaces)
+			NO need empty objects to click on
+		ignore reserved (leave gaps, instead of reserved objects)
+
+	disk container understands disks
+	e.g. /dev/hda, sda, etc
+	logical container understands lvm
+	e.g. /etc/mapper/myvol-X, /dev/myvol/X
+	derived from container
+
+	container.find (uuid)
+	recurse through children
+	stop on match? unique? dupes?
+
+	container.find (mount point)
+	recurse
+
+	cmdline what do we need to specify?
+
+	open -> limited set of devices! vs scan all devices
+
+gui
+	menu Help/Log -- save option
+
+	scenario:
+		encrypted volume ENC
+		user unlocks
+			password -> manager
+		probe new device
+		filesystem detected F_ENC
+		filesystem manager
+			user selects vm image VM1
+		block added to gui B_VM1
+		user runs file manager on filesystem F_VM1
+		filesystem in B_VM1 mounted F_VM1 (temp)
+		user asks to lock original volume
+		Ask user:
+			Are you sure?
+			[X] Unmount volume F_VM1
+			[X] Lock volume ENC
+			[ ] Forget password
+			Yes No
+		umount volume F_VM1
+		lock volume ENC
+		invalidate F_VM1, F_ENC, B_VM1
+			let everyone let go when they want
+
+	OS icons for partitions/fileysystems
+
+	menu option
+		show NOT IMPL actions
+
+	Can't do that now.  Do it at boot time?
+		insert one-off resize script
+
+	filesystems have children?
+		vm images within?
+		NO
+		but menu highlights owner
+
+	determine what to do for single/multiple selections in the treeview
+
+	localisation on object names
+
+	view menu: Labels
+	name gui disks with fs labels (if poss)
+
+	gfx device
+	signals
+		clicked		}		{ disk		}
+		double-clicked	} - need to ask { partition	} for options
+		right-clicked	}		{ filesystem	}
+
+	don't need to rebuild entire gfx objects unless refreshed (or at end of jobs)
+	UNLESS: you want a live view of progress
+
+	handles on disk, extended, lvm -- not disk?
+	anything with multiple children
+	disk,loop,file => icon
+
+	when performing operations what should the cancel button do?
+	between operations:
+		stop work
+		list of what got done
+		list of what didn't get done
+	mid large operation:
+		nothing un-reversable has happened, therefore ok
+		some potential for undo? back to sane state
+		"this will destroy...", continue y/n
+		cancel should SIGSTOP all operations until further notice
+
+	ability to save details of actions
+	after and *before* operations
+	make it a list of commands that can the copied
+
+	new top-level panel for virtual disk images
+	path, size, %age used, etc
+
+	list view
+	csv columns
+		container type		disk, partition, filesystem
+		name			sda, msdos, ext4
+		block size		4096
+		label			[filesystem only]
+		siblings / part of?	necessary?
+		device			/dev/sda1
+		device offset		1MiB
+		size total		total size	}
+		size used		in use		} size in bytes, sectors, MiB, GiB, cylinders, %age
+		size free		empty space	}
+		mounts			/home
+		devices			/dev/disk/by-id by-uuid etc
+		flags			object specific flags, read-only, broken?
+		raid type		mirror, stripe, raid, etc
+		children		implied?
+		siblings		prev / next?
+		parts			list of lvm segments
+
+	right click on ONE part of a lvm/raid/etc setup and get menus:
+		delete WHOLE lvm/raid/etc
+		delete THIS part only (breaking raid, mirror, stripe, etc)
+		select entire contents (all parts of volume)
+
+	device selection
+		"all devices" (default) -- run in new mode with all devices visible
+		/dev/sda, etc -- run in classic mode examining one device
+		compact mode with all devices visible, but vertically compressed
+
+	progress dialog is non-modal
+		icon to toggle visibility
+
+	highlight working partition
+
+	multi_select
+		fs * n
+		partitions * n
+		-> delete, check, info
+			minimise options
+				only actions that apply to all objects
+			maximise options
+				all actions that could apply to any object
+			checkboxes on actions (optional)
+
+	select
+		this segment
+		all segments
+
+	file open menu to add extra devices, e.g.
+		/dev/loop0
+		fedora_vm.img
+
+	put "locked" (mounted) symbol on graphical display, too
+
+	display commands to do & recovery steps
+		commands
+		shell script
+		comments explaining what's going on
+
+	when working (performing disk actions)
+	highlight the current partition (red)?
+
+	are !'s visible enough to use in gui?
+
+	autosize text (vertically) to fit disk gui
+	count the number of lines we can get away with
+
+	identify LUKS partitions and offer to open/close them
+	need an icon
+
+	clicking on the disk gui should expand the tree view if necessary
+
+	prelight drawing area on hover => clickable
+	tooltip on hover
+
+	gap 2px before and 1 after?
+
+	handle size 10px?
+
+	which items (in list view) should be folded?
+	container + child == same size
+	child = filesystem
+
+	short fs (doesn't fill the container)
+	less white bit
+
+	unallocated vs empty partition -- distinguish them
+
+	treeview double-click -> infobox
+
+	expanding treeview rows to highlight current selection
+
+	drag'n'drop partition moving
+	if you drop a large partition into a smaller space, it will offer to shrink the volume (if that's possible)
+		check free space of volume
+		shrink in place
+			success -> move
+			failure -> offer to move other things out of the way
+
+	in disk gui only drop "/dev/" not everything up to "/"
+	therefore
+		/dev/sda1 -> sda1
+		/dev/mapper/bob -> mapper/bob
+
+	add device [X] discover next time
+		add popup/popdown list
+
+	make the drawing area completely self-contained
+	i.e. pluggable into another app
+	properties to control
+		colour scheme
+		tooltips
+		etc
+	would need plenty of overridable methods
+
+	can I put a text ui on top
+		lines of text (tables and stuff)?
+		full ncurses?
+
+	allow multiple views -- of what?
+		one gfx view
+		one list view
+		one limited to loop devices
+
+	mounts panel
+		show all
+		show/hide type "tmpfs", etc
+		show/hide virtual fs
+		show/hide net fs
+
+	lvm partial volume
+		icon
+		greyed out
+		hashed out
+
+	gfx: yellow bar for %age in use; use a colour for %age completion of mirror generation
+		need timed callback for mirror, stop at 100%
+		need periodic callback for disk usage
+
+	Click behaviour
+	Graphical display
+		[DISK] [LVM] [sda1: linear(1/3)] [sda2: linear(2/3)] [sda3: linear(3/3)]
+	Logical Volumes
+		My Vol
+			linear
+	Partitions
+		sda
+			sda1
+			sda2
+			sda3
+	CLICK ON		HIGHLIGHT		HIGHLIGHT		HIGHLIGHT
+	gfx: linear(2/3)	gfx:linear(2/3)		logical vol: linear	partitions:sda2
+	gfx: lvm tag		gfx:linear(all3)	logical vol: linear	partitions:sda[123]
+	lvm: linear		gfx:linear(all3)	logical vol: linear	partitions:sda[123]
+	part: sda3		gfx:linear(3/3)		logical vol: linear	partitions:sda3
+
+	in the top-right corner of each display section, show a |X| to UN-display that element
+
+	Display Menu
+		Graphical
+		Disks
+		Partitions
+		Logical Volumes
+		Mounts
+		Log
+
+	resize "working" dialog
+		shouldn't be modal
+		should be on/off-able
+
+	opt show/hide each top-level group
+		disks, loops, vms
+		menu toggle
+
+	Help menu: Thank the author
+		popup a dialog, "Thanks from <username>"
+		src version number
+
+	highlight partitions by greying out others?
+
+	gtk_application_inhibit
+		prevent logout during operations
+
+	kde(qt), curses frontends, cmdline (non-curses) too
+
+	drag'n'drop between windows?
+		between different sets of devices!
+
+	Am-I-a-laptop check. look for a battery
+
+	g_application_mark_busy/g_application_unmark_busy
+		show app is working
+
+	snap to edges option
+		users asks for 4Gib, but gets a few MiB more to fill the space
+
+	draw a scale on the disk gui
+	especially for the non-linear scaling
+
+	view menu: key detailing colours and icons
+		display the theme in some coherent manner
+
+	Are you sure?
+	This operation will destroy:
+		2 filesystems
+		120 GiB of data
+	YES NO
+
+	used space is coloured yellow
+	system space is coloured green? (system/reserved)
+
+	disk display:
+		linear
+		logorithmic
+
+	partition display within a disk:
+		linear
+		logorithmic
+
+	text labels
+		separate text for:
+			disk
+			partition
+			container
+		magic:
+			%device		/dev/sda2
+			%dev		sda2
+			%mounts		/home, /mnt/home
+			%filesystem	ext4
+			%label		home dirs
+			%size		120 GiB
+			%used		56 GiB
+			%flags		boot
+			%partial	stripe, mirror, raid, etc
+		escape seq:
+			\n		newline
+			\r		right align
+			\l		left align
+			\b		big text
+			\s		small text
+			\o		ordinary text
+
+	don't disable menu items (mark them (colour/!))
+		on selection, explain why they can't be selected
+
+cmdline options
+	env var overridden by cmdline
+
+	command line option - read-only
+
+	cmdline --window-geometry --dot --app --detail
+
+accessibility
+

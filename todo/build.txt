@@ -1,0 +1,60 @@
+make
+	speed up build by only compiling gui src with gtkmm, etc
+
+rpm
+deb
+	find correct LSB locations for
+		apps
+		libs
+		man pages
+		info docs
+		html manual
+		icons
+		helper tools
+		localization
+		config files
+
+targets
+	dparted
+		gui application
+
+	libdparted
+		library to parse block devices
+
+	libos
+		library to identify filesystem's
+			operating system
+			os version
+			os installed apps
+		requires fs to be mounted (r/o)
+		slow => optional (config)
+
+	libzero
+		library to blank unused filesystem areas
+
+	libsparse
+		library to sparsify unused filesystem/disk areas
+
+	libfilesystem
+		library to identify filesystem
+
+	libutils
+		library of useful functions
+		e.g.  crc
+
+	mount_scripter
+		tool to read a block device and create a mount script
+		e.g.
+			losetup /dev/loop0 --offset X --sizelimit Y
+			mkdir AAA
+			mount /dev/loop0 AAA
+
+	part_converter
+		tool to non-destructively convert between different partition table types
+
+	part_clone
+		tool to clone block device metadata
+
+	rescue_scripter
+		tool to create script to mount OS and deps, then chroot into root fs
+

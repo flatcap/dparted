@@ -1,0 +1,90 @@
+actions
+	resize
+	move
+	create
+	delete
+	format
+	info
+	check
+	label
+	uuid
+
+unlock/lock encrypted volume
+
+view
+	Graphical
+	Tree View
+	Toolbar
+	Status Bar
+	Log
+	Pending Actions
+	Mounts
+
+context menu
+	highlight parent
+	highlight siblings (other pieces of me)
+	highlight children
+
+raid-y things
+	lvm, md, btrfs, ldm, etc
+
+Blank disk
+	new partition table -> msdos, gpt, etc
+	new partition - whole disk
+	new lvm? - protective partition?	} What proportion of the disk?
+	new ldm? - protective partition?	}
+
+disk
+	contents
+		empty
+		partition table, but no partitions
+		partition table, some partitions
+		lvm ident
+		filesystem
+	actions
+		information
+		create partition table
+			msdos
+			gpt
+			lvm
+		delete partition table
+		rescue partitions / data
+
+partition
+	contents
+		empty
+		filesystem
+		partition (extended)
+		lvm ident
+	actions
+		information
+		create partition
+		delete partition
+		move partition
+		resize partition
+		copy partition
+		paste partition
+		edit flags
+
+filesystem
+	contents
+		recognised
+		not recognised
+	actions
+		label partition
+		format partition
+		check partition
+		delete filesystem
+
+	actions
+		check
+		info
+		mount
+		unmount
+		format
+		wipe
+		label
+		set uuid
+		set flags
+
+

@@ -1,0 +1,96 @@
+config manager
+	hierarchy of names
+	default values
+
+categories
+	library
+	gui
+	confirmation
+
+gui
+	show metadata: yes, no, theme (default)
+
+	show raid internals -- how?
+
+	menu option
+		show NOT IMPL actions
+
+	quick refresh vs full-re-read (option?)
+
+	option to choose data columns to display
+
+	reserved space?
+		ignore it in the diskgui?
+
+	preferences dialog
+	tabbed (notebook) of options
+	OK, Cancel, Cautious (set defaults for a novice user), Expert (select defaults for an expert user)
+
+	hide
+		partition table?
+		partition?
+		protective partition?
+
+	hide protective partitions?
+	just flag them?
+		lvm, gpt, ldm, md
+
+	configurable sizes:
+		bytes/sectors/kilobytes/megabytes/gigabytes/terabytes (and SI versions)
+		also percentage
+		option for "classic" look of mixed units
+
+	multi_select
+		minimise options
+			only actions that apply to all objects
+		maximise options
+			all actions that could apply to any object
+		checkboxes on actions (optional)
+
+	opt show/hide each top-level group
+		disks, loops, vms
+		menu toggle
+
+	snap to edges option
+		users asks for 4Gib, but gets a few MiB more to fill the space
+
+	enable libos
+
+	managers
+		on a timer, keep track of
+		config option for frequency
+
+	advanced menu option to view an unknown partition in a hex viewer
+
+cmdline
+	partition reader gives offsets of partitions
+		output in bytes, sectors, kb, mb, etc
+
+	loop dev option - dev name or backing file
+		filename too long for gui
+
+	option to show/hide reserved space
+
+	on delete partition offer to clean up
+		do nothing
+		write zeroes over the beginning of the partition
+		write zeroes over the entire partition
+		shred the entire partition
+	fewer options
+		Delete:
+			Are you sure? [y/N]
+			Secure deletion [y/N]
+
+	option show:
+		partition size
+	OR	filesystem size
+
+confirmation
+	Are you sure?
+	Only enable "yes" button after an n-second delay
+	options to disable all warning messages
+	[X]	Warning1
+	[X]	Warning2
+	[X]	Disable safety delay on Yes button
+	[X]	Disable "are you sure?" (contingent on above)
+

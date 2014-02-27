@@ -1,0 +1,36 @@
+for publishing: who should I tell?
+
+features matrix vs gparted, gnome-disks, etc
+
+minimal package set to install/build dparted on
+	fedora
+	debian
+	ubuntu
+	mint
+	opensuse
+=> repository for fedora/suse
+=> ppa for debian/ubuntu
+
+not just top 10 distros, but all their LTS releases too
+	ubuntu
+	rhel
+	etc
+
+debut
+	who
+	how many
+	anonymous?
+github
+cv
+paypal
+ntfs/ldm docs
+where's rich
+yha
+read-only version first?
+only valid (not-broken/degraded) volumes
+bugzilla
+bug reporting strategy
+	metadata tool
+
+github rogues gallery of authors (gravatar links)
+
