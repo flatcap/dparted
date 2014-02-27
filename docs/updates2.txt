@@ -1,0 +1,19 @@
+Updates -- keep object in sync
+
+table update - identify unique trait
+	!slot, name type, etc
+	offset changes when part is moved
+pre-move: update object offset value
+move succeeds => reunite table with object
+move fails => RESCAN ALL (drop all objects)
+
+table update
+	children++
+	children--
+		existing children, same seq num
+		new child inserted
+		old child (empty weak ptr) row deleted
+How do I keep the original objects?
+Gfx -- complete refresh wouldn't be visible (list, too)
+Tree -- pattern of expanded nodes would be lost!
+

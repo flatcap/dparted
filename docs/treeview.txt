@@ -1,0 +1,27 @@
+Treeview
+
+Block,  Table, Partition * n, FS
+Always, Empty, Empty,        Always
+
+Columns
+	Container (fixed?) | warnings, locked (icons)
+	Colour, filesystem
+	...
+
+Config:
+	comma packs together
+	bar - left/right alignment
+
+Limit to 2 lines (no extra columns)
+Custom col -> {X} label
+"display" -> "graphics" to match view menu
+"treeview" theme option
+	is this theme option also relevant to text ui?
+Units in config, override in theme?
+View menu
+	[X] gfx
+	(.) tree
+	( ) list
+	( ) other
+
+

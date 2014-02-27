@@ -1,0 +1,15 @@
+Rounding
+
+     |              |
+     |     +--------+-------+
+     |     |        |       |
+     |     |        |       |
+     |     +--------+-------+
+     |              |
+
+start	end
+exact	exact	s	e
+s+s1	exact	s	e+s1 (round up)
+exact	e+e1	s	e+b
+s+s1	e+e1	s	e+s1+e1 (round up)
+

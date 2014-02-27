@@ -1,0 +1,17 @@
+Focus Sync
+
+Linear A	J K L M N O P
+Linear B	J K L . N O .
+Linear C	. K . M . O P
+
+J	Focus A->B	J
+	Focus B->C	K
+
+Focus A/J, B/J, C/-
+Focus C/K, A/K, B/K
+      C/M, A/M, B/-
+
+Select if possible
+If not, no selection
+On focus area, select first visible object
+

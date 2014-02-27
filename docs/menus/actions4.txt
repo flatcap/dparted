@@ -1,0 +1,28 @@
+Actions
+
+Partition/Volume/Filesystem?
+File/Loop/Device
+Table
+Raid
+Space
+
+Fold Table into Device menu?
+Disk rescan/rescan all?
+
+Context menu: DTFSR
+Main menu: DTFR
+
+Space - ask parent for min/max/type (set)
+	msdos -> primary, extended
+	lvm -> linear, stripe, raid
+
+Create filesystem on block device -- how does it work?
+	block has no table -> create default table
+	table has no partition -> create appropriate-sized default type
+	create filesystem
+
+How do I create the menu?
+	block can have table, had default table, delegate (set of tables available)
+	table can have partition, has default partition, delegate (set of partitions available)
+	partition can have filesystem, no default fs?, ask (set of fs available)
+

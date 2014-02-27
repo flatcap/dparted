@@ -1,0 +1,29 @@
+Properties - Where they come from
+
+scan:
+	name
+	device
+	size
+generate:	(these are read-only)
+	size (%age)
+	uuid (short)
+theme:
+	colour (name, type)
+plugin:
+	O/S
+
+
+BASE
+GENERATED
+THEME
+PLUGIN
+
+as bytes_used changes on fs
+	seqnum++
+	recalculate "used" %age, etc
+
+mount manager polls
+gfx::on_draw
+	gfx_container->container.seqnum
+who tells the model?
+
