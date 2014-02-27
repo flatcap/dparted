@@ -1,0 +1,24 @@
+Offsets
+
+Name		Offset		Device
+-----------------------------------------------------------
+loop		0		/dev/loop0
+gpt		0		(inherit)
+partition	>1M		/dev/loop0p1
+luks (closed)	0		(inherit)
+luks (open)	~1M		/dev/mapper/luks-UUID
+fs		0		(inherit)
+
+sda		0		/dev/sda
+msdos		0		(inherit)
+partition	>1M		/dev/sda2
+luks (closed)	0		(inherit)
+luks (open)	~1M		/dev/mapper/luks-UUID
+lvm pv		0		(inherit)
+
+sda		0		/dev/sda
+msdos		0		(inherit)
+extended	>1M		/dev/sda2
+partition	~1M		/dev/sda5
+fs		0		(inherit)
+

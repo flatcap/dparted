@@ -140,3 +140,11 @@ how to specify other icons, e.g.
 
 theme *only* knows about strings and hierarchy
 
+highlight theme plugin
+	all objects grey except thouse matching criteria
+	menubar/toggle button
+	e.g. lvmvols > 80% full
+	linux volumes
+	window volumes
+	highlight by OS (colour code by OS)
+

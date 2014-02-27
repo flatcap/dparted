@@ -235,7 +235,7 @@ Window::parse_geometry
 theme directory to choose from
 resize dialog: minimise, maximise (space used) buttons
 table = [X] correct order -> sort, squash holes
-invisible, transparent => #00000000, = empty?
+none, invisible, transparent => #00000000, = empty?
 props dialog: save button, copy button (to clipboard)
 Misc:Alignment : sub_type ~= Reserved?
 Tools menu, combine with plugins?
@@ -252,4 +252,21 @@ wipefs
 can i copy mounted fs's by creating a snapshot?
 How to i turn the received snapshot info a real fs?  Do I need to?
 configure to ignore fs types UNLESS one's detected
+treeiter on container?
+shadow objects -- entire gui set of objs
+	call all virtual methods on orig lib objects
+
+Container
+	bytes_size
+	bytes_used
+	bytes_free
+	bytes_reserved
+bytes reserved will change if container::alignment is altered
+expose all the above as properties, so the user doesn't need to perform calculations
+
+gpt owns (msdos,partition) => shield
+T50-55 protective -- need to discover lvm table
+move partitions different distances from zero
+T60-66 !protective, protective
+T6* missing lvm tabframe
 

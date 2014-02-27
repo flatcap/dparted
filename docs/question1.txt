@@ -1,0 +1,17 @@
+Question
+
+Type: Info, Question, Warning, Error, Password, Change Password
+
+Read-only, Read-write
+Modal, non-modal
+
+Data: Text-1-line, Text-n-line, checkbox, radio, label, group?, password
+
+Buttons: OK, Cancel, Apply, Close
+
+Control: Type, label, default value, size(display), size(max), default button
+
+IQWE: Title, secondary, help, "Don't ask/tell me again"
+P: Title, secondary, help, size(min)
+
+

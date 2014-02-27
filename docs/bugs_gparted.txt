@@ -1,0 +1,21 @@
+Bugs in GParted
+
+Damned slow - reading 9 partitions on loop
+
+Ctrl-C, format partition, Ctrl-V pastes wrong (new fs), should fail
+
+Gui has 5 types of action - but gives no clue which is which
+	Immediate action - change partition flags
+	Dialog immediate - create table
+	Queue - check fs, delete
+	Dialog queued - resize, insert
+	No changes - mount, properties
+
+Mixed scale numbers
+
+Mount/swapon => refresh!
+
+No support for Fedora/Ubuntu default install
+
+Any operation -> rescan *all*
+

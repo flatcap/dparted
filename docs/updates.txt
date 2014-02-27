@@ -1,0 +1,39 @@
+Disk/Gpt
+	Partition 1
+	space
+	Partition 2
+	space
+
+Updates:
+	add
+	delete
+	move
+	change/format
+
+Add partition
+	table change
+	p1 same
+	p2 same
+	p3 new
+
+Delete partition
+	table changed
+	p1 same
+	p2 dead
+
+Resize partition
+	table changed
+	p1 same
+	p2 changed
+
+Move
+	table changed
+	p1 same
+	p2 changed
+
+Format
+	table same
+	p1 same
+	p2 same
+	fs dead
+
