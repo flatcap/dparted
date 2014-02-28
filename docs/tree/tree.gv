@@ -1,0 +1,36 @@
+digraph tree {
+	graph [
+		rankdir="TB"
+		bgcolor="black"
+		color="white"
+		nodesep="0.1"
+		ranksep="0.5"
+	];
+
+	node [
+		shape="Mrecord"
+		fontsize="24"
+		style="filled"
+		width="0.50"
+		height="0.50"
+		fixedsize="true"
+		penwidth="0.0"
+	];
+
+	edge [
+		penwidth="1.0"
+		color="#A0A0A0"
+		arrowsize="0.5"
+	];
+
+	Z -> P
+	Z -> Q
+	P -> A
+	P -> B
+	P -> C
+	Q -> R
+	Q -> S
+	R -> L
+	S -> M
+}
+
