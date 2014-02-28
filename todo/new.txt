@@ -295,3 +295,6 @@ What's the visual difference between
 	Disk/LvmTable/LvmGroup
 	Disk/LvmTable/LvmGroup/LvmVolume
 
+git pre-commit hook -- file type sensitive
+	i.e. allow spaces to indent svg, etc
+
