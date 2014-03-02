@@ -46,7 +46,10 @@ digraph G
 	MdTable        [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdTable</td><td>&nbsp;</td></tr> </table> > ]
 
 	Partition      [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Partition</td><td>&nbsp;</td></tr> </table> > ]
-	MsdosPartition [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MsdosPartition</td><td>★</td></tr> </table> > ]
+	MsdosPartition [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MsdosPartition</td><td>&nbsp;</td></tr> </table> > ]
+	Primary        [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Primary</td><td>☆</td></tr> </table> > ]
+	Logical        [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Logical</td><td>☆</td></tr> </table> > ]
+
 	GptPartition   [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">GptPartition</td><td>★</td></tr> </table> > ]
 	LvmPartition   [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmPartition</td><td>&nbsp;</td></tr> </table> > ]
 	MdPartition    [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdPartition</td><td>&nbsp;</td></tr> </table> > ]
@@ -156,6 +159,9 @@ digraph G
 		GptPartition         -> Partition;
 		LvmPartition         -> Partition;
 		MdPartition          -> Partition;
+
+		Primary              -> MsdosPartition;
+		Logical              -> MsdosPartition;
 
 		Space                -> Partition;
 		Reserved             -> Space;

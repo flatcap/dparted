@@ -1,354 +1,250 @@
-Virtual
-	Container
-		Block
-		Filesystem
-			Extfs
-		Misc
-		Partition
-			Space
-		Table
-		Whole
-			Group
-			Volume
-				LvmVolume
-				MdVolume
-		Wrapper
-------------------------------------------------------
-Disk
-	Table
-		Msdos
-		Gpt
-		LvmTable
-		MdTable
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-Loop
-	Table
-		Msdos
-		Gpt
-		LvmTable
-		MdTable
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-File
-	Loop
-------------------------------------------------------
-Msdos
-	Partition
-		MsdosPartition
-		Space
-			Reserved
-			Alignment
-			Unallocated
-	Extended
-------------------------------------------------------
-Extended
-	Partition
-		MsdosPartition
-		Space
-			Reserved
-			Alignment
-			Unallocated
-------------------------------------------------------
-Gpt
-	Partition
-		GptPartition
-		Space
-			Reserved
-			Alignment
-			Unallocated
-------------------------------------------------------
-LvmTable
-	Partition
-		LvmPartition
-		Space
-			Reserved
-			Alignment
-			Unallocated
-------------------------------------------------------
-MdTable
-	Partition
-		MdPartition
-		Space
-			Reserved
-			Alignment
-			Unallocated
-------------------------------------------------------
-LvmPartition
-	NOTHING
-------------------------------------------------------
-MdPartition
-	NOTHING
-------------------------------------------------------
-Btrfs
-	Btrfs (Snapshot)
-	Btrfs (Subvolume)
-------------------------------------------------------
-Ntfs
-	NOTHING
-------------------------------------------------------
-Ext2
-	NOTHING
-------------------------------------------------------
-Ext3
-	NOTHING
-------------------------------------------------------
-Ext4
-	NOTHING
-------------------------------------------------------
-Reiserfs
-	NOTHING
-------------------------------------------------------
-Swap
-	NOTHING
-------------------------------------------------------
-Vfat
-	NOTHING
-------------------------------------------------------
-Xfs
-	NOTHING
-------------------------------------------------------
-Reserved
-	NOTHING
-------------------------------------------------------
-Alignment
-	NOTHING
-------------------------------------------------------
-Unallocated
-	NOTHING
-------------------------------------------------------
-Zero
-	NOTHING
-------------------------------------------------------
-Random
-	NOTHING
-------------------------------------------------------
-LvmGroup
-	LvmVolume
-		LvmLinear
-			LvmMetadata
-		LvmMirror
-		LvmRaid
-		LvmStripe
-------------------------------------------------------
-MdGroup
-	MdVolume
-		MdLinear
-		MdMirror
-		MdRaid
-		MdStripe
-------------------------------------------------------
-LvmLinear
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-LvmMetadata
-	NOTHING
-------------------------------------------------------
-LvmMirror
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-LvmRaid
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-LvmStripe
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-MdLinear
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-MdMirror
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-MdRaid
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-MdStripe
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-Partition
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Wrapper
-		Luks
-------------------------------------------------------
-Luks
-	Filesystem
-		Extfs
-			Ext2
-			Ext3
-			Ext4
-		Btrfs
-		Ntfs
-		Reiserfs
-		Swap
-		Vfat
-		Xfs
-	Misc
-		Zero
-		Random
-	Table
-		LvmTable
-		MdTable
-------------------------------------------------------
+Block.Disk
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Table.Gpt
+	Table.LvmTable
+	Table.MdTable
+	Table.Msdos
+	Wrapper.Luks
+
+Block.File
+	Block.Loop
+
+Block.Loop
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Table.Gpt
+	Table.LvmTable
+	Table.MdTable
+	Table.Msdos
+	Wrapper.Luks
+
+Filesystem.Btrfs
+	Filesystem.Btrfs.Snapshot
+	Filesystem.Btrfs.Subvolume
+
+Partition.GptPartition
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Partition.MsdosPartition.Logical
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Partition.MsdosPartition.Primary
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Table.Gpt
+	Partition.GptPartition
+	Partition.Space.Alignment
+	Partition.Space.Reserved
+	Partition.Space.Unallocated
+
+Table.LvmTable
+	Partition.LvmPartition
+	Partition.Space.Alignment
+	Partition.Space.Reserved
+	Partition.Space.Unallocated
+
+Table.MdTable
+	Partition.MdPartition
+	Partition.Space.Alignment
+	Partition.Space.Reserved
+	Partition.Space.Unallocated
+
+Table.Msdos
+	Partition.MsdosPartition.Primary
+	Partition.Space.Alignment
+	Partition.Space.Reserved
+	Partition.Space.Unallocated
+	Table.Msdos.Extended
+
+Table.Msdos.Extended
+	Partition.MsdosPartition.Logical
+	Partition.Space.Alignment
+	Partition.Space.Reserved
+	Partition.Space.Unallocated
+
+Whole.Group.LvmGroup
+	LvmVolume.LvmLinear
+	LvmVolume.LvmLinear.LvmMetadata
+	LvmVolume.LvmMirror
+	LvmVolume.LvmRaid
+	LvmVolume.LvmStripe
+
+Whole.Volume.LvmVolume.LvmLinear
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Whole.Volume.LvmVolume.LvmMirror
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Whole.Volume.LvmVolume.LvmRaid
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Whole.Volume.LvmVolume.LvmStripe
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Whole.Volume.MdVolume.MdLinear
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Whole.Volume.MdVolume.MdMirror
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Whole.Volume.MdVolume.MdRaid
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Whole.Volume.MdVolume.MdStripe
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Wrapper.Luks
+
+Wrapper.Luks
+	Filesystem.Btrfs
+	Filesystem.Extfs.Ext2
+	Filesystem.Extfs.Ext3
+	Filesystem.Extfs.Ext4
+	Filesystem.Ntfs
+	Filesystem.Reiserfs
+	Filesystem.Swap
+	Filesystem.Vfat
+	Filesystem.Xfs
+	Misc.Random
+	Misc.Zero
+	Table.LvmTable
+	Table.MdTable
+
