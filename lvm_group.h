@@ -24,13 +24,13 @@
 #include <string>
 #include <vector>
 
-#include "group.h"
+#include "whole.h"
 
 class LvmGroup;
 
 typedef std::shared_ptr<LvmGroup> LvmGroupPtr;
 
-class LvmGroup : public Group
+class LvmGroup : public Whole
 {
 public:
 	static LvmGroupPtr create (void);

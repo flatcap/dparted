@@ -28,8 +28,8 @@ OUT	= dparted
 
 # Core Objects
 OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extended.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp \
-	   gpt_partition.cpp group.cpp loop.cpp luks.cpp lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp \
-	   lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp md_group.cpp md_linear.cpp md_mirror.cpp \
+	   gpt_partition.cpp loop.cpp luks.cpp lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp \
+	   lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp md_linear.cpp md_mirror.cpp \
 	   md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp misc.cpp msdos.cpp \
 	   msdos_partition.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
 

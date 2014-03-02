@@ -48,8 +48,8 @@ digraph G
 	Partition      [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Partition</td><td>&nbsp;</td></tr> </table> > ]
 	MsdosPartition [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MsdosPartition</td><td>★</td></tr> </table> > ]
 	GptPartition   [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">GptPartition</td><td>★</td></tr> </table> > ]
-	LvmPartition   [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmPartition</td><td>★</td></tr> </table> > ]
-	MdPartition    [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdPartition</td><td>★</td></tr> </table> > ]
+	LvmPartition   [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmPartition</td><td>&nbsp;</td></tr> </table> > ]
+	MdPartition    [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdPartition</td><td>&nbsp;</td></tr> </table> > ]
 
 	Space          [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Space</td><td>&nbsp;</td></tr> </table> > ]
 	Reserved       [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Reserved</td><td>&nbsp;</td></tr> </table> > ]
@@ -84,9 +84,8 @@ digraph G
 
 	Volume         [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Volume</td><td>▲</td></tr> </table> > ]
 	Whole          [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Whole</td><td>&nbsp;</td></tr> </table> > ]
-	Group          [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Group</td><td>▲</td></tr> </table> > ]
+	Group          [ color="#2BDCFF" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Group</td><td>△</td></tr> </table> > ]
 	LvmGroup       [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmGroup</td><td>&nbsp;</td></tr> </table> > ]
-	MdGroup        [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdGroup</td><td>&nbsp;</td></tr> </table> > ]
 
 	LvmLinear      [ fillcolor="#DAA520"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmLinear</td><td>★</td></tr> </table> > ]
 	LvmMirror      [ fillcolor="#DAA520"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmMirror</td><td>★</td></tr> </table> > ]
@@ -188,7 +187,6 @@ digraph G
 		color=transparent;
 
 		LvmGroup             -> Group;
-		MdGroup              -> Group;
 		Group                -> Whole;
 		Volume               -> Whole;
 	}

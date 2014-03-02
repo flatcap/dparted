@@ -31,7 +31,6 @@
 #include "filesystem.h"
 #include "gpt.h"
 #include "gpt_partition.h"
-#include "group.h"
 #include "loop.h"
 #include "luks.h"
 #include "lvm_group.h"
@@ -42,7 +41,6 @@
 #include "lvm_stripe.h"
 #include "lvm_table.h"
 #include "lvm_volume.h"
-#include "md_group.h"
 #include "md_linear.h"
 #include "md_mirror.h"
 #include "md_partition.h"
@@ -78,10 +76,9 @@ public:
 	virtual bool visit (FilesystemPtr     p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
 	virtual bool visit (GptPartitionPtr   p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
 	virtual bool visit (GptPtr            p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
-	virtual bool visit (GroupPtr          p) { return visit (std::dynamic_pointer_cast<Whole>     (p)); }
 	virtual bool visit (LoopPtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
 	virtual bool visit (LuksPtr           p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
-	virtual bool visit (LvmGroupPtr       p) { return visit (std::dynamic_pointer_cast<Group>     (p)); }
+	virtual bool visit (LvmGroupPtr       p) { return visit (std::dynamic_pointer_cast<Whole>     (p)); }
 	virtual bool visit (LvmLinearPtr      p) { return visit (std::dynamic_pointer_cast<LvmVolume> (p)); }
 	virtual bool visit (LvmMirrorPtr      p) { return visit (std::dynamic_pointer_cast<LvmVolume> (p)); }
 	virtual bool visit (LvmPartitionPtr   p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
@@ -89,7 +86,6 @@ public:
 	virtual bool visit (LvmStripePtr      p) { return visit (std::dynamic_pointer_cast<LvmVolume> (p)); }
 	virtual bool visit (LvmTablePtr       p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
 	virtual bool visit (LvmVolumePtr      p) { return visit (std::dynamic_pointer_cast<Volume>    (p)); }
-	virtual bool visit (MdGroupPtr        p) { return visit (std::dynamic_pointer_cast<Group>     (p)); }
 	virtual bool visit (MdLinearPtr       p) { return visit (std::dynamic_pointer_cast<MdVolume>  (p)); }
 	virtual bool visit (MdMirrorPtr       p) { return visit (std::dynamic_pointer_cast<MdVolume>  (p)); }
 	virtual bool visit (MdPartitionPtr    p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }

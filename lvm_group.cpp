@@ -44,6 +44,7 @@ LvmGroup::LvmGroup (void)
 {
 	const char* me = "LvmGroup";
 
+	sub_type ("Whole");
 	sub_type (me);
 
 	declare_prop (me, "pv_count", pv_count, "desc of pv_count");
@@ -84,7 +85,7 @@ LvmGroup::get_actions (void)
 		{ "dummy.lvm_group", true },
 	};
 
-	std::vector<Action> parent_actions = Group::get_actions();
+	std::vector<Action> parent_actions = Whole::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -98,7 +99,7 @@ LvmGroup::perform_action (Action action)
 		std::cout << "LvmGroup perform: " << action.name << std::endl;
 		return true;
 	} else {
-		return Group::perform_action (action);
+		return Whole::perform_action (action);
 	}
 }
 

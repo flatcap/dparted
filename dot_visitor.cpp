@@ -809,23 +809,6 @@ dot_whole (std::shared_ptr<T> t)
 
 template <class T>
 std::string
-dot_group (std::shared_ptr<T> t)
-{
-	GroupPtr p(t);
-	if (!p)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_whole(p);
-
-	// no specifics for now
-
-	return output.str();
-}
-
-template <class T>
-std::string
 dot_lvm_group (std::shared_ptr<T> t)
 {
 	LvmGroupPtr p(t);
@@ -834,29 +817,12 @@ dot_lvm_group (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	output << dot_group(p);
+	output << dot_whole(p);
 
 	output << dot_row ("pv_count", p->pv_count);
 	output << dot_row ("lv_count", p->lv_count);
 	output << dot_row ("vg_attr",  p->vg_attr);
 	output << dot_row ("vg_seqno", p->vg_seqno);
-
-	return output.str();
-}
-
-template <class T>
-std::string
-dot_md_group (std::shared_ptr<T> t)
-{
-	MdGroupPtr p(t);
-	if (!p)
-		return "";
-
-	std::stringstream output;
-
-	output << dot_group(p);
-
-	// no specifics for now
 
 	return output.str();
 }
