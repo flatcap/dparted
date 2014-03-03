@@ -321,7 +321,7 @@ function test_30()
 # 12.01	Table.Msdos.Extended -> Partition.MsdosPartition.Primary
 # 12.03	Table.Msdos.Extended -> Partition.Space.Reserved
 # 12.04	Table.Msdos.Extended -> Partition.Space.Unallocated
-function test_300()
+function test_30x()
 {
 	local IMAGE
 	local LOOP
@@ -643,27 +643,27 @@ function test_39()
 
 if [ $# = 0 ]; then
 	#cleanup
-	# test_20
-	# test_21
-	# test_22
-	# test_23
-	# test_24
-	# test_25
-	# test_26
-	# test_27
-	# test_28
-	# test_29
-	# test_30
-	test_300
-	# test_31
-	# test_32
-	# test_33
-	# test_34
-	# test_35
-	# test_36
-	# test_37
-	# test_38
-	# test_39
+	test_20
+	test_21
+	test_22
+	test_23
+	test_24
+	test_25
+	test_26
+	test_27
+	test_28
+	test_29
+	test_30
+	test_30x
+	test_31
+	test_32
+	test_33
+	test_34
+	test_35
+	test_36
+	test_37
+	test_38
+	test_39
 elif [ $# = 1 -a $1 = "-d" ]; then
 	cleanup
 else

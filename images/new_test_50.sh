@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IMAGE_SIZE="500M"
-MD_INDEX=0
+MD_INDEX=1
 
 source common.sh
 
@@ -323,11 +323,11 @@ function test_55()
 
 if [ $# = 0 ]; then
 	#cleanup
-	# test_50
-	# test_51
-	# test_52
-	# test_53
-	# test_54
+	test_50
+	test_51
+	test_52
+	test_53
+	test_54
 	test_55
 elif [ $# = 1 -a $1 = "-d" ]; then
 	cleanup
