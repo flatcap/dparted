@@ -4,6 +4,10 @@ IMAGE_SIZE="500M"
 
 source common.sh
 
+##
+# 09.01	Table.LvmTable -> Partition.LvmPartition
+# 09.03	Table.LvmTable -> Partition.Space.Reserved
+# 09.04	Table.LvmTable -> Partition.Space.Unallocated
 function test_40()
 {
 	local IMAGE
@@ -33,6 +37,12 @@ function test_40()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 13.01	Whole.Group.LvmGroup -> Whole.Volume.LvmVolume.LvmLinear
+# 13.02	Whole.Group.LvmGroup -> Whole.Volume.LvmVolume.LvmLinear.LvmMetadata
+# 13.03	Whole.Group.LvmGroup -> Whole.Volume.LvmVolume.LvmMirror
+# 13.04	Whole.Group.LvmGroup -> Whole.Volume.LvmVolume.LvmRaid
+# 13.05	Whole.Group.LvmGroup -> Whole.Volume.LvmVolume.LvmStripe
 function test_41()
 {
 	local IMAGE
@@ -82,6 +92,16 @@ function test_41()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 14.01	Whole.Volume.LvmVolume.LvmLinear -> Filesystem.Btrfs
+# 14.02	Whole.Volume.LvmVolume.LvmLinear -> Filesystem.Extfs.Ext2
+# 14.03	Whole.Volume.LvmVolume.LvmLinear -> Filesystem.Extfs.Ext3
+# 14.04	Whole.Volume.LvmVolume.LvmLinear -> Filesystem.Extfs.Ext4
+# 14.05	Whole.Volume.LvmVolume.LvmLinear -> Filesystem.Ntfs
+# 14.06	Whole.Volume.LvmVolume.LvmLinear -> Filesystem.Reiserfs
+# 14.07	Whole.Volume.LvmVolume.LvmLinear -> Filesystem.Swap
+# 14.08	Whole.Volume.LvmVolume.LvmLinear -> Filesystem.Vfat
+# 14.09	Whole.Volume.LvmVolume.LvmLinear -> Filesystem.Xfs
 function test_42()
 {
 	local IMAGE
@@ -129,6 +149,16 @@ function test_42()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 15.01	Whole.Volume.LvmVolume.LvmMirror -> Filesystem.Btrfs
+# 15.02	Whole.Volume.LvmVolume.LvmMirror -> Filesystem.Extfs.Ext2
+# 15.03	Whole.Volume.LvmVolume.LvmMirror -> Filesystem.Extfs.Ext3
+# 15.04	Whole.Volume.LvmVolume.LvmMirror -> Filesystem.Extfs.Ext4
+# 15.05	Whole.Volume.LvmVolume.LvmMirror -> Filesystem.Ntfs
+# 15.06	Whole.Volume.LvmVolume.LvmMirror -> Filesystem.Reiserfs
+# 15.07	Whole.Volume.LvmVolume.LvmMirror -> Filesystem.Swap
+# 15.08	Whole.Volume.LvmVolume.LvmMirror -> Filesystem.Vfat
+# 15.09	Whole.Volume.LvmVolume.LvmMirror -> Filesystem.Xfs
 function test_43()
 {
 	local IMAGE
@@ -186,6 +216,16 @@ function test_43()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 16.01	Whole.Volume.LvmVolume.LvmRaid -> Filesystem.Btrfs
+# 16.02	Whole.Volume.LvmVolume.LvmRaid -> Filesystem.Extfs.Ext2
+# 16.03	Whole.Volume.LvmVolume.LvmRaid -> Filesystem.Extfs.Ext3
+# 16.04	Whole.Volume.LvmVolume.LvmRaid -> Filesystem.Extfs.Ext4
+# 16.05	Whole.Volume.LvmVolume.LvmRaid -> Filesystem.Ntfs
+# 16.06	Whole.Volume.LvmVolume.LvmRaid -> Filesystem.Reiserfs
+# 16.07	Whole.Volume.LvmVolume.LvmRaid -> Filesystem.Swap
+# 16.08	Whole.Volume.LvmVolume.LvmRaid -> Filesystem.Vfat
+# 16.09	Whole.Volume.LvmVolume.LvmRaid -> Filesystem.Xfs
 function test_44()
 {
 	local IMAGE
@@ -253,6 +293,16 @@ function test_44()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 17.01	Whole.Volume.LvmVolume.LvmStripe -> Filesystem.Btrfs
+# 17.02	Whole.Volume.LvmVolume.LvmStripe -> Filesystem.Extfs.Ext2
+# 17.03	Whole.Volume.LvmVolume.LvmStripe -> Filesystem.Extfs.Ext3
+# 17.04	Whole.Volume.LvmVolume.LvmStripe -> Filesystem.Extfs.Ext4
+# 17.05	Whole.Volume.LvmVolume.LvmStripe -> Filesystem.Ntfs
+# 17.06	Whole.Volume.LvmVolume.LvmStripe -> Filesystem.Reiserfs
+# 17.07	Whole.Volume.LvmVolume.LvmStripe -> Filesystem.Swap
+# 17.08	Whole.Volume.LvmVolume.LvmStripe -> Filesystem.Vfat
+# 17.09	Whole.Volume.LvmVolume.LvmStripe -> Filesystem.Xfs
 function test_45()
 {
 	local IMAGE
@@ -310,6 +360,19 @@ function test_45()
 	ok "${LOOP_LIST[@]}"
 }
 
+
+# 14.10	Whole.Volume.LvmVolume.LvmLinear -> Misc.Random
+# 14.11	Whole.Volume.LvmVolume.LvmLinear -> Misc.Zero
+# 14.12	Whole.Volume.LvmVolume.LvmLinear -> Wrapper.Luks
+# 15.10	Whole.Volume.LvmVolume.LvmMirror -> Misc.Random
+# 15.11	Whole.Volume.LvmVolume.LvmMirror -> Misc.Zero
+# 15.12	Whole.Volume.LvmVolume.LvmMirror -> Wrapper.Luks
+# 16.10	Whole.Volume.LvmVolume.LvmRaid -> Misc.Random
+# 16.11	Whole.Volume.LvmVolume.LvmRaid -> Misc.Zero
+# 16.12	Whole.Volume.LvmVolume.LvmRaid -> Wrapper.Luks
+# 17.10	Whole.Volume.LvmVolume.LvmStripe -> Misc.Random
+# 17.11	Whole.Volume.LvmVolume.LvmStripe -> Misc.Zero
+# 17.12	Whole.Volume.LvmVolume.LvmStripe -> Wrapper.Luks
 
 if [ $# = 0 ]; then
 	#cleanup

@@ -4,6 +4,8 @@ IMAGE_SIZE="500M"
 
 source common.sh
 
+##
+# 22.01	Wrapper.Luks -> Filesystem.Btrfs
 function test_30()
 {
 	local IMAGE
@@ -42,6 +44,8 @@ function test_30()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 22.02	Wrapper.Luks -> Filesystem.Extfs.Ext2
 function test_31()
 {
 	local IMAGE
@@ -80,6 +84,8 @@ function test_31()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 22.03	Wrapper.Luks -> Filesystem.Extfs.Ext3
 function test_32()
 {
 	local IMAGE
@@ -118,6 +124,8 @@ function test_32()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 22.04	Wrapper.Luks -> Filesystem.Extfs.Ext4
 function test_33()
 {
 	local IMAGE
@@ -156,6 +164,8 @@ function test_33()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 22.05	Wrapper.Luks -> Filesystem.Ntfs
 function test_34()
 {
 	local IMAGE
@@ -194,6 +204,8 @@ function test_34()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 22.06	Wrapper.Luks -> Filesystem.Reiserfs
 function test_35()
 {
 	local IMAGE
@@ -232,6 +244,8 @@ function test_35()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 22.07	Wrapper.Luks -> Filesystem.Swap
 function test_36()
 {
 	local IMAGE
@@ -270,6 +284,8 @@ function test_36()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 22.08	Wrapper.Luks -> Filesystem.Vfat
 function test_37()
 {
 	local IMAGE
@@ -308,6 +324,8 @@ function test_37()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 22.09	Wrapper.Luks -> Filesystem.Xfs
 function test_38()
 {
 	local IMAGE
@@ -346,6 +364,11 @@ function test_38()
 	ok "${LOOP_LIST[@]}"
 }
 
+#
+# 22.10	Wrapper.Luks -> Misc.Random
+# 22.11	Wrapper.Luks -> Misc.Zero
+# 22.12	Wrapper.Luks -> Table.LvmTable
+# 22.13	Wrapper.Luks -> Table.MdTable
 
 if [ $# = 0 ]; then
 	#cleanup

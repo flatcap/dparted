@@ -4,6 +4,17 @@ IMAGE_SIZE="500M"
 
 source common.sh
 
+##
+# 03 - Filesystem
+# 	03.01 Block.Loop -> Filesystem.Btrfs
+# 	03.02 Block.Loop -> Filesystem.Extfs.Ext2
+# 	03.03 Block.Loop -> Filesystem.Extfs.Ext3
+# 	03.04 Block.Loop -> Filesystem.Extfs.Ext4
+# 	03.05 Block.Loop -> Filesystem.Ntfs
+# 	03.06 Block.Loop -> Filesystem.Reiserfs
+# 	03.07 Block.Loop -> Filesystem.Swap
+# 	03.08 Block.Loop -> Filesystem.Vfat
+# 	03.09 Block.Loop -> Filesystem.Xfs
 function test_00()
 {
 	local IMAGE
@@ -42,6 +53,10 @@ function test_00()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 03 - Misc
+# 	03.10 Block.Loop -> Misc.Random
+# 	03.11 Block.Loop -> Misc.Zero
 function test_01()
 {
 	local IMAGE
@@ -75,6 +90,10 @@ function test_01()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 03 - Table
+# 	03.12 Block.Loop -> Table.Gpt
+# 	03.15 Block.Loop -> Table.Msdos
 function test_02()
 {
 	local IMAGE
@@ -108,6 +127,9 @@ function test_02()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 03 - Table
+# 	03.13 Block.Loop -> Table.LvmTable
 function test_03()
 {
 	local IMAGE
@@ -130,6 +152,9 @@ function test_03()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 03 - Table
+# 	03.14 Block.Loop -> Table.MdTable
 function test_04()
 {
 	local IMAGE
@@ -151,6 +176,9 @@ function test_04()
 	ok "${LOOP_LIST[@]}"
 }
 
+##
+# 03 - Wrapper.Luks
+# 	03.16 Block.Loop -> Wrapper.Luks
 function test_05()
 {
 	local IMAGE
