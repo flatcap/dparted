@@ -35,7 +35,13 @@ get_reiserfs (unsigned char* buffer, int bufsize)
 	FilesystemPtr f  = Filesystem::create();
 	f->sub_type ("reiserfs");
 
-	f->name = (char*) (buffer+0x10064);
+	//XXX c++ this
+	const int max_len = 16;			// Maximum length of a reiserfs label
+	char label[max_len+1];
+	memset (label, 0, sizeof (label));
+	memcpy (label, buffer+0x10064, max_len);
+	f->name = label;
+
 	f->uuid = read_uuid1 (buffer + 0x10054);
 
 	short    int block_size   = *(short    int*) (buffer + 0x1002C);
