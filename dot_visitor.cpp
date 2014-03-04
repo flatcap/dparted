@@ -94,7 +94,7 @@ dot_row (const char* name, bool value)
 {
 	std::stringstream output;
 
-	output << "<tr>";
+	output << "\t\t<tr>";
 	output << "<td align=\"left\">" << name << "</td>";
 	output << "<td>=</td>";
 	output << "<td align=\"left\">" << (value ? "true" : "false") << "</td>";
@@ -111,7 +111,7 @@ dot_row (const char* name, int value)
 {
 	std::stringstream output;
 
-	output << "<tr>";
+	output << "\t\t<tr>";
 	output << "<td align=\"left\">" << name << "</td>";
 	output << "<td>=</td>";
 	output << "<td align=\"left\">" << value << "</td>";
@@ -133,7 +133,7 @@ dot_row (const char* name, long value)
 		str = " (" + get_size (value) + ")";
 	}
 
-	output << "<tr>";
+	output << "\t\t<tr>";
 	output << "<td align=\"left\">" << name << "</td>";
 	output << "<td>=</td>";
 #if 0
@@ -154,7 +154,7 @@ dot_row (const char* name, const std::string& value)
 {
 	std::stringstream output;
 
-	output << "<tr>";
+	output << "\t\t<tr>";
 	output << "<td align=\"left\">" << name << "</td>";
 	output << "<td>=</td>";
 	output << "<td align=\"left\">" << value << "</td>";
@@ -171,7 +171,7 @@ dot_row (const char* name, const std::stringstream& value)
 {
 	std::stringstream output;
 
-	output << "<tr>";
+	output << "\t\t<tr>";
 	output << "<td align=\"left\">" << name << "</td>";
 	output << "<td>=</td>";
 	output << "<td align=\"left\">" << value.str() << "</td>";
@@ -188,7 +188,7 @@ dot_row (const char* name, const char* value)
 {
 	std::stringstream output;
 
-	output << "<tr>";
+	output << "\t\t<tr>";
 	output << "<td align=\"left\">" << name << "</td>";
 	output << "<td>=</td>";
 	output << "<td align=\"left\">" << value << "</td>";
@@ -205,7 +205,7 @@ dot_row (const char* name, unsigned int value)
 {
 	std::stringstream output;
 
-	output << "<tr>";
+	output << "\t\t<tr>";
 	output << "<td align=\"left\">" << name << "</td>";
 	output << "<td>=</td>";
 	output << "<td align=\"left\">" << value << "</td>";
@@ -222,7 +222,7 @@ dot_row (const char* name, void* value)
 {
 	std::stringstream output;
 
-	output << "<tr>";
+	output << "\t\t<tr>";
 	output << "<td align=\"left\">" << name << "</td>";
 	output << "<td>=</td>";
 	if (value) {
@@ -248,7 +248,7 @@ dot_row (const char* name, ContainerPtr value)
 		dest = " (" + value->type.back() + ")";
 	}
 
-	output << "<tr>";
+	output << "\t\t<tr>";
 	output << "<td align=\"left\">" << name << "</td>";
 	output << "<td>=</td>";
 	if (value) {
@@ -797,7 +797,7 @@ dot_whole (std::shared_ptr<T> t)
 	output << dot_container(p);
 
 	if (count > 0) {
-		std::cout << count << " segments" << std::endl;
+		//std::cout << count << " segments" << std::endl;
 		output << dot_row ("segments", count);
 		for (auto i : p->segments) {
 			output << dot_row ("", i);
@@ -1300,7 +1300,6 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 			dot << "subgraph cluster_" << count++ << " { color=transparent;\n";
 
 		dot << "\n";
-		dot << "// " << c << "\n";
 
 		if (c->name.empty()) {
 			c->name = "UNKNOWN";
@@ -1369,7 +1368,6 @@ dump_dot_inner (const std::vector <ContainerPtr>& v)
 
 	return dot.str();
 }
-
 #endif
 
 std::string
