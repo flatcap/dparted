@@ -16,8 +16,8 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _STRINGNUM_H
-#define _STRINGNUM_H
+#ifndef _STRINGNUM_H_
+#define _STRINGNUM_H_
 
 #include <cstdlib>
 #include <string>
@@ -80,5 +80,5 @@ public:
 };
 
 
-#endif // _STRINGNUM_H
+#endif // _STRINGNUM_H_
 

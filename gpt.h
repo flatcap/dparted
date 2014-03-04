@@ -16,8 +16,8 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _GPT_H
-#define _GPT_H
+#ifndef _GPT_H_
+#define _GPT_H_
 
 #include <memory>
 #include <string>
@@ -51,5 +51,5 @@ private:
 
 };
 
-#endif // _GPT_H
+#endif // _GPT_H_
 

@@ -16,8 +16,8 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _EXTENDED_H
-#define _EXTENDED_H
+#ifndef _EXTENDED_H_
+#define _EXTENDED_H_
 
 #include <memory>
 #include <string>
@@ -51,5 +51,5 @@ private:
 
 };
 
-#endif // _EXTENDED_H
+#endif // _EXTENDED_H_
 

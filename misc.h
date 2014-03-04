@@ -16,8 +16,8 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _MISC_H
-#define _MISC_H
+#ifndef _MISC_H_
+#define _MISC_H_
 
 #include <memory>
 #include <string>
@@ -51,5 +51,5 @@ private:
 
 };
 
-#endif // _MISC_H
+#endif // _MISC_H_
 

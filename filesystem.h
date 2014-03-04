@@ -16,8 +16,8 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _FILESYSTEM_H
-#define _FILESYSTEM_H
+#ifndef _FILESYSTEM_H_
+#define _FILESYSTEM_H_
 
 #include <memory>
 #include <string>
@@ -56,5 +56,5 @@ private:
 
 };
 
-#endif // _FILESYSTEM_H
+#endif // _FILESYSTEM_H_
 

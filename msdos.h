@@ -16,8 +16,8 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _MSDOS_H
-#define _MSDOS_H
+#ifndef _MSDOS_H_
+#define _MSDOS_H_
 
 #include <memory>
 #include <string>
@@ -61,5 +61,5 @@ private:
 
 };
 
-#endif // _MSDOS_H
+#endif // _MSDOS_H_
 
