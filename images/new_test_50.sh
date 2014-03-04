@@ -3,6 +3,18 @@
 IMAGE_SIZE="500M"
 MD_INDEX=1
 
+FS_LIST=(
+	"mkfs.btrfs           -L btrfs_label"
+	"mkfs.ext2     -q -F  -L ext2_label"
+	"mkfs.ext3     -q -F  -L ext3_label"
+	"mkfs.ext4     -q -F  -L ext4_label"
+	"mkfs.ntfs     -q -fF -L ntfs_label"
+	"mkfs.reiserfs -q -ff -l reiserfs_label"
+	"mkswap               -L swap_label"
+	"mkfs.vfat            -n vfat_label"
+	"mkfs.xfs             -L xfs_label"
+)
+
 source common.sh
 
 ##
@@ -92,20 +104,8 @@ function test_52()
 
 	echo -n "$FUNCNAME: "
 
-	COMMAND_LIST=(
-		'mkfs.btrfs           -L "btrfs_label"'
-		'mkfs.ext2     -q -F  -L "ext2_label"'
-		'mkfs.ext3     -q -F  -L "ext3_label"'
-		'mkfs.ext4     -q -F  -L "ext4_label"'
-		'mkfs.ntfs     -q -fF -L "ntfs_label"'
-		'mkfs.reiserfs -q -ff -l "reiserfs_label"'
-		'mkswap               -L "swap_label"'
-		'mkfs.vfat            -n "vfat_label"'
-		'mkfs.xfs             -L "xfs_label"'
-	)
-
 	LOOP_LIST=()
-	for INDEX in ${!COMMAND_LIST[*]}; do
+	for INDEX in ${!FS_LIST[*]}; do
 		IMAGE="$(create_image $FUNCNAME$INDEX)"
 		[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
@@ -117,7 +117,7 @@ function test_52()
 		[ $? = 0 ] || error || return
 		[ -b "/dev/md$MD_INDEX" ] || error || return
 
-		${COMMAND_LIST[$INDEX]} /dev/md$MD_INDEX >& /dev/null
+		${FS_LIST[$INDEX]} /dev/md$MD_INDEX >& /dev/null
 		[ $? = 0 ] || error || return
 
 		: $((MD_INDEX++))
@@ -143,20 +143,8 @@ function test_53()
 
 	echo -n "$FUNCNAME: "
 
-	COMMAND_LIST=(
-		'mkfs.btrfs           -L "btrfs_label"'
-		'mkfs.ext2     -q -F  -L "ext2_label"'
-		'mkfs.ext3     -q -F  -L "ext3_label"'
-		'mkfs.ext4     -q -F  -L "ext4_label"'
-		'mkfs.ntfs     -q -fF -L "ntfs_label"'
-		'mkfs.reiserfs -q -ff -l "reiserfs_label"'
-		'mkswap               -L "swap_label"'
-		'mkfs.vfat            -n "vfat_label"'
-		'mkfs.xfs             -L "xfs_label"'
-	)
-
 	LOOP_LIST=()
-	for INDEX in ${!COMMAND_LIST[*]}; do
+	for INDEX in ${!FS_LIST[*]}; do
 		IMAGE1="$(create_image $FUNCNAME$((INDEX*2)))"
 		[ -n "$IMAGE1" -a -f "$IMAGE1" ] || error || return
 
@@ -175,7 +163,7 @@ function test_53()
 		[ $? = 0 ] || error || return
 		[ -b "/dev/md$MD_INDEX" ] || error || return
 
-		${COMMAND_LIST[$INDEX]} /dev/md$MD_INDEX >& /dev/null
+		${FS_LIST[$INDEX]} /dev/md$MD_INDEX >& /dev/null
 		[ $? = 0 ] || error || return
 
 		: $((MD_INDEX++))
@@ -201,20 +189,8 @@ function test_54()
 
 	echo -n "$FUNCNAME: "
 
-	COMMAND_LIST=(
-		'mkfs.btrfs           -L "btrfs_label"'
-		'mkfs.ext2     -q -F  -L "ext2_label"'
-		'mkfs.ext3     -q -F  -L "ext3_label"'
-		'mkfs.ext4     -q -F  -L "ext4_label"'
-		'mkfs.ntfs     -q -fF -L "ntfs_label"'
-		'mkfs.reiserfs -q -ff -l "reiserfs_label"'
-		'mkswap               -L "swap_label"'
-		'mkfs.vfat            -n "vfat_label"'
-		'mkfs.xfs             -L "xfs_label"'
-	)
-
 	LOOP_LIST=()
-	for INDEX in ${!COMMAND_LIST[*]}; do
+	for INDEX in ${!FS_LIST[*]}; do
 		IMAGE1="$(create_image $FUNCNAME$((INDEX*3)))"
 		[ -n "$IMAGE1" -a -f "$IMAGE1" ] || error || return
 
@@ -240,7 +216,7 @@ function test_54()
 		[ $? = 0 ] || error || return
 		[ -b "/dev/md$MD_INDEX" ] || error || return
 
-		${COMMAND_LIST[$INDEX]} /dev/md$MD_INDEX >& /dev/null
+		${FS_LIST[$INDEX]} /dev/md$MD_INDEX >& /dev/null
 		[ $? = 0 ] || error || return
 
 		: $((MD_INDEX++))
@@ -266,20 +242,8 @@ function test_55()
 
 	echo -n "$FUNCNAME: "
 
-	COMMAND_LIST=(
-		'mkfs.btrfs           -L "btrfs_label"'
-		'mkfs.ext2     -q -F  -L "ext2_label"'
-		'mkfs.ext3     -q -F  -L "ext3_label"'
-		'mkfs.ext4     -q -F  -L "ext4_label"'
-		'mkfs.ntfs     -q -fF -L "ntfs_label"'
-		'mkfs.reiserfs -q -ff -l "reiserfs_label"'
-		'mkswap               -L "swap_label"'
-		'mkfs.vfat            -n "vfat_label"'
-		'mkfs.xfs             -L "xfs_label"'
-	)
-
 	LOOP_LIST=()
-	for INDEX in ${!COMMAND_LIST[*]}; do
+	for INDEX in ${!FS_LIST[*]}; do
 		IMAGE1="$(create_image $FUNCNAME$((INDEX*2)))"
 		[ -n "$IMAGE1" -a -f "$IMAGE1" ] || error || return
 
@@ -298,7 +262,7 @@ function test_55()
 		[ $? = 0 ] || error || return
 		[ -b "/dev/md$MD_INDEX" ] || error || return
 
-		${COMMAND_LIST[$INDEX]} /dev/md$MD_INDEX >& /dev/null
+		${FS_LIST[$INDEX]} /dev/md$MD_INDEX >& /dev/null
 		[ $? = 0 ] || error || return
 
 		: $((MD_INDEX++))

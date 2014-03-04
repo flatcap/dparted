@@ -2,6 +2,18 @@
 
 IMAGE_SIZE="500M"
 
+FS_LIST=(
+	"mkfs.btrfs           -L btrfs_label"
+	"mkfs.ext2     -q -F  -L ext2_label"
+	"mkfs.ext3     -q -F  -L ext3_label"
+	"mkfs.ext4     -q -F  -L ext4_label"
+	"mkfs.ntfs     -q -fF -L ntfs_label"
+	"mkfs.reiserfs -q -ff -l reiserfs_label"
+	"mkswap               -L swap_label"
+	"mkfs.vfat            -n vfat_label"
+	"mkfs.xfs             -L xfs_label"
+)
+
 source common.sh
 
 ##
@@ -22,21 +34,9 @@ function test_00()
 
 	echo -n "$FUNCNAME: "
 
-	COMMAND_LIST=(
-		'mkfs.btrfs           -L "btrfs_label"'
-		'mkfs.ext2     -q -F  -L "ext2_label"'
-		'mkfs.ext3     -q -F  -L "ext3_label"'
-		'mkfs.ext4     -q -F  -L "ext4_label"'
-		'mkfs.ntfs     -q -fF -L "ntfs_label"'
-		'mkfs.reiserfs -q -ff -l "reiserfs_label"'
-		'mkswap               -L "swap_label"'
-		'mkfs.vfat            -n "vfat_label"'
-		'mkfs.xfs             -L "xfs_label"'
-	)
-
 	LOOP_LIST=()
 	INDEX=0
-	for COMMAND in "${COMMAND_LIST[@]}"; do
+	for COMMAND in "${FS_LIST[@]}"; do
 		IMAGE="$(create_image $FUNCNAME$INDEX)"
 		[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 

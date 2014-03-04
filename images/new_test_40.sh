@@ -2,6 +2,18 @@
 
 IMAGE_SIZE="500M"
 
+FS_LIST=(
+	"mkfs.btrfs           -L btrfs_label"
+	"mkfs.ext2     -q -F  -L ext2_label"
+	"mkfs.ext3     -q -F  -L ext3_label"
+	"mkfs.ext4     -q -F  -L ext4_label"
+	"mkfs.ntfs     -q -fF -L ntfs_label"
+	"mkfs.reiserfs -q -ff -l reiserfs_label"
+	"mkswap               -L swap_label"
+	"mkfs.vfat            -n vfat_label"
+	"mkfs.xfs             -L xfs_label"
+)
+
 source common.sh
 
 ##
@@ -109,20 +121,8 @@ function test_42()
 
 	echo -n "$FUNCNAME: "
 
-	COMMAND_LIST=(
-		'mkfs.btrfs           -L "btrfs_label"'
-		'mkfs.ext2     -q -F  -L "ext2_label"'
-		'mkfs.ext3     -q -F  -L "ext3_label"'
-		'mkfs.ext4     -q -F  -L "ext4_label"'
-		'mkfs.ntfs     -q -fF -L "ntfs_label"'
-		'mkfs.reiserfs -q -ff -l "reiserfs_label"'
-		'mkswap               -L "swap_label"'
-		'mkfs.vfat            -n "vfat_label"'
-		'mkfs.xfs             -L "xfs_label"'
-	)
-
 	LOOP_LIST=()
-	for INDEX in ${!COMMAND_LIST[*]}; do
+	for INDEX in ${!FS_LIST[*]}; do
 		IMAGE="$(create_image $FUNCNAME$INDEX)"
 		[ -n "$IMAGE" -a -f "$IMAGE" ] || error || return
 
@@ -142,7 +142,7 @@ function test_42()
 		lvcreate --size 400m --name $VOLUME $GROUP > /dev/null
 		[ $? = 0 ] || error || return
 
-		${COMMAND_LIST[$INDEX]} /dev/$GROUP/$VOLUME >& /dev/null
+		${FS_LIST[$INDEX]} /dev/$GROUP/$VOLUME >& /dev/null
 		[ $? = 0 ] || error || return
 	done
 
@@ -166,20 +166,8 @@ function test_43()
 
 	echo -n "$FUNCNAME: "
 
-	COMMAND_LIST=(
-		'mkfs.btrfs           -L "btrfs_label"'
-		'mkfs.ext2     -q -F  -L "ext2_label"'
-		'mkfs.ext3     -q -F  -L "ext3_label"'
-		'mkfs.ext4     -q -F  -L "ext4_label"'
-		'mkfs.ntfs     -q -fF -L "ntfs_label"'
-		'mkfs.reiserfs -q -ff -l "reiserfs_label"'
-		'mkswap               -L "swap_label"'
-		'mkfs.vfat            -n "vfat_label"'
-		'mkfs.xfs             -L "xfs_label"'
-	)
-
 	LOOP_LIST=()
-	for INDEX in ${!COMMAND_LIST[*]}; do
+	for INDEX in ${!FS_LIST[*]}; do
 		IMAGE1="$(create_image $FUNCNAME$((INDEX*2)))"
 		[ -n "$IMAGE1" -a -f "$IMAGE1" ] || error || return
 
@@ -209,8 +197,10 @@ function test_43()
 		lvcreate --mirrors 1 --size 400m --name $VOLUME $GROUP > /dev/null
 		[ $? = 0 ] || error || return
 
-		${COMMAND_LIST[$INDEX]} /dev/$GROUP/$VOLUME >& /dev/null
+		${FS_LIST[$INDEX]} /dev/$GROUP/$VOLUME >& /dev/null
 		[ $? = 0 ] || error || return
+
+		break
 	done
 
 	ok "${LOOP_LIST[@]}"
@@ -233,20 +223,8 @@ function test_44()
 
 	echo -n "$FUNCNAME: "
 
-	COMMAND_LIST=(
-		'mkfs.btrfs           -L "btrfs_label"'
-		'mkfs.ext2     -q -F  -L "ext2_label"'
-		'mkfs.ext3     -q -F  -L "ext3_label"'
-		'mkfs.ext4     -q -F  -L "ext4_label"'
-		'mkfs.ntfs     -q -fF -L "ntfs_label"'
-		'mkfs.reiserfs -q -ff -l "reiserfs_label"'
-		'mkswap               -L "swap_label"'
-		'mkfs.vfat            -n "vfat_label"'
-		'mkfs.xfs             -L "xfs_label"'
-	)
-
 	LOOP_LIST=()
-	for INDEX in ${!COMMAND_LIST[*]}; do
+	for INDEX in ${!FS_LIST[*]}; do
 		IMAGE1="$(create_image $FUNCNAME$((INDEX*3)))"
 		[ -n "$IMAGE1" -a -f "$IMAGE1" ] || error || return
 
@@ -286,7 +264,7 @@ function test_44()
 		lvcreate --stripes 2 --type raid5 --size 400m --name $VOLUME $GROUP > /dev/null
 		[ $? = 0 ] || error || return
 
-		${COMMAND_LIST[$INDEX]} /dev/$GROUP/$VOLUME >& /dev/null
+		${FS_LIST[$INDEX]} /dev/$GROUP/$VOLUME >& /dev/null
 		[ $? = 0 ] || error || return
 	done
 
@@ -310,20 +288,8 @@ function test_45()
 
 	echo -n "$FUNCNAME: "
 
-	COMMAND_LIST=(
-		'mkfs.btrfs           -L "btrfs_label"'
-		'mkfs.ext2     -q -F  -L "ext2_label"'
-		'mkfs.ext3     -q -F  -L "ext3_label"'
-		'mkfs.ext4     -q -F  -L "ext4_label"'
-		'mkfs.ntfs     -q -fF -L "ntfs_label"'
-		'mkfs.reiserfs -q -ff -l "reiserfs_label"'
-		'mkswap               -L "swap_label"'
-		'mkfs.vfat            -n "vfat_label"'
-		'mkfs.xfs             -L "xfs_label"'
-	)
-
 	LOOP_LIST=()
-	for INDEX in ${!COMMAND_LIST[*]}; do
+	for INDEX in ${!FS_LIST[*]}; do
 		IMAGE1="$(create_image $FUNCNAME$((INDEX*2)))"
 		[ -n "$IMAGE1" -a -f "$IMAGE1" ] || error || return
 
@@ -353,7 +319,7 @@ function test_45()
 		lvcreate --stripes 2 --size 400m --name $VOLUME $GROUP > /dev/null
 		[ $? = 0 ] || error || return
 
-		${COMMAND_LIST[$INDEX]} /dev/$GROUP/$VOLUME >& /dev/null
+		${FS_LIST[$INDEX]} /dev/$GROUP/$VOLUME >& /dev/null
 		[ $? = 0 ] || error || return
 	done
 
@@ -376,12 +342,12 @@ function test_45()
 
 if [ $# = 0 ]; then
 	#cleanup
-	test_40
-	test_41
-	test_42
+	# test_40
+	# test_41
+	# test_42
 	test_43
-	test_44
-	test_45
+	# test_44
+	# test_45
 elif [ $# = 1 -a $1 = "-d" ]; then
 	cleanup
 else
