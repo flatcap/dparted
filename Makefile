@@ -119,7 +119,7 @@ cmd	= @$(if $($(quiet)cmd_$(1)),\
 # ----------------------------------------------------------------------------
 
 quiet_cmd_TAGS	= CTAGS	$@
-      cmd_TAGS	= ctags $(SRC) $(HDR)
+      cmd_TAGS	= ctags -I UNUSED -f - $(SRC) $(HDR) | grep -v -e "^_[A-Z0-9_]\+_H_	" -e "^[A-Za-z]\+Ptr	" > tags
 
 tags:	$(SRC) $(HDR)
 	$(call cmd,TAGS)
