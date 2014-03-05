@@ -293,10 +293,20 @@ DotVisitor::parent_link (std::shared_ptr<T> t)
 {
 	std::stringstream output;
 
+#if 1
 	if (parents.size() > 0) {
 		ContainerPtr c(t);
 		output << "obj_" << parents.top() << " -> obj_" << (void*) c.get() << ";\n";
 	}
+#else
+	ContainerPtr c(t);
+	if (c) {
+		ContainerPtr parent = c->parent.lock();
+		if (parent) {
+			output << "obj_" << (void*) parent.get() << " -> obj_" << (void*) c.get() << ";\n";
+		}
+	}
+#endif
 
 	return output.str();
 }
@@ -873,7 +883,7 @@ template <class T>
 std::string
 dot_lvm_volume (std::shared_ptr<T> t)
 {
-	LvmVolumePtr p(t);
+	LvmVolumePtr p = std::dynamic_pointer_cast<LvmVolume>(t);
 	if (!p)
 		return "";
 
@@ -906,7 +916,7 @@ template <class T>
 std::string
 dot_lvm_linear (std::shared_ptr<T> t)
 {
-	LvmLinearPtr p(t);
+	LvmLinearPtr p = std::dynamic_pointer_cast<LvmLinear>(t);
 	if (!p)
 		return "";
 
@@ -1189,11 +1199,35 @@ DotVisitor::visit (LvmRaidPtr f)
 	output << dump_table (f, dot_lvm_raid(f));
 	output << parent_link(f);
 
-#if 0
-	printf ("%ld segments\n", f->segments.size());
-	printf ("%ld metadata\n", f->metadata.size());
-	printf ("%ld subvols\n",  f->subvols.size());
-#endif
+	ContainerPtr c(f);
+	std::stringstream addr;
+	addr << (void*) c.get();
+	parents.push (addr.str());
+
+	for (auto i : f->metadata) {
+		output << dump_table (i, dot_lvm_linear(i));
+		output << parent_link(i);
+	}
+
+	for (auto i : f->subvols) {
+		output << dump_table (i, dot_lvm_volume(i));
+		output << parent_link(i);
+	}
+
+	parents.pop();
+
+	return true;
+}
+
+/**
+ * visit (LvmGroupPtr)
+ */
+bool
+DotVisitor::visit (LvmGroupPtr f)
+{
+	//LOG_TRACE;
+	output << dump_table (f, dot_lvm_group(f));
+	output << parent_link(f);
 
 	return true;
 }
@@ -1296,7 +1330,7 @@ DotVisitor::get_output (void)
 void
 DotVisitor::run_dotty (void)
 {
-	std::string command = "dot -Tpng | display -resize 70% - &";
+	std::string command = "dot -Tpng | display -resize 80% - &";
 	std::string input = output.str();
 	input += "\n}\n";
 

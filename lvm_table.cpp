@@ -324,10 +324,20 @@ LvmTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned
 	t->config = config;
 	t->uuid = pv_uuid;
 
-	t->metadata_size = 1048576;
+	t->metadata_size = 1048576;		//XXX read from header
 
 	ContainerPtr c(t);
 	parent->add_child(c);
+
+	PartitionPtr p = Partition::create();
+	p->sub_type ("Space");
+	p->sub_type ("Reserved");
+	p->parent_offset = 0;
+	p->bytes_size = t->metadata_size;
+	p->bytes_used = t->metadata_size;
+	c->add_child(p);
+
+	//XXX add alignment -- can't do this without the group's block size
 
 	return t;
 }
@@ -339,7 +349,8 @@ LvmTable::add_child (ContainerPtr& child)
 	if (!child)
 		return;
 
-	//child->parent_offset = metadata_size;
+	//printf ("TABLE: parent offset = %ld\n", child->parent_offset);
+	child->parent_offset += metadata_size;
 
 	Table::add_child (child);
 
