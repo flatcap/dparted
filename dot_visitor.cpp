@@ -17,6 +17,7 @@
  */
 
 #include <iostream>
+#include <sstream>
 
 #include "dot_visitor.h"
 #include "container.h"
@@ -261,6 +262,29 @@ dot_row (const char* name, ContainerPtr value)
 	return output.str();
 }
 
+
+template <class T>
+std::string
+dump_table (std::shared_ptr<T> t, const std::string& props)
+{
+	ContainerPtr c(t);
+	std::stringstream table;
+
+	if (c) {
+		std::string colour = get_colour(c);
+		std::string name   = c->name;
+		if (name.empty()) {
+			name = "UNKNOWN";
+		}
+
+		table << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
+		table << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << "</b></font></td></tr>\n";
+		table << props;
+		table << "</table>>];\n";
+	}
+
+	return table.str();
+}
 
 template <class T>
 std::string
@@ -1038,23 +1062,7 @@ bool
 DotVisitor::visit (ContainerPtr c)
 {
 	//LOG_TRACE;
-	output << "\n";
-	output << "// " << (void*) c.get() << "\n";
-
-	std::string name = c->name;
-	if (name.empty()) {
-		name = "UNKNOWN";
-	}
-
-	std::string colour = get_colour (c);
-
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << "</b></font></td></tr>\n";
-
-	output << dot_container(c);
-
-	output << "</table>>];\n";
-
+	output << dump_table (c, dot_container(c));
 	output << parent_link(c);
 
 	return true;
@@ -1067,69 +1075,7 @@ bool
 DotVisitor::visit (LoopPtr l)
 {
 	//LOG_TRACE;
-	ContainerPtr c(l);
-
-	output << "\n";
-	output << "// " << (void*) c.get() << "\n";
-
-	std::string name = l->name;
-	if (name.empty()) {
-		name = "UNKNOWN";
-	}
-
-	std::string colour = get_colour (c);
-
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << l.use_count() << "</b></font></td></tr>\n";
-
-	std::stringstream mm;
-
-	output << dot_block (std::dynamic_pointer_cast<Block>(l));
-
-	std::string flags;
-	if (l->autoclear)	flags += ", autoclear";
-	if (l->partscan)	flags += ", partscan";
-	if (l->deleted)		flags += ", deleted";
-	if (l->read_only)	flags += ", read only";
-	if (flags.empty()) {
-		flags = "n/a";
-	} else {
-		flags = flags.substr(2);
-	}
-
-	// Backing file
-	output << dot_row ("file_name",		l->file_name);
-#if 1
-	mm << l->file_major << ":" << l->file_minor;
-	output << dot_row ("file maj:min",	mm);
-#else
-	output << dot_row ("file_major",	l->file_major);
-	output << dot_row ("file_minor",	l->file_minor);
-#endif
-	output << dot_row ("file_inode",	l->file_inode);
-
-	// Loop device
-#if 1
-	mm.str ("");
-	mm << l->loop_major << ":" << l->loop_minor;
-	output << dot_row ("loop maj:min",	mm);
-#else
-	output << dot_row ("loop_major",	l->loop_major);
-	output << dot_row ("loop_minor",	l->loop_minor);
-#endif
-	output << dot_row ("offset",		l->offset);
-	output << dot_row ("sizelimit",		l->sizelimit);
-
-	output << dot_row ("flags",		flags);
-#if 0
-	output << dot_row ("autoclear",		l->autoclear);
-	output << dot_row ("partscan",		l->partscan);
-	output << dot_row ("read_only",		l->read_only);
-	output << dot_row ("deleted",		l->deleted);
-#endif
-
-	output << "</table>>];\n";
-
+	output << dump_table (l, dot_loop(l));
 	output << parent_link(l);
 
 	return true;
@@ -1142,24 +1088,7 @@ bool
 DotVisitor::visit (GptPtr g)
 {
 	//LOG_TRACE;
-	ContainerPtr c(g);
-	output << "\n";
-	output << "// " << (void*) c.get() << "\n";
-
-	std::string name = g->name;
-	if (name.empty()) {
-		name = "UNKNOWN";
-	}
-
-	std::string colour = get_colour (c);
-
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << g.use_count() << "</b></font></td></tr>\n";
-
-	output << dot_gpt(g);
-
-	output << "</table>>];\n";
-
+	output << dump_table (g, dot_gpt(g));
 	output << parent_link(g);
 
 	return true;
@@ -1172,24 +1101,7 @@ bool
 DotVisitor::visit (MsdosPtr m)
 {
 	//LOG_TRACE;
-	ContainerPtr c(m);
-	output << "\n";
-	output << "// " << (void*) c.get() << "\n";
-
-	std::string name = m->name;
-	if (name.empty()) {
-		name = "UNKNOWN";
-	}
-
-	std::string colour = get_colour (c);
-
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << m.use_count() << "</b></font></td></tr>\n";
-
-	output << dot_msdos(m);
-
-	output << "</table>>];\n";
-
+	output << dump_table (m, dot_msdos(m));
 	output << parent_link(m);
 
 	return true;
@@ -1202,24 +1114,7 @@ bool
 DotVisitor::visit (MiscPtr m)
 {
 	//LOG_TRACE;
-	ContainerPtr c(m);
-	output << "\n";
-	output << "// " << (void*) c.get() << "\n";
-
-	std::string name = m->name;
-	if (name.empty()) {
-		name = "UNKNOWN";
-	}
-
-	std::string colour = get_colour (c);
-
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << m.use_count() << "</b></font></td></tr>\n";
-
-	output << dot_misc(m);
-
-	output << "</table>>];\n";
-
+	output << dump_table (m, dot_misc(m));
 	output << parent_link(m);
 
 	return true;
@@ -1232,24 +1127,7 @@ bool
 DotVisitor::visit (PartitionPtr p)
 {
 	//LOG_TRACE;
-	ContainerPtr c(p);
-	output << "\n";
-	output << "// " << (void*) c.get() << "\n";
-
-	std::string name = p->name;
-	if (name.empty()) {
-		name = "UNKNOWN";
-	}
-
-	std::string colour = get_colour (c);
-
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << p.use_count() << "</b></font></td></tr>\n";
-
-	output << dot_partition(p);
-
-	output << "</table>>];\n";
-
+	output << dump_table (p, dot_partition(p));
 	output << parent_link(p);
 
 	return true;
@@ -1262,24 +1140,7 @@ bool
 DotVisitor::visit (FilesystemPtr f)
 {
 	//LOG_TRACE;
-	ContainerPtr c(f);
-	output << "\n";
-	output << "// " << (void*) c.get() << "\n";
-
-	std::string name = f->name;
-	if (name.empty()) {
-		name = "UNKNOWN";
-	}
-
-	std::string colour = get_colour (c);
-
-	output << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-	output << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << f.use_count() << "</b></font></td></tr>\n";
-
-	output << dot_filesystem(f);
-
-	output << "</table>>];\n";
-
+	output << dump_table (f, dot_filesystem(f));
 	output << parent_link(f);
 
 	return true;
