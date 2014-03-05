@@ -157,11 +157,15 @@ $(DEPDIR) $(OBJDIR):
 docs:	force
 	doxygen docs/doxygen.conf
 
+stats:	force
+	$(RM) stats
+	gitstats . stats
+
 clean:	force
 	$(RM) $(OUT) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) gmon.out
 
 distclean: clean
-	$(RM) $(DEPDIR) $(OBJDIR) tags html
+	$(RM) $(DEPDIR) $(OBJDIR) tags html stats
 
 force:
 
