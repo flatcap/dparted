@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <utility>
 
 #include "dot_visitor.h"
 #include "container.h"
@@ -1142,6 +1143,57 @@ DotVisitor::visit (FilesystemPtr f)
 	//LOG_TRACE;
 	output << dump_table (f, dot_filesystem(f));
 	output << parent_link(f);
+
+	return true;
+}
+
+
+/**
+ * visit (WholePtr)
+ */
+bool
+DotVisitor::visit (WholePtr f)
+{
+	//LOG_TRACE;
+	output << dump_table (f, dot_whole(f));
+	output << parent_link(f);
+
+	for (auto i : f->segments) {
+		output << dump_table (i, dot_container(i));
+		output << parent_link(i);
+	}
+
+	return true;
+}
+
+/**
+ * visit (LvmVolumePtr)
+ */
+bool
+DotVisitor::visit (LvmVolumePtr f)
+{
+	//LOG_TRACE;
+	output << dump_table (f, dot_lvm_volume(f));
+	output << parent_link(f);
+
+	return true;
+}
+
+/**
+ * visit (LvmRaidPtr)
+ */
+bool
+DotVisitor::visit (LvmRaidPtr f)
+{
+	//LOG_TRACE;
+	output << dump_table (f, dot_lvm_raid(f));
+	output << parent_link(f);
+
+#if 0
+	printf ("%ld segments\n", f->segments.size());
+	printf ("%ld metadata\n", f->metadata.size());
+	printf ("%ld subvols\n",  f->subvols.size());
+#endif
 
 	return true;
 }
