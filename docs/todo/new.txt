@@ -298,3 +298,37 @@ What's the visual difference between
 git pre-commit hook -- file type sensitive
 	i.e. allow spaces to indent svg, etc
 
+config - default options for all commands, e.g.
+	options for mkfs.ext2
+	options for lvs
+be able to configure each command?
+
+tests: get_next_free_md() function
+
+make stats target
+
+Table::set_alignment
+
+debug object properties:
+	mem_addr
+	ref_count
+	etc
+
+resize dialog "Usable space" option may need input from the filesystem
+	i.e.  how much metadata do you have?
+	ext4 and btrfs differ greatly in metadata size
+
+turn parent_offset to child_offset (and move to parent)
+	NO.  can't distinguish between
+		external get_buffer
+		child get_buffer
+
+"long" property:
+	"type" -> "container.block.disk"
+
+property - "default_name" (name may be empty)
+
+expand all command names and their options
+	lvs -x
+	lvscan --xyx
+
