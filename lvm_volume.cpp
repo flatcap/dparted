@@ -112,6 +112,9 @@ LvmVolume::add_child (ContainerPtr& child)
 		add_segment (child);
 		//Volume::add_child (child);
 		child->whole = get_smart();
+	} else if (child->is_a ("Space")) {
+		//log_info ("SPACE %s\n", child->name.c_str());
+		Volume::add_child (child);
 	} else {
 		// filesystem
 		Volume::add_child (child);

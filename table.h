@@ -44,6 +44,8 @@ public:
 
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
 
+	virtual bool set_alignment (long bytes);
+
 public:
 	//properties
 

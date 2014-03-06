@@ -7,6 +7,7 @@
 
 /* Fields with the suffix _xl should be xlate'd wherever they appear */
 
+// " LVM2 x[5A%r0N*>"
 #define FMTT_MAGIC "\040\114\126\115\062\040\170\133\065\101\045\162\060\116\052\076"
 #define FMTT_VERSION 1
 

@@ -197,3 +197,10 @@ Table::fill_space (void)
 }
 
 
+bool
+Table::set_alignment (long bytes)
+{
+	block_size = bytes;
+	return true;
+}
+

@@ -332,9 +332,9 @@ LvmTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned
 	PartitionPtr p = Partition::create();
 	p->sub_type ("Space");
 	p->sub_type ("Reserved");
-	p->parent_offset = 0;
 	p->bytes_size = t->metadata_size;
 	p->bytes_used = t->metadata_size;
+	p->parent_offset = 0;
 	c->add_child(p);
 
 	//XXX add alignment -- can't do this without the group's block size
@@ -350,7 +350,9 @@ LvmTable::add_child (ContainerPtr& child)
 		return;
 
 	//printf ("TABLE: parent offset = %ld\n", child->parent_offset);
-	child->parent_offset += metadata_size;
+	if (!child->is_a ("Space")) {
+		child->parent_offset += metadata_size;
+	}
 
 	Table::add_child (child);
 
@@ -364,3 +366,41 @@ LvmTable::add_child (ContainerPtr& child)
 }
 
 
+bool
+LvmTable::set_alignment (long bytes)
+{
+	Table::set_alignment (bytes);
+
+	// We expect a Reserved at the start...
+	if (children.empty())
+		return false;
+
+	// and possibly an Alignment at the end
+	ContainerPtr last = children.back();
+	if (last->is_a ("Alignment")) {
+		children.pop_back();
+	}
+
+	ContainerPtr reserved = children.front();
+
+	//XXX validate numbers
+	long remainder = (bytes_size - reserved->bytes_size) % block_size;
+
+#if 0
+	printf ("size of device   = %10ld\n", bytes_size);
+	printf ("size of reserved = %10ld\n", reserved->bytes_size);
+	printf ("block size       = %10ld\n", block_size);
+	printf ("remainder        = %10ld\n", remainder);
+#endif
+
+	PartitionPtr s = Partition::create();
+	s->sub_type ("Space");
+	s->sub_type ("Alignment");
+	s->bytes_size = remainder;
+	s->bytes_used = remainder;
+	s->parent_offset = bytes_size - remainder;
+	ContainerPtr c(s);
+	add_child (c);
+
+	return true;
+}

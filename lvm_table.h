@@ -43,6 +43,7 @@ public:
 	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
 
 	virtual void add_child (ContainerPtr& child);
+	virtual bool set_alignment (long bytes);
 
 public:
 	//properties

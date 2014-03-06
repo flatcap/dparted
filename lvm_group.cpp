@@ -207,6 +207,10 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 				log_error ("UNKNOWN type %s\n", segtype.c_str());
 				continue;
 			}
+			// These types are "full" by definition
+			v->bytes_size =  tags["LVM2_VG_EXTENT_SIZE"];
+			v->bytes_size *= (long) tags["LVM2_PVSEG_SIZE"];
+			v->bytes_used = v->bytes_size;
 
 			//std::cout << "lv uuid = " << lv_uuid << '\n';
 			v->uuid    = lv_uuid;
@@ -229,8 +233,10 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 		// LvmTable
 		t->pv_attr	= tags["LVM2_PV_ATTR"];
-		t->bytes_size	= tags["LVM2_PV_SIZE"];
 		//t->bytes_used	= tags["LVM2_PV_USED"];
+
+		//XXX for now rely on the LvmTable header on disk
+		//t->bytes_size	= tags["LVM2_PV_SIZE"];		//XXX this excludes the Reserved and Space
 
 		// LvmPartition
 		p->parent_offset  = tags["LVM2_PVSEG_START"];
@@ -316,8 +322,17 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 		// Container
 		g->name			= tags["LVM2_VG_NAME"];
-		g->block_size		= tags["LVM2_VG_EXTENT_SIZE"];
 		g->bytes_size		= tags["LVM2_VG_SIZE"];
+		g->block_size		= tags["LVM2_VG_EXTENT_SIZE"];
+		//XXX if group has no segments, then what?
+		for (auto s : g->segments) {
+			LvmTablePtr t = std::dynamic_pointer_cast<LvmTable>(s);
+			if (!t) {
+				//XXX bad children
+			}
+			t->set_alignment (g->block_size);
+		}
+		// printf ("TRIGGER set_alignment: %ld\n", g->segments.size());
 		//g->bytes_used		= g->bytes_size - (long) tags["LVM2_VG_FREE"];
 
 		// LvmGroup
