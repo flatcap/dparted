@@ -54,7 +54,7 @@ public:
 	void run_dotty (void);
 
 protected:
-	std::stack<std::string> parents;
+	std::stack<ContainerPtr> parents;
 	std::stringstream output;
 };
 

@@ -51,9 +51,7 @@ DotVisitor::~DotVisitor()
 bool
 DotVisitor::visit_enter (ContainerPtr& c)
 {
-	std::stringstream addr;
-	addr << (void*) c.get();
-	parents.push (addr.str());
+	parents.push (c);
 	return true;
 }
 
@@ -296,7 +294,7 @@ DotVisitor::parent_link (std::shared_ptr<T> t)
 #if 1
 	if (parents.size() > 0) {
 		ContainerPtr c(t);
-		output << "obj_" << parents.top() << " -> obj_" << (void*) c.get() << ";\n";
+		output << "obj_" << (void*) parents.top().get() << " -> obj_" << (void*) c.get() << ";\n";
 	}
 #else
 	ContainerPtr c(t);
@@ -1200,9 +1198,7 @@ DotVisitor::visit (LvmRaidPtr f)
 	output << parent_link(f);
 
 	ContainerPtr c(f);
-	std::stringstream addr;
-	addr << (void*) c.get();
-	parents.push (addr.str());
+	parents.push (c);
 
 	for (auto i : f->metadata) {
 		output << dump_table (i, dot_lvm_linear(i));
