@@ -51,12 +51,12 @@ public:
 	template <class T>
 	std::string parent_link (std::shared_ptr<T> t);
 
-	std::string get_output (void);
+	std::string get_dot (void);
 	void run_dotty (void);
 
 protected:
 	std::stack<ContainerPtr> parents;
-	std::stringstream output;
+	std::stringstream dot;
 };
 
 

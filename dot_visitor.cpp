@@ -36,11 +36,6 @@
 
 DotVisitor::DotVisitor (void)
 {
-	output << "digraph disks {\n";
-	output << "graph [ rankdir=\"TB\", color=\"white\",bgcolor=\"#000000\" ];\n";
-	output << "node [ shape=\"record\", color=\"black\", fillcolor=\"lightcyan\", style=\"filled\" ];\n";
-	output << "edge [ penwidth=3.0,color=\"#cccccc\" ];\n";
-	output << "\n";
 }
 
 DotVisitor::~DotVisitor()
@@ -59,13 +54,6 @@ bool
 DotVisitor::visit_leave (void)
 {
 	parents.pop();
-#if 0
-	if (parents.empty()) {
-		output << "\n}";
-		output << "\n";
-	}
-#endif
-
 	return true;
 }
 
@@ -92,15 +80,15 @@ get_colour (ContainerPtr c)
 std::string
 dot_row (const char* name, bool value)
 {
-	std::stringstream output;
+	std::stringstream row;
 
-	output << "\t\t<tr>";
-	output << "<td align=\"left\">" << name << "</td>";
-	output << "<td>=</td>";
-	output << "<td align=\"left\">" << (value ? "true" : "false") << "</td>";
-	output << "</tr>\n";
+	row << "\t\t<tr>";
+	row << "<td align=\"left\">" << name << "</td>";
+	row << "<td>=</td>";
+	row << "<td align=\"left\">" << (value ? "true" : "false") << "</td>";
+	row << "</tr>\n";
 
-	return output.str();
+	return row.str();
 }
 
 /**
@@ -109,15 +97,15 @@ dot_row (const char* name, bool value)
 std::string
 dot_row (const char* name, int value)
 {
-	std::stringstream output;
+	std::stringstream row;
 
-	output << "\t\t<tr>";
-	output << "<td align=\"left\">" << name << "</td>";
-	output << "<td>=</td>";
-	output << "<td align=\"left\">" << value << "</td>";
-	output << "</tr>\n";
+	row << "\t\t<tr>";
+	row << "<td align=\"left\">" << name << "</td>";
+	row << "<td>=</td>";
+	row << "<td align=\"left\">" << value << "</td>";
+	row << "</tr>\n";
 
-	return output.str();
+	return row.str();
 }
 
 /**
@@ -126,24 +114,24 @@ dot_row (const char* name, int value)
 std::string
 dot_row (const char* name, long value)
 {
-	std::stringstream output;
+	std::stringstream row;
 	std::string str;
 
 	if (value > 1023) {
 		str = " (" + get_size (value) + ")";
 	}
 
-	output << "\t\t<tr>";
-	output << "<td align=\"left\">" << name << "</td>";
-	output << "<td>=</td>";
+	row << "\t\t<tr>";
+	row << "<td align=\"left\">" << name << "</td>";
+	row << "<td>=</td>";
 #if 0
-	output << "<td align=\"left\">" << str << "</td>";
+	row << "<td align=\"left\">" << str << "</td>";
 #else
-	output << "<td align=\"left\">" << value << str << "</td>";
+	row << "<td align=\"left\">" << value << str << "</td>";
 #endif
-	output << "</tr>\n";
+	row << "</tr>\n";
 
-	return output.str();
+	return row.str();
 }
 
 /**
@@ -152,15 +140,15 @@ dot_row (const char* name, long value)
 std::string
 dot_row (const char* name, const std::string& value)
 {
-	std::stringstream output;
+	std::stringstream row;
 
-	output << "\t\t<tr>";
-	output << "<td align=\"left\">" << name << "</td>";
-	output << "<td>=</td>";
-	output << "<td align=\"left\">" << value << "</td>";
-	output << "</tr>\n";
+	row << "\t\t<tr>";
+	row << "<td align=\"left\">" << name << "</td>";
+	row << "<td>=</td>";
+	row << "<td align=\"left\">" << value << "</td>";
+	row << "</tr>\n";
 
-	return output.str();
+	return row.str();
 }
 
 /**
@@ -169,15 +157,15 @@ dot_row (const char* name, const std::string& value)
 std::string
 dot_row (const char* name, const std::stringstream& value)
 {
-	std::stringstream output;
+	std::stringstream row;
 
-	output << "\t\t<tr>";
-	output << "<td align=\"left\">" << name << "</td>";
-	output << "<td>=</td>";
-	output << "<td align=\"left\">" << value.str() << "</td>";
-	output << "</tr>\n";
+	row << "\t\t<tr>";
+	row << "<td align=\"left\">" << name << "</td>";
+	row << "<td>=</td>";
+	row << "<td align=\"left\">" << value.str() << "</td>";
+	row << "</tr>\n";
 
-	return output.str();
+	return row.str();
 }
 
 /**
@@ -186,15 +174,15 @@ dot_row (const char* name, const std::stringstream& value)
 std::string
 dot_row (const char* name, const char* value)
 {
-	std::stringstream output;
+	std::stringstream row;
 
-	output << "\t\t<tr>";
-	output << "<td align=\"left\">" << name << "</td>";
-	output << "<td>=</td>";
-	output << "<td align=\"left\">" << value << "</td>";
-	output << "</tr>\n";
+	row << "\t\t<tr>";
+	row << "<td align=\"left\">" << name << "</td>";
+	row << "<td>=</td>";
+	row << "<td align=\"left\">" << value << "</td>";
+	row << "</tr>\n";
 
-	return output.str();
+	return row.str();
 }
 
 /**
@@ -203,15 +191,15 @@ dot_row (const char* name, const char* value)
 std::string
 dot_row (const char* name, unsigned int value)
 {
-	std::stringstream output;
+	std::stringstream row;
 
-	output << "\t\t<tr>";
-	output << "<td align=\"left\">" << name << "</td>";
-	output << "<td>=</td>";
-	output << "<td align=\"left\">" << value << "</td>";
-	output << "</tr>\n";
+	row << "\t\t<tr>";
+	row << "<td align=\"left\">" << name << "</td>";
+	row << "<td>=</td>";
+	row << "<td align=\"left\">" << value << "</td>";
+	row << "</tr>\n";
 
-	return output.str();
+	return row.str();
 }
 
 /**
@@ -220,19 +208,19 @@ dot_row (const char* name, unsigned int value)
 std::string
 dot_row (const char* name, void* value)
 {
-	std::stringstream output;
+	std::stringstream row;
 
-	output << "\t\t<tr>";
-	output << "<td align=\"left\">" << name << "</td>";
-	output << "<td>=</td>";
+	row << "\t\t<tr>";
+	row << "<td align=\"left\">" << name << "</td>";
+	row << "<td>=</td>";
 	if (value) {
-		output << "<td align=\"left\">" << value << "</td>";
+		row << "<td align=\"left\">" << value << "</td>";
 	} else {
-		output << "<td align=\"left\">NULL</td>";
+		row << "<td align=\"left\">NULL</td>";
 	}
-	output << "</tr>\n";
+	row << "</tr>\n";
 
-	return output.str();
+	return row.str();
 }
 
 /**
@@ -241,24 +229,24 @@ dot_row (const char* name, void* value)
 std::string
 dot_row (const char* name, ContainerPtr value)
 {
-	std::stringstream output;
+	std::stringstream row;
 	std::string dest;
 
 	if (value) {
 		dest = " (" + value->type.back() + ")";
 	}
 
-	output << "\t\t<tr>";
-	output << "<td align=\"left\">" << name << "</td>";
-	output << "<td>=</td>";
+	row << "\t\t<tr>";
+	row << "<td align=\"left\">" << name << "</td>";
+	row << "<td>=</td>";
 	if (value) {
-		output << "<td align=\"left\">" << (void*) value.get() << dest << "</td>";
+		row << "<td align=\"left\">" << (void*) value.get() << dest << "</td>";
 	} else {
-		output << "<td align=\"left\">NULL</td>";
+		row << "<td align=\"left\">NULL</td>";
 	}
-	output << "</tr>\n";
+	row << "</tr>\n";
 
-	return output.str();
+	return row.str();
 }
 
 
@@ -289,24 +277,24 @@ template <class T>
 std::string
 DotVisitor::parent_link (std::shared_ptr<T> t)
 {
-	std::stringstream output;
+	std::stringstream link;
 
 #if 1
 	if (parents.size() > 0) {
 		ContainerPtr c(t);
-		output << "obj_" << (void*) parents.top().get() << " -> obj_" << (void*) c.get() << ";\n";
+		link << "obj_" << (void*) parents.top().get() << " -> obj_" << (void*) c.get() << ";\n";
 	}
 #else
 	ContainerPtr c(t);
 	if (c) {
 		ContainerPtr parent = c->parent.lock();
 		if (parent) {
-			output << "obj_" << (void*) parent.get() << " -> obj_" << (void*) c.get() << ";\n";
+			link << "obj_" << (void*) parent.get() << " -> obj_" << (void*) c.get() << ";\n";
 		}
 	}
 #endif
 
-	return output.str();
+	return link.str();
 }
 
 
@@ -1071,8 +1059,8 @@ bool
 DotVisitor::visit (ContainerPtr c)
 {
 	//LOG_TRACE;
-	output << dump_table (c, dot_container(c));
-	output << parent_link(c);
+	dot << dump_table (c, dot_container(c));
+	dot << parent_link(c);
 
 	return true;
 }
@@ -1084,8 +1072,8 @@ bool
 DotVisitor::visit (LoopPtr l)
 {
 	//LOG_TRACE;
-	output << dump_table (l, dot_loop(l));
-	output << parent_link(l);
+	dot << dump_table (l, dot_loop(l));
+	dot << parent_link(l);
 
 	return true;
 }
@@ -1097,8 +1085,8 @@ bool
 DotVisitor::visit (GptPtr g)
 {
 	//LOG_TRACE;
-	output << dump_table (g, dot_gpt(g));
-	output << parent_link(g);
+	dot << dump_table (g, dot_gpt(g));
+	dot << parent_link(g);
 
 	return true;
 }
@@ -1110,8 +1098,8 @@ bool
 DotVisitor::visit (MsdosPtr m)
 {
 	//LOG_TRACE;
-	output << dump_table (m, dot_msdos(m));
-	output << parent_link(m);
+	dot << dump_table (m, dot_msdos(m));
+	dot << parent_link(m);
 
 	return true;
 }
@@ -1123,8 +1111,8 @@ bool
 DotVisitor::visit (MiscPtr m)
 {
 	//LOG_TRACE;
-	output << dump_table (m, dot_misc(m));
-	output << parent_link(m);
+	dot << dump_table (m, dot_misc(m));
+	dot << parent_link(m);
 
 	return true;
 }
@@ -1136,8 +1124,8 @@ bool
 DotVisitor::visit (PartitionPtr p)
 {
 	//LOG_TRACE;
-	output << dump_table (p, dot_partition(p));
-	output << parent_link(p);
+	dot << dump_table (p, dot_partition(p));
+	dot << parent_link(p);
 
 	return true;
 }
@@ -1149,8 +1137,8 @@ bool
 DotVisitor::visit (FilesystemPtr f)
 {
 	//LOG_TRACE;
-	output << dump_table (f, dot_filesystem(f));
-	output << parent_link(f);
+	dot << dump_table (f, dot_filesystem(f));
+	dot << parent_link(f);
 
 	return true;
 }
@@ -1163,12 +1151,12 @@ bool
 DotVisitor::visit (WholePtr f)
 {
 	//LOG_TRACE;
-	output << dump_table (f, dot_whole(f));
-	output << parent_link(f);
+	dot << dump_table (f, dot_whole(f));
+	dot << parent_link(f);
 
 	for (auto i : f->segments) {
-		output << dump_table (i, dot_container(i));
-		output << parent_link(i);
+		dot << dump_table (i, dot_container(i));
+		dot << parent_link(i);
 	}
 
 	return true;
@@ -1181,15 +1169,15 @@ bool
 DotVisitor::visit (LvmVolumePtr f)
 {
 	//LOG_TRACE;
-	output << dump_table (f, dot_lvm_volume(f));
-	output << parent_link(f);
+	dot << dump_table (f, dot_lvm_volume(f));
+	dot << parent_link(f);
 
 	//XXX this needs to be at dot_lvm_volume level
 	if (f->sibling) {
 		ContainerPtr c1(f);
 		ContainerPtr c2 (f->sibling);
 
-		output << "obj_" << (void*) c1.get() << " -> obj_" << (void*) c2.get() << " [ color=red ];\n";
+		dot << "obj_" << (void*) c1.get() << " -> obj_" << (void*) c2.get() << " [ color=red ];\n";
 		//XXX rank
 	}
 
@@ -1203,8 +1191,8 @@ bool
 DotVisitor::visit (LvmRaidPtr f)
 {
 	//LOG_TRACE;
-	output << dump_table (f, dot_lvm_raid(f));
-	output << parent_link(f);
+	dot << dump_table (f, dot_lvm_raid(f));
+	dot << parent_link(f);
 
 	return true;
 }
@@ -1216,8 +1204,8 @@ bool
 DotVisitor::visit (LvmGroupPtr f)
 {
 	//LOG_TRACE;
-	output << dump_table (f, dot_lvm_group(f));
-	output << parent_link(f);
+	dot << dump_table (f, dot_lvm_group(f));
+	dot << parent_link(f);
 
 	return true;
 }
@@ -1229,113 +1217,36 @@ bool
 DotVisitor::visit (LvmLinearPtr f)
 {
 	//LOG_TRACE;
-	output << dump_table (f, dot_lvm_linear(f));
-	output << parent_link(f);
+	dot << dump_table (f, dot_lvm_linear(f));
+	dot << parent_link(f);
 
 	return true;
 }
 
 
-#if 0
-static std::string
-dump_dot_inner (const std::vector <ContainerPtr>& v)
-{
-	std::stringstream dot;
-	int count = 0;
-
-	for (auto c : v) {
-		std::string type = c->type.back();
-		// Isolate the top-level objects
-		if (c->parent && (c->parent->parent == nullptr))
-			dot << "subgraph cluster_" << count++ << " { color=transparent;\n";
-
-		dot << "\n";
-
-		if (c->name.empty()) {
-			c->name = "UNKNOWN";
-		}
-
-		std::string colour = get_colour(c);
-		std::string missing;
-		if (c->missing) {
-			missing = " MISSING";
-		}
-
-		dot << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
-		dot << "<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << c->name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << missing << "</b></font></td></tr>\n";
-
-		if (type == "block")         { dot << dot_block        (c); }
-		//...
-
-		dot << "</table>>];\n";
-
-#if 0
-		if (c->parent) {
-			dot << "obj_" << (void*) c << " -> obj_" << (void*) c->parent << " [constraint=false color=red];\n";
-		}
-#endif
-
-		for (auto c2 : c->get_children()) {
-			dot << "obj_" << (void*) c.get() << " -> obj_" << (void*) c2.get() << ";\n";
-		}
-
-#if 0
-		if (c->is_a ("Whole")) {
-			WholePtr w = std::dynamic_pointer_cast<Whole>(c);
-			if (w) {
-				for (auto w2 : w->segments) {
-					dot << "obj_" << (void*) w << " -> obj_" << (void*) w2 << " [constraint=false style=dashed];\n";
-				}
-			}
-		}
-#endif
-
-#if 1
-		if (c->is_a ("LvmVolume")) {
-			LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume>(c);
-			if (v) {
-				//log_info ("VOLUME %s, %ld\n", v->type.back().c_str(), v->subvols.size());
-				dot << dump_dot_inner (v->metadata);
-
-				for (auto v2 : v->metadata) {
-					dot << "obj_" << (void*) v.get() << " -> obj_" << (void*) v2.get() << ";\n";
-				}
-
-				dot << dump_dot_inner (v->subvols);
-
-				for (auto v2 : v->subvols) {
-					dot << "obj_" << (void*) v.get() << " -> obj_" << (void*) v2.get() << ";\n";
-				}
-			}
-		}
-#endif
-
-		dot << dump_dot_inner (c->get_children());
-
-		if (c->parent && (c->parent->parent == nullptr))
-			dot << "}\n";
-	}
-
-	return dot.str();
-}
-#endif
-
 std::string
-DotVisitor::get_output (void)
+DotVisitor::get_dot (void)
 {
-	std::string str = output.str();
+	std::string str;
+
+	str  = "digraph disks {\n";
+	str += "graph [ rankdir=\"TB\", color=\"white\",bgcolor=\"#000000\" ];\n";
+	str += "node [ shape=\"record\", color=\"black\", fillcolor=\"lightcyan\", style=\"filled\" ];\n";
+	str += "edge [ penwidth=3.0,color=\"#cccccc\" ];\n";
+	str += "\n";
+
+	str += dot.str();
+
 	str += "\n}\n";
 
 	return str;
 }
 
-
 void
 DotVisitor::run_dotty (void)
 {
 	std::string command = "dot -Tpng | display -resize 80% - &";
-	std::string input = output.str();
-	input += "\n}\n";
+	std::string input = get_dot();
 
 #if 0
 	std::cout << input << std::endl;
