@@ -1059,8 +1059,8 @@ bool
 DotVisitor::visit (ContainerPtr c)
 {
 	//LOG_TRACE;
-	dot << dump_table (c, dot_container(c));
-	dot << parent_link(c);
+	dot_objects << dump_table (c, dot_container(c));
+	dot_links   << parent_link(c);
 
 	return true;
 }
@@ -1072,8 +1072,8 @@ bool
 DotVisitor::visit (LoopPtr l)
 {
 	//LOG_TRACE;
-	dot << dump_table (l, dot_loop(l));
-	dot << parent_link(l);
+	dot_objects << dump_table (l, dot_loop(l));
+	dot_links   << parent_link(l);
 
 	return true;
 }
@@ -1085,8 +1085,8 @@ bool
 DotVisitor::visit (GptPtr g)
 {
 	//LOG_TRACE;
-	dot << dump_table (g, dot_gpt(g));
-	dot << parent_link(g);
+	dot_objects << dump_table (g, dot_gpt(g));
+	dot_links   << parent_link(g);
 
 	return true;
 }
@@ -1098,8 +1098,8 @@ bool
 DotVisitor::visit (MsdosPtr m)
 {
 	//LOG_TRACE;
-	dot << dump_table (m, dot_msdos(m));
-	dot << parent_link(m);
+	dot_objects << dump_table (m, dot_msdos(m));
+	dot_links   << parent_link(m);
 
 	return true;
 }
@@ -1111,8 +1111,8 @@ bool
 DotVisitor::visit (MiscPtr m)
 {
 	//LOG_TRACE;
-	dot << dump_table (m, dot_misc(m));
-	dot << parent_link(m);
+	dot_objects << dump_table (m, dot_misc(m));
+	dot_links   << parent_link(m);
 
 	return true;
 }
@@ -1124,8 +1124,8 @@ bool
 DotVisitor::visit (PartitionPtr p)
 {
 	//LOG_TRACE;
-	dot << dump_table (p, dot_partition(p));
-	dot << parent_link(p);
+	dot_objects << dump_table (p, dot_partition(p));
+	dot_links   << parent_link(p);
 
 	return true;
 }
@@ -1137,8 +1137,8 @@ bool
 DotVisitor::visit (FilesystemPtr f)
 {
 	//LOG_TRACE;
-	dot << dump_table (f, dot_filesystem(f));
-	dot << parent_link(f);
+	dot_objects << dump_table (f, dot_filesystem(f));
+	dot_links   << parent_link(f);
 
 	return true;
 }
@@ -1151,12 +1151,12 @@ bool
 DotVisitor::visit (WholePtr f)
 {
 	//LOG_TRACE;
-	dot << dump_table (f, dot_whole(f));
-	dot << parent_link(f);
+	dot_objects << dump_table (f, dot_whole(f));
+	dot_links   << parent_link(f);
 
 	for (auto i : f->segments) {
-		dot << dump_table (i, dot_container(i));
-		dot << parent_link(i);
+		dot_objects << dump_table (i, dot_container(i));
+		dot_links   << parent_link(i);
 	}
 
 	return true;
@@ -1169,17 +1169,8 @@ bool
 DotVisitor::visit (LvmVolumePtr f)
 {
 	//LOG_TRACE;
-	dot << dump_table (f, dot_lvm_volume(f));
-	dot << parent_link(f);
-
-	//XXX this needs to be at dot_lvm_volume level
-	if (f->sibling) {
-		ContainerPtr c1(f);
-		ContainerPtr c2 (f->sibling);
-
-		dot << "obj_" << (void*) c1.get() << " -> obj_" << (void*) c2.get() << " [ color=red ];\n";
-		//XXX rank
-	}
+	dot_objects << dump_table (f, dot_lvm_volume(f));
+	dot_links   << parent_link(f);
 
 	return true;
 }
@@ -1191,8 +1182,8 @@ bool
 DotVisitor::visit (LvmRaidPtr f)
 {
 	//LOG_TRACE;
-	dot << dump_table (f, dot_lvm_raid(f));
-	dot << parent_link(f);
+	dot_objects << dump_table (f, dot_lvm_raid(f));
+	dot_links   << parent_link(f);
 
 	return true;
 }
@@ -1204,8 +1195,8 @@ bool
 DotVisitor::visit (LvmGroupPtr f)
 {
 	//LOG_TRACE;
-	dot << dump_table (f, dot_lvm_group(f));
-	dot << parent_link(f);
+	dot_objects << dump_table (f, dot_lvm_group(f));
+	dot_links   << parent_link(f);
 
 	return true;
 }
@@ -1217,8 +1208,18 @@ bool
 DotVisitor::visit (LvmLinearPtr f)
 {
 	//LOG_TRACE;
-	dot << dump_table (f, dot_lvm_linear(f));
-	dot << parent_link(f);
+	dot_objects << dump_table (f, dot_lvm_linear(f));
+	dot_links   << parent_link(f);
+
+	//XXX this needs to be at dot_lvm_volume level
+	if ((f->sibling) && (f->is_a ("LvmMetadata"))) {	// Link sibling, but only in one direction
+		ContainerPtr c1(f);
+		ContainerPtr c2 (f->sibling);
+
+		// We link them invisibly to keep them together
+		dot_links << "obj_" << (void*) c1.get() << " -> obj_" << (void*) c2.get() << " [ style=invis ];\n";
+		dot_links << "{ rank=same obj_" << (void*) c1.get() << " obj_" << (void*) c2.get() << "}\n";
+	}
 
 	return true;
 }
@@ -1235,7 +1236,9 @@ DotVisitor::get_dot (void)
 	str += "edge [ penwidth=3.0,color=\"#cccccc\" ];\n";
 	str += "\n";
 
-	str += dot.str();
+	str += dot_objects.str();
+	str += "\n";
+	str += dot_links.str();
 
 	str += "\n}\n";
 

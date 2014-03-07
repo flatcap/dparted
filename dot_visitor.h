@@ -56,7 +56,8 @@ public:
 
 protected:
 	std::stack<ContainerPtr> parents;
-	std::stringstream dot;
+	std::stringstream dot_objects;
+	std::stringstream dot_links;
 };
 
 
