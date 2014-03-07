@@ -40,7 +40,7 @@
 #include "option_group.h"
 
 #include "dot_visitor.h"
-#include "dump_visitor.h"
+#include "list_visitor.h"
 #include "prop_visitor.h"
 
 GuiAppPtr gui_app;
@@ -315,9 +315,9 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 
 	if (group.list && top_level) {
 		log_info ("------------------------------------------------------------\n");
-		DumpVisitor dv;
-		top_level->accept (dv);
-		dv.dump();
+		ListVisitor lv;
+		top_level->accept (lv);
+		lv.list();
 		log_info ("------------------------------------------------------------\n");
 	}
 
@@ -325,7 +325,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		log_info ("------------------------------------------------------------\n");
 		PropVisitor pv;
 		top_level->accept (pv);
-		pv.dump();
+		pv.list();
 		log_info ("------------------------------------------------------------\n");
 	}
 

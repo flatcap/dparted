@@ -16,18 +16,18 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DUMP_VISITOR_H_
-#define _DUMP_VISITOR_H_
+#ifndef _LIST_VISITOR_H_
+#define _LIST_VISITOR_H_
 
 #include <sstream>
 
 #include "visitor.h"
 
-class DumpVisitor : public Visitor
+class ListVisitor : public Visitor
 {
 public:
-	DumpVisitor (void);
-	virtual ~DumpVisitor();
+	ListVisitor (void);
+	virtual ~ListVisitor();
 
 	virtual bool visit_enter (ContainerPtr& c);
 	virtual bool visit_leave (void);
@@ -35,7 +35,7 @@ public:
 	virtual bool visit (ContainerPtr c);
 	virtual bool visit (LvmVolumePtr c);
 
-	void dump (void);
+	void list (void);
 
 protected:
 	std::stringstream output;
@@ -44,5 +44,5 @@ protected:
 };
 
 
-#endif // _DUMP_VISITOR_H_
+#endif // _LIST_VISITOR_H_
 

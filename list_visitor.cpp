@@ -18,28 +18,28 @@
 
 #include <iostream>
 
-#include "dump_visitor.h"
+#include "list_visitor.h"
 #include "container.h"
 #include "log_trace.h"
 
-DumpVisitor::DumpVisitor (void)
+ListVisitor::ListVisitor (void)
 {
 }
 
-DumpVisitor::~DumpVisitor()
+ListVisitor::~ListVisitor()
 {
 }
 
 
 bool
-DumpVisitor::visit_enter (ContainerPtr& UNUSED(c))
+ListVisitor::visit_enter (ContainerPtr& UNUSED(c))
 {
 	indent++;
 	return true;
 }
 
 bool
-DumpVisitor::visit_leave (void)
+ListVisitor::visit_leave (void)
 {
 	indent--;
 	return true;
@@ -50,7 +50,7 @@ DumpVisitor::visit_leave (void)
  * visit (ContainerPtr)
  */
 bool
-DumpVisitor::visit (ContainerPtr c)
+ListVisitor::visit (ContainerPtr c)
 {
 	if (c->name != "dummy") {
 		std::string tabs;
@@ -67,7 +67,7 @@ DumpVisitor::visit (ContainerPtr c)
  * visit (LvmVolumePtr)
  */
 bool
-DumpVisitor::visit (LvmVolumePtr l)
+ListVisitor::visit (LvmVolumePtr l)
 {
 	ContainerPtr c(l);
 
@@ -92,7 +92,7 @@ DumpVisitor::visit (LvmVolumePtr l)
 
 
 void
-DumpVisitor::dump (void)
+ListVisitor::list (void)
 {
 	std::cout << output.str();
 }

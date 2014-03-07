@@ -34,7 +34,7 @@ public:
 
 	virtual bool visit (ContainerPtr c);
 
-	void dump (void);
+	void list (void);
 
 protected:
 	std::stringstream output;

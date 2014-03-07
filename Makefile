@@ -34,7 +34,7 @@ OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extended.cpp extfs.cpp fil
 	   msdos_partition.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
-LIB_SRC	+= app.cpp config.cpp config_file.cpp dot_visitor.cpp dump_visitor.cpp fs_get.cpp fs_identify.cpp \
+LIB_SRC	+= app.cpp config.cpp config_file.cpp dot_visitor.cpp list_visitor.cpp fs_get.cpp fs_identify.cpp \
 	   fs_usage.cpp log.cpp message.cpp property.cpp prop_visitor.cpp question.cpp utils.cpp
 
 # GUI - Graphical objects
