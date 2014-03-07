@@ -342,12 +342,12 @@ function test_45()
 
 if [ $# = 0 ]; then
 	#cleanup
-	# test_40
-	# test_41
-	# test_42
+	test_40
+	test_41
+	test_42
 	test_43
-	# test_44
-	# test_45
+	test_44
+	test_45
 elif [ $# = 1 -a $1 = "-d" ]; then
 	cleanup
 else
