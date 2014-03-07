@@ -19,6 +19,7 @@
 #include <iostream>
 #include <sstream>
 #include <utility>
+#include <ctime>
 
 #include "dot_visitor.h"
 #include "container.h"
@@ -1248,7 +1249,16 @@ DotVisitor::get_dot (void)
 void
 DotVisitor::run_dotty (void)
 {
-	std::string command = "dot -Tpng | display -resize 80% - &";
+	char timebuf[8];
+	time_t rawtime;
+	struct tm* timeinfo;
+
+	time (&rawtime);
+	timeinfo = localtime (&rawtime);
+	strftime (timebuf, sizeof (timebuf), "%H:%M", timeinfo);
+
+	std::string title = "DParted: " + std::string (timebuf);
+	std::string command = "dot -Tpng | display -title \"" + title + "\" -resize 80% - &";
 	std::string input = get_dot();
 
 #if 0
