@@ -51,6 +51,25 @@ LvmRaid::accept (Visitor& v)
 	LvmRaidPtr l = std::dynamic_pointer_cast<LvmRaid> (get_smart());
 	if (!v.visit(l))
 		return false;
+
+	//XXX this needs to be in LvmVolume
+	ContainerPtr c = get_smart();
+	if (!v.visit_enter(c))
+		return false;
+
+	for (auto m : metadata) {
+		if (!m->accept(v))
+			return false;
+	}
+
+	for (auto s : subvols) {
+		if (!s->accept(v))
+			return false;
+	}
+
+	if (!v.visit_leave())
+		return false;
+
 	return visit_children(v);
 }
 

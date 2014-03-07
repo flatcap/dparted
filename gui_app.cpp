@@ -332,6 +332,8 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	if (group.dot && top_level) {
 		if (group.separate) {
 			for (auto c : top_level->get_children()) {
+				if ((c->is_a ("Space") || c->is_a ("Filesystem"))) //XXX tmp
+					continue;
 				DotVisitor dv;
 				c->accept (dv);
 				dv.run_dotty();
@@ -339,6 +341,8 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		} else {
 			DotVisitor dv;
 			for (auto c : top_level->get_children()) {
+				if ((c->is_a ("Space") || c->is_a ("Filesystem"))) //XXX tmp
+					continue;
 				c->accept (dv);
 			}
 			dv.run_dotty();

@@ -59,7 +59,30 @@ LvmVolume::accept (Visitor& v)
 	LvmVolumePtr l = std::dynamic_pointer_cast<LvmVolume> (get_smart());
 	if (!v.visit(l))
 		return false;
-	return visit_children(v);
+
+	if (!visit_children(v)) {
+		std::cout << "LvmVolume visit_children failed" << std::endl;
+		return false;
+	}
+
+	for (auto i : metadata) {
+		LvmLinearPtr meta = std::dynamic_pointer_cast<LvmLinear>(i);
+		if (!v.visit(meta)) {
+			std::cout << "LvmVolume metadata failed" << std::endl;
+			return false;
+		}
+	}
+
+	for (auto i : subvols) {
+		//XXX need most-derived type, really
+		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(i);
+		if (!v.visit(vol)) {
+			std::cout << "LvmVolume metadata failed" << std::endl;
+			return false;
+		}
+	}
+
+	return true;
 }
 
 
@@ -95,6 +118,14 @@ LvmVolume::add_child (ContainerPtr& child)
 {
 	if (!child)
 		return;
+
+	if ((is_a ("LvmMetadata") && (child->is_a ("LvmVolume")))) {	//XXX tmp
+		//printf ("LvmMetadata: %s\n", child->type.back().c_str());
+		sibling = child;
+		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(child);
+		vol->sibling = get_smart();
+		return;
+	}
 
 	//log_info ("volume: %s (%s), child: %s (%s)\n", name.c_str(), type.back().c_str(), child->name.c_str(), child->type.back().c_str());
 	if (child->is_a ("LvmMetadata")) {

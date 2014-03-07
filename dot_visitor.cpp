@@ -1184,6 +1184,15 @@ DotVisitor::visit (LvmVolumePtr f)
 	output << dump_table (f, dot_lvm_volume(f));
 	output << parent_link(f);
 
+	//XXX this needs to be at dot_lvm_volume level
+	if (f->sibling) {
+		ContainerPtr c1(f);
+		ContainerPtr c2 (f->sibling);
+
+		output << "obj_" << (void*) c1.get() << " -> obj_" << (void*) c2.get() << " [ color=red ];\n";
+		//XXX rank
+	}
+
 	return true;
 }
 
@@ -1197,21 +1206,6 @@ DotVisitor::visit (LvmRaidPtr f)
 	output << dump_table (f, dot_lvm_raid(f));
 	output << parent_link(f);
 
-	ContainerPtr c(f);
-	parents.push (c);
-
-	for (auto i : f->metadata) {
-		output << dump_table (i, dot_lvm_linear(i));
-		output << parent_link(i);
-	}
-
-	for (auto i : f->subvols) {
-		output << dump_table (i, dot_lvm_volume(i));
-		output << parent_link(i);
-	}
-
-	parents.pop();
-
 	return true;
 }
 
@@ -1223,6 +1217,19 @@ DotVisitor::visit (LvmGroupPtr f)
 {
 	//LOG_TRACE;
 	output << dump_table (f, dot_lvm_group(f));
+	output << parent_link(f);
+
+	return true;
+}
+
+/**
+ * visit (LvmLinearPtr)
+ */
+bool
+DotVisitor::visit (LvmLinearPtr f)
+{
+	//LOG_TRACE;
+	output << dump_table (f, dot_lvm_linear(f));
 	output << parent_link(f);
 
 	return true;

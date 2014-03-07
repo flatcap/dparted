@@ -46,6 +46,7 @@ public:
 	virtual bool visit (LvmVolumePtr  p);
 	virtual bool visit (LvmRaidPtr    p);
 	virtual bool visit (LvmGroupPtr   p);
+	virtual bool visit (LvmLinearPtr  p);
 
 	template <class T>
 	std::string parent_link (std::shared_ptr<T> t);
