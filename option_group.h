@@ -30,11 +30,12 @@ public:
 	OptionGroup();
 
 	bool app        = false;
-	bool list       = false;
 	bool dot        = false;
-	bool separate   = false;
+	bool hex        = false;
+	bool list       = false;
 	bool properties = false;
 	bool quit       = false;
+	bool separate   = false;
 
 	int x = -1;	// Window coordinates
 	int y = -1;

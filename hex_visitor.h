@@ -16,25 +16,25 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _LIST_VISITOR_H_
-#define _LIST_VISITOR_H_
+#ifndef _HEX_VISITOR_H_
+#define _HEX_VISITOR_H_
 
 #include <sstream>
 
 #include "visitor.h"
 
-class ListVisitor : public Visitor
+class HexVisitor : public Visitor
 {
 public:
-	ListVisitor (void);
-	virtual ~ListVisitor();
+	HexVisitor (void);
+	virtual ~HexVisitor();
 
 	virtual bool visit_enter (ContainerPtr& c);
 	virtual bool visit_leave (void);
 
 	virtual bool visit (ContainerPtr c);
 
-	void list (void);
+	void hexdump (void);
 
 protected:
 	std::stringstream output;
@@ -43,5 +43,5 @@ protected:
 };
 
 
-#endif // _LIST_VISITOR_H_
+#endif // _HEX_VISITOR_H_
 

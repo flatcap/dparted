@@ -476,13 +476,13 @@ dump_hex2 (void* buf, int start, int length)
 
 	for (off = s; off < e; off += 16) {
 #if 1
-		if (memcmp ((char*) buf+off, last, sizeof (last)) == 0) {
+		if ((memcmp ((char*) buf+off, last, sizeof (last)) == 0) &&
+			((off + 16) < e)) {
 			if (!same) {
 				log_info ("	        ...\n");
 				same = 1;
 			}
-			if ((off + 16) < e)
-				continue;
+			continue;
 		} else {
 			same = 0;
 			memcpy (last, (char*) buf+off, sizeof (last));

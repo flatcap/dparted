@@ -40,6 +40,7 @@
 #include "option_group.h"
 
 #include "dot_visitor.h"
+#include "hex_visitor.h"
 #include "list_visitor.h"
 #include "prop_visitor.h"
 
@@ -235,7 +236,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	std::cout << "\th          = " << group.h          << std::endl;
 #endif
 
-	if (!group.app && !group.list && !group.properties && !group.dot && !group.quit) {
+	if (!group.app && !group.list && !group.properties && !group.dot && !group.hex && !group.quit) {
 		group.app = true;
 	}
 
@@ -329,11 +330,17 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		log_info ("------------------------------------------------------------\n");
 	}
 
+	if (group.hex && top_level) {
+		log_info ("------------------------------------------------------------\n");
+		HexVisitor hv;
+		top_level->accept (hv);
+		hv.hexdump();
+		log_info ("------------------------------------------------------------\n");
+	}
+
 	if (group.dot && top_level) {
 		if (group.separate) {
 			for (auto c : top_level->get_children()) {
-				if ((c->is_a ("Space") || c->is_a ("Filesystem"))) //XXX tmp
-					continue;
 				DotVisitor dv;
 				c->accept (dv);
 				dv.run_dotty();
@@ -341,8 +348,6 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		} else {
 			DotVisitor dv;
 			for (auto c : top_level->get_children()) {
-				if ((c->is_a ("Space") || c->is_a ("Filesystem"))) //XXX tmp
-					continue;
 				c->accept (dv);
 			}
 			dv.run_dotty();

@@ -123,7 +123,7 @@ public:
 	long		bytes_size = 0;
 	long		bytes_used = 0;
 
-	ContainerPtr	 whole;
+	ContainerPtr	whole;
 
 	std::weak_ptr<Container> parent;
 

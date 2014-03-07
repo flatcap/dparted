@@ -125,6 +125,10 @@ Container::visit_children (Visitor& v)
 		return false;
 
 	for (auto c : children) {
+		ContainerPtr p = parent.lock();
+		if (!p && ((c->is_a ("Space") || c->is_a ("Filesystem")))) //XXX tmp
+			continue;
+
 		if (!c->accept(v))
 			return false;
 	}
@@ -471,8 +475,8 @@ Container::get_buffer (long offset, long size)
 		if (p) {
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
-			std::cout << this << std::endl;
-			log_error ("mmap: no device and no parent\n");
+			//std::cout << this << std::endl;
+			//log_error ("mmap: no device and no parent\n");
 			return nullptr;
 		}
 	}

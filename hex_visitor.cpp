@@ -18,28 +18,29 @@
 
 #include <iostream>
 
-#include "list_visitor.h"
-#include "container.h"
-#include "log_trace.h"
+#include "hex_visitor.h"
 
-ListVisitor::ListVisitor (void)
+#include "container.h"
+#include "utils.h"
+
+HexVisitor::HexVisitor (void)
 {
 }
 
-ListVisitor::~ListVisitor()
+HexVisitor::~HexVisitor()
 {
 }
 
 
 bool
-ListVisitor::visit_enter (ContainerPtr& UNUSED(c))
+HexVisitor::visit_enter (ContainerPtr& UNUSED(c))
 {
 	indent++;
 	return true;
 }
 
 bool
-ListVisitor::visit_leave (void)
+HexVisitor::visit_leave (void)
 {
 	indent--;
 	return true;
@@ -50,14 +51,29 @@ ListVisitor::visit_leave (void)
  * visit (ContainerPtr)
  */
 bool
-ListVisitor::visit (ContainerPtr c)
+HexVisitor::visit (ContainerPtr c)
 {
 	if (c->name != "dummy") {
+#if 0
 		std::string tabs;
 		if (indent > 0) {
 			tabs.resize (indent, '\t');
 		}
-		output << tabs << c << "\n";
+		output << tabs;
+#endif
+
+		unsigned char* buf = nullptr;
+		const int bufsize = 1024;
+
+		buf = c->get_buffer (0, bufsize);
+		if (buf) {
+			std::cout << "\033[01;32m" << c << "\033[0m\n";
+			//std::cout << (void*) buf << "\n";
+			dump_hex2 (buf, 0, bufsize);
+			printf ("\n");
+		} else {
+			std::cout << "\033[01;31m" << c << "\033[0m\n";
+		}
 	}
 
 	return true;
@@ -65,7 +81,8 @@ ListVisitor::visit (ContainerPtr c)
 
 
 void
-ListVisitor::list (void)
+HexVisitor::hexdump (void)
 {
 	std::cout << output.str();
 }
+
