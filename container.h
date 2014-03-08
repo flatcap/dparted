@@ -75,8 +75,7 @@ public:
 	virtual void find_type (const std::string& type, std::vector<ContainerPtr>& results);
 	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);
 
-	virtual unsigned char* get_buffer (long offset, long size);
-	virtual void close_buffer (unsigned char* buffer, long size);
+	virtual unsigned char* get_buffer (long offset, long size); virtual void close_buffer (unsigned char* buffer, long size);
 
 	virtual bool is_a (const std::string& type);
 
@@ -144,14 +143,14 @@ protected:
 
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 
-	void insert (long offset, long size, void* ptr);
-
-	MmapSet	mmaps;
+	//MmapSet	mmaps;
+	MmapPtr	device_mmap;
 
 	std::map<std::string,PPtr> props;
 	std::vector<ContainerPtr> children;
 
 private:
+	void insert (long offset, long size, void* ptr);
 
 };
 

@@ -1258,7 +1258,7 @@ DotVisitor::run_dotty (void)
 	strftime (timebuf, sizeof (timebuf), "%H:%M", timeinfo);
 
 	std::string title = "DParted: " + std::string (timebuf);
-	std::string command = "dot -Tpng | display -title \"" + title + "\" -resize 80% - &";
+	std::string command = "dot -Tpng | display -title \"" + title + "\" -resize 75% - &";
 	std::string input = get_dot();
 
 #if 0

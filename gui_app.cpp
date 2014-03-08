@@ -43,6 +43,7 @@
 #include "hex_visitor.h"
 #include "list_visitor.h"
 #include "prop_visitor.h"
+#include "utils.h"
 
 GuiAppPtr gui_app;
 
@@ -353,7 +354,6 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 			dv.run_dotty();
 		}
 	}
-
 
 	show_window();
 

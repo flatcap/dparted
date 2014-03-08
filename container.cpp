@@ -445,28 +445,34 @@ Container::find (const std::string& search)
 }
 
 
+void deleter (Mmap* m)
+{
+	long  size = 0;
+	void* ptr = nullptr;
+
+	std::tie (size, ptr) = *m;
+
+	//std::cout << "mmap deleter: " << ptr << std::endl;
+	munmap (ptr, size);
+
+	delete m;
+}
+
 unsigned char*
 Container::get_buffer (long offset, long size)
 {
-	//XXX validate offset and size against device size
-	const int PAGE_SIZE = 4096;	//XXX from kernel, use block size if bigger?
+	// range check
+	if ((offset < 0) || (size < 1) || ((offset + size) > bytes_size)) {
+		log_error ("%s: out of range\n", __FUNCTION__);
+		return nullptr;
+	}
 
 	//log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s\n", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
 
-	//if (mmaps.size() > 0) log_info ("%ld mmaps\n", mmaps.size());
-	for (auto m : mmaps) {
-		long o;
-		long s;
-		void* p;
-
-		std::tie (o, s, p) = *m;
-		//log_info ("mmap: %ld, %ld, %p (%ld)\n", o, s, p, m.use_count());
-
-		//XXX allow subset: offset >= 0 and size < (s-(offset-o)?
-		if ((offset == o) && (size <= s)) {
-			//log_info ("mmap match: ask (%ld,%s), found (%ld,%s)\n", offset, get_size (size).c_str(), o, get_size(s).c_str());
-			return (unsigned char*) p;
-		}
+	if (device_mmap) {
+		void* buf = (*device_mmap).second;
+		//printf ("mmap existing: %p\n", ((unsigned char*) buf) + offset);
+		return ((unsigned char*) buf) + offset;
 	}
 
 	// No device -- delegate
@@ -475,47 +481,39 @@ Container::get_buffer (long offset, long size)
 		if (p) {
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
-			//std::cout << this << std::endl;
-			//log_error ("mmap: no device and no parent\n");
+			std::cout << this << std::endl;
+			log_error ("%s: no device and no parent\n", __FUNCTION__);
 			return nullptr;
 		}
 	}
 
-	// mmap doesn't exist, or isn't big enough
+	// mmap doesn't exist, create it
 	void*	buf   = nullptr;
 	int	newfd = get_fd();
 
 	if (newfd < 0) {
-		log_error ("can't get file descriptor\n");
+		log_error ("%s: can't get file descriptor\n", __FUNCTION__);
 		return nullptr;
 	}
 
-	int adjust = (offset % PAGE_SIZE);
-#if 0
-	printf ("offset = %ld\n", offset);
-	printf ("size   = %ld\n", size);
-	printf ("adjust = %d\n", adjust);
-	printf ("\n");
-#endif
-	if (adjust != 0) {
-		offset -= adjust;
-		size   += adjust;
-	}
+	// Create an mmap for the entire device
 
-	size = std::max ((long) 4194304, size);	// 4 MiB
+	// const long KERNEL_PAGE_SIZE = 4096;		//XXX from kernel, use block size if bigger?
+	// size = std::max (KERNEL_PAGE_SIZE, size);	//XXX test on a 512 byte loop device
+	size = bytes_size;	//XXX round up to PAGE_SIZE?
 
-	//offset += parent_offset;
-	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, offset);
+	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, 0);
 	if (buf == MAP_FAILED) {
-		log_error ("mmap: alloc failed\n");	//XXX perror
-		close (newfd);				//XXX may not be ours to close
+		log_error ("%s: alloc failed\n", __FUNCTION__);	//XXX perror
+		//close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
-	//log_debug ("mmap created: %p, device %s, offset %ld, size %s\n", buf, device.c_str(), offset, get_size (size).c_str());
+	//log_debug ("mmap created: %p, device %s, size %s\n", buf, device.c_str(), get_size (size).c_str());
 
-	insert (offset, size, buf);
+	device_mmap = (MmapPtr (new Mmap (size, buf), deleter));
 
-	return ((unsigned char*) buf) + adjust;
+	//printf ("mmap new: %p\n", ((unsigned char*) buf) + offset);
+	return ((unsigned char*) buf) + offset;
 }
 
 void
@@ -603,26 +601,6 @@ Container::get_children (void)
 		return whole->get_children();	//XXX ARGH! don't want derived class in here
 
 	return children;
-}
-
-
-void deleter (Mmap* m)
-{
-	long  size = 0;
-	void* ptr = nullptr;
-
-	std::tie (std::ignore, size, ptr) = *m;
-
-	//std::cout << "mmap deleter: " << ptr << std::endl;
-	munmap (ptr, size);
-
-	delete m;
-}
-
-void
-Container::insert (long offset, long size, void* ptr)
-{
-	mmaps.insert (MmapPtr (new Mmap (offset, size, ptr), deleter));
 }
 
 
