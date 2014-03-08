@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with DParted.  If not, see <http://www.gnu.org/licenses/>.
 
-CC	= clang++
+CC	= g++	#clang++
 SCAN	= scan-build
 RM	= rm -fr
 MKDIR	= mkdir -p
@@ -81,7 +81,7 @@ GUI_CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
 GUI_CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 
 # bug in ccache
-GUI_CFLAGS	+= -Qunused-arguments
+#GUI_CFLAGS	+= -Qunused-arguments
 
 #GUI_CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
 #GUI_CFLAGS	+= -DG_DISABLE_DEPRECATED

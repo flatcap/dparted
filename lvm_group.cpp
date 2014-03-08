@@ -26,7 +26,6 @@
 #include "lvm_group.h"
 #include "action.h"
 #include "app.h"
-#include "dump_visitor.h"
 #include "log.h"
 #include "log_trace.h"
 #include "lvm_linear.h"
