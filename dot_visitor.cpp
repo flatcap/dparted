@@ -1106,6 +1106,25 @@ DotVisitor::visit (MsdosPtr m)
 }
 
 /**
+ * visit (ExtendedPtr)
+ */
+bool
+DotVisitor::visit (ExtendedPtr m)
+{
+	//LOG_TRACE;
+	dot_objects << dump_table (m, dot_extended(m));
+
+	// Custom parent pointer (same rank)
+	if (parents.size() > 0) {
+		ContainerPtr c(m);
+		dot_links << "obj_"             << (void*) parents.top().get() << " -> obj_" << (void*) c.get() << ";\n";
+		dot_links << "{ rank=same obj_" << (void*) parents.top().get() <<    " obj_" << (void*) c.get() << "}\n";
+	}
+
+	return true;
+}
+
+/**
  * visit (MiscPtr)
  */
 bool
