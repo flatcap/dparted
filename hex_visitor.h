@@ -32,7 +32,8 @@ public:
 	virtual bool visit_enter (ContainerPtr& c);
 	virtual bool visit_leave (void);
 
-	virtual bool visit (ContainerPtr c);
+	virtual bool visit (ContainerPtr p);
+	virtual bool visit (LvmGroupPtr  p);
 
 	void hexdump (void);
 

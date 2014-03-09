@@ -53,24 +53,43 @@ HexVisitor::visit_leave (void)
 bool
 HexVisitor::visit (ContainerPtr c)
 {
-	if (c->name != "dummy") {
-#if 0
-		std::string tabs;
-		if (indent > 0) {
-			tabs.resize (indent, '\t');
-		}
-		output << tabs;
-#endif
+	if (c->name == "dummy")
+		return true;
 
-		unsigned char* buf = nullptr;
-		const int bufsize = 1024;
+	unsigned char* buf = nullptr;
+	int bufsize = c->bytes_size;
 
-		buf = c->get_buffer (0, bufsize);
+	buf = c->get_buffer (0, bufsize);
+	if (buf) {
+		printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
+		dump_hex2 (buf, 0, bufsize);
+		std::cout << std::endl;
+	} else {
+		std::cout << "\033[01;31m" << c << "\033[0m\n";
+	}
+
+	return true;
+}
+
+/**
+ * visit (LvmGroupPtr)
+ */
+bool
+HexVisitor::visit (LvmGroupPtr c)
+{
+	// An LvmGroup has segments, but no device
+	unsigned char* buf = nullptr;
+	int bufsize = 0;
+
+	for (auto i : c->segments) {
+		std::cout << "Segment:" << std::endl;
+
+		bufsize = i->bytes_size;
+		buf = i->get_buffer (0, bufsize);
 		if (buf) {
-			std::cout << "\033[01;32m" << c << "\033[0m\n";
-			//std::cout << (void*) buf << "\n";
+			printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", i->name.c_str(), i->parent_offset, i->parent_offset >> 20, i->bytes_size, i->bytes_size >> 20);
 			dump_hex2 (buf, 0, bufsize);
-			printf ("\n");
+			std::cout << std::endl;
 		} else {
 			std::cout << "\033[01;31m" << c << "\033[0m\n";
 		}
