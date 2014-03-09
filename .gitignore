@@ -1,17 +1,14 @@
-# executables
-/dparted
-
-# useful stuff
-/watcher*
-
-## generated deps
+# build products
 /.dep
 /.obj
-gmon.out
+/dparted
+/html
+/stats
 
 # work dirs
 /backup
 /gtk
-/html
+/misc
 /test
-/stats
+/watcher*
+
