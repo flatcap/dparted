@@ -332,3 +332,31 @@ expand all command names and their options
 	lvs -x
 	lvscan --xyx
 
+can i run zerofree on luks partitions?
+	punch holes?
+
+dot visitor - separate tables and links
+	output_tables
+	output_links
+
+test - check refcounts before and after each visitor
+
+hexdump object?  no, doesn't make sense, not reused
+	properties: start, len, fold dupes, indent
+
+container/table
+	get_buffer_count()
+	set_buffer(n)
+	choose which raid image to use
+
+request for users: think up test cases
+
+menu: examine -> hex dump
+
+zero object: test end of container, too
+
+dot: msdos/extended: rank=same
+
+dot visitor: save to file gv/png
+	command line options
+
