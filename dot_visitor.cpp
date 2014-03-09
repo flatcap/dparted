@@ -1118,7 +1118,7 @@ DotVisitor::visit (ExtendedPtr m)
 	if (parents.size() > 0) {
 		ContainerPtr c(m);
 		dot_links << "obj_"             << (void*) parents.top().get() << " -> obj_" << (void*) c.get() << ";\n";
-		dot_links << "{ rank=same obj_" << (void*) parents.top().get() <<    " obj_" << (void*) c.get() << "}\n";
+		// dot_links << "{ rank=same obj_" << (void*) parents.top().get() <<    " obj_" << (void*) c.get() << "}\n";
 	}
 
 	return true;
@@ -1278,6 +1278,7 @@ DotVisitor::run_dotty (void)
 
 	std::string title = "DParted: " + std::string (timebuf);
 	std::string command = "dot -Tpng | display -title \"" + title + "\" -resize 75% - &";
+	// std::string command = "dot -Tpng > png/$RANDOM.png";
 	std::string input = get_dot();
 
 #if 0
