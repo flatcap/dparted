@@ -477,7 +477,7 @@ dump_hex2 (void* buf, int start, int length)
 	for (off = s; off < e; off += 16) {
 #if 1
 		if ((memcmp ((char*) buf+off, last, sizeof (last)) == 0) &&
-			((off + 16) < e)) {
+			((off + 16) < e) && (off > s)) {
 			if (!same) {
 				log_info ("	        ...\n");
 				same = 1;
