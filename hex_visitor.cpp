@@ -60,13 +60,7 @@ HexVisitor::visit (ContainerPtr c)
 	int bufsize = c->bytes_size;
 
 	buf = c->get_buffer (0, bufsize);
-	if (buf) {
-		printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
-		dump_hex2 (buf, 0, bufsize);
-		std::cout << std::endl;
-	} else {
-		std::cout << "\033[01;31m" << c << "\033[0m\n";
-	}
+	dump (c, buf, bufsize);
 
 	return true;
 }
@@ -81,17 +75,11 @@ HexVisitor::visit (LvmGroupPtr c)
 	unsigned char* buf = nullptr;
 	int bufsize = 0;
 
+	//XXX offsets should be cumulative across the segments
 	for (auto i : c->segments) {
 		bufsize = i->bytes_size;
 		buf = i->get_buffer (0, bufsize);
-		if (buf) {
-			//XXX offsets should be cumulative across the segments
-			printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", i->name.c_str(), i->parent_offset, i->parent_offset >> 20, i->bytes_size, i->bytes_size >> 20);
-			dump_hex2 (buf, 0, bufsize);
-			std::cout << std::endl;
-		} else {
-			std::cout << "\033[01;31m" << c << "\033[0m\n";
-		}
+		dump (i, buf, bufsize);
 	}
 
 	return true;
@@ -117,22 +105,38 @@ HexVisitor::visit (ExtendedPtr c)
 	// Get our-sized buffer from parent
 	bufsize = c->bytes_size;
 	buf = parent->get_buffer (c->parent_offset, bufsize);
-	if (buf) {
-		printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
-		dump_hex2 (buf, 0, bufsize);
-		std::cout << std::endl;
-	} else {
-		std::cout << "\033[01;31m" << c << "\033[0m\n";
-		return false;
-	}
+	dump (c, buf, bufsize);
 
 	return true;
 }
 
 
 void
-HexVisitor::hexdump (void)
+HexVisitor::dump (ContainerPtr c, unsigned char* buf, long size)
 {
-	std::cout << output.str();
+	if (!c)
+		return;
+
+	std::string type;
+	for (auto i : c->type) {
+		type += "." + i;
+	}
+	type.erase (0,1);
+
+	std::cout << type << std::endl;
+	if (buf) {
+		printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
+		dump_hex2 (buf, 0, 512);
+		if (abbreviate) {
+			std::cout << "\t~~~\n";
+		} else {
+			dump_hex2 (buf, 512, size-512);
+		}
+		dump_hex2 (buf, size-512, 512);
+		std::cout << std::endl;
+	} else {
+		std::cout << "\033[01;31m" << c << "\033[0m\n";
+	}
+
 }
 

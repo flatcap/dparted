@@ -36,12 +36,12 @@ public:
 	virtual bool visit (LvmGroupPtr  p);
 	virtual bool visit (ExtendedPtr  p);
 
-	void hexdump (void);
+	bool abbreviate = true;
 
 protected:
-	std::stringstream output;
-
 	int indent = -1;
+
+	void dump (ContainerPtr c, unsigned char* buf, long size);
 };
 
 

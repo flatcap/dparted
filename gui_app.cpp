@@ -335,7 +335,6 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		log_info ("------------------------------------------------------------\n");
 		HexVisitor hv;
 		top_level->accept (hv);
-		hv.hexdump();
 		log_info ("------------------------------------------------------------\n");
 	}
 
