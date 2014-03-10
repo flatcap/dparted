@@ -212,3 +212,23 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, long off
 }
 
 
+unsigned char*
+Extended::get_buffer (long offset, long size)
+{
+	// Our device is defective, so delegate to our parent
+	// range check
+	if ((offset < 0) || (size < 1) || ((offset + size) > bytes_size)) {
+		log_error ("%s: out of range\n", __FUNCTION__);
+		return nullptr;
+	}
+
+	ContainerPtr p = parent.lock();
+	if (p) {
+		return p->get_buffer (offset + parent_offset, size);
+	} else {
+		std::cout << this << std::endl;
+		log_error ("%s: no device and no parent\n", __FUNCTION__);
+		return nullptr;
+	}
+}
+

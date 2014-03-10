@@ -34,6 +34,7 @@ public:
 
 	virtual bool visit (ContainerPtr p);
 	virtual bool visit (LvmGroupPtr  p);
+	virtual bool visit (ExtendedPtr  p);
 
 	void hexdump (void);
 

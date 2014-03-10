@@ -82,17 +82,48 @@ HexVisitor::visit (LvmGroupPtr c)
 	int bufsize = 0;
 
 	for (auto i : c->segments) {
-		std::cout << "Segment:" << std::endl;
-
 		bufsize = i->bytes_size;
 		buf = i->get_buffer (0, bufsize);
 		if (buf) {
+			//XXX offsets should be cumulative across the segments
 			printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", i->name.c_str(), i->parent_offset, i->parent_offset >> 20, i->bytes_size, i->bytes_size >> 20);
 			dump_hex2 (buf, 0, bufsize);
 			std::cout << std::endl;
 		} else {
 			std::cout << "\033[01;31m" << c << "\033[0m\n";
 		}
+	}
+
+	return true;
+}
+
+/**
+ * visit (ExtendedPtr)
+ */
+bool
+HexVisitor::visit (ExtendedPtr c)
+{
+	// An Extended has size, but the device is limited to 1KiB
+	unsigned char* buf = nullptr;
+	int bufsize = 0;
+	ContainerPtr parent;
+
+	parent = c->parent.lock();
+	if (!parent) {
+		std::cout << "\033[01;31m" << c << "\033[0m\n";
+		return false;
+	}
+
+	// Get our-sized buffer from parent
+	bufsize = c->bytes_size;
+	buf = parent->get_buffer (c->parent_offset, bufsize);
+	if (buf) {
+		printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
+		dump_hex2 (buf, 0, bufsize);
+		std::cout << std::endl;
+	} else {
+		std::cout << "\033[01;31m" << c << "\033[0m\n";
+		return false;
 	}
 
 	return true;
