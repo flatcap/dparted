@@ -119,20 +119,20 @@ HexVisitor::dump (ContainerPtr c, unsigned char* buf, long size)
 
 	std::string type;
 	for (auto i : c->type) {
-		type += "." + i;
+		type += i + ".";
 	}
-	type.erase (0,1);
+	type.pop_back();
 
 	std::cout << type << std::endl;
 	if (buf) {
 		printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
-		dump_hex2 (buf, 0, 512);
-		if (abbreviate) {
+		dump_hex2 (buf, 0, abbreviate);
+		if (abbreviate > 0) {
 			std::cout << "\t~~~\n";
 		} else {
-			dump_hex2 (buf, 512, size-512);
+			dump_hex2 (buf, abbreviate, size-abbreviate);
 		}
-		dump_hex2 (buf, size-512, 512);
+		dump_hex2 (buf, size-abbreviate, abbreviate);
 		std::cout << std::endl;
 	} else {
 		std::cout << "\033[01;31m" << c << "\033[0m\n";
