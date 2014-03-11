@@ -126,13 +126,16 @@ HexVisitor::dump (ContainerPtr c, unsigned char* buf, long size)
 	std::cout << type << std::endl;
 	if (buf) {
 		printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
-		dump_hex2 (buf, 0, abbreviate);
-		if (abbreviate > 0) {
-			std::cout << "\t~~~\n";
+
+		long abbr = (abbreviate & ~15);	// Round down to multiple of 16
+
+		if ((abbr == 0) || (abbr >= (size/2))) {
+			dump_hex2 (buf, 0, size);
 		} else {
-			dump_hex2 (buf, abbreviate, size-abbreviate);
+			dump_hex2 (buf, 0, abbr);
+			std::cout << "\t~~~\n";
+			dump_hex2 (buf, size-abbr, abbr);
 		}
-		dump_hex2 (buf, size-abbreviate, abbreviate);
 		std::cout << std::endl;
 	} else {
 		std::cout << "\033[01;31m" << c << "\033[0m\n";

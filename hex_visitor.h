@@ -36,7 +36,7 @@ public:
 	virtual bool visit (ExtendedPtr  p);
 	virtual bool visit (LvmGroupPtr  p);
 
-	int abbreviate = 1024;
+	int abbreviate = 256;
 
 protected:
 	int indent = -1;
