@@ -23,6 +23,9 @@
 
 #include <endian.h>
 #include <byteswap.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "luks_table.h"
 #include "action.h"
@@ -231,16 +234,37 @@ LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 	std::string mapper = "/dev/mapper/luks-" + uuid;
 
 	//XXX check that the luks device matches the parent device
-	if (is_mounted (mapper))
-		return true;
+	if (!is_mounted (mapper)) {
+		std::string command = "sudo cryptsetup open --type luks " + parent + " luks-" + uuid;
+		//std::cout << "Command: " << command << std::endl;
 
-	std::string command = "sudo cryptsetup open --type luks " + parent + " luks-" + uuid;
-	//std::cout << "Command: " << command << std::endl;
+		std::string password = "password";
+		execute_command2 (command, password);
+		we_opened_this_device = true;
+	}
 
-	std::string password = "password";
-	execute_command2 (command, password);
-	we_opened_this_device = true;
-	return false;
+	//XXX check mount really succeeded
+	if (!is_mounted (mapper))
+		return false;
+
+	LuksPartitionPtr p = LuksPartition::create();
+
+	p->bytes_size =  bytes_size - 4096;
+	p->parent_offset = 4096;	//XXX header_size
+	p->device = mapper;
+
+	p->get_fd();
+
+	// move to container::find_size or utils (or block::)
+	off_t size;
+	size = lseek (p->fd, 0, SEEK_END);
+	p->bytes_size = size;
+
+	add_child (p);
+	ContainerPtr c(p);
+	main_app->queue_add_probe(c);	//XXX do this when we've asked for a password
+
+	return true;
 }
 
 bool
