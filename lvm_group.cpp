@@ -76,6 +76,31 @@ LvmGroup::accept (Visitor& v)
 }
 
 
+void
+expand_name (std::string& name)
+{
+	size_t pos = 0;
+
+	while ((pos = name.find_first_of ("-", pos)) != std::string::npos) {
+		name.insert (pos, "-");
+		pos += 2;
+	}
+}
+
+std::string
+make_device (std::string group, std::string volume)
+{
+	// Either:
+	//	/dev/GROUP/VOLUME
+	//	/dev/mapper/GROUP-VOLUME(*)
+	// (*) with - replace with -- in both parts
+	expand_name (group);
+	expand_name (volume);
+
+	return "/dev/mapper/" + group + "-" + volume;
+}
+
+
 std::vector<Action>
 LvmGroup::get_actions (void)
 {
@@ -463,15 +488,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		    (v->lv_attr[0] == 'e')) {		// mirror image/log, raid metadata/image
 			v->name = v->name.substr (1, v->name.length() - 2);	// Strip the []'s
 
-			std::string dev_name = v->name;
-			size_t pos = 0;
-
-			while ((pos = v->name.find_first_of ("-", pos)) != std::string::npos) {
-				dev_name.insert (pos, "-");
-				pos++;
-			}
-
-			v->device = "/dev/mapper/" + g->name + '-' + dev_name; //RAR
+			v->device = make_device (g->name, v->name);
 			//printf ("DEVNAME = %s\n", v->device.c_str());
 		}
 
