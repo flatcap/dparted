@@ -33,10 +33,10 @@ public:
 	virtual bool visit_leave (void);
 
 	virtual bool visit (ContainerPtr p);
-	virtual bool visit (LvmGroupPtr  p);
 	virtual bool visit (ExtendedPtr  p);
+	virtual bool visit (LvmGroupPtr  p);
 
-	int abbreviate = 128;
+	int abbreviate = 1024;
 
 protected:
 	int indent = -1;

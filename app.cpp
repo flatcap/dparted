@@ -106,7 +106,7 @@ App::queue_add_probe (ContainerPtr& item)
 
 	probe_queue.push (item);
 	std::string s = get_size (item->parent_offset);
-	//log_info ("QUEUE: %s %s : %lld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
+	//log_info ("QUEUE: %s %s : %ld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
 	//log_info ("QUEUE has %lu items\n", probe_queue.size());
 }
 

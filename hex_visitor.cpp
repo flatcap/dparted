@@ -66,26 +66,6 @@ HexVisitor::visit (ContainerPtr c)
 }
 
 /**
- * visit (LvmGroupPtr)
- */
-bool
-HexVisitor::visit (LvmGroupPtr c)
-{
-	// An LvmGroup has segments, but no device
-	unsigned char* buf = nullptr;
-	int bufsize = 0;
-
-	//XXX offsets should be cumulative across the segments
-	for (auto i : c->segments) {
-		bufsize = i->bytes_size;
-		buf = i->get_buffer (0, bufsize);
-		dump (i, buf, bufsize);
-	}
-
-	return true;
-}
-
-/**
  * visit (ExtendedPtr)
  */
 bool
@@ -106,6 +86,26 @@ HexVisitor::visit (ExtendedPtr c)
 	bufsize = c->bytes_size;
 	buf = parent->get_buffer (c->parent_offset, bufsize);
 	dump (c, buf, bufsize);
+
+	return true;
+}
+
+/**
+ * visit (LvmGroupPtr)
+ */
+bool
+HexVisitor::visit (LvmGroupPtr c)
+{
+	// An LvmGroup has segments, but no device
+	unsigned char* buf = nullptr;
+	int bufsize = 0;
+
+	//XXX offsets should be cumulative across the segments
+	for (auto i : c->segments) {
+		bufsize = i->bytes_size;
+		buf = i->get_buffer (0, bufsize);
+		dump (i, buf, bufsize);
+	}
 
 	return true;
 }
