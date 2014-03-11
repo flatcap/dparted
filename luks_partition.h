@@ -16,54 +16,37 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _LUKS_H_
-#define _LUKS_H_
+#ifndef _LUKS_PARTITION_H_
+#define _LUKS_PARTITION_H_
 
 #include <memory>
-#include <string>
 #include <vector>
 
-#include "container.h"
-#include "question.h"
+#include "partition.h"
 
-class Luks;
+class LuksPartition;
 
-typedef std::shared_ptr<Luks> LuksPtr;
+typedef std::shared_ptr<LuksPartition> LuksPartitionPtr;
 
-class Luks : public Container
+class LuksPartition : public Partition
 {
 public:
-	static LuksPtr create (void);
-	virtual ~Luks();
+	static LuksPartitionPtr create (void);
+	virtual ~LuksPartition();
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize);
-
-	bool luks_open (const std::string& parent, bool probe);
-	bool luks_close (void);
-
 public:
 	//properties
-	int         version;
-	std::string cipher_name;
-	std::string cipher_mode;
-	std::string hash_spec;
 
 protected:
-	Luks (void);
-
-	void on_reply (QuestionPtr q);
-	bool is_luks (const std::string& device);
-	bool is_mounted (const std::string& device);
-
-	bool we_opened_this_device = false;
+	LuksPartition (void);
 
 private:
 
 };
 
-#endif // _LUKS_H_
+#endif // _LUKS_PARTITION_H_
 

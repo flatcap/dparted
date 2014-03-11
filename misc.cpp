@@ -23,7 +23,7 @@
 #include "action.h"
 #include "log.h"
 #include "log_trace.h"
-#include "luks.h"
+#include "luks_table.h"
 #include "main.h"
 #include "partition.h"
 #include "utils.h"
@@ -139,7 +139,7 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 
 	ContainerPtr c;
 
-	c = Luks::probe (top_level, parent, buffer, bufsize);	//RAR
+	c = LuksTable::probe (top_level, parent, buffer, bufsize);	//RAR
 	if (c) {
 		parent->add_child(c);
 

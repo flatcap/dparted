@@ -21,19 +21,23 @@
 #include <cstring>
 #include <functional>
 
-#include "luks.h"
+#include <endian.h>
+#include <byteswap.h>
+
+#include "luks_table.h"
 #include "action.h"
 #include "app.h"
 #include "log.h"
 #include "log_trace.h"
+#include "luks_partition.h"
+#include "partition.h"
 #include "utils.h"
 #include "visitor.h"
 
-Luks::Luks (void)
+LuksTable::LuksTable (void)
 {
-	const char* me = "Luks";
+	const char* me = "LuksTable";
 
-	sub_type ("Wrapper");	// Fake base class (for now)
 	sub_type (me);
 
 	declare_prop (me, "version",     version,     "desc of version");
@@ -42,14 +46,14 @@ Luks::Luks (void)
 	declare_prop (me, "hash_spec",   hash_spec,   "desc of hash_spec");
 }
 
-Luks::~Luks()
+LuksTable::~LuksTable()
 {
 }
 
-LuksPtr
-Luks::create (void)
+LuksTablePtr
+LuksTable::create (void)
 {
-	LuksPtr p (new Luks());
+	LuksTablePtr p (new LuksTable());
 	p->weak = p;
 
 	return p;
@@ -57,9 +61,9 @@ Luks::create (void)
 
 
 bool
-Luks::accept (Visitor& v)
+LuksTable::accept (Visitor& v)
 {
-	LuksPtr l = std::dynamic_pointer_cast<Luks> (get_smart());
+	LuksTablePtr l = std::dynamic_pointer_cast<LuksTable> (get_smart());
 	if (!v.visit(l))
 		return false;
 	return visit_children(v);
@@ -67,11 +71,11 @@ Luks::accept (Visitor& v)
 
 
 std::vector<Action>
-Luks::get_actions (void)
+LuksTable::get_actions (void)
 {
 	// LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.luks", true },
+		{ "dummy.luks_table", true },
 	};
 
 	std::vector<Action> parent_actions = Container::get_actions();
@@ -82,10 +86,10 @@ Luks::get_actions (void)
 }
 
 bool
-Luks::perform_action (Action action)
+LuksTable::perform_action (Action action)
 {
-	if (action.name == "dummy.luks") {
-		std::cout << "Luks perform: " << action.name << std::endl;
+	if (action.name == "dummy.luks_table") {
+		std::cout << "LuksTable perform: " << action.name << std::endl;
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -94,25 +98,36 @@ Luks::perform_action (Action action)
 
 
 ContainerPtr
-Luks::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int UNUSED(bufsize))
+LuksTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int UNUSED(bufsize))
 {
 	const char* signature = "LUKS\xBA\xBE";
 
 	if (strncmp ((const char*) buffer, signature, strlen (signature)))
 		return nullptr;
 
-	LuksPtr l = create();
+	LuksTablePtr l = create();
 
 	l->version     = *(short int*) (buffer+6);
 	l->cipher_name = (char*) (buffer+8);
 	l->cipher_mode = (char*) (buffer+40);
 	l->hash_spec   = (char*) (buffer+72);
 	l->uuid        = (char*) (buffer+168);
+	l->bytes_size  = parent->bytes_size;
 
-	l->device      = "/dev/mapper/luks-" + l->uuid;
+	//l->device      = "/dev/mapper/luks-" + l->uuid;
 
 	//std::cout << "Parent: " << parent->get_device_name() << std::endl;
-	l->luks_open(parent->get_device_name(), false);
+	l->luks_open (parent->get_device_name(), false);
+
+	PartitionPtr p = Partition::create();
+	p->sub_type ("Space");
+	p->sub_type ("Reserved");
+
+	long header_size = be32toh (*(int*)(buffer+104));
+
+	p->bytes_size = header_size;
+	p->bytes_used = header_size;
+	l->add_child (p);
 
 #if 0
 	log_info ("LUKS:\n");
@@ -124,7 +139,7 @@ Luks::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned cha
 #endif
 
 #if 0
-	question_cb_t fn = std::bind(&Luks::on_reply, l, std::placeholders::_1);
+	question_cb_t fn = std::bind(&LuksTable::on_reply, l, std::placeholders::_1);
 	QuestionPtr q = Question::create (l, fn);
 	q->title = "Enter Password";
 	q->question = "for luks device " + l->device;
@@ -132,27 +147,29 @@ Luks::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned cha
 #endif
 #if 0
 	PasswordDialogPtr p = PasswordDialog::create();
-	p->title = "Luks";
+	p->title = "LuksTable";
 	gui_app->ask_pass (p);
 #endif
 
 	//main_app->ask (q);
 
 	ContainerPtr c(l);
+#if 0
 	main_app->queue_add_probe(c);	//XXX do this when we've asked for a password
+#endif
 
 	return c;
 }
 
 void
-Luks::on_reply (QuestionPtr UNUSED(q))
+LuksTable::on_reply (QuestionPtr UNUSED(q))
 {
 	std::cout << "user has answered question" << std::endl;
 }
 
 
 bool
-Luks::is_mounted (const std::string& device)
+LuksTable::is_mounted (const std::string& device)
 {
 	std::string command = "sudo cryptsetup status " + device;
 	//std::cout << "Command: " << command << std::endl;
@@ -169,7 +186,7 @@ Luks::is_mounted (const std::string& device)
 }
 
 bool
-Luks::is_luks (const std::string& device)
+LuksTable::is_luks (const std::string& device)
 {
 	// device exists?		stat			somebody else's problem
 	// is luks			cryptsetup isLuks
@@ -191,7 +208,7 @@ Luks::is_luks (const std::string& device)
 
 
 bool
-Luks::luks_open (const std::string& parent, bool UNUSED(probe))
+LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 {
 //	cryptsetup open --type luks /dev/loop4p5 luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
 //		/dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
@@ -227,7 +244,7 @@ Luks::luks_open (const std::string& parent, bool UNUSED(probe))
 }
 
 bool
-Luks::luks_close (void)
+LuksTable::luks_close (void)
 {
 	//XXX close all dependents first, e.g. umount X, vgchange -an, etc
 	std::string command = "cryptsetup close " + device;
@@ -279,24 +296,24 @@ status
 cryptsetup luksDump /dev/sda2
 LUKS header information for /dev/sda2
 
-Version:        1
-Cipher name:    aes
-Cipher mode:    xts-plain64
-Hash spec:      sha1
+Version:	1
+Cipher name:	aes
+Cipher mode:	xts-plain64
+Hash spec:	sha1
 Payload offset: 4096
-MK bits:        512
-MK digest:      df 25 17 cb 40 5b ac 5b ce 88 94 5e 82 92 9f fa 70 42 a6 0c
-MK salt:        c7 b7 61 29 5a 9c a9 88 cf 7b 9a 40 74 9c a0 5f
-                fd 7c 3d 83 b7 86 da af 93 32 3c 2c ae d2 17 73
-MK iterations:  52250
-UUID:           bf56d741-efe5-4931-8f4f-91aa934caf4a
+MK bits:	512
+MK digest:	df 25 17 cb 40 5b ac 5b ce 88 94 5e 82 92 9f fa 70 42 a6 0c
+MK salt:	c7 b7 61 29 5a 9c a9 88 cf 7b 9a 40 74 9c a0 5f
+		fd 7c 3d 83 b7 86 da af 93 32 3c 2c ae d2 17 73
+MK iterations:	52250
+UUID:		bf56d741-efe5-4931-8f4f-91aa934caf4a
 
 Key Slot 0: ENABLED
-        Iterations:             209835
-        Salt:                   a2 37 d4 0e ad 47 c7 b2 04 70 d9 df 34 43 a0 9a
-                                2e 58 33 98 44 e6 bb 97 b5 24 26 3f bf 1a ab 94
-        Key material offset:    8
-        AF stripes:             4000
+	Iterations:		209835
+	Salt:			a2 37 d4 0e ad 47 c7 b2 04 70 d9 df 34 43 a0 9a
+				2e 58 33 98 44 e6 bb 97 b5 24 26 3f bf 1a ab 94
+	Key material offset:	8
+	AF stripes:		4000
 Key Slot 1: DISABLED
 Key Slot 2: DISABLED
 Key Slot 3: DISABLED

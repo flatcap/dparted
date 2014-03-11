@@ -29,7 +29,7 @@
 #include "block.h"
 #include "partition.h"
 #include "filesystem.h"
-#include "luks.h"
+#include "luks_table.h"
 #include "lvm_group.h"
 #include "lvm_volume.h"
 #include "log_trace.h"
@@ -789,7 +789,7 @@ template <class T>
 std::string
 dot_luks (std::shared_ptr<T> t)
 {
-	LuksPtr p(t);
+	LuksTablePtr p(t);
 	if (!p)
 		return "";
 

@@ -28,8 +28,8 @@ OUT	= dparted
 
 # Core Objects
 OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extended.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp \
-	   gpt_partition.cpp loop.cpp luks.cpp lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp \
-	   lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp md_linear.cpp md_mirror.cpp \
+	   gpt_partition.cpp loop.cpp luks_partition.cpp luks_table.cpp lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp \
+	   lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp md_linear.cpp md_mirror.cpp \
 	   md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp misc.cpp msdos.cpp \
 	   msdos_partition.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
@@ -127,7 +127,7 @@ tags:	$(SRC) $(HDR)
 # ----------------------------------------------------------------------------
 
 quiet_cmd_CC	= CC	$<
-      cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@ #&& (											\
+      cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@ && (											\
 		  $(CC) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;						\
 		  cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp;										\
 		  sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d;	\

@@ -44,6 +44,7 @@ digraph G
 	Gpt            [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Gpt</td><td>&nbsp;</td></tr> </table> > ]
 	LvmTable       [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmTable</td><td>&nbsp;</td></tr> </table> > ]
 	MdTable        [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdTable</td><td>&nbsp;</td></tr> </table> > ]
+	LuksTable      [ fillcolor="#FFFFCC"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LuksTable</td><td>&nbsp;</td></tr> </table> > ]
 
 	Partition      [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Partition</td><td>&nbsp;</td></tr> </table> > ]
 	MsdosPartition [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MsdosPartition</td><td>&nbsp;</td></tr> </table> > ]
@@ -53,6 +54,7 @@ digraph G
 	GptPartition   [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">GptPartition</td><td>★</td></tr> </table> > ]
 	LvmPartition   [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LvmPartition</td><td>&nbsp;</td></tr> </table> > ]
 	MdPartition    [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">MdPartition</td><td>&nbsp;</td></tr> </table> > ]
+	LuksPartition  [ fillcolor="#B0D0B0"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">LuksPartition</td><td>★</td></tr> </table> > ]
 
 	Space          [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Space</td><td>&nbsp;</td></tr> </table> > ]
 	Reserved       [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Reserved</td><td>&nbsp;</td></tr> </table> > ]
@@ -81,10 +83,6 @@ digraph G
 	Zero           [ color="#DC4C46" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Zero</td><td>&nbsp;</td></tr> </table> > ]
 	Random         [ color="#DC4C46" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Random</td><td>&nbsp;</td></tr> </table> > ]
 
-	Wrapper        [ color="#80FF80" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Wrapper</td><td>&nbsp;</td></tr> </table> > ]
-
-	Luks           [ fillcolor="#80FF80"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Luks</td><td>&nbsp;</td></tr> </table> > ]
-
 	Volume         [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Volume</td><td>▲</td></tr> </table> > ]
 	Whole          [ fillcolor="#2BDCFF"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Whole</td><td>&nbsp;</td></tr> </table> > ]
 	Group          [ color="#2BDCFF" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Group</td><td>△</td></tr> </table> > ]
@@ -110,7 +108,6 @@ digraph G
 	Partition  -> Container;
 	Table      -> Container;
 	Whole      -> Container;
-	Wrapper    -> Container;
 
 	LvmVolume  -> Volume;
 	MdVolume   -> Volume;
@@ -124,6 +121,7 @@ digraph G
 		LvmTable             -> Table;
 		MdTable              -> Table;
 		Msdos                -> Table;
+		LuksTable            -> Table;
 	}
 
 	subgraph cluster_2 {
@@ -159,6 +157,7 @@ digraph G
 		GptPartition         -> Partition;
 		LvmPartition         -> Partition;
 		MdPartition          -> Partition;
+		LuksPartition        -> Partition;
 
 		Primary              -> MsdosPartition;
 		Logical              -> MsdosPartition;
@@ -204,12 +203,6 @@ digraph G
 		Loop                 -> Block;
 		File                 -> Block;
 		Key                  -> Disk [style=invis];
-	}
-
-	subgraph cluster_9 {
-		color=transparent;
-
-		Luks                 -> Wrapper;
 	}
 
 	{ rank=same Key LvmMetadata }
