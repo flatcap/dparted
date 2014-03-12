@@ -14,7 +14,7 @@
 	01.13 Table.LvmTable
 	01.14 Table.MdTable
 	01.15 Table.Msdos
-	01.16 Wrapper.Luks
+	01.16 Table.LuksTable
 
 02 Block.File
 	02.01 Block.Loop
@@ -35,7 +35,7 @@
 	03.13 Table.LvmTable
 	03.14 Table.MdTable
 	03.15 Table.Msdos
-	03.16 Wrapper.Luks
+	03.16 Table.LuksTable
 
 04 Filesystem.Btrfs
 	04.01 Filesystem.Btrfs.Snapshot
@@ -53,7 +53,7 @@
 	05.09 Filesystem.Xfs
 	05.10 Misc.Random
 	05.11 Misc.Zero
-	05.12 Wrapper.Luks
+	05.12 Table.LuksTable
 
 06 Partition.MsdosPartition.Logical
 	06.01 Filesystem.Btrfs
@@ -67,7 +67,7 @@
 	06.09 Filesystem.Xfs
 	06.10 Misc.Random
 	06.11 Misc.Zero
-	06.12 Wrapper.Luks
+	06.12 Table.LuksTable
 
 07 Partition.MsdosPartition.Primary
 	07.01 Filesystem.Btrfs
@@ -81,7 +81,7 @@
 	07.09 Filesystem.Xfs
 	07.10 Misc.Random
 	07.11 Misc.Zero
-	07.12 Wrapper.Luks
+	07.12 Table.LuksTable
 
 08 Table.Gpt
 	08.01 Partition.GptPartition
@@ -133,7 +133,7 @@
 	14.09 Filesystem.Xfs
 	14.10 Misc.Random
 	14.11 Misc.Zero
-	14.12 Wrapper.Luks
+	14.12 Table.LuksTable
 
 15 Whole.Volume.LvmVolume.LvmMirror
 	15.01 Filesystem.Btrfs
@@ -147,7 +147,7 @@
 	15.09 Filesystem.Xfs
 	15.10 Misc.Random
 	15.11 Misc.Zero
-	15.12 Wrapper.Luks
+	15.12 Table.LuksTable
 
 16 Whole.Volume.LvmVolume.LvmRaid
 	16.01 Filesystem.Btrfs
@@ -161,7 +161,7 @@
 	16.09 Filesystem.Xfs
 	16.10 Misc.Random
 	16.11 Misc.Zero
-	16.12 Wrapper.Luks
+	16.12 Table.LuksTable
 
 17 Whole.Volume.LvmVolume.LvmStripe
 	17.01 Filesystem.Btrfs
@@ -175,7 +175,7 @@
 	17.09 Filesystem.Xfs
 	17.10 Misc.Random
 	17.11 Misc.Zero
-	17.12 Wrapper.Luks
+	17.12 Table.LuksTable
 
 18 Whole.Volume.MdVolume.MdLinear
 	18.01 Filesystem.Btrfs
@@ -189,7 +189,7 @@
 	18.09 Filesystem.Xfs
 	18.10 Misc.Random
 	18.11 Misc.Zero
-	18.12 Wrapper.Luks
+	18.12 Table.LuksTable
 
 19 Whole.Volume.MdVolume.MdMirror
 	19.01 Filesystem.Btrfs
@@ -203,7 +203,7 @@
 	19.09 Filesystem.Xfs
 	19.10 Misc.Random
 	19.11 Misc.Zero
-	19.12 Wrapper.Luks
+	19.12 Table.LuksTable
 
 20 Whole.Volume.MdVolume.MdRaid
 	20.01 Filesystem.Btrfs
@@ -217,7 +217,7 @@
 	20.09 Filesystem.Xfs
 	20.10 Misc.Random
 	20.11 Misc.Zero
-	20.12 Wrapper.Luks
+	20.12 Table.LuksTable
 
 21 Whole.Volume.MdVolume.MdStripe
 	21.01 Filesystem.Btrfs
@@ -231,9 +231,9 @@
 	21.09 Filesystem.Xfs
 	21.10 Misc.Random
 	21.11 Misc.Zero
-	21.12 Wrapper.Luks
+	21.12 Table.LuksTable
 
-22 Wrapper.Luks
+22 Partition.LuksPartition
 	22.01 Filesystem.Btrfs
 	22.02 Filesystem.Extfs.Ext2
 	22.03 Filesystem.Extfs.Ext3
@@ -247,4 +247,10 @@
 	22.11 Misc.Zero
 	22.12 Table.LvmTable
 	22.13 Table.MdTable
+
+23 Table.LuksTable
+	08.01 Partition.LuksPartition
+	08.02 Partition.Space.Alignment
+	08.03 Partition.Space.Reserved
+	08.04 Partition.Space.Unallocated
 
