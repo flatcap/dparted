@@ -326,6 +326,14 @@ dot_container (std::shared_ptr<T> t)
 		}
 	} else {
 		output << dot_row ("device", p->device);
+#if 1
+		std::stringstream mm;
+		mm << t->device_major << ":" << t->device_minor;
+		output << dot_row ("device maj:min",	mm);
+#else
+		output << dot_row ("device_major",	p->device_major);
+		output << dot_row ("device_minor",	p->device_minor);
+#endif
 	}
 
 	output << dot_row ("fd",       p->fd);
@@ -455,14 +463,6 @@ dot_loop (std::shared_ptr<T> t)
 	output << dot_row ("file_inode",	p->file_inode);
 
 	// Loop device
-#if 1
-	mm.str ("");
-	mm << p->loop_major << ":" << p->loop_minor;
-	output << dot_row ("loop maj:min",	mm);
-#else
-	output << dot_row ("loop_major",	p->loop_major);
-	output << dot_row ("loop_minor",	p->loop_minor);
-#endif
 	output << dot_row ("offset",		p->offset);
 	output << dot_row ("sizelimit",		p->sizelimit);
 

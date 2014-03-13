@@ -51,8 +51,6 @@ public:
 	int		file_major = 0;
 	int		file_minor = 0;
 
-	int		loop_major = 0;		// Loop device
-	int		loop_minor = 0;
 	long		offset     = 0;
 	long		sizelimit  = 0;
 	bool		autoclear  = false;

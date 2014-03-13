@@ -40,8 +40,6 @@ Loop::Loop (void)
 	declare_prop (me, "file_inode", file_inode, "desc of file_inode");
 	declare_prop (me, "file_major", file_major, "desc of file_major");
 	declare_prop (me, "file_minor", file_minor, "desc of file_minor");
-	declare_prop (me, "loop_major", loop_major, "desc of loop_major");
-	declare_prop (me, "loop_minor", loop_minor, "desc of loop_minor");
 	declare_prop (me, "offset",     offset,     "desc of offset");
 	declare_prop (me, "sizelimit",  sizelimit,  "desc of sizelimit");
 	declare_prop (me, "autoclear",  autoclear,  "desc of autoclear");
@@ -83,16 +81,16 @@ Loop::create (const std::string& losetup)
 		l->name = l->name.substr (index+1);
 	}
 
-	l->autoclear  = StringNum (parts[ 1]);
-	l->file_inode = StringNum (parts[ 2]);
-	l->file_major = StringNum (parts[ 3]);
-	l->file_minor = StringNum (parts[ 4]);
-	l->loop_major = StringNum (parts[ 5]);
-	l->loop_minor = StringNum (parts[ 6]);
-	l->offset     = StringNum (parts[ 7]);
-	l->partscan   = StringNum (parts[ 8]);
-	l->read_only  = StringNum (parts[ 9]);
-	l->sizelimit  = StringNum (parts[10]);
+	l->autoclear    = StringNum (parts[ 1]);
+	l->file_inode   = StringNum (parts[ 2]);
+	l->file_major   = StringNum (parts[ 3]);
+	l->file_minor   = StringNum (parts[ 4]);
+	l->device_major = StringNum (parts[ 5]);
+	l->device_minor = StringNum (parts[ 6]);
+	l->offset       = StringNum (parts[ 7]);
+	l->partscan     = StringNum (parts[ 8]);
+	l->read_only    = StringNum (parts[ 9]);
+	l->sizelimit    = StringNum (parts[10]);
 
 	std::size_t len = l->file_name.size();
 	if ((len > 10) && (l->file_name.substr (len-10) == " (deleted)")) {
@@ -102,12 +100,10 @@ Loop::create (const std::string& losetup)
 	}
 
 	//XXX tmp
-	l->kernel_major = l->loop_major;
-	l->kernel_minor = l->loop_minor;
 	l->block_size   = 512;	//XXX kernel limit, but fs block size is likely to be bigger
 
 	std::stringstream ss;
-	ss << "[" << l->kernel_major << ":" << l->kernel_minor << "]";
+	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
 	return l;
@@ -248,7 +244,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	l->block_size = 512;	//XXX granularity, or blocksize of backing-file fs/disk?
 
 	std::stringstream ss;
-	ss << "[" << l->loop_major << ":" << l->loop_minor << "]";
+	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
 	ContainerPtr c(l);

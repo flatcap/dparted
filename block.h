@@ -44,8 +44,6 @@ public:
 
 public:
 	//properties
-	int kernel_major = 0;	//XXX rename block major
-	int kernel_minor = 0;
 
 protected:
 	Block (void);

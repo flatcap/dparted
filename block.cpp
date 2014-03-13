@@ -43,9 +43,6 @@ Block::Block (void)
 	const char* me = "Block";
 
 	sub_type (me);
-
-	declare_prop (me, "kernel_major", kernel_major, "desc of kernel_major");
-	declare_prop (me, "kernel_minor", kernel_minor, "desc of kernel_minor");
 }
 
 Block::~Block()

@@ -84,7 +84,7 @@ Disk::create (const std::string& lsblk)
 	//log_debug ("%s\n", device.c_str());
 
 	std::string majmin = tags["MAJ:MIN"];
-	scan = sscanf (majmin.c_str(), "%d:%d", &d->kernel_major, &d->kernel_minor);
+	scan = sscanf (majmin.c_str(), "%lu:%lu", &d->device_major, &d->device_minor);
 	if (scan != 2) {
 		log_debug ("scan failed1\n");
 	}
@@ -210,8 +210,8 @@ Disk::find_devices (ContainerPtr& list)
 	std::string device;
 	std::string type;
 	std::string mount;
-	int kernel_major = -1;
-	int kernel_minor = -1;
+	int major = -1;
+	int minor = -1;
 	long size;
 	std::string part;
 	int scan;
@@ -231,7 +231,7 @@ Disk::find_devices (ContainerPtr& list)
 		//log_debug ("%s\n", device.c_str());
 
 		std::string majmin = tags["MAJ:MIN"];
-		scan = sscanf (majmin.c_str(), "%d:%d", &kernel_major, &kernel_minor);
+		scan = sscanf (majmin.c_str(), "%d:%d", &major, &minor);
 		if (scan != 2) {
 			log_debug ("scan failed1\n");
 			continue;
@@ -241,8 +241,8 @@ Disk::find_devices (ContainerPtr& list)
 		mount = tags["MOUNTPOINT"];
 
 #if 0
-		log_debug ("\tmajor: %d\n", kernel_major);
-		log_debug ("\tminor: %d\n", kernel_minor);
+		log_debug ("\tmajor: %d\n", major);
+		log_debug ("\tminor: %d\n", minor);
 		log_debug ("\tsize:  %lld\n", size);
 		log_debug ("\tmount: %s\n", mount.c_str());
 		log_debug ("\n");
@@ -251,8 +251,8 @@ Disk::find_devices (ContainerPtr& list)
 		DiskPtr d = Disk::create();
 		d->device = "/dev/" + device;
 		d->parent_offset = 0;
-		d->kernel_major = kernel_major;
-		d->kernel_minor = kernel_minor;
+		d->device_major = major;
+		d->device_minor = minor;
 		d->mounts = mount;
 		d->bytes_size = size;
 
