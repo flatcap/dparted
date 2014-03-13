@@ -231,10 +231,8 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 				log_error ("UNKNOWN type %s\n", segtype.c_str());
 				continue;
 			}
-			// These types are "full" by definition
 			v->bytes_size =  tags["LVM2_VG_EXTENT_SIZE"];
 			v->bytes_size *= (long) tags["LVM2_PVSEG_SIZE"];
-			v->bytes_used = v->bytes_size;
 
 			//std::cout << "lv uuid = " << lv_uuid << '\n';
 			v->uuid    = lv_uuid;
@@ -470,7 +468,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		v->bytes_size		= tags["LVM2_LV_SIZE"];
 
 		// LvmVolume
-		v->lv_attr		= tags["LVM2_LV_ATTR"];		// m(e)tadata(i)mage,(r)aid
+		v->lv_attr		= tags["LVM2_LV_ATTR"];		// m(e)tadata, (i)mage, (r)aid
 		v->kernel_major		= tags["LVM2_LV_KERNEL_MAJOR"];
 		v->kernel_minor		= tags["LVM2_LV_KERNEL_MINOR"];
 
@@ -490,6 +488,9 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 			v->device = make_device (g->name, v->name);
 			//printf ("DEVNAME = %s\n", v->device.c_str());
+
+			//INTERNAL object => full
+			v->bytes_used = v->bytes_size;
 		}
 
 		std::string devices = tags["LVM2_DEVICES"];
