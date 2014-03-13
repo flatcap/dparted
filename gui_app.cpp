@@ -225,26 +225,24 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 
 #if 0
 	std::cout << "values: " << std::endl;
-	std::cout << "\tapp        = " << group.app        << std::endl;
-	std::cout << "\tlist       = " << group.list       << std::endl;
-	std::cout << "\tdot        = " << group.dot        << std::endl;
-	std::cout << "\tseparate   = " << group.separate   << std::endl;
-	std::cout << "\tproperties = " << group.properties << std::endl;
-	std::cout << "\tquit       = " << group.quit       << std::endl;
-	std::cout << "\tx          = " << group.x          << std::endl;
-	std::cout << "\ty          = " << group.y          << std::endl;
-	std::cout << "\tw          = " << group.w          << std::endl;
-	std::cout << "\th          = " << group.h          << std::endl;
+	std::cout << "\tapp          = " << group.app          << std::endl;
+	std::cout << "\thex          = " << group.hex          << std::endl;
+	std::cout << "\tlist         = " << group.list         << std::endl;
+	std::cout << "\tproperties   = " << group.properties   << std::endl;
+	std::cout << "\tquit         = " << group.quit         << std::endl;
+	std::cout << "\tx            = " << group.x            << std::endl;
+	std::cout << "\ty            = " << group.y            << std::endl;
+	std::cout << "\tw            = " << group.w            << std::endl;
+	std::cout << "\th            = " << group.h            << std::endl;
+	std::cout << "\tdot-display  = " << group.dot_display  << std::endl;
+	std::cout << "\tdot-resize   = " << group.dot_resize   << std::endl;
+	std::cout << "\tdot-separate = " << group.dot_separate << std::endl;
+	std::cout << "\tdot-save_gv  = " << group.dot_save_gv  << std::endl;
+	std::cout << "\tdot-save_png = " << group.dot_save_png << std::endl;
 #endif
 
-	if (!group.app && !group.list && !group.properties && !group.dot && !group.hex && !group.quit) {
+	if (!group.app && !group.list && !group.properties && !group.dot_display && !group.dot_save_gv && !group.dot_save_png && !group.hex && !group.quit) {
 		group.app = true;
-	}
-
-	//std::cout << "validate options" << std::endl;
-
-	if (group.separate && !group.dot) {
-		std::cout << "separate without dot" << std::endl;
 	}
 
 	if (!group.app) {
@@ -338,15 +336,23 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		log_info ("------------------------------------------------------------\n");
 	}
 
-	if (group.dot && top_level) {
-		if (group.separate) {
+	if ((group.dot_display || group.dot_save_gv || group.dot_save_png) && top_level) {
+		if (group.dot_separate) {
 			for (auto c : top_level->get_children()) {
 				DotVisitor dv;
+				dv.display  = group.dot_display;
+				dv.resize   = group.dot_resize;
+				dv.save_gv  = group.dot_save_gv;
+				dv.save_png = group.dot_save_png;
 				c->accept (dv);
 				dv.run_dotty();
 			}
 		} else {
 			DotVisitor dv;
+			dv.display  = group.dot_display;
+			dv.resize   = group.dot_resize;
+			dv.save_gv  = group.dot_save_gv;
+			dv.save_png = group.dot_save_png;
 			for (auto c : top_level->get_children()) {
 				c->accept (dv);
 			}

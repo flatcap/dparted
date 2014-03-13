@@ -55,6 +55,11 @@ public:
 	std::string get_dot (void);
 	void run_dotty (void);
 
+	bool display  = false;
+	int  resize   = -1;
+	bool save_gv  = false;
+	bool save_png = false;
+
 protected:
 	std::stack<ContainerPtr> parents;
 	std::stringstream dot_objects;

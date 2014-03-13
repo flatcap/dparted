@@ -1276,15 +1276,40 @@ DotVisitor::run_dotty (void)
 	timeinfo = localtime (&rawtime);
 	strftime (timebuf, sizeof (timebuf), "%H:%M", timeinfo);
 
-	std::string title = "DParted: " + std::string (timebuf);
-	std::string command = "dot -Tpng | display -title \"" + title + "\" -resize 75% - &";
-	// std::string command = "dot -Tpng > png/$RANDOM.png";
-	std::string input = get_dot();
+	std::string now (timebuf);
 
-#if 0
-	std::cout << input << std::endl;
-#else
-	execute_command2 (command, input);
-#endif
+	if (!save_gv && !save_png)
+		display = true;
+
+	std::string input = get_dot();
+	std::string nothing;
+	std::string dir;
+
+	if (display) {
+		std::string title = "DParted: " + std::string (timebuf);
+		std::string size;
+		if (resize != -1) {
+			size = " -resize " + std::to_string (resize) + "%";
+		}
+		std::string command = "dot -Tpng | display -title \"" + title + "\"" + size + " - &";
+		execute_command2 (command, input);
+	}
+
+	if (save_gv) {
+		dir = "gv_" + now;
+		execute_command2 ("mkdir -p " + dir, nothing);
+		std::string command = "cat > " + dir + "/$RANDOM.gv";
+		execute_command2 (command, input);
+	}
+
+	if (save_png) {
+		dir = "png_" + now;
+		execute_command2 ("mkdir -p " + dir, nothing);
+		std::string command = "dot -Tpng > " + dir + "/$RANDOM.png";
+		execute_command2 (command, input);
+	}
 }
+
+// --dot={display|dump|save_gv|save_png}
+// --dot-resize=PERCENTAGE
 
