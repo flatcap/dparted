@@ -113,8 +113,9 @@ public:
 	std::string	uuid;
 
 	std::string	device;	// These don't belong here, but the alternative is multiple inheritance
-	dev_t		device_major;
-	dev_t		device_minor;
+	dev_t		device_major = 0;
+	dev_t		device_minor = 0;
+	int		fd = -1;
 
 	long		parent_offset = 0;
 
@@ -129,8 +130,6 @@ public:
 	std::vector<std::string> type;	//XXX move to protected
 
 	bool		 missing = false;
-
-	int		 fd = -1;
 
 	int seqnum = 123;
 

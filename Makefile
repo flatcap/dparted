@@ -65,7 +65,8 @@ CFLAGS	+= -fno-omit-frame-pointer
 #CFLAGS	+= -fno-inline-functions
 #CFLAGS	+= -fno-inline-functions-called-once
 CFLAGS	+= -fno-optimize-sibling-calls
-CFLAGS	+= -O0
+#CFLAGS	+= -O0
+CFLAGS	+= -DDEBUG
 
 GUI_CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
 GUI_CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
