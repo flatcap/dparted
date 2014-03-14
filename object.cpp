@@ -17,55 +17,29 @@ Object::Object (void)
 	declare_prop (me, "block_size",    block_size,    "desc of block_size");
 	declare_prop (me, "bytes_size",    bytes_size,    "desc of bytes_size");
 	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used");
+
+#if 0
+	uuid_short
+	device_short
+	bytes_size_human
+	bytes_used_human
+#endif
+
+	name = "table";
+	uuid = "0fbb65cd-9514-4297-9da3-205796c81660";
+	device = "/dev/mapper/rich-table";
+	device_major = 253;
+	device_minor = 35;
+	parent_offset = 4194304;
+	block_size = 4096;
+	bytes_size = 104857600;
+	bytes_used = 45088768;
 }
 
 Object::~Object()
 {
 }
 
-
-#ifdef RAR
-std::string
-Object::get_prop (const std::string& propname)
-{
-	if (propname == "name") {
-		return name;
-	} else if (propname == "uuid") {
-		return uuid;
-	} else if (propname == "uuid_short") {
-		std::string uuid_short = uuid;
-
-		if ((uuid_short.size() > 8) && (uuid_short[0] != '/')) {
-			uuid_short = uuid_short.substr (0, 6) + "...";
-		}
-
-		return uuid_short;
-	} else if (propname == "device") {
-		return get_device_name();
-	} else if (propname == "device_short") {
-		std::string d = get_device_name();
-		size_t pos = d.find_last_of ('/');
-		if (pos != std::string::npos) {
-			d.erase (0, pos+1);
-		}
-		return d;
-	} else if (propname == "parent_offset") {
-		return std::to_string (parent_offset);
-	} else if (propname == "block_size") {
-		return std::to_string (block_size);
-	} else if (propname == "bytes_size") {
-		return std::to_string (bytes_size);
-	} else if (propname == "bytes_size_human") {
-		return get_size (bytes_size);
-	} else if (propname == "bytes_used") {
-		return std::to_string (bytes_used);
-	} else if (propname == "bytes_used_human") {
-		return get_size (bytes_used);
-	}
-
-	return propname;
-}
-#endif
 
 std::vector<std::string>
 Object::get_prop_names (void)

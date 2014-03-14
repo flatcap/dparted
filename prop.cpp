@@ -261,3 +261,23 @@ BaseProp::operator int64_t (void)
 }
 
 
+std::string BaseProp::get_type_name (void)
+{
+	switch (type) {
+		case Tag::t_unset:  return "t_unset";
+		case Tag::t_string: return "t_string";
+		case Tag::t_double: return "t_double";
+		case Tag::t_bool:   return "t_bool";
+		case Tag::t_u8:     return "t_u8";
+		case Tag::t_s8:     return "t_s8";
+		case Tag::t_u16:    return "t_u16";
+		case Tag::t_s16:    return "t_s16";
+		case Tag::t_u32:    return "t_u32";
+		case Tag::t_s32:    return "t_s32";
+		case Tag::t_u64:    return "t_u64";
+		case Tag::t_s64:    return "t_s64";
+	}
+
+	return "unknown";
+}
+

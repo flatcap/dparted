@@ -73,6 +73,8 @@ public:
 	virtual operator uint64_t    (void);
 	virtual operator  int64_t    (void);
 
+	std::string get_type_name (void);
+
 	enum class Tag {
 		t_unset,	// Empty
 		t_string,	// Text

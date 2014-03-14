@@ -13,6 +13,12 @@ main()
 	}
 	std::cout << std::endl;
 
+	std::cout << "Types:" << std::endl;
+	for (auto p : j.get_all_props()) {
+		std::cout << '\t' << p->get_type_name() << std::endl;
+	}
+	std::cout << std::endl;
+
 	std::cout << "Values:" << std::endl;
 	for (auto p : j.get_all_props()) {
 		std::cout << '\t' << (std::string) *p << std::endl;
