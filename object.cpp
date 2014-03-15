@@ -19,19 +19,12 @@ Object::Object (void)
 	declare_prop (me, "bytes_size",    bytes_size,    "desc of bytes_size");
 	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used");
 
-	get_int64_t  fn1 = std::bind(&Object::get_bytes_free,         this);
-	get_string_t fn2 = std::bind(&Object::get_uuid_short,         this);
-	get_string_t fn3 = std::bind(&Object::get_device_short,       this);
-	get_string_t fn4 = std::bind(&Object::get_device_major_minor, this);
-	get_string_t fn5 = std::bind(&Object::get_bytes_size_human,   this);
-	get_string_t fn6 = std::bind(&Object::get_bytes_free_human,   this);
-
-	declare_prop (me, "bytes_free",         fn1, "desc of bytes_free");
-	declare_prop (me, "uuid_short",         fn2, "desc of uuid_short");
-	declare_prop (me, "device_short",       fn3, "desc of device_short");
-	declare_prop (me, "device_major_minor", fn4, "desc of device_major_minor");
-	declare_prop (me, "bytes_size_human",   fn5, "desc of bytes_size_human");
-	declare_prop (me, "bytes_free_human",   fn6, "desc of bytes_free_human");
+	declare_prop (me, "bytes_free",         (get_int64_t)  std::bind(&Object::get_bytes_free,         this), "desc of bytes_free");
+	declare_prop (me, "uuid_short",         (get_string_t) std::bind(&Object::get_uuid_short,         this), "desc of uuid_short");
+	declare_prop (me, "device_short",       (get_string_t) std::bind(&Object::get_device_short,       this), "desc of device_short");
+	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Object::get_device_major_minor, this), "desc of device_major_minor");
+	declare_prop (me, "bytes_size_human",   (get_string_t) std::bind(&Object::get_bytes_size_human,   this), "desc of bytes_size_human");
+	declare_prop (me, "bytes_free_human",   (get_string_t) std::bind(&Object::get_bytes_free_human,   this), "desc of bytes_free_human");
 
 	name = "table";
 	uuid = "b23896a2-2023-4039-bb99-87fa92efe821";
