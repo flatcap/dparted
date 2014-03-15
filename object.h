@@ -47,8 +47,14 @@ public:
 	int seqnum = 123;
 
 protected:
+public:
 	std::map<std::string,PPtr> props;
 
+	std::string get_uuid_short (void);
+	std::string get_device_short (void);
+	std::string get_device_major_minor (void);
+	std::string get_bytes_size_human (void);
+	std::string get_bytes_free_human (void);
 };
 
 #endif // _OBJECT_H_

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <set>
 #include <string>
+#include <cmath>
 
 #include "object.h"
 
@@ -21,12 +22,13 @@ Object::Object (void)
 #if 0
 	uuid_short
 	device_short
+	device_major_minor
 	bytes_size_human
 	bytes_used_human
 #endif
 
 	name = "table";
-	uuid = "0fbb65cd-9514-4297-9da3-205796c81660";
+	uuid = "b23896a2-2023-4039-bb99-87fa92efe821";
 	device = "/dev/mapper/rich-table";
 	device_major = 253;
 	device_minor = 35;
@@ -73,5 +75,85 @@ Object::get_all_props (void)
 	return vv;
 }
 
+
+std::string
+get_size (long size)
+{
+	//XXX do this without log2?  use ffs
+	char buffer[64];
+	double power = log2 ((double) llabs (size)) + 0.5;
+	const char* suffix = "";
+	double divide = 1;
+
+	if (power < 10) {
+		suffix = "   B";
+		divide = 1;
+	} else if (power < 20) {
+		suffix = " KiB";
+		divide = 1024;
+	} else if (power < 30) {
+		suffix = " MiB";
+		divide = 1048576;
+	} else if (power < 40) {
+		suffix = " GiB";
+		divide = 1073741824;
+	} else if (power < 50) {
+		suffix = " TiB";
+		divide = 1099511627776;
+	} else if (power < 60) {
+		suffix = " PiB";
+		divide = 1125899906842624;
+	}
+	sprintf (buffer, "%0.3g%s", (double) size/divide, suffix);
+	return buffer;
+}
+
+
+std::string
+Object::get_uuid_short (void)
+{
+	std::string u = uuid;
+	size_t pos = uuid.find_first_of ("-:");
+
+	if (pos != std::string::npos) {
+		u = uuid.substr (0, pos);
+	}
+
+	return u;
+}
+
+std::string
+Object::get_device_short (void)
+{
+	std::string d = device;
+	size_t pos = device.find ("/dev");
+
+	if (pos != std::string::npos) {
+		d = device.substr (pos+5);
+	}
+
+	return d;
+}
+
+std::string
+Object::get_device_major_minor (void)
+{
+	if ((device_major == 0) && (device_minor == 0))
+		return "";
+
+	return std::to_string (device_major) + ":" + std::to_string (device_minor);
+}
+
+std::string
+Object::get_bytes_size_human (void)
+{
+	return get_size (bytes_size);
+}
+
+std::string
+Object::get_bytes_free_human (void)
+{
+	return get_size (bytes_size - bytes_used);
+}
 
 
