@@ -90,9 +90,14 @@ public:
 		t_s64		//          signed
 	} type = Tag::t_unset;
 
+	enum class Flags {
+		f_Property	// Should be displayed in properties dialog
+	};
+
 	std::string owner;
 	std::string name;
 	std::string desc;
+	long flags = 0;
 };
 
 

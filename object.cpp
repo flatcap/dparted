@@ -79,7 +79,7 @@ Object::get_all_props (void)
 std::string
 get_size (long size)
 {
-	//XXX do this without log2?  use ffs
+	//XXX do this without log2?  use gcc's __builtin_clzl?
 	char buffer[64];
 	double power = log2 ((double) llabs (size)) + 0.5;
 	const char* suffix = "";

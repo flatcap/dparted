@@ -19,7 +19,8 @@ public:
 	std::vector<PPtr> get_all_props (void);
 
 	template<typename T>
-	void declare_prop (const char* owner, const char* name, T& var, const char* desc)
+	void
+	declare_prop (const char* owner, const char* name, T& var, const char* desc)
 	{
 		PPtr pp (new Prop<T> (owner, name, var, desc));
 		props[name] = pp;
