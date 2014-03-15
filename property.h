@@ -29,6 +29,18 @@ class BaseProperty;
 
 typedef std::shared_ptr<BaseProperty> PPtr;
 
+typedef std::function<std::string (void)> get_string_t;
+typedef std::function<double      (void)> get_double_t;
+typedef std::function<bool        (void)> get_bool_t;
+typedef std::function<uint8_t     (void)> get_uint8_t;
+typedef std::function<int8_t      (void)> get_int8_t;
+typedef std::function<uint16_t    (void)> get_uint16_t;
+typedef std::function<int16_t     (void)> get_int16_t;
+typedef std::function<uint32_t    (void)> get_uint32_t;
+typedef std::function<int32_t     (void)> get_int32_t;
+typedef std::function<uint64_t    (void)> get_uint64_t;
+typedef std::function<int64_t     (void)> get_int64_t;
+
 class BaseProperty
 {
 public:
@@ -43,7 +55,7 @@ public:
 	virtual ~BaseProperty() = default;
 
 	BaseProperty (const BaseProperty&  other) = default;
-	BaseProperty (BaseProperty&& other)       = default;
+	BaseProperty (      BaseProperty&& other) = default;
 
 	BaseProperty& operator= (BaseProperty&  other) = default;
 	BaseProperty& operator= (BaseProperty&& other) = default;
@@ -73,6 +85,8 @@ public:
 	virtual operator uint64_t    (void);
 	virtual operator  int64_t    (void);
 
+	std::string get_type_name (void);
+
 	enum class Tag {
 		t_unset,	// Empty
 		t_string,	// Text
@@ -88,34 +102,39 @@ public:
 		t_s64		//          signed
 	} type = Tag::t_unset;
 
+	enum class Flags {
+		f_Property	// Should be displayed in properties dialog
+	};
+
 	std::string owner;
 	std::string name;
 	std::string desc;
+	long flags = 0;
 };
 
 
 template <typename T>
-class Property : public BaseProperty
+class PropVar : public BaseProperty
 {
 public:
-	Property (const char* owner, const char* name, T& v, const char* desc = "") :
+	PropVar (const char* owner, const char* name, T& v, const char* desc = "") :
 		BaseProperty (owner, name, desc),
 		value(v)
 	{
 		set_type(v);
 	}
 
-	virtual ~Property()
+	virtual ~PropVar()
 	{
 	}
 
-	Property (void) = default;
+	PropVar (void) = default;
 
-	Property (const Property&  other) = default;
-	Property (Property&& other)       = default;
+	PropVar (const PropVar&  other) = default;
+	PropVar (PropVar&& other)       = default;
 
-	Property& operator= (Property&  other) = default;
-	Property& operator= (Property&& other) = default;
+	PropVar& operator= (PropVar&  other) = default;
+	PropVar& operator= (PropVar&& other) = default;
 
 	virtual operator T (void)
 	{
@@ -124,6 +143,40 @@ public:
 
 protected:
 	T& value;
+};
+
+
+template <typename T>
+class PropFn : public BaseProperty
+{
+public:
+	PropFn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc = "") :
+		BaseProperty (owner, name, desc),
+		fn(fn)
+	{
+		T dummy = {};
+		set_type(dummy);
+	}
+
+	virtual ~PropFn()
+	{
+	}
+
+	PropFn (void) = default;
+
+	PropFn (const PropFn&  other) = default;
+	PropFn (PropFn&& other)       = default;
+
+	PropFn& operator= (PropFn&  other) = default;
+	PropFn& operator= (PropFn&& other) = default;
+
+	virtual operator T (void)
+	{
+		return fn();
+	}
+
+protected:
+	std::function<T(void)> fn = nullptr;
 };
 
 

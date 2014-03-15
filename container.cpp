@@ -99,6 +99,13 @@ Container::Container (void)
 	declare_prop (me, "block_size",    block_size,    "desc of block_size");
 	declare_prop (me, "bytes_size",    bytes_size,    "desc of bytes_size");
 	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used");
+
+	declare_prop (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free");
+	declare_prop (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short");
+	declare_prop (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short");
+	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor");
+	declare_prop (me, "bytes_size_human",   (get_string_t) std::bind(&Container::get_bytes_size_human,   this), "desc of bytes_size_human");
+	declare_prop (me, "bytes_free_human",   (get_string_t) std::bind(&Container::get_bytes_free_human,   this), "desc of bytes_free_human");
 }
 
 Container::~Container()
@@ -706,6 +713,60 @@ Container::get_smart (void)
 		weak = c;
 	}
 	return weak.lock();
+}
+
+
+std::string
+Container::get_uuid_short (void)
+{
+	std::string u = uuid;
+	size_t pos = uuid.find_first_of ("-:");
+
+	if (pos != std::string::npos) {
+		u = uuid.substr (0, pos);
+	}
+
+	return u;
+}
+
+std::string
+Container::get_device_short (void)
+{
+	std::string d = device;
+	size_t pos = device.find ("/dev");
+
+	if (pos != std::string::npos) {
+		d = device.substr (pos+5);
+	}
+
+	return d;
+}
+
+std::string
+Container::get_device_major_minor (void)
+{
+	if ((device_major == 0) && (device_minor == 0))
+		return "";
+
+	return std::to_string (device_major) + ":" + std::to_string (device_minor);
+}
+
+std::string
+Container::get_bytes_size_human (void)
+{
+	return get_size (bytes_size);
+}
+
+long
+Container::get_bytes_free (void)
+{
+	return (bytes_size - bytes_used);
+}
+
+std::string
+Container::get_bytes_free_human (void)
+{
+	return get_size (bytes_size - bytes_used);
 }
 
 
