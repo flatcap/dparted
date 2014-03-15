@@ -79,8 +79,6 @@ public:
 
 	virtual bool is_a (const std::string& type);
 
-	virtual std::string get_property (const std::string& propname);
-
 	virtual std::vector<ContainerPtr>& get_children (void);
 
 	std::string get_path (void);

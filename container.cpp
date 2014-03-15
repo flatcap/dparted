@@ -627,47 +627,6 @@ Container::get_path (void)
 	return path;
 }
 
-std::string
-Container::get_property (const std::string& propname)
-{
-	if (propname == "name") {
-		return name;
-	} else if (propname == "uuid") {
-		return uuid;
-	} else if (propname == "uuid_short") {
-		std::string uuid_short = uuid;
-
-		if ((uuid_short.size() > 8) && (uuid_short[0] != '/')) {
-			uuid_short = uuid_short.substr (0, 6) + "...";
-		}
-
-		return uuid_short;
-	} else if (propname == "device") {
-		return get_device_name();
-	} else if (propname == "device_short") {
-		std::string d = get_device_name();
-		size_t pos = d.find_last_of ('/');
-		if (pos != std::string::npos) {
-			d.erase (0, pos+1);
-		}
-		return d;
-	} else if (propname == "parent_offset") {
-		return std::to_string (parent_offset);
-	} else if (propname == "block_size") {
-		return std::to_string (block_size);
-	} else if (propname == "bytes_size") {
-		return std::to_string (bytes_size);
-	} else if (propname == "bytes_size_human") {
-		return get_size (bytes_size);
-	} else if (propname == "bytes_used") {
-		return std::to_string (bytes_used);
-	} else if (propname == "bytes_used_human") {
-		return get_size (bytes_used);
-	}
-
-	return propname;
-}
-
 
 std::vector<std::string>
 Container::get_prop_names (void)
@@ -732,11 +691,12 @@ Container::get_uuid_short (void)
 std::string
 Container::get_device_short (void)
 {
-	std::string d = device;
-	size_t pos = device.find ("/dev");
+	std::string d = get_device_name();
+	std::cout << d << std::endl;
+	size_t pos = d.find ("/dev");
 
 	if (pos != std::string::npos) {
-		d = device.substr (pos+5);
+		d = d.substr (pos+5);
 	}
 
 	return d;
@@ -745,6 +705,7 @@ Container::get_device_short (void)
 std::string
 Container::get_device_major_minor (void)
 {
+	//XXX should this and the other device helpers ask their parents?
 	if ((device_major == 0) && (device_minor == 0))
 		return "";
 

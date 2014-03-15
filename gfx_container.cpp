@@ -200,7 +200,8 @@ GfxContainer::process_label (const std::string& label_template)
 	size_t start = std::string::npos;
 	size_t stop  = std::string::npos;
 	while (find_subst (l, tag, start, stop)) {
-		std::string value = c->get_property (tag);
+		PPtr prop = c->get_prop (tag);
+		std::string value = (std::string) *prop;
 		if (value == tag) {		//XXX tmp
 			break;
 		}
