@@ -29,6 +29,18 @@ class BaseProp;
 
 typedef std::shared_ptr<BaseProp> PPtr;
 
+typedef std::function<std::string (void)> get_string_t;
+typedef std::function<double      (void)> get_double_t;
+typedef std::function<bool        (void)> get_bool_t;
+typedef std::function<uint8_t     (void)> get_uint8_t;
+typedef std::function<int8_t      (void)> get_int8_t;
+typedef std::function<uint16_t    (void)> get_uint16_t;
+typedef std::function<int16_t     (void)> get_int16_t;
+typedef std::function<uint32_t    (void)> get_uint32_t;
+typedef std::function<int32_t     (void)> get_int32_t;
+typedef std::function<uint64_t    (void)> get_uint64_t;
+typedef std::function<int64_t     (void)> get_int64_t;
+
 class BaseProp
 {
 public:
@@ -43,7 +55,7 @@ public:
 	virtual ~BaseProp() = default;
 
 	BaseProp (const BaseProp&  other) = default;
-	BaseProp (BaseProp&& other)       = default;
+	BaseProp (      BaseProp&& other) = default;
 
 	BaseProp& operator= (BaseProp&  other) = default;
 	BaseProp& operator= (BaseProp&& other) = default;
@@ -102,27 +114,27 @@ public:
 
 
 template <typename T>
-class Prop : public BaseProp
+class PropVar : public BaseProp
 {
 public:
-	Prop (const char* owner, const char* name, T& v, const char* desc = "") :
+	PropVar (const char* owner, const char* name, T& v, const char* desc = "") :
 		BaseProp (owner, name, desc),
 		value(v)
 	{
 		set_type(v);
 	}
 
-	virtual ~Prop()
+	virtual ~PropVar()
 	{
 	}
 
-	Prop (void) = default;
+	PropVar (void) = default;
 
-	Prop (const Prop&  other) = default;
-	Prop (Prop&& other)       = default;
+	PropVar (const PropVar&  other) = default;
+	PropVar (PropVar&& other)       = default;
 
-	Prop& operator= (Prop&  other) = default;
-	Prop& operator= (Prop&& other) = default;
+	PropVar& operator= (PropVar&  other) = default;
+	PropVar& operator= (PropVar&& other) = default;
 
 	virtual operator T (void)
 	{
@@ -131,6 +143,40 @@ public:
 
 protected:
 	T& value;
+};
+
+
+template <typename T>
+class PropFn : public BaseProp
+{
+public:
+	PropFn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc = "") :
+		BaseProp (owner, name, desc),
+		fn(fn)
+	{
+		T dummy = {};
+		set_type(dummy);
+	}
+
+	virtual ~PropFn()
+	{
+	}
+
+	PropFn (void) = default;
+
+	PropFn (const PropFn&  other) = default;
+	PropFn (PropFn&& other)       = default;
+
+	PropFn& operator= (PropFn&  other) = default;
+	PropFn& operator= (PropFn&& other) = default;
+
+	virtual operator T (void)
+	{
+		return fn();
+	}
+
+protected:
+	std::function<T(void)> fn = nullptr;
 };
 
 

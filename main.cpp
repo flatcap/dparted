@@ -31,7 +31,7 @@ main()
 	std::cout << std::endl;
 #endif
 
-#if 1
+#if 0
 	std::cout << "Casts:" << std::endl;
 	std::cout << "\tstring: " << (std::string) *j.get_prop ("bytes_size") << std::endl;
 	std::cout << "\tlong:   " << (long)   *j.get_prop ("bytes_size") << std::endl;
@@ -45,6 +45,17 @@ main()
 	std::cout << '\t' << j.get_device_major_minor() << std::endl;
 	std::cout << '\t' << j.get_bytes_size_human()   << std::endl;
 	std::cout << '\t' << j.get_bytes_free_human()   << std::endl;
+	std::cout << std::endl;
+#endif
+
+#if 1
+	std::cout << "Functions:" << std::endl;
+	std::cout << '\t' << (long)   *j.get_prop ("bytes_free")         << std::endl;
+	std::cout << '\t' << (std::string) *j.get_prop ("uuid_short")         << std::endl;
+	std::cout << '\t' << (std::string) *j.get_prop ("device_short")       << std::endl;
+	std::cout << '\t' << (std::string) *j.get_prop ("device_major_minor") << std::endl;
+	std::cout << '\t' << (std::string) *j.get_prop ("bytes_size_human")   << std::endl;
+	std::cout << '\t' << (std::string) *j.get_prop ("bytes_free_human")   << std::endl;
 	std::cout << std::endl;
 #endif
 

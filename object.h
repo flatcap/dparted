@@ -8,6 +8,8 @@
 
 #include "prop.h"
 
+#define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
+
 class Object
 {
 public:
@@ -22,7 +24,15 @@ public:
 	void
 	declare_prop (const char* owner, const char* name, T& var, const char* desc)
 	{
-		PPtr pp (new Prop<T> (owner, name, var, desc));
+		PPtr pp (new PropVar<T> (owner, name, var, desc));
+		props[name] = pp;
+	}
+
+	template<typename T>
+	void
+	declare_prop (const char* owner, const char* name, std::function<T(void)> fn, const char* desc)
+	{
+		PPtr pp (new PropFn<T> (owner, name, fn, desc));
 		props[name] = pp;
 	}
 
@@ -55,6 +65,7 @@ public:
 	std::string get_device_short (void);
 	std::string get_device_major_minor (void);
 	std::string get_bytes_size_human (void);
+	long   get_bytes_free (void);
 	std::string get_bytes_free_human (void);
 };
 
