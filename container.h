@@ -67,7 +67,6 @@ public:
 	virtual long get_size_used (void);
 	virtual long get_size_free (void);
 
-	virtual ContainerPtr find_device (const std::string& dev);
 	virtual ContainerPtr find_name   (const std::string& name);
 	virtual ContainerPtr find_uuid   (const std::string& uuid);
 	virtual ContainerPtr find        (const std::string& uuid);

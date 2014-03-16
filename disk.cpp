@@ -280,22 +280,6 @@ Disk::get_device_space (std::map<long, long>& UNUSED(spaces))
 }
 
 
-ContainerPtr
-Disk::find_device (const std::string& dev)
-{
-	// does it sound like one of my children?  /dev/sdaX, /dev/sdaXX
-	unsigned int dev_len = device.length();
-
-	// iterate through my children
-	if (device.compare (0, dev_len, dev, 0, dev_len) == 0) {
-		//log_debug ("similar\n");
-		return Block::find_device (dev);
-	}
-
-	return nullptr;
-}
-
-
 bool
 Disk::lsblk (std::vector <std::string>& output, std::string device)
 {

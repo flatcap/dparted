@@ -45,8 +45,6 @@ public:
 	virtual long          get_block_size (void);
 	virtual unsigned int  get_device_space (std::map<long, long>& spaces);
 
-	virtual ContainerPtr find_device (const std::string& dev);
-
 	static unsigned int find_devices (ContainerPtr& list);
 
 	static bool lsblk    (std::vector <std::string>& output, std::string device = std::string());

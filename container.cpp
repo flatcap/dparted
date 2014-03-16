@@ -349,30 +349,6 @@ Container::get_size_free (void)
 
 
 ContainerPtr
-Container::find_device (const std::string& dev)
-{
-	ContainerPtr match;
-
-	// am *I* the device?
-	//log_debug ("Me? %s %s\n", device.c_str(), dev.c_str());
-	if (dev == device) {
-		match = get_smart();
-		return match;
-	}
-
-	for (auto i : children) {
-		//log_debug ("child %p (%s)\n", i, i->device.c_str());
-		match = i->find_device (dev);
-		if (match) {
-			//log_debug ("MATCHES! %s (%s)\n", match->type.back().c_str(), match->name.c_str());
-			break;
-		}
-	}
-
-	return match;
-}
-
-ContainerPtr
 Container::find_name (const std::string& search)
 {
 	if (name == search) {
