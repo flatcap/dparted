@@ -467,8 +467,8 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 		// LvmVolume
 		v->lv_attr		= tags["LVM2_LV_ATTR"];		// m(e)tadata, (i)mage, (r)aid
-		v->kernel_major		= tags["LVM2_LV_KERNEL_MAJOR"];
-		v->kernel_minor		= tags["LVM2_LV_KERNEL_MINOR"];
+		v->device_major		= tags["LVM2_LV_KERNEL_MAJOR"];
+		v->device_minor		= tags["LVM2_LV_KERNEL_MINOR"];
 
 		v->seg_count		= tags["LVM2_SEG_COUNT"];
 		v->stripes		= tags["LVM2_STRIPES"];

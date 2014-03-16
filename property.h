@@ -103,7 +103,9 @@ public:
 	} type = Tag::t_unset;
 
 	enum class Flags {
-		f_Property	// Should be displayed in properties dialog
+		f_Property,	// Should be displayed in properties dialog
+		f_Dot,		// Should be displayed in graphviz diagram
+		f_Debug
 	};
 
 	std::string owner;

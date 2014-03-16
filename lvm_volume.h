@@ -45,8 +45,6 @@ public:
 
 public:
 	//properties
-	long		kernel_major = -1;	//XXX move to container
-	long		kernel_minor = -1;	//XXX move to container
 	std::string	lv_attr;
 	int		seg_count    = 0;
 	int		seg_start_pe = 0;
