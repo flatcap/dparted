@@ -29,14 +29,14 @@ LvmVolume::LvmVolume (void)
 
 	sub_type (me);
 
-	declare_prop (me, "lv_attr",      lv_attr,      "desc of lv_attr");
 	declare_prop (me, "kernel_major", kernel_major, "desc of kernel_major");
 	declare_prop (me, "kernel_minor", kernel_minor, "desc of kernel_minor");
+	declare_prop (me, "lv_attr",      lv_attr,      "desc of lv_attr");
 	declare_prop (me, "seg_count",    seg_count,    "desc of seg_count");
+	declare_prop (me, "seg_start_pe", seg_start_pe, "desc of seg_start_pe");
 	declare_prop (me, "stripes",      stripes,      "desc of stripes");
 	declare_prop (me, "stripesize",   stripesize,   "desc of stripesize");
 	declare_prop (me, "stripe_size",  stripe_size,  "desc of stripe_size");
-	declare_prop (me, "seg_start_pe", seg_start_pe, "desc of seg_start_pe");
 }
 
 LvmVolume::~LvmVolume()

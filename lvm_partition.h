@@ -42,7 +42,7 @@ public:
 public:
 	//properties
 #if 0
-	long		dev_size;	// 5368709120
+	long		dev_size;	//XXX not declared
 	long		pe_start;	// 1048576
 	std::string	pv_attr;	// a--
 	long		pv_count;	// 8

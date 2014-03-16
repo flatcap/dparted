@@ -90,22 +90,25 @@ Container::Container (void)
 
 	sub_type (me);
 
-	declare_prop (me, "name",          name,          "desc of name");
-	declare_prop (me, "uuid",          uuid,          "desc of uuid");
-	declare_prop (me, "device",        device,        "desc of device");
-	declare_prop (me, "device_major",  device_major,  "desc of device_major");
-	declare_prop (me, "device_minor",  device_minor,  "desc of device_minor");
-	declare_prop (me, "parent_offset", parent_offset, "desc of parent_offset");
 	declare_prop (me, "block_size",    block_size,    "desc of block_size");
 	declare_prop (me, "bytes_size",    bytes_size,    "desc of bytes_size");
 	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used");
+	declare_prop (me, "device",        device,        "desc of device");
+	declare_prop (me, "device_major",  device_major,  "desc of device_major");
+	declare_prop (me, "device_minor",  device_minor,  "desc of device_minor");
+	declare_prop (me, "name",          name,          "desc of name");
+	declare_prop (me, "parent_offset", parent_offset, "desc of parent_offset");
+	declare_prop (me, "uuid",          uuid,          "desc of uuid");
 
 	declare_prop (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free");
-	declare_prop (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short");
-	declare_prop (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short");
-	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor");
-	declare_prop (me, "bytes_size_human",   (get_string_t) std::bind(&Container::get_bytes_size_human,   this), "desc of bytes_size_human");
 	declare_prop (me, "bytes_free_human",   (get_string_t) std::bind(&Container::get_bytes_free_human,   this), "desc of bytes_free_human");
+	declare_prop (me, "bytes_size_human",   (get_string_t) std::bind(&Container::get_bytes_size_human,   this), "desc of bytes_size_human");
+	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor");
+	declare_prop (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short");
+	declare_prop (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default");
+	declare_prop (me, "type",               (get_string_t) std::bind(&Container::get_type,               this), "desc of type");
+	declare_prop (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long");
+	declare_prop (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short");
 }
 
 Container::~Container()
@@ -675,31 +678,22 @@ Container::get_smart (void)
 }
 
 
-std::string
-Container::get_uuid_short (void)
+long
+Container::get_bytes_free (void)
 {
-	std::string u = uuid;
-	size_t pos = uuid.find_first_of ("-:");
-
-	if (pos != std::string::npos) {
-		u = uuid.substr (0, pos);
-	}
-
-	return u;
+	return (bytes_size - bytes_used);
 }
 
 std::string
-Container::get_device_short (void)
+Container::get_bytes_free_human (void)
 {
-	std::string d = get_device_name();
-	std::cout << d << std::endl;
-	size_t pos = d.find ("/dev");
+	return get_size (bytes_size - bytes_used);
+}
 
-	if (pos != std::string::npos) {
-		d = d.substr (pos+5);
-	}
-
-	return d;
+std::string
+Container::get_bytes_size_human (void)
+{
+	return get_size (bytes_size);
 }
 
 std::string
@@ -713,21 +707,59 @@ Container::get_device_major_minor (void)
 }
 
 std::string
-Container::get_bytes_size_human (void)
+Container::get_device_short (void)
 {
-	return get_size (bytes_size);
-}
+	std::string d = get_device_name();
+	size_t pos = d.find ("/dev");
 
-long
-Container::get_bytes_free (void)
-{
-	return (bytes_size - bytes_used);
+	if (pos != std::string::npos) {
+		d = d.substr (pos+5);
+	}
+
+	return d;
 }
 
 std::string
-Container::get_bytes_free_human (void)
+Container::get_name_default (void)
 {
-	return get_size (bytes_size - bytes_used);
+	if (name.empty())
+		return "[EMPTY]";
+	else
+		return name;
+}
+
+std::string
+Container::get_type (void)
+{
+	return type.back();
+}
+
+std::string
+Container::get_type_long (void)
+{
+	std::string tl;
+	for (auto i : type) {
+		tl += i + ".";
+	}
+	tl.pop_back();
+
+	return tl;
+}
+
+std::string
+Container::get_uuid_short (void)
+{
+	std::string u = uuid;
+	if (u.length() < 8)
+		return u;
+
+	size_t pos = uuid.find_first_of ("-:");
+
+	if (pos != std::string::npos) {
+		u = uuid.substr (0, pos);
+	}
+
+	return u;
 }
 
 

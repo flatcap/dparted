@@ -30,15 +30,15 @@ MdTable::MdTable (void)
 
 	sub_type (me);
 
-	declare_prop (me, "vol_uuid",    vol_uuid,    "desc of vol_uuid");
-	declare_prop (me, "vol_name",    vol_name,    "desc of vol_name");
-	declare_prop (me, "raid_type",   raid_type,   "desc of raid_type");
-	declare_prop (me, "raid_layout", raid_layout, "desc of raid_layout");
-	declare_prop (me, "raid_disks",  raid_disks,  "desc of raid_disks");
-	declare_prop (me, "chunk_size",  chunk_size,  "desc of chunk_size");
 	declare_prop (me, "chunks_used", chunks_used, "desc of chunks_used");
+	declare_prop (me, "chunk_size",  chunk_size,  "desc of chunk_size");
 	declare_prop (me, "data_offset", data_offset, "desc of data_offset");
 	declare_prop (me, "data_size",   data_size,   "desc of data_size");
+	declare_prop (me, "raid_disks",  raid_disks,  "desc of raid_disks");
+	declare_prop (me, "raid_layout", raid_layout, "desc of raid_layout");
+	declare_prop (me, "raid_type",   raid_type,   "desc of raid_type");
+	declare_prop (me, "vol_name",    vol_name,    "desc of vol_name");
+	declare_prop (me, "vol_uuid",    vol_uuid,    "desc of vol_uuid");
 }
 
 MdTable::~MdTable()

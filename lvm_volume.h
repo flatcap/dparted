@@ -45,20 +45,19 @@ public:
 
 public:
 	//properties
+	long		kernel_major = -1;	//XXX move to container
+	long		kernel_minor = -1;	//XXX move to container
 	std::string	lv_attr;
-	long		kernel_major = -1;
-	long		kernel_minor = -1;
-
 	int		seg_count    = 0;
-	int		stripes      = 0;
-	int		stripesize   = 0;
-	int		stripe_size  = 0;
 	int		seg_start_pe = 0;
+	int		stripes      = 0;
+	int		stripe_size  = 0;
+	int		stripesize   = 0;
 
-	std::string	mirror_log;
+	std::string	mirror_log;		//XXX not declared
 
-	std::vector<ContainerPtr> metadata;
-	std::vector<ContainerPtr> subvols;
+	std::vector<ContainerPtr> metadata;		//XXX not declared
+	std::vector<ContainerPtr> subvols;		//XXX not declared
 
 	ContainerPtr sibling;
 

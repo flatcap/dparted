@@ -43,15 +43,15 @@ public:
 
 public:
 	//properties
-	std::string	vol_uuid;
-	std::string	vol_name;
-	int		raid_type;
-	int		raid_layout;
-	int		raid_disks;
 	int		chunk_size;
 	long		chunks_used;
 	long		data_offset;
 	long		data_size;
+	int		raid_disks;
+	int		raid_layout;
+	int		raid_type;
+	std::string	vol_name;
+	std::string	vol_uuid;
 
 protected:
 	MdTable (void);

@@ -47,10 +47,10 @@ public:
 
 public:
 	//properties
-	int         version;
-	std::string cipher_name;
 	std::string cipher_mode;
+	std::string cipher_name;
 	std::string hash_spec;
+	int         version;
 
 protected:
 	LuksTable (void);

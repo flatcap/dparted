@@ -46,20 +46,23 @@ public:
 
 public:
 	//properties
-	std::string	file_name;		// Backing file
+	bool		autoclear  = false;
+	bool		deleted    = false;
 	long		file_inode = 0;
 	int		file_major = 0;
 	int		file_minor = 0;
-
+	std::string	file_name;		// Backing file
 	long		offset     = 0;
-	long		sizelimit  = 0;
-	bool		autoclear  = false;
 	bool		partscan   = false;
 	bool		read_only  = false;
-	bool		deleted    = false;
+	long		sizelimit  = 0;
 
 protected:
 	Loop (void);
+
+	std::string get_file_major_minor (void);
+	std::string get_file_name_short (void);
+	std::string get_flags (void);
 
 private:
 

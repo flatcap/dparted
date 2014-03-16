@@ -47,7 +47,7 @@ public:
 	//properties
 	int ptype = 0;
 
-	VolumePtr volume;
+	VolumePtr volume;	//XXX not declared
 
 	//XXX flag for protective partition
 	//XXX partition number - nth in set?

@@ -36,16 +36,20 @@ Loop::Loop (void)
 
 	sub_type (me);
 
-	declare_prop (me, "file_name",  file_name,  "desc of file_name");
+	declare_prop (me, "autoclear",  autoclear,  "desc of autoclear");
+	declare_prop (me, "deleted",    deleted,    "desc of deleted");
 	declare_prop (me, "file_inode", file_inode, "desc of file_inode");
 	declare_prop (me, "file_major", file_major, "desc of file_major");
 	declare_prop (me, "file_minor", file_minor, "desc of file_minor");
+	declare_prop (me, "file_name",  file_name,  "desc of file_name");
 	declare_prop (me, "offset",     offset,     "desc of offset");
-	declare_prop (me, "sizelimit",  sizelimit,  "desc of sizelimit");
-	declare_prop (me, "autoclear",  autoclear,  "desc of autoclear");
 	declare_prop (me, "partscan",   partscan,   "desc of partscan");
 	declare_prop (me, "read_only",  read_only,  "desc of read_only");
-	declare_prop (me, "deleted",    deleted,    "desc of deleted");
+	declare_prop (me, "sizelimit",  sizelimit,  "desc of sizelimit");
+
+	declare_prop (me, "file_major_minor", (get_string_t) std::bind(&Loop::get_file_major_minor, this), "desc of file_major_minor");
+	declare_prop (me, "file_name_short",  (get_string_t) std::bind(&Loop::get_file_name_short,  this), "desc of file_name_short");
+	declare_prop (me, "flags",            (get_string_t) std::bind(&Loop::get_flags,            this), "desc of flags");
 }
 
 Loop::~Loop()
@@ -250,6 +254,49 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	ContainerPtr c(l);
 	top_level->just_add_child(c);
 	main_app->queue_add_probe(c);	// queue the container for action
+}
+
+
+std::string
+Loop::get_file_major_minor (void)
+{
+	if ((file_major == 0) && (file_minor == 0))
+		return "";
+
+	return std::to_string (file_major) + ":" + std::to_string (file_minor);
+}
+
+std::string
+Loop::get_file_name_short (void)
+{
+	std::string f = file_name;
+	size_t pos = f.find_last_of ('/');
+	if (pos != std::string::npos) {
+		f = f.substr (pos+1);
+	}
+
+	return f;
+}
+
+std::string
+Loop::get_flags (void)
+{
+	std::string flags;
+
+	if (autoclear) flags += "autoclear, ";
+	if (deleted)   flags += "deleted, ";
+	if (partscan)  flags += "partscan, ";
+	if (read_only) flags += "read_only, ";
+
+	if (flags.length() > 2) {
+		flags.pop_back();
+		flags.pop_back();
+	}
+
+	if (flags.empty())
+		flags = "n/a";
+
+	return flags;
 }
 
 

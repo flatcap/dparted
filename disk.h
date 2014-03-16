@@ -55,15 +55,15 @@ public:
 
 public:
 	//properties
-	bool		read_only      = false;
-	int		hw_cylinders   = 0;
-	int		hw_heads       = 0;
-	int		hw_sectors     = 0;
 	int		bios_cylinders = 0;
 	int		bios_heads     = 0;
 	int		bios_sectors   = 0;
-	int		host           = 0;
 	int		did            = 0;
+	int		host           = 0;
+	int		hw_cylinders   = 0;
+	int		hw_heads       = 0;
+	int		hw_sectors     = 0;
+	bool		read_only      = false;
 	//std::string	model;
 	//std::string	path;
 	//int		type;

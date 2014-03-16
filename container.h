@@ -156,12 +156,15 @@ protected:
 	std::vector<ContainerPtr> children;
 
 	// Helper functions
-	std::string get_uuid_short (void);
-	std::string get_device_short (void);
-	std::string get_device_major_minor (void);
-	std::string get_bytes_size_human (void);
-	long   get_bytes_free (void);
+	long        get_bytes_free (void);
 	std::string get_bytes_free_human (void);
+	std::string get_bytes_size_human (void);
+	std::string get_device_major_minor (void);
+	std::string get_device_short (void);
+	std::string get_name_default (void);
+	std::string get_type (void);
+	std::string get_type_long (void);
+	std::string get_uuid_short (void);
 
 private:
 	void insert (long offset, long size, void* ptr);

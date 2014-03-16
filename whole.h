@@ -44,7 +44,7 @@ public:
 public:
 	//properties
 	// seg_count - LVM2_SEG_COUNT
-	std::vector<ContainerPtr> segments;
+	std::vector<ContainerPtr> segments;	//XXX not declared
 
 protected:
 	Whole (void);
