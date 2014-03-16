@@ -140,7 +140,7 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char
 {
 	//LOG_TRACE;
 
-	if (strncmp ((char*) buffer+512, "EFI PART", 8))	// XXX replace with strict identify function (static)
+	if (strncmp ((char*) buffer+512, "EFI PART", 8))	//XXX replace with strict identify function (static)
 		return nullptr;
 
 	// LBA		Description
@@ -164,7 +164,7 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char
 	g->uuid = read_uuid1 (buffer+568);
 
 	ContainerPtr c(g);
-	parent->add_child(c); //RAR new
+	parent->add_child(c); //XXX new
 
 	// Assumption: 1MiB alignment (for now)
 	// Should reserved bits be allocated after actual partitions?

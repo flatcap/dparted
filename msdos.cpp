@@ -140,7 +140,7 @@ Msdos::read_table (unsigned char* buffer, int UNUSED(bufsize), long UNUSED(offse
 
 	for (int i = 0; i < 4; i++) {
 		if (!read_partition (buffer, i, &part))	// could flag Msdos object as invalid
-			continue;		// RAR or return -1
+			continue;		//XXX or return -1
 
 		vp.push_back (part);
 	}
@@ -168,7 +168,7 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buff
 	m->parent_offset = 0;
 
 	ContainerPtr c(m);
-	parent->add_child(c);	//RAR new
+	parent->add_child(c);	//XXX new
 
 	std::vector<struct partition> vp;
 	count = m->read_table (buffer, bufsize, 0, vp);

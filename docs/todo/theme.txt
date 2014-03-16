@@ -91,8 +91,8 @@ config
 	display: Yes, No, Hidden, Empty (zero children), Box, TabBox, Block?
 	usage keyword => leaf or (children not visible)
 	table theme - display -- full block
-		partial => [X]__[XXX]______|
-		full => [X]
+		partial => [x]__[xxx]______|
+		full => [x]
 
 css?
 

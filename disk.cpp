@@ -189,7 +189,7 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	log_debug ("heads     = %d\n", geometry.heads);
 	log_debug ("sectors   = %d\n", geometry.sectors);
 	log_debug ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
-	//close (fd);	// XXX or keep it for later?
+	//close (fd);	//XXX or keep it for later?
 #endif
 
 unsigned int

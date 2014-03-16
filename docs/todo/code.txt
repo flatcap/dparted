@@ -15,7 +15,7 @@ build
 
 	change
 		int function (in_param, &out_param);
-	to the less efficient, but clearer XXX more eff!
+	to the less efficient, but clearer NO! -> more eff!
 		output = function (in_param);
 
 	get_fs_X -> get_fs_X_sb

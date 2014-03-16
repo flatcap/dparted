@@ -242,7 +242,7 @@ DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& sh
 		cr->set_line_width(1);
 
 	cr->set_dash (dashes, start);
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);		//RAR focus colours from theme
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);		//XXX focus colours from theme
 	draw_border (cr, shape);
 	cr->close_path();
 	cr->stroke();
@@ -391,7 +391,7 @@ bool
 DrawingArea::on_timeout (int timer_number)
 {
 	std::cout << "timer" << "\n";
-	get_window()->invalidate (false); //RAR everything for now
+	get_window()->invalidate (false); //XXX everything for now
 	//return (m_c->device == "/dev/sdc");
 	return true;
 }
@@ -427,7 +427,7 @@ DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
 	mouse_close = ((event->y > 25) and (event->x < 90));
 
 	if (mouse_close != old) {
-		get_window()->invalidate (false); //RAR everything for now
+		get_window()->invalidate (false); //XXX everything for now
 	}
 #endif
 
@@ -440,7 +440,7 @@ DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
 #if 0
 	if (mouse_close) {
 		mouse_close = false;
-		get_window()->invalidate (false); //RAR everything for now
+		get_window()->invalidate (false); //XXX everything for now
 	}
 #endif
 	return true;

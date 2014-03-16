@@ -102,7 +102,7 @@ Dialog
 |	ext4    |                      |
 \--------------------------------------/
 
-[XXX] = highlight
+[xyz] = highlight
 select resizefs and it will display *all* the sub commands
 
 Options:

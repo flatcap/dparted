@@ -273,11 +273,9 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		t->add_child (c2);
 	}
 
-	/* XXX
-	 * tag all the lvm_tables as missing
-	 * tag them as !missing as we add them to the volume group
-	 * delete all the !missing tables
-	 */
+	//XXX tag all the lvm_tables as missing
+	//XXX tag them as !missing as we add them to the volume group
+	//XXX delete all the !missing tables
 
 #if 0
 	// remove_if puts all the tables at the end of the vector
@@ -517,7 +515,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 				size_t pos = dep_name.find ("_rimage_");
 				if (pos != std::string::npos) {
 					dep_name.replace (pos, 8, "_rmeta_");
-					//log_debug ("ADD XXX: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());
+					//log_debug ("ADD: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());
 					deps.insert (std::make_pair (v->uuid,dep_name));
 
 					// add a sibling dependency (image <-> metadata)

@@ -162,11 +162,16 @@ stats:	force
 	$(RM) stats
 	gitstats . stats
 
+xxx:	force
+	grep --exclude xxx.txt -rHno "//[X]XX.*" . \
+		| sed -e 's/^..//' -e 's!//[X]XX[ \t]*!!' \
+		| sort > xxx.txt
+
 clean:	force
 	$(RM) $(OUT) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) gmon.out
 
 distclean: clean
-	$(RM) $(DEPDIR) $(OBJDIR) tags html stats
+	$(RM) $(DEPDIR) $(OBJDIR) tags html stats xxx.txt
 
 force:
 

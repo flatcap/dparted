@@ -1,5 +1,5 @@
-" XXX script this from a list of numbers
-" XXX script this from the header line
+"XXX script this from a list of numbers
+"XXX script this from the header line
 
 syntax clear
 
@@ -15,8 +15,8 @@ syntax match rich_col1 "\%76c.\{,27\}"
 syntax match rich_col2 "\%103c.\{,37\}"
 syntax match rich_col1 "\%140c.\{,50\}"
 
-highlight rich_col1 ctermfg=230
-highlight rich_col2 ctermfg=225
+highlight rich_col1 ctermfg=229
+highlight rich_col2 ctermfg=226
 
 syntax match rich_row1 "\%1l.*"
 syntax match rich_row1 "^[^ 	].\+$"

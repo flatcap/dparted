@@ -534,7 +534,7 @@ Container::close_buffer (unsigned char* buffer, long size)
 	if (munmap (buffer, size) != 0)
 		perror ("munmap");
 
-	// XXX nothing else we can do
+	//XXX nothing else we can do
 }
 
 
@@ -555,7 +555,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 
 	if (uuid.size() > 8) {
 		size_t index = uuid.find_first_of (":-. ");
-		uuid = "U:" + uuid.substr (0, index);//RAR + "...";
+		uuid = "U:" + uuid.substr (0, index);	//XXX + "...";
 	}
 
 	stream

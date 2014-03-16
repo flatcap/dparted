@@ -97,7 +97,7 @@ get_vfat (unsigned char* buffer, int bufsize)
 
 	f->name = std::string ((char*) (buffer+0x30), 14);
 	if (!f->name.empty() && ((f->name[0] < 'A') || (f->name[0] > 'z')))
-		f->name.clear();//XXX
+		f->name.clear();	//XXX this isn't reliable
 
 	f->uuid = read_uuid3 (buffer+0x1C);
 

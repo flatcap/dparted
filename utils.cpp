@@ -101,7 +101,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 	} while (count > 0);
 
 #if 0
-	   XXX correct way to check return code
+	//XXX correct way to check return code
 	int ret = pclose (fd);
 	if (WIFEXITED(ret))
 		  log_info ("%d\n", WEXITSTATUS(ret));
@@ -259,12 +259,12 @@ parse_tagged_line (const std::string& line, const char* separators, std::map<std
 		tags.clear();
 
 	for (auto it : list) {
-		middle = it.find ('=');				// XXX check it succeeds
+		middle = it.find ('=');				//XXX check it succeeds
 
 		std::string name  = it.substr (0, middle);
 		std::string value = it.substr (middle + 1);
 
-		// trim quotes XXX
+		//XXX trim quotes
 		unsigned int len = value.length();
 		if (len > 0) {
 			if ((value[0] == '"') || (value[0] == '\'')) {

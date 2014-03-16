@@ -139,7 +139,7 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 
 	ContainerPtr c;
 
-	c = LuksTable::probe (top_level, parent, buffer, bufsize);	//RAR
+	c = LuksTable::probe (top_level, parent, buffer, bufsize);	//XXX shouldn't be in misc
 	if (c) {
 		parent->add_child(c);
 

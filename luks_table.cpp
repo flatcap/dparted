@@ -277,7 +277,7 @@ LuksTable::luks_close (void)
 }
 
 
-#ifdef RAR
+#if 0
 cryptsetup status /dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
 	/dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116 is active and is in use.
 	  type:    LUKS1
