@@ -22,6 +22,9 @@
 
 MdMirror::MdMirror (void)
 {
+	const char* me = "MdMirror";
+
+	sub_type (me);
 }
 
 MdMirror::~MdMirror()

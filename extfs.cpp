@@ -30,6 +30,9 @@
 
 Extfs::Extfs (void)
 {
+	const char* me = "Extfs";
+
+	sub_type (me);
 }
 
 Extfs::~Extfs()

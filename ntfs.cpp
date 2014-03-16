@@ -30,6 +30,9 @@
 
 Ntfs::Ntfs (void)
 {
+	const char* me = "Ntfs";
+
+	sub_type (me);
 }
 
 Ntfs::~Ntfs()

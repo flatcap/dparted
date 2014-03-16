@@ -22,6 +22,9 @@
 
 MsdosPartition::MsdosPartition (void)
 {
+	const char* me = "MsdosPartition";
+
+	sub_type (me);
 }
 
 MsdosPartition::~MsdosPartition()

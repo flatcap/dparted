@@ -22,6 +22,9 @@
 
 MdLinear::MdLinear (void)
 {
+	const char* me = "MdLinear";
+
+	sub_type (me);
 }
 
 MdLinear::~MdLinear()

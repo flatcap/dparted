@@ -22,6 +22,9 @@
 
 MdRaid::MdRaid (void)
 {
+	const char* me = "MdRaid";
+
+	sub_type (me);
 }
 
 MdRaid::~MdRaid()

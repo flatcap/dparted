@@ -22,6 +22,9 @@
 
 GptPartition::GptPartition (void)
 {
+	const char* me = "GptPartition";
+
+	sub_type (me);
 }
 
 GptPartition::~GptPartition()

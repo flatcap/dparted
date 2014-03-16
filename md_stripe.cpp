@@ -22,6 +22,9 @@
 
 MdStripe::MdStripe (void)
 {
+	const char* me = "MdStripe";
+
+	sub_type (me);
 }
 
 MdStripe::~MdStripe()

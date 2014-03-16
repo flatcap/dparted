@@ -30,6 +30,9 @@
 
 Btrfs::Btrfs (void)
 {
+	const char* me = "Btrfs";
+
+	sub_type (me);
 }
 
 Btrfs::~Btrfs()

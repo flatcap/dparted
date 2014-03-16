@@ -22,6 +22,9 @@
 
 MdVolume::MdVolume (void)
 {
+	const char* me = "MdVolume";
+
+	sub_type (me);
 }
 
 MdVolume::~MdVolume()
