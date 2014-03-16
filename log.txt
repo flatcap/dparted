@@ -55,10 +55,6 @@ uniq log line numbers
 	partition numbers
 	translate strings
 
-log info
-log debug
-log error
-
 log_info (spec)
 log::info << streamystuff << ...
 log::info.format (spec)
@@ -90,4 +86,7 @@ Log::Debug.printf ("format %s\n", X);
 Log::printf (Log::Debug, "format %s\n", X);
 
 uniq id for all throws cf log
+
+single exit point for all logging
+	i.e. different handles, but one command
 
