@@ -16,30 +16,53 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _UUID_VISITOR_H_
-#define _UUID_VISITOR_H_
+#include "type_visitor.h"
 
-#include <string>
-
-#include "visitor.h"
-
-ContainerPtr find_first_uuid (ContainerPtr c, const std::string& uuid);
-
-class UuidVisitor : public Visitor
+TypeVisitor::TypeVisitor (const std::string& search) :
+	type (search)
 {
-public:
-	UuidVisitor (const std::string& search);
-	virtual ~UuidVisitor();
+}
 
-	virtual bool visit_enter (ContainerPtr& c);
-	virtual bool visit_leave (void);
+TypeVisitor::~TypeVisitor()
+{
+}
 
-	virtual bool visit (ContainerPtr c);
+bool
+TypeVisitor::visit_enter (ContainerPtr& UNUSED(c))
+{
+	return true;
+}
 
-	std::string uuid;
-	ContainerPtr match;
+bool
+TypeVisitor::visit_leave (void)
+{
+	return true;
+}
 
-};
+bool
+TypeVisitor::visit (ContainerPtr c)
+{
+	if (c->is_a (type)) {
+		matches.push_back(c);
+	}
 
-#endif // _UUID_VISITOR_H_
+	return true;	// Keep looking
+}
+
+
+std::vector<ContainerPtr>
+find_all_type (ContainerPtr c, const std::string& type)
+{
+	std::vector<ContainerPtr> empty;
+
+	if (!c)
+		return empty;
+
+	TypeVisitor tv (type);
+	if (!c->accept (tv))
+		return empty;		// Something went wrong
+
+	return tv.matches;
+}
+
 

@@ -68,8 +68,6 @@ public:
 	virtual long get_size_free (void);
 
 	virtual ContainerPtr find (const std::string& uuid);
-
-	virtual void find_type (const std::string& type, std::vector<ContainerPtr>& results);
 	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);
 
 	virtual unsigned char* get_buffer (long offset, long size); virtual void close_buffer (unsigned char* buffer, long size);

@@ -16,30 +16,31 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _UUID_VISITOR_H_
-#define _UUID_VISITOR_H_
+#ifndef _TYPE_VISITOR_H_
+#define _TYPE_VISITOR_H_
 
 #include <string>
+#include <vector>
 
 #include "visitor.h"
 
-ContainerPtr find_first_uuid (ContainerPtr c, const std::string& uuid);
+std::vector<ContainerPtr> find_all_type (ContainerPtr c, const std::string& type);
 
-class UuidVisitor : public Visitor
+class TypeVisitor : public Visitor
 {
 public:
-	UuidVisitor (const std::string& search);
-	virtual ~UuidVisitor();
+	TypeVisitor (const std::string& search);
+	virtual ~TypeVisitor();
 
 	virtual bool visit_enter (ContainerPtr& c);
 	virtual bool visit_leave (void);
 
 	virtual bool visit (ContainerPtr c);
 
-	std::string uuid;
-	ContainerPtr match;
+	std::string type;
+	std::vector<ContainerPtr> matches;
 
 };
 
-#endif // _UUID_VISITOR_H_
+#endif // _TYPE_VISITOR_H_
 

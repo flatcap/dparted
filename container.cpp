@@ -348,19 +348,6 @@ Container::get_size_free (void)
 }
 
 
-void
-Container::find_type (const std::string& type, std::vector<ContainerPtr>& results)
-{
-	if (is_a (type)) {
-		ContainerPtr c = get_smart();
-		results.push_back(c);
-	}
-
-	for (auto i : children) {
-		i->find_type (type, results);
-	}
-}
-
 ContainerPtr
 Container::find (const std::string& search)
 {

@@ -57,15 +57,10 @@ find_first_uuid (ContainerPtr c, const std::string& uuid)
 	if (!c)
 		return nullptr;
 
-	ContainerPtr match;
-
 	UuidVisitor uv (uuid);
-	if (c->accept (uv)) {
-		std::cout << "no match for " << uuid << std::endl;
+	if (c->accept (uv))
 		return nullptr;
-	}
 
-	std::cout << "match for " << uuid << std::endl;
 	return uv.match;
 }
 

@@ -36,6 +36,7 @@
 #include "lvm_table.h"
 #include "lvm_volume.h"
 #include "main.h"
+#include "type_visitor.h"
 #include "utils.h"
 #include "uuid_visitor.h"
 #include "visitor.h"
@@ -587,8 +588,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	ContainerPtr pieces = Container::create();
 	std::multimap<std::string,std::string> deps;
 
-	std::vector<ContainerPtr> t;
-	top_level->find_type ("LvmTable", t);
+	std::vector<ContainerPtr> t = find_all_type (top_level, "LvmTable");
 
 	//log_info ("top_level: %ld tables\n", t.size());
 	for (auto i : t) {
@@ -609,8 +609,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 #if 1
 	//probe leaves
-	std::vector<ContainerPtr> v;
-	pieces->find_type ("LvmVolume", v);
+	std::vector<ContainerPtr> v = find_all_type (pieces, "LvmVolume");
 	//printf ("%ld volumes\n", v.size());
 
 	for (auto i : v) {
@@ -623,8 +622,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	}
 #endif
 #if 1
-	std::vector<ContainerPtr> g;
-	pieces->find_type ("LvmGroup", g);
+	std::vector<ContainerPtr> g = find_all_type (pieces, "LvmGroup");
 	//printf ("%ld groups\n", g.size());
 
 	for (auto i : g) {
