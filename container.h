@@ -67,8 +67,7 @@ public:
 	virtual long get_size_used (void);
 	virtual long get_size_free (void);
 
-	virtual ContainerPtr find_uuid   (const std::string& uuid);
-	virtual ContainerPtr find        (const std::string& uuid);
+	virtual ContainerPtr find (const std::string& uuid);
 
 	virtual void find_type (const std::string& type, std::vector<ContainerPtr>& results);
 	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);

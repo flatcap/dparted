@@ -37,6 +37,7 @@
 #include "lvm_volume.h"
 #include "main.h"
 #include "utils.h"
+#include "uuid_visitor.h"
 #include "visitor.h"
 
 LvmGroup::LvmGroup (void)
@@ -185,7 +186,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 		// Find our relations
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
-		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup> (pieces->find_uuid (vg_uuid));
+		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup> (find_first_uuid (pieces, vg_uuid));
 		if (!g) {
 			g = LvmGroup::create();
 			g->name    = tags["VG_NAME"];
@@ -197,7 +198,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		}
 
 		std::string pv_uuid = tags["LVM2_PV_UUID"];
-		LvmTablePtr t = std::dynamic_pointer_cast<LvmTable> (pieces->find_uuid (pv_uuid));
+		LvmTablePtr t = std::dynamic_pointer_cast<LvmTable> (find_first_uuid (pieces, pv_uuid));
 		if (!t) {
 			log_info ("new table %s [SHOULDN'T HAPPEN]\n", pv_uuid.c_str());
 			t = LvmTable::create();
@@ -213,7 +214,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		//XXX deps.insert (std::make_pair (g->uuid,t->uuid));
 
 		std::string lv_uuid = tags["LVM2_LV_UUID"];
-		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (pieces->find_uuid (lv_uuid));
+		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (find_first_uuid (pieces, lv_uuid));
 		if (!v) {
 			std::string lv_attr = tags["LVM2_LV_ATTR"];
 			if ((lv_attr[0] == 'e') || (lv_attr[0] == 'l')) {
@@ -331,7 +332,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
-		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup>(pieces->find_uuid (vg_uuid));
+		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup>(find_first_uuid (pieces, vg_uuid));
 		if (!g) {
 			log_info ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
 			g = LvmGroup::create();
@@ -414,7 +415,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
-		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup> (pieces->find_uuid (vg_uuid));
+		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup> (find_first_uuid (pieces, vg_uuid));
 		if (!g) {
 			log_info ("new group %s [SHOULDN'T HAPPEN]\n", vg_uuid.c_str());
 			g = LvmGroup::create();
@@ -425,7 +426,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		}
 
 		std::string lv_uuid = tags["LVM2_LV_UUID"];
-		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (pieces->find_uuid (lv_uuid));
+		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (find_first_uuid (pieces, lv_uuid));
 		if (!v) {
 			std::string segtype = tags["LVM2_SEGTYPE"];
 			//log_info ("Type = %s\n", segtype.c_str());

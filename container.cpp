@@ -362,31 +362,6 @@ Container::find_type (const std::string& type, std::vector<ContainerPtr>& result
 }
 
 ContainerPtr
-Container::find_uuid (const std::string& search)
-{
-#if 0
-	if (uuid.empty())
-		std::cout << "name = " << name << std::endl;
-	else
-		std::cout << "uuid = " << uuid << std::endl;
-#endif
-
-	if (uuid == search) {
-		ContainerPtr c = get_smart();
-		return c;
-	}
-
-	ContainerPtr item;
-
-	for (auto i : children) {
-		if ((item = i->find_uuid (search)))
-			break;
-	}
-
-	return item;
-}
-
-ContainerPtr
 Container::find (const std::string& search)
 {
 	if (uuid == search) {
