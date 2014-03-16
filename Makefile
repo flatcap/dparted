@@ -26,6 +26,8 @@ OBJDIR	= .obj
 
 OUT	= dparted
 
+LINKS	= misc test
+
 # Core Objects
 OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extended.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp \
 	   gpt_partition.cpp loop.cpp luks_partition.cpp luks_table.cpp lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp \
@@ -167,6 +169,11 @@ xxx:	force
 	grep --exclude xxx.txt -rHno "//[X]XX.*" . \
 		| sed -e 's/^..//' -e 's!//[X]XX[ \t]*!!' \
 		| sort > xxx.txt
+
+links:	$(LINKS)
+
+$(LINKS):
+	ln -s ../dparted-$@ $@
 
 clean:	force
 	$(RM) $(OUT) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) gmon.out
