@@ -35,6 +35,7 @@
 #include "action.h"
 #include "log.h"
 #include "log_trace.h"
+#include "property.h"
 #include "utils.h"
 #include "visitor.h"
 #include "whole.h"
@@ -86,29 +87,32 @@ std::vector<Action> cont_actions = {
 
 Container::Container (void)
 {
+	// Save a bit of space
 	const char* me = "Container";
+	const int   d  = (int) BaseProperty::Flags::Dot;
+	//const int   h  = (int) BaseProperty::Flags::Hide;
 
 	sub_type (me);
 
-	declare_prop (me, "block_size",    block_size,    "desc of block_size");
-	declare_prop (me, "bytes_size",    bytes_size,    "desc of bytes_size");
-	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used");
-	declare_prop (me, "device",        device,        "desc of device");
-	declare_prop (me, "device_major",  device_major,  "desc of device_major");
-	declare_prop (me, "device_minor",  device_minor,  "desc of device_minor");
-	declare_prop (me, "name",          name,          "desc of name");
-	declare_prop (me, "parent_offset", parent_offset, "desc of parent_offset");
-	declare_prop (me, "uuid",          uuid,          "desc of uuid");
+	declare_prop (me, "block_size",    block_size,    "desc of block_size",    d);
+	declare_prop (me, "bytes_size",    bytes_size,    "desc of bytes_size",    d);
+	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used",    d);
+	declare_prop (me, "device",        device,        "desc of device",        d);
+	declare_prop (me, "device_major",  device_major,  "desc of device_major",  0);
+	declare_prop (me, "device_minor",  device_minor,  "desc of device_minor",  0);
+	declare_prop (me, "name",          name,          "desc of name",          0);
+	declare_prop (me, "parent_offset", parent_offset, "desc of parent_offset", d);
+	declare_prop (me, "uuid",          uuid,          "desc of uuid",          0);
 
-	declare_prop (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free");
-	declare_prop (me, "bytes_free_human",   (get_string_t) std::bind(&Container::get_bytes_free_human,   this), "desc of bytes_free_human");
-	declare_prop (me, "bytes_size_human",   (get_string_t) std::bind(&Container::get_bytes_size_human,   this), "desc of bytes_size_human");
-	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor");
-	declare_prop (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short");
-	declare_prop (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default");
-	declare_prop (me, "type",               (get_string_t) std::bind(&Container::get_type,               this), "desc of type");
-	declare_prop (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long");
-	declare_prop (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short");
+	declare_prop (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         0);
+	declare_prop (me, "bytes_free_human",   (get_string_t) std::bind(&Container::get_bytes_free_human,   this), "desc of bytes_free_human",   d);
+	declare_prop (me, "bytes_size_human",   (get_string_t) std::bind(&Container::get_bytes_size_human,   this), "desc of bytes_size_human",   d);
+	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
+	declare_prop (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
+	declare_prop (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default",       d);
+	declare_prop (me, "type",               (get_string_t) std::bind(&Container::get_type,               this), "desc of type",               d);
+	declare_prop (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long",          0);
+	declare_prop (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short",         d);
 }
 
 Container::~Container()

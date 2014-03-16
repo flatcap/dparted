@@ -31,7 +31,7 @@ Partition::Partition (void)
 
 	sub_type (me);
 
-	declare_prop (me, "ptype", ptype, "desc of ptype");
+	declare_prop (me, "ptype", ptype, "desc of ptype", 0);
 }
 
 Partition::~Partition()

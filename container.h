@@ -98,17 +98,17 @@ public:
 
 	template<typename T>
 	void
-	declare_prop (const char* owner, const char* name, T& var, const char* desc)
+	declare_prop (const char* owner, const char* name, T& var, const char* desc, int flags = 0)
 	{
-		PPtr pp (new PropVar<T> (owner, name, var, desc));
+		PPtr pp (new PropVar<T> (owner, name, var, desc, flags));
 		props[name] = pp;
 	}
 
 	template<typename T>
 	void
-	declare_prop (const char* owner, const char* name, std::function<T(void)> fn, const char* desc)
+	declare_prop (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags = 0)
 	{
-		PPtr pp (new PropFn<T> (owner, name, fn, desc));
+		PPtr pp (new PropFn<T> (owner, name, fn, desc, flags));
 		props[name] = pp;
 	}
 

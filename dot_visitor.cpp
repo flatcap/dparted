@@ -198,6 +198,11 @@ dot_container (std::shared_ptr<T> t)
 	std::stringstream output;
 
 	for (auto prop : p->get_all_props()) {
+		if (!(prop->flags & BaseProperty::Flags::Dot)) {
+			// std::cout << "Dot ignore : " << prop->name << std::endl;
+			continue;
+		}
+
 		std::string s = (std::string) *prop;
 		size_t pos = s.find_first_of ('<');
 		if (pos != std::string::npos) {
@@ -206,6 +211,9 @@ dot_container (std::shared_ptr<T> t)
 		pos = s.find_first_of ('>');
 		if (pos != std::string::npos) {
 			s = s.replace (pos, 1, ")");
+		}
+		if (s.empty()) {
+			continue;	// Skip empty values
 		}
 		output << dot_row (prop->name.c_str(), s);
 	}
@@ -252,7 +260,6 @@ dot_whole (std::shared_ptr<T> t)
 	output << dot_container(p);
 
 	if (count > 0) {
-		//std::cout << count << " segments" << std::endl;
 		output << dot_row ("segments", count);
 		for (auto i : p->segments) {
 			output << dot_row ("", i);

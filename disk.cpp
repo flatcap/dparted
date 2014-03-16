@@ -41,16 +41,16 @@ Disk::Disk (void)
 
 	sub_type (me);
 
-	declare_prop (me, "bios_cylinders", bios_cylinders, "desc of bios_cylinders");
-	declare_prop (me, "bios_heads",     bios_heads,     "desc of bios_heads");
-	declare_prop (me, "bios_sectors",   bios_sectors,   "desc of bios_sectors");
-	declare_prop (me, "did",            did,            "desc of did");
-	declare_prop (me, "host",           host,           "desc of host");
-	declare_prop (me, "hw_cylinders",   hw_cylinders,   "desc of hw_cylinders");
-	declare_prop (me, "hw_heads",       hw_heads,       "desc of hw_heads");
-	declare_prop (me, "hw_sectors",     hw_sectors,     "desc of hw_sectors");
-	declare_prop (me, "mounts",         mounts,         "desc of mounts");
-	declare_prop (me, "read_only",      read_only,      "desc of read_only");
+	declare_prop (me, "bios_cylinders", bios_cylinders, "desc of bios_cylinders", 0);
+	declare_prop (me, "bios_heads",     bios_heads,     "desc of bios_heads",     0);
+	declare_prop (me, "bios_sectors",   bios_sectors,   "desc of bios_sectors",   0);
+	declare_prop (me, "did",            did,            "desc of did",            0);
+	declare_prop (me, "host",           host,           "desc of host",           0);
+	declare_prop (me, "hw_cylinders",   hw_cylinders,   "desc of hw_cylinders",   0);
+	declare_prop (me, "hw_heads",       hw_heads,       "desc of hw_heads",       0);
+	declare_prop (me, "hw_sectors",     hw_sectors,     "desc of hw_sectors",     0);
+	declare_prop (me, "mounts",         mounts,         "desc of mounts",         0);
+	declare_prop (me, "read_only",      read_only,      "desc of read_only",      0);
 }
 
 Disk::~Disk()

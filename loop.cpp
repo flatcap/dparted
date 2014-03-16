@@ -32,24 +32,27 @@
 
 Loop::Loop (void)
 {
+	// Save a bit of space
 	const char* me = "Loop";
+	const int   d  = (int) BaseProperty::Flags::Dot;
+	//const int   h  = (int) BaseProperty::Flags::Hide;
 
 	sub_type (me);
 
-	declare_prop (me, "autoclear",  autoclear,  "desc of autoclear");
-	declare_prop (me, "deleted",    deleted,    "desc of deleted");
-	declare_prop (me, "file_inode", file_inode, "desc of file_inode");
-	declare_prop (me, "file_major", file_major, "desc of file_major");
-	declare_prop (me, "file_minor", file_minor, "desc of file_minor");
-	declare_prop (me, "file_name",  file_name,  "desc of file_name");
-	declare_prop (me, "offset",     offset,     "desc of offset");
-	declare_prop (me, "partscan",   partscan,   "desc of partscan");
-	declare_prop (me, "read_only",  read_only,  "desc of read_only");
-	declare_prop (me, "sizelimit",  sizelimit,  "desc of sizelimit");
+	declare_prop (me, "autoclear",  autoclear,  "desc of autoclear",  0);
+	declare_prop (me, "deleted",    deleted,    "desc of deleted",    0);
+	declare_prop (me, "file_inode", file_inode, "desc of file_inode", d);
+	declare_prop (me, "file_major", file_major, "desc of file_major", 0);
+	declare_prop (me, "file_minor", file_minor, "desc of file_minor", 0);
+	declare_prop (me, "file_name",  file_name,  "desc of file_name",  0);
+	declare_prop (me, "offset",     offset,     "desc of offset",     d);
+	declare_prop (me, "partscan",   partscan,   "desc of partscan",   0);
+	declare_prop (me, "read_only",  read_only,  "desc of read_only",  0);
+	declare_prop (me, "sizelimit",  sizelimit,  "desc of sizelimit",  d);
 
-	declare_prop (me, "file_major_minor", (get_string_t) std::bind(&Loop::get_file_major_minor, this), "desc of file_major_minor");
-	declare_prop (me, "file_name_short",  (get_string_t) std::bind(&Loop::get_file_name_short,  this), "desc of file_name_short");
-	declare_prop (me, "flags",            (get_string_t) std::bind(&Loop::get_flags,            this), "desc of flags");
+	declare_prop (me, "file_major_minor", (get_string_t) std::bind(&Loop::get_file_major_minor, this), "desc of file_major_minor", d);
+	declare_prop (me, "file_name_short",  (get_string_t) std::bind(&Loop::get_file_name_short,  this), "desc of file_name_short",  d);
+	declare_prop (me, "flags",            (get_string_t) std::bind(&Loop::get_flags,            this), "desc of flags",            d);
 }
 
 Loop::~Loop()

@@ -44,10 +44,11 @@ typedef std::function<int64_t     (void)> get_int64_t;
 class BaseProperty
 {
 public:
-	BaseProperty (const char* owner, const char* name, const char* desc) :
+	BaseProperty (const char* owner, const char* name, const char* desc, int flags) :
 		owner (owner),
 		name  (name),
-		desc  (desc)
+		desc  (desc),
+		flags (flags)
 	{
 	}
 
@@ -102,10 +103,10 @@ public:
 		t_s64		//          signed
 	} type = Tag::t_unset;
 
-	enum class Flags {
-		f_Property,	// Should be displayed in properties dialog
-		f_Dot,		// Should be displayed in graphviz diagram
-		f_Debug
+	enum Flags {
+		Hide  = 1 << 0,		// Should not be displayed in properties dialog
+		Dot   = 1 << 1,		// Should be displayed in graphviz diagram
+		Debug = 1 << 2
 	};
 
 	std::string owner;
@@ -119,8 +120,8 @@ template <typename T>
 class PropVar : public BaseProperty
 {
 public:
-	PropVar (const char* owner, const char* name, T& v, const char* desc = "") :
-		BaseProperty (owner, name, desc),
+	PropVar (const char* owner, const char* name, T& v, const char* desc, int flags) :
+		BaseProperty (owner, name, desc, flags),
 		value(v)
 	{
 		set_type(v);
@@ -152,8 +153,8 @@ template <typename T>
 class PropFn : public BaseProperty
 {
 public:
-	PropFn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc = "") :
-		BaseProperty (owner, name, desc),
+	PropFn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags) :
+		BaseProperty (owner, name, desc, flags),
 		fn(fn)
 	{
 		T dummy = {};

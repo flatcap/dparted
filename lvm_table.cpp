@@ -38,9 +38,9 @@ LvmTable::LvmTable (void)
 
 	sub_type (me);
 
-	//declare_prop (me, "config",        config,        "desc of config");
-	declare_prop (me, "metadata_size", metadata_size, "desc of metadata_size");
-	declare_prop (me, "pv_attr",       pv_attr,       "desc of pv_attr");
+	declare_prop (me, "config",        config,        "desc of config",        0);
+	declare_prop (me, "metadata_size", metadata_size, "desc of metadata_size", 0);
+	declare_prop (me, "pv_attr",       pv_attr,       "desc of pv_attr",       0);
 }
 
 LvmTable::~LvmTable()
