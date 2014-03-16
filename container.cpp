@@ -348,24 +348,6 @@ Container::get_size_free (void)
 }
 
 
-ContainerPtr
-Container::find_name (const std::string& search)
-{
-	if (name == search) {
-		ContainerPtr c = get_smart();
-		return c;
-	}
-
-	ContainerPtr item;
-
-	for (auto i : children) {
-		if ((item = i->find_name (search)))
-			break;
-	}
-
-	return item;
-}
-
 void
 Container::find_type (const std::string& type, std::vector<ContainerPtr>& results)
 {
