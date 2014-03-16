@@ -1,0 +1,131 @@
+Syslog levels
+	SD_EMERG   "<0>"  /* system is unusable */
+	SD_ALERT   "<1>"  /* action must be taken immediately */
+	SD_CRIT    "<2>"  /* critical conditions */
+	SD_ERR     "<3>"  /* error conditions */
+	SD_WARNING "<4>"  /* warning conditions */
+	SD_NOTICE  "<5>"  /* normal but significant condition */
+	SD_INFO    "<6>"  /* informational */
+	SD_DEBUG   "<7>"  /* debug-level messages */
+
+Log Levels
+	Debug		x = 42
+	Trace		Before calculate
+	Quiet		Quietable output
+	Info		Volume needs defragmenting
+	Verbose		Forced to continue
+	Progress	54% complete
+	Warning		You should backup before starting
+	Error		Operation failed, no damage done
+	Perror		Message : standard error description
+	Critical	Operation failed, damage may have occurred
+	Enter		Enter a function
+	Leave		Leave a function
+	Command		Running command 'losetup -D'
+	CommandIn	Sending data to command: ...
+	CommandOut	Received data from command: ...
+	Code		There's a mistake in the code
+	IoIn		Read data from file
+	IoOut		Wrote data to file
+	Dot		Create dot output
+	Hex		Memory dump
+	File		File opened/closed/mmaped
+	ConfigRead	Read config entry
+	ConfigWrite	Wrote confi entry
+	User		Asked user "Are you sure?"
+
+---------------------
+
+log output -> callback function
+
+log::dot
+	cache output
+	spawn dot on flush
+
+log::code
+	can't be caused by user operation
+	effectively an assert
+
+logging: config file -- script to manipulate log destinations
+	log_me [log_level]
+	runs tty
+
+log level push object cf LOG_TRACE
+
+template<type X> X log return (X) calls logtrace leaving(X) (retval, line no)
+
+log -> cout? (still use varargs, printf format)
+
+main -v => log_info, main -vv => log_debug
+
+move iprintf (indented) to log.cpp
+
+force fflush of log?
+
+reset terminal
+echo -en "\ec" > /dev/pts/1
+use it in log_init()
+
+could log different levels to different files / ttys
+
+LOG_ENTER macro that references __FUNCTION__
+enables per function logging!
+
+change the log functions into a log object?
+dtor would close the log
+
+add a log_debug (DPContainer *) and ref to dump the object
+
+LogQuell object
+	when instantiated it prevents [some/all] logging
+	when it is destroyed, logging is returned to normal
+how do you conditionally create an object without hassle or leakage?
+
+int log_XXX (const char *format, ...) __attribute__ ((format (printf, 1, 2)));
+
+bool log_init (const char *name);
+void log_close (void);
+
+unsigned int log_set_level (unsigned int level);
+unsigned int log_get_level (void);
+
+uniq log line numbers
+	partition numbers
+	translate strings
+
+log info
+log debug
+log error
+
+log_info (spec)
+log::info << streamystuff << ...
+log::info.format (spec)
+
+automatic creation, cf std::cout
+
+stream
+printf
+
+enable (bitfield)	} function or object (scoped)?
+disable (bitfield)	}
+push/pop (bitfield)
+quell to end of function
+log_enter/exit function
+
+initialise global, or per stream
+	output file/tty
+	colour
+	timestamp
+
+trace ctor def params __FILE__ etc defined in .h _which_ file?
+
+namespace Log {
+
+class Debug : public log -> public iostream {};
+
+Log::Debug << xyz << std::endl;
+Log::Debug.printf ("format %s\n", X);
+Log::printf (Log::Debug, "format %s\n", X);
+
+uniq id for all throws cf log
+
