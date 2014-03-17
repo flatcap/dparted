@@ -211,19 +211,7 @@ Container::add_child (ContainerPtr& child)
 #endif
 	bytes_used += child->bytes_size;
 
-	bool inserted = false;
-
-	for (auto i = children.begin(); i != children.end(); i++) {
-		if ((*i)->parent_offset > child->parent_offset) {
-			children.insert (i, child);
-			inserted = true;
-			break;
-		}
-	}
-
-	if (!inserted) {
-		children.push_back (child);
-	}
+	children.insert (child);
 
 	//log_debug ("child: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
@@ -233,8 +221,9 @@ Container::add_child (ContainerPtr& child)
 void
 Container::just_add_child (ContainerPtr& child)
 {
-	if (child)
-		children.push_back (child);
+	if (child) {
+		children.insert (child);
+	}
 	//log_debug ("just: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 }
 
@@ -529,7 +518,7 @@ Container::sub_type (const char* n)
 }
 
 
-std::vector<ContainerPtr>&
+std::set<ContainerPtr, Container::compare>&
 Container::get_children (void)
 {
 	//LOG_TRACE;

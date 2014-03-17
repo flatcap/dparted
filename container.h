@@ -34,8 +34,8 @@
 #include "mmap.h"
 
 class Container;
-struct Action;
 class Visitor;
+struct Action;
 
 typedef std::shared_ptr<Container> ContainerPtr;
 
@@ -74,7 +74,19 @@ public:
 
 	virtual bool is_a (const std::string& type);
 
-	virtual std::vector<ContainerPtr>& get_children (void);
+	struct compare
+	{
+		bool operator() (const ContainerPtr a, const ContainerPtr b)
+		{
+			if (a->parent_offset == b->parent_offset) {
+				return (a->name.compare (b->name) < 0);
+			} else {
+				return (a->parent_offset < b->parent_offset);
+			}
+		}
+	};
+
+	virtual std::set<ContainerPtr, compare>& get_children (void);
 
 	std::string get_path (void);
 
@@ -148,7 +160,7 @@ protected:
 	MmapPtr	device_mmap;
 
 	std::map<std::string,PPtr> props;
-	std::vector<ContainerPtr> children;
+	std::set<ContainerPtr, compare> children;
 
 	// Helper functions
 	long        get_bytes_free (void);

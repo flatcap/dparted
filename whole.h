@@ -20,6 +20,7 @@
 #define _WHOLE_H_
 
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -44,7 +45,7 @@ public:
 public:
 	//properties
 	// seg_count - LVM2_SEG_COUNT
-	std::vector<ContainerPtr> segments;	//XXX not declared
+	std::set<ContainerPtr, Container::compare> segments;	//XXX not declared
 
 protected:
 	Whole (void);

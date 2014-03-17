@@ -20,6 +20,7 @@
 #define _LVM_VOLUME_H_
 
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -54,8 +55,8 @@ public:
 
 	std::string	mirror_log;		//XXX not declared
 
-	std::vector<ContainerPtr> metadata;		//XXX not declared
-	std::vector<ContainerPtr> subvols;		//XXX not declared
+	std::set<ContainerPtr, Container::compare> metadata;	//XXX not declared
+	std::set<ContainerPtr, Container::compare> subvols;	//XXX not declared
 
 	ContainerPtr sibling;
 

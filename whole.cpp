@@ -86,21 +86,7 @@ Whole::perform_action (Action action)
 void
 Whole::add_segment (ContainerPtr seg)
 {
-	bool inserted = false;
-
-	for (auto i = segments.begin(); i != segments.end(); i++) {
-		if ((*i) == seg)
-			return;
-		if ((*i)->parent_offset > seg->parent_offset) {
-			segments.insert (i, seg);
-			inserted = true;
-			break;
-		}
-	}
-
-	if (!inserted) {
-		segments.push_back (seg);
-	}
+	segments.insert (seg);
 
 	seg->whole = get_smart();
 }

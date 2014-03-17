@@ -376,12 +376,13 @@ LvmTable::set_alignment (long bytes)
 		return false;
 
 	// and possibly an Alignment at the end
-	ContainerPtr last = children.back();
+	auto it = children.rbegin();
+	ContainerPtr last = *it;
 	if (last->is_a ("Alignment")) {
-		children.pop_back();
+		children.erase (last);
 	}
 
-	ContainerPtr reserved = children.front();
+	ContainerPtr reserved = *children.begin();
 
 	//XXX validate numbers
 	long remainder = (bytes_size - reserved->bytes_size) % block_size;
