@@ -34,12 +34,14 @@
 
 LvmTable::LvmTable (void)
 {
+	// Save a bit of space
 	const char* me = "LvmTable";
+	const int   s  = (int) BaseProperty::Flags::Size;
 
 	sub_type (me);
 
 	declare_prop (me, "config",        config,        "desc of config",        0);
-	declare_prop (me, "metadata_size", metadata_size, "desc of metadata_size", 0);
+	declare_prop (me, "metadata_size", metadata_size, "desc of metadata_size", s);
 	declare_prop (me, "pv_attr",       pv_attr,       "desc of pv_attr",       0);
 }
 

@@ -106,7 +106,8 @@ public:
 	enum Flags {
 		Hide  = 1 << 0,		// Should not be displayed in properties dialog
 		Dot   = 1 << 1,		// Should be displayed in graphviz diagram
-		Debug = 1 << 2
+		Size  = 1 << 2,		// This number can be abbreviated, e.g. MiB
+		Debug = 1 << 3
 	};
 
 	std::string owner;

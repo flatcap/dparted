@@ -473,7 +473,6 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 		v->seg_count		= tags["LVM2_SEG_COUNT"];
 		v->stripes		= tags["LVM2_STRIPES"];
-		v->stripesize		= tags["LVM2_STRIPESIZE"];
 		v->stripe_size		= tags["LVM2_STRIPE_SIZE"];
 		v->seg_start_pe		= tags["LVM2_SEG_START_PE"];
 		v->mirror_log		= tags["LVM2_MIRROR_LOG"];

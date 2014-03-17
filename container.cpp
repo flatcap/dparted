@@ -90,13 +90,14 @@ Container::Container (void)
 	// Save a bit of space
 	const char* me = "Container";
 	const int   d  = (int) BaseProperty::Flags::Dot;
+	const int   s  = (int) BaseProperty::Flags::Size;
 	//const int   h  = (int) BaseProperty::Flags::Hide;
 
 	sub_type (me);
 
-	declare_prop (me, "block_size",    block_size,    "desc of block_size",    d);
-	declare_prop (me, "bytes_size",    bytes_size,    "desc of bytes_size",    d);
-	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used",    d);
+	declare_prop (me, "block_size",    block_size,    "desc of block_size",    d|s);
+	declare_prop (me, "bytes_size",    bytes_size,    "desc of bytes_size",    d|s);
+	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used",    d|s);
 	declare_prop (me, "device",        device,        "desc of device",        d);
 	declare_prop (me, "device_major",  device_major,  "desc of device_major",  0);
 	declare_prop (me, "device_minor",  device_minor,  "desc of device_minor",  0);
@@ -104,9 +105,9 @@ Container::Container (void)
 	declare_prop (me, "parent_offset", parent_offset, "desc of parent_offset", d);
 	declare_prop (me, "uuid",          uuid,          "desc of uuid",          0);
 
-	declare_prop (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         0);
-	declare_prop (me, "bytes_free_human",   (get_string_t) std::bind(&Container::get_bytes_free_human,   this), "desc of bytes_free_human",   d);
-	declare_prop (me, "bytes_size_human",   (get_string_t) std::bind(&Container::get_bytes_size_human,   this), "desc of bytes_size_human",   d);
+	declare_prop (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
+	declare_prop (me, "bytes_free_human",   (get_string_t) std::bind(&Container::get_bytes_free_human,   this), "desc of bytes_free_human",   d|s);
+	declare_prop (me, "bytes_size_human",   (get_string_t) std::bind(&Container::get_bytes_size_human,   this), "desc of bytes_size_human",   d|s);
 	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
 	declare_prop (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
 	declare_prop (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default",       d);

@@ -51,7 +51,6 @@ public:
 	std::uint64_t	seg_start_pe = 0;
 	std::uint64_t	stripes      = 0;
 	std::uint64_t	stripe_size  = 0;
-	std::uint64_t	stripesize   = 0;
 
 	std::string	mirror_log;		//XXX not declared
 

@@ -33,7 +33,6 @@ LvmVolume::LvmVolume (void)
 	declare_prop (me, "seg_count",    seg_count,    "desc of seg_count",    0);
 	declare_prop (me, "seg_start_pe", seg_start_pe, "desc of seg_start_pe", 0);
 	declare_prop (me, "stripes",      stripes,      "desc of stripes",      0);
-	declare_prop (me, "stripesize",   stripesize,   "desc of stripesize",   0);
 	declare_prop (me, "stripe_size",  stripe_size,  "desc of stripe_size",  0);
 }
 
