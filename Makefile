@@ -166,9 +166,10 @@ stats:	force
 	gitstats . stats
 
 xxx:	force
-	grep --exclude xxx.txt -rHno "//[X]XX.*" . \
+	@grep --exclude xxx.txt -rHno "//[X]XX.*" . \
 		| sed -e 's/^..//' -e 's!//[X]XX[ \t]*!!' \
 		| sort > xxx.txt
+	@wc -l xxx.txt
 
 links:	$(LINKS)
 
