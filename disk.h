@@ -42,8 +42,8 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	virtual long          get_block_size (void);
-	virtual unsigned int  get_device_space (std::map<long, long>& spaces);
+	virtual std::uint64_t get_block_size (void);
+	virtual std::uint64_t get_device_space (std::map<std::uint64_t,std::uint64_t>& spaces);
 
 	static unsigned int find_devices (ContainerPtr& list);
 

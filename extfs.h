@@ -40,9 +40,9 @@ public:
 	virtual bool perform_action (Action action);
 
 	void get_ext_sb (ContainerPtr parent);
-	static ExtfsPtr get_ext2 (ContainerPtr parent, std::uint8_t* buffer, int bufsize);
-	static ExtfsPtr get_ext3 (ContainerPtr parent, std::uint8_t* buffer, int bufsize);
-	static ExtfsPtr get_ext4 (ContainerPtr parent, std::uint8_t* buffer, int bufsize);
+	static ExtfsPtr get_ext2 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize);
+	static ExtfsPtr get_ext3 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize);
+	static ExtfsPtr get_ext4 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 public:
 	//properties

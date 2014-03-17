@@ -56,23 +56,23 @@ public:
 	virtual void add_child      (ContainerPtr& child);
 	virtual void just_add_child (ContainerPtr& child);
 	virtual void delete_child   (ContainerPtr& child);
-	virtual void move_child     (ContainerPtr& child, long offset, long size);
+	virtual void move_child     (ContainerPtr& child, std::uint64_t offset, std::uint64_t size);
 
-	virtual int           get_fd (void);
-	virtual long          get_block_size (void);
+	virtual int      get_fd (void);
+	virtual std::uint64_t get_block_size (void);
 	virtual std::string   get_device_name (void);
-	virtual long          get_parent_offset (void);
-	virtual unsigned int  get_device_space (std::map<long, long>& spaces);
+	virtual std::uint64_t get_parent_offset (void);
+	virtual std::uint64_t get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces);
 
-	virtual long get_size_total (void);
-	virtual long get_size_used (void);
-	virtual long get_size_free (void);
+	virtual std::uint64_t get_size_total (void);
+	virtual std::uint64_t get_size_used (void);
+	virtual std::uint64_t get_size_free (void);
 
 	virtual ContainerPtr find (const std::string& uuid);
 	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);
 
 	virtual std::uint8_t* get_buffer (std::uint64_t offset, std::uint64_t size);
-	virtual void close_buffer (std::uint8_t* buffer, long size);
+	virtual void close_buffer (std::uint8_t* buffer, std::uint64_t size);
 
 	virtual bool is_a (const std::string& type);
 
@@ -80,8 +80,8 @@ public:
 	{
 		bool operator() (const ContainerPtr a, const ContainerPtr b)
 		{
-			long da = (a->device_major << 10) + a->device_minor;
-			long db = (b->device_major << 10) + b->device_minor;
+			std::uint64_t da = (a->device_major << 10) + a->device_minor;
+			std::uint64_t db = (b->device_major << 10) + b->device_minor;
 			if (da != db)
 				return (da < db);
 

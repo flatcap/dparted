@@ -198,7 +198,7 @@ Table::fill_space (void)
 
 
 bool
-Table::set_alignment (long bytes)
+Table::set_alignment (std::uint64_t bytes)
 {
 	block_size = bytes;
 	return true;

@@ -39,7 +39,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static NtfsPtr get_ntfs (ContainerPtr parent, std::uint8_t* buffer, int bufsize);
+	static NtfsPtr get_ntfs (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 public:
 	//properties

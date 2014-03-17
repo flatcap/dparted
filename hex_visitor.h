@@ -41,7 +41,7 @@ public:
 protected:
 	int indent = -1;
 
-	void dump (ContainerPtr c, std::uint8_t* buf, long size);
+	void dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size);
 };
 
 

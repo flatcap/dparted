@@ -248,10 +248,10 @@ Extfs::get_ext_sb (ContainerPtr parent)
 }
 
 ExtfsPtr
-Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, int UNUSED(bufsize))
+Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 {
-	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
-	bool b2 = !(*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal
+	bool b1 = (*(std::uint16_t*) (buffer+0x438) == 0xEF53);		// Magic
+	bool b2 = !(*(std::uint32_t*) (buffer + 0x45C) & 0x0000004);	// Journal
 
 	ExtfsPtr e;
 	if (b1 && b2) {
@@ -264,12 +264,12 @@ Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, int UNUSED(bufsize))
 }
 
 ExtfsPtr
-Extfs::get_ext3 (ContainerPtr parent, std::uint8_t* buffer, int UNUSED(bufsize))
+Extfs::get_ext3 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 {
-	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
-	bool b2 = (*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal
-	bool b3 = (*(unsigned int*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
-	bool b4 = (*(unsigned int*) (buffer + 0x464) < 0x0000008);	// Small RO_COMPAT
+	bool b1 = (*(std::uint16_t*) (buffer+0x438) == 0xEF53);		// Magic
+	bool b2 = (*(std::uint32_t*) (buffer + 0x45C) & 0x0000004);	// Journal
+	bool b3 = (*(std::uint32_t*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
+	bool b4 = (*(std::uint32_t*) (buffer + 0x464) < 0x0000008);	// Small RO_COMPAT
 
 	ExtfsPtr e;
 	if (b1 && b2 && b3 && b4) {
@@ -282,13 +282,13 @@ Extfs::get_ext3 (ContainerPtr parent, std::uint8_t* buffer, int UNUSED(bufsize))
 }
 
 ExtfsPtr
-Extfs::get_ext4 (ContainerPtr parent, std::uint8_t* buffer, int UNUSED(bufsize))
+Extfs::get_ext4 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 {
-	bool b1 = (*(unsigned short int*) (buffer+0x438) == 0xEF53);	// Magic
-	bool b2 = (*(unsigned int*) (buffer + 0x45C) & 0x0000004);	// Journal
-	bool b3 = (*(unsigned int*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
-	bool b4 = (*(unsigned int*) (buffer + 0x460) > 0x000003f);	// Large INCOMPAT
-	bool b5 = (*(unsigned int*) (buffer + 0x464) > 0x0000007);	// Large RO_COMPAT
+	bool b1 = (*(std::uint16_t*) (buffer+0x438) == 0xEF53);		// Magic
+	bool b2 = (*(std::uint32_t*) (buffer + 0x45C) & 0x0000004);	// Journal
+	bool b3 = (*(std::uint32_t*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
+	bool b4 = (*(std::uint32_t*) (buffer + 0x460) > 0x000003f);	// Large INCOMPAT
+	bool b5 = (*(std::uint32_t*) (buffer + 0x464) > 0x0000007);	// Large RO_COMPAT
 
 	ExtfsPtr e;
 	if (b1 && b2 && ((b3 && b5) || b4)) {

@@ -239,7 +239,7 @@ Container::delete_child (ContainerPtr& child)
 }
 
 void
-Container::move_child (ContainerPtr& UNUSED(child), long UNUSED(offset), long UNUSED(size))
+Container::move_child (ContainerPtr& UNUSED(child), std::uint64_t UNUSED(offset), std::uint64_t UNUSED(size))
 {
 }
 
@@ -272,7 +272,7 @@ Container::get_fd (void)
 	return newfd;
 }
 
-long
+std::uint64_t
 Container::get_block_size (void)
 {
 	//XXX need to get the max of all parents
@@ -300,14 +300,14 @@ Container::get_device_name (void)
 		return "UNKNOWN";
 }
 
-long
+std::uint64_t
 Container::get_parent_offset (void)
 {
 	return parent_offset;
 }
 
-unsigned int
-Container::get_device_space (std::map<long, long>& spaces)
+std::uint64_t
+Container::get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces)
 {
 	spaces.clear();
 
@@ -318,19 +318,19 @@ Container::get_device_space (std::map<long, long>& spaces)
 }
 
 
-long
+std::uint64_t
 Container::get_size_total (void)
 {
 	return bytes_size;
 }
 
-long
+std::uint64_t
 Container::get_size_used (void)
 {
 	return bytes_used;
 }
 
-long
+std::uint64_t
 Container::get_size_free (void)
 {
 	return bytes_size - bytes_used;
@@ -442,7 +442,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 }
 
 void
-Container::close_buffer (std::uint8_t* buffer, long size)
+Container::close_buffer (std::uint8_t* buffer, std::uint64_t size)
 {
 	if (!buffer)
 		return;

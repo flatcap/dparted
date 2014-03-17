@@ -267,14 +267,14 @@ Disk::find_devices (ContainerPtr& list)
 }
 
 
-long
+std::uint64_t
 Disk::get_block_size (void)
 {
 	return 0;
 }
 
-unsigned int
-Disk::get_device_space (std::map<long, long>& UNUSED(spaces))
+std::uint64_t
+Disk::get_device_space (std::map<std::uint64_t, std::uint64_t>& UNUSED(spaces))
 {
 	return 0;
 }

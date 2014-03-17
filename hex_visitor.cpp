@@ -112,7 +112,7 @@ HexVisitor::visit (LvmGroupPtr c)
 
 
 void
-HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, long size)
+HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 {
 	if (!c)
 		return;
@@ -127,7 +127,7 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, long size)
 	if (buf) {
 		printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
 
-		long abbr = (abbreviate & ~15);	// Round down to multiple of 16
+		std::uint64_t abbr = (abbreviate & ~15);	// Round down to multiple of 16
 
 		if ((abbr == 0) || (abbr >= (size/2))) {
 			dump_hex2 (buf, 0, size);

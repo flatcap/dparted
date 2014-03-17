@@ -300,7 +300,7 @@ get_null_str (void *buffer, std::uint32_t maxlen)
 }
 
 std::string
-get_size (long size)
+get_size (std::uint64_t size)
 {
 	//XXX do this without log2?  use ffs
 	char buffer[64];
