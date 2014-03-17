@@ -134,7 +134,7 @@ Table::fill_space (void)
 	log_debug ("fill space\n");
 #endif
 
-	long upto = 0;
+	std::uint64_t upto = 0;
 
 	for (auto c : children) {
 		if (upto == c->parent_offset) {

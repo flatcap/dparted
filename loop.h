@@ -48,14 +48,14 @@ public:
 	//properties
 	bool		autoclear  = false;
 	bool		deleted    = false;
-	long		file_inode = 0;
-	int		file_major = 0;
-	int		file_minor = 0;
+	std::uint64_t	file_inode = 0;
+	dev_t		file_major = 0;
+	dev_t		file_minor = 0;
 	std::string	file_name;		// Backing file
-	long		offset     = 0;
+	std::uint64_t	offset     = 0;
 	bool		partscan   = false;
 	bool		read_only  = false;
-	long		sizelimit  = 0;
+	std::uint64_t	sizelimit  = 0;
 
 protected:
 	Loop (void);

@@ -40,7 +40,7 @@ public:
 	virtual bool perform_action (Action action);
 
 	static ExtendedPtr probe (ContainerPtr& top_level, ContainerPtr& parent, long offset, long size);
-	virtual unsigned char* get_buffer (long offset, long size);
+	virtual unsigned char* get_buffer (std::uint64_t offset, std::uint64_t size);
 
 public:
 	//properties

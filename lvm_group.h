@@ -46,10 +46,10 @@ public:
 
 public:
 	//properties
-	long		lv_count = 0;	//XXX this matches children.size()
-	long		pv_count = 0;	//XXX put this in seg_count in Whole
+	std::uint64_t	lv_count = 0;	//XXX this matches children.size()
+	std::uint64_t	pv_count = 0;	//XXX put this in seg_count in Whole
 	std::string	vg_attr;
-	long		vg_seqno = 0;
+	std::uint64_t	vg_seqno = 0;
 
 	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
 	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?

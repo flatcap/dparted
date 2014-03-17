@@ -43,10 +43,10 @@ public:
 
 public:
 	//properties
-	int		chunk_size;
-	long		chunks_used;
-	long		data_offset;
-	long		data_size;
+	std::uint64_t	chunk_size;
+	std::uint64_t	chunks_used;
+	std::uint64_t	data_offset;
+	std::uint64_t	data_size;
 	int		raid_disks;
 	int		raid_layout;
 	int		raid_type;

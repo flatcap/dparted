@@ -48,7 +48,7 @@ public:
 public:
 	//properties
 	std::string config;	// my volume
-	int metadata_size = 0;
+	std::uint64_t metadata_size = 0;
 	std::string pv_attr;
 
 	LvmGroupPtr group;	//XXX not declared

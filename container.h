@@ -19,6 +19,7 @@
 #ifndef _CONTAINER_H_
 #define _CONTAINER_H_
 
+#include <cstdint>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -70,7 +71,8 @@ public:
 	virtual ContainerPtr find (const std::string& uuid);
 	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);
 
-	virtual unsigned char* get_buffer (long offset, long size); virtual void close_buffer (unsigned char* buffer, long size);
+	virtual unsigned char* get_buffer (std::uint64_t offset, std::uint64_t size);
+	virtual void close_buffer (unsigned char* buffer, long size);
 
 	virtual bool is_a (const std::string& type);
 
@@ -139,11 +141,11 @@ public:
 	dev_t		device_minor = 0;
 	int		fd = -1;
 
-	long		parent_offset = 0;
+	std::uint64_t	parent_offset = 0;
 
-	long		block_size = 0;
-	long		bytes_size = 0;
-	long		bytes_used = 0;
+	std::uint64_t	block_size = 0;
+	std::uint64_t	bytes_size = 0;
+	std::uint64_t	bytes_used = 0;
 
 	ContainerPtr	whole;
 

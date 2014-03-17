@@ -50,7 +50,7 @@ public:
 	std::string cipher_mode;
 	std::string cipher_name;
 	std::string hash_spec;
-	int         version;
+	std::uint16_t version;
 
 protected:
 	LuksTable (void);

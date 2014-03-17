@@ -42,29 +42,29 @@ public:
 public:
 	//properties
 #if 0
-	long		dev_size;	//XXX not declared
-	long		pe_start;	// 1048576
+	std::uint64_t	dev_size;	//XXX not declared
+	std::uint64_t	pe_start;	// 1048576
 	std::string	pv_attr;	// a--
-	long		pv_count;	// 8
-	long		pv_free;	// 4294967296
+	std::uint64_t	pv_count;	// 8
+	std::uint64_t	pv_free;	// 4294967296
 	std::string	pv_name;	// /dev/loop2
-	long		pv_pe_alloc;	// 255
-	long		pv_pe_count;	// 1279
-	long		pv_size;	// 5364514816
-	long		pv_used;	// 1069547520
+	std::uint64_t	pv_pe_alloc;	// 255
+	std::uint64_t	pv_pe_count;	// 1279
+	std::uint64_t	pv_size;	// 5364514816
+	std::uint64_t	pv_used;	// 1069547520
 	std::string	pv_uuid;	// D6IBDt-v35s-iehu-JPdK-U45M-DqBi-ZjkVP4
 
-	long		pvseg_size;	// 1024
-	long		pvseg_start;	// 255
+	std::uint64_t	pvseg_size;	// 1024
+	std::uint64_t	pvseg_start;	// 255
 
 	std::string	lv_name;	// myvol
 	std::string	lv_type;	// mirror
 	std::string	lv_attr;	// i
 	std::string	lv_uuid;	// FLYSmN-CXwZ-O01d-cpmX-ZUbc-c8gm-o11d90
 
-	long		vg_extent;	// 4194304
+	std::uint64_t	vg_extent;	// 4194304
 	std::string	vg_name;	// test_02
-	long		vg_seqno;	// 3
+	std::uint64_t	vg_seqno;	// 3
 	std::string	vg_uuid;	// xtV5An-Ua5C-iCba-JEpw-AlP0-7isO-iZCeXn
 #endif
 

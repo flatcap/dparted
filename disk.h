@@ -53,7 +53,7 @@ public:
 
 public:
 	//properties
-	int		bios_cylinders = 0;
+	int		bios_cylinders = 0;	//XXX types
 	int		bios_heads     = 0;
 	int		bios_sectors   = 0;
 	int		did            = 0;

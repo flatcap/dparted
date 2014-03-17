@@ -384,10 +384,10 @@ void deleter (Mmap* m)
 }
 
 unsigned char*
-Container::get_buffer (long offset, long size)
+Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 {
 	// range check
-	if ((offset < 0) || (size < 1) || ((offset + size) > bytes_size)) {
+	if ((size < 1) || ((offset + size) > bytes_size)) {
 		log_error ("%s: out of range\n", __FUNCTION__);
 		return nullptr;
 	}

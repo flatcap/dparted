@@ -111,8 +111,8 @@ LuksTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigne
 	LuksTablePtr l = create();
 
 	l->version     = *(short int*) (buffer+6);
-	l->cipher_name = (char*) (buffer+8);
-	l->cipher_mode = (char*) (buffer+40);
+	l->cipher_name = (char*) (buffer+8);	//XXX null termination check
+	l->cipher_mode = (char*) (buffer+40);	//XXX max length check
 	l->hash_spec   = (char*) (buffer+72);
 	l->uuid        = (char*) (buffer+168);
 	l->bytes_size  = parent->bytes_size;

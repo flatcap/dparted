@@ -47,11 +47,11 @@ public:
 public:
 	//properties
 	std::string	lv_attr;
-	int		seg_count    = 0;
-	int		seg_start_pe = 0;
-	int		stripes      = 0;
-	int		stripe_size  = 0;
-	int		stripesize   = 0;
+	std::uint64_t	seg_count    = 0;
+	std::uint64_t	seg_start_pe = 0;
+	std::uint64_t	stripes      = 0;
+	std::uint64_t	stripe_size  = 0;
+	std::uint64_t	stripesize   = 0;
 
 	std::string	mirror_log;		//XXX not declared
 
