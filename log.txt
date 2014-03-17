@@ -1,4 +1,48 @@
-log output -> callback function
+Output locations:
+	stdout/cout
+	stderr/cerr
+	file/tty
+	syslog
+	journal
+	function
+	/dev/null
+
+Output features:
+	ANSI reset terminal
+	ANSI colour codes
+	Timestamps
+	Flush output
+
+Locations and features independent
+	Different levels to different files/ttys
+
+Code features
+	single exit point for all logging
+		i.e. different handles, but one command
+		or at least one common point somewhere
+	config file / command line
+		levels -> outputs
+	uniq log line numbers
+		partition the numbers (by what?)
+		translate strings?
+		systemd messageid?
+	namespace Log?
+	trim \n from single line for syslog/journal
+	LogInit();
+		automatic?
+	LogClose();
+
+Input features
+	stream
+		Log << "xyz\n";
+	printf
+		Log.printf ("%s\n", str);
+	object?
+		Log (object);
+			template function
+			object supports <<
+
+-------------------------------------------
 
 log::dot
 	cache output
@@ -22,14 +66,6 @@ main -v => log_info, main -vv => log_debug
 
 move iprintf (indented) to log.cpp
 
-force fflush of log?
-
-reset terminal
-echo -en "\ec" > /dev/pts/1
-use it in log_init()
-
-could log different levels to different files / ttys
-
 LOG_ENTER macro that references __FUNCTION__
 enables per function logging!
 
@@ -51,10 +87,6 @@ void log_close (void);
 unsigned int log_set_level (unsigned int level);
 unsigned int log_get_level (void);
 
-uniq log line numbers
-	partition numbers
-	translate strings
-
 log_info (spec)
 log::info << streamystuff << ...
 log::info.format (spec)
@@ -70,23 +102,11 @@ push/pop (bitfield)
 quell to end of function
 log_enter/exit function
 
-initialise global, or per stream
-	output file/tty
-	colour
-	timestamp
-
 trace ctor def params __FILE__ etc defined in .h _which_ file?
-
-namespace Log {
 
 class Debug : public log -> public iostream {};
 
 Log::Debug << xyz << std::endl;
 Log::Debug.printf ("format %s\n", X);
 Log::printf (Log::Debug, "format %s\n", X);
-
-uniq id for all throws cf log
-
-single exit point for all logging
-	i.e. different handles, but one command
 
