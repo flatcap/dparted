@@ -30,9 +30,9 @@ class Msdos;
 typedef std::shared_ptr<Msdos> MsdosPtr;
 
 struct partition {
-	long start;
-	long size;
-	int type;
+	std::uint64_t start;
+	std::uint64_t size;
+	std::uint8_t  type;
 };
 
 class Msdos : public Table
@@ -53,9 +53,9 @@ public:
 protected:
 	Msdos (void);
 
-	virtual bool read_partition (unsigned char* buffer, int index, struct partition* part);
-	virtual unsigned int read_table (unsigned char* buffer, int bufsize, long offset, std::vector<struct partition>& vp);
-	virtual void read_chs (unsigned char* buffer, int* cylinder, int* head, int* sector);
+	virtual bool read_partition (std::uint8_t* buffer, int index, struct partition* part);
+	virtual unsigned int read_table (std::uint8_t* buffer, std::uint64_t bufsize, std::uint64_t offset, std::vector<struct partition>& vp);
+	// void read_chs (std::uint8_t* buffer, std::uint16_t& cylinder, std::uint8_t& head, std::uint8_t& sector);
 
 private:
 

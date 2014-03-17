@@ -96,19 +96,22 @@ Msdos::perform_action (Action action)
 }
 
 
+#if 0
 void
-Msdos::read_chs (unsigned char* buffer, int* cylinder, int* head, int* sector)
+Msdos::read_chs (std::uint8_t* buffer, std::uint16_t& cylinder, std::uint8_t& head, std::uint8_t& sector)
 {
-	if (!buffer || !cylinder || !head || !sector)
+	if (!buffer)
 		return;
 
-	*head     = buffer[0];
-	*sector   = buffer[1] & 0x3F;
-	*cylinder = buffer[2] + ((buffer[1] & 0xC0) << 2);
+	head     = buffer[0];
+	sector   = buffer[1] & 0x3F;
+	cylinder = buffer[2] + ((buffer[1] & 0xC0) << 2);
 }
 
+#endif
+
 bool
-Msdos::read_partition (unsigned char* buffer, int index, struct partition* part)
+Msdos::read_partition (std::uint8_t* buffer, int index, struct partition* part)
 {
 	//XXX include this in read_table?
 	if (!buffer || !part)
@@ -124,17 +127,17 @@ Msdos::read_partition (unsigned char* buffer, int index, struct partition* part)
 
 	part->type = buffer[index + 4];
 
-	part->start = *(int*) (buffer + index + 8);
+	part->start = *(std::uint32_t*) (buffer + index + 8);
 	part->start *= 512;
 
-	part->size = *(int*) (buffer + index + 12);
+	part->size = *(std::uint32_t*) (buffer + index + 12);
 	part->size *= 512;
 
 	return true;
 }
 
 unsigned int
-Msdos::read_table (unsigned char* buffer, int UNUSED(bufsize), long UNUSED(offset), std::vector<struct partition>& vp)
+Msdos::read_table (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize), std::uint64_t UNUSED(offset), std::vector<struct partition>& vp)
 {
 	struct partition part;
 
@@ -155,7 +158,7 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, std::uint8_t* buffe
 	//LOG_TRACE;
 	int count = 0;
 
-	if (*(unsigned short int*) (buffer+510) != 0xAA55)
+	if (*(std::uint16_t*) (buffer+510) != 0xAA55)	//XXX declare magic elsewhere
 		return nullptr;
 
 	// and some other quick checks
