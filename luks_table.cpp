@@ -110,11 +110,11 @@ LuksTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigne
 
 	LuksTablePtr l = create();
 
-	l->version     = *(short int*) (buffer+6);
-	l->cipher_name = (char*) (buffer+8);	//XXX null termination check
-	l->cipher_mode = (char*) (buffer+40);	//XXX max length check
-	l->hash_spec   = (char*) (buffer+72);
-	l->uuid        = (char*) (buffer+168);
+	l->version     = *(std::uint16_t*) (buffer+6);
+	l->cipher_name = get_null_str (buffer+  8, 32);
+	l->cipher_mode = get_null_str (buffer+ 40, 32);
+	l->hash_spec   = get_null_str (buffer+ 72, 96);
+	l->uuid        = get_null_str (buffer+168, 40);
 	l->bytes_size  = parent->bytes_size;
 
 	//l->device      = "/dev/mapper/luks-" + l->uuid;
