@@ -360,3 +360,21 @@ dot: msdos/extended: rank=same
 dot visitor: save to file gv/png
 	command line options
 
+conceal string::npos?
+
+action lvm -- view config (not properties)
+
+lvm2 release -- when did _mlog become _meta?
+
+easter - type checks -> int64_t
+easter big-/little-endian translation
+
+plugin could change dot and prop flags of PPtrs
+
+use property keywords internally and L10N to translate
+
+don't unnecessarily name objects
+	leave for name_default
+
+declare property flag "size" -> _human variant
+
