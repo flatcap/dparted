@@ -32,35 +32,77 @@
 #include "utils.h"
 #include "log_trace.h"
 
-/**
- * execute_command2 - input (string)
- */
-unsigned int
-execute_command2 (const std::string& command, std::string& input)
+long
+align (long num, long round)
 {
-	FILE* file = nullptr;
-	//int count = 0;
+	if (round == 0)
+		return num;
+	return ((num + round - 1) / round * round);
+}
 
-	//XXX log command and output
-
-	//log_debug ("running command: %s\n", command.c_str());
-	file = popen (command.c_str(), "we");
-	if (file == nullptr) {
-		log_error ("popen failed");	//XXX log_perror
-		return -1;
+void
+dump_hex (unsigned char* buffer, int bufsize)
+{
+	for (int i = 0; i < bufsize; i += 16) {
+		log_debug ("%06x  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
+			i,
+			buffer[i +  0], buffer[i +  1], buffer[i +  2], buffer[i +  3], buffer[i +  4], buffer[i +  5], buffer[i +  6], buffer[i +  7],
+			buffer[i +  8], buffer[i +  9], buffer[i + 10], buffer[i + 11], buffer[i + 12], buffer[i + 13], buffer[i + 14], buffer[i + 15]);
 	}
+}
 
-	//count =
-	fprintf (file, "%s\n", input.c_str());
-	//log_debug ("wrote %d bytes to command %s\n", count, command.c_str());
+void
+dump_hex2 (void* buf, int start, int length)
+{
+	int off, i, s, e;
+	unsigned char* mem = (unsigned char*) buf;
 
-	int retcode = pclose (file);
-	if (retcode == -1) {
-		log_error ("pclose failed");	//XXX log_perror
-		return -1;
+#if 1
+	unsigned char last[16];
+	int same = 0;
+#endif
+	s =  start                & ~15;	// round down
+	e = (start + length + 15) & ~15;	// round up
+
+	for (off = s; off < e; off += 16) {
+#if 1
+		if ((memcmp ((char*) buf+off, last, sizeof (last)) == 0) &&
+			((off + 16) < e) && (off > s)) {
+			if (!same) {
+				log_info ("	        ...\n");
+				same = 1;
+			}
+			continue;
+		} else {
+			same = 0;
+			memcpy (last, (char*) buf+off, sizeof (last));
+		}
+#endif
+
+		if (off == s)
+			log_info ("	%6.6x ", start);
+		else
+			log_info ("	%6.6x ", off);
+
+		for (i = 0; i < 16; i++) {
+			if (i == 8)
+				log_info (" -");
+			if (((off+i) >= start) && ((off+i) < (start+length)))
+				log_info (" %02X", mem[off+i]);
+			else
+				log_info ("   ");
+		}
+		log_info ("  ");
+		for (i = 0; i < 16; i++) {
+			if (((off+i) < start) || ((off+i) >= (start+length)))
+				log_info (" ");
+			else if (isprint (mem[off + i]))
+				log_info ("%c", mem[off + i]);
+			else
+				log_info (".");
+		}
+		log_info ("\n");
 	}
-
-	return retcode;
 }
 
 /**
@@ -117,6 +159,37 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 }
 
 /**
+ * execute_command2 - input (string)
+ */
+unsigned int
+execute_command2 (const std::string& command, std::string& input)
+{
+	FILE* file = nullptr;
+	//int count = 0;
+
+	//XXX log command and output
+
+	//log_debug ("running command: %s\n", command.c_str());
+	file = popen (command.c_str(), "we");
+	if (file == nullptr) {
+		log_error ("popen failed");	//XXX log_perror
+		return -1;
+	}
+
+	//count =
+	fprintf (file, "%s\n", input.c_str());
+	//log_debug ("wrote %d bytes to command %s\n", count, command.c_str());
+
+	int retcode = pclose (file);
+	if (retcode == -1) {
+		log_error ("pclose failed");	//XXX log_perror
+		return -1;
+	}
+
+	return retcode;
+}
+
+/**
  * execute_command3 - output (string)
  */
 unsigned int
@@ -133,38 +206,6 @@ execute_command3 (const std::string& command, std::string& output)
 	}
 
 	return retcode;
-}
-
-std::string
-get_size (long size)
-{
-	//XXX do this without log2?  use ffs
-	char buffer[64];
-	double power = log2 ((double) llabs (size)) + 0.5;
-	const char* suffix = "";
-	double divide = 1;
-
-	if (power < 10) {
-		suffix = "   B";
-		divide = 1;
-	} else if (power < 20) {
-		suffix = " KiB";
-		divide = 1024;
-	} else if (power < 30) {
-		suffix = " MiB";
-		divide = 1048576;
-	} else if (power < 40) {
-		suffix = " GiB";
-		divide = 1073741824;
-	} else if (power < 50) {
-		suffix = " TiB";
-		divide = 1099511627776;
-	} else if (power < 60) {
-		suffix = " PiB";
-		divide = 1125899906842624;
-	}
-	sprintf (buffer, "%0.3g%s", (double) size/divide, suffix);
-	return buffer;
 }
 
 unsigned int
@@ -244,6 +285,38 @@ explode_n (const char* separators, const std::string& input, std::vector<std::st
 #endif
 
 	return parts.size();
+}
+
+std::string
+get_size (long size)
+{
+	//XXX do this without log2?  use ffs
+	char buffer[64];
+	double power = log2 ((double) llabs (size)) + 0.5;
+	const char* suffix = "";
+	double divide = 1;
+
+	if (power < 10) {
+		suffix = "   B";
+		divide = 1;
+	} else if (power < 20) {
+		suffix = " KiB";
+		divide = 1024;
+	} else if (power < 30) {
+		suffix = " MiB";
+		divide = 1048576;
+	} else if (power < 40) {
+		suffix = " GiB";
+		divide = 1073741824;
+	} else if (power < 50) {
+		suffix = " TiB";
+		divide = 1099511627776;
+	} else if (power < 60) {
+		suffix = " PiB";
+		divide = 1125899906842624;
+	}
+	sprintf (buffer, "%0.3g%s", (double) size/divide, suffix);
+	return buffer;
 }
 
 unsigned int
@@ -350,77 +423,4 @@ read_uuid3 (unsigned char* buffer)
 	return ss.str();
 }
 
-
-void
-dump_hex (unsigned char* buffer, int bufsize)
-{
-	for (int i = 0; i < bufsize; i += 16) {
-		log_debug ("%06x  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
-			i,
-			buffer[i +  0], buffer[i +  1], buffer[i +  2], buffer[i +  3], buffer[i +  4], buffer[i +  5], buffer[i +  6], buffer[i +  7],
-			buffer[i +  8], buffer[i +  9], buffer[i + 10], buffer[i + 11], buffer[i + 12], buffer[i + 13], buffer[i + 14], buffer[i + 15]);
-	}
-}
-
-void
-dump_hex2 (void* buf, int start, int length)
-{
-	int off, i, s, e;
-	unsigned char* mem = (unsigned char*) buf;
-
-#if 1
-	unsigned char last[16];
-	int same = 0;
-#endif
-	s =  start                & ~15;	// round down
-	e = (start + length + 15) & ~15;	// round up
-
-	for (off = s; off < e; off += 16) {
-#if 1
-		if ((memcmp ((char*) buf+off, last, sizeof (last)) == 0) &&
-			((off + 16) < e) && (off > s)) {
-			if (!same) {
-				log_info ("	        ...\n");
-				same = 1;
-			}
-			continue;
-		} else {
-			same = 0;
-			memcpy (last, (char*) buf+off, sizeof (last));
-		}
-#endif
-
-		if (off == s)
-			log_info ("	%6.6x ", start);
-		else
-			log_info ("	%6.6x ", off);
-
-		for (i = 0; i < 16; i++) {
-			if (i == 8)
-				log_info (" -");
-			if (((off+i) >= start) && ((off+i) < (start+length)))
-				log_info (" %02X", mem[off+i]);
-			else
-				log_info ("   ");
-		}
-		log_info ("  ");
-		for (i = 0; i < 16; i++) {
-			if (((off+i) < start) || ((off+i) >= (start+length)))
-				log_info (" ");
-			else if (isprint (mem[off + i]))
-				log_info ("%c", mem[off + i]);
-			else
-				log_info (".");
-		}
-		log_info ("\n");
-	}
-}
-
-long
-align (long num, long round)
-{
-	if (round == 0)
-		return num;
-	return ((num + round - 1) / round * round);
-}
 

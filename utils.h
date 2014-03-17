@@ -25,20 +25,20 @@
 
 #include "stringnum.h"
 
-unsigned int execute_command2 (const std::string& command, std::string& input);
+long         align (long num, long round);
+void         dump_hex (unsigned char* buffer, int bufsize);
+void         dump_hex2 (void* buf, int start, int length);
 unsigned int execute_command1 (const std::string& command, std::vector<std::string>& output);
+unsigned int execute_command2 (const std::string& command, std::string& input);
 unsigned int execute_command3 (const std::string& command, std::string& output);
-std::string get_size (long size);
-unsigned int parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map = true);
 unsigned int explode (const char* separators, const std::string& input, std::vector<std::string>& parts);
 unsigned int explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max);
-std::string read_file_line (const std::string& filename);
-std::string read_uuid1 (unsigned char* buffer);
-std::string read_uuid2 (unsigned char* buffer);
-std::string read_uuid3 (unsigned char* buffer);
-void dump_hex (unsigned char* buffer, int bufsize);
-void dump_hex2 (void* buf, int start, int length);
-long align (long num, long round);
+std::string  get_size (long size);
+unsigned int parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map = true);
+std::string  read_file_line (const std::string& filename);
+std::string  read_uuid1 (unsigned char* buffer);
+std::string  read_uuid2 (unsigned char* buffer);
+std::string  read_uuid3 (unsigned char* buffer);
 
 #endif // _UTILS_H_
 
