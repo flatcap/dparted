@@ -78,11 +78,19 @@ public:
 	{
 		bool operator() (const ContainerPtr a, const ContainerPtr b)
 		{
-			if (a->parent_offset == b->parent_offset) {
-				return (a->name.compare (b->name) < 0);
-			} else {
+			long da = (a->device_major << 10) + a->device_minor;
+			long db = (b->device_major << 10) + b->device_minor;
+			if (da != db)
+				return (da < db);
+
+			int x = a->name.compare (b->name);
+			if (x != 0)
+				return (x < 0);
+
+			if (a->parent_offset != b->parent_offset)
 				return (a->parent_offset < b->parent_offset);
-			}
+
+			return ((void*) a.get() < (void*) b.get());
 		}
 	};
 
