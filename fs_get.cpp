@@ -27,12 +27,12 @@
 #include "utils.h"
 
 FilesystemPtr
-get_reiserfs (std::uint8_t* buffer, int bufsize)
+get_reiserfs (std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	if (!identify_reiserfs (buffer, bufsize))
 		return nullptr;
 
-	FilesystemPtr f  = Filesystem::create();
+	FilesystemPtr f = Filesystem::create();
 	f->sub_type ("reiserfs");
 
 	//XXX c++ this
@@ -44,9 +44,9 @@ get_reiserfs (std::uint8_t* buffer, int bufsize)
 
 	f->uuid = read_uuid1 (buffer + 0x10054);
 
-	short    int block_size   = *(short    int*) (buffer + 0x1002C);
-	unsigned int blocks_total = *(unsigned int*) (buffer + 0x10000);
-	unsigned int blocks_free  = *(unsigned int*) (buffer + 0x10004);
+	short    int block_size   = *(std::uint16_t*) (buffer + 0x1002C);
+	unsigned int blocks_total = *(std::uint32_t*) (buffer + 0x10000);
+	unsigned int blocks_free  = *(std::uint32_t*) (buffer + 0x10004);
 
 	f->block_size = block_size;
 	f->bytes_size = (blocks_total * block_size);
@@ -59,7 +59,7 @@ get_reiserfs (std::uint8_t* buffer, int bufsize)
 }
 
 FilesystemPtr
-get_swap (std::uint8_t* buffer, int bufsize)
+get_swap (std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	if (!identify_swap (buffer, bufsize))
 		return nullptr;
@@ -71,7 +71,7 @@ get_swap (std::uint8_t* buffer, int bufsize)
 
 	if (!strncmp ((char*) buffer+4086, "SWAPSPACE2", 10)) {
 		block = 4096;
-		size  = *(long*) (buffer + 0x404) * block;
+		size  = *(std::uint64_t*) (buffer + 0x404) * block;
 	}
 
 	FilesystemPtr f  = Filesystem::create();
@@ -87,7 +87,7 @@ get_swap (std::uint8_t* buffer, int bufsize)
 }
 
 FilesystemPtr
-get_vfat (std::uint8_t* buffer, int bufsize)
+get_vfat (std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	if (!identify_vfat (buffer, bufsize))
 		return nullptr;
@@ -101,25 +101,25 @@ get_vfat (std::uint8_t* buffer, int bufsize)
 
 	f->uuid = read_uuid3 (buffer+0x1C);
 
-	long sectors = *(short int*) (buffer + 0x13);
+	std::uint64_t sectors = *(std::uint32_t*) (buffer + 0x13);
 	if (sectors == 0) {
-		sectors = *(int*) (buffer + 0x20);
+		sectors = *(std::uint32_t*) (buffer + 0x20);
 	}
 
 	f->bytes_size = sectors * 512;
 
 #if 1
 	// will likely exceed bufsize
-	int reserved   = *(short int*) (buffer + 0x0E);
-	int sect_fat   = *(short int*) (buffer + 0x16);
-	int sect_clust = buffer[0x0D];
-	int clusters   = sectors / sect_clust;
-	int free_clust = 0;
+	std::uint32_t reserved   = *(std::uint16_t*) (buffer + 0x0E);
+	std::uint32_t sect_fat   = *(std::uint16_t*) (buffer + 0x16);
+	std::uint32_t sect_clust = buffer[0x0D];
+	std::uint32_t clusters   = sectors / sect_clust;
+	std::uint32_t free_clust = 0;
 
 	f->block_size = sect_clust * 512;
 
 	if ((sect_fat * 512) <= bufsize) {
-		short int* ptr = (short int*) (buffer + (512*reserved));
+		std::uint16_t* ptr = (std::uint16_t*) (buffer + (512*reserved));
 #if 0
 		//XXX not stored anywhere
 		if (sect_fat == 0) {
@@ -127,7 +127,7 @@ get_vfat (std::uint8_t* buffer, int bufsize)
 		}
 #endif
 
-		for (int i = 0; i < clusters; i++) {
+		for (std::uint32_t i = 0; i < clusters; i++) {
 			if (ptr[i] == 0) {
 				free_clust++;
 			}
@@ -145,7 +145,7 @@ get_vfat (std::uint8_t* buffer, int bufsize)
 }
 
 FilesystemPtr
-get_xfs (std::uint8_t* buffer, int bufsize)
+get_xfs (std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	if (!identify_xfs (buffer, bufsize))
 		return nullptr;
@@ -156,9 +156,9 @@ get_xfs (std::uint8_t* buffer, int bufsize)
 	f->name = (char*) (buffer+0x6C);
 	f->uuid = read_uuid1 (buffer + 0x20);
 
-	int  block_size   = *(int*)  (buffer + 0x04);
-	long blocks_total = *(long*) (buffer + 0x08);
-	long blocks_free  = *(long*) (buffer + 0x90);
+	std::uint32_t block_size   = *(std::uint32_t*) (buffer + 0x04);
+	std::uint64_t blocks_total = *(std::uint64_t*) (buffer + 0x08);
+	std::uint64_t blocks_free  = *(std::uint64_t*) (buffer + 0x90);
 
 	block_size   = be32toh (block_size);
 	blocks_total = be64toh (blocks_total);
