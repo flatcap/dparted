@@ -233,7 +233,7 @@ format_config (std::string& config)
 
 #endif
 ContainerPtr
-LvmTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned char* buffer, int bufsize)
+LvmTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 	LvmTablePtr t;
@@ -289,8 +289,8 @@ LvmTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, unsigned
 	}
 #endif
 
-	int offset = mh->raw_locns[0].offset;
-	int size   = mh->raw_locns[0].size;
+	std::uint64_t offset = mh->raw_locns[0].offset;
+	std::uint64_t size   = mh->raw_locns[0].size;
 
 	std::string config;
 	std::string vol_name;

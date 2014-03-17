@@ -92,7 +92,7 @@ Extended::perform_action (Action action)
 
 
 ExtendedPtr
-Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, long offset, long size)
+Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint64_t offset, std::uint64_t size)
 {
 	//LOG_TRACE;
 	ExtendedPtr ext;

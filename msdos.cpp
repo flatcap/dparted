@@ -150,7 +150,7 @@ Msdos::read_table (unsigned char* buffer, int UNUSED(bufsize), long UNUSED(offse
 
 
 ContainerPtr
-Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, unsigned char* buffer, int bufsize)
+Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 	int count = 0;
