@@ -98,7 +98,7 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uin
 	ExtendedPtr ext;
 
 #if 1
-	unsigned char* buffer = nullptr;
+	std::uint8_t* buffer = nullptr;
 	int bufsize = 512;
 	//off_t seek = 0;
 	//ssize_t count = 0;
@@ -116,7 +116,7 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uin
 	ext->device = parent->device;
 	ext->parent_offset = offset;
 
-	buffer = (unsigned char*) malloc (bufsize);
+	buffer = (std::uint8_t*) malloc (bufsize);
 	if (!buffer)
 		return nullptr;
 
@@ -138,7 +138,7 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uin
 #endif
 		//log_debug ("f = %p, r = %d\n", f, r);
 		long		bufsize = 1048576;	// 1 MiB
-		unsigned char*	buffer  = parent->get_buffer (table_offset, bufsize);
+		std::uint8_t*	buffer  = parent->get_buffer (table_offset, bufsize);
 
 		//dump_hex (buffer, bufsize);
 
@@ -212,7 +212,7 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uin
 }
 
 
-unsigned char*
+std::uint8_t*
 Extended::get_buffer (std::uint64_t offset, std::uint64_t size)
 {
 	// Our device is defective, so delegate to our parent

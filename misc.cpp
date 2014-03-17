@@ -88,7 +88,7 @@ Misc::perform_action (Action action)
 
 
 static bool
-is_empty (unsigned char* buffer, int bufsize)
+is_empty (std::uint8_t* buffer, int bufsize)
 {
 	for (int i = 0; i < bufsize; i++) {
 		if (buffer[i]) {
@@ -101,7 +101,7 @@ is_empty (unsigned char* buffer, int bufsize)
 
 #if 0
 static bool
-is_random (unsigned char* buffer, int bufsize)
+is_random (std::uint8_t* buffer, int bufsize)
 {
 	double mean = 0;
 
@@ -130,7 +130,7 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 		return nullptr;
 
 	long		 bufsize = 1048576;	// 1 MiB
-	unsigned char*	 buffer  = parent->get_buffer (0, bufsize);
+	std::uint8_t*	 buffer  = parent->get_buffer (0, bufsize);
 
 	if (!buffer) {
 		//log_error ("can't get buffer\n");

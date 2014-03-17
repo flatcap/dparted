@@ -103,8 +103,8 @@ Filesystem::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent)
 	if (!parent)
 		return nullptr;
 
-	long		 bufsize = 131072;	// 128 KiB, enough for the fs signatures
-	unsigned char	*buffer  = parent->get_buffer (0, bufsize);
+	long		bufsize = 131072;	// 128 KiB, enough for the fs signatures
+	std::uint8_t*	buffer  = parent->get_buffer (0, bufsize);
 
 	if (!buffer) {
 		//log_error ("can't get buffer\n");

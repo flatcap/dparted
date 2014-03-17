@@ -39,7 +39,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static BtrfsPtr get_btrfs (ContainerPtr parent, unsigned char* buffer, int bufsize);
+	static BtrfsPtr get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int bufsize);
 
 public:
 	//properties

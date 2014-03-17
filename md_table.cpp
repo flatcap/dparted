@@ -93,7 +93,7 @@ MdTable::perform_action (Action action)
 
 
 std::string
-read_uuid_string (unsigned char* buffer)
+read_uuid_string (std::uint8_t* buffer)
 {
 	char uuid[40];
 
@@ -105,7 +105,7 @@ read_uuid_string (unsigned char* buffer)
 
 
 static bool
-is_mdtable (unsigned char* buffer)
+is_mdtable (std::uint8_t* buffer)
 {
 	if (!buffer)
 		return false;

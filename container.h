@@ -71,8 +71,8 @@ public:
 	virtual ContainerPtr find (const std::string& uuid);
 	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);
 
-	virtual unsigned char* get_buffer (std::uint64_t offset, std::uint64_t size);
-	virtual void close_buffer (unsigned char* buffer, long size);
+	virtual std::uint8_t* get_buffer (std::uint64_t offset, std::uint64_t size);
+	virtual void close_buffer (std::uint8_t* buffer, long size);
 
 	virtual bool is_a (const std::string& type);
 

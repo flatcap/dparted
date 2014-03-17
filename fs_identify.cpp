@@ -22,19 +22,19 @@
 #include "log_trace.h"
 
 bool
-identify_gpt (unsigned char* buffer, int UNUSED(bufsize))
+identify_gpt (std::uint8_t* buffer, int UNUSED(bufsize))
 {
 	return (strncmp ((char*) buffer+512, "EFI PART", 8) == 0);
 }
 
 bool
-identify_msdos (unsigned char* buffer, int UNUSED(bufsize))
+identify_msdos (std::uint8_t* buffer, int UNUSED(bufsize))
 {
 	return (*(unsigned short int*) (buffer+510) == 0xAA55);
 }
 
 bool
-identify_reiserfs (unsigned char* buffer, int UNUSED(bufsize))
+identify_reiserfs (std::uint8_t* buffer, int UNUSED(bufsize))
 {
 	return (!strncmp ((char*) buffer+65588, "ReIsErFs",  8) ||
 		!strncmp ((char*) buffer+65588, "ReIsEr2Fs", 8) ||
@@ -42,7 +42,7 @@ identify_reiserfs (unsigned char* buffer, int UNUSED(bufsize))
 }
 
 bool
-identify_swap (unsigned char* buffer, int UNUSED(bufsize))
+identify_swap (std::uint8_t* buffer, int UNUSED(bufsize))
 {
 	return (!strncmp ((char*) buffer+4086, "SWAPSPACE2",           10) ||
 		!strncmp ((char*) buffer+4086, "SWAP-SPACE",           10) ||
@@ -54,7 +54,7 @@ identify_swap (unsigned char* buffer, int UNUSED(bufsize))
 }
 
 bool
-identify_vfat (unsigned char* buffer, int UNUSED(bufsize))
+identify_vfat (std::uint8_t* buffer, int UNUSED(bufsize))
 {
 	for (int i = 3; i < 11; i++) {
 		if ((buffer[i] > 0) && (buffer[i] < ' '))
@@ -72,19 +72,19 @@ identify_vfat (unsigned char* buffer, int UNUSED(bufsize))
 }
 
 bool
-identify_xfs (unsigned char* buffer, int UNUSED(bufsize))
+identify_xfs (std::uint8_t* buffer, int UNUSED(bufsize))
 {
 	return (strncmp ((char*) buffer, "XFSB", 4) == 0);
 }
 
 bool
-identify_lvm (unsigned char* buffer, int UNUSED(bufsize))
+identify_lvm (std::uint8_t* buffer, int UNUSED(bufsize))
 {
 	return (strncmp ((char*) buffer+536, "LVM2 001", 8) == 0);
 }
 
 bool
-identify_lvm_mlog (unsigned char* buffer, int UNUSED(bufsize))
+identify_lvm_mlog (std::uint8_t* buffer, int UNUSED(bufsize))
 {
 	return (strncmp ((char*) buffer+0, "rRiM", 4) == 0);
 }

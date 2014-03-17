@@ -21,10 +21,10 @@
 
 #include "filesystem.h"
 
-FilesystemPtr get_reiserfs (unsigned char* buffer, int bufsize);
-FilesystemPtr get_swap     (unsigned char* buffer, int bufsize);
-FilesystemPtr get_vfat     (unsigned char* buffer, int bufsize);
-FilesystemPtr get_xfs      (unsigned char* buffer, int bufsize);
+FilesystemPtr get_reiserfs (std::uint8_t* buffer, int bufsize);
+FilesystemPtr get_swap     (std::uint8_t* buffer, int bufsize);
+FilesystemPtr get_vfat     (std::uint8_t* buffer, int bufsize);
+FilesystemPtr get_xfs      (std::uint8_t* buffer, int bufsize);
 
 #endif // _FS_GET_H_
 

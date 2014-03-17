@@ -41,7 +41,7 @@ align (long num, long round)
 }
 
 void
-dump_hex (unsigned char* buffer, int bufsize)
+dump_hex (std::uint8_t* buffer, int bufsize)
 {
 	for (int i = 0; i < bufsize; i += 16) {
 		log_debug ("%06x  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
@@ -55,10 +55,10 @@ void
 dump_hex2 (void* buf, int start, int length)
 {
 	int off, i, s, e;
-	unsigned char* mem = (unsigned char*) buf;
+	std::uint8_t* mem = (std::uint8_t*) buf;
 
 #if 1
-	unsigned char last[16];
+	std::uint8_t last[16];
 	int same = 0;
 #endif
 	s =  start                & ~15;	// round down
@@ -390,7 +390,7 @@ read_file_line (const std::string& filename)
 }
 
 std::string
-read_uuid1 (unsigned char* buffer)
+read_uuid1 (std::uint8_t* buffer)
 {
 	std::stringstream ss;
 
@@ -406,7 +406,7 @@ read_uuid1 (unsigned char* buffer)
 }
 
 std::string
-read_uuid2 (unsigned char* buffer)
+read_uuid2 (std::uint8_t* buffer)
 {
 	std::stringstream ss;
 
@@ -420,7 +420,7 @@ read_uuid2 (unsigned char* buffer)
 }
 
 std::string
-read_uuid3 (unsigned char* buffer)
+read_uuid3 (std::uint8_t* buffer)
 {
 	std::stringstream ss;
 

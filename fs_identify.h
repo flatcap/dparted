@@ -19,14 +19,14 @@
 #ifndef _IDENTIFY_H_
 #define _IDENTIFY_H_
 
-bool identify_gpt      (unsigned char* buffer, int bufsize);
-bool identify_lvm      (unsigned char* buffer, int bufsize);
-bool identify_lvm_mlog (unsigned char* buffer, int bufsize);
-bool identify_msdos    (unsigned char* buffer, int bufsize);
-bool identify_reiserfs (unsigned char* buffer, int bufsize);
-bool identify_swap     (unsigned char* buffer, int bufsize);
-bool identify_vfat     (unsigned char* buffer, int bufsize);
-bool identify_xfs      (unsigned char* buffer, int bufsize);
+bool identify_gpt      (std::uint8_t* buffer, int bufsize);
+bool identify_lvm      (std::uint8_t* buffer, int bufsize);
+bool identify_lvm_mlog (std::uint8_t* buffer, int bufsize);
+bool identify_msdos    (std::uint8_t* buffer, int bufsize);
+bool identify_reiserfs (std::uint8_t* buffer, int bufsize);
+bool identify_swap     (std::uint8_t* buffer, int bufsize);
+bool identify_vfat     (std::uint8_t* buffer, int bufsize);
+bool identify_xfs      (std::uint8_t* buffer, int bufsize);
 
 #endif // _IDENTIFY_H_
 

@@ -27,7 +27,7 @@
 #include "utils.h"
 
 FilesystemPtr
-get_reiserfs (unsigned char* buffer, int bufsize)
+get_reiserfs (std::uint8_t* buffer, int bufsize)
 {
 	if (!identify_reiserfs (buffer, bufsize))
 		return nullptr;
@@ -59,7 +59,7 @@ get_reiserfs (unsigned char* buffer, int bufsize)
 }
 
 FilesystemPtr
-get_swap (unsigned char* buffer, int bufsize)
+get_swap (std::uint8_t* buffer, int bufsize)
 {
 	if (!identify_swap (buffer, bufsize))
 		return nullptr;
@@ -87,7 +87,7 @@ get_swap (unsigned char* buffer, int bufsize)
 }
 
 FilesystemPtr
-get_vfat (unsigned char* buffer, int bufsize)
+get_vfat (std::uint8_t* buffer, int bufsize)
 {
 	if (!identify_vfat (buffer, bufsize))
 		return nullptr;
@@ -145,7 +145,7 @@ get_vfat (unsigned char* buffer, int bufsize)
 }
 
 FilesystemPtr
-get_xfs (unsigned char* buffer, int bufsize)
+get_xfs (std::uint8_t* buffer, int bufsize)
 {
 	if (!identify_xfs (buffer, bufsize))
 		return nullptr;

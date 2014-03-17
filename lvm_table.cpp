@@ -114,7 +114,7 @@ read_uuid_string (char* buffer)
 
 
 static struct label_header*
-get_label_header (unsigned char* buffer)
+get_label_header (std::uint8_t* buffer)
 {
 	struct label_header* lh = (struct label_header*) buffer;
 
@@ -132,7 +132,7 @@ get_label_header (unsigned char* buffer)
 }
 
 static struct pv_header*
-get_pv_header (unsigned char* buffer)
+get_pv_header (std::uint8_t* buffer)
 {
 	struct pv_header* ph = (struct pv_header*) buffer;
 
@@ -144,7 +144,7 @@ get_pv_header (unsigned char* buffer)
 }
 
 static struct mda_header*
-get_mda_header (unsigned char* buffer)
+get_mda_header (std::uint8_t* buffer)
 {
 	struct mda_header* mh = (struct mda_header*) buffer;
 

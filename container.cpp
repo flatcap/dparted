@@ -383,7 +383,7 @@ void deleter (Mmap* m)
 	delete m;
 }
 
-unsigned char*
+std::uint8_t*
 Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 {
 	// range check
@@ -396,8 +396,8 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	if (device_mmap) {
 		void* buf = (*device_mmap).second;
-		//printf ("mmap existing: %p\n", ((unsigned char*) buf) + offset);
-		return ((unsigned char*) buf) + offset;
+		//printf ("mmap existing: %p\n", ((std::uint8_t*) buf) + offset);
+		return ((std::uint8_t*) buf) + offset;
 	}
 
 	// No device -- delegate
@@ -437,12 +437,12 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	device_mmap = (MmapPtr (new Mmap (size, buf), deleter));
 
-	//printf ("mmap new: %p\n", ((unsigned char*) buf) + offset);
-	return ((unsigned char*) buf) + offset;
+	//printf ("mmap new: %p\n", ((std::uint8_t*) buf) + offset);
+	return ((std::uint8_t*) buf) + offset;
 }
 
 void
-Container::close_buffer (unsigned char* buffer, long size)
+Container::close_buffer (std::uint8_t* buffer, long size)
 {
 	if (!buffer)
 		return;
