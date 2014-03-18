@@ -62,13 +62,9 @@ CFLAGS	+= -Wextra
 CFLAGS	+= -Wpedantic
 #CFLAGS	+= -fcolor-diagnostics
 
-#CFLAGS	+= -pg -fprofile-arcs -ftest-coverage
 
 CFLAGS	+= -fno-omit-frame-pointer
-#CFLAGS	+= -fno-inline-functions
-#CFLAGS	+= -fno-inline-functions-called-once
 CFLAGS	+= -fno-optimize-sibling-calls
-#CFLAGS	+= -O0
 CFLAGS	+= -DDEBUG
 
 GUI_CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
@@ -90,7 +86,6 @@ GUI_CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 #GUI_CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
 #GUI_CFLAGS	+= -DG_DISABLE_DEPRECATED
 
-#LDFLAGS	+= -pg -fprofile-arcs
 
 PACKAGES = gtkmm-3.0 libconfig++
 
@@ -105,11 +100,20 @@ else
 	quiet=quiet_
 endif
 
+P	?= 0
+
+ifeq ($(P),1)
+	CFLAGS	+= -O0
+	CFLAGS	+= -fno-inline-functions
+	CFLAGS	+= -pg -fprofile-arcs -ftest-coverage
+	CFLAGS	+= -fno-inline-functions-called-once
+	LDFLAGS	+= -pg -fprofile-arcs
+endif
+
 ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
 	quiet=silent_
 endif
 
-#CFLAGS += $(GUI_CFLAGS)
 $(GUI_OBJ):	CFLAGS += $(GUI_CFLAGS)
 
 all:	$(OBJDIR) $(DEPDIR) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) $(OUT) tags
@@ -177,7 +181,7 @@ $(LINKS):
 	ln -s ../dparted-$@ $@
 
 clean:	force
-	$(RM) $(OUT) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) gmon.out
+	$(RM) $(OUT) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) gmon.out *.gcov
 
 distclean: clean
 	$(RM) $(DEPDIR) $(OBJDIR) tags html stats xxx.txt
