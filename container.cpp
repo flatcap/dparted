@@ -105,6 +105,9 @@ Container::Container (void)
 	declare_prop (me, "parent_offset", parent_offset, "desc of parent_offset", d);
 	declare_prop (me, "uuid",          uuid,          "desc of uuid",          0);
 
+	// declare_prop (me, "bytes_free", bytes_free, bytes_size, "bytes free", d|s);
+	//declare_prop (me, "bytes_used", bytes_used, bytes_size, "bytes used", d|s);
+
 	declare_prop (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
 	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
 	declare_prop (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
@@ -113,6 +116,16 @@ Container::Container (void)
 	declare_prop (me, "type",               (get_string_t) std::bind(&Container::get_type,               this), "desc of type",               d);
 	declare_prop (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long",          0);
 	declare_prop (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short",         d);
+
+	// Absolute Offset  bytes      u64 size        num/scale  absolute_offset_bytes      123456789
+
+	// Absolute Offset  percentage u8  percentage  num %      absolute_offset_percentage 45
+	// Absolute Size    percentage u8  percentage  num %      absolute_size_percentage   23         %age of container size
+	// Parent Offset    percentage u8  percentage  num %      parent_offset_percentage   75
+
+	// Free Space       percentage u8  percentage  num %      free_space_percentage      35
+	// Size             percentage u8  percentage  num %      size_percentage            27         %age of parent's size
+	// Used             percentage u8  percentage  num %      used_percentage            88
 
 #ifdef DEBUG
 	declare_prop (me, "mem_addr",  (get_string_t) std::bind(&Container::get_mem_addr,  this), "desc of mem_addr",  0);

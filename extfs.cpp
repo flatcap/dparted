@@ -242,7 +242,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 		//printf ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
 
 		more_props.push_back (value);
-		declare_prop (me, key.c_str(), more_props.back(), desc.c_str());
+		// declare_prop (me, key.c_str(), more_props.back(), desc.c_str());
 	}
 #endif
 }

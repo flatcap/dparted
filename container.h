@@ -143,6 +143,23 @@ public:
 
 	template<typename T>
 	void
+	declare_prop (const char* owner, const char* name, T& numerator, T& denominator, const char* desc, int flags = 0)
+	{
+		if (flags & BaseProperty::Flags::Size) {
+			// Create a fake property
+			std::string human (name);
+			human += "_human";
+			PPtr pv (new PropRatio<T> (owner, human.c_str(), numerator, denominator, desc, flags & ~BaseProperty::Flags::Dot));
+			props[human] = pv;
+			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
+		}
+
+		PPtr pv (new PropRatio<T> (owner, name, numerator, denominator, desc, flags));
+		props[name] = pv;
+	}
+
+	template<typename T>
+	void
 	declare_prop (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags = 0)
 	{
 		if (flags & BaseProperty::Flags::Size) {

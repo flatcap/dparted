@@ -116,7 +116,6 @@ public:
 	long flags = 0;
 };
 
-
 template <typename T>
 class PropVar : public BaseProperty
 {
@@ -149,7 +148,6 @@ protected:
 	T& value;
 };
 
-
 template <typename T>
 class PropFn : public BaseProperty
 {
@@ -181,6 +179,43 @@ public:
 
 protected:
 	std::function<T(void)> fn = nullptr;
+};
+
+template <typename T>
+class PropRatio : public BaseProperty
+{
+public:
+	PropRatio (const char* owner, const char* name, T& numerator, T& denominator, const char* desc, int flags) :
+		BaseProperty (owner, name, desc, flags),
+		num(numerator),
+		denom(denominator)
+	{
+		type = Tag::t_double;		// Pretend to be a double
+	}
+
+	virtual ~PropRatio()
+	{
+	}
+
+	PropRatio (void) = default;
+
+	PropRatio (const PropRatio&  other) = default;
+	PropRatio (PropRatio&& other)       = default;
+
+	PropRatio& operator= (PropRatio&  other) = default;
+	PropRatio& operator= (PropRatio&& other) = default;
+
+	virtual operator double (void)
+	{
+		double dn = num;
+		double dd = denom;
+
+		return (dn/dd);
+	}
+
+protected:
+	T& num;
+	T& denom;
 };
 
 

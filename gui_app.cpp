@@ -376,6 +376,11 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 				dv.run_dotty();
 			}
 		} else {
+			ContainerPtr c = *top_level->get_children().begin();
+			for (auto p : c->get_all_props()) {
+				std::cout << p->name << "\t" << (std::string) *p<< std::endl;
+			}
+			return 0;
 			DotVisitor dv;
 			dv.display  = group.dot_display;
 			dv.resize   = group.dot_resize;
