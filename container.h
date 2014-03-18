@@ -85,7 +85,7 @@ public:
 			if (da != db)
 				return (da < db);
 
-			int x = a->name.compare (b->name);
+			int x = a->name.compare (b->name);	//XXX default name?
 			if (x != 0)
 				return (x < 0);
 
@@ -121,7 +121,7 @@ public:
 			// Create a fake property
 			std::string human (name);
 			human += "_human";
-			PPtr pv (new PropVar<T> (owner, human.c_str(), var, desc, flags));
+			PPtr pv (new PropVar<T> (owner, human.c_str(), var, desc, flags & ~BaseProperty::Flags::Dot));
 			props[human] = pv;
 			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
 		}
@@ -138,7 +138,7 @@ public:
 			// Create a fake property
 			std::string human (name);
 			human += "_human";
-			PPtr pp (new PropFn<T> (owner, human.c_str(), fn, desc, flags));
+			PPtr pp (new PropFn<T> (owner, human.c_str(), fn, desc, flags & ~BaseProperty::Flags::Dot));
 			props[human] = pp;
 			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
 		}

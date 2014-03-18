@@ -148,10 +148,7 @@ dump_table (std::shared_ptr<T> t, const std::string& props)
 
 	if (c) {
 		std::string colour = get_colour(c);
-		std::string name   = c->name;
-		if (name.empty()) {
-			name = "UNKNOWN";
-		}
+		std::string name   = *c->get_prop ("name_default");
 
 		table << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 		table << "\t\t<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << "</b></font></td></tr>\n";

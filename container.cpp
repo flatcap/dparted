@@ -546,6 +546,7 @@ Container::get_path (void)
 std::vector<std::string>
 Container::get_prop_names (void)
 {
+	//XXX c++ magic?
 	std::vector<std::string> names;
 	for (auto p : props) {
 		names.push_back (p.second->name);

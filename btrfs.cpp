@@ -244,9 +244,9 @@ Btrfs::get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int UNUSED(bufsize)
 	b->name = (char*) (buffer+0x1012B);
 	b->uuid = read_uuid1 (buffer + 0x10020);
 
-	b->bytes_size = *(long*) (buffer + 0x10070);	// 64 bits
-	b->bytes_used = *(long*) (buffer + 0x10078);	// 64 bits
-	b->block_size = *(int*)  (buffer + 0x10090);	// 32 bits
+	b->bytes_size = *(std::uint64_t*) (buffer + 0x10070);
+	b->bytes_used = *(std::uint64_t*) (buffer + 0x10078);
+	b->block_size = *(std::uint32_t*)  (buffer + 0x10090);
 
 	b->get_btrfs_sb (parent);
 	b->get_btrfs_usage();
