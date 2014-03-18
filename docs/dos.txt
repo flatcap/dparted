@@ -1,7 +1,6 @@
 dosfsck -vn /dev/loop3p8
 
 	fsck.fat 3.0.24 (2013-11-23)
-	fsck.fat 3.0.24 (2013-11-23)
 	Checking we can access the last sector of the filesystem
 	Boot sector contents:
 	System ID "mkfs.fat"

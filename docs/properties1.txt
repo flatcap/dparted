@@ -1,46 +1,124 @@
-Properties Dialog
+Container Properties
 
-[XXXXXXXXX.........]   or Pie Chart
-(in theme colours for object)
+Types:
+	int
+	string
+	bool
 
-Name		Value
-...		...
+vector<string>
+get_prop_names (void)
 
-+Advanced
-+Family
+get_prop (name, typed_recv)
 
-		[Close]
+get_int_ref (name)
+
+GfxContainer:
+	simplified interface
+
+	vector<string> get_prop_names();
+	long           get_prop_long (name);
+	string         get_prop_string (name);
+
+Notes:
+	get properties by type
+		gpn (all)		// all properties
+		gpn (properties)	// what the object wants to export
+
+declare_prop (
+	owner			Container
+	name			bytes_size
+	description		Size of the object in bytes
+	get_prop()		get_bytes_size
+	flags			F_PROPERTY
+)
+
+int    get_prop_int    ("name");
+double get_prop_double ("name");
+string get_prop_string ("name");
+
+int    default_get_int    (PPtr)
+double default_get_double (PPtr)
+string default_get_string (PPtr)
+
+int    custom_get_int    (PPtr)
+double custom_get_double (PPtr)
+string custom_get_string (PPtr)
+
+declare_prop (
+	owner			Container
+	variable&		bytes_size
+	description		Size of the object in bytes
+	flags			F_PROPERTY
+)
+
+std::string	name			default
+std::string	name_default		dynamic
+std::string	uuid			default
+std::string	uuid_short		default
+td::string	type			dynamic
+std::string	type_full		dynamic
+
+void*		address			dynamic	debug
+void*		whole			default	debug
+void*		parent			dynamic	debug	(weak ptr)
+int		ref_count		dynamic	debug
+
+long		block_size		default
+long		bytes_size		default
+long		bytes_used		default
+long		bytes_free		dynamic		(calculate)
+long		parent_offset		default
+
+long		bytes_reserved?
+
+magic suffixes:		// by flag?  F_GENERATE_SIZES
+	kb,kib,mb,mib,gb,gib,tb,tib,pb,pib,eb,eib,human
+on properties:
+	bytes_*
+	parent_offset
+
+std::string	device			default
+std::string	device_short		default
+dev_t		device_major		default
+dev_t		device_minor		default
+std::string	device_major_minor	dynamic		(generate)
+
+default get - copy variable
+dynamic get - call function
 
 
-Info can be copied (highlighted)
-	right-click to copy, or ctrl-c
-Copy text button?
-"Advanced" determined by object's declare
-Family: [Previous] [Parent] [Child] [Next]
-	Ctrl-click -> new Window
-	Give some hint what the prev, next, parent, child refer to
-Props: non-modal, multiple instances, only one per container?
-"short" properties shouldn't show up, e.g. uuid-short (unless asked for)
-Sections? for what?
+Declare properties (owner, {});
+	(type, name) * n
 
-Props of File show up in loop?
-Combine Loop and File? -- how can they be used separately?
-User opens loop -> title loop (with file details)
-User opens file -> title file (with loop details)
+		Variant?
+Base	x u32	<- ref	-> case u32
+	y double
+Class	a string
+	b s64
+Derived	p bool
+	q char
 
-Who closes the loops/mounts?
-Ask on exit?
-	[X] /dev/loop0
-	[X] Always try to clean up on close
-	[X] Don't ask again
+Base
+	cast int	v.get_int()	 { throw }
+	cast string	v.get_string()	 { throw }
+	cast double	v.get_double()	 { throw }
 
-File : LoopAuto
-FileAuto : Loop
 
-button event modifiers
-	Shift	17
-	Ctrl	20
-	Alt	24
-	AltGr	144
-	Win	67108944
+V<int>
+get_int()
+operator int()
+
+V<string>
+get_string()
+operator string()
+
+V<double>
+get_double()
+operator double()
+
+
+props for uuid_short => set method for uuid
+
+get_prop_string (name)
+
 

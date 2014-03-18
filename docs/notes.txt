@@ -16,7 +16,6 @@ Missing icons, invalid colours, invalid options
 		Coalesce if titles are the same, e.g.
 			Error reading theme files
 
-
 config_file	table = "/usr/share/..."
 		colour = "cyan"
 		block.icon = "table"
@@ -121,9 +120,7 @@ Colours:
 Inheritance
 	Class hierarchy
 
-
 manage updates using backup mechanism to sync
-
 
 segments
 	lvm_group, lvm_table		sort by device name of table, offset n/a
@@ -154,5 +151,4 @@ gfx - multiple selection
 Selection menu option
 	put a tickbox on every visible object
 	does this work for keyboard, still?
-
 

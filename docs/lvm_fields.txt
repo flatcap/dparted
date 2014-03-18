@@ -48,9 +48,9 @@ Physical Volume Label Fields
         pv_name                - LVM2_PV_NAME                - Name.
         pv_mda_free            - LVM2_PV_MDA_FREE            - Free metadata area space on this device in current units.
         pv_mda_size            - LVM2_PV_MDA_SIZE            - Size of smallest metadata area on this device in current units.
-                                                            
-Physical Volume Fields                                      
-----------------------                                      
+
+Physical Volume Fields
+----------------------
         pv_all                 -                             - All fields in this section.
         pe_start               - LVM2_PE_START               - Offset to the start of data on the underlying device.
         pv_size                - LVM2_PV_SIZE                - Size of PV in current units.
@@ -64,9 +64,9 @@ Physical Volume Fields
         pv_mda_used_count      - LVM2_PV_MDA_USED_COUNT      - Number of metadata areas in use on this device.
         pv_ba_start            - LVM2_PV_BA_START            - Offset to the start of PV Bootloader Area on the underlying device in current units.
         pv_ba_size             - LVM2_PV_BA_SIZE             - Size of PV Bootloader Area in current units.
-                                                            
-Volume Group Fields                                         
--------------------                                         
+
+Volume Group Fields
+-------------------
         vg_all                 -                             - All fields in this section.
         vg_fmt                 - LVM2_VG_FMT                 - Type of metadata.
         vg_uuid                - LVM2_VG_UUID                - Unique identifier.
@@ -91,9 +91,9 @@ Volume Group Fields
         vg_mda_free            - LVM2_VG_MDA_FREE            - Free metadata area space for this VG in current units.
         vg_mda_size            - LVM2_VG_MDA_SIZE            - Size of smallest metadata area for this VG in current units.
         vg_mda_copies          - LVM2_VG_MDA_COPIES          - Target number of in use metadata areas in the VG.
-                                                            
-Logical Volume Segment Fields                               
------------------------------                               
+
+Logical Volume Segment Fields
+-----------------------------
         seg_all                -                             - All fields in this section.
         segtype                - LVM2_SEGTYPE                - Type of LV segment.
         stripes                - LVM2_STRIPES                - Number of stripes or mirror legs.
@@ -113,9 +113,9 @@ Logical Volume Segment Fields
         seg_pe_ranges          - LVM2_SEG_PE_RANGES          - Ranges of Physical Extents of underlying devices in command line format.
         devices                - LVM2_DEVICES                - Underlying devices used with starting extent numbers.
         seg_monitor            - LVM2_SEG_MONITOR            - Dmeventd monitoring status of the segment.
-                                                            
-Physical Volume Segment Fields                              
-------------------------------                              
+
+Physical Volume Segment Fields
+------------------------------
         pvseg_all              -                             - All fields in this section.
         pvseg_start            - LVM2_PVSEG_START            - Physical Extent number of start of segment.
         pvseg_size             - LVM2_PVSEG_SIZE             - Number of extents in segment.
