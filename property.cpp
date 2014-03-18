@@ -20,6 +20,7 @@
 #include <stdexcept>
 
 #include "property.h"
+#include "utils.h"
 
 BaseProperty::operator std::string (void)
 {
@@ -30,12 +31,22 @@ BaseProperty::operator std::string (void)
 		case BaseProperty::Tag::t_bool:		return std::to_string (operator bool());
 		case BaseProperty::Tag::t_u8:		return std::to_string (operator uint8_t());
 		case BaseProperty::Tag::t_s8:		return std::to_string (operator int8_t());
-		case BaseProperty::Tag::t_u16:		return std::to_string (operator uint16_t());
-		case BaseProperty::Tag::t_s16:		return std::to_string (operator int16_t());
-		case BaseProperty::Tag::t_u32:		return std::to_string (operator uint32_t());
-		case BaseProperty::Tag::t_s32:		return std::to_string (operator int32_t());
-		case BaseProperty::Tag::t_u64:		return std::to_string (operator uint64_t());
-		case BaseProperty::Tag::t_s64:		return std::to_string (operator int64_t());
+
+		case BaseProperty::Tag::t_u16:
+		case BaseProperty::Tag::t_u32:
+		case BaseProperty::Tag::t_u64:		if (flags & Flags::Size) {
+								return get_size (operator uint64_t());
+							} else {
+								return std::to_string (operator uint64_t());
+							}
+
+		case BaseProperty::Tag::t_s16:
+		case BaseProperty::Tag::t_s32:
+		case BaseProperty::Tag::t_s64:		if (flags & Flags::Size) {
+								return get_size (operator int64_t());
+							} else {
+								return std::to_string (operator int64_t());
+							}
 
 		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 

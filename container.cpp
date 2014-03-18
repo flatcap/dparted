@@ -106,8 +106,6 @@ Container::Container (void)
 	declare_prop (me, "uuid",          uuid,          "desc of uuid",          0);
 
 	declare_prop (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
-	declare_prop (me, "bytes_free_human",   (get_string_t) std::bind(&Container::get_bytes_free_human,   this), "desc of bytes_free_human",   d|s);
-	declare_prop (me, "bytes_size_human",   (get_string_t) std::bind(&Container::get_bytes_size_human,   this), "desc of bytes_size_human",   d|s);
 	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
 	declare_prop (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
 	declare_prop (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default",       d);
@@ -559,9 +557,11 @@ Container::get_prop_names (void)
 PPtr
 Container::get_prop (const std::string& name)
 {
-	//std::cout << "get_prop: " << props.count (name) << std::endl;
-	//XXX check exists, otherwise throw
-	return props[name];
+	if (props.count (name)) {		// Exact match
+		return props[name];
+	}
+
+	return nullptr;
 }
 
 std::vector<PPtr>
@@ -596,18 +596,6 @@ long
 Container::get_bytes_free (void)
 {
 	return (bytes_size - bytes_used);
-}
-
-std::string
-Container::get_bytes_free_human (void)
-{
-	return get_size (bytes_size - bytes_used);
-}
-
-std::string
-Container::get_bytes_size_human (void)
-{
-	return get_size (bytes_size);
 }
 
 std::string

@@ -97,7 +97,6 @@ Logical Volume Segment Fields
         seg_all                -                             - All fields in this section.
         segtype                - LVM2_SEGTYPE                - Type of LV segment.
         stripes                - LVM2_STRIPES                - Number of stripes or mirror legs.
-        stripesize             - LVM2_STRIPESIZE             - For stripes, amount of data placed on one device before switching to the next.
         stripe_size            - LVM2_STRIPE_SIZE            - For stripes, amount of data placed on one device before switching to the next.
         regionsize             - LVM2_REGIONSIZE             - For mirrors, the unit of data copied when synchronising devices.
         region_size            - LVM2_REGION_SIZE            - For mirrors, the unit of data copied when synchronising devices.

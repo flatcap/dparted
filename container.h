@@ -117,14 +117,32 @@ public:
 	void
 	declare_prop (const char* owner, const char* name, T& var, const char* desc, int flags = 0)
 	{
-		PPtr pp (new PropVar<T> (owner, name, var, desc, flags));
-		props[name] = pp;
+		if (flags & BaseProperty::Flags::Size) {
+			// Create a fake property
+			std::string human (name);
+			human += "_human";
+			PPtr pv (new PropVar<T> (owner, human.c_str(), var, desc, flags));
+			props[human] = pv;
+			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
+		}
+
+		PPtr pv (new PropVar<T> (owner, name, var, desc, flags));
+		props[name] = pv;
 	}
 
 	template<typename T>
 	void
 	declare_prop (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags = 0)
 	{
+		if (flags & BaseProperty::Flags::Size) {
+			// Create a fake property
+			std::string human (name);
+			human += "_human";
+			PPtr pp (new PropFn<T> (owner, human.c_str(), fn, desc, flags));
+			props[human] = pp;
+			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
+		}
+
 		PPtr pp (new PropFn<T> (owner, name, fn, desc, flags));
 		props[name] = pp;
 	}
@@ -174,8 +192,6 @@ protected:
 
 	// Helper functions
 	long        get_bytes_free (void);
-	std::string get_bytes_free_human (void);
-	std::string get_bytes_size_human (void);
 	std::string get_device_major_minor (void);
 	std::string get_device_short (void);
 	std::string get_name_default (void);
