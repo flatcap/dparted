@@ -154,12 +154,10 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	if (is_empty (buffer, bufsize)) {
 		//log_error ("probe empty\n");
 		m = Misc::create();
-		m->name = "Zero";
 		m->sub_type ("Zero");
 	} else { //if (is_random (buffer, bufsize)) {
 		//log_error ("probe random\n");
 		m = Misc::create();
-		m->name = "Random";
 		m->sub_type ("Random");
 	}
 

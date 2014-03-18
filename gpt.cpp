@@ -156,7 +156,6 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint8_t*
 
 	std::vector<std::pair<int,int>> empty = { { 0, (parent->bytes_size/512)-1 } };
 
-	g->name = "gpt";
 	g->bytes_size = parent->bytes_size;
 	g->bytes_used = 0;
 	g->parent_offset = 0;
@@ -174,7 +173,6 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint8_t*
 
 #if 1
 	PartitionPtr res1 = Partition::create();
-	res1->name          = "Reserved";
 	res1->sub_type ("Space");
 	res1->sub_type ("Reserved");
 	res1->bytes_size    = 512 * 34;		//align (512 * 34, 1024*1024);
@@ -183,7 +181,6 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint8_t*
 	g->add_child (res1);		// change to add_reserved?
 
 	PartitionPtr res2 = Partition::create();
-	res2->name          = "Reserved";
 	res2->sub_type ("Space");
 	res2->sub_type ("Reserved");
 	res2->bytes_size    = 512 * 33;		//align (512 * 33, 1024*1024);
@@ -255,12 +252,10 @@ Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint8_t*
 		p->bytes_size = (r.second-r.first+1);	p->bytes_size    *= 512;	//XXX avoid overflow (for now)
 		p->parent_offset = r.first;		p->parent_offset *= 512;
 		if (r.first == 0) {
-			p->name = "Reserved";
 			p->sub_type ("Space");
 			p->sub_type ("Reserved");
 			p->bytes_used = p->bytes_size;
 		} else {
-			p->name = "Unallocated";
 			p->sub_type ("Space");
 			p->sub_type ("Unallocated");
 			p->bytes_used = 0;

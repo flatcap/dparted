@@ -154,7 +154,6 @@ Table::fill_space (void)
 			log_debug ("\tpartition %12lld -> %12lld    %8s -> %8s\n", c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str(), s2.c_str());
 #endif
 			PartitionPtr p = Partition::create();
-			p->name = "Unallocated";
 			p->sub_type ("Space");
 			p->sub_type ("Unallocated");
 			p->parent_offset = upto;
@@ -170,7 +169,6 @@ Table::fill_space (void)
 	//log_debug ("upto = %lld, size = %lld\n", upto, bytes_size);
 	if (upto < bytes_size) {
 		PartitionPtr p = Partition::create();
-		p->name = "Unallocated";
 		p->sub_type ("Space");
 		p->sub_type ("Unallocated");
 		p->parent_offset = upto;

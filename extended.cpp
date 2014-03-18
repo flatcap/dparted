@@ -111,7 +111,6 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uin
 
 	ext = Extended::create();
 
-	ext->name = "extended";
 	ext->bytes_size = size;
 	ext->device = parent->device;
 	ext->parent_offset = offset;
@@ -121,7 +120,6 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uin
 		return nullptr;
 
 	PartitionPtr res1 = Partition::create();
-	res1->name          = "Reserved";
 	res1->sub_type ("Space");
 	res1->sub_type ("Reserved");
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
@@ -179,7 +177,6 @@ Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uin
 				table_offset = offset + part.start;
 			} else {
 				c = MsdosPartition::create();
-				c->name = "partition";
 				c->bytes_size = part.size;
 
 				//c->parent_offset = table_offset + part.start;

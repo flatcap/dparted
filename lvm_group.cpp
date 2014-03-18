@@ -249,7 +249,6 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		}
 
 		// Container
-		p->name		= "partition";
 		p->block_size	= tags["LVM2_VG_EXTENT_SIZE"];
 		p->uuid		= t->get_device_name() + "(" + tags["LVM2_PVSEG_START"] + ")";
 		p->whole	= nullptr;	//XXX we don't know this yet

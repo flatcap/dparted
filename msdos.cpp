@@ -165,7 +165,6 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, std::uint8_t* buffe
 
 	MsdosPtr m = Msdos::create();
 
-	m->name = "msdos";
 	m->bytes_size = parent->bytes_size;
 	//m->device = parent->device;	//XXX only for partitions, main body should inherit
 	m->parent_offset = 0;
@@ -182,7 +181,6 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, std::uint8_t* buffe
 	}
 
 	PartitionPtr res1 = Partition::create();
-	res1->name          = "Reserved";
 	res1->sub_type ("Space");
 	res1->sub_type ("Reserved");
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
@@ -224,7 +222,6 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, std::uint8_t* buffe
 			PartitionPtr p = Partition::create();
 			p->ptype = vp[i].type;
 			c = p;
-			c->name = "partition";
 			c->bytes_size = vp[i].size;
 
 			c->parent_offset = vp[i].start;
