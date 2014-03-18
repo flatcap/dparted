@@ -136,7 +136,7 @@ delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 }
 
 ContainerPtr
-Gpt::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 {
 	//LOG_TRACE;
 

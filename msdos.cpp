@@ -153,7 +153,7 @@ Msdos::read_table (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize), std::uin
 
 
 ContainerPtr
-Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
+Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 	int count = 0;
@@ -212,7 +212,7 @@ Msdos::probe (ContainerPtr& top_level, ContainerPtr& parent, std::uint8_t* buffe
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 			//log_debug ("vp[i].start = %lld\n", vp[i].start);
 			ContainerPtr m2(m);
-			c = Extended::probe (top_level, m2, vp[i].start, vp[i].size);
+			c = Extended::probe (m2, vp[i].start, vp[i].size);
 			if (!c)
 				continue;
 

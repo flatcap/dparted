@@ -101,7 +101,7 @@ LuksTable::perform_action (Action action)
 
 
 ContainerPtr
-LuksTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 {
 	const char* signature = "LUKS\xBA\xBE";
 
@@ -160,6 +160,8 @@ LuksTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::ui
 #if 0
 	main_app->queue_add_probe(c);	//XXX do this when we've asked for a password
 #endif
+
+	parent->add_child(c);
 
 	return c;
 }

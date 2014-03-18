@@ -39,7 +39,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
+	static ContainerPtr probe (ContainerPtr& parent);
 
 public:
 	//properties

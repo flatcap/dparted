@@ -40,7 +40,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
+	static ContainerPtr probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 	bool luks_open (const std::string& parent, bool probe);
 	bool luks_close (void);

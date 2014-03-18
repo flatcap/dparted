@@ -40,14 +40,14 @@ public:
 	virtual ~App();
 
 	virtual bool ask    (QuestionPtr q);
-	virtual bool notify (Message&  m);
+	virtual bool notify (Message& m);
 
 	ConfigFilePtr get_config (void);
 	bool set_config (const std::string& filename);
 
 	void queue_add_probe (ContainerPtr& item);
 	ContainerPtr scan (const std::vector<std::string>& files);
-	ContainerPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
+	ContainerPtr probe (ContainerPtr& parent);
 
 	ContainerPtr get_top_level (void) { return top_level; } //XXX tmp
 

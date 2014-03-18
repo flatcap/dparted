@@ -96,7 +96,7 @@ Filesystem::perform_action (Action action)
 
 
 FilesystemPtr
-Filesystem::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent)
+Filesystem::probe (ContainerPtr& parent)
 {
 	//LOG_TRACE;
 

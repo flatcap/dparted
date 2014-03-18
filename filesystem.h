@@ -42,7 +42,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static FilesystemPtr probe (ContainerPtr& top_level, ContainerPtr& parent);
+	static FilesystemPtr probe (ContainerPtr& parent);
 	bool get_mounted_usage (ContainerPtr parent);
 
 public:

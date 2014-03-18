@@ -120,7 +120,7 @@ is_mdtable (std::uint8_t* buffer)
 
 
 ContainerPtr
-MdTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 {
 	//LOG_TRACE;
 

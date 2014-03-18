@@ -121,7 +121,7 @@ is_random (std::uint8_t* buffer, int bufsize)
 #endif
 
 ContainerPtr
-Misc::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent)
+Misc::probe (ContainerPtr& parent)
 {
 	//LOG_TRACE;
 

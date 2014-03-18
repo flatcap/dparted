@@ -92,13 +92,13 @@ Extended::perform_action (Action action)
 
 
 ExtendedPtr
-Extended::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint64_t offset, std::uint64_t size)
+Extended::probe (ContainerPtr& parent, std::uint64_t offset, std::uint64_t size)
 {
 	//LOG_TRACE;
 	ExtendedPtr ext;
 
 #if 1
-	std::uint8_t* buffer = nullptr;
+	std::uint8_t* buffer = nullptr;		//XXX kill me
 	int bufsize = 512;
 	//off_t seek = 0;
 	//ssize_t count = 0;

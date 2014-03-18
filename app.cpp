@@ -132,26 +132,23 @@ mounts_get_list (ContainerPtr& mounts)
 
 #endif
 ContainerPtr
-App::probe (ContainerPtr& top_level, ContainerPtr& parent)
+App::probe (ContainerPtr& parent)
 {
 	//LOG_TRACE;
 
-	if (!top_level || !parent)
+	if (!parent)
 		return nullptr;
 
 	ContainerPtr item;
 
-	if ((item = Filesystem::probe (top_level, parent))) {
+	if ((item = Filesystem::probe (parent)))
 		return item;
-	}
 
-	if ((item = Table::probe (top_level, parent))) {
+	if ((item = Table::probe (parent)))
 		return item;
-	}
 
-	if ((item = Misc::probe (top_level, parent))) {
+	if ((item = Misc::probe (parent)))
 		return item;
-	}
 
 	return nullptr;
 }
@@ -209,7 +206,7 @@ App::scan (const std::vector<std::string>& files)
 
 		//std::cout << "Item: " << item << "\n";
 
-		ContainerPtr found = probe (top_level, item);
+		ContainerPtr found = probe (item);
 		if (found) {
 			//std::cout << "top_level = " << top_level->get_children().size() << std::endl;
 			//item->add_child (found);
@@ -233,7 +230,7 @@ App::scan (const std::vector<std::string>& files)
 
 		//std::cout << "Item: " << item << "\n";
 
-		ContainerPtr found = probe (top_level, item);
+		ContainerPtr found = probe (item);
 		if (found) {
 			top_level->just_add_child (found);
 			//item->add_child (found);

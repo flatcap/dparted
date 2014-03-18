@@ -39,7 +39,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static ExtendedPtr probe (ContainerPtr& top_level, ContainerPtr& parent, std::uint64_t offset, std::uint64_t size);
+	static ExtendedPtr probe (ContainerPtr& parent, std::uint64_t offset, std::uint64_t size);
 	virtual std::uint8_t* get_buffer (std::uint64_t offset, std::uint64_t size);
 
 public:

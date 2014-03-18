@@ -235,7 +235,7 @@ format_config (std::string& config)
 
 #endif
 ContainerPtr
-LvmTable::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
+LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 	LvmTablePtr t;

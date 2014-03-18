@@ -91,7 +91,7 @@ Table::perform_action (Action action)
 
 
 ContainerPtr
-Table::probe (ContainerPtr& top_level, ContainerPtr& parent)
+Table::probe (ContainerPtr& parent)
 {
 	//LOG_TRACE;
 
@@ -107,27 +107,20 @@ Table::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	}
 
 	ContainerPtr c;
-	if ((c = Gpt::probe (top_level, parent, buffer, bufsize)))
+	if ((c = Gpt::probe (parent, buffer, bufsize)))
 		return c;
 
-	if ((c = Msdos::probe (top_level, parent, buffer, bufsize)))
+	if ((c = Msdos::probe (parent, buffer, bufsize)))
 		return c;
 
-	if ((c = LvmTable::probe (top_level, parent, buffer, bufsize)))
+	if ((c = LvmTable::probe (parent, buffer, bufsize)))
 		return c;
 
-	if ((c = MdTable::probe (top_level, parent, buffer, bufsize)))
+	if ((c = MdTable::probe (parent, buffer, bufsize)))
 		return c;
 
-	if (c = LuksTable::probe (top_level, parent, buffer, bufsize)) {
-		parent->add_child(c);
-
-		c->bytes_size = parent->bytes_size;
-		c->bytes_used = 0;
-		c->parent_offset = 0;
-
+	if (c = LuksTable::probe (parent, buffer, bufsize))
 		return c;
-	}
 
 	return nullptr;
 }
