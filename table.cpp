@@ -24,6 +24,7 @@
 #include "gpt.h"
 #include "log.h"
 #include "log_trace.h"
+#include "luks_table.h"
 #include "lvm_table.h"
 #include "md_table.h"
 #include "msdos.h"
@@ -117,6 +118,16 @@ Table::probe (ContainerPtr& top_level, ContainerPtr& parent)
 
 	if ((c = MdTable::probe (top_level, parent, buffer, bufsize)))
 		return c;
+
+	if (c = LuksTable::probe (top_level, parent, buffer, bufsize)) {
+		parent->add_child(c);
+
+		c->bytes_size = parent->bytes_size;
+		c->bytes_used = 0;
+		c->parent_offset = 0;
+
+		return c;
+	}
 
 	return nullptr;
 }

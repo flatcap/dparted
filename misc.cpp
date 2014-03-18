@@ -23,7 +23,6 @@
 #include "action.h"
 #include "log.h"
 #include "log_trace.h"
-#include "luks_table.h"
 #include "main.h"
 #include "partition.h"
 #include "utils.h"
@@ -122,7 +121,7 @@ is_random (std::uint8_t* buffer, int bufsize)
 #endif
 
 ContainerPtr
-Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
+Misc::probe (ContainerPtr& UNUSED(top_level), ContainerPtr& parent)
 {
 	//LOG_TRACE;
 
@@ -135,19 +134,6 @@ Misc::probe (ContainerPtr& top_level, ContainerPtr& parent)
 	if (!buffer) {
 		//log_error ("can't get buffer\n");
 		return nullptr;
-	}
-
-	ContainerPtr c;
-
-	c = LuksTable::probe (top_level, parent, buffer, bufsize);	//XXX shouldn't be in misc
-	if (c) {
-		parent->add_child(c);
-
-		c->bytes_size = parent->bytes_size;
-		c->bytes_used = 0;
-		c->parent_offset = 0;
-
-		return c;
 	}
 
 	MiscPtr m;
