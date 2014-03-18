@@ -28,4 +28,6 @@ test on:
 	ubuntu live dvd
 	instructions for installation on both
 dropbox account for anonymous distribution
+type checks -> int64_t
+big-/little-endian translation
 

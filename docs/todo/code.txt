@@ -28,14 +28,9 @@ build
 
 	flag all the throwing functions
 
-	C++11 start with for loops
-		what else do I know?
-
 	test everything on
 		a 32-bit machine/vm
 		big-endian arch
-
-	delegate label to container get_prop(), get_prop_short()
 
 gui
 	remove all container knowledge from drawingarea?
@@ -65,8 +60,6 @@ gui
 
 	adapt draw_grid_linear et al to fit into a partition frame
 
-	code to spawn dot and display to show object diagrams live
-
 cmdline
 	subclass of loop_auto (i.e. user file)
 	subclass of file_auto (i.e. existing loop device)
@@ -81,6 +74,7 @@ cmdline
 	declare fake (non-code) subtypes, e.g. protective partition
 
 	Unknown usage => bytes_used == -1
+		(unsigned => 0xFFFFFFFF)
 
 	maximums
 		lvm 1678 volumes -- metadata overflow
@@ -99,7 +93,7 @@ cmdline
 		one name for all
 
 	can we build map without vgchange -ay?
-		yes
+		yes, but can't read filesystem inside!
 
 	separation of privileges
 		how?  what's the proper fedora way?
