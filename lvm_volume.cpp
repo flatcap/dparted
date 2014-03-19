@@ -142,10 +142,10 @@ LvmVolume::add_child (ContainerPtr& child)
 		child->whole = get_smart();
 	} else if (child->is_a ("Space")) {
 		//log_info ("SPACE %s\n", child->name.c_str());
-		Volume::add_child2 (child);
+		Volume::add_child (child);
 	} else {
 		// filesystem
-		Volume::add_child2 (child);
+		Volume::add_child (child);
 
 #if 0
 		for (auto i : subvols) {

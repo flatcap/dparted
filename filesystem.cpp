@@ -118,7 +118,7 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 
 	if (f) {
 		//log_info ("volume: %s (%s), child: %s\n", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
-		parent->add_child2(f);
+		parent->add_child(f);
 	}
 
 	return f;

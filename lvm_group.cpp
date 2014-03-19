@@ -193,7 +193,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			g->name    = tags["VG_NAME"];
 			g->uuid    = vg_uuid;
 			//g->missing = true;
-			pieces->just_add_child2(g);
+			pieces->just_add_child(g);
 			added++;
 		}
 
@@ -204,7 +204,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			t = LvmTable::create();
 			t->uuid    = pv_uuid;
 			//t->missing = true;
-			pieces->just_add_child2(t);
+			pieces->just_add_child(t);
 			added++;
 		}
 
@@ -236,7 +236,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			//std::cout << "lv uuid = " << lv_uuid << '\n';
 			v->uuid    = lv_uuid;
 			//v->missing = true;
-			pieces->just_add_child2(v);
+			pieces->just_add_child(v);
 			added++;
 
 			if (lv_attr[0] == '-') {
@@ -418,7 +418,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			g = LvmGroup::create();
 			g->uuid    = vg_uuid;
 			//g->missing = true;
-			pieces->just_add_child2(g);
+			pieces->just_add_child(g);
 		}
 
 		std::string lv_uuid = tags["LVM2_LV_UUID"];
@@ -448,7 +448,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			}
 			v->uuid    = lv_uuid;
 			//v->missing = true;
-			pieces->just_add_child2(v);
+			pieces->just_add_child(v);
 
 			// A volume discovered here doesn't have any physical parts.
 			// Therefore, it's a top-level entity.
@@ -555,7 +555,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		}
 
 		//log_info ("add_child %s -> %s\n", parent->uuid.c_str(), child->uuid.c_str());
-		parent->add_child2 (child);
+		parent->add_child (child);
 
 		//log_info ("\t%p -> %p\n", (void*) parent, (void*) child);
 		//log_info ("\t%s -> %s\n", parent->name.c_str(), child->name.c_str());
@@ -585,7 +585,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	//log_info ("top_level: %ld tables\n", t.size());
 	for (auto i : t) {
-		pieces->just_add_child2(i);
+		pieces->just_add_child(i);
 	}
 
 	if (lvm_pvs (pieces, deps) > 0) {
@@ -611,7 +611,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 		if (i->whole)				// we're part of something bigger
 			continue;
 		//log_info ("Q: [%s] %s: %s\n", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
-		main_app->queue_add_probe2(i);
+		main_app->queue_add_probe(i);
 	}
 #endif
 #if 1
@@ -620,7 +620,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	for (auto i : g) {
 		//std::cout << '\t' << i->uuid << '\t' << i << '\n';
-		top_level->just_add_child2(i);
+		top_level->just_add_child(i);
 	}
 #endif
 }

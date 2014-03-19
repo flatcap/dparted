@@ -122,7 +122,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	ext->add_child2 (res1);		// change to add_reserved?
+	ext->add_child (res1);		// change to add_reserved?
 
 	for (int loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
 		//log_debug ("f = %p, r = %d\n", f, r);
@@ -179,8 +179,8 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 				m->device = part_name;
 
-				ext->add_child2(m);
-				main_app->queue_add_probe2(m);
+				ext->add_child(m);
+				main_app->queue_add_probe(m);
 			}
 		}
 		if (vp.size() == 1)

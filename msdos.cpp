@@ -173,7 +173,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	//m->device = parent->device;	//XXX only for partitions, main body should inherit
 	m->parent_offset = 0;
 
-	parent->add_child2(m);
+	parent->add_child(m);
 
 	std::vector<struct partition> vp;
 	count = m->read_table (buffer, bufsize, 0, vp);
@@ -189,7 +189,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	m->add_child2 (res1);		// change to add_reserved?
+	m->add_child (res1);		// change to add_reserved?
 
 	for (unsigned int i = 0; i < vp.size(); i++) {
 #if 0
@@ -232,9 +232,9 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			c->parent_offset = vp[i].start;
 			c->device = part_name.str();
 
-			main_app->queue_add_probe2(c);
+			main_app->queue_add_probe(c);
 		}
-		m->add_child2(c);
+		m->add_child(c);
 	}
 
 	m->fill_space();		// optional

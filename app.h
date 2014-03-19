@@ -51,12 +51,12 @@ public:
 	ContainerPtr get_top_level (void) { return top_level; } //XXX tmp
 
 	template<class T>
-	void queue_add_probe2 (std::shared_ptr<T>& item)
+	void queue_add_probe (std::shared_ptr<T>& item)
 	{
 		ContainerPtr c (item);
-		queue_add_probe2(c);
+		queue_add_probe(c);
 	}
-	void queue_add_probe2 (ContainerPtr& item);
+	void queue_add_probe (ContainerPtr& item);
 
 protected:
 	ContainerPtr top_level;

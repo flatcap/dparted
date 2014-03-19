@@ -258,7 +258,7 @@ Disk::find_devices (ContainerPtr& list)
 
 		//d->open_device();
 
-		list->add_child2(d);
+		list->add_child(d);
 		added++;
 	}
 
@@ -317,7 +317,7 @@ Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 	for (auto line : output) {
 		DiskPtr d = Disk::create (line);
 
-		top_level->just_add_child2(d);
+		top_level->just_add_child(d);
 		probe_queue.push(d);	// We need to probe
 	}
 }
@@ -333,8 +333,8 @@ Disk::identify (ContainerPtr& top_level, const char* name, int UNUSED(fd), struc
 
 	DiskPtr d = Disk::create (output[0]);
 
-	top_level->just_add_child2(d);
-	main_app->queue_add_probe2(d);	// queue the container for action
+	top_level->just_add_child(d);
+	main_app->queue_add_probe(d);	// queue the container for action
 }
 
 

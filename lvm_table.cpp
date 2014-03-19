@@ -332,7 +332,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	t->metadata_size = 1048576;		//XXX read from header
 
-	parent->add_child2(t);
+	parent->add_child(t);
 
 	PartitionPtr p = Partition::create();
 	p->sub_type ("Space");
@@ -340,7 +340,8 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	p->bytes_size = t->metadata_size;
 	p->bytes_used = t->metadata_size;
 	p->parent_offset = 0;
-	t->add_child2(p);
+	ContainerPtr c(p);//XXX fix
+	t->add_child(c);
 
 	//XXX add alignment -- can't do this without the group's block size
 
@@ -359,7 +360,7 @@ LvmTable::add_child (ContainerPtr& child)
 		child->parent_offset += metadata_size;
 	}
 
-	Table::add_child2 (child);
+	Table::add_child (child);
 
 	//child->open_device();	// get a buffer
 
