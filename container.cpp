@@ -109,9 +109,15 @@ Container::Container (void)
 	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
 	declare_prop (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
 	declare_prop (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default",       d);
+	declare_prop (me, "path",               (get_string_t) std::bind(&Container::get_path,               this), "desc of get_path",           0);
 	declare_prop (me, "type",               (get_string_t) std::bind(&Container::get_type,               this), "desc of type",               d);
 	declare_prop (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long",          0);
 	declare_prop (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short",         d);
+
+#ifdef DEBUG
+	declare_prop (me, "mem_addr",  (get_string_t) std::bind(&Container::get_mem_addr,  this), "desc of mem_addr",  0);
+	declare_prop (me, "ref_count", (get_int64_t)  std::bind(&Container::get_ref_count, this), "desc of ref_count", 0);
+#endif
 }
 
 Container::~Container()
@@ -542,6 +548,25 @@ Container::get_path (void)
 	return path;
 }
 
+#ifdef DEBUG
+std::string
+Container::get_mem_addr (void)
+{
+	std::stringstream addr;
+	ContainerPtr c = weak.lock();
+	if (c) {
+		addr << "0x" << (void*) c.get();
+	}
+
+	return addr.str();
+}
+
+std::int64_t
+Container::get_ref_count (void)
+{
+	return weak.use_count();
+}
+#endif
 
 std::vector<std::string>
 Container::get_prop_names (void)
