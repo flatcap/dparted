@@ -143,10 +143,10 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	if (!parent || !buffer || !bufsize)
 		return nullptr;
 
-	//XXX check min size against bufsize ((34*512) + (33*512)) bytes
+	//XXX check min size against bufsize ((34*512) + (33*512)) bytes and all other probes
 	// If container is smaller that this, even an empty Gpt won't fit
 
-	if (strncmp ((char*) buffer+512, "EFI PART", 8))	//XXX replace with strict identify function (static)
+	if (strncmp ((char*) buffer+512, "EFI PART", 8))	//XXX replace with strict identify function (static) and all other probes
 		return nullptr;
 
 	// LBA		Description
@@ -253,7 +253,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		//printf ("(%d,%d) ", r.first, r.second);
 
 		PartitionPtr p = Partition::create();
-		p->bytes_size = (r.second-r.first+1);	p->bytes_size    *= 512;	//XXX avoid overflow (for now)
+		p->bytes_size = (r.second-r.first+1);	p->bytes_size    *= 512;	//XXX two parts to avoid overflow
 		p->parent_offset = r.first;		p->parent_offset *= 512;
 		if (r.first == 0) {
 			p->sub_type ("Space");

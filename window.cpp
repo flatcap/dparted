@@ -35,7 +35,7 @@ Window::Window (void)
 {
 	set_title ("DParted");
 
-	//XXX Arbitrary minimum requirement
+	//XXX Arbitrary minimum requirement -- theme?
 	//set_size_request (800, 600);
 
 	scrolledwindow.set_hexpand (true);
@@ -121,7 +121,7 @@ void
 Window::my_show (void)
 {
 	//LOG_TRACE;
-	//XXX Arbitrary minimum requirement
+	//XXX Arbitrary minimum requirement - theme?
 	//set_size_request (800, 600);
 	resize (800, 250);
 }

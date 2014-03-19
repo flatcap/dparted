@@ -280,7 +280,7 @@ Container::get_fd (void)
 std::uint64_t
 Container::get_block_size (void)
 {
-	//XXX need to get the max of all parents
+	//XXX do I need to get the max of all parents?
 	if (block_size > 0)
 		return block_size;
 
@@ -476,7 +476,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 
 	if (uuid.size() > 8) {
 		size_t index = uuid.find_first_of (":-. ");
-		uuid = "U:" + uuid.substr (0, index);	//XXX + "...";
+		uuid = "U:" + uuid.substr (0, index);
 	}
 
 	stream
@@ -528,7 +528,7 @@ Container::get_children (void)
 {
 	//LOG_TRACE;
 	if (children.empty() && whole)
-		return whole->get_children();	//XXX ARGH! don't want derived class in here
+		return whole->get_children();	// Delegate
 
 	return children;
 }
@@ -609,7 +609,7 @@ Container::get_smart (void)
 {
 	if (weak.expired()) {
 		std::cout << "SMART\n";
-		//XXX who created us?
+		//XXX who created us? code error
 		ContainerPtr c (this);
 		std::cout << c << std::endl;
 		weak = c;
@@ -627,7 +627,7 @@ Container::get_bytes_free (void)
 std::string
 Container::get_device_major_minor (void)
 {
-	//XXX should this and the other device helpers ask their parents?
+	//XXX should this and the other device helpers ask their parents? YES
 	if ((device_major == 0) && (device_minor == 0))
 		return "";
 

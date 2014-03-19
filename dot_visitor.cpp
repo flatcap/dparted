@@ -116,7 +116,7 @@ dot_row (const char* name, unsigned int value)
  */
 static
 std::string
-dot_row (const char* name, ContainerPtr value)
+dot_row (const char* name, ContainerPtr value)	//XXX template this to std::shared_ptr<T>
 {
 	std::stringstream row;
 	std::string dest;
@@ -235,7 +235,7 @@ dot_container (std::shared_ptr<T> t)
 	}
 
 	ContainerPtr cwhole = p->whole;
-	output << dot_row ("whole",         cwhole);		//XXX what's this doing here?
+	output << dot_row ("whole",         cwhole);		//XXX what's this doing here? which class should it be in?
 	output << dot_row ("parent",        p->parent);
 	output << dot_row ("missing", p->missing);
 #endif

@@ -52,7 +52,7 @@ public:
 	std::uint64_t	vg_seqno = 0;
 
 	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
-	//std::vector<std::string> components;	//XXX do we need this, shouldn't we just use a the segments vector?
+	//std::vector<std::string> components;	// do we need this, shouldn't we just use a the segments vector?
 
 protected:
 	LvmGroup (void);

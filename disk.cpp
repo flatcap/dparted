@@ -156,7 +156,7 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	DiskPtr d = Disk::create();
 
 	//log_debug ("fd = %d\n", fd);
-	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); //XXX replace with ftell (user, not root)
+	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); // replace with ftell (user, not root)
 	//log_debug ("res = %d\n", res);
 	if (!res) {
 	}
@@ -189,14 +189,14 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	log_debug ("heads     = %d\n", geometry.heads);
 	log_debug ("sectors   = %d\n", geometry.sectors);
 	log_debug ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
-	//close (fd);	//XXX or keep it for later?
+	//close (fd);	// or keep it for later?
 #endif
 
 unsigned int
 Disk::find_devices (ContainerPtr& list)
 {
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
-	//XXX use LOOP_MAJOR
+	//XXX use LOOP_MAJOR <linux/major.h>
 	std::string command = "lsblk --bytes --pairs --exclude 7";
 	std::vector<std::string> output;
 	std::string error;
@@ -286,7 +286,7 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 	std::string command = "sudo lsblk --bytes --pairs ";
 
 	if (device.empty()) {
-		command += "--exclude 7";	//XXX LOOP_MAJOR
+		command += "--exclude 7";	//XXX LOOP_MAJOR <linux/major.h>
 	} else {
 		command += device;
 	}
@@ -294,7 +294,7 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 	command += " | grep 'TYPE=\"disk\"'";
 
 	output.clear();
-	//XXX distinguish between zero loop devices and an error
+	//XXX distinguish between zero devices and an error
 	execute_command1 (command, output);
 	if (output.empty())
 		return false;

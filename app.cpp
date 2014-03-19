@@ -199,7 +199,7 @@ App::scan (const std::vector<std::string>& files)
 
 	// Process the probe_queue
 	ContainerPtr item;
-	//XXX deque?
+	//XXX change probe_queue to use a deque?
 	while (!probe_queue.empty()) {
 		item = probe_queue.front();
 		probe_queue.pop();
@@ -221,7 +221,7 @@ App::scan (const std::vector<std::string>& files)
 			//std::cout << "\tFound: " << found << "\n";
 			//probe_queue.push (found);
 		} else {
-			//XXX LOG
+			//XXX log the probe failure
 			break;
 		}
 		//std::cout << std::endl;
@@ -231,7 +231,6 @@ App::scan (const std::vector<std::string>& files)
 	//MdGroup::discover (top_level);
 
 	// Process the probe_queue
-	//XXX deque?
 	while (!probe_queue.empty()) {
 		item = probe_queue.front();
 		probe_queue.pop();
@@ -253,7 +252,7 @@ App::scan (const std::vector<std::string>& files)
 			//std::cout << "\tFound: " << found << "\n";
 			//probe_queue.push (found);
 		} else {
-			//XXX LOG
+			//XXX log the probe failure
 			break;
 		}
 	}

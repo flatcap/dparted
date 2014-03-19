@@ -171,7 +171,8 @@ stats:	force
 
 xxx:	force
 	@grep --exclude xxx.txt -rHno "//[X]XX.*" . \
-		| sed -e 's/^..//' -e 's!//[X]XX[ \t]*!!' \
+		| expand -t8 \
+		| sed -e 's/  \+/ /g' -e 's/^..//' -e 's!//[X]XX *!!' \
 		| sort > xxx.txt
 	@wc -l xxx.txt
 

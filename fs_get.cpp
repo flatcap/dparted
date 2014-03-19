@@ -112,7 +112,7 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	f->name = std::string ((char*) (buffer+0x30), 14);
 	if (!f->name.empty() && ((f->name[0] < 'A') || (f->name[0] > 'z')))
-		f->name.clear();	//XXX this isn't reliable
+		f->name.clear();	//XXX this isn't a reliable place to find the label
 
 	f->uuid = read_uuid3 (buffer+0x1C);
 

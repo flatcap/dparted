@@ -143,7 +143,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 	} while (count > 0);
 
 #if 0
-	//XXX correct way to check return code
+	// correct way to check return code
 	int ret = pclose (fd);
 	if (WIFEXITED(ret))
 		  log_info ("%d\n", WEXITSTATUS(ret));
@@ -302,7 +302,7 @@ get_null_str (void *buffer, std::uint32_t maxlen)
 std::string
 get_size (std::uint64_t size)
 {
-	//XXX do this without log2?  use ffs
+	//XXX do this without log2?  use __builtin_clz
 	char buffer[64];
 	double power = log2 ((double) llabs (size)) + 0.5;
 	const char* suffix = "";
@@ -334,7 +334,6 @@ get_size (std::uint64_t size)
 unsigned int
 parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map /* = true */)
 {
-	//XXX optional param: bool clear_array = true;
 	int middle;
 	std::vector<std::string> list;
 

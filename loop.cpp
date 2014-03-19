@@ -107,8 +107,7 @@ Loop::create (const std::string& losetup)
 		//log_info ("%s is deleted\n", device.c_str());
 	}
 
-	//XXX tmp
-	l->block_size   = 512;	//XXX kernel limit, but fs block size is likely to be bigger
+	l->block_size   = 512;	//XXX kernel lower limit, but fs block size is likely to be bigger
 
 	std::stringstream ss;
 	ss << "[" << l->device_major << ":" << l->device_minor << "]";

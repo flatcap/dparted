@@ -152,7 +152,7 @@ bool
 PropertiesDialog::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	LOG_TRACE;
-	//XXX check if the GfxContainer has changed
+	// check if the GfxContainer has changed
 	return Gtk::Dialog::on_draw (cr);
 }
 

@@ -176,9 +176,9 @@ public:
 	std::uint64_t	bytes_size = 0;
 	std::uint64_t	bytes_used = 0;
 
-	ContainerPtr	whole;
+	ContainerPtr	whole;	//XXX move to protected
 
-	std::weak_ptr<Container> parent;
+	std::weak_ptr<Container> parent;	//XXX move to protected
 
 	std::vector<std::string> type;	//XXX move to protected
 

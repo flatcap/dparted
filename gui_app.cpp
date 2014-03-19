@@ -113,7 +113,7 @@ GuiApp::on_startup (void)
 
 	Glib::RefPtr<Gtk::IconTheme> theme = Gtk::IconTheme::get_default();
 
-	theme->append_search_path ("/home/flatcap/work/gtk-app/icons");		//XXX hard-coded
+	theme->append_search_path ("/home/flatcap/work/dparted/icons");		//XXX theme. hard-coded
 
 	add_action ("preferences", sigc::mem_fun (*this, &GuiApp::menu_preferences));
 	add_action ("help",        sigc::mem_fun (*this, &GuiApp::menu_help));

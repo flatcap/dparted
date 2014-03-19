@@ -160,7 +160,7 @@ make_key (std::string desc)
 void
 Ntfs::get_ntfs_sb (ContainerPtr parent)
 {
-	//XXX return bool -- a quick match on the sb might not be enough -- tune2fs could fail
+	//XXX return bool -- a quick match on the sb might not be enough -- ntfsinfo could fail
 	if (!parent)
 		return;
 

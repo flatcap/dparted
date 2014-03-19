@@ -114,7 +114,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	ext->bytes_size = bufsize;
 	ext->device = parent->device;
-	ext->parent_offset = 0;		//offset;	//XXX hmm... tricky, let our parent do it?
+	ext->parent_offset = 0;		//offset;	//XXX hmm... tricky, where do we get our offset from? our parent?
 
 	PartitionPtr res1 = Partition::create();
 	res1->sub_type ("Space");
@@ -172,6 +172,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 				std::string part_name = parent->get_device_name();
 				//XXX check part_name isn't empty
+				//XXX extract partition naming into function
 				if (isdigit (part_name.back())) {
 					part_name += 'p';
 				}

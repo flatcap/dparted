@@ -202,7 +202,7 @@ GfxContainer::process_label (const std::string& label_template)
 	while (find_subst (l, tag, start, stop)) {
 		PPtr prop = c->get_prop (tag);
 		std::string value = (std::string) *prop;
-		if (value == tag) {		//XXX tmp
+		if (value == tag) {		//XXX error tag not translated
 			break;
 		}
 		l.replace (start, stop-start+1, value);
@@ -368,7 +368,7 @@ GfxContainer::get_smart (void)
 {
 	if (weak.expired()) {
 		std::cout << "SMART\n";
-		//XXX who created us?
+		//XXX who created us? - code error
 		GfxContainerPtr c (this);
 		std::cout << c << std::endl;
 		weak = c;

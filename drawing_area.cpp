@@ -391,7 +391,7 @@ bool
 DrawingArea::on_timeout (int timer_number)
 {
 	std::cout << "timer" << "\n";
-	get_window()->invalidate (false); //XXX everything for now
+	get_window()->invalidate (false); // everything for now
 	//return (m_c->device == "/dev/sdc");
 	return true;
 }
@@ -427,7 +427,7 @@ DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
 	mouse_close = ((event->y > 25) and (event->x < 90));
 
 	if (mouse_close != old) {
-		get_window()->invalidate (false); //XXX everything for now
+		get_window()->invalidate (false); // everything for now
 	}
 #endif
 
@@ -440,7 +440,7 @@ DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
 #if 0
 	if (mouse_close) {
 		mouse_close = false;
-		get_window()->invalidate (false); //XXX everything for now
+		get_window()->invalidate (false); // everything for now
 	}
 #endif
 	return true;
@@ -494,7 +494,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	if (!cont)
 		return;
 
-#if 0 //XXX icon + label above
+#if 0 // icon + label above
 	Rect inside;
 	Rect below;
 
@@ -539,7 +539,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	draw_icon (cr, "disk", inside, below);
 #endif
 
-#if 0 //XXX icon + shaded label below
+#if 0 // icon + shaded label below
 	Rect inside;
 	Rect below;
 
@@ -1284,7 +1284,7 @@ DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 	} else if (action.name == "Properties") {
 		gui_app->properties (gfx);
 	} else {
-		//XXX needs to be done in a separate thread in case it takes a white
+		//XXX needs to be done in a separate thread in case it takes a while
 		c->perform_action (action);
 	}
 }
