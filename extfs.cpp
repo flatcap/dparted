@@ -232,7 +232,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 
 #if 1
 	// declare everything else
-	const char* me = "Extfs";
+	//const char* me = "Extfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
 	//printf ("Props:\n");
 	for (auto i : info) {

@@ -95,27 +95,27 @@ Container::Container (void)
 
 	sub_type (me);
 
-	declare_prop (me, "block_size",    block_size,    "desc of block_size",    d|s);
-	declare_prop (me, "bytes_size",    bytes_size,    "desc of bytes_size",    d|s);
-	declare_prop (me, "bytes_used",    bytes_used,    "desc of bytes_used",    d|s);
-	declare_prop (me, "device",        device,        "desc of device",        d);
-	declare_prop (me, "device_major",  device_major,  "desc of device_major",  0);
-	declare_prop (me, "device_minor",  device_minor,  "desc of device_minor",  0);
-	declare_prop (me, "name",          name,          "desc of name",          0);
-	declare_prop (me, "parent_offset", parent_offset, "desc of parent_offset", d);
-	declare_prop (me, "uuid",          uuid,          "desc of uuid",          0);
+	declare_prop_var (me, "block_size",    block_size,    "desc of block_size",    d|s);
+	declare_prop_var (me, "bytes_size",    bytes_size,    "desc of bytes_size",    d|s);
+	declare_prop_var (me, "bytes_used",    bytes_used,    "desc of bytes_used",    d|s);
+	declare_prop_var (me, "device",        device,        "desc of device",        d);
+	declare_prop_var (me, "device_major",  device_major,  "desc of device_major",  0);
+	declare_prop_var (me, "device_minor",  device_minor,  "desc of device_minor",  0);
+	declare_prop_var (me, "name",          name,          "desc of name",          0);
+	declare_prop_var (me, "parent_offset", parent_offset, "desc of parent_offset", d);
+	declare_prop_var (me, "uuid",          uuid,          "desc of uuid",          0);
 
-	// declare_prop (me, "bytes_free", bytes_free, bytes_size, "bytes free", d|s);
+	//declare_prop (me, "bytes_free", bytes_free, bytes_size, "bytes free", d|s);
 	//declare_prop (me, "bytes_used", bytes_used, bytes_size, "bytes used", d|s);
 
-	declare_prop (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
-	declare_prop (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
-	declare_prop (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
-	declare_prop (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default",       d);
-	declare_prop (me, "path",               (get_string_t) std::bind(&Container::get_path,               this), "desc of get_path",           0);
-	declare_prop (me, "type",               (get_string_t) std::bind(&Container::get_type,               this), "desc of type",               d);
-	declare_prop (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long",          0);
-	declare_prop (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short",         d);
+	declare_prop_fn (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
+	declare_prop_fn (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
+	declare_prop_fn (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
+	declare_prop_fn (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default",       d);
+	declare_prop_fn (me, "path",               (get_string_t) std::bind(&Container::get_path,               this), "desc of get_path",           0);
+	declare_prop_fn (me, "type",               (get_string_t) std::bind(&Container::get_type,               this), "desc of type",               d);
+	declare_prop_fn (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long",          0);
+	declare_prop_fn (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short",         d);
 
 	// Absolute Offset  bytes      u64 size        num/scale  absolute_offset_bytes      123456789
 
@@ -128,8 +128,8 @@ Container::Container (void)
 	// Used             percentage u8  percentage  num %      used_percentage            88
 
 #ifdef DEBUG
-	declare_prop (me, "mem_addr",  (get_string_t) std::bind(&Container::get_mem_addr,  this), "desc of mem_addr",  0);
-	declare_prop (me, "ref_count", (get_int64_t)  std::bind(&Container::get_ref_count, this), "desc of ref_count", 0);
+	declare_prop_fn (me, "mem_addr",  (get_string_t) std::bind(&Container::get_mem_addr,  this), "desc of mem_addr",  0);
+	declare_prop_fn (me, "ref_count", (get_int64_t)  std::bind(&Container::get_ref_count, this), "desc of ref_count", 0);
 #endif
 }
 
@@ -550,6 +550,8 @@ Container::get_children (void)
 std::string
 Container::get_path (void)
 {
+	//XXX same as get_type_long, change to represent ownership:
+	//	disk(sda)/partition(sda1)/filesystem(ext4)
 	std::string path;
 
 	for (auto n : type) {

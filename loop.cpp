@@ -40,20 +40,20 @@ Loop::Loop (void)
 
 	sub_type (me);
 
-	declare_prop (me, "autoclear",  autoclear,  "desc of autoclear",  0);
-	declare_prop (me, "deleted",    deleted,    "desc of deleted",    0);
-	declare_prop (me, "file_inode", file_inode, "desc of file_inode", d);
-	declare_prop (me, "file_major", file_major, "desc of file_major", 0);
-	declare_prop (me, "file_minor", file_minor, "desc of file_minor", 0);
-	declare_prop (me, "file_name",  file_name,  "desc of file_name",  0);
-	declare_prop (me, "offset",     offset,     "desc of offset",     d|s);
-	declare_prop (me, "partscan",   partscan,   "desc of partscan",   0);
-	declare_prop (me, "read_only",  read_only,  "desc of read_only",  0);
-	declare_prop (me, "sizelimit",  sizelimit,  "desc of sizelimit",  d|s);
+	declare_prop_var (me, "autoclear",  autoclear,  "desc of autoclear",  0);
+	declare_prop_var (me, "deleted",    deleted,    "desc of deleted",    0);
+	declare_prop_var (me, "file_inode", file_inode, "desc of file_inode", d);
+	declare_prop_var (me, "file_major", file_major, "desc of file_major", 0);
+	declare_prop_var (me, "file_minor", file_minor, "desc of file_minor", 0);
+	declare_prop_var (me, "file_name",  file_name,  "desc of file_name",  0);
+	declare_prop_var (me, "offset",     offset,     "desc of offset",     d|s);
+	declare_prop_var (me, "partscan",   partscan,   "desc of partscan",   0);
+	declare_prop_var (me, "read_only",  read_only,  "desc of read_only",  0);
+	declare_prop_var (me, "sizelimit",  sizelimit,  "desc of sizelimit",  d|s);
 
-	declare_prop (me, "file_major_minor", (get_string_t) std::bind(&Loop::get_file_major_minor, this), "desc of file_major_minor", d);
-	declare_prop (me, "file_name_short",  (get_string_t) std::bind(&Loop::get_file_name_short,  this), "desc of file_name_short",  d);
-	declare_prop (me, "flags",            (get_string_t) std::bind(&Loop::get_flags,            this), "desc of flags",            d);
+	declare_prop_fn (me, "file_major_minor", (get_string_t) std::bind(&Loop::get_file_major_minor, this), "desc of file_major_minor", d);
+	declare_prop_fn (me, "file_name_short",  (get_string_t) std::bind(&Loop::get_file_name_short,  this), "desc of file_name_short",  d);
+	declare_prop_fn (me, "flags",            (get_string_t) std::bind(&Loop::get_flags,            this), "desc of flags",            d);
 }
 
 Loop::~Loop()

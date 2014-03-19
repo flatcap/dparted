@@ -125,8 +125,8 @@ public:
 	}
 
 	template<typename T>
-	void
-	declare_prop (const char* owner, const char* name, T& var, const char* desc, int flags = 0)
+	PPtr
+	declare_prop_var (const char* owner, const char* name, T& var, const char* desc, int flags = 0)
 	{
 		if (flags & BaseProperty::Flags::Size) {
 			// Create a fake property
@@ -139,28 +139,13 @@ public:
 
 		PPtr pv (new PropVar<T> (owner, name, var, desc, flags));
 		props[name] = pv;
+
+		return pv;
 	}
 
 	template<typename T>
-	void
-	declare_prop (const char* owner, const char* name, T& numerator, T& denominator, const char* desc, int flags = 0)
-	{
-		if (flags & BaseProperty::Flags::Size) {
-			// Create a fake property
-			std::string human (name);
-			human += "_human";
-			PPtr pv (new PropRatio<T> (owner, human.c_str(), numerator, denominator, desc, flags & ~BaseProperty::Flags::Dot));
-			props[human] = pv;
-			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
-		}
-
-		PPtr pv (new PropRatio<T> (owner, name, numerator, denominator, desc, flags));
-		props[name] = pv;
-	}
-
-	template<typename T>
-	void
-	declare_prop (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags = 0)
+	PPtr
+	declare_prop_fn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags = 0)
 	{
 		if (flags & BaseProperty::Flags::Size) {
 			// Create a fake property
@@ -173,7 +158,28 @@ public:
 
 		PPtr pp (new PropFn<T> (owner, name, fn, desc, flags));
 		props[name] = pp;
+
+		return pp;
 	}
+
+#if 0
+	void
+	declare_prop_percent (const char* owner, const char* name, BaseProperty& numerator, BaseProperty& denominator, const char* desc, int flags = 0)
+	{
+		if (flags & BaseProperty::Flags::Size) {
+			// Create a fake property
+			std::string human (name);
+			human += "_human";
+			PPtr pv (new PropPercent (owner, human.c_str(), numerator, denominator, desc, flags & ~BaseProperty::Flags::Dot));
+			props[human] = pv;
+			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
+		}
+
+		PPtr pv (new PropRatio<T> (owner, name, numerator, denominator, desc, flags));
+		props[name] = pv;
+	}
+
+#endif
 
 	void sub_type (const char* name);
 

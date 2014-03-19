@@ -134,7 +134,7 @@ public:
 	PropVar (void) = default;
 
 	PropVar (const PropVar&  other) = default;
-	PropVar (PropVar&& other)       = default;
+	PropVar (      PropVar&& other) = default;
 
 	PropVar& operator= (PropVar&  other) = default;
 	PropVar& operator= (PropVar&& other) = default;
@@ -167,7 +167,7 @@ public:
 	PropFn (void) = default;
 
 	PropFn (const PropFn&  other) = default;
-	PropFn (PropFn&& other)       = default;
+	PropFn (      PropFn&& other) = default;
 
 	PropFn& operator= (PropFn&  other) = default;
 	PropFn& operator= (PropFn&& other) = default;
@@ -181,43 +181,78 @@ protected:
 	std::function<T(void)> fn = nullptr;
 };
 
-template <typename T>
-class PropRatio : public BaseProperty
+class PropPercent : public BaseProperty
 {
 public:
-	PropRatio (const char* owner, const char* name, T& numerator, T& denominator, const char* desc, int flags) :
+	PropPercent (const char* owner, const char* name, BaseProperty& numerator, BaseProperty& denominator, const char* desc, int flags) :
 		BaseProperty (owner, name, desc, flags),
 		num(numerator),
 		denom(denominator)
 	{
-		type = Tag::t_double;		// Pretend to be a double
+		type = Tag::t_u8;	// Pretend to be a std::uint8_t
 	}
 
-	virtual ~PropRatio()
+	virtual ~PropPercent()
 	{
 	}
 
-	PropRatio (void) = default;
+	PropPercent (void) = default;
 
-	PropRatio (const PropRatio&  other) = default;
-	PropRatio (PropRatio&& other)       = default;
+	PropPercent (const PropPercent&  other) = default;
+	PropPercent (      PropPercent&& other) = default;
 
-	PropRatio& operator= (PropRatio&  other) = default;
-	PropRatio& operator= (PropRatio&& other) = default;
+	PropPercent& operator= (PropPercent&  other) = default;
+	PropPercent& operator= (PropPercent&& other) = default;
 
-	virtual operator double (void)
+	virtual operator std::uint8_t (void)
 	{
-		double dn = num;
-		double dd = denom;
+		double dn = (std::uint64_t) num;
+		double dd = (std::uint64_t) denom;
 
-		return (dn/dd);
+		return (std::uint8_t) ((dn/dd) + 0.5);
 	}
 
 protected:
-	T& num;
-	T& denom;
+	BaseProperty& num;
+	BaseProperty& denom;
 };
 
+#if 0
+class PropHuman : public BaseProperty
+{
+public:
+	PropHuman (const char* owner, const char* name, BaseProperty& value, const char* desc, int flags) :
+		BaseProperty (owner, name, desc, flags),
+		value(value)
+	{
+		type = Tag::t_u8;	// Pretend to be a std::uint8_t
+	}
+
+	virtual ~PropHuman()
+	{
+	}
+
+	PropHuman (void) = default;
+
+	PropHuman (const PropHuman&  other) = default;
+	PropHuman (      PropHuman&& other) = default;
+
+	PropHuman& operator= (PropHuman&  other) = default;
+	PropHuman& operator= (PropHuman&& other) = default;
+
+	virtual operator std::uint8_t (void)
+	{
+		double dn = (std::uint64_t) num;
+		double dd = (std::uint64_t) denom;
+
+		return (std::uint8_t) ((dn/dd) + 0.5);
+	}
+
+protected:
+	BaseProperty& value;
+};
+
+#endif
 
 #endif // _PROPERTY_H_
 
