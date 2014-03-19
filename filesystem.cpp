@@ -96,20 +96,12 @@ Filesystem::perform_action (Action action)
 
 
 FilesystemPtr
-Filesystem::probe (ContainerPtr& parent)
+Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent)
 		return nullptr;
-
-	long		bufsize = 131072;	// 128 KiB, enough for the fs signatures
-	std::uint8_t*	buffer  = parent->get_buffer (0, bufsize);
-
-	if (!buffer) {
-		//log_error ("can't get buffer\n");
-		return nullptr;
-	}
 
 	FilesystemPtr f;
 

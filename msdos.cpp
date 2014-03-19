@@ -155,7 +155,9 @@ Msdos::read_table (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize), std::uin
 ContainerPtr
 Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//LOG_TRACE;
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	int count = 0;
 
 	if (*(std::uint16_t*) (buffer+510) != 0xAA55)	//XXX declare magic elsewhere
@@ -212,6 +214,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 			//log_debug ("vp[i].start = %lld\n", vp[i].start);
 			ContainerPtr m2(m);
+			//XXX recalculate buffer?
 			c = Extended::probe (m2, vp[i].start, vp[i].size);
 			if (!c)
 				continue;

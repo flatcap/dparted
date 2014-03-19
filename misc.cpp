@@ -121,20 +121,12 @@ is_random (std::uint8_t* buffer, int bufsize)
 #endif
 
 ContainerPtr
-Misc::probe (ContainerPtr& parent)
+Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent)
 		return nullptr;
-
-	long		 bufsize = 1048576;	// 1 MiB
-	std::uint8_t*	 buffer  = parent->get_buffer (0, bufsize);
-
-	if (!buffer) {
-		//log_error ("can't get buffer\n");
-		return nullptr;
-	}
 
 	MiscPtr m;
 	if (is_empty (buffer, bufsize)) {

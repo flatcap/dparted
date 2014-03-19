@@ -47,7 +47,7 @@ public:
 
 	void queue_add_probe (ContainerPtr& item);
 	ContainerPtr scan (const std::vector<std::string>& files);
-	ContainerPtr probe (ContainerPtr& parent);
+	ContainerPtr probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 	ContainerPtr get_top_level (void) { return top_level; } //XXX tmp
 

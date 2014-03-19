@@ -136,9 +136,13 @@ delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 }
 
 ContainerPtr
-Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//LOG_TRACE;
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
+	//XXX check min size against bufsize ((34*512) + (33*512)) bytes
+	// If container is smaller that this, even an empty Gpt won't fit
 
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	//XXX replace with strict identify function (static)
 		return nullptr;

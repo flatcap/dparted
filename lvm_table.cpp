@@ -237,7 +237,9 @@ format_config (std::string& config)
 ContainerPtr
 LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//LOG_TRACE;
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	LvmTablePtr t;
 
 	//XXX check bufsize gives us all the data we need

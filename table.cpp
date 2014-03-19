@@ -91,20 +91,12 @@ Table::perform_action (Action action)
 
 
 ContainerPtr
-Table::probe (ContainerPtr& parent)
+Table::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
-	if (!parent)
+	if (!parent || !buffer || !bufsize)
 		return nullptr;
-
-	long		bufsize = 1048576;	// 1 MiB
-	std::uint8_t*	buffer  = parent->get_buffer (0, bufsize);
-
-	if (!buffer) {
-		//log_error ("can't get buffer\n");
-		return nullptr;
-	}
 
 	ContainerPtr c;
 	if ((c = Gpt::probe (parent, buffer, bufsize)))

@@ -101,8 +101,11 @@ LuksTable::perform_action (Action action)
 
 
 ContainerPtr
-LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	const char* signature = "LUKS\xBA\xBE";
 
 	if (strncmp ((const char*) buffer, signature, strlen (signature)))

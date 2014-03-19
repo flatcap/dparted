@@ -132,22 +132,22 @@ mounts_get_list (ContainerPtr& mounts)
 
 #endif
 ContainerPtr
-App::probe (ContainerPtr& parent)
+App::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
-	if (!parent)
+	if (!parent || !buffer || !bufsize)
 		return nullptr;
 
 	ContainerPtr item;
 
-	if ((item = Filesystem::probe (parent)))
+	if ((item = Table::probe (parent, buffer, bufsize)))
 		return item;
 
-	if ((item = Table::probe (parent)))
+	if ((item = Filesystem::probe (parent, buffer, bufsize)))
 		return item;
 
-	if ((item = Misc::probe (parent)))
+	if ((item = Misc::probe (parent, buffer, bufsize)))
 		return item;
 
 	return nullptr;
@@ -206,7 +206,15 @@ App::scan (const std::vector<std::string>& files)
 
 		//std::cout << "Item: " << item << "\n";
 
-		ContainerPtr found = probe (item);
+		long	 bufsize = item->bytes_size;
+		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
+
+		if (!buffer) {
+			//log_error ("can't get buffer\n");
+			continue;
+		}
+
+		ContainerPtr found = probe (item, buffer, bufsize);
 		if (found) {
 			//std::cout << "top_level = " << top_level->get_children().size() << std::endl;
 			//item->add_child (found);
@@ -230,7 +238,15 @@ App::scan (const std::vector<std::string>& files)
 
 		//std::cout << "Item: " << item << "\n";
 
-		ContainerPtr found = probe (item);
+		long	 bufsize = item->bytes_size;
+		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
+
+		if (!buffer) {
+			//log_error ("can't get buffer\n");
+			continue;
+		}
+
+		ContainerPtr found = probe (item, buffer, bufsize);
 		if (found) {
 			top_level->just_add_child (found);
 			//item->add_child (found);

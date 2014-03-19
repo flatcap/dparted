@@ -120,9 +120,10 @@ is_mdtable (std::uint8_t* buffer)
 
 
 ContainerPtr
-MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//LOG_TRACE;
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
 
 	buffer  += 4096;	// Ignore the first 4KiB
 	//bufsize -= 4096;
