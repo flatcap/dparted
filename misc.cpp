@@ -125,7 +125,7 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
-	if (!parent)
+	if (!parent || !buffer || !bufsize)
 		return nullptr;
 
 	MiscPtr m;

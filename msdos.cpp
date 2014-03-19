@@ -155,6 +155,8 @@ Msdos::read_table (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize), std::uin
 ContainerPtr
 Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
 	if (!parent || !buffer || !bufsize)
 		return nullptr;
 
@@ -214,10 +216,12 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 			//log_debug ("vp[i].start = %lld\n", vp[i].start);
 			ContainerPtr m2(m);
-			//XXX recalculate buffer?
-			c = Extended::probe (m2, vp[i].start, vp[i].size);
+			//XXX recalculate buffer?  BELOW IS NOW WRONG RECHECK
+#if 0
+			c = Extended::probe (m2, buffer, bufsize);
 			if (!c)
 				continue;
+#endif
 
 			c->parent_offset = vp[i].start;
 			c->device = part_name.str();

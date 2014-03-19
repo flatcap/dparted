@@ -138,6 +138,8 @@ delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 ContainerPtr
 Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
 	if (!parent || !buffer || !bufsize)
 		return nullptr;
 

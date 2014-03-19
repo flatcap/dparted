@@ -248,8 +248,13 @@ Extfs::get_ext_sb (ContainerPtr parent)
 }
 
 ExtfsPtr
-Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	bool b1 = (*(std::uint16_t*) (buffer+0x438) == 0xEF53);		// Magic
 	bool b2 = !(*(std::uint32_t*) (buffer + 0x45C) & 0x0000004);	// Journal
 
@@ -264,8 +269,13 @@ Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t UNUSED
 }
 
 ExtfsPtr
-Extfs::get_ext3 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+Extfs::get_ext3 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	bool b1 = (*(std::uint16_t*) (buffer+0x438) == 0xEF53);		// Magic
 	bool b2 = (*(std::uint32_t*) (buffer + 0x45C) & 0x0000004);	// Journal
 	bool b3 = (*(std::uint32_t*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
@@ -282,8 +292,13 @@ Extfs::get_ext3 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t UNUSED
 }
 
 ExtfsPtr
-Extfs::get_ext4 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+Extfs::get_ext4 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	bool b1 = (*(std::uint16_t*) (buffer+0x438) == 0xEF53);		// Magic
 	bool b2 = (*(std::uint32_t*) (buffer + 0x45C) & 0x0000004);	// Journal
 	bool b3 = (*(std::uint32_t*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT

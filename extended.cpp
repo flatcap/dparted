@@ -92,16 +92,17 @@ Extended::perform_action (Action action)
 
 
 ExtendedPtr
-Extended::probe (ContainerPtr& parent, std::uint64_t offset, std::uint64_t size)
+Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
-	ExtendedPtr ext;
 
-#if 1
-	std::uint8_t* buffer = nullptr;		//XXX kill me
-	int bufsize = 512;
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
+	ExtendedPtr ext;
 	//off_t seek = 0;
 	//ssize_t count = 0;
+	long offset = 0;
 	long table_offset = offset;
 
 	// create extended
@@ -111,13 +112,9 @@ Extended::probe (ContainerPtr& parent, std::uint64_t offset, std::uint64_t size)
 
 	ext = Extended::create();
 
-	ext->bytes_size = size;
+	ext->bytes_size = bufsize;
 	ext->device = parent->device;
-	ext->parent_offset = offset;
-
-	buffer = (std::uint8_t*) malloc (bufsize);
-	if (!buffer)
-		return nullptr;
+	ext->parent_offset = 0;		//offset;	//XXX hmm... tricky, let our parent do it?
 
 	PartitionPtr res1 = Partition::create();
 	res1->sub_type ("Space");
@@ -128,18 +125,7 @@ Extended::probe (ContainerPtr& parent, std::uint64_t offset, std::uint64_t size)
 	ext->add_child (res1);		// change to add_reserved?
 
 	for (int loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
-		std::string s = get_size (table_offset);
-		//log_debug ("table_offset = %lld (%s)\n", table_offset, s.c_str());
-#if 0
-		/*FILE* f =*/ parent->open_device();
-		/*int r =*/ parent->read_data (table_offset, bufsize, buffer);
-#endif
 		//log_debug ("f = %p, r = %d\n", f, r);
-		long		bufsize = 1048576;	// 1 MiB
-		std::uint8_t*	buffer  = parent->get_buffer (table_offset, bufsize);
-
-		//dump_hex (buffer, bufsize);
-
 		if (*(unsigned short int*) (buffer+510) != 0xAA55) {
 			log_error ("not an extended partition\n");
 			//log_debug ("%s (%s), %lld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
@@ -203,8 +189,6 @@ Extended::probe (ContainerPtr& parent, std::uint64_t offset, std::uint64_t size)
 
 	ext->fill_space();		// optional
 
-	free (buffer);
-#endif
 	return ext;
 }
 

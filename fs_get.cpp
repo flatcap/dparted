@@ -27,8 +27,13 @@
 #include "utils.h"
 
 FilesystemPtr
-get_reiserfs (std::uint8_t* buffer, std::uint64_t bufsize)
+get_reiserfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	if (!identify_reiserfs (buffer, bufsize))
 		return nullptr;
 
@@ -59,8 +64,13 @@ get_reiserfs (std::uint8_t* buffer, std::uint64_t bufsize)
 }
 
 FilesystemPtr
-get_swap (std::uint8_t* buffer, std::uint64_t bufsize)
+get_swap (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	if (!identify_swap (buffer, bufsize))
 		return nullptr;
 
@@ -87,8 +97,13 @@ get_swap (std::uint8_t* buffer, std::uint64_t bufsize)
 }
 
 FilesystemPtr
-get_vfat (std::uint8_t* buffer, std::uint64_t bufsize)
+get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	if (!identify_vfat (buffer, bufsize))
 		return nullptr;
 
@@ -145,8 +160,13 @@ get_vfat (std::uint8_t* buffer, std::uint64_t bufsize)
 }
 
 FilesystemPtr
-get_xfs (std::uint8_t* buffer, std::uint64_t bufsize)
+get_xfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	if (!identify_xfs (buffer, bufsize))
 		return nullptr;
 

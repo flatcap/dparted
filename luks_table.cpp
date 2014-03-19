@@ -103,6 +103,8 @@ LuksTable::perform_action (Action action)
 ContainerPtr
 LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
 	if (!parent || !buffer || !bufsize)
 		return nullptr;
 

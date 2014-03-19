@@ -233,12 +233,17 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 }
 
 BtrfsPtr
-Btrfs::get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int UNUSED(bufsize))
+Btrfs::get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int bufsize)
 {
+	//LOG_TRACE;
+
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	if (strncmp ((char*) buffer+65600, "_BHRfS_M", 8) != 0)
 		return nullptr;
 
-	BtrfsPtr b  = Btrfs::create();
+	BtrfsPtr b = Btrfs::create();
 	b->sub_type ("btrfs");
 
 	b->name = (char*) (buffer+0x1012B);
@@ -246,7 +251,7 @@ Btrfs::get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int UNUSED(bufsize)
 
 	b->bytes_size = *(std::uint64_t*) (buffer + 0x10070);
 	b->bytes_used = *(std::uint64_t*) (buffer + 0x10078);
-	b->block_size = *(std::uint32_t*)  (buffer + 0x10090);
+	b->block_size = *(std::uint32_t*) (buffer + 0x10090);
 
 	b->get_btrfs_sb (parent);
 	b->get_btrfs_usage();

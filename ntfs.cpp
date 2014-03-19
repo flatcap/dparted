@@ -225,8 +225,13 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 }
 
 NtfsPtr
-Ntfs::get_ntfs (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+Ntfs::get_ntfs (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	//LOG_TRACE;
+
+	if (!parent || !buffer || !bufsize)
+		return nullptr;
+
 	if (strncmp ((char*) buffer+3, "NTFS    ", 8) != 0)
 		return nullptr;
 

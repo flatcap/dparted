@@ -100,7 +100,7 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 {
 	//LOG_TRACE;
 
-	if (!parent)
+	if (!parent || !buffer || !bufsize)
 		return nullptr;
 
 	FilesystemPtr f;
@@ -111,10 +111,10 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 	else if ((f = Extfs::get_ext3     (parent, buffer, bufsize))) {}
 	else if ((f = Extfs::get_ext4     (parent, buffer, bufsize))) {}
 	else if ((f =  Ntfs::get_ntfs     (parent, buffer, bufsize))) {}
-	else if ((f =        get_reiserfs (buffer, bufsize))) {}
-	else if ((f =        get_swap     (buffer, bufsize))) {}
-	else if ((f =        get_vfat     (buffer, bufsize))) {}
-	else if ((f =        get_xfs      (buffer, bufsize))) {}
+	else if ((f =        get_reiserfs (parent, buffer, bufsize))) {}
+	else if ((f =        get_swap     (parent, buffer, bufsize))) {}
+	else if ((f =        get_vfat     (parent, buffer, bufsize))) {}
+	else if ((f =        get_xfs      (parent, buffer, bufsize))) {}
 
 	if (f) {
 		//log_info ("volume: %s (%s), child: %s\n", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
