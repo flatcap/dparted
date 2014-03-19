@@ -42,6 +42,13 @@ public:
 
 	static ContainerPtr probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
+	template<class T>
+	void add_child (std::shared_ptr<T>& child)
+	{
+		ContainerPtr c (child);
+		add_child(c);
+	}
+
 	virtual void add_child (ContainerPtr& child);
 	virtual bool set_alignment (long bytes);
 

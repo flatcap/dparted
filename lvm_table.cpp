@@ -340,8 +340,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	p->bytes_size = t->metadata_size;
 	p->bytes_used = t->metadata_size;
 	p->parent_offset = 0;
-	ContainerPtr c(p);//XXX fix
-	t->add_child(c);
+	t->add_child(p);
 
 	//XXX add alignment -- can't do this without the group's block size
 

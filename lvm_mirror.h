@@ -38,6 +38,13 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
+	template<class T>
+	void add_child (std::shared_ptr<T>& child)
+	{
+		ContainerPtr c (child);
+		add_child(c);
+	}
+
 	virtual void add_child    (ContainerPtr& child);
 	virtual void delete_child (ContainerPtr& child);
 
