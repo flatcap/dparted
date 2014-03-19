@@ -95,6 +95,9 @@ Container::Container (void)
 
 	sub_type (me);
 
+	declare_prop_fn (me, "b", (get_string_t)([&](){ return std::to_string (block_size); }), "");
+	declare_prop_fn (me, "c", (get_int64_t)([&](){ return block_size; }), "");
+
 	declare_prop_var (me, "block_size",    block_size,    "desc of block_size",    d|s);
 	declare_prop_var (me, "bytes_size",    bytes_size,    "desc of bytes_size",    d|s);
 	declare_prop_var (me, "bytes_used",    bytes_used,    "desc of bytes_used",    d|s);
