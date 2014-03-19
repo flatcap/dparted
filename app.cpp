@@ -99,7 +99,7 @@ App::get_config (void)
 
 
 void
-App::queue_add_probe (ContainerPtr& item)
+App::queue_add_probe2 (ContainerPtr& item)
 {
 	if (!item)
 		return;
@@ -248,7 +248,7 @@ App::scan (const std::vector<std::string>& files)
 
 		ContainerPtr found = probe (item, buffer, bufsize);
 		if (found) {
-			top_level->just_add_child (found);
+			top_level->just_add_child2 (found);
 			//item->add_child (found);
 			//std::cout << "\tFound: " << found << "\n";
 			//probe_queue.push (found);

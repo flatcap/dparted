@@ -195,7 +195,7 @@ Container::perform_action (Action action)
 
 
 void
-Container::add_child (ContainerPtr& child)
+Container::add_child2 (ContainerPtr& child)
 {
 	if (!child)
 		return;
@@ -224,7 +224,7 @@ Container::add_child (ContainerPtr& child)
 }
 
 void
-Container::just_add_child (ContainerPtr& child)
+Container::just_add_child2 (ContainerPtr& child)
 {
 	if (child) {
 		children.insert (child);

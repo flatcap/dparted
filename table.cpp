@@ -175,7 +175,7 @@ Table::fill_space (void)
 
 #if 1
 	for (auto i : vm) {
-		add_child(i);			// add_free()
+		add_child2(i);			// add_free()
 	}
 #endif
 

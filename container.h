@@ -53,10 +53,10 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	virtual void add_child      (ContainerPtr& child);
-	virtual void just_add_child (ContainerPtr& child);
-	virtual void delete_child   (ContainerPtr& child);
-	virtual void move_child     (ContainerPtr& child, std::uint64_t offset, std::uint64_t size);
+	virtual void add_child2      (ContainerPtr& child);
+	virtual void just_add_child2 (ContainerPtr& child);
+	virtual void delete_child    (ContainerPtr& child);
+	virtual void move_child      (ContainerPtr& child, std::uint64_t offset, std::uint64_t size);
 
 	virtual int      get_fd (void);
 	virtual std::uint64_t get_block_size (void);
@@ -111,10 +111,17 @@ public:
 	std::vector<PPtr> get_all_props (void);
 
 	template<class T>
-	void add_child (std::shared_ptr<T>& child)
+	void add_child2 (std::shared_ptr<T>& child)
 	{
 		ContainerPtr c (child);
-		add_child(c);
+		add_child2(c);
+	}
+
+	template<class T>
+	void just_add_child2 (std::shared_ptr<T>& child)
+	{
+		ContainerPtr c (child);
+		just_add_child2(c);
 	}
 
 	template<typename T>

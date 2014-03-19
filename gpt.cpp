@@ -168,8 +168,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	g->block_size = 0;
 	g->uuid = read_uuid1 (buffer+568);
 
-	ContainerPtr c(g);
-	parent->add_child(c); //XXX new
+	parent->add_child2(g);
 
 	// Assumption: 1MiB alignment (for now)
 	// Should reserved bits be allocated after actual partitions?
@@ -184,7 +183,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res1->bytes_size    = 512 * 34;		//align (512 * 34, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	g->add_child (res1);		// change to add_reserved?
+	g->add_child2 (res1);		// change to add_reserved?
 
 	PartitionPtr res2 = Partition::create();
 	res2->sub_type ("Space");
@@ -192,7 +191,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res2->bytes_size    = 512 * 33;		//align (512 * 33, 1024*1024);
 	res2->bytes_used    = res2->bytes_size;
 	res2->parent_offset = g->bytes_size - res2->bytes_size;		// End of the partition
-	g->add_child (res2);
+	g->add_child2 (res2);
 
 	delete_region (empty, 0, 33);
 
@@ -246,9 +245,8 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		log_debug ("\t\t\tfinish = %lld\n", *(long*) (buffer+40) * 512);
 		log_debug ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
 #endif
-		ContainerPtr c(p);
-		g->add_child(c);
-		main_app->queue_add_probe(c);
+		g->add_child2(p);
+		main_app->queue_add_probe2(p);
 	}
 
 	for (auto r : empty) {
@@ -266,7 +264,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			p->sub_type ("Unallocated");
 			p->bytes_used = 0;
 		}
-		g->add_child (p);		// change to add_reserved?
+		g->add_child2(p);		// change to add_reserved?
 	}
 	//printf ("\n");
 

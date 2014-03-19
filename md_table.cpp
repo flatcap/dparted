@@ -175,8 +175,7 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	t->data_offset		= data_offset;
 	t->data_size		= data_size;
 
-	ContainerPtr c(t);
-	parent->add_child(c);
+	parent->add_child2(t);
 
 	return t;
 }

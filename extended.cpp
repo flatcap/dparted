@@ -122,7 +122,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	res1->bytes_size    = 512;		//align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	ext->add_child (res1);		// change to add_reserved?
+	ext->add_child2 (res1);		// change to add_reserved?
 
 	for (int loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
 		//log_debug ("f = %p, r = %d\n", f, r);
@@ -157,18 +157,18 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 				log_debug ("\n");
 			}
 #endif
-			ContainerPtr c;
-
 			if ((part.type == 0x05) || (part.type == 0x0F)) {
 				table_offset = offset + part.start;
 			} else {
-				c = MsdosPartition::create();
-				c->bytes_size = part.size;
+				MsdosPartitionPtr m;
 
-				//c->parent_offset = table_offset + part.start;
-				//c->device = parent->device;
+				m = MsdosPartition::create();
+				m->bytes_size = part.size;
 
-				c->parent_offset = table_offset + part.start - ext->parent_offset;
+				//m->parent_offset = table_offset + part.start;
+				//m->device = parent->device;
+
+				m->parent_offset = table_offset + part.start - ext->parent_offset;
 
 				std::string part_name = parent->get_device_name();
 				//XXX check part_name isn't empty
@@ -177,10 +177,10 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 				}
 				part_name += std::to_string (loop+5);
 
-				c->device = part_name;
+				m->device = part_name;
 
-				ext->add_child(c);
-				main_app->queue_add_probe(c);
+				ext->add_child2(m);
+				main_app->queue_add_probe2(m);
 			}
 		}
 		if (vp.size() == 1)
