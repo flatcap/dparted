@@ -197,7 +197,7 @@ Disk::find_devices (ContainerPtr& list)
 {
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
 	//XXX use LOOP_MAJOR
-	std::string command = "lsblk -b -P -e 7";
+	std::string command = "lsblk --bytes --pairs --exclude 7";
 	std::vector<std::string> output;
 	std::string error;
 
@@ -284,10 +284,10 @@ bool
 Disk::lsblk (std::vector <std::string>& output, std::string device)
 {
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
-	std::string command = "sudo lsblk -b -P ";
+	std::string command = "sudo lsblk --bytes --pairs ";
 
 	if (device.empty()) {
-		command += "-e 7";	//XXX LOOP_MAJOR
+		command += "--exclude 7";	//XXX LOOP_MAJOR
 	} else {
 		command += device;
 	}

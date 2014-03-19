@@ -144,7 +144,7 @@ tune2fs (const std::string& dev)
 	std::vector<std::string> output;
 	std::map<std::string,std::string> results;
 
-	command = "tune2fs -l " + dev;
+	command = "tune2fs -l " + dev;		// list contents of filesystem superblock
 	execute_command1 (command, output);
 
 	std::string key;

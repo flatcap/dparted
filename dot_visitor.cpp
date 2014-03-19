@@ -561,14 +561,14 @@ DotVisitor::run_dotty (void)
 
 	if (save_gv) {
 		dir = "gv_" + now;
-		execute_command2 ("mkdir -p " + dir, nothing);
+		execute_command2 ("mkdir --parents " + dir, nothing);
 		std::string command = "cat > " + dir + "/$RANDOM.gv";
 		execute_command2 (command, input);
 	}
 
 	if (save_png) {
 		dir = "png_" + now;
-		execute_command2 ("mkdir -p " + dir, nothing);
+		execute_command2 ("mkdir --parents " + dir, nothing);
 		std::string command = "dot -Tpng > " + dir + "/$RANDOM.png";
 		execute_command2 (command, input);
 	}
