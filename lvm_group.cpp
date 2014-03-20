@@ -266,8 +266,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 		//log_info ("add piece: %s (%s)\n", p->uuid.c_str(), p->name.c_str());
 
-		ContainerPtr c2(p);
-		t->add_child (c2);
+		t->add_child (p);
 	}
 
 	//XXX tag all the lvm_tables as missing
