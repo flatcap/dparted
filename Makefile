@@ -130,7 +130,10 @@ CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 #CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
 #CFLAGS	+= -DG_DISABLE_DEPRECATED
 
-PACKAGES = gtkmm-3.0 libconfig++
+PACKAGES += libconfig++
+ifeq ($(GUI),1)
+	PACKAGES += gtkmm-3.0
+endif
 
 CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
 LDFLAGS	+= $(shell pkg-config --libs   $(PACKAGES))
