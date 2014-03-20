@@ -41,7 +41,7 @@ TextApp::run (int argc, char **argv)
 {
 	std::vector<std::string> disks;			// Mop up any remaining args
 	for (; argc > 1; argc--, argv++) {
-		disks.push_back (argv[1]);
+		//disks.push_back (argv[1]);
 	}
 
 	top_level = main_app->scan (disks);
@@ -51,6 +51,11 @@ TextApp::run (int argc, char **argv)
 	top_level->accept (lv);
 	lv.list();
 #endif
+
+	ContainerPtr c = *top_level->get_children().begin();
+	for (auto p : c->get_all_props()) {
+		std::cout << p->name << "\t" << (std::string) *p<< std::endl;
+	}
 
 	return 0;
 }
