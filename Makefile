@@ -31,9 +31,14 @@ LINKS	= misc test
 # Core Objects
 OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extended.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp \
 	   gpt_partition.cpp loop.cpp luks_partition.cpp luks_table.cpp lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp \
-	   lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp md_linear.cpp md_mirror.cpp \
-	   md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp misc.cpp msdos.cpp \
+	   lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp misc.cpp msdos.cpp \
 	   msdos_partition.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
+
+MD	?= 0
+ifeq ($(MD),1)
+	OBJ_SRC	+= md_linear.cpp md_mirror.cpp md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp
+	CFLAGS	+= -DDP_MD
+endif
 
 # Library - Non-graphical miscellany
 LIB_SRC	+= app.cpp config.cpp config_file.cpp dot_visitor.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp hex_visitor.cpp \

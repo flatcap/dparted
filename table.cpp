@@ -107,8 +107,10 @@ Table::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	if (LvmTable::probe (parent, buffer, bufsize))
 		return true;
 
+#ifdef DP_MD
 	if (MdTable::probe (parent, buffer, bufsize))
 		return true;
+#endif
 
 	if (Msdos::probe (parent, buffer, bufsize))
 		return true;
