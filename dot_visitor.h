@@ -39,8 +39,10 @@ public:
 	virtual bool visit (GptPtr        p);
 	virtual bool visit (LoopPtr       p);
 	virtual bool visit (MiscPtr       p);
+#ifdef DP_MSDOS
 	virtual bool visit (MsdosPtr      p);
 	virtual bool visit (ExtendedPtr   p);
+#endif
 	virtual bool visit (PartitionPtr  p);
 
 	virtual bool visit (WholePtr      p);

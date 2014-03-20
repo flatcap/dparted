@@ -65,6 +65,7 @@ HexVisitor::visit (ContainerPtr c)
 	return true;
 }
 
+#ifdef DP_MSDOS
 /**
  * visit (ExtendedPtr)
  */
@@ -90,6 +91,7 @@ HexVisitor::visit (ExtendedPtr c)
 	return true;
 }
 
+#endif
 #ifdef DP_LVM
 /**
  * visit (LvmGroupPtr)

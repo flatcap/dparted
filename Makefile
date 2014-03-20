@@ -29,7 +29,7 @@ OUT	= dparted
 LINKS	= misc test
 
 # Core Objects
-OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extended.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp gpt_partition.cpp loop.cpp misc.cpp msdos.cpp msdos_partition.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
+OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp gpt_partition.cpp loop.cpp misc.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 LUKS	?= 0
 ifeq ($(LUKS),1)
@@ -40,6 +40,7 @@ endif
 LVM	?= 0
 ifeq ($(LVM),1)
 	OBJ_SRC	+= lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp
+	HDR	+= lvm2.h
 	CFLAGS	+= -DDP_LVM
 endif
 
@@ -47,6 +48,12 @@ MD	?= 0
 ifeq ($(MD),1)
 	OBJ_SRC	+= md_linear.cpp md_mirror.cpp md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp
 	CFLAGS	+= -DDP_MD
+endif
+
+MSDOS	?= 0
+ifeq ($(MSDOS),1)
+	OBJ_SRC	+= extended.cpp msdos.cpp msdos_partition.cpp
+	CFLAGS	+= -DDP_MSDOS
 endif
 
 # Library - Non-graphical miscellany

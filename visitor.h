@@ -25,7 +25,6 @@
 #include "btrfs.h"
 #include "container.h"
 #include "disk.h"
-#include "extended.h"
 #include "extfs.h"
 #include "file.h"
 #include "filesystem.h"
@@ -56,8 +55,11 @@
 #include "md_volume.h"
 #endif
 #include "misc.h"
+#ifdef DP_MSDOS
+#include "extended.h"
 #include "msdos.h"
 #include "msdos_partition.h"
+#endif
 #include "ntfs.h"
 #include "partition.h"
 #include "table.h"
@@ -77,7 +79,9 @@ public:
 	virtual bool visit (BlockPtr          p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
 	virtual bool visit (BtrfsPtr          p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
 	virtual bool visit (DiskPtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
+#ifdef DP_MSDOS
 	virtual bool visit (ExtendedPtr       p) { return visit (std::dynamic_pointer_cast<Msdos>     (p)); }
+#endif
 	virtual bool visit (ExtfsPtr          p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
 	virtual bool visit (FilePtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
 	virtual bool visit (FilesystemPtr     p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
@@ -108,8 +112,10 @@ public:
 	virtual bool visit (MdVolumePtr       p) { return visit (std::dynamic_pointer_cast<Volume>    (p)); }
 #endif
 	virtual bool visit (MiscPtr           p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
+#ifdef DP_MSDOS
 	virtual bool visit (MsdosPartitionPtr p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
 	virtual bool visit (MsdosPtr          p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
+#endif
 	virtual bool visit (NtfsPtr           p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
 	virtual bool visit (PartitionPtr      p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
 	virtual bool visit (TablePtr          p) { return visit (std::dynamic_pointer_cast<Container> (p)); }

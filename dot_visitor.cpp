@@ -364,6 +364,7 @@ DotVisitor::visit (GptPtr g)
 	return true;
 }
 
+#ifdef DP_MSDOS
 /**
  * visit (MsdosPtr)
  */
@@ -396,6 +397,7 @@ DotVisitor::visit (ExtendedPtr m)
 	return true;
 }
 
+#endif
 /**
  * visit (MiscPtr)
  */
