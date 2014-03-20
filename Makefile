@@ -40,92 +40,96 @@ GUI_SRC	+= gui_app.cpp main.cpp option_group.cpp
 # Misc header files
 HDR	+= log_trace.h mmap.h stringnum.h visitor.h
 
+# Configurables
+V	?= 0		# Verbose
+P	?= 0		# Profiling
 BTRFS	?= 0
+DOT	?= 0
+EXTFS	?= 1
+FS_MISC	?= 0
+GPT	?= 0
+GUI	?= 0
+HEX	?= 0
+LIST	?= 1
+LUKS	?= 0
+LVM	?= 1
+MD	?= 0
+MSDOS	?= 0
+NTFS	?= 0
+PROP	?= 0
+UNUSED	?= 0
+
 ifeq ($(BTRFS),1)
 	LIB_SRC	+= btrfs.cpp
 	CFLAGS	+= -DDP_BTRFS
 endif
 
-DOT	?= 0
 ifeq ($(DOT),1)
 	LIB_SRC	+= dot_visitor.cpp
 	CFLAGS	+= -DDP_DOT
 endif
 
-EXTFS	?= 0
 ifeq ($(EXTFS),1)
 	LIB_SRC	+= extfs.cpp
 	CFLAGS	+= -DDP_EXTFS
 endif
 
-FS_MISC	?= 0
 ifeq ($(FS_MISC),1)
 	LIB_SRC	+= fs_get.cpp fs_identify.cpp fs_usage.cpp
 	CFLAGS	+= -DDP_FS_MISC
 endif
 
-GPT	?= 0
 ifeq ($(GPT),1)
 	OBJ_SRC	+= gpt.cpp gpt_partition.cpp
 	CFLAGS	+= -DDP_GPT
 endif
 
-GUI	?= 0
 ifeq ($(GUI),1)
 	OBJ_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp tree_view.cpp window.cpp
 	CFLAGS	+= -DDP_GUI
 endif
 
-HEX	?= 0
 ifeq ($(HEX),1)
 	LIB_SRC	+= hex_visitor.cpp
 	CFLAGS	+= -DDP_HEX
 endif
 
-LIST	?= 0
 ifeq ($(LIST),1)
 	LIB_SRC	+= list_visitor.cpp
 	CFLAGS	+= -DDP_LIST
 endif
 
-LUKS	?= 0
 ifeq ($(LUKS),1)
 	OBJ_SRC	+= luks_partition.cpp luks_table.cpp
 	CFLAGS	+= -DDP_LUKS
 endif
 
-LVM	?= 0
 ifeq ($(LVM),1)
 	OBJ_SRC	+= lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp
 	HDR	+= lvm2.h
 	CFLAGS	+= -DDP_LVM
 endif
 
-MD	?= 0
 ifeq ($(MD),1)
 	OBJ_SRC	+= md_linear.cpp md_mirror.cpp md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp
 	CFLAGS	+= -DDP_MD
 endif
 
-MSDOS	?= 0
 ifeq ($(MSDOS),1)
 	OBJ_SRC	+= extended.cpp msdos.cpp msdos_partition.cpp
 	CFLAGS	+= -DDP_MSDOS
 endif
 
-NTFS	?= 0
 ifeq ($(NTFS),1)
 	LIB_SRC	+= ntfs.cpp
 	CFLAGS	+= -DDP_NTFS
 endif
 
-PROP	?= 0
 ifeq ($(PROP),1)
 	LIB_SRC	+= prop_visitor.cpp
 	CFLAGS	+= -DDP_PROP
 endif
 
-UNUSED	?= 0
 ifeq ($(UNUSED),1)
 	LIB_SRC	+= icon_manager.cpp
 	HDR	+= config_manager.h
@@ -169,21 +173,16 @@ GUI_CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 #GUI_CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
 #GUI_CFLAGS	+= -DG_DISABLE_DEPRECATED
 
-
 PACKAGES = gtkmm-3.0 libconfig++
 
 GUI_CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
 LDFLAGS		+= $(shell pkg-config --libs   $(PACKAGES))
-
-V	?= 0
 
 ifeq ($(V),1)
 	quiet=
 else
 	quiet=quiet_
 endif
-
-P	?= 0
 
 ifeq ($(P),1)
 	CFLAGS	+= -O0
