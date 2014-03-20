@@ -39,7 +39,9 @@
 #include "properties_dialog.h"
 #include "option_group.h"
 
+#ifdef DP_DOT
 #include "dot_visitor.h"
+#endif
 #include "hex_visitor.h"
 #include "list_visitor.h"
 #include "prop_visitor.h"
@@ -234,14 +236,25 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	std::cout << "\ty            = " << group.y            << std::endl;
 	std::cout << "\tw            = " << group.w            << std::endl;
 	std::cout << "\th            = " << group.h            << std::endl;
+#ifdef DP_DOT
 	std::cout << "\tdot-display  = " << group.dot_display  << std::endl;
 	std::cout << "\tdot-resize   = " << group.dot_resize   << std::endl;
 	std::cout << "\tdot-separate = " << group.dot_separate << std::endl;
 	std::cout << "\tdot-save_gv  = " << group.dot_save_gv  << std::endl;
 	std::cout << "\tdot-save_png = " << group.dot_save_png << std::endl;
 #endif
+#endif
 
-	if (!group.app && !group.list && !group.properties && !group.dot_display && !group.dot_save_gv && !group.dot_save_png && !group.hex && !group.quit) {
+	if (!group.app &&
+	    !group.list &&
+	    !group.properties &&
+#ifdef DP_DOT
+	    !group.dot_display &&
+	    !group.dot_save_gv &&
+	    !group.dot_save_png &&
+#endif
+	    !group.hex &&
+	    !group.quit) {
 		group.app = true;
 	}
 
@@ -336,6 +349,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		log_info ("------------------------------------------------------------\n");
 	}
 
+#ifdef DP_DOT
 	if ((group.dot_display || group.dot_save_gv || group.dot_save_png) && top_level) {
 		if (group.dot_separate) {
 			for (auto c : top_level->get_children()) {
@@ -359,6 +373,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 			dv.run_dotty();
 		}
 	}
+#endif
 
 	show_window();
 

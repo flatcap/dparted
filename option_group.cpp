@@ -34,12 +34,13 @@ OptionGroup::OptionGroup (void) :
 	Glib::OptionEntry entry11; entry11.set_short_name ('w'); entry11.set_long_name ("width");      entry11.set_description ("Width of the main window (app only)");              add_entry          (entry11, w);
 	Glib::OptionEntry entry12; entry12.set_short_name ('h'); entry12.set_long_name ("height");     entry12.set_description ("Height of the main window (app only)");             add_entry          (entry12, h);
 	Glib::OptionEntry entry13; entry13.set_short_name ('H'); entry13.set_long_name ("hexdump");    entry13.set_description ("Hexdump of all the objects on the disks");          add_entry          (entry13, hex);
-
+#ifdef DP_DOT
 	Glib::OptionEntry entry90; entry90.set_short_name ('d'); entry90.set_long_name ("dot-display");  entry90.set_description ("Display disk hierarchy");      add_entry (entry90, dot_display);
 	Glib::OptionEntry entry91;                               entry91.set_long_name ("dot-resize");   entry91.set_description ("Percentage scale of display"); add_entry (entry91, dot_resize);
 	Glib::OptionEntry entry92;                               entry92.set_long_name ("dot-separate"); entry92.set_description ("Separate graphviz diagrams");  add_entry (entry92, dot_separate);
 	Glib::OptionEntry entry93;                               entry93.set_long_name ("dot-save-gv");  entry93.set_description ("Save graphviz diagrams");      add_entry (entry93, dot_save_gv);
 	Glib::OptionEntry entry94;                               entry94.set_long_name ("dot-save-png"); entry94.set_description ("Save png images");             add_entry (entry94, dot_save_png);
+#endif
 }
 
 

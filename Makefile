@@ -31,6 +31,20 @@ LINKS	= misc test
 # Core Objects
 OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extfs.cpp file.cpp filesystem.cpp loop.cpp misc.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
+# Library - Non-graphical miscellany
+LIB_SRC	+= app.cpp config.cpp config_file.cpp hex_visitor.cpp list_visitor.cpp log.cpp message.cpp property.cpp prop_visitor.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp
+
+# GUI - Graphical objects
+GUI_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp gui_app.cpp icon_manager.cpp \
+	   main.cpp option_group.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp \
+	   tree_view.cpp window.cpp
+
+FS_DOT	?= 0
+ifeq ($(FS_DOT),1)
+	LIB_SRC	+= dot_visitor.cpp
+	CFLAGS	+= -DDP_FS_DOT
+endif
+
 FS_MISC	?= 0
 ifeq ($(FS_MISC),1)
 	LIB_SRC	+= fs_get.cpp fs_identify.cpp fs_usage.cpp

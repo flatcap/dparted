@@ -34,13 +34,13 @@ public:
 	bool list       = false;
 	bool properties = false;
 	bool quit       = false;
-
+#ifdef DP_DOT
 	bool dot_display  = false;
 	int  dot_resize   = -1;
 	bool dot_separate = false;
 	bool dot_save_gv  = false;
 	bool dot_save_png = false;
-
+#endif
 	int x = -1;	// Window coordinates
 	int y = -1;
 	int w = -1;	// Window size
