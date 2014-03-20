@@ -95,13 +95,13 @@ Filesystem::perform_action (Action action)
 }
 
 
-FilesystemPtr
+bool
 Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return nullptr;
+		return false;
 
 	FilesystemPtr f;
 
@@ -118,10 +118,11 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 
 	if (f) {
 		//log_info ("volume: %s (%s), child: %s\n", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
-		parent->add_child(f);
+		parent->add_child(f);	//XXX move this into get_*?
+		return true;
 	}
 
-	return f;
+	return false;
 }
 
 bool

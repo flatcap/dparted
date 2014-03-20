@@ -119,19 +119,19 @@ is_mdtable (std::uint8_t* buffer)
 }
 
 
-ContainerPtr
+bool
 MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return nullptr;
+		return false;
 
 	buffer  += 4096;	// Ignore the first 4KiB
 	//bufsize -= 4096;
 
 	if (!is_mdtable (buffer))
-		return nullptr;
+		return false;
 
 	std::string vol_uuid = read_uuid_string (buffer + 16);
 	//log_info ("vol uuid = %s\n", vol_uuid.c_str());
@@ -177,7 +177,7 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 
 	parent->add_child(t);
 
-	return t;
+	return true;
 }
 
 

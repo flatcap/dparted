@@ -100,18 +100,18 @@ LuksTable::perform_action (Action action)
 }
 
 
-ContainerPtr
+bool
 LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return nullptr;
+		return false;
 
 	const char* signature = "LUKS\xBA\xBE";
 
 	if (strncmp ((const char*) buffer, signature, strlen (signature)))
-		return nullptr;
+		return false;
 
 	LuksTablePtr l = create();
 
@@ -167,7 +167,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	parent->add_child(l);
 
-	return l;
+	return true;
 }
 
 void
