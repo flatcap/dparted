@@ -32,8 +32,10 @@
 #include "gpt.h"
 #include "gpt_partition.h"
 #include "loop.h"
+#ifdef DP_LUKS
 #include "luks_partition.h"
 #include "luks_table.h"
+#endif
 #ifdef DP_LVM
 #include "lvm_group.h"
 #include "lvm_linear.h"
@@ -82,8 +84,10 @@ public:
 	virtual bool visit (GptPartitionPtr   p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
 	virtual bool visit (GptPtr            p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
 	virtual bool visit (LoopPtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
+#ifdef DP_LUKS
 	virtual bool visit (LuksPartitionPtr  p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
 	virtual bool visit (LuksTablePtr      p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
+#endif
 #ifdef DP_LVM
 	virtual bool visit (LvmGroupPtr       p) { return visit (std::dynamic_pointer_cast<Whole>     (p)); }
 	virtual bool visit (LvmLinearPtr      p) { return visit (std::dynamic_pointer_cast<LvmVolume> (p)); }

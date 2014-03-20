@@ -29,7 +29,9 @@
 #include "block.h"
 #include "partition.h"
 #include "filesystem.h"
+#ifdef DP_LUKS
 #include "luks_table.h"
+#endif
 #ifdef DP_LVM
 #include "lvm_group.h"
 #include "lvm_volume.h"

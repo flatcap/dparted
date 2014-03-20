@@ -24,7 +24,9 @@
 #include "gpt.h"
 #include "log.h"
 #include "log_trace.h"
+#ifdef DP_LUKS
 #include "luks_table.h"
+#endif
 #ifdef DP_LVM
 #include "lvm_table.h"
 #endif
@@ -105,14 +107,14 @@ Table::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	if (Gpt::probe (parent, buffer, bufsize))
 		return true;
 
+#ifdef DP_LUKS
 	if (LuksTable::probe (parent, buffer, bufsize))
 		return true;
-
+#endif
 #ifdef DP_LVM
 	if (LvmTable::probe (parent, buffer, bufsize))
 		return true;
 #endif
-
 #ifdef DP_MD
 	if (MdTable::probe (parent, buffer, bufsize))
 		return true;
