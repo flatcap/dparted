@@ -24,7 +24,7 @@ DOT	?= 0
 EXTFS	?= 1
 FS_MISC	?= 0
 GPT	?= 0
-GUI	?= 0
+GUI	?= 1
 HEX	?= 0
 LIST	?= 1
 LUKS	?= 0
@@ -55,7 +55,7 @@ SRC	+= app.cpp config.cpp config_file.cpp log.cpp message.cpp property.cpp quest
 SRC	+= text_app.cpp
 
 # GUI - Graphical objects
-SRC	+= gui_app.cpp main.cpp option_group.cpp
+SRC	+= main.cpp
 
 # Misc header files
 HDR	+= log_trace.h mmap.h stringnum.h visitor.h
@@ -81,7 +81,7 @@ SRC-$(DOT)		+= dot_visitor.cpp
 SRC-$(EXTFS)		+= extfs.cpp
 SRC-$(FS_MISC)		+= fs_get.cpp fs_identify.cpp fs_usage.cpp
 SRC-$(GPT)		+= gpt.cpp gpt_partition.cpp
-SRC-$(GUI)		+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp tree_view.cpp window.cpp
+SRC-$(GUI)		+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp gui_app.cpp option_group.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp tree_view.cpp window.cpp
 SRC-$(HEX)		+= hex_visitor.cpp
 SRC-$(LIST)		+= list_visitor.cpp
 SRC-$(LUKS)		+= luks_partition.cpp luks_table.cpp

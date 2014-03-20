@@ -33,10 +33,8 @@
 
 #include "app.h"
 #include "gui_app.h"
-#ifdef DP_GUI
 #include "window.h"
 #include "properties_dialog.h"
-#endif
 #include "log.h"
 #include "log_trace.h"
 #include "option_group.h"
@@ -69,7 +67,6 @@ GuiApp::~GuiApp()
 }
 
 
-#ifdef DP_GUI
 bool
 GuiApp::my_idle (void)
 {
@@ -193,8 +190,6 @@ GuiApp::show_window (void)
 	}
 }
 
-#endif
-
 void
 GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
@@ -255,7 +250,6 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 #endif
 #endif
 
-#ifdef DP_GUI
 	if (!group.app &&
 #ifdef DP_LIST
 	    !group.list &&
@@ -274,9 +268,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	    !group.quit) {
 		group.app = true;
 	}
-#endif
 
-#ifdef DP_GUI
 	if (!group.app) {
 		if (group.theme.size())
 			std::cout << "theme without app" << std::endl;
@@ -322,12 +314,10 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 			window->set_geometry (group.x, group.y, group.w, group.h);
 		}
 	}
-#endif
 
 	ContainerPtr top_level;
 
 	if (disks.size()) {
-#ifdef DP_GUI
 		std::cout << "scan only: ";
 		for (auto d : disks) {
 			std::cout << "\"" << d << "\" ";
@@ -336,20 +326,15 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 			}
 		}
 		std::cout << std::endl;
-#endif
 		top_level = main_app->scan (disks);
 	} else {
-#ifdef DP_GUI
 		if (running) {
 			top_level = main_app->get_top_level();	// Default to what's there
 		} else {
 			//std::cout << "scan all disks" << std::endl;
 			//Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
-#endif
 			top_level = main_app->scan (disks);
-#ifdef DP_GUI
 		}
-#endif
 	}
 
 #ifdef DP_LIST
@@ -404,16 +389,12 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	}
 #endif
 
-#ifdef DP_GUI
 	show_window();
-#endif
 
 	return EXIT_SUCCESS;
-
 }
 
 
-#ifdef DP_GUI
 void
 GuiApp::menu_preferences (void)
 {
@@ -596,4 +577,3 @@ GuiApp::set_theme (const std::string& filename)
 	return true;
 }
 
-#endif

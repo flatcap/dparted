@@ -21,6 +21,9 @@
 
 #include "text_app.h"
 #include "log_trace.h"
+#ifdef DP_LIST
+#include "list_visitor.h"
+#endif
 
 TextAppPtr text_app;
 
@@ -34,9 +37,21 @@ TextApp::~TextApp()
 
 
 int
-TextApp::run (int UNUSED(argc), char **UNUSED(argv))
+TextApp::run (int argc, char **argv)
 {
-	std::cout << "text" << std::endl;
+	std::vector<std::string> disks;			// Mop up any remaining args
+	for (; argc > 1; argc--, argv++) {
+		disks.push_back (argv[1]);
+	}
+
+	top_level = main_app->scan (disks);
+
+#ifdef DP_LIST
+	ListVisitor lv;
+	top_level->accept (lv);
+	lv.list();
+#endif
+
 	return 0;
 }
 
