@@ -46,7 +46,7 @@ public:
 	bool set_config (const std::string& filename);
 
 	ContainerPtr scan (const std::vector<std::string>& files);
-	ContainerPtr probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
+	bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 	ContainerPtr get_top_level (void) { return top_level; } //XXX tmp
 

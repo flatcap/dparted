@@ -90,31 +90,30 @@ Table::perform_action (Action action)
 }
 
 
-ContainerPtr
+bool
 Table::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return nullptr;
+		return false;
 
-	ContainerPtr c;
-	if ((c = Gpt::probe (parent, buffer, bufsize)))
-		return c;
+	if (Gpt::probe (parent, buffer, bufsize))
+		return true;
 
-	if ((c = Msdos::probe (parent, buffer, bufsize)))
-		return c;
+	if (LuksTable::probe (parent, buffer, bufsize))
+		return true;
 
-	if ((c = LvmTable::probe (parent, buffer, bufsize)))
-		return c;
+	if (LvmTable::probe (parent, buffer, bufsize))
+		return true;
 
-	if ((c = MdTable::probe (parent, buffer, bufsize)))
-		return c;
+	if (MdTable::probe (parent, buffer, bufsize))
+		return true;
 
-	if (c = LuksTable::probe (parent, buffer, bufsize))
-		return c;
+	if (Msdos::probe (parent, buffer, bufsize))
+		return true;
 
-	return nullptr;
+	return false;
 }
 
 long

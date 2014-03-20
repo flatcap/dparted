@@ -120,13 +120,13 @@ is_random (std::uint8_t* buffer, int bufsize)
 
 #endif
 
-ContainerPtr
+bool
 Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return nullptr;
+		return false;
 
 	MiscPtr m;
 	if (is_empty (buffer, bufsize)) {
@@ -145,9 +145,10 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		m->bytes_size = parent->bytes_size;
 		m->bytes_used = 0;
 		m->parent_offset = 0;
+		return true;
 	}
 
-	return m;
+	return false;
 }
 
 

@@ -39,7 +39,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static ContainerPtr probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
+	static bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 public:
 	//properties

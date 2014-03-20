@@ -152,18 +152,18 @@ Msdos::read_table (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize), std::uin
 }
 
 
-ContainerPtr
+bool
 Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return nullptr;
+		return false;
 
 	int count = 0;
 
 	if (*(std::uint16_t*) (buffer+510) != 0xAA55)	//XXX declare magic elsewhere
-		return nullptr;
+		return false;
 
 	// and some other quick checks
 
@@ -180,7 +180,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	if ((count < 0) || (vp.size() > 4)) {
 		log_debug ("partition table is corrupt\n");	// bugger
-		return nullptr;
+		return false;
 	}
 
 	PartitionPtr res1 = Partition::create();
@@ -239,7 +239,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	m->fill_space();		// optional
 
-	return m;
+	return true;
 }
 
 

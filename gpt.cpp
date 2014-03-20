@@ -135,19 +135,19 @@ delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 	}
 }
 
-ContainerPtr
+bool
 Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return nullptr;
+		return false;
 
 	//XXX check min size against bufsize ((34*512) + (33*512)) bytes and all other probes
 	// If container is smaller that this, even an empty Gpt won't fit
 
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	//XXX replace with strict identify function (static) and all other probes
-		return nullptr;
+		return false;
 
 	// LBA		Description
 	// ---------------------------------
@@ -176,7 +176,6 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	// Then once a non-aligned partition is deleted
 	// it would be replaced by an aligned partition.
 
-#if 1
 	PartitionPtr res1 = Partition::create();
 	res1->sub_type ("Space");
 	res1->sub_type ("Reserved");
@@ -197,7 +196,6 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	long sect_offset = (g->bytes_size - res2->bytes_size) / 512;
 	delete_region (empty, sect_offset, sect_offset+32);
-#endif
 
 	buffer += 1024;	//bufsize -= 1024; for range checking
 
@@ -273,7 +271,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	g->fill_space();		// optional
 #endif
 
-	return g;
+	return true;
 }
 
 
