@@ -40,16 +40,16 @@ Loop::Loop (void)
 
 	sub_type (me);
 
-	declare_prop_var (me, "autoclear",  autoclear,  "desc of autoclear",  0);
-	declare_prop_var (me, "deleted",    deleted,    "desc of deleted",    0);
-	declare_prop_var (me, "file_inode", file_inode, "desc of file_inode", d);
-	declare_prop_var (me, "file_major", file_major, "desc of file_major", 0);
-	declare_prop_var (me, "file_minor", file_minor, "desc of file_minor", 0);
-	declare_prop_var (me, "file_name",  file_name,  "desc of file_name",  0);
-	declare_prop_var (me, "offset",     offset,     "desc of offset",     d|s);
-	declare_prop_var (me, "partscan",   partscan,   "desc of partscan",   0);
-	declare_prop_var (me, "read_only",  read_only,  "desc of read_only",  0);
-	declare_prop_var (me, "sizelimit",  sizelimit,  "desc of sizelimit",  d|s);
+	declare_prop_fn (me, "autoclear",  (get_bool_t)   ([&](){ return autoclear;  }), "desc of autoclear",  0);
+	declare_prop_fn (me, "deleted",    (get_bool_t)   ([&](){ return deleted;    }), "desc of deleted",    0);
+	declare_prop_fn (me, "file_inode", (get_uint64_t) ([&](){ return file_inode; }), "desc of file_inode", d);
+	declare_prop_fn (me, "file_major", (get_uint64_t) ([&](){ return file_major; }), "desc of file_major", 0);
+	declare_prop_fn (me, "file_minor", (get_uint64_t) ([&](){ return file_minor; }), "desc of file_minor", 0);
+	declare_prop_fn (me, "file_name",  (get_string_t) ([&](){ return file_name;  }), "desc of file_name",  0);
+	declare_prop_fn (me, "offset",     (get_uint64_t) ([&](){ return offset;     }), "desc of offset",     d|s);
+	declare_prop_fn (me, "partscan",   (get_bool_t)   ([&](){ return partscan;   }), "desc of partscan",   0);
+	declare_prop_fn (me, "read_only",  (get_bool_t)   ([&](){ return read_only;  }), "desc of read_only",  0);
+	declare_prop_fn (me, "sizelimit",  (get_uint64_t) ([&](){ return sizelimit;  }), "desc of sizelimit",  d|s);
 
 	declare_prop_fn (me, "file_major_minor", (get_string_t) std::bind(&Loop::get_file_major_minor, this), "desc of file_major_minor", d);
 	declare_prop_fn (me, "file_name_short",  (get_string_t) std::bind(&Loop::get_file_name_short,  this), "desc of file_name_short",  d);

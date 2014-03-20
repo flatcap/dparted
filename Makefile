@@ -21,14 +21,14 @@ V	?= 0		# Verbose
 P	?= 0		# Profiling
 BTRFS	?= 0
 DOT	?= 0
-EXTFS	?= 1
+EXTFS	?= 0
 FS_MISC	?= 0
 GPT	?= 0
 GUI	?= 1
 HEX	?= 0
-LIST	?= 1
+LIST	?= 0
 LUKS	?= 0
-LVM	?= 1
+LVM	?= 0
 MD	?= 0
 MSDOS	?= 0
 NTFS	?= 0
@@ -186,7 +186,7 @@ $(DEPDIR) $(OBJDIR):
 
 # ----------------------------------------------------------------------------
 
-tags:
+tags:	$(SRC) $(HDR)
 	$(QUIET_TAGS)ctags -I UNUSED -f - $(SRC) $(HDR) | grep -v -e "^_[A-Z0-9_]\+_H_	" -e "^[A-Za-z]\+Ptr	" > tags
 
 docs:
@@ -218,5 +218,5 @@ force:
 
 -include $(SRC:%.cpp=$(DEPDIR)/%.d)
 
-.PHONY:	tags docs stats xxx
+.PHONY:	docs stats xxx
 

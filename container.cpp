@@ -95,18 +95,15 @@ Container::Container (void)
 
 	sub_type (me);
 
-	declare_prop_fn (me, "b", (get_string_t)([&](){ return std::to_string (block_size); }), "");
-	declare_prop_fn (me, "c", (get_int64_t)([&](){ return block_size; }), "");
-
-	declare_prop_var (me, "block_size",    block_size,    "desc of block_size",    d|s);
-	declare_prop_var (me, "bytes_size",    bytes_size,    "desc of bytes_size",    d|s);
-	declare_prop_var (me, "bytes_used",    bytes_used,    "desc of bytes_used",    d|s);
-	declare_prop_var (me, "device",        device,        "desc of device",        d);
-	declare_prop_var (me, "device_major",  device_major,  "desc of device_major",  0);
-	declare_prop_var (me, "device_minor",  device_minor,  "desc of device_minor",  0);
-	declare_prop_var (me, "name",          name,          "desc of name",          0);
-	declare_prop_var (me, "parent_offset", parent_offset, "desc of parent_offset", d);
-	declare_prop_var (me, "uuid",          uuid,          "desc of uuid",          0);
+	declare_prop_fn (me, "block_size",    (get_uint64_t) ([&](){ return block_size;    }), "Block Size",    d|s);
+	declare_prop_fn (me, "bytes_size",    (get_uint64_t) ([&](){ return bytes_size;    }), "Size",          d|s);
+	declare_prop_fn (me, "bytes_used",    (get_uint64_t) ([&](){ return bytes_used;    }), "Used",          d|s);
+	declare_prop_fn (me, "device",        (get_string_t) ([&](){ return device;        }), "Device",        d);
+	declare_prop_fn (me, "device_major",  (get_uint64_t) ([&](){ return device_major;  }), "Major",         0);
+	declare_prop_fn (me, "device_minor",  (get_uint64_t) ([&](){ return device_minor;  }), "Minor",         0);
+	declare_prop_fn (me, "name",          (get_string_t) ([&](){ return name;          }), "Name",          0);
+	declare_prop_fn (me, "parent_offset", (get_uint64_t) ([&](){ return parent_offset; }), "Parent Offset", d);
+	declare_prop_fn (me, "uuid",          (get_string_t) ([&](){ return uuid;          }), "UUID",          0);
 
 	//declare_prop (me, "bytes_free", bytes_free, bytes_size, "bytes free", d|s);
 	//declare_prop (me, "bytes_used", bytes_used, bytes_size, "bytes used", d|s);

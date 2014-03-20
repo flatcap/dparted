@@ -26,12 +26,13 @@
 #include <sstream>
 #include <string>
 
-#include "disk.h"
 #include "action.h"
 #include "app.h"
+#include "disk.h"
 #include "log.h"
 #include "log_trace.h"
 #include "main.h"
+#include "property.h"
 #include "utils.h"
 #include "visitor.h"
 
@@ -41,16 +42,16 @@ Disk::Disk (void)
 
 	sub_type (me);
 
-	declare_prop_var (me, "bios_cylinders", bios_cylinders, "desc of bios_cylinders", 0);
-	declare_prop_var (me, "bios_heads",     bios_heads,     "desc of bios_heads",     0);
-	declare_prop_var (me, "bios_sectors",   bios_sectors,   "desc of bios_sectors",   0);
-	declare_prop_var (me, "did",            did,            "desc of did",            0);
-	declare_prop_var (me, "host",           host,           "desc of host",           0);
-	declare_prop_var (me, "hw_cylinders",   hw_cylinders,   "desc of hw_cylinders",   0);
-	declare_prop_var (me, "hw_heads",       hw_heads,       "desc of hw_heads",       0);
-	declare_prop_var (me, "hw_sectors",     hw_sectors,     "desc of hw_sectors",     0);
-	declare_prop_var (me, "mounts",         mounts,         "desc of mounts",         0);
-	declare_prop_var (me, "read_only",      read_only,      "desc of read_only",      0);
+	declare_prop_fn (me, "bios_cylinders", (get_int32_t)  ([&](){ return bios_cylinders; }), "BIOS Cylinders", 0);
+	declare_prop_fn (me, "bios_heads",     (get_int32_t)  ([&](){ return bios_heads;     }), "BIOS Heads",     0);
+	declare_prop_fn (me, "bios_sectors",   (get_int32_t)  ([&](){ return bios_sectors;   }), "BIOS Sectors",   0);
+	declare_prop_fn (me, "did",            (get_int32_t)  ([&](){ return did;            }), "DID",            0);
+	declare_prop_fn (me, "host",           (get_int32_t)  ([&](){ return host;           }), "Host",           0);
+	declare_prop_fn (me, "hw_cylinders",   (get_int32_t)  ([&](){ return hw_cylinders;   }), "HW Cylinders",   0);
+	declare_prop_fn (me, "hw_heads",       (get_int32_t)  ([&](){ return hw_heads;       }), "HW Heads",       0);
+	declare_prop_fn (me, "hw_sectors",     (get_int32_t)  ([&](){ return hw_sectors;     }), "HW Sectors",     0);
+	declare_prop_fn (me, "mounts",         (get_string_t) ([&](){ return mounts;         }), "Mounts",         0);
+	declare_prop_fn (me, "read_only",      (get_bool_t)   ([&](){ return read_only;      }), "Read Only",      0);
 }
 
 Disk::~Disk()
