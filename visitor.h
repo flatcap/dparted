@@ -22,10 +22,14 @@
 #include <memory>
 
 #include "block.h"
+#ifdef DP_BTRFS
 #include "btrfs.h"
+#endif
 #include "container.h"
 #include "disk.h"
+#ifdef DP_EXTFS
 #include "extfs.h"
+#endif
 #include "file.h"
 #include "filesystem.h"
 #ifdef DP_GPT
@@ -62,7 +66,9 @@
 #include "msdos.h"
 #include "msdos_partition.h"
 #endif
+#ifdef DP_NTFS
 #include "ntfs.h"
+#endif
 #include "partition.h"
 #include "table.h"
 #include "volume.h"
@@ -79,12 +85,16 @@ public:
 
 	//XXX move the dirty inheritance stuff elsewhere? (hideous dependency problem)
 	virtual bool visit (BlockPtr          p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
+#ifdef DP_BTRFS
 	virtual bool visit (BtrfsPtr          p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
+#endif
 	virtual bool visit (DiskPtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
 #ifdef DP_MSDOS
 	virtual bool visit (ExtendedPtr       p) { return visit (std::dynamic_pointer_cast<Msdos>     (p)); }
 #endif
+#ifdef DP_EXTFS
 	virtual bool visit (ExtfsPtr          p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
+#endif
 	virtual bool visit (FilePtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
 	virtual bool visit (FilesystemPtr     p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
 #ifdef DP_GPT
@@ -120,7 +130,9 @@ public:
 	virtual bool visit (MsdosPartitionPtr p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
 	virtual bool visit (MsdosPtr          p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
 #endif
+#ifdef DP_NTFS
 	virtual bool visit (NtfsPtr           p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
+#endif
 	virtual bool visit (PartitionPtr      p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
 	virtual bool visit (TablePtr          p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
 	virtual bool visit (VolumePtr         p) { return visit (std::dynamic_pointer_cast<Whole>     (p)); }

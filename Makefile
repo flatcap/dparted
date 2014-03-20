@@ -29,7 +29,7 @@ OUT	= dparted
 LINKS	= misc test
 
 # Core Objects
-OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extfs.cpp file.cpp filesystem.cpp loop.cpp misc.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
+OBJ_SRC	+= block.cpp container.cpp disk.cpp file.cpp filesystem.cpp loop.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
 LIB_SRC	+= app.cpp config.cpp config_file.cpp log.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp
@@ -39,10 +39,22 @@ GUI_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_containe
 	   main.cpp option_group.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp \
 	   tree_view.cpp window.cpp
 
+FS_BTRFS	?= 0
+ifeq ($(FS_BTRFS),1)
+	LIB_SRC	+= btrfs.cpp
+	CFLAGS	+= -DDP_FS_BTRFS
+endif
+
 FS_DOT	?= 0
 ifeq ($(FS_DOT),1)
 	LIB_SRC	+= dot_visitor.cpp
 	CFLAGS	+= -DDP_FS_DOT
+endif
+
+FS_EXTFS	?= 0
+ifeq ($(FS_EXTFS),1)
+	LIB_SRC	+= extfs.cpp
+	CFLAGS	+= -DDP_FS_EXTFS
 endif
 
 FS_HEX	?= 0
@@ -61,6 +73,12 @@ FS_MISC	?= 0
 ifeq ($(FS_MISC),1)
 	LIB_SRC	+= fs_get.cpp fs_identify.cpp fs_usage.cpp
 	CFLAGS	+= -DDP_FS_MISC
+endif
+
+FS_NTFS	?= 0
+ifeq ($(FS_NTFS),1)
+	LIB_SRC	+= ntfs.cpp
+	CFLAGS	+= -DDP_FS_NTFS
 endif
 
 FS_PROP	?= 0
