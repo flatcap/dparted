@@ -30,8 +30,10 @@
 #include "partition.h"
 #include "filesystem.h"
 #include "luks_table.h"
+#ifdef DP_LVM
 #include "lvm_group.h"
 #include "lvm_volume.h"
+#endif
 #include "log_trace.h"
 #include "utils.h"
 
@@ -266,6 +268,7 @@ dot_whole (std::shared_ptr<T> t)
 	return output.str();
 }
 
+#ifdef DP_LVM
 template <class T>
 std::string
 dot_lvm_volume (std::shared_ptr<T> t)
@@ -299,6 +302,8 @@ dot_lvm_volume (std::shared_ptr<T> t)
 	return output.str();
 }
 
+#endif
+#ifdef DP_MD
 template <class T>
 std::string
 dot_md_volume (std::shared_ptr<T> t)
@@ -316,6 +321,7 @@ dot_md_volume (std::shared_ptr<T> t)
 	return output.str();
 }
 
+#endif
 
 /**
  * visit (ContainerPtr)
@@ -446,6 +452,7 @@ DotVisitor::visit (WholePtr f)
 	return true;
 }
 
+#ifdef DP_LVM
 /**
  * visit (LvmVolumePtr)
  */
@@ -508,6 +515,7 @@ DotVisitor::visit (LvmLinearPtr f)
 	return true;
 }
 
+#endif
 
 std::string
 DotVisitor::get_dot (void)

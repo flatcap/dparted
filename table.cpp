@@ -25,8 +25,12 @@
 #include "log.h"
 #include "log_trace.h"
 #include "luks_table.h"
+#ifdef DP_LVM
 #include "lvm_table.h"
+#endif
+#ifdef DP_MD
 #include "md_table.h"
+#endif
 #include "msdos.h"
 #include "partition.h"
 #include "utils.h"

@@ -34,7 +34,9 @@ public:
 
 	virtual bool visit (ContainerPtr p);
 	virtual bool visit (ExtendedPtr  p);
+#ifdef DP_LVM
 	virtual bool visit (LvmGroupPtr  p);
+#endif
 
 	int abbreviate = 256;
 

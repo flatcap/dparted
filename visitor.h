@@ -34,6 +34,7 @@
 #include "loop.h"
 #include "luks_partition.h"
 #include "luks_table.h"
+#ifdef DP_LVM
 #include "lvm_group.h"
 #include "lvm_linear.h"
 #include "lvm_mirror.h"
@@ -42,6 +43,8 @@
 #include "lvm_stripe.h"
 #include "lvm_table.h"
 #include "lvm_volume.h"
+#endif
+#ifdef DP_MD
 #include "md_linear.h"
 #include "md_mirror.h"
 #include "md_partition.h"
@@ -49,6 +52,7 @@
 #include "md_stripe.h"
 #include "md_table.h"
 #include "md_volume.h"
+#endif
 #include "misc.h"
 #include "msdos.h"
 #include "msdos_partition.h"
@@ -80,6 +84,7 @@ public:
 	virtual bool visit (LoopPtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
 	virtual bool visit (LuksPartitionPtr  p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
 	virtual bool visit (LuksTablePtr      p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
+#ifdef DP_LVM
 	virtual bool visit (LvmGroupPtr       p) { return visit (std::dynamic_pointer_cast<Whole>     (p)); }
 	virtual bool visit (LvmLinearPtr      p) { return visit (std::dynamic_pointer_cast<LvmVolume> (p)); }
 	virtual bool visit (LvmMirrorPtr      p) { return visit (std::dynamic_pointer_cast<LvmVolume> (p)); }
@@ -88,6 +93,8 @@ public:
 	virtual bool visit (LvmStripePtr      p) { return visit (std::dynamic_pointer_cast<LvmVolume> (p)); }
 	virtual bool visit (LvmTablePtr       p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
 	virtual bool visit (LvmVolumePtr      p) { return visit (std::dynamic_pointer_cast<Volume>    (p)); }
+#endif
+#ifdef DP_MD
 	virtual bool visit (MdLinearPtr       p) { return visit (std::dynamic_pointer_cast<MdVolume>  (p)); }
 	virtual bool visit (MdMirrorPtr       p) { return visit (std::dynamic_pointer_cast<MdVolume>  (p)); }
 	virtual bool visit (MdPartitionPtr    p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
@@ -95,6 +102,7 @@ public:
 	virtual bool visit (MdStripePtr       p) { return visit (std::dynamic_pointer_cast<MdVolume>  (p)); }
 	virtual bool visit (MdTablePtr        p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
 	virtual bool visit (MdVolumePtr       p) { return visit (std::dynamic_pointer_cast<Volume>    (p)); }
+#endif
 	virtual bool visit (MiscPtr           p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
 	virtual bool visit (MsdosPartitionPtr p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
 	virtual bool visit (MsdosPtr          p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }

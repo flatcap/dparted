@@ -90,6 +90,7 @@ HexVisitor::visit (ExtendedPtr c)
 	return true;
 }
 
+#ifdef DP_LVM
 /**
  * visit (LvmGroupPtr)
  */
@@ -110,6 +111,7 @@ HexVisitor::visit (LvmGroupPtr c)
 	return true;
 }
 
+#endif
 
 void
 HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)

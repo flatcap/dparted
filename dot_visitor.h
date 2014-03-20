@@ -44,10 +44,12 @@ public:
 	virtual bool visit (PartitionPtr  p);
 
 	virtual bool visit (WholePtr      p);
+#ifdef DP_LVM
 	virtual bool visit (LvmVolumePtr  p);
 	virtual bool visit (LvmRaidPtr    p);
 	virtual bool visit (LvmGroupPtr   p);
 	virtual bool visit (LvmLinearPtr  p);
+#endif
 
 	template <class T>
 	std::string parent_link (std::shared_ptr<T> t);
