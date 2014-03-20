@@ -25,8 +25,10 @@
 #include "app.h"
 #include "btrfs.h"
 #include "extfs.h"
+#ifdef DP_FS_MISC
 #include "fs_get.h"
 #include "fs_identify.h"
+#endif
 #include "log.h"
 #include "log_trace.h"
 #include "main.h"
@@ -111,10 +113,12 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 	else if ((f = Extfs::get_ext3     (parent, buffer, bufsize))) {}
 	else if ((f = Extfs::get_ext4     (parent, buffer, bufsize))) {}
 	else if ((f =  Ntfs::get_ntfs     (parent, buffer, bufsize))) {}
+#ifdef DP_FS_MISC
 	else if ((f =        get_reiserfs (parent, buffer, bufsize))) {}
 	else if ((f =        get_swap     (parent, buffer, bufsize))) {}
 	else if ((f =        get_vfat     (parent, buffer, bufsize))) {}
 	else if ((f =        get_xfs      (parent, buffer, bufsize))) {}
+#endif
 
 	if (f) {
 		//log_info ("volume: %s (%s), child: %s\n", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
