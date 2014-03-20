@@ -234,13 +234,13 @@ format_config (std::string& config)
 }
 
 #endif
-ContainerPtr
+bool
 LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return nullptr;
+		return false;
 
 	LvmTablePtr t;
 
@@ -248,13 +248,13 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	struct label_header* lh = get_label_header (buffer+512);
 	if (!lh)
-		return nullptr;
+		return false;
 
 	//log_info ("'%.8s', %lu, 0x%8x, %u, '%.8s'\n", lh->id, lh->sector_xl, lh->crc_xl, lh->offset_xl, lh->type);
 
 	struct pv_header* ph = get_pv_header (buffer + 512 + lh->offset_xl);
 	if (!ph)
-		return nullptr;
+		return false;
 
 	std::string pv_uuid = read_uuid_string ((char*) ph->pv_uuid);
 
@@ -282,7 +282,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	//XXX 4096 from metadata location
 	struct mda_header* mh = get_mda_header (buffer + 4096);
 	if (!mh)
-		return nullptr;
+		return false;
 
 	//log_info ("0x%08x, '%.16s', %u, %lu, %lu\n", mh->checksum_xl, mh->magic, mh->version, mh->start, mh->size);
 
@@ -304,7 +304,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	if ((offset+size) > bufsize) {
 		//log_info ("TOO BIG (%d > %d)\n", (offset+size), bufsize);
-		//return nullptr;
+		//return false;
 	} else {
 		if (size > 0) {
 			config = std::string ((char*) (buffer+4096+offset), size-1);
@@ -344,7 +344,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	//XXX add alignment -- can't do this without the group's block size
 
-	return t;
+	return true;
 }
 
 

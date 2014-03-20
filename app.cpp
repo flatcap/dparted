@@ -131,26 +131,24 @@ mounts_get_list (ContainerPtr& mounts)
 }
 
 #endif
-ContainerPtr
+bool
 App::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return nullptr;
+		return false;
 
-	ContainerPtr item;
+	if (Table::probe (parent, buffer, bufsize))
+		return true;
 
-	if ((item = Table::probe (parent, buffer, bufsize)))
-		return item;
+	if (Filesystem::probe (parent, buffer, bufsize))
+		return true;
 
-	if ((item = Filesystem::probe (parent, buffer, bufsize)))
-		return item;
+	if (Misc::probe (parent, buffer, bufsize))
+		return true;
 
-	if ((item = Misc::probe (parent, buffer, bufsize)))
-		return item;
-
-	return nullptr;
+	return false;
 }
 
 
@@ -214,13 +212,7 @@ App::scan (const std::vector<std::string>& files)
 			continue;
 		}
 
-		ContainerPtr found = probe (item, buffer, bufsize);
-		if (found) {
-			//std::cout << "top_level = " << top_level->get_children().size() << std::endl;
-			//item->add_child (found);
-			//std::cout << "\tFound: " << found << "\n";
-			//probe_queue.push (found);
-		} else {
+		if (!probe (item, buffer, bufsize)) {
 			//XXX LOG
 			break;
 		}
@@ -246,13 +238,7 @@ App::scan (const std::vector<std::string>& files)
 			continue;
 		}
 
-		ContainerPtr found = probe (item, buffer, bufsize);
-		if (found) {
-			top_level->just_add_child (found);
-			//item->add_child (found);
-			//std::cout << "\tFound: " << found << "\n";
-			//probe_queue.push (found);
-		} else {
+		if (!probe (item, buffer, bufsize)) {
 			//XXX LOG
 			break;
 		}

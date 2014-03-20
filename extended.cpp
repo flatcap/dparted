@@ -91,13 +91,13 @@ Extended::perform_action (Action action)
 }
 
 
-ExtendedPtr
+bool
 Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return nullptr;
+		return false;
 
 	ExtendedPtr ext;
 	//off_t seek = 0;
@@ -129,7 +129,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 		if (*(unsigned short int*) (buffer+510) != 0xAA55) {
 			log_error ("not an extended partition\n");
 			//log_debug ("%s (%s), %lld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
-			return nullptr;
+			return false;
 		}
 
 		//log_debug ("extended partition\n");
@@ -142,7 +142,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 		if ((num < 0) || (vp.size() > 2)) {
 			log_error ("partition table is corrupt\n");	// bugger
-			return nullptr;
+			return false;
 		}
 
 		for (auto& part : vp) {
@@ -189,7 +189,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	ext->fill_space();		// optional
 
-	return ext;
+	return true;
 }
 
 
