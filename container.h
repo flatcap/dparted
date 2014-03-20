@@ -195,7 +195,6 @@ protected:
 
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 
-	//MmapSet	mmaps;
 	MmapPtr	device_mmap;
 
 	std::map<std::string,PPtr> props;
