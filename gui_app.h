@@ -23,11 +23,13 @@
 #include <memory>
 
 #include "app.h"
+#include "message.h"
+#ifdef DP_APP
 #include "gfx_container.h"
 #include "theme.h"
-#include "message.h"
 #include "password_dialog.h"
 #include "window.h"
+#endif
 
 class GuiApp;
 
@@ -43,13 +45,14 @@ public:
 	GuiApp (void);
 	virtual ~GuiApp();
 
+#ifdef DP_APP
 	virtual bool ask      (QuestionPtr q);
-	virtual bool ask_pass (PasswordDialogPtr pw);
 	virtual bool notify (Message& m);
+	virtual bool ask_pass (PasswordDialogPtr pw);
 	virtual void properties (GfxContainerPtr c);
-
 	ThemePtr get_theme (void);
 	void set_theme (ThemePtr theme);
+#endif
 
 	bool set_config (const std::string& filename);
 	bool set_theme  (const std::string& filename);
@@ -61,11 +64,13 @@ public:
 	void on_action_help       (void);
 
 protected:
+#ifdef DP_APP
 	virtual void on_activate (void);
 	virtual void on_startup  (void);
 
 	virtual void on_window_added   (Gtk::Window* window);
 	virtual void on_window_removed (Gtk::Window* window);
+#endif
 
 	virtual void on_open         (const type_vec_files& files, const Glib::ustring& hint);
 	virtual int  on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line);
@@ -82,9 +87,11 @@ protected:
 	bool on_mouse_click (GdkEventButton* event);
 
 	std::vector<QuestionPtr> vq;
+#ifdef DP_APP
 	PasswordDialogPtr passwd;
 	ThemePtr theme;
 	Window* window = nullptr;	// do not delete
+#endif
 };
 
 

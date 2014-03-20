@@ -35,7 +35,7 @@ OBJ_SRC	+= block.cpp container.cpp disk.cpp file.cpp filesystem.cpp loop.cpp mis
 LIB_SRC	+= app.cpp config.cpp config_file.cpp log.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp
 
 # GUI - Graphical objects
-GUI_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp gui_app.cpp main.cpp option_group.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp tree_view.cpp window.cpp
+GUI_SRC	+= gui_app.cpp main.cpp option_group.cpp
 
 # Misc header files
 HDR	+= log_trace.h mmap.h stringnum.h visitor.h
@@ -163,6 +163,12 @@ GPT	?= 0
 ifeq ($(GPT),1)
 	OBJ_SRC	+= gpt.cpp gpt_partition.cpp
 	CFLAGS	+= -DDP_GPT
+endif
+
+GUI	?= 0
+ifeq ($(GUI),1)
+	OBJ_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp tree_view.cpp window.cpp
+	CFLAGS	+= -DDP_GUI
 endif
 
 HEX	?= 0
