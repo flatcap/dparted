@@ -134,12 +134,6 @@ PACKAGES = gtkmm-3.0 libconfig++
 CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
 LDFLAGS	+= $(shell pkg-config --libs   $(PACKAGES))
 
-ifeq ($(V),1)
-	quiet=
-else
-	quiet=quiet_
-endif
-
 ifeq ($(P),1)
 	CFLAGS	+= -O0
 	CFLAGS	+= -fno-inline-functions
@@ -148,64 +142,57 @@ ifeq ($(P),1)
 	LDFLAGS	+= -pg -fprofile-arcs
 endif
 
-ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
-	quiet=silent_
-endif
-
 all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT) tags
 
 # ----------------------------------------------------------------------------
 
-# If quiet is set, only print short version of command
-cmd	= @$(if $($(quiet)cmd_$(1)),\
-		echo '$($(quiet)cmd_$(1))' &&) $(cmd_$(1))
+#
+# Pretty print
+#
+V	      = @
+Q	      = $(V:1=)
+QUIET_CC      = $(Q:@=@echo 'CC      '$^;)
+QUIET_LINK    = $(Q:@=@echo 'LINK    '$@;)
+QUIET_TAGS    = $(Q:@=@echo 'TAGS    '$@;)
+QUIET_CLEAN   = $(Q:@=@echo 'CLEAN   '$@;)
+
+ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
+	QUIET_CC      =
+	QUIET_LINK    =
+	QUIET_TAGS    =
+	QUIET_CLEAN   =
+endif
 
 # ----------------------------------------------------------------------------
-
-quiet_cmd_TAGS	= CTAGS	$@
-      cmd_TAGS	= ctags -I UNUSED -f - $(SRC) $(HDR) | grep -v -e "^_[A-Z0-9_]\+_H_	" -e "^[A-Za-z]\+Ptr	" > tags
-
-tags:	$(SRC) $(HDR)
-	$(call cmd,TAGS)
-
-# ----------------------------------------------------------------------------
-
-quiet_cmd_CC	= CC	$<
-      cmd_CC	= $(CC) $(CFLAGS) -c $< -o $@ && (											\
-		  $(CC) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;						\
-		  cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp;										\
-		  sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d;	\
-		  rm -f $(DEPDIR)/$*.d.tmp)
 
 $(OBJDIR)/%.o: %.cpp
-	$(call cmd,CC)
+	$(QUIET_CC)$(CC) $(CFLAGS) -c $< -o $@ && (										\
+	$(CC) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;						\
+	cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp;										\
+	sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d;		\
+	rm -f $(DEPDIR)/$*.d.tmp)
 
 # ----------------------------------------------------------------------------
-
-quiet_cmd_LD	= LD	$@
-      cmd_LD	= $(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 $(OUT):	$(OBJ)
-	$(call cmd,LD)
-
-# ----------------------------------------------------------------------------
-
-quiet_cmd_MKDIR	= MKDIR	$@
-      cmd_MKDIR	= $(MKDIR) $@
+	$(QUIET_LINK)$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 $(DEPDIR) $(OBJDIR):
-	$(call cmd,MKDIR)
+	$(Q)$(MKDIR) $@
 
 # ----------------------------------------------------------------------------
 
-docs:	force
+tags:
+	$(QUIET_TAGS)ctags -I UNUSED -f - $(SRC) $(HDR) | grep -v -e "^_[A-Z0-9_]\+_H_	" -e "^[A-Za-z]\+Ptr	" > tags
+
+docs:
 	doxygen docs/doxygen.conf
 
-stats:	force
+stats:
 	$(RM) stats
 	gitstats . stats
 
-xxx:	force
+xxx:
 	@grep --exclude xxx.txt -rHno "//[X]XX.*" . \
 		| expand -t8 \
 		| sed -e 's/  \+/ /g' -e 's/^..//' -e 's!//[X]XX *!!' \
@@ -217,13 +204,15 @@ links:	$(LINKS)
 $(LINKS):
 	ln -s ../dparted-$@ $@
 
-clean:	force
-	$(RM) $(OUT) $(OBJ) gmon.out *.gcov
+clean:
+	$(Q)$(RM) $(OUT) $(OBJ) gmon.out *.gcov
 
 distclean: clean
-	$(RM) $(DEPDIR) $(OBJDIR) tags html stats xxx.txt
+	$(Q)$(RM) $(DEPDIR) $(OBJDIR) tags html stats xxx.txt
 
 force:
 
 -include $(SRC:%.cpp=$(DEPDIR)/%.d)
+
+.PHONY:	tags docs stats xxx
 
