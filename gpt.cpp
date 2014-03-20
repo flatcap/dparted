@@ -30,7 +30,9 @@
 #include "log.h"
 #include "log_trace.h"
 #include "main.h"
+#ifdef DP_MSDOS
 #include "msdos_partition.h"
+#endif
 #include "utils.h"
 #include "visitor.h"
 
@@ -205,7 +207,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		if (*(long*) (buffer+32) == 0)
 			continue;			// Skip empty slots
 
-		MsdosPartitionPtr p = MsdosPartition::create();
+		GptPartitionPtr p = GptPartition::create();
 		p->bytes_used = 0;
 		p->uuid = read_uuid1 (buffer+16);
 		//p->part_type_uuid = read_guid (buffer+0);

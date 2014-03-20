@@ -20,8 +20,8 @@
 #include "log_trace.h"
 
 #if 0
-swap		swapon -s (if mounted, else 0)
 reiserfs	reiserfstune {device}
+swap		swapon -s (if mounted, else 0)
 vfat		dosfsck -n {device}
 xfs		xfs_db {device}, sb, p
 #endif

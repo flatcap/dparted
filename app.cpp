@@ -35,7 +35,9 @@
 #include "file.h"
 #include "loop.h"
 #include "log.h"
+#ifdef DP_LVM
 #include "lvm_group.h"
+#endif
 #include "log_trace.h"
 
 AppPtr main_app;
@@ -219,7 +221,9 @@ App::scan (const std::vector<std::string>& files)
 		//std::cout << std::endl;
 	}
 
+#ifdef DP_LVM
 	LvmGroup::discover (top_level);
+#endif
 	//MdGroup::discover (top_level);
 
 	// Process the probe_queue

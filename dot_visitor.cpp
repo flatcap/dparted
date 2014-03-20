@@ -24,14 +24,20 @@
 #include "dot_visitor.h"
 #include "container.h"
 #include "loop.h"
+#ifdef DP_GPT
 #include "gpt.h"
+#endif
 #include "whole.h"
 #include "block.h"
 #include "partition.h"
 #include "filesystem.h"
+#ifdef DP_LUKS
 #include "luks_table.h"
+#endif
+#ifdef DP_LVM
 #include "lvm_group.h"
 #include "lvm_volume.h"
+#endif
 #include "log_trace.h"
 #include "utils.h"
 
@@ -266,6 +272,7 @@ dot_whole (std::shared_ptr<T> t)
 	return output.str();
 }
 
+#ifdef DP_LVM
 template <class T>
 std::string
 dot_lvm_volume (std::shared_ptr<T> t)
@@ -299,6 +306,8 @@ dot_lvm_volume (std::shared_ptr<T> t)
 	return output.str();
 }
 
+#endif
+#ifdef DP_MD
 template <class T>
 std::string
 dot_md_volume (std::shared_ptr<T> t)
@@ -316,6 +325,7 @@ dot_md_volume (std::shared_ptr<T> t)
 	return output.str();
 }
 
+#endif
 
 /**
  * visit (ContainerPtr)
@@ -343,6 +353,7 @@ DotVisitor::visit (LoopPtr l)
 	return true;
 }
 
+#ifdef DP_GPT
 /**
  * visit (GptPtr)
  */
@@ -356,6 +367,8 @@ DotVisitor::visit (GptPtr g)
 	return true;
 }
 
+#endif
+#ifdef DP_MSDOS
 /**
  * visit (MsdosPtr)
  */
@@ -388,6 +401,7 @@ DotVisitor::visit (ExtendedPtr m)
 	return true;
 }
 
+#endif
 /**
  * visit (MiscPtr)
  */
@@ -446,6 +460,7 @@ DotVisitor::visit (WholePtr f)
 	return true;
 }
 
+#ifdef DP_LVM
 /**
  * visit (LvmVolumePtr)
  */
@@ -508,6 +523,7 @@ DotVisitor::visit (LvmLinearPtr f)
 	return true;
 }
 
+#endif
 
 std::string
 DotVisitor::get_dot (void)

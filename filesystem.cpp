@@ -23,14 +23,22 @@
 #include "filesystem.h"
 #include "action.h"
 #include "app.h"
+#ifdef DP_BTRFS
 #include "btrfs.h"
+#endif
+#ifdef DP_EXTFS
 #include "extfs.h"
+#endif
+#ifdef DP_FS_MISC
 #include "fs_get.h"
 #include "fs_identify.h"
+#endif
 #include "log.h"
 #include "log_trace.h"
 #include "main.h"
+#ifdef DP_NTFS
 #include "ntfs.h"
+#endif
 #include "partition.h"
 #include "question.h"
 #include "stringnum.h"
@@ -106,15 +114,24 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 	FilesystemPtr f;
 
 	//XXX reorder by likelihood
-	     if ((f = Btrfs::get_btrfs    (parent, buffer, bufsize))) {}
+	if (false) {}
+#ifdef DP_BTRFS
+	else if ((f = Btrfs::get_btrfs    (parent, buffer, bufsize))) {}
+#endif
+#ifdef DP_EXTFS
 	else if ((f = Extfs::get_ext2     (parent, buffer, bufsize))) {}
 	else if ((f = Extfs::get_ext3     (parent, buffer, bufsize))) {}
 	else if ((f = Extfs::get_ext4     (parent, buffer, bufsize))) {}
+#endif
+#ifdef DP_NTFS
 	else if ((f =  Ntfs::get_ntfs     (parent, buffer, bufsize))) {}
+#endif
+#ifdef DP_FS_MISC
 	else if ((f =        get_reiserfs (parent, buffer, bufsize))) {}
 	else if ((f =        get_swap     (parent, buffer, bufsize))) {}
 	else if ((f =        get_vfat     (parent, buffer, bufsize))) {}
 	else if ((f =        get_xfs      (parent, buffer, bufsize))) {}
+#endif
 
 	if (f) {
 		//log_info ("volume: %s (%s), child: %s\n", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());

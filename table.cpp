@@ -21,13 +21,23 @@
 
 #include "table.h"
 #include "action.h"
+#ifdef DP_GPT
 #include "gpt.h"
+#endif
 #include "log.h"
 #include "log_trace.h"
+#ifdef DP_LUKS
 #include "luks_table.h"
+#endif
+#ifdef DP_LVM
 #include "lvm_table.h"
+#endif
+#ifdef DP_MD
 #include "md_table.h"
+#endif
+#ifdef DP_MSDOS
 #include "msdos.h"
+#endif
 #include "partition.h"
 #include "utils.h"
 #include "visitor.h"
@@ -98,20 +108,26 @@ Table::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	if (!parent || !buffer || !bufsize)
 		return false;
 
+#ifdef DP_GPT
 	if (Gpt::probe (parent, buffer, bufsize))
 		return true;
-
+#endif
+#ifdef DP_LUKS
 	if (LuksTable::probe (parent, buffer, bufsize))
 		return true;
-
+#endif
+#ifdef DP_LVM
 	if (LvmTable::probe (parent, buffer, bufsize))
 		return true;
-
+#endif
+#ifdef DP_MD
 	if (MdTable::probe (parent, buffer, bufsize))
 		return true;
-
+#endif
+#ifdef DP_MSDOS
 	if (Msdos::probe (parent, buffer, bufsize))
 		return true;
+#endif
 
 	return false;
 }

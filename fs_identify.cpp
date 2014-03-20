@@ -22,18 +22,6 @@
 #include "log_trace.h"
 
 bool
-identify_gpt (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
-{
-	return (strncmp ((char*) buffer+512, "EFI PART", 8) == 0);
-}
-
-bool
-identify_msdos (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
-{
-	return (*(unsigned short int*) (buffer+510) == 0xAA55);
-}
-
-bool
 identify_reiserfs (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 {
 	return (!strncmp ((char*) buffer+65588, "ReIsErFs",  8) ||

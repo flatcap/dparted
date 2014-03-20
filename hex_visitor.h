@@ -33,8 +33,12 @@ public:
 	virtual bool visit_leave (void);
 
 	virtual bool visit (ContainerPtr p);
+#ifdef DP_MSDOS
 	virtual bool visit (ExtendedPtr  p);
+#endif
+#ifdef DP_LVM
 	virtual bool visit (LvmGroupPtr  p);
+#endif
 
 	int abbreviate = 256;
 

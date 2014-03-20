@@ -33,16 +33,26 @@
 
 #include "app.h"
 #include "gui_app.h"
+#ifdef DP_APP
 #include "window.h"
+#include "properties_dialog.h"
+#endif
 #include "log.h"
 #include "log_trace.h"
-#include "properties_dialog.h"
 #include "option_group.h"
 
+#ifdef DP_DOT
 #include "dot_visitor.h"
+#endif
+#ifdef DP_HEX
 #include "hex_visitor.h"
+#endif
+#ifdef DP_LIST
 #include "list_visitor.h"
+#endif
+#ifdef DP_PROP
 #include "prop_visitor.h"
+#endif
 #include "utils.h"
 
 GuiAppPtr gui_app;
@@ -59,6 +69,7 @@ GuiApp::~GuiApp()
 }
 
 
+#ifdef DP_APP
 bool
 GuiApp::my_idle (void)
 {
@@ -182,6 +193,7 @@ GuiApp::show_window (void)
 	}
 }
 
+#endif
 
 void
 GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
@@ -234,17 +246,37 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	std::cout << "\ty            = " << group.y            << std::endl;
 	std::cout << "\tw            = " << group.w            << std::endl;
 	std::cout << "\th            = " << group.h            << std::endl;
+#ifdef DP_DOT
 	std::cout << "\tdot-display  = " << group.dot_display  << std::endl;
 	std::cout << "\tdot-resize   = " << group.dot_resize   << std::endl;
 	std::cout << "\tdot-separate = " << group.dot_separate << std::endl;
 	std::cout << "\tdot-save_gv  = " << group.dot_save_gv  << std::endl;
 	std::cout << "\tdot-save_png = " << group.dot_save_png << std::endl;
 #endif
+#endif
 
-	if (!group.app && !group.list && !group.properties && !group.dot_display && !group.dot_save_gv && !group.dot_save_png && !group.hex && !group.quit) {
+#ifdef DP_APP
+	if (!group.app &&
+#ifdef DP_LIST
+	    !group.list &&
+#endif
+#ifdef DP_PROP
+	    !group.properties &&
+#endif
+#ifdef DP_DOT
+	    !group.dot_display &&
+	    !group.dot_save_gv &&
+	    !group.dot_save_png &&
+#endif
+#ifdef DP_HEX
+	    !group.hex &&
+#endif
+	    !group.quit) {
 		group.app = true;
 	}
+#endif
 
+#ifdef DP_APP
 	if (!group.app) {
 		if (group.theme.size())
 			std::cout << "theme without app" << std::endl;
@@ -290,10 +322,12 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 			window->set_geometry (group.x, group.y, group.w, group.h);
 		}
 	}
+#endif
 
 	ContainerPtr top_level;
 
 	if (disks.size()) {
+#ifdef DP_APP
 		std::cout << "scan only: ";
 		for (auto d : disks) {
 			std::cout << "\"" << d << "\" ";
@@ -302,17 +336,23 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 			}
 		}
 		std::cout << std::endl;
+#endif
 		top_level = main_app->scan (disks);
 	} else {
+#ifdef DP_APP
 		if (running) {
 			top_level = main_app->get_top_level();	// Default to what's there
 		} else {
 			//std::cout << "scan all disks" << std::endl;
 			//Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
+#endif
 			top_level = main_app->scan (disks);
+#ifdef DP_APP
 		}
+#endif
 	}
 
+#ifdef DP_LIST
 	if (group.list && top_level) {
 		log_info ("------------------------------------------------------------\n");
 		ListVisitor lv;
@@ -320,7 +360,8 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		lv.list();
 		log_info ("------------------------------------------------------------\n");
 	}
-
+#endif
+#ifdef DP_PROP
 	if (group.properties && top_level) {
 		log_info ("------------------------------------------------------------\n");
 		PropVisitor pv;
@@ -328,14 +369,16 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		pv.list();
 		log_info ("------------------------------------------------------------\n");
 	}
-
+#endif
+#ifdef DP_HEX
 	if (group.hex && top_level) {
 		log_info ("------------------------------------------------------------\n");
 		HexVisitor hv;
 		top_level->accept (hv);
 		log_info ("------------------------------------------------------------\n");
 	}
-
+#endif
+#ifdef DP_DOT
 	if ((group.dot_display || group.dot_save_gv || group.dot_save_png) && top_level) {
 		if (group.dot_separate) {
 			for (auto c : top_level->get_children()) {
@@ -359,14 +402,18 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 			dv.run_dotty();
 		}
 	}
+#endif
 
+#ifdef DP_APP
 	show_window();
+#endif
 
 	return EXIT_SUCCESS;
 
 }
 
 
+#ifdef DP_APP
 void
 GuiApp::menu_preferences (void)
 {
@@ -549,3 +596,4 @@ GuiApp::set_theme (const std::string& filename)
 	return true;
 }
 
+#endif

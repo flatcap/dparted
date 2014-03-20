@@ -29,27 +29,111 @@ OUT	= dparted
 LINKS	= misc test
 
 # Core Objects
-OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extended.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp \
-	   gpt_partition.cpp loop.cpp luks_partition.cpp luks_table.cpp lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp \
-	   lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp md_linear.cpp md_mirror.cpp \
-	   md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp misc.cpp msdos.cpp \
-	   msdos_partition.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
+OBJ_SRC	+= block.cpp container.cpp disk.cpp file.cpp filesystem.cpp loop.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
-LIB_SRC	+= app.cpp config.cpp config_file.cpp dot_visitor.cpp fs_get.cpp fs_identify.cpp fs_usage.cpp hex_visitor.cpp \
-	   list_visitor.cpp log.cpp message.cpp property.cpp prop_visitor.cpp question.cpp utils.cpp uuid_visitor.cpp \
-	   type_visitor.cpp
+LIB_SRC	+= app.cpp config.cpp config_file.cpp log.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp
 
 # GUI - Graphical objects
-GUI_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp gui_app.cpp icon_manager.cpp \
-	   main.cpp option_group.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp \
-	   tree_view.cpp window.cpp
-
-SRC	= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
-HDR	= $(SRC:%.cpp=%.h)
+GUI_SRC	+= gui_app.cpp main.cpp option_group.cpp
 
 # Misc header files
-HDR	+= config_manager.h log_trace.h lvm2.h mmap.h stringnum.h visitor.h
+HDR	+= log_trace.h mmap.h stringnum.h visitor.h
+
+BTRFS	?= 0
+ifeq ($(BTRFS),1)
+	LIB_SRC	+= btrfs.cpp
+	CFLAGS	+= -DDP_BTRFS
+endif
+
+DOT	?= 0
+ifeq ($(DOT),1)
+	LIB_SRC	+= dot_visitor.cpp
+	CFLAGS	+= -DDP_DOT
+endif
+
+EXTFS	?= 0
+ifeq ($(EXTFS),1)
+	LIB_SRC	+= extfs.cpp
+	CFLAGS	+= -DDP_EXTFS
+endif
+
+FS_MISC	?= 0
+ifeq ($(FS_MISC),1)
+	LIB_SRC	+= fs_get.cpp fs_identify.cpp fs_usage.cpp
+	CFLAGS	+= -DDP_FS_MISC
+endif
+
+GPT	?= 0
+ifeq ($(GPT),1)
+	OBJ_SRC	+= gpt.cpp gpt_partition.cpp
+	CFLAGS	+= -DDP_GPT
+endif
+
+GUI	?= 0
+ifeq ($(GUI),1)
+	OBJ_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp tree_view.cpp window.cpp
+	CFLAGS	+= -DDP_GUI
+endif
+
+HEX	?= 0
+ifeq ($(HEX),1)
+	LIB_SRC	+= hex_visitor.cpp
+	CFLAGS	+= -DDP_HEX
+endif
+
+LIST	?= 0
+ifeq ($(LIST),1)
+	LIB_SRC	+= list_visitor.cpp
+	CFLAGS	+= -DDP_LIST
+endif
+
+LUKS	?= 0
+ifeq ($(LUKS),1)
+	OBJ_SRC	+= luks_partition.cpp luks_table.cpp
+	CFLAGS	+= -DDP_LUKS
+endif
+
+LVM	?= 0
+ifeq ($(LVM),1)
+	OBJ_SRC	+= lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp
+	HDR	+= lvm2.h
+	CFLAGS	+= -DDP_LVM
+endif
+
+MD	?= 0
+ifeq ($(MD),1)
+	OBJ_SRC	+= md_linear.cpp md_mirror.cpp md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp
+	CFLAGS	+= -DDP_MD
+endif
+
+MSDOS	?= 0
+ifeq ($(MSDOS),1)
+	OBJ_SRC	+= extended.cpp msdos.cpp msdos_partition.cpp
+	CFLAGS	+= -DDP_MSDOS
+endif
+
+NTFS	?= 0
+ifeq ($(NTFS),1)
+	LIB_SRC	+= ntfs.cpp
+	CFLAGS	+= -DDP_NTFS
+endif
+
+PROP	?= 0
+ifeq ($(PROP),1)
+	LIB_SRC	+= prop_visitor.cpp
+	CFLAGS	+= -DDP_PROP
+endif
+
+UNUSED	?= 0
+ifeq ($(UNUSED),1)
+	LIB_SRC	+= icon_manager.cpp
+	HDR	+= config_manager.h
+	CFLAGS	+= -DDP_UNUSED
+endif
+
+SRC	+= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
+HDR	+= $(SRC:%.cpp=%.h)
 
 OBJ_OBJ	= $(OBJ_SRC:%.cpp=$(OBJDIR)/%.o)
 LIB_OBJ	= $(LIB_SRC:%.cpp=$(OBJDIR)/%.o)
@@ -61,7 +145,6 @@ CFLAGS	+= -Wall
 CFLAGS	+= -Wextra
 CFLAGS	+= -Wpedantic
 #CFLAGS	+= -fcolor-diagnostics
-
 
 CFLAGS	+= -fno-omit-frame-pointer
 CFLAGS	+= -fno-optimize-sibling-calls
