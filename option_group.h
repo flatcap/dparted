@@ -36,7 +36,9 @@ public:
 #ifdef DP_LIST
 	bool list       = false;
 #endif
+#ifdef DP_PROP
 	bool properties = false;
+#endif
 	bool quit       = false;
 #ifdef DP_DOT
 	bool dot_display  = false;
