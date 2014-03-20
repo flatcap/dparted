@@ -31,7 +31,9 @@ public:
 
 	bool app        = false;
 	bool hex        = false;
+#ifdef DP_LIST
 	bool list       = false;
+#endif
 	bool properties = false;
 	bool quit       = false;
 #ifdef DP_DOT

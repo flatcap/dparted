@@ -43,7 +43,9 @@
 #include "dot_visitor.h"
 #endif
 #include "hex_visitor.h"
+#ifdef DP_LIST
 #include "list_visitor.h"
+#endif
 #include "prop_visitor.h"
 #include "utils.h"
 
@@ -246,7 +248,9 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 #endif
 
 	if (!group.app &&
+#ifdef DP_LIST
 	    !group.list &&
+#endif
 	    !group.properties &&
 #ifdef DP_DOT
 	    !group.dot_display &&
@@ -326,6 +330,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		}
 	}
 
+#ifdef DP_LIST
 	if (group.list && top_level) {
 		log_info ("------------------------------------------------------------\n");
 		ListVisitor lv;
@@ -333,7 +338,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		lv.list();
 		log_info ("------------------------------------------------------------\n");
 	}
-
+#endif
 	if (group.properties && top_level) {
 		log_info ("------------------------------------------------------------\n");
 		PropVisitor pv;

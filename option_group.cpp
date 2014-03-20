@@ -24,7 +24,9 @@ OptionGroup::OptionGroup (void) :
 	Glib::OptionGroup ("dparted", "Options for DParted", "Options to configure DParted")
 {
 	Glib::OptionEntry entry01; entry01.set_short_name ('a'); entry01.set_long_name ("app");        entry01.set_description ("Run the graphical application (default)");          add_entry          (entry01, app);
+#ifdef DP_LIST
 	Glib::OptionEntry entry02; entry02.set_short_name ('l'); entry02.set_long_name ("list");       entry02.set_description ("List all the objects on the disks");                add_entry          (entry02, list);
+#endif
 	Glib::OptionEntry entry04; entry04.set_short_name ('p'); entry04.set_long_name ("properties"); entry04.set_description ("Show all the disks' metadata");                     add_entry          (entry04, properties);
 	Glib::OptionEntry entry06; entry06.set_short_name ('q'); entry06.set_long_name ("quit");       entry06.set_description ("Kill the running instance of DParted");             add_entry          (entry06, quit);
 	Glib::OptionEntry entry07; entry07.set_short_name ('c'); entry07.set_long_name ("config");     entry07.set_description ("Use this file to configure DParted");               add_entry_filename (entry07, config);
