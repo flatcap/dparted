@@ -35,9 +35,17 @@ OBJ_SRC	+= block.cpp container.cpp disk.cpp file.cpp filesystem.cpp loop.cpp mis
 LIB_SRC	+= app.cpp config.cpp config_file.cpp log.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp
 
 # GUI - Graphical objects
-GUI_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp gui_app.cpp icon_manager.cpp \
-	   main.cpp option_group.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp \
-	   tree_view.cpp window.cpp
+GUI_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp gui_app.cpp main.cpp option_group.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp tree_view.cpp window.cpp
+
+# Misc header files
+HDR	+= log_trace.h mmap.h stringnum.h visitor.h
+
+UNUSED	?= 0
+ifeq ($(UNUSED),1)
+	LIB_SRC	+= icon_manager.cpp
+	HDR	+= config_manager.h
+	CFLAGS	+= -DDP_UNUSED
+endif
 
 FS_BTRFS	?= 0
 ifeq ($(FS_BTRFS),1)
@@ -215,9 +223,6 @@ endif
 
 SRC	+= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
 HDR	+= $(SRC:%.cpp=%.h)
-
-# Misc header files
-HDR	+= config_manager.h log_trace.h mmap.h stringnum.h visitor.h
 
 OBJ_OBJ	= $(OBJ_SRC:%.cpp=$(OBJDIR)/%.o)
 LIB_OBJ	= $(LIB_SRC:%.cpp=$(OBJDIR)/%.o)
