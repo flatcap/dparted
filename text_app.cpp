@@ -16,34 +16,27 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include <memory>
 
-#ifdef DP_GUI
-#include "gui_app.h"
-#else
+#include <iostream>
+
 #include "text_app.h"
-#endif
-#include "log.h"
+#include "log_trace.h"
+
+TextAppPtr text_app;
+
+TextApp::TextApp (void)
+{
+}
+
+TextApp::~TextApp()
+{
+}
+
 
 int
-main (int argc, char *argv[])
+TextApp::run (int UNUSED(argc), char **UNUSED(argv))
 {
-	log_init ("/dev/stdout");
-
-	int status = 0;
-
-#ifdef DP_GUI
-	gui_app = std::make_shared<GuiApp>();
-	main_app = gui_app;
-	status = gui_app->run (argc, argv);
-#else
-	text_app = std::make_shared<TextApp>();
-	main_app = text_app;
-	status = text_app->run (argc, argv);
-#endif
-
-	log_close();
-	return status;
+	std::cout << "text" << std::endl;
+	return 0;
 }
 

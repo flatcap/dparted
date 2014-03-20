@@ -52,6 +52,7 @@ SRC	+= block.cpp container.cpp disk.cpp file.cpp filesystem.cpp loop.cpp misc.cp
 
 # Library - Non-graphical miscellany
 SRC	+= app.cpp config.cpp config_file.cpp log.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp
+SRC	+= text_app.cpp
 
 # GUI - Graphical objects
 SRC	+= gui_app.cpp main.cpp option_group.cpp
