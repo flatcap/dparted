@@ -21,7 +21,9 @@
 
 #include "table.h"
 #include "action.h"
+#ifdef DP_GPT
 #include "gpt.h"
+#endif
 #include "log.h"
 #include "log_trace.h"
 #ifdef DP_LUKS
@@ -106,9 +108,10 @@ Table::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	if (!parent || !buffer || !bufsize)
 		return false;
 
+#ifdef DP_GPT
 	if (Gpt::probe (parent, buffer, bufsize))
 		return true;
-
+#endif
 #ifdef DP_LUKS
 	if (LuksTable::probe (parent, buffer, bufsize))
 		return true;

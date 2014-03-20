@@ -24,7 +24,9 @@
 #include "dot_visitor.h"
 #include "container.h"
 #include "loop.h"
+#ifdef DP_GPT
 #include "gpt.h"
+#endif
 #include "whole.h"
 #include "block.h"
 #include "partition.h"
@@ -351,6 +353,7 @@ DotVisitor::visit (LoopPtr l)
 	return true;
 }
 
+#ifdef DP_GPT
 /**
  * visit (GptPtr)
  */
@@ -364,6 +367,7 @@ DotVisitor::visit (GptPtr g)
 	return true;
 }
 
+#endif
 #ifdef DP_MSDOS
 /**
  * visit (MsdosPtr)

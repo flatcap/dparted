@@ -28,8 +28,10 @@
 #include "extfs.h"
 #include "file.h"
 #include "filesystem.h"
+#ifdef DP_GPT
 #include "gpt.h"
 #include "gpt_partition.h"
+#endif
 #include "loop.h"
 #ifdef DP_LUKS
 #include "luks_partition.h"
@@ -85,8 +87,10 @@ public:
 	virtual bool visit (ExtfsPtr          p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
 	virtual bool visit (FilePtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
 	virtual bool visit (FilesystemPtr     p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
+#ifdef DP_GPT
 	virtual bool visit (GptPartitionPtr   p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
 	virtual bool visit (GptPtr            p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
+#endif
 	virtual bool visit (LoopPtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
 #ifdef DP_LUKS
 	virtual bool visit (LuksPartitionPtr  p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }

@@ -29,7 +29,13 @@ OUT	= dparted
 LINKS	= misc test
 
 # Core Objects
-OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp gpt_partition.cpp loop.cpp misc.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
+OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extfs.cpp file.cpp filesystem.cpp loop.cpp misc.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
+
+GPT	?= 0
+ifeq ($(GPT),1)
+	OBJ_SRC	+= gpt.cpp gpt_partition.cpp
+	CFLAGS	+= -DDP_GPT
+endif
 
 LUKS	?= 0
 ifeq ($(LUKS),1)

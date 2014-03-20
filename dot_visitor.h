@@ -36,7 +36,9 @@ public:
 
 	virtual bool visit (ContainerPtr  p);
 	virtual bool visit (FilesystemPtr p);
+#ifdef DP_GPT
 	virtual bool visit (GptPtr        p);
+#endif
 	virtual bool visit (LoopPtr       p);
 	virtual bool visit (MiscPtr       p);
 #ifdef DP_MSDOS
