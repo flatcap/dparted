@@ -16,30 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with DParted.  If not, see <http://www.gnu.org/licenses/>.
 
-CC	= g++	#clang++
-SCAN	= scan-build
-RM	= rm -fr
-MKDIR	= mkdir -p
-
-DEPDIR	= .dep
-OBJDIR	= .obj
-
-OUT	= dparted
-
-LINKS	= misc test
-
-# Core Objects
-OBJ_SRC	+= block.cpp container.cpp disk.cpp file.cpp filesystem.cpp loop.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
-
-# Library - Non-graphical miscellany
-LIB_SRC	+= app.cpp config.cpp config_file.cpp log.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp
-
-# GUI - Graphical objects
-GUI_SRC	+= gui_app.cpp main.cpp option_group.cpp
-
-# Misc header files
-HDR	+= log_trace.h mmap.h stringnum.h visitor.h
-
 # Configurables
 V	?= 0		# Verbose
 P	?= 0		# Profiling
@@ -59,90 +35,70 @@ NTFS	?= 0
 PROP	?= 0
 UNUSED	?= 0
 
-ifeq ($(BTRFS),1)
-	LIB_SRC	+= btrfs.cpp
-	CFLAGS	+= -DDP_BTRFS
-endif
+CC	= g++	#clang++
+SCAN	= scan-build
+RM	= rm -fr
+MKDIR	= mkdir -p
 
-ifeq ($(DOT),1)
-	LIB_SRC	+= dot_visitor.cpp
-	CFLAGS	+= -DDP_DOT
-endif
+DEPDIR	= .dep
+OBJDIR	= .obj
 
-ifeq ($(EXTFS),1)
-	LIB_SRC	+= extfs.cpp
-	CFLAGS	+= -DDP_EXTFS
-endif
+OUT	= dparted
 
-ifeq ($(FS_MISC),1)
-	LIB_SRC	+= fs_get.cpp fs_identify.cpp fs_usage.cpp
-	CFLAGS	+= -DDP_FS_MISC
-endif
+LINKS	= misc test
 
-ifeq ($(GPT),1)
-	OBJ_SRC	+= gpt.cpp gpt_partition.cpp
-	CFLAGS	+= -DDP_GPT
-endif
+# Core Objects
+SRC	+= block.cpp container.cpp disk.cpp file.cpp filesystem.cpp loop.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
-ifeq ($(GUI),1)
-	OBJ_SRC	+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp tree_view.cpp window.cpp
-	CFLAGS	+= -DDP_GUI
-endif
+# Library - Non-graphical miscellany
+SRC	+= app.cpp config.cpp config_file.cpp log.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp
 
-ifeq ($(HEX),1)
-	LIB_SRC	+= hex_visitor.cpp
-	CFLAGS	+= -DDP_HEX
-endif
+# GUI - Graphical objects
+SRC	+= gui_app.cpp main.cpp option_group.cpp
 
-ifeq ($(LIST),1)
-	LIB_SRC	+= list_visitor.cpp
-	CFLAGS	+= -DDP_LIST
-endif
+# Misc header files
+HDR	+= log_trace.h mmap.h stringnum.h visitor.h
 
-ifeq ($(LUKS),1)
-	OBJ_SRC	+= luks_partition.cpp luks_table.cpp
-	CFLAGS	+= -DDP_LUKS
-endif
+CFLAGS-$(BTRFS)		+= -DDP_BTRFS
+CFLAGS-$(DOT)		+= -DDP_DOT
+CFLAGS-$(EXTFS)		+= -DDP_EXTFS
+CFLAGS-$(FS_MISC)	+= -DDP_FS_MISC
+CFLAGS-$(GPT)		+= -DDP_GPT
+CFLAGS-$(GUI)		+= -DDP_GUI
+CFLAGS-$(HEX)		+= -DDP_HEX
+CFLAGS-$(LIST)		+= -DDP_LIST
+CFLAGS-$(LUKS)		+= -DDP_LUKS
+CFLAGS-$(LVM)		+= -DDP_LVM
+CFLAGS-$(MD)		+= -DDP_MD
+CFLAGS-$(MSDOS)		+= -DDP_MSDOS
+CFLAGS-$(NTFS)		+= -DDP_NTFS
+CFLAGS-$(PROP)		+= -DDP_PROP
+CFLAGS-$(UNUSED)	+= -DDP_UNUSED
 
-ifeq ($(LVM),1)
-	OBJ_SRC	+= lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp
-	HDR	+= lvm2.h
-	CFLAGS	+= -DDP_LVM
-endif
+SRC-$(BTRFS)		+= btrfs.cpp
+SRC-$(DOT)		+= dot_visitor.cpp
+SRC-$(EXTFS)		+= extfs.cpp
+SRC-$(FS_MISC)		+= fs_get.cpp fs_identify.cpp fs_usage.cpp
+SRC-$(GPT)		+= gpt.cpp gpt_partition.cpp
+SRC-$(GUI)		+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp tree_view.cpp window.cpp
+SRC-$(HEX)		+= hex_visitor.cpp
+SRC-$(LIST)		+= list_visitor.cpp
+SRC-$(LUKS)		+= luks_partition.cpp luks_table.cpp
+SRC-$(LVM)		+= lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp
+SRC-$(MD)		+= md_linear.cpp md_mirror.cpp md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp
+SRC-$(MSDOS)		+= extended.cpp msdos.cpp msdos_partition.cpp
+SRC-$(NTFS)		+= ntfs.cpp
+SRC-$(PROP)		+= prop_visitor.cpp
+SRC-$(UNUSED)		+= icon_manager.cpp
 
-ifeq ($(MD),1)
-	OBJ_SRC	+= md_linear.cpp md_mirror.cpp md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp
-	CFLAGS	+= -DDP_MD
-endif
-
-ifeq ($(MSDOS),1)
-	OBJ_SRC	+= extended.cpp msdos.cpp msdos_partition.cpp
-	CFLAGS	+= -DDP_MSDOS
-endif
-
-ifeq ($(NTFS),1)
-	LIB_SRC	+= ntfs.cpp
-	CFLAGS	+= -DDP_NTFS
-endif
-
-ifeq ($(PROP),1)
-	LIB_SRC	+= prop_visitor.cpp
-	CFLAGS	+= -DDP_PROP
-endif
-
-ifeq ($(UNUSED),1)
-	LIB_SRC	+= icon_manager.cpp
-	HDR	+= config_manager.h
-	CFLAGS	+= -DDP_UNUSED
-endif
-
-SRC	+= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
+SRC	+= $(SRC-1)
 HDR	+= $(SRC:%.cpp=%.h)
 
-OBJ_OBJ	= $(OBJ_SRC:%.cpp=$(OBJDIR)/%.o)
-LIB_OBJ	= $(LIB_SRC:%.cpp=$(OBJDIR)/%.o)
-GUI_OBJ	= $(GUI_SRC:%.cpp=$(OBJDIR)/%.o)
+HDR	+= lvm2.h config_manager.h
 
+OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
+
+CFLAGS	+= $(CFLAGS-1)
 CFLAGS	+= -std=c++11
 CFLAGS	+= -ggdb
 CFLAGS	+= -Wall
@@ -154,29 +110,29 @@ CFLAGS	+= -fno-omit-frame-pointer
 CFLAGS	+= -fno-optimize-sibling-calls
 CFLAGS	+= -DDEBUG
 
-GUI_CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
-GUI_CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
-GUI_CFLAGS	+= -DGDK_DISABLE_DEPRECATED
-GUI_CFLAGS	+= -DGDK_PIXBUF_DISABLE_DEPRECATED
-GUI_CFLAGS	+= -DGIOMM_DISABLE_DEPRECATED
-GUI_CFLAGS	+= -DGLIBMM_DISABLE_DEPRECATED
-GUI_CFLAGS	+= -DGLIBMM_G_DISABLE_DEPRECATED_UNDEFED
-GUI_CFLAGS	+= -DGTKMM_GTKMM_DISABLE_DEPRECATED_UNDEFED
-GUI_CFLAGS	+= -DGTK_DISABLE_DEPRECATED
-GUI_CFLAGS	+= -DHB_DISABLE_DEPRECATED
-GUI_CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
-GUI_CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
+CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
+CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
+CFLAGS	+= -DGDK_DISABLE_DEPRECATED
+CFLAGS	+= -DGDK_PIXBUF_DISABLE_DEPRECATED
+CFLAGS	+= -DGIOMM_DISABLE_DEPRECATED
+CFLAGS	+= -DGLIBMM_DISABLE_DEPRECATED
+CFLAGS	+= -DGLIBMM_G_DISABLE_DEPRECATED_UNDEFED
+CFLAGS	+= -DGTKMM_GTKMM_DISABLE_DEPRECATED_UNDEFED
+CFLAGS	+= -DGTK_DISABLE_DEPRECATED
+CFLAGS	+= -DHB_DISABLE_DEPRECATED
+CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
+CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 
 # bug in ccache
-#GUI_CFLAGS	+= -Qunused-arguments
+#CFLAGS	+= -Qunused-arguments
 
-#GUI_CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
-#GUI_CFLAGS	+= -DG_DISABLE_DEPRECATED
+#CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
+#CFLAGS	+= -DG_DISABLE_DEPRECATED
 
 PACKAGES = gtkmm-3.0 libconfig++
 
-GUI_CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
-LDFLAGS		+= $(shell pkg-config --libs   $(PACKAGES))
+CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
+LDFLAGS	+= $(shell pkg-config --libs   $(PACKAGES))
 
 ifeq ($(V),1)
 	quiet=
@@ -196,9 +152,7 @@ ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
 	quiet=silent_
 endif
 
-$(GUI_OBJ):	CFLAGS += $(GUI_CFLAGS)
-
-all:	$(OBJDIR) $(DEPDIR) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) $(OUT) tags
+all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT) tags
 
 # ----------------------------------------------------------------------------
 
@@ -229,9 +183,9 @@ $(OBJDIR)/%.o: %.cpp
 # ----------------------------------------------------------------------------
 
 quiet_cmd_LD	= LD	$@
-      cmd_LD	= $(CC) -o $@ $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) $(LDFLAGS)
+      cmd_LD	= $(CC) -o $@ $(OBJ) $(LDFLAGS)
 
-$(OUT):	$(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ)
+$(OUT):	$(OBJ)
 	$(call cmd,LD)
 
 # ----------------------------------------------------------------------------
@@ -264,7 +218,7 @@ $(LINKS):
 	ln -s ../dparted-$@ $@
 
 clean:	force
-	$(RM) $(OUT) $(OBJ_OBJ) $(LIB_OBJ) $(GUI_OBJ) gmon.out *.gcov
+	$(RM) $(OUT) $(OBJ) gmon.out *.gcov
 
 distclean: clean
 	$(RM) $(DEPDIR) $(OBJDIR) tags html stats xxx.txt

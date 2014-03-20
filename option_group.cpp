@@ -23,7 +23,7 @@
 OptionGroup::OptionGroup (void) :
 	Glib::OptionGroup ("dparted", "Options for DParted", "Options to configure DParted")
 {
-#ifdef DP_APP
+#ifdef DP_GUI
 	Glib::OptionEntry entry01; entry01.set_short_name ('a'); entry01.set_long_name ("app");        entry01.set_description ("Run the graphical application (default)");          add_entry          (entry01, app);
 #endif
 #ifdef DP_LIST
@@ -32,11 +32,11 @@ OptionGroup::OptionGroup (void) :
 #ifdef DP_PROP
 	Glib::OptionEntry entry04; entry04.set_short_name ('p'); entry04.set_long_name ("properties"); entry04.set_description ("Show all the disks' metadata");                     add_entry          (entry04, properties);
 #endif
-#ifdef DP_APP
+#ifdef DP_GUI
 	Glib::OptionEntry entry06; entry06.set_short_name ('q'); entry06.set_long_name ("quit");       entry06.set_description ("Kill the running instance of DParted");             add_entry          (entry06, quit);
 #endif
 	Glib::OptionEntry entry07; entry07.set_short_name ('c'); entry07.set_long_name ("config");     entry07.set_description ("Use this file to configure DParted");               add_entry_filename (entry07, config);
-#ifdef DP_APP
+#ifdef DP_GUI
 	Glib::OptionEntry entry08; entry08.set_short_name ('t'); entry08.set_long_name ("theme");      entry08.set_description ("Use this file to style the graphical application"); add_entry_filename (entry08, theme);
 	Glib::OptionEntry entry09; entry09.set_short_name ('x'); entry09.set_long_name ("xcoord");     entry09.set_description ("X coordinate of the main window (app only)");       add_entry          (entry09, x);
 	Glib::OptionEntry entry10; entry10.set_short_name ('y'); entry10.set_long_name ("ycoord");     entry10.set_description ("Y coordinate of the main window (app only)");       add_entry          (entry10, y);

@@ -29,7 +29,7 @@ class OptionGroup : public Glib::OptionGroup
 public:
 	OptionGroup();
 
-#ifdef DP_APP
+#ifdef DP_GUI
 	bool app        = false;
 #endif
 #ifdef DP_HEX
@@ -49,7 +49,7 @@ public:
 	bool dot_save_gv  = false;
 	bool dot_save_png = false;
 #endif
-#ifdef DP_APP
+#ifdef DP_GUI
 	int x = -1;	// Window coordinates
 	int y = -1;
 	int w = -1;	// Window size
@@ -57,7 +57,7 @@ public:
 #endif
 
 	std::vector<std::string> config;
-#ifdef DP_APP
+#ifdef DP_GUI
 	std::vector<std::string> theme;
 #endif
 };

@@ -33,7 +33,7 @@
 
 #include "app.h"
 #include "gui_app.h"
-#ifdef DP_APP
+#ifdef DP_GUI
 #include "window.h"
 #include "properties_dialog.h"
 #endif
@@ -69,7 +69,7 @@ GuiApp::~GuiApp()
 }
 
 
-#ifdef DP_APP
+#ifdef DP_GUI
 bool
 GuiApp::my_idle (void)
 {
@@ -255,7 +255,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 #endif
 #endif
 
-#ifdef DP_APP
+#ifdef DP_GUI
 	if (!group.app &&
 #ifdef DP_LIST
 	    !group.list &&
@@ -276,7 +276,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	}
 #endif
 
-#ifdef DP_APP
+#ifdef DP_GUI
 	if (!group.app) {
 		if (group.theme.size())
 			std::cout << "theme without app" << std::endl;
@@ -327,7 +327,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	ContainerPtr top_level;
 
 	if (disks.size()) {
-#ifdef DP_APP
+#ifdef DP_GUI
 		std::cout << "scan only: ";
 		for (auto d : disks) {
 			std::cout << "\"" << d << "\" ";
@@ -339,7 +339,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 #endif
 		top_level = main_app->scan (disks);
 	} else {
-#ifdef DP_APP
+#ifdef DP_GUI
 		if (running) {
 			top_level = main_app->get_top_level();	// Default to what's there
 		} else {
@@ -347,7 +347,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 			//Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
 #endif
 			top_level = main_app->scan (disks);
-#ifdef DP_APP
+#ifdef DP_GUI
 		}
 #endif
 	}
@@ -404,7 +404,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	}
 #endif
 
-#ifdef DP_APP
+#ifdef DP_GUI
 	show_window();
 #endif
 
@@ -413,7 +413,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 }
 
 
-#ifdef DP_APP
+#ifdef DP_GUI
 void
 GuiApp::menu_preferences (void)
 {

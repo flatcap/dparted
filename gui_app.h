@@ -24,7 +24,7 @@
 
 #include "app.h"
 #include "message.h"
-#ifdef DP_APP
+#ifdef DP_GUI
 #include "gfx_container.h"
 #include "theme.h"
 #include "password_dialog.h"
@@ -45,7 +45,7 @@ public:
 	GuiApp (void);
 	virtual ~GuiApp();
 
-#ifdef DP_APP
+#ifdef DP_GUI
 	virtual bool ask      (QuestionPtr q);
 	virtual bool notify (Message& m);
 	virtual bool ask_pass (PasswordDialogPtr pw);
@@ -64,7 +64,7 @@ public:
 	void on_action_help       (void);
 
 protected:
-#ifdef DP_APP
+#ifdef DP_GUI
 	virtual void on_activate (void);
 	virtual void on_startup  (void);
 
@@ -87,7 +87,7 @@ protected:
 	bool on_mouse_click (GdkEventButton* event);
 
 	std::vector<QuestionPtr> vq;
-#ifdef DP_APP
+#ifdef DP_GUI
 	PasswordDialogPtr passwd;
 	ThemePtr theme;
 	Window* window = nullptr;	// do not delete
