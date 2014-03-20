@@ -30,7 +30,9 @@ public:
 	OptionGroup();
 
 	bool app        = false;
+#ifdef DP_HEX
 	bool hex        = false;
+#endif
 #ifdef DP_LIST
 	bool list       = false;
 #endif

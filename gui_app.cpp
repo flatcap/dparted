@@ -42,7 +42,9 @@
 #ifdef DP_DOT
 #include "dot_visitor.h"
 #endif
+#ifdef DP_HEX
 #include "hex_visitor.h"
+#endif
 #ifdef DP_LIST
 #include "list_visitor.h"
 #endif
@@ -257,7 +259,9 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	    !group.dot_save_gv &&
 	    !group.dot_save_png &&
 #endif
+#ifdef DP_HEX
 	    !group.hex &&
+#endif
 	    !group.quit) {
 		group.app = true;
 	}
@@ -347,13 +351,14 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		log_info ("------------------------------------------------------------\n");
 	}
 
+#ifdef DP_HEX
 	if (group.hex && top_level) {
 		log_info ("------------------------------------------------------------\n");
 		HexVisitor hv;
 		top_level->accept (hv);
 		log_info ("------------------------------------------------------------\n");
 	}
-
+#endif
 #ifdef DP_DOT
 	if ((group.dot_display || group.dot_save_gv || group.dot_save_png) && top_level) {
 		if (group.dot_separate) {
