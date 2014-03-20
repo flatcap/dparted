@@ -29,10 +29,13 @@ OUT	= dparted
 LINKS	= misc test
 
 # Core Objects
-OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extended.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp \
-	   gpt_partition.cpp loop.cpp luks_partition.cpp luks_table.cpp lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp \
-	   lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp misc.cpp msdos.cpp \
-	   msdos_partition.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
+OBJ_SRC	+= block.cpp btrfs.cpp container.cpp disk.cpp extended.cpp extfs.cpp file.cpp filesystem.cpp gpt.cpp gpt_partition.cpp loop.cpp luks_partition.cpp luks_table.cpp misc.cpp msdos.cpp msdos_partition.cpp ntfs.cpp partition.cpp table.cpp volume.cpp whole.cpp
+
+LVM	?= 0
+ifeq ($(LVM),1)
+	OBJ_SRC	+= lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp
+	CFLAGS	+= -DDP_LVM
+endif
 
 MD	?= 0
 ifeq ($(MD),1)
@@ -141,7 +144,7 @@ SRC	+= $(OBJ_SRC) $(LIB_SRC) $(GUI_SRC)
 HDR	+= $(SRC:%.cpp=%.h)
 
 # Misc header files
-HDR	+= config_manager.h log_trace.h lvm2.h mmap.h stringnum.h visitor.h
+HDR	+= config_manager.h log_trace.h mmap.h stringnum.h visitor.h
 
 OBJ_OBJ	= $(OBJ_SRC:%.cpp=$(OBJDIR)/%.o)
 LIB_OBJ	= $(LIB_SRC:%.cpp=$(OBJDIR)/%.o)

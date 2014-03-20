@@ -219,7 +219,9 @@ App::scan (const std::vector<std::string>& files)
 		//std::cout << std::endl;
 	}
 
+#ifdef DP_LVM
 	LvmGroup::discover (top_level);
+#endif
 	//MdGroup::discover (top_level);
 
 	// Process the probe_queue

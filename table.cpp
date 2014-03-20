@@ -104,8 +104,10 @@ Table::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	if (LuksTable::probe (parent, buffer, bufsize))
 		return true;
 
+#ifdef DP_LVM
 	if (LvmTable::probe (parent, buffer, bufsize))
 		return true;
+#endif
 
 #ifdef DP_MD
 	if (MdTable::probe (parent, buffer, bufsize))
