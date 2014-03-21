@@ -117,6 +117,17 @@ Container::Container (void)
 	declare_prop_fn (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long",          0);
 	declare_prop_fn (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short",         d);
 
+	// declare_prop_fn (me, "block_size",    (get_uint64_t) ([&](){ return block_size;    }), "Block Size",    d|s);
+	// declare_prop_fn (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
+	// declare_prop_fn (me, "bytes_size",    (get_uint64_t) ([&](){ return bytes_size;    }), "Size",          d|s);
+	// declare_prop_fn (me, "bytes_used",    (get_uint64_t) ([&](){ return bytes_used;    }), "Used",          d|s);
+	// declare_prop_fn (me, "chunk_size",  (get_uint64_t) ([&](){ return chunk_size;  }), "desc of chunk_size",  s);
+	// declare_prop_fn (me, "data_offset", (get_uint64_t) ([&](){ return data_offset; }), "desc of data_offset", s);
+	// declare_prop_fn (me, "data_size",   (get_uint64_t) ([&](){ return data_size;   }), "desc of data_size",   s);
+	// declare_prop_fn (me, "metadata_size", (get_uint64_t) ([&](){ return metadata_size; }), "desc of metadata_size", s);
+	// declare_prop_fn (me, "offset",     (get_uint64_t) ([&](){ return offset;     }), "desc of offset",     d|s);
+	// declare_prop_fn (me, "sizelimit",  (get_uint64_t) ([&](){ return sizelimit;  }), "desc of sizelimit",  d|s);
+
 	// Absolute Offset  bytes      u64 size        num/scale  absolute_offset_bytes      123456789
 
 	// Absolute Offset  percentage u8  percentage  num %      absolute_offset_percentage 45

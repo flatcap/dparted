@@ -181,6 +181,15 @@ public:
 
 #endif
 
+	PPtr
+	declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags = 0)
+	{
+		PPtr pv (new PropArray (owner, name, v, index, desc, flags));
+		props[name] = pv;
+
+		return pv;
+	}
+
 	void sub_type (const char* name);
 
 public:

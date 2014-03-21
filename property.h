@@ -24,6 +24,7 @@
 #include <cstdint>
 #include <string>
 #include <memory>
+#include <vector>
 
 class BaseProperty;
 
@@ -215,6 +216,42 @@ public:
 protected:
 	BaseProperty& num;
 	BaseProperty& denom;
+};
+
+class PropArray : public BaseProperty
+{
+public:
+	PropArray (const char* owner, const char* name, std::vector<std::string>& vec, unsigned int index, const char* desc, int flags) :
+		BaseProperty (owner, name, desc, flags),
+		v(vec),
+		index(index)
+	{
+		type = Tag::t_string;		// Pretend to be a std::string
+	}
+
+	virtual ~PropArray()
+	{
+	}
+
+	PropArray (void) = default;
+
+	PropArray (const PropArray&  other) = default;
+	PropArray (      PropArray&& other) = default;
+
+	PropArray& operator= (PropArray&  other) = default;
+	PropArray& operator= (PropArray&& other) = default;
+
+	virtual operator std::string (void)
+	{
+		if (index >= v.size())
+			return "";
+
+		return v[index];
+	}
+
+protected:
+	std::vector<std::string>& v;
+	unsigned int index = 0;
 };
 
 #if 0

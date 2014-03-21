@@ -52,8 +52,10 @@ TextApp::run (int argc, char **argv)
 	lv.list();
 #endif
 
-	ContainerPtr c = *top_level->get_children().begin();
-	for (auto p : c->get_all_props()) {
+	ContainerPtr c1 = *top_level->get_children().begin();
+	ContainerPtr c2 = *c1->get_children().begin();
+	ContainerPtr c3 = *c2->get_children().begin();
+	for (auto p : c3->get_all_props()) {
 		std::cout << p->name << "\t" << (std::string) *p<< std::endl;
 	}
 
