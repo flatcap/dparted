@@ -28,6 +28,7 @@ Code features
 		systemd messageid?
 	namespace Log?
 	trim \n from single line for syslog/journal
+		or add it if nec (dependent on output type)
 	LogInit();
 		automatic?
 	LogClose();
