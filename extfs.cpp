@@ -241,9 +241,13 @@ Extfs::get_ext_sb (ContainerPtr parent)
 		std::string value = i.second;
 		//printf ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
 
-		more_props.push_back (value);
-		//declare_prop_var (me, key.c_str(), more_props.back(), desc.c_str());
-		declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str());
+		if (desc == "Filesystem features") {
+			explode (" ", value, features);
+			declare_prop_var (me, key.c_str(), features, desc.c_str());
+		} else {
+			more_props.push_back (value);
+			declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str());
+		}
 	}
 #endif
 }
