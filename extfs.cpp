@@ -244,6 +244,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 		more_props.push_back (value);
 		//declare_prop_var (me, key.c_str(), more_props.back(), desc.c_str());
 		declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str());
+		if (more_props.size() > 5) break;
 	}
 #endif
 }

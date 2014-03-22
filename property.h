@@ -105,10 +105,11 @@ public:
 	} type = Tag::t_unset;
 
 	enum Flags {
-		Hide  = 1 << 0,		// Should not be displayed in properties dialog
-		Dot   = 1 << 1,		// Should be displayed in graphviz diagram
-		Size  = 1 << 2,		// This number can be abbreviated, e.g. MiB
-		Debug = 1 << 3
+		Hide    = 1 << 0,	// Should not be displayed in properties dialog
+		Dot     = 1 << 1,	// Should be displayed in graphviz diagram
+		Size    = 1 << 2,	// This number can be abbreviated, e.g. MiB
+		Percent = 1 << 3,	// Display the ratio of two numbers as a percentage
+		Debug   = 1 << 4
 	};
 
 	std::string owner;
@@ -185,7 +186,7 @@ protected:
 class PropPercent : public BaseProperty
 {
 public:
-	PropPercent (const char* owner, const char* name, BaseProperty& numerator, BaseProperty& denominator, const char* desc, int flags) :
+	PropPercent (const char* owner, const char* name, PPtr& numerator, PPtr& denominator, const char* desc, int flags) :
 		BaseProperty (owner, name, desc, flags),
 		num(numerator),
 		denom(denominator)
@@ -207,15 +208,16 @@ public:
 
 	virtual operator std::uint8_t (void)
 	{
-		double dn = (std::uint64_t) num;
-		double dd = (std::uint64_t) denom;
+		//XXX check num & denom
+		double dn = (std::uint64_t) *num;
+		double dd = (std::uint64_t) *denom;
 
-		return (std::uint8_t) ((dn/dd) + 0.5);
+		return (std::uint8_t) ((dn/dd*100) + 0.5);
 	}
 
 protected:
-	BaseProperty& num;
-	BaseProperty& denom;
+	PPtr num;
+	PPtr denom;
 };
 
 class PropArray : public BaseProperty

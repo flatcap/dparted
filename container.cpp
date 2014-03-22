@@ -91,13 +91,21 @@ Container::Container (void)
 	const char* me = "Container";
 	const int   d  = (int) BaseProperty::Flags::Dot;
 	const int   s  = (int) BaseProperty::Flags::Size;
+	const int   p  = (int) BaseProperty::Flags::Percent;
 	//const int   h  = (int) BaseProperty::Flags::Hide;
 
 	sub_type (me);
 
+	PPtr bs = declare_prop_fn (me, "bytes_size",    (get_uint64_t) ([&](){ return bytes_size;    }), "Size",          d|s);
+
+	declare_prop_var_extra (me, "bytes_used", bytes_used, "Used", d|s|p, bs);
+
+	declare_prop_fn_extra (me, "bytes_free", (get_uint64_t) std::bind(&Container::get_bytes_free, this), "desc of bytes_free", s|p, bs);
+
+	// declare_prop_fn (me, "bytes_used",    (get_uint64_t) ([&](){ return bytes_used;    }), "Used",          d|s);
+	// declare_prop_fn (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
+
 	declare_prop_fn (me, "block_size",    (get_uint64_t) ([&](){ return block_size;    }), "Block Size",    d|s);
-	declare_prop_fn (me, "bytes_size",    (get_uint64_t) ([&](){ return bytes_size;    }), "Size",          d|s);
-	declare_prop_fn (me, "bytes_used",    (get_uint64_t) ([&](){ return bytes_used;    }), "Used",          d|s);
 	declare_prop_fn (me, "device",        (get_string_t) ([&](){ return device;        }), "Device",        d);
 	declare_prop_fn (me, "device_major",  (get_uint64_t) ([&](){ return device_major;  }), "Major",         0);
 	declare_prop_fn (me, "device_minor",  (get_uint64_t) ([&](){ return device_minor;  }), "Minor",         0);
@@ -108,7 +116,6 @@ Container::Container (void)
 	//declare_prop (me, "bytes_free", bytes_free, bytes_size, "bytes free", d|s);
 	//declare_prop (me, "bytes_used", bytes_used, bytes_size, "bytes used", d|s);
 
-	declare_prop_fn (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
 	declare_prop_fn (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
 	declare_prop_fn (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
 	declare_prop_fn (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default",       d);
