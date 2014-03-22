@@ -77,18 +77,18 @@ public:
 	void set_type (uint64_t)                 { type = Tag::t_u64;    }
 	void set_type (int64_t)                  { type = Tag::t_s64;    }
 
-	virtual operator std::string              (void);
-	virtual operator std::vector<std::string> (void);
-	virtual operator double                   (void);
-	virtual operator bool                     (void);
-	virtual operator uint8_t                  (void);
-	virtual operator  int8_t                  (void);
-	virtual operator uint16_t                 (void);
-	virtual operator  int16_t                 (void);
-	virtual operator uint32_t                 (void);
-	virtual operator  int32_t                 (void);
-	virtual operator uint64_t                 (void);
-	virtual operator  int64_t                 (void);
+	virtual explicit operator std::string              (void);
+	virtual explicit operator std::vector<std::string> (void);
+	virtual explicit operator double                   (void);
+	virtual explicit operator bool                     (void);
+	virtual explicit operator uint8_t                  (void);
+	virtual explicit operator  int8_t                  (void);
+	virtual explicit operator uint16_t                 (void);
+	virtual explicit operator  int16_t                 (void);
+	virtual explicit operator uint32_t                 (void);
+	virtual explicit operator  int32_t                 (void);
+	virtual explicit operator uint64_t                 (void);
+	virtual explicit operator  int64_t                 (void);
 
 	std::string get_type_name (void);
 
