@@ -40,9 +40,9 @@ LvmTable::LvmTable (void)
 
 	sub_type (me);
 
-	declare_prop_fn (me, "config",        (get_string_t) ([&](){ return config;        }), "desc of config",        0);
-	declare_prop_fn (me, "metadata_size", (get_uint64_t) ([&](){ return metadata_size; }), "desc of metadata_size", s);
-	declare_prop_fn (me, "pv_attr",       (get_string_t) ([&](){ return pv_attr;       }), "desc of pv_attr",       0);
+	declare_prop_var (me, "config",        config,        "desc of config",        0);
+	declare_prop_var (me, "metadata_size", metadata_size, "desc of metadata_size", s);
+	declare_prop_var (me, "pv_attr",       pv_attr,       "desc of pv_attr",       0);
 }
 
 LvmTable::~LvmTable()

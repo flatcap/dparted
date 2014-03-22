@@ -29,11 +29,11 @@ LvmVolume::LvmVolume (void)
 
 	sub_type (me);
 
-	declare_prop_fn (me, "lv_attr",      (get_string_t) ([&](){ return lv_attr;      }), "desc of lv_attr",      0);
-	declare_prop_fn (me, "seg_count",    (get_uint64_t) ([&](){ return seg_count;    }), "desc of seg_count",    0);
-	declare_prop_fn (me, "seg_start_pe", (get_uint64_t) ([&](){ return seg_start_pe; }), "desc of seg_start_pe", 0);
-	declare_prop_fn (me, "stripes",      (get_uint64_t) ([&](){ return stripes;      }), "desc of stripes",      0);
-	declare_prop_fn (me, "stripe_size",  (get_uint64_t) ([&](){ return stripe_size;  }), "desc of stripe_size",  0);
+	declare_prop_var (me, "lv_attr",      lv_attr,      "desc of lv_attr",      0);
+	declare_prop_var (me, "seg_count",    seg_count,    "desc of seg_count",    0);
+	declare_prop_var (me, "seg_start_pe", seg_start_pe, "desc of seg_start_pe", 0);
+	declare_prop_var (me, "stripes",      stripes,      "desc of stripes",      0);
+	declare_prop_var (me, "stripe_size",  stripe_size,  "desc of stripe_size",  0);
 }
 
 LvmVolume::~LvmVolume()

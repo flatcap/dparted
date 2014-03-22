@@ -42,16 +42,16 @@ Disk::Disk (void)
 
 	sub_type (me);
 
-	declare_prop_fn (me, "bios_cylinders", (get_int32_t)  ([&](){ return bios_cylinders; }), "BIOS Cylinders", 0);
-	declare_prop_fn (me, "bios_heads",     (get_int32_t)  ([&](){ return bios_heads;     }), "BIOS Heads",     0);
-	declare_prop_fn (me, "bios_sectors",   (get_int32_t)  ([&](){ return bios_sectors;   }), "BIOS Sectors",   0);
-	declare_prop_fn (me, "did",            (get_int32_t)  ([&](){ return did;            }), "DID",            0);
-	declare_prop_fn (me, "host",           (get_int32_t)  ([&](){ return host;           }), "Host",           0);
-	declare_prop_fn (me, "hw_cylinders",   (get_int32_t)  ([&](){ return hw_cylinders;   }), "HW Cylinders",   0);
-	declare_prop_fn (me, "hw_heads",       (get_int32_t)  ([&](){ return hw_heads;       }), "HW Heads",       0);
-	declare_prop_fn (me, "hw_sectors",     (get_int32_t)  ([&](){ return hw_sectors;     }), "HW Sectors",     0);
-	declare_prop_fn (me, "mounts",         (get_string_t) ([&](){ return mounts;         }), "Mounts",         0);
-	declare_prop_fn (me, "read_only",      (get_bool_t)   ([&](){ return read_only;      }), "Read Only",      0);
+	declare_prop_var (me, "bios_cylinders", bios_cylinders, "BIOS Cylinders", 0);
+	declare_prop_var (me, "bios_heads",     bios_heads,     "BIOS Heads",     0);
+	declare_prop_var (me, "bios_sectors",   bios_sectors,   "BIOS Sectors",   0);
+	declare_prop_var (me, "did",            did,            "DID",            0);
+	declare_prop_var (me, "host",           host,           "Host",           0);
+	declare_prop_var (me, "hw_cylinders",   hw_cylinders,   "HW Cylinders",   0);
+	declare_prop_var (me, "hw_heads",       hw_heads,       "HW Heads",       0);
+	declare_prop_var (me, "hw_sectors",     hw_sectors,     "HW Sectors",     0);
+	declare_prop_var (me, "mounts",         mounts,         "Mounts",         0);
+	declare_prop_var (me, "read_only",      read_only,      "Read Only",      0);
 }
 
 Disk::~Disk()

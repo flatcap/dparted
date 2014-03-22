@@ -31,7 +31,7 @@ Partition::Partition (void)
 
 	sub_type (me);
 
-	declare_prop_fn (me, "ptype", (get_int32_t) ([&](){ return ptype; }), "desc of ptype", 0);
+	declare_prop_var (me, "ptype", ptype, "desc of ptype", 0);
 }
 
 Partition::~Partition()

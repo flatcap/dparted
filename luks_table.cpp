@@ -43,10 +43,10 @@ LuksTable::LuksTable (void)
 
 	sub_type (me);
 
-	declare_prop_fn (me, "cipher_mode", (get_string_t) ([&](){ return cipher_mode; }), "Cipher Mode", 0);
-	declare_prop_fn (me, "cipher_name", (get_string_t) ([&](){ return cipher_name; }), "Cipher Name", 0);
-	declare_prop_fn (me, "hash_spec",   (get_string_t) ([&](){ return hash_spec;   }), "Hash Spec",   0);
-	declare_prop_fn (me, "version",     (get_uint16_t) ([&](){ return version;     }), "Version",     0);
+	declare_prop_var (me, "cipher_mode", cipher_mode, "Cipher Mode", 0);
+	declare_prop_var (me, "cipher_name", cipher_name, "Cipher Name", 0);
+	declare_prop_var (me, "hash_spec",   hash_spec,   "Hash Spec",   0);
+	declare_prop_var (me, "version",     version,     "Version",     0);
 }
 
 LuksTable::~LuksTable()
