@@ -30,17 +30,18 @@ class BaseProperty;
 
 typedef std::shared_ptr<BaseProperty> PPtr;
 
-typedef std::function<std::string (void)> get_string_t;
-typedef std::function<double      (void)> get_double_t;
-typedef std::function<bool        (void)> get_bool_t;
-typedef std::function<uint8_t     (void)> get_uint8_t;
-typedef std::function<int8_t      (void)> get_int8_t;
-typedef std::function<uint16_t    (void)> get_uint16_t;
-typedef std::function<int16_t     (void)> get_int16_t;
-typedef std::function<uint32_t    (void)> get_uint32_t;
-typedef std::function<int32_t     (void)> get_int32_t;
-typedef std::function<uint64_t    (void)> get_uint64_t;
-typedef std::function<int64_t     (void)> get_int64_t;
+typedef std::function<std::string              (void)> get_string_t;
+typedef std::function<std::vector<std::string> (void)> get_list_t;
+typedef std::function<double                   (void)> get_double_t;
+typedef std::function<bool                     (void)> get_bool_t;
+typedef std::function<uint8_t                  (void)> get_uint8_t;
+typedef std::function< int8_t                  (void)> get_int8_t;
+typedef std::function<uint16_t                 (void)> get_uint16_t;
+typedef std::function< int16_t                 (void)> get_int16_t;
+typedef std::function<uint32_t                 (void)> get_uint32_t;
+typedef std::function< int32_t                 (void)> get_int32_t;
+typedef std::function<uint64_t                 (void)> get_uint64_t;
+typedef std::function< int64_t                 (void)> get_int64_t;
 
 class BaseProperty
 {
@@ -62,36 +63,39 @@ public:
 	BaseProperty& operator= (BaseProperty&  other) = default;
 	BaseProperty& operator= (BaseProperty&& other) = default;
 
-	void set_type (std::string) { type = Tag::t_string; }
-	void set_type (const char*) { type = Tag::t_string; }
-	void set_type (double)      { type = Tag::t_double; }
-	void set_type (bool)        { type = Tag::t_bool;   }
-	void set_type (uint8_t)     { type = Tag::t_u8;     }
-	void set_type (int8_t)      { type = Tag::t_s8;     }
-	void set_type (uint16_t)    { type = Tag::t_u16;    }
-	void set_type (int16_t)     { type = Tag::t_s16;    }
-	void set_type (uint32_t)    { type = Tag::t_u32;    }
-	void set_type (int32_t)     { type = Tag::t_s32;    }
-	void set_type (uint64_t)    { type = Tag::t_u64;    }
-	void set_type (int64_t)     { type = Tag::t_s64;    }
+	void set_type (std::string)              { type = Tag::t_string; }
+	void set_type (std::vector<std::string>) { type = Tag::t_list; }
+	void set_type (const char*)              { type = Tag::t_string; }
+	void set_type (double)                   { type = Tag::t_double; }
+	void set_type (bool)                     { type = Tag::t_bool;   }
+	void set_type (uint8_t)                  { type = Tag::t_u8;     }
+	void set_type (int8_t)                   { type = Tag::t_s8;     }
+	void set_type (uint16_t)                 { type = Tag::t_u16;    }
+	void set_type (int16_t)                  { type = Tag::t_s16;    }
+	void set_type (uint32_t)                 { type = Tag::t_u32;    }
+	void set_type (int32_t)                  { type = Tag::t_s32;    }
+	void set_type (uint64_t)                 { type = Tag::t_u64;    }
+	void set_type (int64_t)                  { type = Tag::t_s64;    }
 
-	virtual operator std::string (void);
-	virtual operator double      (void);
-	virtual operator bool        (void);
-	virtual operator uint8_t     (void);
-	virtual operator  int8_t     (void);
-	virtual operator uint16_t    (void);
-	virtual operator  int16_t    (void);
-	virtual operator uint32_t    (void);
-	virtual operator  int32_t    (void);
-	virtual operator uint64_t    (void);
-	virtual operator  int64_t    (void);
+	virtual operator std::string              (void);
+	virtual operator std::vector<std::string> (void);
+	virtual operator double                   (void);
+	virtual operator bool                     (void);
+	virtual operator uint8_t                  (void);
+	virtual operator  int8_t                  (void);
+	virtual operator uint16_t                 (void);
+	virtual operator  int16_t                 (void);
+	virtual operator uint32_t                 (void);
+	virtual operator  int32_t                 (void);
+	virtual operator uint64_t                 (void);
+	virtual operator  int64_t                 (void);
 
 	std::string get_type_name (void);
 
 	enum class Tag {
 		t_unset,	// Empty
 		t_string,	// Text
+		t_list,		// A set of text strings
 		t_double,	// Floating point
 		t_bool,		//  1 bit
 		t_u8,		//  8 bit unsigned integer
