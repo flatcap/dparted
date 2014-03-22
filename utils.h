@@ -28,6 +28,7 @@
 long         align (long num, long round);
 void         dump_hex (std::uint8_t* buffer, int bufsize);
 void         dump_hex2 (void* buf, int start, int length);
+std::string  join (std::vector<std::string> v, const std::string& sep);
 unsigned int execute_command1 (const std::string& command, std::vector<std::string>& output);
 unsigned int execute_command2 (const std::string& command, std::string& input);
 unsigned int execute_command3 (const std::string& command, std::string& output);

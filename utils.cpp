@@ -435,3 +435,23 @@ read_uuid3 (std::uint8_t* buffer)
 }
 
 
+std::string
+join (std::vector<std::string> v, const std::string& sep)
+{
+	std::string j;
+
+	if (v.empty())
+		return j;
+
+	auto it  = std::begin(v);
+	auto end = std::end(v);
+
+	j = *it;
+	it++;
+
+	for (; it != end; it++) {
+		j += sep + *it;
+	}
+
+	return j;
+}
