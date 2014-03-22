@@ -98,50 +98,19 @@ Container::Container (void)
 
 	PPtr tls = declare_prop_fn (me, "top_level_size", (get_uint64_t) std::bind(&Container::get_top_level_size, this), "desc of tls", s|h);
 	PPtr ps  = declare_prop_fn (me, "parent_size", (get_uint64_t) std::bind(&Container::get_parent_size, this), "desc of ps", s|h);
-	PPtr bs = declare_prop_fn_extra (me, "bytes_size", (get_uint64_t) ([&](){ return bytes_size; }), "Size", d|s|p, ps);
+	PPtr bs = declare_prop_var_extra (me, "bytes_size", bytes_size, "Size", d|s|p, ps);
+
+	declare_prop_var (me, "block_size",    block_size,    "Block Size",    d|s);
+	declare_prop_var (me, "device",        device,        "Device",        d);
+	declare_prop_var (me, "device_major",  device_major,  "Major",         0);
+	declare_prop_var (me, "device_minor",  device_minor,  "Minor",         0);
+	declare_prop_var (me, "name",          name,          "Name",          0);
+	declare_prop_var (me, "parent_offset", parent_offset, "Parent Offset", d);
+	declare_prop_var (me, "uuid",          uuid,          "UUID",          0);
 
 	declare_prop_var_extra (me, "bytes_used", bytes_used, "Used", d|s|p, bs);
-
-	declare_prop_fn_extra (me, "bytes_free", (get_uint64_t) std::bind(&Container::get_bytes_free, this), "desc of bytes_free", s|p, bs);
-
-	declare_prop_fn_extra (me, "absolute_offset", (get_uint64_t) std::bind(&Container::get_absolute_offset, this), "desc of abs off", s|p, tls);
-
-	declare_prop_fn_extra (me, "absolute_size", (get_uint64_t) ([&](){ return bytes_size; }), "desc of abs size", s|p, tls);
-
-	declare_prop_fn_extra (me, "parent_offset", (get_uint64_t) ([&](){ return parent_offset; }), "Parent Offset", d|s|p, ps);
-
-// Working
-	// bytes_free                 286216192		fn		get_bytes_free()
-	// bytes_free_human           273 MiB		fn		get_bytes_free()
-	// bytes_free_percentage      55		fn, var		PPtr(bytes_size)
-
-	// bytes_used                 237023232		var		bytes_used
-	// bytes_used_human           226 MiB		var		bytes_used
-	// bytes_used_percentage      45		var, var	bytes_used, PPtr(bytes_size)
-
-// To do
-	// absolute_offset            1572864000        fn              get_absolute_offset()
-	// absolute_offset_human      1.46 GiB          fn              get_absolute_offset()
-	// absolute_offset_percentage 55%               fn, fn          get_absolute_offset(), top_level_size()		XXX hidden
-
-	// absolute_size              5368709120        var             bytes_size
-	// absolute_size_human        5 GiB             var             bytes_size
-	// absolute_size_percentage   35%               var, fn         bytes_size, top_level_size()			XXX hidden
-
-	// parent_offset              123421342         var             parent_offset
-	// parent_offset_human        123 MiB           var             parent_offset
-	// parent_offset_percentage   22%               var, fn         parent_offset, get_parent_size()		XXX hidden
-
-	declare_prop_fn (me, "block_size",    (get_uint64_t) ([&](){ return block_size;    }), "Block Size",    d|s);
-	declare_prop_fn (me, "device",        (get_string_t) ([&](){ return device;        }), "Device",        d);
-	declare_prop_fn (me, "device_major",  (get_uint64_t) ([&](){ return device_major;  }), "Major",         0);
-	declare_prop_fn (me, "device_minor",  (get_uint64_t) ([&](){ return device_minor;  }), "Minor",         0);
-	declare_prop_fn (me, "name",          (get_string_t) ([&](){ return name;          }), "Name",          0);
-	declare_prop_fn (me, "parent_offset", (get_uint64_t) ([&](){ return parent_offset; }), "Parent Offset", d);
-	declare_prop_fn (me, "uuid",          (get_string_t) ([&](){ return uuid;          }), "UUID",          0);
-
-	//declare_prop (me, "bytes_free", bytes_free, bytes_size, "bytes free", d|s);
-	//declare_prop (me, "bytes_used", bytes_used, bytes_size, "bytes used", d|s);
+	declare_prop_var_extra (me, "absolute_size", bytes_size, "desc of abs size", s|p, tls);
+	declare_prop_var_extra (me, "parent_offset", parent_offset, "Parent Offset", d|s|p, ps);
 
 	declare_prop_fn (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
 	declare_prop_fn (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
@@ -151,30 +120,13 @@ Container::Container (void)
 	declare_prop_fn (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long",          0);
 	declare_prop_fn (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short",         d);
 
-	// declare_prop_fn (me, "block_size",    (get_uint64_t) ([&](){ return block_size;    }), "Block Size",    d|s);
-	// declare_prop_fn (me, "bytes_free",         (get_uint64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
-	// declare_prop_fn (me, "bytes_size",    (get_uint64_t) ([&](){ return bytes_size;    }), "Size",          d|s);
-	// declare_prop_fn (me, "bytes_used",    (get_uint64_t) ([&](){ return bytes_used;    }), "Used",          d|s);
-	// declare_prop_fn (me, "chunk_size",  (get_uint64_t) ([&](){ return chunk_size;  }), "desc of chunk_size",  s);
-	// declare_prop_fn (me, "data_offset", (get_uint64_t) ([&](){ return data_offset; }), "desc of data_offset", s);
-	// declare_prop_fn (me, "data_size",   (get_uint64_t) ([&](){ return data_size;   }), "desc of data_size",   s);
-	// declare_prop_fn (me, "metadata_size", (get_uint64_t) ([&](){ return metadata_size; }), "desc of metadata_size", s);
-	// declare_prop_fn (me, "offset",     (get_uint64_t) ([&](){ return offset;     }), "desc of offset",     d|s);
-	// declare_prop_fn (me, "sizelimit",  (get_uint64_t) ([&](){ return sizelimit;  }), "desc of sizelimit",  d|s);
-
-	// Absolute Offset  bytes      u64 size        num/scale  absolute_offset_bytes      123456789
-
-	// Absolute Offset  percentage u8  percentage  num %      absolute_offset_percentage 45
-	// Absolute Size    percentage u8  percentage  num %      absolute_size_percentage   23         %age of container size
-	// Parent Offset    percentage u8  percentage  num %      parent_offset_percentage   75
-
-	// Free Space       percentage u8  percentage  num %      free_space_percentage      35
-	// Size             percentage u8  percentage  num %      size_percentage            27         %age of parent's size
-	// Used             percentage u8  percentage  num %      used_percentage            88
+	declare_prop_fn_extra (me, "bytes_free", (get_uint64_t) std::bind(&Container::get_bytes_free, this), "desc of bytes_free", s|p, bs);
+	declare_prop_fn_extra (me, "absolute_offset", (get_uint64_t) std::bind(&Container::get_absolute_offset, this), "desc of abs off", s|p, tls);
 
 #ifdef DEBUG
-	//RAR declare_prop_fn (me, "mem_addr",  (get_string_t) std::bind(&Container::get_mem_addr,  this), "desc of mem_addr",  0);
-	//RAR declare_prop_fn (me, "ref_count", (get_int64_t)  std::bind(&Container::get_ref_count, this), "desc of ref_count", 0);
+	declare_prop_var (me, "file_desc", fd, "desc of ref_count", 0);
+	declare_prop_fn  (me, "mem_addr",  (get_string_t) std::bind(&Container::get_mem_addr,  this), "desc of mem_addr",  0);
+	declare_prop_fn  (me, "ref_count", (get_int64_t)  std::bind(&Container::get_ref_count, this), "desc of ref_count", 0);
 #endif
 }
 
