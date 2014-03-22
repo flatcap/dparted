@@ -256,42 +256,6 @@ protected:
 	unsigned int index = 0;
 };
 
-#if 0
-class PropHuman : public BaseProperty
-{
-public:
-	PropHuman (const char* owner, const char* name, BaseProperty& value, const char* desc, int flags) :
-		BaseProperty (owner, name, desc, flags),
-		value(value)
-	{
-		type = Tag::t_u8;	// Pretend to be a std::uint8_t
-	}
-
-	virtual ~PropHuman()
-	{
-	}
-
-	PropHuman (void) = default;
-
-	PropHuman (const PropHuman&  other) = default;
-	PropHuman (      PropHuman&& other) = default;
-
-	PropHuman& operator= (PropHuman&  other) = default;
-	PropHuman& operator= (PropHuman&& other) = default;
-
-	virtual operator std::uint8_t (void)
-	{
-		double dn = (std::uint64_t) num;
-		double dd = (std::uint64_t) denom;
-
-		return (std::uint8_t) ((dn/dd) + 0.5);
-	}
-
-protected:
-	BaseProperty& value;
-};
-
-#endif
 
 #endif // _PROPERTY_H_
 

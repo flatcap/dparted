@@ -92,18 +92,45 @@ Container::Container (void)
 	const int   d  = (int) BaseProperty::Flags::Dot;
 	const int   s  = (int) BaseProperty::Flags::Size;
 	const int   p  = (int) BaseProperty::Flags::Percent;
-	//const int   h  = (int) BaseProperty::Flags::Hide;
+	const int   h  = (int) BaseProperty::Flags::Hide;
 
 	sub_type (me);
 
-	PPtr bs = declare_prop_fn (me, "bytes_size",    (get_uint64_t) ([&](){ return bytes_size;    }), "Size",          d|s);
+	PPtr tls = declare_prop_fn (me, "top_level_size", (get_uint64_t) std::bind(&Container::get_top_level_size, this), "desc of tls", s|h);
+	PPtr ps  = declare_prop_fn (me, "parent_size", (get_uint64_t) std::bind(&Container::get_parent_size, this), "desc of ps", s|h);
+	PPtr bs = declare_prop_fn_extra (me, "bytes_size", (get_uint64_t) ([&](){ return bytes_size; }), "Size", d|s|p, ps);
 
 	declare_prop_var_extra (me, "bytes_used", bytes_used, "Used", d|s|p, bs);
 
 	declare_prop_fn_extra (me, "bytes_free", (get_uint64_t) std::bind(&Container::get_bytes_free, this), "desc of bytes_free", s|p, bs);
 
-	// declare_prop_fn (me, "bytes_used",    (get_uint64_t) ([&](){ return bytes_used;    }), "Used",          d|s);
-	// declare_prop_fn (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
+	declare_prop_fn_extra (me, "absolute_offset", (get_uint64_t) std::bind(&Container::get_absolute_offset, this), "desc of abs off", s|p, tls);
+
+	declare_prop_fn_extra (me, "absolute_size", (get_uint64_t) ([&](){ return bytes_size; }), "desc of abs size", s|p, tls);
+
+	declare_prop_fn_extra (me, "parent_offset", (get_uint64_t) ([&](){ return parent_offset; }), "Parent Offset", d|s|p, ps);
+
+// Working
+	// bytes_free                 286216192		fn		get_bytes_free()
+	// bytes_free_human           273 MiB		fn		get_bytes_free()
+	// bytes_free_percentage      55		fn, var		PPtr(bytes_size)
+
+	// bytes_used                 237023232		var		bytes_used
+	// bytes_used_human           226 MiB		var		bytes_used
+	// bytes_used_percentage      45		var, var	bytes_used, PPtr(bytes_size)
+
+// To do
+	// absolute_offset            1572864000        fn              get_absolute_offset()
+	// absolute_offset_human      1.46 GiB          fn              get_absolute_offset()
+	// absolute_offset_percentage 55%               fn, fn          get_absolute_offset(), top_level_size()		XXX hidden
+
+	// absolute_size              5368709120        var             bytes_size
+	// absolute_size_human        5 GiB             var             bytes_size
+	// absolute_size_percentage   35%               var, fn         bytes_size, top_level_size()			XXX hidden
+
+	// parent_offset              123421342         var             parent_offset
+	// parent_offset_human        123 MiB           var             parent_offset
+	// parent_offset_percentage   22%               var, fn         parent_offset, get_parent_size()		XXX hidden
 
 	declare_prop_fn (me, "block_size",    (get_uint64_t) ([&](){ return block_size;    }), "Block Size",    d|s);
 	declare_prop_fn (me, "device",        (get_string_t) ([&](){ return device;        }), "Device",        d);
@@ -125,7 +152,7 @@ Container::Container (void)
 	declare_prop_fn (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short",         d);
 
 	// declare_prop_fn (me, "block_size",    (get_uint64_t) ([&](){ return block_size;    }), "Block Size",    d|s);
-	// declare_prop_fn (me, "bytes_free",         (get_int64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
+	// declare_prop_fn (me, "bytes_free",         (get_uint64_t)  std::bind(&Container::get_bytes_free,         this), "desc of bytes_free",         s);
 	// declare_prop_fn (me, "bytes_size",    (get_uint64_t) ([&](){ return bytes_size;    }), "Size",          d|s);
 	// declare_prop_fn (me, "bytes_used",    (get_uint64_t) ([&](){ return bytes_used;    }), "Used",          d|s);
 	// declare_prop_fn (me, "chunk_size",  (get_uint64_t) ([&](){ return chunk_size;  }), "desc of chunk_size",  s);
@@ -146,8 +173,8 @@ Container::Container (void)
 	// Used             percentage u8  percentage  num %      used_percentage            88
 
 #ifdef DEBUG
-	declare_prop_fn (me, "mem_addr",  (get_string_t) std::bind(&Container::get_mem_addr,  this), "desc of mem_addr",  0);
-	declare_prop_fn (me, "ref_count", (get_int64_t)  std::bind(&Container::get_ref_count, this), "desc of ref_count", 0);
+	//RAR declare_prop_fn (me, "mem_addr",  (get_string_t) std::bind(&Container::get_mem_addr,  this), "desc of mem_addr",  0);
+	//RAR declare_prop_fn (me, "ref_count", (get_int64_t)  std::bind(&Container::get_ref_count, this), "desc of ref_count", 0);
 #endif
 }
 
@@ -624,12 +651,14 @@ Container::get_prop (const std::string& name)
 }
 
 std::vector<PPtr>
-Container::get_all_props (void)
+Container::get_all_props (bool inc_hidden /*=false*/)
 {
 	std::vector<PPtr> vv;
 
+	//XXX what's the magic C++11 way of doing this?
 	for (auto p : props) {
-		//XXX what's the magic C++11 way of doing this?
+		if ((p.second->flags & BaseProperty::Flags::Hide) && !inc_hidden)
+			continue;
 		vv.push_back (p.second);
 	}
 
@@ -651,7 +680,23 @@ Container::get_smart (void)
 }
 
 
-long
+std::uint64_t
+Container::get_absolute_offset (void)
+{
+	std::uint64_t ao = parent_offset;
+	ContainerPtr p = get_smart();
+
+	if (!p)
+		return ao;
+
+	while ((p = p->parent.lock())) {
+		ao += p->parent_offset;
+	}
+
+	return ao;
+}
+
+std::uint64_t
 Container::get_bytes_free (void)
 {
 	return (bytes_size - bytes_used);
@@ -687,6 +732,34 @@ Container::get_name_default (void)
 		return "[EMPTY]";
 	else
 		return name;
+}
+
+std::uint64_t
+Container::get_parent_size (void)
+{
+	ContainerPtr p = parent.lock();
+	if (!p)
+		return 0;
+
+	return p->bytes_size;
+}
+
+std::uint64_t
+Container::get_top_level_size (void)
+{
+	std::uint64_t tls = bytes_size;
+	ContainerPtr p = get_smart();
+
+	if (!p)
+		return tls;
+
+	while ((p = p->parent.lock())) {
+		if (p->bytes_size > tls) {
+			tls = p->bytes_size;
+		}
+	}
+
+	return tls;
 }
 
 std::string

@@ -108,7 +108,7 @@ public:
 
 	std::vector<std::string> get_prop_names (void);
 	PPtr get_prop (const std::string& name);
-	std::vector<PPtr> get_all_props (void);
+	std::vector<PPtr> get_all_props (bool inc_hidden = false);
 
 	template<class T>
 	void add_child (std::shared_ptr<T>& child)
@@ -258,7 +258,7 @@ public:
 
 	std::vector<std::string> type;	//XXX move to protected
 
-	bool		 missing = false;
+	bool missing = false;
 
 	int seqnum = 123;
 
@@ -277,13 +277,17 @@ protected:
 	std::set<ContainerPtr, compare> children;
 
 	// Helper functions
-	long        get_bytes_free (void);
-	std::string get_device_major_minor (void);
-	std::string get_device_short (void);
-	std::string get_name_default (void);
-	std::string get_type (void);
-	std::string get_type_long (void);
-	std::string get_uuid_short (void);
+	std::uint64_t get_absolute_offset    (void);
+	std::uint64_t get_absolute_size      (void);
+	std::uint64_t get_bytes_free         (void);
+	std::string   get_device_major_minor (void);
+	std::string   get_device_short       (void);
+	std::string   get_name_default       (void);
+	std::uint64_t get_parent_size        (void);
+	std::uint64_t get_top_level_size     (void);
+	std::string   get_type_long          (void);
+	std::string   get_type               (void);
+	std::string   get_uuid_short         (void);
 
 private:
 	void insert (long offset, long size, void* ptr);
