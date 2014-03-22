@@ -98,7 +98,8 @@ public:
 
 	virtual std::set<ContainerPtr, compare>& get_children (void);
 
-	std::string get_path (void);
+	std::string get_path_name (void);
+	std::string get_path_type (void);
 #ifdef DEBUG
 	std::string get_mem_addr (void);
 	std::int64_t get_ref_count (void);

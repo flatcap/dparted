@@ -115,7 +115,8 @@ Container::Container (void)
 	declare_prop_fn (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
 	declare_prop_fn (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
 	declare_prop_fn (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default",       d);
-	declare_prop_fn (me, "path",               (get_string_t) std::bind(&Container::get_path,               this), "desc of get_path",           0);
+	declare_prop_fn (me, "path_name",          (get_string_t) std::bind(&Container::get_path_name,          this), "desc of get_path_name",      0);
+	declare_prop_fn (me, "path_type",          (get_string_t) std::bind(&Container::get_path_type,          this), "desc of get_path_type",      0);
 	declare_prop_fn (me, "type",               (get_string_t) std::bind(&Container::get_type,               this), "desc of type",               d);
 	declare_prop_fn (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long",          0);
 	declare_prop_fn (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short",         d);
@@ -545,16 +546,36 @@ Container::get_children (void)
 
 
 std::string
-Container::get_path (void)
+Container::get_path_name (void)
 {
 	//XXX same as get_type_long, change to represent ownership:
 	//	disk(sda)/partition(sda1)/filesystem(ext4)
-	std::string path;
+	std::string path = "/" + get_name_default();
 
-	for (auto n : type) {
-		if (!path.empty())
-			path += '.';
-		path += n;
+	ContainerPtr p = get_smart();
+	if (!p)
+		return path;
+
+	while ((p = p->parent.lock())) {
+		path = "/" + p->get_name_default() + path;
+	}
+
+	return path;
+}
+
+std::string
+Container::get_path_type (void)
+{
+	//XXX same as get_type_long, change to represent ownership:
+	//	disk(sda)/partition(sda1)/filesystem(ext4)
+	std::string path = "/" + type.back();
+
+	ContainerPtr p = get_smart();
+	if (!p)
+		return path;
+
+	while ((p = p->parent.lock())) {
+		path = "/" + p->type.back() + path;
 	}
 
 	return path;
