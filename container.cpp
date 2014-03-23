@@ -347,25 +347,6 @@ Container::get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces)
 }
 
 
-std::uint64_t
-Container::get_size_total (void)
-{
-	return bytes_size;
-}
-
-std::uint64_t
-Container::get_size_used (void)
-{
-	return bytes_used;
-}
-
-std::uint64_t
-Container::get_size_free (void)
-{
-	return bytes_size - bytes_used;
-}
-
-
 ContainerPtr
 Container::find (const std::string& search)
 {
@@ -558,62 +539,6 @@ Container::get_children (void)
 }
 
 
-std::string
-Container::get_path_name (void)
-{
-	//XXX same as get_type_long, change to represent ownership:
-	//	disk(sda)/partition(sda1)/filesystem(ext4)
-	std::string path = "/" + get_name_default();
-
-	ContainerPtr p = get_smart();
-	if (!p)
-		return path;
-
-	while ((p = p->parent.lock())) {
-		path = "/" + p->get_name_default() + path;
-	}
-
-	return path;
-}
-
-std::string
-Container::get_path_type (void)
-{
-	//XXX same as get_type_long, change to represent ownership:
-	//	disk(sda)/partition(sda1)/filesystem(ext4)
-	std::string path = "/" + type.back();
-
-	ContainerPtr p = get_smart();
-	if (!p)
-		return path;
-
-	while ((p = p->parent.lock())) {
-		path = "/" + p->type.back() + path;
-	}
-
-	return path;
-}
-
-#ifdef DEBUG
-std::string
-Container::get_object_addr (void)
-{
-	std::stringstream addr;
-	ContainerPtr c = weak.lock();
-	if (c) {
-		addr << "0x" << (void*) c.get();
-	}
-
-	return addr.str();
-}
-
-std::int64_t
-Container::get_ref_count (void)
-{
-	return weak.use_count();
-}
-#endif
-
 std::vector<std::string>
 Container::get_prop_names (void)
 {
@@ -716,6 +641,14 @@ Container::get_device_major_inherit (void)
 }
 
 std::string
+Container::get_device_major_minor (void)
+{
+	if (device_major > 0)
+		return std::to_string (device_major) + ":" + std::to_string (device_minor);
+	return "";
+}
+
+std::string
 Container::get_device_major_minor_inherit (void)
 {
 	if (device_major > 0)
@@ -727,14 +660,6 @@ Container::get_device_major_minor_inherit (void)
 		if (p->device_major > 0)
 			return std::to_string (p->device_major) + ":" + std::to_string (p->device_minor);
 	}
-	return "";
-}
-
-std::string
-Container::get_device_major_minor (void)
-{
-	if (device_major > 0)
-		return std::to_string (device_major) + ":" + std::to_string (device_minor);
 	return "";
 }
 
@@ -754,6 +679,12 @@ Container::get_device_minor_inherit (void)
 }
 
 std::string
+Container::get_device_short (void)
+{
+	return shorten_device (device);
+}
+
+std::string
 Container::get_device_short_inherit (void)
 {
 	if (!device.empty())
@@ -766,12 +697,6 @@ Container::get_device_short_inherit (void)
 			return shorten_device (device);
 	}
 	return "";
-}
-
-std::string
-Container::get_device_short (void)
-{
-	return shorten_device (device);
 }
 
 std::uint64_t
@@ -818,6 +743,18 @@ Container::get_name_default (void)
 		return name;
 }
 
+std::string
+Container::get_object_addr (void)
+{
+	std::stringstream addr;
+	ContainerPtr c = weak.lock();
+	if (c) {
+		addr << "0x" << (void*) c.get();
+	}
+
+	return addr.str();
+}
+
 std::uint64_t
 Container::get_parent_size (void)
 {
@@ -825,6 +762,48 @@ Container::get_parent_size (void)
 	if (!p)
 		return 0;
 	return p->bytes_size;
+}
+
+std::string
+Container::get_path_name (void)
+{
+	//XXX same as get_type_long, change to represent ownership:
+	//	disk(sda)/partition(sda1)/filesystem(ext4)
+	std::string path = "/" + get_name_default();
+
+	ContainerPtr p = get_smart();
+	if (!p)
+		return path;
+
+	while ((p = p->parent.lock())) {
+		path = "/" + p->get_name_default() + path;
+	}
+
+	return path;
+}
+
+std::string
+Container::get_path_type (void)
+{
+	//XXX same as get_type_long, change to represent ownership:
+	//	disk(sda)/partition(sda1)/filesystem(ext4)
+	std::string path = "/" + type.back();
+
+	ContainerPtr p = get_smart();
+	if (!p)
+		return path;
+
+	while ((p = p->parent.lock())) {
+		path = "/" + p->type.back() + path;
+	}
+
+	return path;
+}
+
+std::int64_t
+Container::get_ref_count (void)
+{
+	return weak.use_count();
 }
 
 std::uint64_t
@@ -843,6 +822,12 @@ Container::get_top_level_size (void)
 }
 
 std::string
+Container::get_type (void)
+{
+	return type.back();
+}
+
+std::string
 Container::get_type_long (void)
 {
 	std::string tl;
@@ -851,12 +836,6 @@ Container::get_type_long (void)
 	}
 	tl.pop_back();
 	return tl;
-}
-
-std::string
-Container::get_type (void)
-{
-	return type.back();
 }
 
 std::string

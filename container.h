@@ -64,10 +64,6 @@ public:
 	virtual std::uint64_t get_parent_offset (void);
 	virtual std::uint64_t get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces);
 
-	virtual std::uint64_t get_size_total (void);
-	virtual std::uint64_t get_size_used (void);
-	virtual std::uint64_t get_size_free (void);
-
 	virtual ContainerPtr find (const std::string& uuid);
 	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);
 
@@ -97,13 +93,6 @@ public:
 	};
 
 	virtual std::set<ContainerPtr, compare>& get_children (void);
-
-	std::string get_path_name (void);
-	std::string get_path_type (void);
-#ifdef DEBUG
-	std::string get_object_addr (void);
-	std::int64_t get_ref_count (void);
-#endif
 
 	ContainerPtr get_smart (void);
 
@@ -282,19 +271,23 @@ protected:
 	std::uint64_t get_bytes_free                 (void);
 	std::string   get_device_inherit             (void);
 	std::uint64_t get_device_major_inherit       (void);
-	std::string   get_device_major_minor_inherit (void);
 	std::string   get_device_major_minor         (void);
+	std::string   get_device_major_minor_inherit (void);
 	std::uint64_t get_device_minor_inherit       (void);
-	std::string   get_device_short_inherit       (void);
 	std::string   get_device_short               (void);
+	std::string   get_device_short_inherit       (void);
 	std::uint64_t get_file_desc_inherit          (void);
 	std::string   get_mmap_addr                  (void);
 	std::uint64_t get_mmap_size                  (void);
 	std::string   get_name_default               (void);
+	std::string   get_object_addr                (void);
 	std::uint64_t get_parent_size                (void);
+	std::string   get_path_name                  (void);
+	std::string   get_path_type                  (void);
+	std::int64_t  get_ref_count                  (void);
 	std::uint64_t get_top_level_size             (void);
-	std::string   get_type_long                  (void);
 	std::string   get_type                       (void);
+	std::string   get_type_long                  (void);
 	std::string   get_uuid_short                 (void);
 
 private:
