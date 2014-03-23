@@ -101,19 +101,28 @@ Container::Container (void)
 	PPtr bs = declare_prop_var_extra (me, "bytes_size", bytes_size, "Size", d|s|p, ps);
 
 	declare_prop_var (me, "block_size",    block_size,    "Block Size",    d|s);
-	declare_prop_var (me, "device",        device,        "Device",        d);
-	declare_prop_var (me, "device_major",  device_major,  "Major",         0);
-	declare_prop_var (me, "device_minor",  device_minor,  "Minor",         0);
 	declare_prop_var (me, "name",          name,          "Name",          0);
 	declare_prop_var (me, "parent_offset", parent_offset, "Parent Offset", d);
 	declare_prop_var (me, "uuid",          uuid,          "UUID",          0);
 
-	declare_prop_var_extra (me, "bytes_used", bytes_used, "Used", d|s|p, bs);
-	declare_prop_var_extra (me, "absolute_size", bytes_size, "desc of abs size", s|p, tls);
-	declare_prop_var_extra (me, "parent_offset", parent_offset, "Parent Offset", d|s|p, ps);
+	declare_prop_var (me, "device",        device,        "Device",        d);
+	declare_prop_var (me, "device_major",  device_major,  "Major",         0);
+	declare_prop_var (me, "device_minor",  device_minor,  "Minor",         0);
 
-	declare_prop_fn (me, "device_major_minor", (get_string_t) std::bind(&Container::get_device_major_minor, this), "desc of device_major_minor", d);
-	declare_prop_fn (me, "device_short",       (get_string_t) std::bind(&Container::get_device_short,       this), "desc of device_short",       d);
+	declare_prop_fn (me, "device_inherit",       (get_string_t) std::bind(&Container::get_device_inherit,       this), "desc of ", 0);
+	declare_prop_fn (me, "device_major_inherit", (get_uint64_t) std::bind(&Container::get_device_major_inherit, this), "desc of ", 0);
+	declare_prop_fn (me, "device_minor_inherit", (get_uint64_t) std::bind(&Container::get_device_minor_inherit, this), "desc of ", 0);
+
+	declare_prop_var_extra (me, "absolute_size", bytes_size,    "desc of abs size", s|p,   tls);
+	declare_prop_var_extra (me, "bytes_used",    bytes_used,    "Used",             d|s|p, bs);
+	declare_prop_var_extra (me, "parent_offset", parent_offset, "Parent Offset",    d|s|p, ps);
+
+	declare_prop_fn (me, "device_major_minor",         (get_string_t) std::bind(&Container::get_device_major_minor,         this), "desc of device_major_minor", d);
+	declare_prop_fn (me, "device_short",               (get_string_t) std::bind(&Container::get_device_short,               this), "desc of device_short",       d);
+
+	declare_prop_fn (me, "device_major_minor_inherit", (get_string_t) std::bind(&Container::get_device_major_minor_inherit, this), "desc of device_major_minor", 0);
+	declare_prop_fn (me, "device_short_inherit",       (get_string_t) std::bind(&Container::get_device_short_inherit,       this), "desc of device_short",       0);
+
 	declare_prop_fn (me, "name_default",       (get_string_t) std::bind(&Container::get_name_default,       this), "desc of name default",       d);
 	declare_prop_fn (me, "path_name",          (get_string_t) std::bind(&Container::get_path_name,          this), "desc of get_path_name",      0);
 	declare_prop_fn (me, "path_type",          (get_string_t) std::bind(&Container::get_path_type,          this), "desc of get_path_type",      0);
@@ -121,13 +130,17 @@ Container::Container (void)
 	declare_prop_fn (me, "type_long",          (get_string_t) std::bind(&Container::get_type_long,          this), "desc of type long",          0);
 	declare_prop_fn (me, "uuid_short",         (get_string_t) std::bind(&Container::get_uuid_short,         this), "desc of uuid_short",         d);
 
-	declare_prop_fn_extra (me, "bytes_free", (get_uint64_t) std::bind(&Container::get_bytes_free, this), "desc of bytes_free", s|p, bs);
-	declare_prop_fn_extra (me, "absolute_offset", (get_uint64_t) std::bind(&Container::get_absolute_offset, this), "desc of abs off", s|p, tls);
+	declare_prop_fn_extra (me, "bytes_free",      (get_uint64_t) std::bind(&Container::get_bytes_free, this),      "desc of bytes_free", s|p, bs);
+	declare_prop_fn_extra (me, "absolute_offset", (get_uint64_t) std::bind(&Container::get_absolute_offset, this), "desc of abs off",    s|p, tls);
 
 #ifdef DEBUG
 	declare_prop_var (me, "file_desc", fd, "desc of ref_count", 0);
-	declare_prop_fn  (me, "mem_addr",  (get_string_t) std::bind(&Container::get_mem_addr,  this), "desc of mem_addr",  0);
-	declare_prop_fn  (me, "ref_count", (get_int64_t)  std::bind(&Container::get_ref_count, this), "desc of ref_count", 0);
+
+	declare_prop_fn  (me, "file_desc_inherit", (get_int64_t)  std::bind(&Container::get_file_desc_inherit, this), "desc of file_desc_inherit",  0);
+	declare_prop_fn  (me, "object_addr",       (get_string_t) std::bind(&Container::get_object_addr,       this), "desc of object_addr",        0);
+	declare_prop_fn  (me, "ref_count",         (get_int64_t)  std::bind(&Container::get_ref_count,         this), "desc of ref_count",          0);
+	declare_prop_fn  (me, "mmap_addr",         (get_string_t) std::bind(&Container::get_mmap_addr,         this), "desc of ref_count",          0);
+	declare_prop_fn  (me, "mmap_size",         (get_uint64_t) std::bind(&Container::get_mmap_size,         this), "desc of ref_count",          0);
 #endif
 }
 
@@ -583,7 +596,7 @@ Container::get_path_type (void)
 
 #ifdef DEBUG
 std::string
-Container::get_mem_addr (void)
+Container::get_object_addr (void)
 {
 	std::stringstream addr;
 	ContainerPtr c = weak.lock();
@@ -658,14 +671,11 @@ Container::get_absolute_offset (void)
 {
 	std::uint64_t ao = parent_offset;
 	ContainerPtr p = get_smart();
-
 	if (!p)
 		return ao;
-
 	while ((p = p->parent.lock())) {
 		ao += p->parent_offset;
 	}
-
 	return ao;
 }
 
@@ -676,26 +686,127 @@ Container::get_bytes_free (void)
 }
 
 std::string
+Container::get_device_inherit (void)
+{
+	if (!device.empty())
+		return device;
+	ContainerPtr p = get_smart();
+	if (!p)
+		return "";
+	while ((p = p->parent.lock())) {
+		if (!p->device.empty())
+			return p->device;
+	}
+	return "";
+}
+
+std::uint64_t
+Container::get_device_major_inherit (void)
+{
+	if (device_major > 0)
+		return device_major;
+	ContainerPtr p = get_smart();
+	if (!p)
+		return 0;
+	while ((p = p->parent.lock())) {
+		if (device_major > 0)
+			return device_major;
+	}
+	return 0;
+}
+
+std::string
+Container::get_device_major_minor_inherit (void)
+{
+	if (device_major > 0)
+		return std::to_string (device_major) + ":" + std::to_string (device_minor);
+	ContainerPtr p = get_smart();
+	if (!p)
+		return "";
+	while ((p = p->parent.lock())) {
+		if (p->device_major > 0)
+			return std::to_string (p->device_major) + ":" + std::to_string (p->device_minor);
+	}
+	return "";
+}
+
+std::string
 Container::get_device_major_minor (void)
 {
-	//XXX should this and the other device helpers ask their parents? YES
-	if ((device_major == 0) && (device_minor == 0))
-		return "";
+	if (device_major > 0)
+		return std::to_string (device_major) + ":" + std::to_string (device_minor);
+	return "";
+}
 
-	return std::to_string (device_major) + ":" + std::to_string (device_minor);
+std::uint64_t
+Container::get_device_minor_inherit (void)
+{
+	if (device_major > 0)			// This is not a typo
+		return device_minor;
+	ContainerPtr p = get_smart();
+	if (!p)
+		return 0;
+	while ((p = p->parent.lock())) {
+		if (device_major > 0)		// This is not a typo
+			return device_minor;
+	}
+	return 0;
+}
+
+std::string
+Container::get_device_short_inherit (void)
+{
+	if (!device.empty())
+		return shorten_device (device);
+	ContainerPtr p = get_smart();
+	if (!p)
+		return "";
+	while ((p = p->parent.lock())) {
+		if (!device.empty())
+			return shorten_device (device);
+	}
+	return "";
 }
 
 std::string
 Container::get_device_short (void)
 {
-	std::string d = get_device_name();
-	size_t pos = d.find ("/dev");
+	return shorten_device (device);
+}
 
-	if (pos != std::string::npos) {
-		d = d.substr (pos+5);
+std::uint64_t
+Container::get_file_desc_inherit (void)
+{
+	if (fd >= 0)
+		return fd;
+	ContainerPtr p = get_smart();
+	if (!p)
+		return -1;
+	while ((p = p->parent.lock())) {
+		if (p->fd >= 0)
+			return p->fd;
 	}
+	return -1;
+}
 
-	return d;
+std::string
+Container::get_mmap_addr (void)
+{
+	std::stringstream addr;
+	if (device_mmap) {
+		addr << "0x" << (void*) device_mmap->second;
+	}
+	return addr.str();
+}
+
+std::uint64_t
+Container::get_mmap_size (void)
+{
+	if (device_mmap) {
+		return device_mmap->first;
+	} else {
+		return 0;
+	}
 }
 
 std::string
@@ -713,7 +824,6 @@ Container::get_parent_size (void)
 	ContainerPtr p = parent.lock();
 	if (!p)
 		return 0;
-
 	return p->bytes_size;
 }
 
@@ -722,23 +832,14 @@ Container::get_top_level_size (void)
 {
 	std::uint64_t tls = bytes_size;
 	ContainerPtr p = get_smart();
-
 	if (!p)
 		return tls;
-
 	while ((p = p->parent.lock())) {
 		if (p->bytes_size > tls) {
 			tls = p->bytes_size;
 		}
 	}
-
 	return tls;
-}
-
-std::string
-Container::get_type (void)
-{
-	return type.back();
 }
 
 std::string
@@ -749,8 +850,13 @@ Container::get_type_long (void)
 		tl += i + ".";
 	}
 	tl.pop_back();
-
 	return tl;
+}
+
+std::string
+Container::get_type (void)
+{
+	return type.back();
 }
 
 std::string
@@ -759,13 +865,10 @@ Container::get_uuid_short (void)
 	std::string u = uuid;
 	if (u.length() < 8)
 		return u;
-
 	size_t pos = uuid.find_first_of ("-:");
-
 	if (pos != std::string::npos) {
 		u = uuid.substr (0, pos);
 	}
-
 	return u;
 }
 
