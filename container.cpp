@@ -595,12 +595,15 @@ std::uint64_t
 Container::get_absolute_offset (void)
 {
 	std::uint64_t ao = parent_offset;
+
 	ContainerPtr p = get_smart();
 	if (!p)
 		return ao;
+
 	while ((p = p->parent.lock())) {
 		ao += p->parent_offset;
 	}
+
 	return ao;
 }
 
@@ -615,13 +618,16 @@ Container::get_device_inherit (void)
 {
 	if (!device.empty())
 		return device;
+
 	ContainerPtr p = get_smart();
 	if (!p)
 		return "";
+
 	while ((p = p->parent.lock())) {
 		if (!p->device.empty())
 			return p->device;
 	}
+
 	return "";
 }
 
@@ -630,13 +636,16 @@ Container::get_device_major_inherit (void)
 {
 	if (device_major > 0)
 		return device_major;
+
 	ContainerPtr p = get_smart();
 	if (!p)
 		return 0;
+
 	while ((p = p->parent.lock())) {
-		if (device_major > 0)
-			return device_major;
+		if (p->device_major > 0)
+			return p->device_major;
 	}
+
 	return 0;
 }
 
@@ -645,6 +654,7 @@ Container::get_device_major_minor (void)
 {
 	if (device_major > 0)
 		return std::to_string (device_major) + ":" + std::to_string (device_minor);
+
 	return "";
 }
 
@@ -653,13 +663,16 @@ Container::get_device_major_minor_inherit (void)
 {
 	if (device_major > 0)
 		return std::to_string (device_major) + ":" + std::to_string (device_minor);
+
 	ContainerPtr p = get_smart();
 	if (!p)
 		return "";
+
 	while ((p = p->parent.lock())) {
 		if (p->device_major > 0)
 			return std::to_string (p->device_major) + ":" + std::to_string (p->device_minor);
 	}
+
 	return "";
 }
 
@@ -668,13 +681,16 @@ Container::get_device_minor_inherit (void)
 {
 	if (device_major > 0)			// This is not a typo
 		return device_minor;
+
 	ContainerPtr p = get_smart();
 	if (!p)
 		return 0;
+
 	while ((p = p->parent.lock())) {
 		if (device_major > 0)		// This is not a typo
 			return device_minor;
 	}
+
 	return 0;
 }
 
@@ -689,13 +705,16 @@ Container::get_device_short_inherit (void)
 {
 	if (!device.empty())
 		return shorten_device (device);
+
 	ContainerPtr p = get_smart();
 	if (!p)
 		return "";
+
 	while ((p = p->parent.lock())) {
-		if (!device.empty())
-			return shorten_device (device);
+		if (!p->device.empty())
+			return shorten_device (p->device);
 	}
+
 	return "";
 }
 
@@ -704,13 +723,16 @@ Container::get_file_desc_inherit (void)
 {
 	if (fd >= 0)
 		return fd;
+
 	ContainerPtr p = get_smart();
 	if (!p)
 		return -1;
+
 	while ((p = p->parent.lock())) {
 		if (p->fd >= 0)
 			return p->fd;
 	}
+
 	return -1;
 }
 
@@ -718,9 +740,11 @@ std::string
 Container::get_mmap_addr (void)
 {
 	std::stringstream addr;
+
 	if (device_mmap) {
 		addr << "0x" << (void*) device_mmap->second;
 	}
+
 	return addr.str();
 }
 
@@ -737,16 +761,18 @@ Container::get_mmap_size (void)
 std::string
 Container::get_name_default (void)
 {
-	if (name.empty())
+	if (name.empty()) {
 		return "[EMPTY]";
-	else
+	} else {
 		return name;
+	}
 }
 
 std::string
 Container::get_object_addr (void)
 {
 	std::stringstream addr;
+
 	ContainerPtr c = weak.lock();
 	if (c) {
 		addr << "0x" << (void*) c.get();
@@ -761,14 +787,13 @@ Container::get_parent_size (void)
 	ContainerPtr p = parent.lock();
 	if (!p)
 		return 0;
+
 	return p->bytes_size;
 }
 
 std::string
 Container::get_path_name (void)
 {
-	//XXX same as get_type_long, change to represent ownership:
-	//	disk(sda)/partition(sda1)/filesystem(ext4)
 	std::string path = "/" + get_name_default();
 
 	ContainerPtr p = get_smart();
@@ -785,8 +810,6 @@ Container::get_path_name (void)
 std::string
 Container::get_path_type (void)
 {
-	//XXX same as get_type_long, change to represent ownership:
-	//	disk(sda)/partition(sda1)/filesystem(ext4)
 	std::string path = "/" + type.back();
 
 	ContainerPtr p = get_smart();
@@ -810,14 +833,17 @@ std::uint64_t
 Container::get_top_level_size (void)
 {
 	std::uint64_t tls = bytes_size;
+
 	ContainerPtr p = get_smart();
 	if (!p)
 		return tls;
+
 	while ((p = p->parent.lock())) {
 		if (p->bytes_size > tls) {
 			tls = p->bytes_size;
 		}
 	}
+
 	return tls;
 }
 
@@ -831,9 +857,11 @@ std::string
 Container::get_type_long (void)
 {
 	std::string tl;
+
 	for (auto i : type) {
 		tl += i + ".";
 	}
+
 	tl.pop_back();
 	return tl;
 }
@@ -844,10 +872,12 @@ Container::get_uuid_short (void)
 	std::string u = uuid;
 	if (u.length() < 8)
 		return u;
+
 	size_t pos = uuid.find_first_of ("-:");
 	if (pos != std::string::npos) {
 		u = uuid.substr (0, pos);
 	}
+
 	return u;
 }
 
