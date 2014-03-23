@@ -47,10 +47,10 @@ LvmGroup::LvmGroup (void)
 
 	sub_type (me);
 
-	declare_prop (me, "lv_count", lv_count, "desc of lv_count", 0);
-	declare_prop (me, "pv_count", pv_count, "desc of pv_count", 0);
-	declare_prop (me, "vg_attr",  vg_attr,  "desc of vg_attr",  0);
-	declare_prop (me, "vg_seqno", vg_seqno, "desc of vg_seqno", 0);
+	declare_prop_var (me, "lv_count", lv_count, "desc of lv_count", 0);
+	declare_prop_var (me, "pv_count", pv_count, "desc of pv_count", 0);
+	declare_prop_var (me, "vg_attr",  vg_attr,  "desc of vg_attr",  0);
+	declare_prop_var (me, "vg_seqno", vg_seqno, "desc of vg_seqno", 0);
 }
 
 LvmGroup::~LvmGroup()

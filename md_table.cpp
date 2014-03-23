@@ -32,15 +32,15 @@ MdTable::MdTable (void)
 
 	sub_type (me);
 
-	declare_prop (me, "chunks_used", chunks_used, "desc of chunks_used", 0);
-	declare_prop (me, "chunk_size",  chunk_size,  "desc of chunk_size",  s);
-	declare_prop (me, "data_offset", data_offset, "desc of data_offset", s);
-	declare_prop (me, "data_size",   data_size,   "desc of data_size",   s);
-	declare_prop (me, "raid_disks",  raid_disks,  "desc of raid_disks",  0);
-	declare_prop (me, "raid_layout", raid_layout, "desc of raid_layout", 0);
-	declare_prop (me, "raid_type",   raid_type,   "desc of raid_type",   0);
-	declare_prop (me, "vol_name",    vol_name,    "desc of vol_name",    0);
-	declare_prop (me, "vol_uuid",    vol_uuid,    "desc of vol_uuid",    0);
+	declare_prop_var (me, "chunks_used", chunks_used, "desc of chunks_used", 0);
+	declare_prop_var (me, "chunk_size",  chunk_size,  "desc of chunk_size",  s);
+	declare_prop_var (me, "data_offset", data_offset, "desc of data_offset", s);
+	declare_prop_var (me, "data_size",   data_size,   "desc of data_size",   s);
+	declare_prop_var (me, "raid_disks",  raid_disks,  "desc of raid_disks",  0);
+	declare_prop_var (me, "raid_layout", raid_layout, "desc of raid_layout", 0);
+	declare_prop_var (me, "raid_type",   raid_type,   "desc of raid_type",   0);
+	declare_prop_var (me, "vol_name",    vol_name,    "desc of vol_name",    0);
+	declare_prop_var (me, "vol_uuid",    vol_uuid,    "desc of vol_uuid",    0);
 }
 
 MdTable::~MdTable()

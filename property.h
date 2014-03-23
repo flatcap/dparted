@@ -24,22 +24,24 @@
 #include <cstdint>
 #include <string>
 #include <memory>
+#include <vector>
 
 class BaseProperty;
 
 typedef std::shared_ptr<BaseProperty> PPtr;
 
-typedef std::function<std::string (void)> get_string_t;
-typedef std::function<double      (void)> get_double_t;
-typedef std::function<bool        (void)> get_bool_t;
-typedef std::function<uint8_t     (void)> get_uint8_t;
-typedef std::function<int8_t      (void)> get_int8_t;
-typedef std::function<uint16_t    (void)> get_uint16_t;
-typedef std::function<int16_t     (void)> get_int16_t;
-typedef std::function<uint32_t    (void)> get_uint32_t;
-typedef std::function<int32_t     (void)> get_int32_t;
-typedef std::function<uint64_t    (void)> get_uint64_t;
-typedef std::function<int64_t     (void)> get_int64_t;
+typedef std::function<std::string              (void)> get_string_t;
+typedef std::function<std::vector<std::string> (void)> get_list_t;
+typedef std::function<double                   (void)> get_double_t;
+typedef std::function<bool                     (void)> get_bool_t;
+typedef std::function<uint8_t                  (void)> get_uint8_t;
+typedef std::function< int8_t                  (void)> get_int8_t;
+typedef std::function<uint16_t                 (void)> get_uint16_t;
+typedef std::function< int16_t                 (void)> get_int16_t;
+typedef std::function<uint32_t                 (void)> get_uint32_t;
+typedef std::function< int32_t                 (void)> get_int32_t;
+typedef std::function<uint64_t                 (void)> get_uint64_t;
+typedef std::function< int64_t                 (void)> get_int64_t;
 
 class BaseProperty
 {
@@ -61,36 +63,39 @@ public:
 	BaseProperty& operator= (BaseProperty&  other) = default;
 	BaseProperty& operator= (BaseProperty&& other) = default;
 
-	void set_type (std::string) { type = Tag::t_string; }
-	void set_type (const char*) { type = Tag::t_string; }
-	void set_type (double)      { type = Tag::t_double; }
-	void set_type (bool)        { type = Tag::t_bool;   }
-	void set_type (uint8_t)     { type = Tag::t_u8;     }
-	void set_type (int8_t)      { type = Tag::t_s8;     }
-	void set_type (uint16_t)    { type = Tag::t_u16;    }
-	void set_type (int16_t)     { type = Tag::t_s16;    }
-	void set_type (uint32_t)    { type = Tag::t_u32;    }
-	void set_type (int32_t)     { type = Tag::t_s32;    }
-	void set_type (uint64_t)    { type = Tag::t_u64;    }
-	void set_type (int64_t)     { type = Tag::t_s64;    }
+	void set_type (std::string)              { type = Tag::t_string; }
+	void set_type (std::vector<std::string>) { type = Tag::t_list; }
+	void set_type (const char*)              { type = Tag::t_string; }
+	void set_type (double)                   { type = Tag::t_double; }
+	void set_type (bool)                     { type = Tag::t_bool;   }
+	void set_type (uint8_t)                  { type = Tag::t_u8;     }
+	void set_type (int8_t)                   { type = Tag::t_s8;     }
+	void set_type (uint16_t)                 { type = Tag::t_u16;    }
+	void set_type (int16_t)                  { type = Tag::t_s16;    }
+	void set_type (uint32_t)                 { type = Tag::t_u32;    }
+	void set_type (int32_t)                  { type = Tag::t_s32;    }
+	void set_type (uint64_t)                 { type = Tag::t_u64;    }
+	void set_type (int64_t)                  { type = Tag::t_s64;    }
 
-	virtual operator std::string (void);
-	virtual operator double      (void);
-	virtual operator bool        (void);
-	virtual operator uint8_t     (void);
-	virtual operator  int8_t     (void);
-	virtual operator uint16_t    (void);
-	virtual operator  int16_t    (void);
-	virtual operator uint32_t    (void);
-	virtual operator  int32_t    (void);
-	virtual operator uint64_t    (void);
-	virtual operator  int64_t    (void);
+	virtual explicit operator std::string              (void);
+	virtual explicit operator std::vector<std::string> (void);
+	virtual explicit operator double                   (void);
+	virtual explicit operator bool                     (void);
+	virtual explicit operator uint8_t                  (void);
+	virtual explicit operator  int8_t                  (void);
+	virtual explicit operator uint16_t                 (void);
+	virtual explicit operator  int16_t                 (void);
+	virtual explicit operator uint32_t                 (void);
+	virtual explicit operator  int32_t                 (void);
+	virtual explicit operator uint64_t                 (void);
+	virtual explicit operator  int64_t                 (void);
 
 	std::string get_type_name (void);
 
 	enum class Tag {
 		t_unset,	// Empty
 		t_string,	// Text
+		t_list,		// A set of text strings
 		t_double,	// Floating point
 		t_bool,		//  1 bit
 		t_u8,		//  8 bit unsigned integer
@@ -104,10 +109,11 @@ public:
 	} type = Tag::t_unset;
 
 	enum Flags {
-		Hide  = 1 << 0,		// Should not be displayed in properties dialog
-		Dot   = 1 << 1,		// Should be displayed in graphviz diagram
-		Size  = 1 << 2,		// This number can be abbreviated, e.g. MiB
-		Debug = 1 << 3
+		Hide    = 1 << 0,	// Should not be displayed in properties dialog
+		Dot     = 1 << 1,	// Should be displayed in graphviz diagram
+		Size    = 1 << 2,	// This number can be abbreviated, e.g. MiB
+		Percent = 1 << 3,	// Display the ratio of two numbers as a percentage
+		Debug   = 1 << 4
 	};
 
 	std::string owner;
@@ -115,7 +121,6 @@ public:
 	std::string desc;
 	long flags = 0;
 };
-
 
 template <typename T>
 class PropVar : public BaseProperty
@@ -135,7 +140,7 @@ public:
 	PropVar (void) = default;
 
 	PropVar (const PropVar&  other) = default;
-	PropVar (PropVar&& other)       = default;
+	PropVar (      PropVar&& other) = default;
 
 	PropVar& operator= (PropVar&  other) = default;
 	PropVar& operator= (PropVar&& other) = default;
@@ -148,7 +153,6 @@ public:
 protected:
 	T& value;
 };
-
 
 template <typename T>
 class PropFn : public BaseProperty
@@ -169,7 +173,7 @@ public:
 	PropFn (void) = default;
 
 	PropFn (const PropFn&  other) = default;
-	PropFn (PropFn&& other)       = default;
+	PropFn (      PropFn&& other) = default;
 
 	PropFn& operator= (PropFn&  other) = default;
 	PropFn& operator= (PropFn&& other) = default;
@@ -181,6 +185,79 @@ public:
 
 protected:
 	std::function<T(void)> fn = nullptr;
+};
+
+class PropPercent : public BaseProperty
+{
+public:
+	PropPercent (const char* owner, const char* name, PPtr& numerator, PPtr& denominator, const char* desc, int flags) :
+		BaseProperty (owner, name, desc, flags),
+		num(numerator),
+		denom(denominator)
+	{
+		type = Tag::t_u8;	// Pretend to be a std::uint8_t
+	}
+
+	virtual ~PropPercent()
+	{
+	}
+
+	PropPercent (void) = default;
+
+	PropPercent (const PropPercent&  other) = default;
+	PropPercent (      PropPercent&& other) = default;
+
+	PropPercent& operator= (PropPercent&  other) = default;
+	PropPercent& operator= (PropPercent&& other) = default;
+
+	virtual operator std::uint8_t (void)
+	{
+		//XXX check num & denom
+		double dn = (std::uint64_t) *num;
+		double dd = (std::uint64_t) *denom;
+
+		return (std::uint8_t) ((dn/dd*100) + 0.5);
+	}
+
+protected:
+	PPtr num;
+	PPtr denom;
+};
+
+class PropArray : public BaseProperty
+{
+public:
+	PropArray (const char* owner, const char* name, std::vector<std::string>& vec, unsigned int index, const char* desc, int flags) :
+		BaseProperty (owner, name, desc, flags),
+		v(vec),
+		index(index)
+	{
+		type = Tag::t_string;		// Pretend to be a std::string
+	}
+
+	virtual ~PropArray()
+	{
+	}
+
+	PropArray (void) = default;
+
+	PropArray (const PropArray&  other) = default;
+	PropArray (      PropArray&& other) = default;
+
+	PropArray& operator= (PropArray&  other) = default;
+	PropArray& operator= (PropArray&& other) = default;
+
+	virtual operator std::string (void)
+	{
+		if (index >= v.size())
+			return "";
+
+		return v[index];
+	}
+
+protected:
+	std::vector<std::string>& v;
+	unsigned int index = 0;
 };
 
 

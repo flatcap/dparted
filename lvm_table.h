@@ -50,7 +50,7 @@ public:
 	}
 
 	virtual void add_child (ContainerPtr& child);
-	virtual bool set_alignment (long bytes);
+	virtual bool set_alignment (std::uint64_t bytes);
 
 public:
 	//properties

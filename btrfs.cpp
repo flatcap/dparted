@@ -228,7 +228,7 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 		//printf ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
 
 		more_props.push_back (value);
-		declare_prop (me, key.c_str(), more_props.back(), desc.c_str());
+		declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str());
 	}
 }
 

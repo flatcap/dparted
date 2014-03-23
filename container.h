@@ -64,10 +64,6 @@ public:
 	virtual std::uint64_t get_parent_offset (void);
 	virtual std::uint64_t get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces);
 
-	virtual std::uint64_t get_size_total (void);
-	virtual std::uint64_t get_size_used (void);
-	virtual std::uint64_t get_size_free (void);
-
 	virtual ContainerPtr find (const std::string& uuid);
 	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);
 
@@ -98,17 +94,11 @@ public:
 
 	virtual std::set<ContainerPtr, compare>& get_children (void);
 
-	std::string get_path (void);
-#ifdef DEBUG
-	std::string get_mem_addr (void);
-	std::int64_t get_ref_count (void);
-#endif
-
 	ContainerPtr get_smart (void);
 
 	std::vector<std::string> get_prop_names (void);
 	PPtr get_prop (const std::string& name);
-	std::vector<PPtr> get_all_props (void);
+	std::vector<PPtr> get_all_props (bool inc_hidden = false);
 
 	template<class T>
 	void add_child (std::shared_ptr<T>& child)
@@ -122,40 +112,6 @@ public:
 	{
 		ContainerPtr c (child);
 		just_add_child(c);
-	}
-
-	template<typename T>
-	void
-	declare_prop (const char* owner, const char* name, T& var, const char* desc, int flags = 0)
-	{
-		if (flags & BaseProperty::Flags::Size) {
-			// Create a fake property
-			std::string human (name);
-			human += "_human";
-			PPtr pv (new PropVar<T> (owner, human.c_str(), var, desc, flags & ~BaseProperty::Flags::Dot));
-			props[human] = pv;
-			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
-		}
-
-		PPtr pv (new PropVar<T> (owner, name, var, desc, flags));
-		props[name] = pv;
-	}
-
-	template<typename T>
-	void
-	declare_prop (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags = 0)
-	{
-		if (flags & BaseProperty::Flags::Size) {
-			// Create a fake property
-			std::string human (name);
-			human += "_human";
-			PPtr pp (new PropFn<T> (owner, human.c_str(), fn, desc, flags & ~BaseProperty::Flags::Dot));
-			props[human] = pp;
-			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
-		}
-
-		PPtr pp (new PropFn<T> (owner, name, fn, desc, flags));
-		props[name] = pp;
 	}
 
 	void sub_type (const char* name);
@@ -182,7 +138,7 @@ public:
 
 	std::vector<std::string> type;	//XXX move to protected
 
-	bool		 missing = false;
+	bool missing = false;
 
 	int seqnum = 123;
 
@@ -200,14 +156,108 @@ protected:
 	std::map<std::string,PPtr> props;
 	std::set<ContainerPtr, compare> children;
 
-	// Helper functions
-	long        get_bytes_free (void);
-	std::string get_device_major_minor (void);
-	std::string get_device_short (void);
-	std::string get_name_default (void);
-	std::string get_type (void);
-	std::string get_type_long (void);
-	std::string get_uuid_short (void);
+	template<typename T>
+	PPtr
+	declare_prop_var (const char* owner, const char* name, T& var1, const char* desc, int flags, PPtr var2 = nullptr)
+	{
+		if (flags & BaseProperty::Flags::Size) {		// Create a fake property
+			std::string human = std::string (name) + "_human";
+			PPtr pvh (new PropVar<T> (owner, human.c_str(), var1, desc, flags & ~BaseProperty::Flags::Dot));
+			props[human] = pvh;
+			flags &= ~BaseProperty::Flags::Size;		// Turn off the size flag
+		}
+
+		PPtr pv (new PropVar<T> (owner, name, var1, desc, flags));
+		props[name] = pv;
+
+		if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
+			if (!var2) {
+				std::cout << "missing var2, can't create percentage" << std::endl;
+				return pv;
+			}
+
+			if (pv->type != var2->type) {
+				std::cout << "types differ, can't create percentage" << std::endl;
+				return pv;
+			}
+
+			std::string percentage = std::string (name) + "_percentage";
+			flags &= ~BaseProperty::Flags::Dot;
+			PPtr pvp (new PropPercent (owner, percentage.c_str(), pv, var2, desc, flags));
+			props[percentage] = pvp;
+		}
+
+		return pv;
+	}
+
+	template<typename T>
+	PPtr
+	declare_prop_fn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags, PPtr var2 = nullptr)
+	{
+		if (flags & BaseProperty::Flags::Size) {		// Create a fake property
+			std::string human (name);
+			human += "_human";
+			PPtr pp (new PropFn<T> (owner, human.c_str(), fn, desc, flags & ~BaseProperty::Flags::Dot));
+			props[human] = pp;
+			flags &= ~BaseProperty::Flags::Size;		// Turn off the size flag
+		}
+
+		PPtr pf (new PropFn<T> (owner, name, fn, desc, flags));
+		props[name] = pf;
+
+		if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
+			if (!var2) {
+				std::cout << "missing var2, can't create percentage" << std::endl;
+				return pf;
+			}
+
+			if (pf->type != var2->type) {
+				std::cout << "types differ, can't create percentage" << std::endl;
+				return pf;
+			}
+
+			std::string percentage = std::string (name) + "_percentage";
+			flags &= ~BaseProperty::Flags::Dot;
+			PPtr pvp (new PropPercent (owner, percentage.c_str(), pf, var2, desc, flags));
+			props[percentage] = pvp;
+		}
+
+		return pf;
+	}
+
+	PPtr
+	declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags)
+	{
+		PPtr pv (new PropArray (owner, name, v, index, desc, flags));
+		props[name] = pv;
+
+		return pv;
+	}
+
+
+	// Property helper functions
+	std::uint64_t get_absolute_offset            (void);
+	std::uint64_t get_bytes_free                 (void);
+	std::string   get_device_inherit             (void);
+	std::uint64_t get_device_major_inherit       (void);
+	std::string   get_device_major_minor         (void);
+	std::string   get_device_major_minor_inherit (void);
+	std::uint64_t get_device_minor_inherit       (void);
+	std::string   get_device_short               (void);
+	std::string   get_device_short_inherit       (void);
+	std::uint64_t get_file_desc_inherit          (void);
+	std::string   get_mmap_addr                  (void);
+	std::uint64_t get_mmap_size                  (void);
+	std::string   get_name_default               (void);
+	std::string   get_object_addr                (void);
+	std::uint64_t get_parent_size                (void);
+	std::string   get_path_name                  (void);
+	std::string   get_path_type                  (void);
+	std::int64_t  get_ref_count                  (void);
+	std::uint64_t get_top_level_size             (void);
+	std::string   get_type                       (void);
+	std::string   get_type_long                  (void);
+	std::string   get_uuid_short                 (void);
 
 private:
 	void insert (long offset, long size, void* ptr);

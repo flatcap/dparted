@@ -25,6 +25,8 @@
 BaseProperty::operator std::string (void)
 {
 	switch (type) {
+		case BaseProperty::Tag::t_list:		return join (operator std::vector<std::string>(), ", ");
+
 		case BaseProperty::Tag::t_string:	return operator std::string();
 
 		case BaseProperty::Tag::t_double:	return std::to_string (operator double());
@@ -47,6 +49,29 @@ BaseProperty::operator std::string (void)
 							} else {
 								return std::to_string (operator int64_t());
 							}
+
+		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
+
+		default:				throw std::runtime_error ("property: unknown type");
+	}
+}
+
+BaseProperty::operator std::vector<std::string> (void)
+{
+	switch (type) {
+		case BaseProperty::Tag::t_list:		return operator std::vector<std::string>();
+
+		case BaseProperty::Tag::t_string:
+		case BaseProperty::Tag::t_double:
+		case BaseProperty::Tag::t_bool:
+		case BaseProperty::Tag::t_u8:
+		case BaseProperty::Tag::t_s8:
+		case BaseProperty::Tag::t_u16:
+		case BaseProperty::Tag::t_u32:
+		case BaseProperty::Tag::t_u64:
+		case BaseProperty::Tag::t_s16:
+		case BaseProperty::Tag::t_s32:
+		case BaseProperty::Tag::t_s64:		return { operator std::string() };
 
 		case BaseProperty::Tag::t_unset:	throw std::runtime_error ("property: not set");
 
@@ -295,6 +320,7 @@ std::string BaseProperty::get_type_name (void)
 	switch (type) {
 		case Tag::t_unset:  return "t_unset";
 		case Tag::t_string: return "t_string";
+		case Tag::t_list:   return "t_list";
 		case Tag::t_double: return "t_double";
 		case Tag::t_bool:   return "t_bool";
 		case Tag::t_u8:     return "t_u8";

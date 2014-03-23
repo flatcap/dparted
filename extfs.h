@@ -51,6 +51,7 @@ protected:
 	Extfs (void);
 
 	std::vector<std::string> more_props;
+	std::vector<std::string> features;
 };
 
 #endif // _EXTFS_H_

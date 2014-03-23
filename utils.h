@@ -26,20 +26,22 @@
 #include "stringnum.h"
 
 long         align (long num, long round);
-void         dump_hex (std::uint8_t* buffer, int bufsize);
+const char*  get_null_str (void *buffer, std::uint32_t maxlen);
 void         dump_hex2 (void* buf, int start, int length);
+void         dump_hex (std::uint8_t* buffer, int bufsize);
+std::string  get_size (std::uint64_t size);
 unsigned int execute_command1 (const std::string& command, std::vector<std::string>& output);
 unsigned int execute_command2 (const std::string& command, std::string& input);
 unsigned int execute_command3 (const std::string& command, std::string& output);
 unsigned int explode (const char* separators, const std::string& input, std::vector<std::string>& parts);
 unsigned int explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max);
-const char*  get_null_str (void *buffer, std::uint32_t maxlen);
-std::string  get_size (std::uint64_t size);
 unsigned int parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map = true);
+std::string  join (std::vector<std::string> v, const std::string& sep);
 std::string  read_file_line (const std::string& filename);
 std::string  read_uuid1 (std::uint8_t* buffer);
 std::string  read_uuid2 (std::uint8_t* buffer);
 std::string  read_uuid3 (std::uint8_t* buffer);
+std::string  shorten_device (const std::string& device);
 
 #endif // _UTILS_H_
 

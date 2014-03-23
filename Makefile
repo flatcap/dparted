@@ -23,10 +23,10 @@ BTRFS	?= 0
 DOT	?= 0
 EXTFS	?= 1
 FS_MISC	?= 0
-GPT	?= 0
-GUI	?= 1
+GPT	?= 1
+GUI	?= 0
 HEX	?= 0
-LIST	?= 1
+LIST	?= 0
 LUKS	?= 0
 LVM	?= 1
 MD	?= 0
@@ -155,16 +155,14 @@ all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT) tags
 #
 V	      = @
 Q	      = $(V:1=)
-QUIET_CC      = $(Q:@=@echo 'CC      '$^;)
-QUIET_LINK    = $(Q:@=@echo 'LINK    '$@;)
+QUIET_CC      = $(Q:@=@echo 'CC      '$<;)
+QUIET_LINK    = $(Q:@=@echo 'LD      '$@;)
 QUIET_TAGS    = $(Q:@=@echo 'TAGS    '$@;)
-QUIET_CLEAN   = $(Q:@=@echo 'CLEAN   '$@;)
 
 ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
 	QUIET_CC      =
 	QUIET_LINK    =
 	QUIET_TAGS    =
-	QUIET_CLEAN   =
 endif
 
 # ----------------------------------------------------------------------------
@@ -186,7 +184,7 @@ $(DEPDIR) $(OBJDIR):
 
 # ----------------------------------------------------------------------------
 
-tags:
+tags:	$(SRC) $(HDR)
 	$(QUIET_TAGS)ctags -I UNUSED -f - $(SRC) $(HDR) | grep -v -e "^_[A-Z0-9_]\+_H_	" -e "^[A-Za-z]\+Ptr	" > tags
 
 docs:
@@ -218,5 +216,5 @@ force:
 
 -include $(SRC:%.cpp=$(DEPDIR)/%.d)
 
-.PHONY:	tags docs stats xxx
+.PHONY:	docs stats xxx
 

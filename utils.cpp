@@ -331,6 +331,27 @@ get_size (std::uint64_t size)
 	return buffer;
 }
 
+std::string
+join (std::vector<std::string> v, const std::string& sep)
+{
+	std::string j;
+
+	if (v.empty())
+		return j;
+
+	auto it  = std::begin(v);
+	auto end = std::end(v);
+
+	j = *it;
+	it++;
+
+	for (; it != end; it++) {
+		j += sep + *it;
+	}
+
+	return j;
+}
+
 unsigned int
 parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map /* = true */)
 {
@@ -432,6 +453,19 @@ read_uuid3 (std::uint8_t* buffer)
 	}
 
 	return ss.str();
+}
+
+std::string
+shorten_device (const std::string& device)
+{
+	size_t pos = device.find ("/dev/");
+	if (pos == std::string::npos)
+		return device;
+
+	if (pos != 0)
+		return device;
+
+	return device.substr(5);
 }
 
 
