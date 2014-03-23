@@ -30,4 +30,4 @@ test on:
 dropbox account for anonymous distribution
 type checks -> int64_t
 big-/little-endian translation
-
+remove any references, e.g. hard-coded strings, to flatcap, russon
