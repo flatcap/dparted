@@ -667,3 +667,24 @@ use property keywords internally and L10N to translate
 don't unnecessarily name objects
 	leave for name_default
 
+reinstate default names of objects if there's no possibility
+of the user naming them?
+
+pathbar below menu (and on view menu)
+	tie in to focus
+
+#ifdef out lvm, md, each fs, etc
+	from makefile
+
+new quiet makefile
+
+treeview percentage -- option to display as bargraph
+
+if object is hidden children should inherit warnings?
+	children might not be visible
+	some parent is always visible
+
+property date type
+	input: string
+	output: struct tm, or sec, usec
+
