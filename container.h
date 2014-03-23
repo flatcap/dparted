@@ -266,7 +266,7 @@ protected:
 	std::map<std::string,PPtr> props;
 	std::set<ContainerPtr, compare> children;
 
-	// Helper functions
+	// Property helper functions
 	std::uint64_t get_absolute_offset            (void);
 	std::uint64_t get_bytes_free                 (void);
 	std::string   get_device_inherit             (void);
