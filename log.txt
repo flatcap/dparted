@@ -45,6 +45,14 @@ Input features
 
 -------------------------------------------
 
+    245 cout
+    120 log_info
+    110 LOG_TRACE
+     94 log_debug
+     51 printf
+     22 log_error
+      4 log_perror
+
 log::dot
 	cache output
 	spawn dot on flush
