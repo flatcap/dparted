@@ -114,6 +114,48 @@ public:
 		just_add_child(c);
 	}
 
+	void sub_type (const char* name);
+
+public:
+	//properties
+	std::string	name;
+	std::string	uuid;
+
+	std::string	device;	// These don't belong here, but the alternative is multiple inheritance
+	dev_t		device_major = 0;
+	dev_t		device_minor = 0;
+	int		fd = -1;
+
+	std::uint64_t	parent_offset = 0;
+
+	std::uint64_t	block_size = 0;
+	std::uint64_t	bytes_size = 0;
+	std::uint64_t	bytes_used = 0;
+
+	ContainerPtr	whole;	//XXX move to protected
+
+	std::weak_ptr<Container> parent;	//XXX move to protected
+
+	std::vector<std::string> type;	//XXX move to protected
+
+	bool missing = false;
+
+	int seqnum = 123;
+
+protected:
+	Container (void);
+
+	std::weak_ptr<Container> weak;	//XXX private?
+
+	bool visit_children (Visitor& v);
+
+	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
+
+	MmapPtr	device_mmap;
+
+	std::map<std::string,PPtr> props;
+	std::set<ContainerPtr, compare> children;
+
 	template<typename T>
 	PPtr
 	declare_prop_var (const char* owner, const char* name, T& var, const char* desc, int flags = 0)
@@ -224,47 +266,6 @@ public:
 		return pv;
 	}
 
-	void sub_type (const char* name);
-
-public:
-	//properties
-	std::string	name;
-	std::string	uuid;
-
-	std::string	device;	// These don't belong here, but the alternative is multiple inheritance
-	dev_t		device_major = 0;
-	dev_t		device_minor = 0;
-	int		fd = -1;
-
-	std::uint64_t	parent_offset = 0;
-
-	std::uint64_t	block_size = 0;
-	std::uint64_t	bytes_size = 0;
-	std::uint64_t	bytes_used = 0;
-
-	ContainerPtr	whole;	//XXX move to protected
-
-	std::weak_ptr<Container> parent;	//XXX move to protected
-
-	std::vector<std::string> type;	//XXX move to protected
-
-	bool missing = false;
-
-	int seqnum = 123;
-
-protected:
-	Container (void);
-
-	std::weak_ptr<Container> weak;	//XXX private?
-
-	bool visit_children (Visitor& v);
-
-	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
-
-	MmapPtr	device_mmap;
-
-	std::map<std::string,PPtr> props;
-	std::set<ContainerPtr, compare> children;
 
 	// Property helper functions
 	std::uint64_t get_absolute_offset            (void);
