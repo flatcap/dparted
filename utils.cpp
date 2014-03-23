@@ -303,6 +303,7 @@ std::string
 get_size (std::uint64_t size)
 {
 	//XXX do this without log2?  use __builtin_clz
+	//XXX stringstream
 	char buffer[64];
 	double power = log2 ((double) llabs (size)) + 0.5;
 	const char* suffix = "";
