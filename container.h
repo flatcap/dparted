@@ -158,107 +158,75 @@ protected:
 
 	template<typename T>
 	PPtr
-	declare_prop_var (const char* owner, const char* name, T& var, const char* desc, int flags = 0)
+	declare_prop_var (const char* owner, const char* name, T& var1, const char* desc, int flags, PPtr var2 = nullptr)
 	{
-		if (flags & BaseProperty::Flags::Size) {
-			// Create a fake property
-			std::string human (name);
-			human += "_human";
-			PPtr pv (new PropVar<T> (owner, human.c_str(), var, desc, flags & ~BaseProperty::Flags::Dot));
-			props[human] = pv;
-			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
+		if (flags & BaseProperty::Flags::Size) {		// Create a fake property
+			std::string human = std::string (name) + "_human";
+			PPtr pvh (new PropVar<T> (owner, human.c_str(), var1, desc, flags & ~BaseProperty::Flags::Dot));
+			props[human] = pvh;
+			flags &= ~BaseProperty::Flags::Size;		// Turn off the size flag
 		}
 
-		PPtr pv (new PropVar<T> (owner, name, var, desc, flags));
+		PPtr pv (new PropVar<T> (owner, name, var1, desc, flags));
 		props[name] = pv;
+
+		if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
+			if (!var2) {
+				std::cout << "missing var2, can't create percentage" << std::endl;
+				return pv;
+			}
+
+			if (pv->type != var2->type) {
+				std::cout << "types differ, can't create percentage" << std::endl;
+				return pv;
+			}
+
+			std::string percentage = std::string (name) + "_percentage";
+			flags &= ~BaseProperty::Flags::Dot;
+			PPtr pvp (new PropPercent (owner, percentage.c_str(), pv, var2, desc, flags));
+			props[percentage] = pvp;
+		}
 
 		return pv;
 	}
 
 	template<typename T>
 	PPtr
-	declare_prop_var_extra (const char* owner, const char* name, T& var, const char* desc, int flags, PPtr var2)
+	declare_prop_fn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags, PPtr var2 = nullptr)
 	{
-		if (flags & BaseProperty::Flags::Size) {
-			// Create a fake property
-			std::string human = std::string (name) + "_human";
-			PPtr pvh (new PropVar<T> (owner, human.c_str(), var, desc, flags & ~BaseProperty::Flags::Dot));
-			props[human] = pvh;
-			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
-		}
-
-		PPtr pv1 (new PropVar<T> (owner, name, var, desc, flags));
-		props[name] = pv1;
-
-		if (pv1->type != var2->type) {
-			std::cout << "types differ, can't create percentage" << std::endl;
-			return pv1;
-		}
-
-		if (flags & BaseProperty::Flags::Percent) {
-			// Create a fake property
-			std::string percentage = std::string (name) + "_percentage";
-			flags &= ~BaseProperty::Flags::Dot;
-			PPtr pvp (new PropPercent (owner, percentage.c_str(), pv1, var2, desc, flags));
-			props[percentage] = pvp;
-		}
-
-		return pv1;
-	}
-
-	template<typename T>
-	PPtr
-	declare_prop_fn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags = 0)
-	{
-		if (flags & BaseProperty::Flags::Size) {
-			// Create a fake property
+		if (flags & BaseProperty::Flags::Size) {		// Create a fake property
 			std::string human (name);
 			human += "_human";
 			PPtr pp (new PropFn<T> (owner, human.c_str(), fn, desc, flags & ~BaseProperty::Flags::Dot));
 			props[human] = pp;
-			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
+			flags &= ~BaseProperty::Flags::Size;		// Turn off the size flag
 		}
 
-		PPtr pp (new PropFn<T> (owner, name, fn, desc, flags));
-		props[name] = pp;
+		PPtr pf (new PropFn<T> (owner, name, fn, desc, flags));
+		props[name] = pf;
 
-		return pp;
-	}
+		if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
+			if (!var2) {
+				std::cout << "missing var2, can't create percentage" << std::endl;
+				return pf;
+			}
 
-	template<typename T>
-	PPtr
-	declare_prop_fn_extra (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags, PPtr var2)
-	{
-		if (flags & BaseProperty::Flags::Size) {
-			// Create a fake property
-			std::string human (name);
-			human += "_human";
-			PPtr pp (new PropFn<T> (owner, human.c_str(), fn, desc, flags & ~BaseProperty::Flags::Dot));
-			props[human] = pp;
-			flags &= ~BaseProperty::Flags::Size;	// Turn off the size flag
-		}
+			if (pf->type != var2->type) {
+				std::cout << "types differ, can't create percentage" << std::endl;
+				return pf;
+			}
 
-		PPtr pf1 (new PropFn<T> (owner, name, fn, desc, flags));
-		props[name] = pf1;
-
-		if (pf1->type != var2->type) {
-			std::cout << "types differ, can't create percentage" << std::endl;
-			return pf1;
-		}
-
-		if (flags & BaseProperty::Flags::Percent) {
-			// Create a fake property
 			std::string percentage = std::string (name) + "_percentage";
 			flags &= ~BaseProperty::Flags::Dot;
-			PPtr pvp (new PropPercent (owner, percentage.c_str(), pf1, var2, desc, flags));
+			PPtr pvp (new PropPercent (owner, percentage.c_str(), pf, var2, desc, flags));
 			props[percentage] = pvp;
 		}
 
-		return pf1;
+		return pf;
 	}
 
 	PPtr
-	declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags = 0)
+	declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags)
 	{
 		PPtr pv (new PropArray (owner, name, v, index, desc, flags));
 		props[name] = pv;

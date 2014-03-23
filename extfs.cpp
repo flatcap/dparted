@@ -244,10 +244,10 @@ Extfs::get_ext_sb (ContainerPtr parent)
 		if (desc == "Filesystem features") {
 			explode (" ", value, features);
 			std::sort (std::begin (features), std::end (features));
-			declare_prop_var (me, key.c_str(), features, desc.c_str());
+			declare_prop_var (me, key.c_str(), features, desc.c_str(), 0);
 		} else {
 			more_props.push_back (value);
-			declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str());
+			declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str(), 0);
 		}
 	}
 #endif
