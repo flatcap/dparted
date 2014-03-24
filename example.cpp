@@ -83,3 +83,50 @@ void function3 (void)
 	Log::error.format ("number %d", 42);
 }
 
+void function4 (void)
+{
+#define log_macro1(ARGS...)					\
+	{							\
+		Log::Function = __PRETTY_FUNCTION__;		\
+		Log::File     = __FILE__;			\
+		Log::Line     = __LINE__;			\
+	}							\
+	Log::Stream
+
+	log_macro1 << "message";
+
+#define log_macro1(ARGS...)					\
+
+	log_macro2 ("%ld", number);
+}
+
+
+//int log_info (const char* format, ...) __attribute__ ((format (printf, 1, 2)));
+
+inline log_method (void)
+{
+}
+
+
+inline log_method (...)
+{
+}
+
+
+void function5 (void)
+{
+#define log_macro1(ARGS...)					\
+	{							\
+		Log::Function = __PRETTY_FUNCTION__;		\
+		Log::File     = __FILE__;			\
+		Log::Line     = __LINE__;			\
+	}							\
+	Log::Stream
+
+	log_macro1 << "message";
+
+#define log_macro1(ARGS...)					\
+
+	log_macro2 ("%ld", number);
+}
+
