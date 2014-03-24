@@ -688,3 +688,7 @@ property date type
 	input: string
 	output: struct tm, or sec, usec
 
+where should the catchs go
+	low-level -- near the new
+	high-level -- near the action that started it
+
