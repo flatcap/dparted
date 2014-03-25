@@ -25,6 +25,7 @@
 #include "fs_usage.h"
 #include "filesystem.h"
 #include "utils.h"
+#include "log_trace.h"
 
 FilesystemPtr
 get_reiserfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
@@ -57,7 +58,7 @@ get_reiserfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	f->bytes_size = (blocks_total * block_size);
 	f->bytes_used = (blocks_total - blocks_free) * block_size;
 
-	//log_info ("reiser: %s, %s, %ld, %ld\n", f->uuid.c_str(), f->label.c_str(), f->bytes_size, f->bytes_used);
+	//log_info ("reiser: %s, %s, %ld, %ld\n", f->uuid.c_str(), f->name.c_str(), f->bytes_size, f->bytes_used);
 
 	get_reiserfs_usage(f);
 	return f;

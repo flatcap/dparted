@@ -61,7 +61,7 @@ Btrfs::accept (Visitor& v)
 std::vector<Action>
 Btrfs::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.btrfs", true },
 	};

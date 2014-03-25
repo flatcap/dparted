@@ -54,7 +54,7 @@ MdMirror::accept (Visitor& v)
 std::vector<Action>
 MdMirror::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.md_mirror", true },
 	};

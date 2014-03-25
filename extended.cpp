@@ -67,7 +67,7 @@ Extended::accept (Visitor& v)
 std::vector<Action>
 Extended::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.extended", true },
 	};
@@ -125,10 +125,9 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	ext->add_child (res1);		// change to add_reserved?
 
 	for (int loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
-		//log_debug ("f = %p, r = %d\n", f, r);
 		if (*(unsigned short int*) (buffer+510) != 0xAA55) {
 			log_error ("not an extended partition\n");
-			//log_debug ("%s (%s), %lld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
+			//log_debug ("%s (%s), %ld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
 			return false;
 		}
 

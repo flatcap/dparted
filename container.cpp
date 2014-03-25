@@ -185,7 +185,7 @@ Container::accept (Visitor& v)
 std::vector<Action>
 Container::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.container", true },
 	};
@@ -375,7 +375,7 @@ void deleter (Mmap* m)
 
 	std::tie (size, ptr) = *m;
 
-	//log_debug ("mmap deleter: "); << ptr << "\n";
+	//log_debug ("mmap deleter: %p\n", ptr);
 	munmap (ptr, size);
 
 	delete m;
@@ -496,7 +496,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 bool
 Container::is_a (const std::string& t)
 {
-	//log_debug ("my type = "); << type.back() << ", compare to " << t << "\n";
+	//log_debug ("my type = %s, compare to %s\n", type.back().c_str(), t.c_str());
 
 	// Start with the most derived type
 	for (auto it = type.rbegin(); it != type.rend(); it++) {

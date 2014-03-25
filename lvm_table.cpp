@@ -72,7 +72,7 @@ LvmTable::accept (Visitor& v)
 std::vector<Action>
 LvmTable::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_table", true },
 	};
@@ -303,7 +303,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	//int seq_num = -1;
 
 	if ((offset+size) > bufsize) {
-		//log_info ("TOO BIG (%d > %d)\n", (offset+size), bufsize);
+		//log_info ("TOO BIG (%lu > %lu)\n", (offset+size), bufsize);
 		//return false;
 	} else {
 		if (size > 0) {

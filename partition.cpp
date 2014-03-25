@@ -61,7 +61,7 @@ Partition::accept (Visitor& v)
 std::vector<Action>
 Partition::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.partition", true },
 	};

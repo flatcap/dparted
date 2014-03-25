@@ -54,7 +54,7 @@ GptPartition::accept (Visitor& v)
 std::vector<Action>
 GptPartition::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.gpt_partition", true },
 	};

@@ -164,7 +164,6 @@ unsigned int
 execute_command2 (const std::string& command, std::string& input)
 {
 	FILE* file = nullptr;
-	//int count = 0;
 
 	//XXX log command and output
 
@@ -175,7 +174,7 @@ execute_command2 (const std::string& command, std::string& input)
 		return -1;
 	}
 
-	//count =
+	//int count =
 	fprintf (file, "%s\n", input.c_str());
 	//log_debug ("wrote %d bytes to command %s\n", count, command.c_str());
 

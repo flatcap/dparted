@@ -76,7 +76,7 @@ LuksTable::accept (Visitor& v)
 std::vector<Action>
 LuksTable::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.luks_table", true },
 	};

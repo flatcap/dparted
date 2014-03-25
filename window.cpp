@@ -131,7 +131,7 @@ Window::my_idle (void)
 #if 1
 	std::vector<std::string> files;
 	ContainerPtr c = gui_app->scan (files);
-	//log_debug ("%d\n", c->get_children().size());
+	//log_debug ("%ld\n", c->get_children().size());
 	GfxContainerPtr dummy;
 	m_g = GfxContainer::create (dummy, c);
 	set_data (m_g);
@@ -152,7 +152,7 @@ Window::on_delete_event (GdkEventAny* UNUSED(event))
 bool
 Window::on_mouse_click (GdkEventButton* UNUSED(event))
 {
-	//log_debug ("Window: mouse click: ("); << event->x << "," << event->y << ")\n";
+	//log_debug ("Window: mouse click: (%.0f,%.0f)\n", event->x, event->y);
 	return true;
 }
 
@@ -180,7 +180,7 @@ Window::set_focus (GfxContainerPtr cont)
 	treeview.set_focus (focus);
 	drawingarea.set_focus (focus);
 
-	//log_debug ("Focus: "); << cont << "\n";
+	//log_debug ("Focus: %s\n", cont->dump());
 	return true;
 }
 
@@ -405,7 +405,7 @@ Window::init_shortcuts (void)
 	Glib::RefPtr<Gtk::AccelGroup> accel = Gtk::AccelGroup::create();
 
 	for (auto k : keys) {
-		//log_debug ("Keypress: "); << k.first << " : " << k.second << "\n";
+		//log_debug ("Keypress: %d : %d\n", k.first, k.second);
 		Gtk::MenuItem* i = manage (new Gtk::MenuItem());
 		i->signal_activate().connect (sigc::bind<int,int> (sigc::mem_fun (*this, &Window::on_keypress), k.first, k.second));
 		i->add_accelerator ("activate", accel, k.second, (Gdk::ModifierType) k.first, Gtk::ACCEL_VISIBLE);
@@ -707,7 +707,7 @@ Window::set_actions (std::vector<Action>& list)
 	for (auto a : list) {				// Then selectively enable the ones we want
 		auto it = action_map.find (a.name);
 		if (it != std::end (action_map)) {
-			//log_debug ("Enable: "); << a.name << "\n";
+			//log_debug ("Enable: %s\n", a.name.c_str());
 			it->second->set_enabled (true);
 		} else {
 			log_debug ("Can't find %s\n", a.name.c_str());
@@ -718,7 +718,7 @@ Window::set_actions (std::vector<Action>& list)
 void
 Window::on_keypress (int modifier, int key)
 {
-	//log_debug ("Keypress: "); << modifier << " : " << (char) key << "\n";
+	//log_debug ("Keypress: %d : %c\n", modifier, key);
 
 	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q')) {
 		set_show_menubar(false);

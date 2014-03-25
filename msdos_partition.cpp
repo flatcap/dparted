@@ -54,7 +54,7 @@ MsdosPartition::accept (Visitor& v)
 std::vector<Action>
 MsdosPartition::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.msdos_partition", true },
 	};

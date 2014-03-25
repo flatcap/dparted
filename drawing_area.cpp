@@ -418,7 +418,7 @@ dump_range (const std::deque<Range>& vRange)
 bool
 DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
 {
-	//log_debug ("mouse motion: (%d,%d)\n", event->x, event->y);
+	//log_debug ("mouse motion: (%.0f,%.0f)\n", event->x, event->y);
 
 #if 0
 	bool old = mouse_close;
@@ -448,7 +448,7 @@ DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
 bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
-	//log_debug ("mouse click: (%d,%d)\n", event->x, event->y);
+	//log_debug ("mouse click: (%.0f,%.0f)\n", event->x, event->y);
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 
@@ -827,7 +827,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	//Rect tab;
 	Rect inside;
 
-	//log_debug ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
+	//log_debug ("object = %s -- %d,%d\n", cont->name.c_str(), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
 #if 0
 		log_debug ("draw_container: too narrow\n");
@@ -854,7 +854,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 
 		Rect below;
 		vRange.push_front ({shape, cont});
-		//log_debug ("Icon: %p\n", (void*) icon);
+		//log_debug ("Icon: %p\n", (void*) icon.operator->());
 		draw_icon (cr, icon, box, below);
 		draw_text (cr, box2, name);
 

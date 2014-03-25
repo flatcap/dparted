@@ -105,7 +105,7 @@ make_device (std::string group, std::string volume)
 std::vector<Action>
 LvmGroup::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_group", true },
 	};
@@ -183,7 +183,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			continue;
 
 		LvmPartitionPtr p = LvmPartition::create();
-		//log_debug ("new LvmPartition (%p)\n", p);
+		//log_debug ("new LvmPartition (%p)\n", (void*) p.get());
 
 		// Find our relations
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
@@ -348,7 +348,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			}
 			t->set_alignment (g->block_size);
 		}
-		// log_debug ("TRIGGER set_alignment: %ld\n", g->segments.size());
+		 //log_debug ("TRIGGER set_alignment: %ld\n", g->segments.size());
 		//g->bytes_used		= g->bytes_size - (long) tags["LVM2_VG_FREE"];
 
 		// LvmGroup
@@ -556,7 +556,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		//log_info ("add_child %s -> %s\n", parent->uuid.c_str(), child->uuid.c_str());
 		parent->add_child (child);
 
-		//log_info ("\t%p -> %p\n", (void*) parent, (void*) child);
+		//log_info ("\t%p -> %p\n", (void*) parent.get(), (void*) child.get());
 		//log_info ("\t%s -> %s\n", parent->name.c_str(), child->name.c_str());
 		//log_info ("\t%s -> %s\n", parent->uuid.c_str(), child->uuid.c_str());
 

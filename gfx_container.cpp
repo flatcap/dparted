@@ -19,6 +19,7 @@
 #include "gfx_container.h"
 #include "gui_app.h"
 #include "log.h"
+#include "log_trace.h"
 
 GfxContainer::GfxContainer (void)
 {
@@ -309,7 +310,7 @@ GfxContainer::process_icon (const std::string& str)
 		return pb;
 
 	pb = theme->get_icon (str);
-	//log_debug ("icon: %s %p\n", str.c_str(), (void*) pb);
+	//log_debug ("icon: %s %p\n", str.c_str(), (void*) pb.operator->());
 	//pb = Gdk::Pixbuf::create_from_file (str);
 
 	return pb;

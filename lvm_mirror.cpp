@@ -58,7 +58,7 @@ LvmMirror::accept (Visitor& v)
 std::vector<Action>
 LvmMirror::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_mirror", true },
 	};

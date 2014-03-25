@@ -54,7 +54,7 @@ MdStripe::accept (Visitor& v)
 std::vector<Action>
 MdStripe::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.md_stripe", true },
 	};

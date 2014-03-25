@@ -81,7 +81,7 @@ Disk::create (const std::string& lsblk)
 
 	d->name = tags["NAME"];
 	d->device = "/dev/" + d->name;
-	//log_debug ("%s\n", device.c_str());
+	//log_debug ("%s\n", d->device.c_str());
 
 	std::string majmin = tags["MAJ:MIN"];
 	scan = sscanf (majmin.c_str(), "%lu:%lu", &d->device_major, &d->device_minor);
@@ -109,7 +109,7 @@ Disk::accept (Visitor& v)
 std::vector<Action>
 Disk::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.disk", true },
 	};
@@ -205,7 +205,7 @@ Disk::find_devices (ContainerPtr& list)
 	if (output.empty())
 		return 0;
 
-	//log_debug ("%s\n", output.c_str());
+	//log_debug ("%s\n", join (output,", ").c_str());
 
 	std::string device;
 	std::string type;
@@ -218,7 +218,7 @@ Disk::find_devices (ContainerPtr& list)
 	std::map<std::string,StringNum> tags;
 	int added = 0;
 
-	//log_debug ("%d lines\n", output.size());
+	//log_debug ("%ld lines\n", output.size());
 
 	for (auto line : output) {
 		parse_tagged_line (line, " ", tags);
@@ -312,7 +312,7 @@ Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 	if (!lsblk (output))
 		return;
 
-	//log_debug ("%d lines\n", count);
+	//log_debug ("%ld lines\n", output.size());
 
 	for (auto line : output) {
 		DiskPtr d = Disk::create (line);

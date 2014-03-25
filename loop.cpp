@@ -104,7 +104,7 @@ Loop::create (const std::string& losetup)
 	if ((len > 10) && (l->file_name.substr (len-10) == " (deleted)")) {
 		l->file_name.erase (len-10);
 		l->deleted = true;
-		//log_info ("%s is deleted\n", device.c_str());
+		//log_info ("%s is deleted\n", l->device.c_str());
 	}
 
 	l->block_size   = 512;	//XXX kernel lower limit, but fs block size is likely to be bigger
@@ -130,7 +130,7 @@ Loop::accept (Visitor& v)
 std::vector<Action>
 Loop::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.loop", true },
 	};

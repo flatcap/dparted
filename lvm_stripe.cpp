@@ -57,7 +57,7 @@ LvmStripe::accept (Visitor& v)
 std::vector<Action>
 LvmStripe::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_stripe", true },
 	};

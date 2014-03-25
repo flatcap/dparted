@@ -72,7 +72,7 @@ Msdos::accept (Visitor& v)
 std::vector<Action>
 Msdos::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.msdos", true },
 	};
@@ -212,7 +212,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		part_name << (i+1);
 
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
-			//log_debug ("vp[i].start = %lld\n", vp[i].start);
+			//log_debug ("vp[i].start = %ld\n", vp[i].start);
 			ContainerPtr m2(m);
 			//XXX recalculate buffer?  BELOW IS NOW WRONG RECHECK
 #if 0
