@@ -569,7 +569,7 @@ ContainerPtr
 Container::get_smart (void)
 {
 	if (weak.expired()) {
-		log_debug ("SMART\n");;
+		log_debug ("SMART\n");
 		//XXX who created us? code error
 		ContainerPtr c (this);
 		log_debug ("%s\n", c->dump());

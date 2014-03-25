@@ -100,7 +100,7 @@ GfxContainer::init (ContainerPtr c)
 	if (!c)
 		return false;
 
-	std::string path = c->get_path_type();
+	std::string path = c->get_type_long();
 	name = c->name;
 	type = c->type.back();
 	device = c->get_device_name();

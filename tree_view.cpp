@@ -110,7 +110,7 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			}
 
 			x->treepath = m_refTreeModel->get_string (row);
-			log_debug ("%s\t%s\n", x->treepath.c_str(), x->dump());
+			//log_debug ("%s\t%s\n", x->treepath.c_str(), x->dump());
 
 			//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
 

@@ -292,7 +292,7 @@ Window::on_menu_file_quit (void)
 
 	if (ask_user) {
 		ContainerPtr c;
-		QuestionPtr q = Question::create (c, [] (QuestionPtr UNUSED(q)) { /*log_debug ("reply\n");;*/ } );
+		QuestionPtr q = Question::create (c, [] (QuestionPtr UNUSED(q)) { log_debug ("reply\n"); } );
 		q->title = "Quit Application?";
 		q->question = "Are you sure?";
 		q->answers = { "No", "Yes" };
