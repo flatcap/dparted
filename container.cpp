@@ -197,10 +197,10 @@ bool
 Container::perform_action (Action action)
 {
 	if (action.name == "dummy.container") {
-		log_debug ("Container perform: "); << action.name << "\n";
+		log_debug ("Container perform: %s\n", action.name.c_str());
 		return true;
 	} else {
-		log_debug ("Unknown action: "); << action.name << "\n";
+		log_debug ("Unknown action: %s\n", action.name.c_str());
 		return false;
 	}
 }
@@ -872,7 +872,7 @@ Container::get_uuid_short (void)
 const char*
 Container::dump (void)
 {
-	stringstream s;
+	std::stringstream s;
 	s << this;
 	return s.str().c_str();
 }

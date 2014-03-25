@@ -96,7 +96,7 @@ Gpt::perform_action (Action action)
 void
 delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 {
-	// std::cout << "delete: (" << start << "," << finish << "): ";
+	// log_debug ("delete: (%d,%d): ", start, finish);
 	for (auto it = std::begin (region); it != std::end (region); it++) {
 		if (finish < (*it).first)
 			continue;

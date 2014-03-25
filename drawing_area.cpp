@@ -418,7 +418,7 @@ dump_range (const std::deque<Range>& vRange)
 bool
 DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
 {
-	//std::cout << "mouse motion: (" << event->x << "," << event->y << ")\n";
+	//log_debug ("mouse motion: (%d,%d)\n", event->x, event->y);
 
 #if 0
 	bool old = mouse_close;
@@ -448,11 +448,11 @@ DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
 bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
-	//std::cout << "mouse click: (" << event->x << "," << event->y << ")\n";
+	//log_debug ("mouse click: (%d,%d)\n", event->x, event->y);
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 
-	//std::cout << "top_level: " << get_toplevel()->get_name() << "\n";
+	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 
 	GfxContainerPtr selection;
@@ -729,7 +729,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 		else
 			colour = 31;
 
-		std::cout << "\t" << "\033[01;" << std::to_string (colour) << "m" << a.name << "\033[0m" << "\n";
+		log_debug ("\t\033[01;%dm%s\033[0m\n", colour, a.name.c_str());
 	}
 	log_debug ("\n");
 #endif
@@ -854,7 +854,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 
 		Rect below;
 		vRange.push_front ({shape, cont});
-		//std::cout << "Icon: " << icon << "\n";	//PIXBUF
+		//log_debug ("Icon: %p\n", (void*) icon);
 		draw_icon (cr, icon, box, below);
 		draw_text (cr, box2, name);
 
@@ -984,7 +984,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 	bool redraw  = false;
 	bool handled = false;
 
-	//std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << "\n";
+	//log_debug ("Key: %d (0x%x)\n", ev->keyval, ev->keyval);
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
 
@@ -1363,7 +1363,7 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 #if 0
 	log_debug ("Actions:\n");
 	for (auto a : actions) {
-		std::cout << "\t" << a << "\n";
+		log_debug ("\t%s\n", a->name.c_str());
 	}
 #endif
 

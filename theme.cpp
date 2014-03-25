@@ -93,9 +93,9 @@ Theme::add_icon (const std::string& name, const std::string& filename)
 	try {
 		pb = Gdk::Pixbuf::create_from_file (filename);
 	} catch (const Glib::FileError& fe) {
-		std::cout << "file error: " << fe.what() << "\n";
+		log_debug ("file error: %s\n", fe.what().c_str());
 	} catch (const Gdk::PixbufError& pbe) {
-		std::cout << "pixbuf error: " << pbe.what() << "\n";
+		log_debug ("pixbuf error: %s\n", pbe.what().c_str());
 	}
 
 	return pb;

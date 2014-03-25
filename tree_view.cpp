@@ -110,7 +110,7 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			}
 
 			x->treepath = m_refTreeModel->get_string (row);
-			//std::cout << x->treepath << '\t' << x << "\n";
+			log_debug ("%s\t%s\n", x->treepath.c_str(), x->dump());
 
 			//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
 
@@ -246,7 +246,7 @@ bool
 TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
 #if 1
-	//std::cout << "qtt: " << menu_active << "\n";
+	//log_debug ("qtt: %d\n", menu_active);
 	if (keyboard_tooltip)
 		return false;
 	if (menu_active)
@@ -257,7 +257,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 
 	convert_widget_to_tree_coords (x, y, tx, ty);
 
-	//std::cout << "tooltip at (x,y) " << x << "," << y << "-- (tx,ty) " << tx << "," << ty << "\n";
+	//log_debug ("  tooltip at (x,y) %d,%d -- (tx,ty) %d, %d\n", x, y, tx, ty);
 
 	Gtk::TreeModel::Path path;
 
@@ -394,7 +394,7 @@ TreeView::get_coords (int& x, int& y)
 
 #if 0
 	Gtk::Allocation allocation = get_allocation();
-	std::cout << "size: " << allocation.get_width() << "," << allocation.get_height() << "\n";
+	log_debug ("size: %d,%d\n", allocation.get_width(), allocation.get_height());
 #endif
 	int ccx = 0;
 	int ccy = 0;
@@ -407,7 +407,7 @@ TreeView::get_coords (int& x, int& y)
 		Gtk::TreeModel::Path path = m_refTreeModel->get_path (it);
 		Gdk::Rectangle rect;
 		get_cell_area (path, *get_column(0), rect);
-		std::cout << "rect: " << rect.get_x() << "," << rect.get_y() << "," << rect.get_width() << "," << rect.get_height() << "\n";
+		log_debug ("rect: %d,%d,%d,%d\n", rect.get_x(), rect.get_y(), rect.get_width(), rect.get_height());
 
 		tx += rect.get_x() + rect.get_width();
 		ty += rect.get_y() + rect.get_height();

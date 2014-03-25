@@ -595,7 +595,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 #if 0
 	log_info ("Pieces (%ld)\n", pieces->get_children().size());
 	for (auto i : pieces->get_children()) {
-		std::cout << '\t' << i->uuid << '\t' << i << '\n';
+		log_debug ("\t%s\t%s\n", i->uuid.c_str(), i->dump());
 	}
 #endif
 
@@ -618,7 +618,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	//log_debug ("%ld groups\n", g.size());
 
 	for (auto i : g) {
-		//std::cout << '\t' << i->uuid << '\t' << i << '\n';
+		//log_debug ("\t%s\t%s\n", i->uuid.c_str(), i->dump());
 		top_level->just_add_child(i);
 	}
 #endif

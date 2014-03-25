@@ -261,7 +261,7 @@ bool
 GfxContainer::set_focus (bool focus)
 {
 	ContainerPtr c = get_container();
-	//std::cout << "Focus: " << c << " = " << focus << "\n";
+	//log_debug ("Focus: %s = %d\n", c->dump(), focus);
 	focussed = focus;
 	return true;
 }
@@ -309,7 +309,7 @@ GfxContainer::process_icon (const std::string& str)
 		return pb;
 
 	pb = theme->get_icon (str);
-	//std::cout << "icon: " << str << " " << pb << "\n";
+	//log_debug ("icon: %s %p\n", str.c_str(), (void*) pb);
 	//pb = Gdk::Pixbuf::create_from_file (str);
 
 	return pb;

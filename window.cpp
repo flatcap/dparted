@@ -475,7 +475,7 @@ Window::init_actions (void)
 	for (auto a : action_map) {
 		if (a.first[7] < 'n')
 			a.second->set_enabled (false);
-		//std::cout << a.first << "\n";
+		log_debug ("%s\n", a.first.c_str());
 	}
 #endif
 }

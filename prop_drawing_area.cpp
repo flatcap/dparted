@@ -118,7 +118,7 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 		box.h -= (GAP*2);
 
 		Rect below;
-		//std::cout << "Icon: " << icon << "\n";	//PIXBUF
+		//log_debug ("Icon: %p\n", (void*) icon);
 		draw_icon (cr, icon, box, below);
 		draw_text (cr, box2, name);
 

@@ -196,7 +196,7 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 	//LOG_TRACE;
 	log_debug ("Open files:\n");
 	for (auto f : files) {
-		std::cout << f->get_uri() << "\n";
+		log_debug ("%s\n", f->get_uri().c_str());
 	}
 
 	log_debug ("hint = %s\n", hint.c_str());
@@ -219,8 +219,8 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	try {
 		context.parse (argc, argv);
 	} catch (const Glib::Error& ex) {
-		std::cout << "Exception parsing command-line: " << ex.what() << "\n";
-		std::cout << context.get_help() << "\n";
+		log_debug ("Exception parsing command-line: %s\n", ex.what().c_str());
+		log_debug ("%s\n", context.get_help().c_str());
 		//XXX if running, don't kill the app
 		return EXIT_FAILURE;
 	}
