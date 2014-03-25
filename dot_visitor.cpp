@@ -547,7 +547,6 @@ DotVisitor::get_dot (void)
 void
 DotVisitor::run_dotty (void)
 {
-	return;
 	char timebuf[8];
 	time_t rawtime;
 	struct tm* timeinfo;
