@@ -17,23 +17,24 @@
 # along with DParted.  If not, see <http://www.gnu.org/licenses/>.
 
 # Configurables
-V	?= 0		# Verbose
-P	?= 0		# Profiling
-BTRFS	?= 1
-DOT	?= 1
+V	?= 0
+P	?= 0
+D	?= 1
+BTRFS	?= 0
+DOT	?= 0
 EXTFS	?= 1
-FS_MISC	?= 1
+FS_MISC	?= 0
 GPT	?= 1
-GUI	?= 1
-HEX	?= 1
+GUI	?= 0
+HEX	?= 0
 LIST	?= 1
-LUKS	?= 1
+LUKS	?= 0
 LVM	?= 1
-MD	?= 1
-MSDOS	?= 1
-NTFS	?= 1
-PROP	?= 1
-UNUSED	?= 1
+MD	?= 0
+MSDOS	?= 0
+NTFS	?= 0
+PROP	?= 0
+UNUSED	?= 0
 
 CC	= g++	#clang++
 SCAN	= scan-build
@@ -109,7 +110,6 @@ CFLAGS	+= -Wpedantic
 
 CFLAGS	+= -fno-omit-frame-pointer
 CFLAGS	+= -fno-optimize-sibling-calls
-CFLAGS	+= -DDEBUG
 
 CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
 CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
@@ -133,6 +133,13 @@ CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 PACKAGES += libconfig++
 ifeq ($(GUI),1)
 	PACKAGES += gtkmm-3.0
+endif
+
+ifeq ($(D),1)
+	CFLAGS	+= -DDEBUG
+	CFLAGS	+= -include iostream
+else
+	CFLAGS	+= -D_GLIBCXX_IOSTREAM
 endif
 
 CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
