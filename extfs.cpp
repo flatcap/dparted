@@ -16,7 +16,6 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -62,7 +61,7 @@ Extfs::accept (Visitor& v)
 std::vector<Action>
 Extfs::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.extfs", true },
 	};
@@ -78,7 +77,7 @@ bool
 Extfs::perform_action (Action action)
 {
 	if (action.name == "dummy.extfs") {
-		std::cout << "Extfs perform: " << action.name << std::endl;
+		log_debug ("Extfs perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -150,20 +149,20 @@ tune2fs (const std::string& dev)
 	std::string key;
 	std::string value;
 
-	//printf ("keys:\n");
+	//log_debug ("keys:\n");
 	for (auto line : output) {
 		if (line.substr (0, 7) == "tune2fs")
 			continue;
 
 		if (!parse_line (line, key, value)) {
-			std::cout << "Failed: " << line << std::endl;
+			log_debug ("Failed: %s\n", line.c_str());
 			continue;
 		}
 
-		//printf ("\t>>%s<<\n", key.c_str());
+		//log_debug ("\t>>%s<<\n", key.c_str());
 		results[key] = value;
 	}
-	//printf ("\n");
+	//log_debug ("\n");
 
 	return results;
 }
@@ -185,7 +184,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 
 	std::map<std::string,std::string> info = tune2fs (dev);
 	if (info.empty()) {
-		std::cout << "tune2fs failed" << std::endl;
+		log_debug ("tune2fs failed\n");
 		return;
 	}
 
@@ -234,12 +233,12 @@ Extfs::get_ext_sb (ContainerPtr parent)
 	// declare everything else
 	const char* me = "Extfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
-	//printf ("Props:\n");
+	//log_debug ("Props:\n");
 	for (auto i : info) {
 		std::string desc  = i.first;
 		std::string key   = make_key (desc);
 		std::string value = i.second;
-		//printf ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
+		//log_debug ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
 
 		if (desc == "Filesystem features") {
 			explode (" ", value, features);

@@ -114,10 +114,10 @@ PropertiesDialog::on_dialog_response (int response_id)
 {
 	switch (response_id) {
 		case Gtk::RESPONSE_DELETE_EVENT:
-			//std::cout << "Delete clicked." << std::endl;
+			//log_debug ("Delete clicked.\n");
 			break;
 		default:
-			std::cout << "Unexpected button clicked, response_id=" << response_id << std::endl;
+			log_debug ("Unexpected button clicked, response_id=%d\n", response_id);
 			break;
 	}
 
@@ -127,7 +127,7 @@ PropertiesDialog::on_dialog_response (int response_id)
 bool
 PropertiesDialog::on_parent_delete (GdkEventAny* UNUSED(event))
 {
-	std::cout << "parent delete\n";
+	log_debug ("parent delete\n");
 	delete this;
 	return false;
 }
@@ -159,7 +159,7 @@ PropertiesDialog::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 bool
 PropertiesDialog::on_event (GdkEvent* event)
 {
-	std::cout << "type: " << event->type << std::endl;
+	log_debug ("type: %d\n", event->type);
 	return false;
 }
 
@@ -190,7 +190,7 @@ PropertiesDialog::my_show (void)
 	//LOG_TRACE;
 	ContainerPtr c = container->get_container();
 	if (!c) {
-		std::cout << "no container" << std::endl;
+		log_debug ("no container\n");
 		return;
 	}
 

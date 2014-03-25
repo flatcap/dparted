@@ -16,7 +16,6 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -62,7 +61,7 @@ Ntfs::accept (Visitor& v)
 std::vector<Action>
 Ntfs::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.ntfs", true },
 	};
@@ -78,7 +77,7 @@ bool
 Ntfs::perform_action (Action action)
 {
 	if (action.name == "dummy.ntfs") {
-		std::cout << "Ntfs perform: " << action.name << std::endl;
+		log_debug ("Ntfs perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -185,7 +184,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	long csize = -1;	// total size in clusters
 	long cfree = -1;	// free space in clusters
 
-	//printf ("keys:\n");
+	//log_debug ("keys:\n");
 	for (auto line : output) {
 		if (line.empty())
 			continue;
@@ -197,7 +196,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 		}
 
 		if (!parse_line (line, desc, value)) {
-			std::cout << "ntfs failed: " << line << std::endl;
+			log_debug ("ntfs failed: %s\n", line.c_str());
 			continue;
 		}
 
@@ -211,10 +210,10 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 		key = make_key (desc);
 
 		more_props.push_back (value);
-		declare_prop_array (section.c_str(), key.c_str(), more_props, more_props.size()-1, desc.c_str());
+		declare_prop_array (section.c_str(), key.c_str(), more_props, more_props.size()-1, desc.c_str(), 0);
 	}
 
-	//printf ("%ld, %ld, %ld\n", clust, csize, cfree);
+	//log_debug ("%ld, %ld, %ld\n", clust, csize, cfree);
 	if ((clust > 0) && (csize > 0) && (cfree > 0)) {
 		block_size = clust;
 		bytes_size = csize * clust;

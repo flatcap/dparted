@@ -16,7 +16,6 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -62,7 +61,7 @@ Btrfs::accept (Visitor& v)
 std::vector<Action>
 Btrfs::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.btrfs", true },
 	};
@@ -78,7 +77,7 @@ bool
 Btrfs::perform_action (Action action)
 {
 	if (action.name == "dummy.btrfs") {
-		std::cout << "Btrfs perform: " << action.name << std::endl;
+		log_debug ("Btrfs perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -169,17 +168,17 @@ btrfs_show_super (const std::string& dev)
 	std::string key;
 	std::string value;
 
-	//printf ("keys:\n");
+	//log_debug ("keys:\n");
 	for (auto line : output) {
 		//XXX move these two tests before loop and doctor vector
 		if (line.substr (0, 11) == "superblock:") {
 			std::string dev2;
 			if (!parse_header (line, dev2)) {
-				std::cout << "btrfs: bad header" << std::endl;
+				log_debug ("btrfs: bad header\n");
 				break;
 			}
 			if (dev != dev2) {
-				std::cout << "btrfs: devices don't match" << std::endl;
+				log_debug ("btrfs: devices don't match\n");
 				break;
 			}
 			continue;
@@ -188,14 +187,14 @@ btrfs_show_super (const std::string& dev)
 		} else if (line.empty()) {
 			continue;
 		} else if (!parse_line (line, key, value)) {
-			std::cout << "btrfs failed: " << line << std::endl;
+			log_debug ("btrfs failed: %s\n", line.c_str());
 			continue;
 		}
 
-		//printf ("\t>>%s<<\n", key.c_str());
+		//log_debug ("\t>>%s<<\n", key.c_str());
 		results[key] = value;
 	}
-	//printf ("\n");
+	//log_debug ("\n");
 
 	return results;
 }
@@ -213,22 +212,22 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 
 	std::map<std::string,std::string> info = btrfs_show_super (dev);
 	if (info.empty()) {
-		std::cout << "btrfs_show_super failed" << std::endl;
+		log_debug ("btrfs_show_super failed\n");
 		return;
 	}
 
 	// declare everything else
 	const char* me = "Btrfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
-	//printf ("Props:\n");
+	//log_debug ("Props:\n");
 	for (auto i : info) {
 		std::string key   = i.first;
 		std::string desc  = make_desc (key);
 		std::string value = i.second;
-		//printf ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
+		//log_debug ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
 
 		more_props.push_back (value);
-		declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str());
+		declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str(), 0);
 	}
 }
 

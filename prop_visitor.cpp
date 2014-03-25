@@ -16,7 +16,6 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 
 #include "prop_visitor.h"
 
@@ -70,5 +69,5 @@ PropVisitor::visit (ContainerPtr c)
 void
 PropVisitor::list (void)
 {
-	std::cout << output.str();
+	log_debug ("%s\n", output.str().c_str());
 }

@@ -20,7 +20,6 @@
 #define _CONTAINER_H_
 
 #include <cstdint>
-#include <iostream>
 #include <map>
 #include <memory>
 #include <set>
@@ -33,6 +32,7 @@
 
 #include "property.h"
 #include "mmap.h"
+#include "log.h"
 
 class Container;
 class Visitor;
@@ -115,6 +115,31 @@ public:
 	}
 
 	void sub_type (const char* name);
+	const char* dump (void);
+
+	// Property helper functions
+	std::uint64_t get_absolute_offset            (void);
+	std::uint64_t get_bytes_free                 (void);
+	std::string   get_device_inherit             (void);
+	std::uint64_t get_device_major_inherit       (void);
+	std::string   get_device_major_minor         (void);
+	std::string   get_device_major_minor_inherit (void);
+	std::uint64_t get_device_minor_inherit       (void);
+	std::string   get_device_short               (void);
+	std::string   get_device_short_inherit       (void);
+	std::uint64_t get_file_desc_inherit          (void);
+	std::string   get_mmap_addr                  (void);
+	std::uint64_t get_mmap_size                  (void);
+	std::string   get_name_default               (void);
+	std::string   get_object_addr                (void);
+	std::uint64_t get_parent_size                (void);
+	std::string   get_path_name                  (void);
+	std::string   get_path_type                  (void);
+	std::int64_t  get_ref_count                  (void);
+	std::uint64_t get_top_level_size             (void);
+	std::string   get_type                       (void);
+	std::string   get_type_long                  (void);
+	std::string   get_uuid_short                 (void);
 
 public:
 	//properties
@@ -172,12 +197,12 @@ protected:
 
 		if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
 			if (!var2) {
-				std::cout << "missing var2, can't create percentage" << std::endl;
+				log_debug ("missing var2, can't create percentage\n");
 				return pv;
 			}
 
 			if (pv->type != var2->type) {
-				std::cout << "types differ, can't create percentage" << std::endl;
+				log_debug ("types differ, can't create percentage\n");
 				return pv;
 			}
 
@@ -207,12 +232,12 @@ protected:
 
 		if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
 			if (!var2) {
-				std::cout << "missing var2, can't create percentage" << std::endl;
+				log_debug ("missing var2, can't create percentage\n");
 				return pf;
 			}
 
 			if (pf->type != var2->type) {
-				std::cout << "types differ, can't create percentage" << std::endl;
+				log_debug ("types differ, can't create percentage\n");
 				return pf;
 			}
 
@@ -234,34 +259,10 @@ protected:
 		return pv;
 	}
 
-
-	// Property helper functions
-	std::uint64_t get_absolute_offset            (void);
-	std::uint64_t get_bytes_free                 (void);
-	std::string   get_device_inherit             (void);
-	std::uint64_t get_device_major_inherit       (void);
-	std::string   get_device_major_minor         (void);
-	std::string   get_device_major_minor_inherit (void);
-	std::uint64_t get_device_minor_inherit       (void);
-	std::string   get_device_short               (void);
-	std::string   get_device_short_inherit       (void);
-	std::uint64_t get_file_desc_inherit          (void);
-	std::string   get_mmap_addr                  (void);
-	std::uint64_t get_mmap_size                  (void);
-	std::string   get_name_default               (void);
-	std::string   get_object_addr                (void);
-	std::uint64_t get_parent_size                (void);
-	std::string   get_path_name                  (void);
-	std::string   get_path_type                  (void);
-	std::int64_t  get_ref_count                  (void);
-	std::uint64_t get_top_level_size             (void);
-	std::string   get_type                       (void);
-	std::string   get_type_long                  (void);
-	std::string   get_uuid_short                 (void);
-
 private:
 	void insert (long offset, long size, void* ptr);
 
+	std::string debug;		// Text representation of self
 };
 
 #endif // _CONTAINER_H_

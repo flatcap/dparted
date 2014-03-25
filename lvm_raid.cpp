@@ -77,7 +77,7 @@ LvmRaid::accept (Visitor& v)
 std::vector<Action>
 LvmRaid::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_raid", true },
 	};
@@ -93,7 +93,7 @@ bool
 LvmRaid::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_raid") {
-		std::cout << "LvmRaid perform: " << action.name << std::endl;
+		log_debug ("LvmRaid perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

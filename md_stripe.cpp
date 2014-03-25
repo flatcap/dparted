@@ -54,7 +54,7 @@ MdStripe::accept (Visitor& v)
 std::vector<Action>
 MdStripe::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.md_stripe", true },
 	};
@@ -70,7 +70,7 @@ bool
 MdStripe::perform_action (Action action)
 {
 	if (action.name == "dummy.md_stripe") {
-		std::cout << "MdStripe perform: " << action.name << std::endl;
+		log_debug ("MdStripe perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return MdVolume::perform_action (action);

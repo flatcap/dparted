@@ -31,6 +31,7 @@
 #include "log_trace.h"
 #include "main.h"
 #include "visitor.h"
+#include "log.h"
 
 File::File (void)
 {
@@ -66,7 +67,7 @@ File::accept (Visitor& v)
 std::vector<Action>
 File::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.file", true },
 	};
@@ -82,7 +83,7 @@ bool
 File::perform_action (Action action)
 {
 	if (action.name == "dummy.file") {
-		std::cout << "File perform: " << action.name << std::endl;
+		log_debug ("File perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);

@@ -57,7 +57,7 @@ LvmPartition::accept (Visitor& v)
 std::vector<Action>
 LvmPartition::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_partition", true },
 	};
@@ -73,7 +73,7 @@ bool
 LvmPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_partition") {
-		std::cout << "LvmPartition perform: " << action.name << std::endl;
+		log_debug ("LvmPartition perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

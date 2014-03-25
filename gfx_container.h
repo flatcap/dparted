@@ -47,7 +47,7 @@ public:
 	std::vector<GfxContainerPtr> children;
 
 	bool sync (void);
-	void dump (void);
+	void dump2 (void);
 
 	bool set_focus (bool focus);
 	bool get_focus (void);
@@ -84,6 +84,7 @@ public:
 	int get_depth (void);
 
 	ContainerPtr get_container (void);
+	const char* dump (void);
 
 protected:
 	GfxContainer (void);
@@ -106,6 +107,9 @@ protected:
 	ThemePtr theme;
 
 	friend std::ostream& operator<< (std::ostream& stream, const GfxContainerPtr& c);
+
+private:
+	std::string debug;		// Text representation of self
 };
 
 

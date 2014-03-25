@@ -105,7 +105,7 @@ make_device (std::string group, std::string volume)
 std::vector<Action>
 LvmGroup::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_group", true },
 	};
@@ -121,7 +121,7 @@ bool
 LvmGroup::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_group") {
-		std::cout << "LvmGroup perform: " << action.name << std::endl;
+		log_debug ("LvmGroup perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Whole::perform_action (action);
@@ -183,7 +183,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			continue;
 
 		LvmPartitionPtr p = LvmPartition::create();
-		//log_debug ("new LvmPartition (%p)\n", p);
+		//log_debug ("new LvmPartition (%p)\n", (void*) p.get());
 
 		// Find our relations
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
@@ -233,7 +233,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			v->bytes_size =  tags["LVM2_VG_EXTENT_SIZE"];
 			v->bytes_size *= (long) tags["LVM2_PVSEG_SIZE"];
 
-			//std::cout << "lv uuid = " << lv_uuid << '\n';
+			//log_debug ("lv uuid = %s\n", lv_uuid.c_str());
 			v->uuid    = lv_uuid;
 			//v->missing = true;
 			pieces->just_add_child(v);
@@ -348,7 +348,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			}
 			t->set_alignment (g->block_size);
 		}
-		// printf ("TRIGGER set_alignment: %ld\n", g->segments.size());
+		 //log_debug ("TRIGGER set_alignment: %ld\n", g->segments.size());
 		//g->bytes_used		= g->bytes_size - (long) tags["LVM2_VG_FREE"];
 
 		// LvmGroup
@@ -478,7 +478,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			v->name = v->name.substr (1, v->name.length() - 2);	// Strip the []'s
 
 			v->device = make_device (g->name, v->name);
-			//printf ("DEVNAME = %s\n", v->device.c_str());
+			//log_debug ("DEVNAME = %s\n", v->device.c_str());
 
 			//INTERNAL object => full
 			v->bytes_used = v->bytes_size;
@@ -556,7 +556,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		//log_info ("add_child %s -> %s\n", parent->uuid.c_str(), child->uuid.c_str());
 		parent->add_child (child);
 
-		//log_info ("\t%p -> %p\n", (void*) parent, (void*) child);
+		//log_info ("\t%p -> %p\n", (void*) parent.get(), (void*) child.get());
 		//log_info ("\t%s -> %s\n", parent->name.c_str(), child->name.c_str());
 		//log_info ("\t%s -> %s\n", parent->uuid.c_str(), child->uuid.c_str());
 
@@ -595,14 +595,14 @@ LvmGroup::discover (ContainerPtr& top_level)
 #if 0
 	log_info ("Pieces (%ld)\n", pieces->get_children().size());
 	for (auto i : pieces->get_children()) {
-		std::cout << '\t' << i->uuid << '\t' << i << '\n';
+		log_debug ("\t%s\t%s\n", i->uuid.c_str(), i->dump());
 	}
 #endif
 
 #if 1
 	//probe leaves
 	std::vector<ContainerPtr> v = find_all_type (pieces, "LvmVolume");
-	//printf ("%ld volumes\n", v.size());
+	//log_debug ("%ld volumes\n", v.size());
 
 	for (auto i : v) {
 		if (i->is_a ("LvmMetadata"))		// nothing interesting here
@@ -615,10 +615,10 @@ LvmGroup::discover (ContainerPtr& top_level)
 #endif
 #if 1
 	std::vector<ContainerPtr> g = find_all_type (pieces, "LvmGroup");
-	//printf ("%ld groups\n", g.size());
+	//log_debug ("%ld groups\n", g.size());
 
 	for (auto i : g) {
-		//std::cout << '\t' << i->uuid << '\t' << i << '\n';
+		//log_debug ("\t%s\t%s\n", i->uuid.c_str(), i->dump());
 		top_level->just_add_child(i);
 	}
 #endif

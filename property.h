@@ -19,7 +19,6 @@
 #ifndef _PROPERTY_H_
 #define _PROPERTY_H_
 
-#include <iostream>
 #include <stdexcept>
 #include <cstdint>
 #include <string>

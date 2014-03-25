@@ -70,7 +70,7 @@ Loop::create (const std::string& losetup)
 #if 0
 	log_info ("parts: (%ld)\n", parts.size());
 	for (auto i : parts) {
-		std::cout << "\t" << i << std::endl;
+		log_debug ("\t%s\n", i.c_str());
 	}
 	log_info ("\n");
 #endif
@@ -104,7 +104,7 @@ Loop::create (const std::string& losetup)
 	if ((len > 10) && (l->file_name.substr (len-10) == " (deleted)")) {
 		l->file_name.erase (len-10);
 		l->deleted = true;
-		//log_info ("%s is deleted\n", device.c_str());
+		//log_info ("%s is deleted\n", l->device.c_str());
 	}
 
 	l->block_size   = 512;	//XXX kernel lower limit, but fs block size is likely to be bigger
@@ -130,7 +130,7 @@ Loop::accept (Visitor& v)
 std::vector<Action>
 Loop::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.loop", true },
 	};
@@ -146,7 +146,7 @@ bool
 Loop::perform_action (Action action)
 {
 	if (action.name == "dummy.loop") {
-		std::cout << "Loop perform: " << action.name << std::endl;
+		log_debug ("Loop perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Block::perform_action (action);
@@ -229,7 +229,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 
 	losetup (output, name);		//XXX retval, exactly one reply
 
-	//std::cout << output[0] << std::endl;
+	//log_debug ("%s\n", output[0].c_str());
 
 	LoopPtr l = create (output[0]);
 

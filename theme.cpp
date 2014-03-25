@@ -22,7 +22,6 @@
 #include <cairomm/cairomm.h>
 
 #include <map>
-#include <iostream>
 #include <string>
 
 #include "log.h"
@@ -94,9 +93,9 @@ Theme::add_icon (const std::string& name, const std::string& filename)
 	try {
 		pb = Gdk::Pixbuf::create_from_file (filename);
 	} catch (const Glib::FileError& fe) {
-		std::cout << "file error: " << fe.what() << std::endl;
+		log_debug ("file error: %s\n", fe.what().c_str());
 	} catch (const Gdk::PixbufError& pbe) {
-		std::cout << "pixbuf error: " << pbe.what() << std::endl;
+		log_debug ("pixbuf error: %s\n", pbe.what().c_str());
 	}
 
 	return pb;
@@ -180,14 +179,14 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 
 		if (!name.empty()) {
 			search = work_path + dot + name + "." + attr;
-			//std::cout << "Search: " << search << std::endl;
+			//log_debug ("Search: %s\n", search.c_str());
 			if (config_file->exists (search)) {
 				return config_file->get_string (search);
 			}
 		}
 
 		search = work_path + dot + attr;
-		//std::cout << "Search: " << search << std::endl;
+		//log_debug ("Search: %s\n", search.c_str());
 		if (config_file->exists (search)) {
 			return config_file->get_string (search);
 		}

@@ -16,7 +16,6 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 #include <string>
 
 #include <fcntl.h>
@@ -54,13 +53,13 @@ App::~App()
 bool
 App::ask (QuestionPtr q)
 {
-	std::cout << q->title << std::endl;
-	std::cout << q->question << std::endl;
-	std::cout << '\t';
+	log_debug ("%s\n", q->title.c_str());
+	log_debug ("%s\n", q->question.c_str());
+	log_debug ("\t");
 	for (auto a : q->answers) {
-		std::cout << a << " ";
+		log_debug ("%s\n", a.c_str());
 	}
-	std::cout << '\n';
+	log_debug ("\n");
 	return false;
 }
 
@@ -107,7 +106,7 @@ App::queue_add_probe (ContainerPtr& item)
 		return;
 
 	probe_queue.push (item);
-	//std::string s = get_size (item->parent_offset);
+	std::string s = get_size (item->parent_offset);
 	//log_info ("QUEUE: %s %s : %ld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
 	//log_info ("QUEUE has %lu items\n", probe_queue.size());
 }
@@ -141,10 +140,10 @@ App::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	if (!parent || !buffer || !bufsize)
 		return false;
 
-	if (Table::probe (parent, buffer, bufsize))
+	if (Filesystem::probe (parent, buffer, bufsize))
 		return true;
 
-	if (Filesystem::probe (parent, buffer, bufsize))
+	if (Table::probe (parent, buffer, bufsize))
 		return true;
 
 	if (Misc::probe (parent, buffer, bufsize))
@@ -204,7 +203,7 @@ App::scan (const std::vector<std::string>& files)
 		item = probe_queue.front();
 		probe_queue.pop();
 
-		//std::cout << "Item: " << item << "\n";
+		//log_debug ("Item: %s\n", item->dump());
 
 		long	 bufsize = item->bytes_size;
 		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
@@ -218,7 +217,7 @@ App::scan (const std::vector<std::string>& files)
 			//XXX LOG
 			break;
 		}
-		//std::cout << std::endl;
+		//log_debug ("\n");
 	}
 
 #ifdef DP_LVM
@@ -231,7 +230,7 @@ App::scan (const std::vector<std::string>& files)
 		item = probe_queue.front();
 		probe_queue.pop();
 
-		//std::cout << "Item: " << item << "\n";
+		//log_debug ("Item: %s\n", item->dump());
 
 		long	 bufsize = item->bytes_size;
 		std::uint8_t* buffer  = item->get_buffer (0, bufsize);

@@ -92,11 +92,11 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 	//Rect tab;
 	Rect inside;
 
-	//printf ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
+	//log_debug ("object = %s -- %d,%d\n", cont->name.c_str(), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
 #if 0
-		printf ("draw_container: too narrow\n");
-		std::cout << cont << std::endl;
+		log_debug ("draw_container: too narrow\n");
+		log_debug ("%s\n", cont->dump());
 #endif
 		return;
 	}
@@ -118,7 +118,7 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 		box.h -= (GAP*2);
 
 		Rect below;
-		//std::cout << "Icon: " << icon << std::endl;
+		//log_debug ("Icon: %p\n", (void*) icon.operator->());
 		draw_icon (cr, icon, box, below);
 		draw_text (cr, box2, name);
 
@@ -190,10 +190,10 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 		 *	background
 		 */
 	} else if (display == "empty") {	// Do nothing for now
-		//printf ("EMPTY\n");
+		//log_debug ("EMPTY\n");
 		inside = shape;
 	} else {
-		printf ("unknown display type: %s\n", display.c_str());
+		log_debug ("unknown display type: %s\n", display.c_str());
 		return;
 	}
 }

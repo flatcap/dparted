@@ -76,7 +76,7 @@ Table::accept (Visitor& v)
 std::vector<Action>
 Table::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.table", true },
 	};
@@ -92,7 +92,7 @@ bool
 Table::perform_action (Action action)
 {
 	if (action.name == "dummy.table") {
-		std::cout << "Table perform: " << action.name << std::endl;
+		log_debug ("Table perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -177,7 +177,7 @@ Table::fill_space (void)
 		}
 	}
 
-	//log_debug ("upto = %lld, size = %lld\n", upto, bytes_size);
+	//log_debug ("upto = %ld, size = %ld\n", upto, bytes_size);
 	if (upto < bytes_size) {
 		PartitionPtr p = Partition::create();
 		p->sub_type ("Space");

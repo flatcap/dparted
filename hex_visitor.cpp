@@ -16,7 +16,6 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 
 #include "hex_visitor.h"
 
@@ -79,7 +78,7 @@ HexVisitor::visit (ExtendedPtr c)
 
 	parent = c->parent.lock();
 	if (!parent) {
-		std::cout << "\033[01;31m" << c << "\033[0m\n";
+		log_debug ("\033[01;31m%s\033[0m\n", c->dump());
 		return false;
 	}
 
@@ -127,9 +126,9 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 	}
 	type.pop_back();
 
-	std::cout << type << std::endl;
+	log_debug ("%s\n", type.c_str());
 	if (buf) {
-		printf ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
+		log_debug ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
 
 		std::uint64_t abbr = (abbreviate & ~15);	// Round down to multiple of 16
 
@@ -137,12 +136,12 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 			dump_hex2 (buf, 0, size);
 		} else {
 			dump_hex2 (buf, 0, abbr);
-			std::cout << "\t~~~\n";
+			log_debug ("\t~~~\n");
 			dump_hex2 (buf, size-abbr, abbr);
 		}
-		std::cout << std::endl;
+		log_debug ("\n");
 	} else {
-		std::cout << "\033[01;31m" << c << "\033[0m\n";
+		log_debug ("\033[01;31m%s\033[0m\n", c->dump());
 	}
 
 }

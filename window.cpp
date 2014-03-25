@@ -21,7 +21,6 @@
 #include <glibmm.h>
 #include <giomm/menu.h>
 
-#include <iostream>
 #include <algorithm>
 
 #include "window.h"
@@ -85,15 +84,15 @@ Window::Window (void)
 	bool sb = false;
 	ConfigFilePtr cfg = gui_app->get_config();
 	if (cfg) {
-		try { tb = cfg->get_bool ("display.tool_bar");   } catch (const char *msg) { std::cout << "notb\n"; }
-		try { gx = cfg->get_bool ("display.graphics");   } catch (const char *msg) { std::cout << "nogx\n"; }
-		try { tv = cfg->get_bool ("display.tree_view");  } catch (const char *msg) { std::cout << "notv\n"; }
-		try { sb = cfg->get_bool ("display.status_bar"); } catch (const char *msg) { std::cout << "nosb\n"; }
+		try { tb = cfg->get_bool ("display.tool_bar");   } catch (const char *msg) { log_debug ("notb\n"); }
+		try { gx = cfg->get_bool ("display.graphics");   } catch (const char *msg) { log_debug ("nogx\n"); }
+		try { tv = cfg->get_bool ("display.tree_view");  } catch (const char *msg) { log_debug ("notv\n"); }
+		try { sb = cfg->get_bool ("display.status_bar"); } catch (const char *msg) { log_debug ("nosb\n"); }
 	}
 
 	show_all_children();
 
-	//printf ("%d,%d,%d,%d\n", tb, gx, tv, sb);
+	//log_debug ("%d,%d,%d,%d\n", tb, gx, tv, sb);
 	toolbar->set_visible (tb);
 	drawingarea.set_visible (gx);
 	treeview.set_visible (tv);
@@ -132,7 +131,7 @@ Window::my_idle (void)
 #if 1
 	std::vector<std::string> files;
 	ContainerPtr c = gui_app->scan (files);
-	//std::cout << c->get_children().size() << " children\n";
+	//log_debug ("%ld\n", c->get_children().size());
 	GfxContainerPtr dummy;
 	m_g = GfxContainer::create (dummy, c);
 	set_data (m_g);
@@ -153,7 +152,7 @@ Window::on_delete_event (GdkEventAny* UNUSED(event))
 bool
 Window::on_mouse_click (GdkEventButton* UNUSED(event))
 {
-	//std::cout << "Window: mouse click: (" << event->x << "," << event->y << ")\n";
+	//log_debug ("Window: mouse click: (%.0f,%.0f)\n", event->x, event->y);
 	return true;
 }
 
@@ -181,7 +180,7 @@ Window::set_focus (GfxContainerPtr cont)
 	treeview.set_focus (focus);
 	drawingarea.set_focus (focus);
 
-	//std::cout << "Focus: " << cont << std::endl;
+	//log_debug ("Focus: %s\n", cont->dump());
 	return true;
 }
 
@@ -231,8 +230,8 @@ Window::set_geometry (int x, int y, int w, int h)
 	move (x, y);
 	resize (w, h);
 
-	//printf ("pg = %d\n", parse_geometry ("800x400+200+50"));
-	//printf ("pg = %d\n", parse_geometry ("800x400-0-0"));
+	//log_debug ("pg = %d\n", parse_geometry ("800x400+200+50"));
+	//log_debug ("pg = %d\n", parse_geometry ("800x400-0-0"));
 
 	//XXX do something smart with negative x,y?
 #if 0
@@ -256,7 +255,7 @@ Window::on_menu_choices (const Glib::ustring& parameter)
 	else
 		message = "Choice b was selected";
 
-	std::cout << message << std::endl;
+	log_debug ("%s\n", message.c_str());
 }
 
 void
@@ -271,13 +270,13 @@ Window::on_menu_choices_other (int parameter)
 	else
 		message = "Choice 2 was selected";
 
-	std::cout << message << std::endl;
+	log_debug ("%s\n", message.c_str());
 }
 
 void
 Window::on_menu_file_new_generic (void)
 {
-	std::cout << "A File|New menu item was selected." << std::endl;
+	log_debug ("A File|New menu item was selected.\n");
 }
 
 void
@@ -293,7 +292,7 @@ Window::on_menu_file_quit (void)
 
 	if (ask_user) {
 		ContainerPtr c;
-		QuestionPtr q = Question::create (c, [] (QuestionPtr UNUSED(q)) { std::cout << "reply\n"; } );
+		QuestionPtr q = Question::create (c, [] (QuestionPtr UNUSED(q)) { log_debug ("reply\n"); } );
 		q->title = "Quit Application?";
 		q->question = "Are you sure?";
 		q->answers = { "No", "Yes" };
@@ -312,7 +311,7 @@ Window::on_menu_file_quit (void)
 void
 Window::on_menu_others (void)
 {
-	std::cout << "A menu item was selected." << std::endl;
+	log_debug ("A menu item was selected.\n");
 }
 
 void
@@ -331,13 +330,13 @@ Window::on_menu_toggle (void)
 	else
 		message = "Toggle is not active";
 
-	std::cout << message << std::endl;
+	log_debug ("%s\n", message.c_str());
 }
 
 void
 Window::on_menu_view (int option)
 {
-	std::cout << "on_menu_view: " << option << std::endl;
+	log_debug ("on_menu_view: %d\n", option);
 
 	bool val = false;
 	switch (option) {
@@ -406,7 +405,7 @@ Window::init_shortcuts (void)
 	Glib::RefPtr<Gtk::AccelGroup> accel = Gtk::AccelGroup::create();
 
 	for (auto k : keys) {
-		//std::cout << "Keypress: " << k.first << " : " << k.second << std::endl;
+		//log_debug ("Keypress: %d : %d\n", k.first, k.second);
 		Gtk::MenuItem* i = manage (new Gtk::MenuItem());
 		i->signal_activate().connect (sigc::bind<int,int> (sigc::mem_fun (*this, &Window::on_keypress), k.first, k.second));
 		i->add_accelerator ("activate", accel, k.second, (Gdk::ModifierType) k.first, Gtk::ACCEL_VISIBLE);
@@ -476,7 +475,7 @@ Window::init_actions (void)
 	for (auto a : action_map) {
 		if (a.first[7] < 'n')
 			a.second->set_enabled (false);
-		//std::cout << a.first << std::endl;
+		log_debug ("%s\n", a.first.c_str());
 	}
 #endif
 }
@@ -673,7 +672,7 @@ Window::init_menubar (Gtk::Box& box)
 	try {
 		m_refBuilder->add_from_string (ui_info);
 	} catch (const Glib::Error& ex) {
-		std::cout << "building menus failed: " << ex.what();
+		log_debug ("building menus failed: %s\n", ex.what().c_str());
 	}
 
 	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object ("dparted-menu");
@@ -708,10 +707,10 @@ Window::set_actions (std::vector<Action>& list)
 	for (auto a : list) {				// Then selectively enable the ones we want
 		auto it = action_map.find (a.name);
 		if (it != std::end (action_map)) {
-			//std::cout << "Enable: " << a.name << std::endl;
+			//log_debug ("Enable: %s\n", a.name.c_str());
 			it->second->set_enabled (true);
 		} else {
-			std::cout << "Can't find " << a.name << std::endl;
+			log_debug ("Can't find %s\n", a.name.c_str());
 		}
 	}
 }
@@ -719,7 +718,7 @@ Window::set_actions (std::vector<Action>& list)
 void
 Window::on_keypress (int modifier, int key)
 {
-	//std::cout << "Keypress: " << modifier << " : " << (char) key << std::endl;
+	//log_debug ("Keypress: %d : %c\n", modifier, key);
 
 	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q')) {
 		set_show_menubar(false);
@@ -731,16 +730,16 @@ Window::on_keypress (int modifier, int key)
 void
 Window::on_action_general (std::string section, std::string name)
 {
-	printf ("%s: %s.%s\n", __FUNCTION__, section.c_str(), name.c_str());
+	log_debug ("%s: %s.%s\n", __FUNCTION__, section.c_str(), name.c_str());
 
 	if (!focus) {
-		std::cout << "no focus" << std::endl;
+		log_debug ("no focus\n");
 		return;
 	}
 
 	ContainerPtr c = focus->get_container();
 	if (!c) {
-		std::cout << "no container" << std::endl;
+		log_debug ("no container\n");
 		return;
 	}
 

@@ -17,29 +17,26 @@
  */
 
 #include <cstdarg>
-#include <cstdio>
 #include <cstring>
-#include <iostream>
 
 #include "log.h"
 #include "log_trace.h"
 
 //static unsigned int log_level = ~0;
 static FILE* file = nullptr;
+static char log_buffer[10240];
 
 __attribute__ ((format (printf, 1, 0)))
 static int
 log (const char* format, va_list args)
 {
-	char buffer[1024];
-
 	if (!file)
 		return 0;
 
-	int count = vsnprintf (buffer, sizeof (buffer), format, args);
+	int count = vsnprintf (log_buffer, sizeof (log_buffer), format, args);
 	//XXX check count against buffer size
 
-	std::cout << buffer << std::flush;
+	fprintf (stdout, "%s\n", log_buffer);
 
 	return count;
 }

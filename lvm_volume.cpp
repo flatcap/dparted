@@ -58,14 +58,14 @@ LvmVolume::accept (Visitor& v)
 		return false;
 
 	if (!visit_children(v)) {
-		std::cout << "LvmVolume visit_children failed" << std::endl;
+		log_debug ("LvmVolume visit_children failed\n");
 		return false;
 	}
 
 	for (auto i : metadata) {
 		LvmLinearPtr meta = std::dynamic_pointer_cast<LvmLinear>(i);
 		if (!v.visit(meta)) {
-			std::cout << "LvmVolume metadata failed" << std::endl;
+			log_debug ("LvmVolume metadata failed\n");
 			return false;
 		}
 	}
@@ -74,7 +74,7 @@ LvmVolume::accept (Visitor& v)
 		//XXX need most-derived type, really
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(i);
 		if (!v.visit(vol)) {
-			std::cout << "LvmVolume metadata failed" << std::endl;
+			log_debug ("LvmVolume metadata failed\n");
 			return false;
 		}
 	}
@@ -86,7 +86,7 @@ LvmVolume::accept (Visitor& v)
 std::vector<Action>
 LvmVolume::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_volume", true },
 	};
@@ -102,7 +102,7 @@ bool
 LvmVolume::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_volume") {
-		std::cout << "LvmVolume perform: " << action.name << std::endl;
+		log_debug ("LvmVolume perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Volume::perform_action (action);
@@ -117,7 +117,7 @@ LvmVolume::add_child (ContainerPtr& child)
 		return;
 
 	if ((is_a ("LvmMetadata") && (child->is_a ("LvmVolume")))) {	//XXX tmp
-		//printf ("LvmMetadata: %s\n", child->type.back().c_str());
+		//log_debug ("LvmMetadata: %s\n", child->type.back().c_str());
 		sibling = child;
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(child);
 		vol->sibling = get_smart();
@@ -162,7 +162,7 @@ LvmVolume::add_child (ContainerPtr& child)
 ContainerPtr
 LvmVolume::find (const std::string& search)
 {
-	//printf ("find: %s -> %s (%s)\n", search.c_str(), name.c_str(), uuid.c_str());
+	//log_debug ("find: %s -> %s (%s)\n", search.c_str(), name.c_str(), uuid.c_str());
 	std::string search2;
 
 	size_t pos = search.find ("(0)");

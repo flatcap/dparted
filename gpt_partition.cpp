@@ -54,7 +54,7 @@ GptPartition::accept (Visitor& v)
 std::vector<Action>
 GptPartition::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.gpt_partition", true },
 	};
@@ -70,7 +70,7 @@ bool
 GptPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.gpt_partition") {
-		std::cout << "GptPartition perform: " << action.name << std::endl;
+		log_debug ("GptPartition perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

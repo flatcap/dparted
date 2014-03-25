@@ -58,7 +58,7 @@ LvmMirror::accept (Visitor& v)
 std::vector<Action>
 LvmMirror::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_mirror", true },
 	};
@@ -74,7 +74,7 @@ bool
 LvmMirror::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_mirror") {
-		std::cout << "LvmMirror perform: " << action.name << std::endl;
+		log_debug ("LvmMirror perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

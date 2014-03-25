@@ -58,7 +58,7 @@ Volume::accept (Visitor& v)
 std::vector<Action>
 Volume::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.volume", true },
 	};
@@ -74,7 +74,7 @@ bool
 Volume::perform_action (Action action)
 {
 	if (action.name == "dummy.volume") {
-		std::cout << "Volume perform: " << action.name << std::endl;
+		log_debug ("Volume perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Whole::perform_action (action);

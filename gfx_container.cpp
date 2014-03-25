@@ -19,6 +19,7 @@
 #include "gfx_container.h"
 #include "gui_app.h"
 #include "log.h"
+#include "log_trace.h"
 
 GfxContainer::GfxContainer (void)
 {
@@ -100,7 +101,7 @@ GfxContainer::init (ContainerPtr c)
 	if (!c)
 		return false;
 
-	std::string path = c->get_path();
+	std::string path = c->get_type_long();
 	name = c->name;
 	type = c->type.back();
 	device = c->get_device_name();
@@ -121,17 +122,17 @@ GfxContainer::init (ContainerPtr c)
 		usage      = process_bool  (u);
 
 #if 0
-		std::cout << "Config\n";
-		std::cout << "\tbackground: " << background     << std::endl;
-		std::cout << "\tcolour:     " << colour         << std::endl;
-		std::cout << "\tdisplay:    " << display        << std::endl;
-		std::cout << "\ticon:       " << icon           << std::endl;
-		std::cout << "\tlabel:      " << label_template << std::endl;
-		std::cout << "\tusage:      " << usage          << std::endl;
+		log_debug ("Config\n");
+		log_debug ("\tbackground: %s\n", background);
+		log_debug ("\tcolour:     %s\n", colour);
+		log_debug ("\tdisplay:    %s\n", display.c_str());
+		log_debug ("\ticon:       %s\n", icon);
+		log_debug ("\tlabel:      %s\n", label_template.c_str());
+		log_debug ("\tusage:      %d\n", usage);
 #endif
 
 	} catch (const std::string& e) {
-		std::cout << "Exception: " << e << std::endl;
+		log_debug ("Exception: %s\n", e.c_str());
 		exit(1);
 	}
 
@@ -191,7 +192,7 @@ GfxContainer::process_label (const std::string& label_template)
 {
 	std::string l = label_template;
 
-	//std::cout << "Label: " << l << std::endl;
+	//log_debug ("Label: %s\n", l.c_str());
 	ContainerPtr c = get_container();
 	if (!c)
 		return l;
@@ -208,7 +209,7 @@ GfxContainer::process_label (const std::string& label_template)
 		l.replace (start, stop-start+1, value);
 	}
 
-	//printf ("label = %s\n", l.c_str());
+	//log_debug ("label = %s\n", l.c_str());
 
 	return l;
 }
@@ -226,7 +227,7 @@ bool GfxContainer::update_info (void)
 }
 
 void
-GfxContainer::dump (void)
+GfxContainer::dump2 (void)
 {
 	static int indent = 0;
 	std::string tabs;
@@ -236,17 +237,17 @@ GfxContainer::dump (void)
 	}
 
 #if 0
-	std::cout << tabs << "----------------------" << std::endl;
-	std::cout << tabs << "display        = " << display        << std::endl;
-	std::cout << tabs << "colour         = " << colour         << std::endl;
-	std::cout << tabs << "background     = " << background     << std::endl;
-	std::cout << tabs << "icon           = " << icon           << std::endl;
-	std::cout << tabs << "label          = " << label          << std::endl;
-	std::cout << tabs << "label_template = " << label_template << std::endl;
-	std::cout << tabs << "bytes_size     = " << bytes_size     << std::endl;
-	std::cout << tabs << "bytes_used     = " << bytes_used     << std::endl;
-	std::cout << tabs << "usage          = " << usage          << std::endl;
-	std::cout << tabs << "seqnum         = " << seqnum         << std::endl;
+	log_debug ("%s----------------------", tabs.c_str);
+	log_debug ("%sdisplay        = ", tabs.c_str(), display);
+	log_debug ("%scolour         = ", tabs.c_str(), colour);
+	log_debug ("%sbackground     = ", tabs.c_str(), background);
+	log_debug ("%sicon           = ", tabs.c_str(), icon);
+	log_debug ("%slabel          = ", tabs.c_str(), label);
+	log_debug ("%slabel_template = ", tabs.c_str(), label_template);
+	log_debug ("%sbytes_size     = ", tabs.c_str(), bytes_size);
+	log_debug ("%sbytes_used     = ", tabs.c_str(), bytes_used);
+	log_debug ("%susage          = ", tabs.c_str(), usage);
+	log_debug ("%sseqnum         = ", tabs.c_str(), seqnum);
 #endif
 
 	indent++;
@@ -261,7 +262,7 @@ bool
 GfxContainer::set_focus (bool focus)
 {
 	ContainerPtr c = get_container();
-	//std::cout << "Focus: " << c << " = " << focus << std::endl;
+	//log_debug ("Focus: %s = %d\n", c->dump(), focus);
 	focussed = focus;
 	return true;
 }
@@ -309,7 +310,7 @@ GfxContainer::process_icon (const std::string& str)
 		return pb;
 
 	pb = theme->get_icon (str);
-	//std::cout << "icon: " << str << " " << pb << std::endl;
+	//log_debug ("icon: %s %p\n", str.c_str(), (void*) pb.operator->());
 	//pb = Gdk::Pixbuf::create_from_file (str);
 
 	return pb;
@@ -341,7 +342,7 @@ GfxContainer::get_tooltip (void)
 
 bool GfxContainer::mouse_event (void)
 {
-	//std::cout << __PRETTY_FUNCTION__ << std::endl;
+	//LOG_TRACE;
 	return false;
 }
 
@@ -367,10 +368,10 @@ GfxContainerPtr
 GfxContainer::get_smart (void)
 {
 	if (weak.expired()) {
-		std::cout << "SMART\n";
+		log_debug ("SMART\n");
 		//XXX who created us? - code error
 		GfxContainerPtr c (this);
-		std::cout << c << std::endl;
+		log_debug ("%s\n", c->dump());
 		weak = c;
 	}
 	return weak.lock();
@@ -466,4 +467,13 @@ GfxContainer::get_right (void)
 
 	return empty;
 }
+
+const char*
+GfxContainer::dump (void)
+{
+	std::stringstream s;
+	s << this;
+	return s.str().c_str();
+}
+
 

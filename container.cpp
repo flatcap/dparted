@@ -23,8 +23,6 @@
 #include <unistd.h>
 
 #include <iterator>
-#include <cstdio>
-#include <iostream>
 #include <set>
 #include <sstream>
 #include <string>
@@ -187,7 +185,7 @@ Container::accept (Visitor& v)
 std::vector<Action>
 Container::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.container", true },
 	};
@@ -199,10 +197,10 @@ bool
 Container::perform_action (Action action)
 {
 	if (action.name == "dummy.container") {
-		std::cout << "Container perform: " << action.name << std::endl;
+		log_debug ("Container perform: %s\n", action.name.c_str());
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
+		log_debug ("Unknown action: %s\n", action.name.c_str());
 		return false;
 	}
 }
@@ -333,7 +331,7 @@ Container::get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces)
 	//spaces[offset] = size
 	//spaces[0] = 123;
 
-	return spaces.size();;
+	return spaces.size();
 }
 
 
@@ -377,7 +375,7 @@ void deleter (Mmap* m)
 
 	std::tie (size, ptr) = *m;
 
-	//std::cout << "mmap deleter: " << ptr << std::endl;
+	//log_debug ("mmap deleter: %p\n", ptr);
 	munmap (ptr, size);
 
 	delete m;
@@ -396,7 +394,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	if (device_mmap) {
 		void* buf = (*device_mmap).second;
-		//printf ("mmap existing: %p\n", ((std::uint8_t*) buf) + offset);
+		//log_debug ("mmap existing: %p\n", ((std::uint8_t*) buf) + offset);
 		return ((std::uint8_t*) buf) + offset;
 	}
 
@@ -406,7 +404,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		if (p) {
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
-			std::cout << this << std::endl;
+			log_debug ("%s\n", this->dump());
 			log_error ("%s: no device and no parent\n", __FUNCTION__);
 			return nullptr;
 		}
@@ -437,7 +435,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	device_mmap = (MmapPtr (new Mmap (size, buf), deleter));
 
-	//printf ("mmap new: %p\n", ((std::uint8_t*) buf) + offset);
+	//log_debug ("mmap new: %p\n", ((std::uint8_t*) buf) + offset);
 	return ((std::uint8_t*) buf) + offset;
 }
 
@@ -498,7 +496,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 bool
 Container::is_a (const std::string& t)
 {
-	//std::cout << "my type = " << type.back() << ", compare to " << t << "\n";
+	//log_debug ("my type = %s, compare to %s\n", type.back().c_str(), t.c_str());
 
 	// Start with the most derived type
 	for (auto it = type.rbegin(); it != type.rend(); it++) {
@@ -571,10 +569,10 @@ ContainerPtr
 Container::get_smart (void)
 {
 	if (weak.expired()) {
-		std::cout << "SMART\n";
+		log_debug ("SMART\n");
 		//XXX who created us? code error
 		ContainerPtr c (this);
-		std::cout << c << std::endl;
+		log_debug ("%s\n", c->dump());
 		weak = c;
 	}
 	return weak.lock();
@@ -869,6 +867,14 @@ Container::get_uuid_short (void)
 	}
 
 	return u;
+}
+
+const char*
+Container::dump (void)
+{
+	std::stringstream s;
+	s << this;
+	return s.str().c_str();
 }
 
 

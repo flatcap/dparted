@@ -57,7 +57,7 @@ LvmStripe::accept (Visitor& v)
 std::vector<Action>
 LvmStripe::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_stripe", true },
 	};
@@ -73,7 +73,7 @@ bool
 LvmStripe::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_stripe") {
-		std::cout << "LvmStripe perform: " << action.name << std::endl;
+		log_debug ("LvmStripe perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

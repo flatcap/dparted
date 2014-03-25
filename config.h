@@ -20,7 +20,6 @@
 #define _CONFIG_H_
 
 #include <string>
-#include <iostream>
 #include <cstdint>
 #include <memory>
 

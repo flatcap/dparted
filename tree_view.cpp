@@ -17,7 +17,6 @@
  */
 
 #include <cstdlib>
-#include <iostream>
 
 #include "tree_view.h"
 #include "log_trace.h"
@@ -57,7 +56,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 		Gtk::TreeModel::iterator s2 = s1->get_selected();
 		const Gtk::TreeModel::Row& s3 = *s2;
 		GfxContainerPtr c = s3[m_Columns.col_container];
-		std::cout << "Selection: " << c << std::endl;
+		log_debug ("Selection: %s\n", c->dump());
 	}
 #endif
 
@@ -111,7 +110,7 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			}
 
 			x->treepath = m_refTreeModel->get_string (row);
-			//std::cout << x->treepath << '\t' << x << std::endl;
+			//log_debug ("%s\t%s\n", x->treepath.c_str(), x->dump());
 
 			//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
 
@@ -247,7 +246,7 @@ bool
 TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
 #if 1
-	//std::cout << "qtt: " << menu_active << std::endl;
+	//log_debug ("qtt: %d\n", menu_active);
 	if (keyboard_tooltip)
 		return false;
 	if (menu_active)
@@ -258,7 +257,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 
 	convert_widget_to_tree_coords (x, y, tx, ty);
 
-	//std::cout << "tooltip at (x,y) " << x << "," << y << "-- (tx,ty) " << tx << "," << ty << "\n";
+	//log_debug ("  tooltip at (x,y) %d,%d -- (tx,ty) %d, %d\n", x, y, tx, ty);
 
 	Gtk::TreeModel::Path path;
 
@@ -281,12 +280,12 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 void
 TreeView::set_focus (GfxContainerPtr& c)
 {
-	//std::cout << "focus: " << c->treepath << std::endl;
+	//log_debug ("focus: %s\n", c->treepath.c_str());
 	if (!c)
 		return;
 
 	if (c->treepath.empty()) {
-		//std::cout << "TreeView: not visible" << std::endl;
+		//log_debug ("TreeView: not visible\n");
 		treeselection->unselect_all();
 		return;
 	}
@@ -314,7 +313,7 @@ TreeView::on_selection_changed()
 
 	const Gtk::TreeModel::Row& row = *it;
 	GfxContainerPtr c = row[m_Columns.col_gfx_container];
-	//std::cout << "sel: " << c << std::endl;
+	//log_debug ("sel: %s\n", c->dump());
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	dp->set_focus (c);
@@ -348,13 +347,13 @@ TreeView::setup_popup (void)
 void
 TreeView::on_menu_select (int UNUSED(option))
 {
-	std::cout << "A popup menu item was selected.\n";
+	log_debug ("A popup menu item was selected.\n");
 
 	Glib::RefPtr<Gtk::TreeView::Selection> refSelection = get_selection();
 	if (refSelection) {
 		Gtk::TreeModel::iterator iter = refSelection->get_selected();
 		if (iter) {
-			std::cout << "selected something\n";
+			log_debug ("selected something\n");
 		}
 	}
 }
@@ -369,13 +368,13 @@ TreeView::get_coords (int& x, int& y)
 {
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		std::cout << "No Window" << std::endl;
+		log_debug ("No Window\n");
 		return false;
 	}
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		//std::cout << "No focus" << std::endl;
+		//log_debug ("No focus\n");
 		return false;
 	}
 
@@ -395,7 +394,7 @@ TreeView::get_coords (int& x, int& y)
 
 #if 0
 	Gtk::Allocation allocation = get_allocation();
-	std::cout << "size: " << allocation.get_width() << "," << allocation.get_height() << std::endl;
+	log_debug ("size: %d,%d\n", allocation.get_width(), allocation.get_height());
 #endif
 	int ccx = 0;
 	int ccy = 0;
@@ -408,7 +407,7 @@ TreeView::get_coords (int& x, int& y)
 		Gtk::TreeModel::Path path = m_refTreeModel->get_path (it);
 		Gdk::Rectangle rect;
 		get_cell_area (path, *get_column(0), rect);
-		std::cout << "rect: " << rect.get_x() << "," << rect.get_y() << "," << rect.get_width() << "," << rect.get_height() << std::endl;
+		log_debug ("rect: %d,%d,%d,%d\n", rect.get_x(), rect.get_y(), rect.get_width(), rect.get_height());
 
 		tx += rect.get_x() + rect.get_width();
 		ty += rect.get_y() + rect.get_height();

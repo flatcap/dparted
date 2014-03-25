@@ -72,7 +72,7 @@ LvmTable::accept (Visitor& v)
 std::vector<Action>
 LvmTable::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_table", true },
 	};
@@ -88,7 +88,7 @@ bool
 LvmTable::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_table") {
-		std::cout << "LvmTable perform: " << action.name << std::endl;
+		log_debug ("LvmTable perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Table::perform_action (action);
@@ -303,11 +303,11 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	//int seq_num = -1;
 
 	if ((offset+size) > bufsize) {
-		//log_info ("TOO BIG (%d > %d)\n", (offset+size), bufsize);
+		//log_info ("TOO BIG (%lu > %lu)\n", (offset+size), bufsize);
 		//return false;
 	} else {
 		if (size > 0) {
-			config = std::string ((char*) (buffer+4096+offset), size-1);
+			config = std::string ((char*) (buffer+4096+offset), size-1);	//XXX validate
 
 			//seq_num = get_seq_num (config);
 
@@ -316,7 +316,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 #if 0
 			log_info ("Config (0x%0x):\n", 4096+offset);
 			format_config (config);
-			std::cout << "\n" << config << "\n";
+			log_debug ("\n%s\n", config.c_str());
 #endif
 		}
 	}
@@ -354,7 +354,7 @@ LvmTable::add_child (ContainerPtr& child)
 	if (!child)
 		return;
 
-	//printf ("TABLE: parent offset = %ld\n", child->parent_offset);
+	//log_debug ("TABLE: parent offset = %ld\n", child->parent_offset);
 	if (!child->is_a ("Space")) {
 		child->parent_offset += metadata_size;
 	}
@@ -364,9 +364,9 @@ LvmTable::add_child (ContainerPtr& child)
 	//child->open_device();	// get a buffer
 
 #if 0
-	printf ("%p, name %s, type %s, uuid: %s\n", child->mmap_buffer, child->name.c_str(), child->type.back().c_str(), child->uuid.c_str());
+	log_debug ("%p, name %s, type %s, uuid: %s\n", child->mmap_buffer, child->name.c_str(), child->type.back().c_str(), child->uuid.c_str());
 	dump_hex2 (child->mmap_buffer, 0, 4096);
-	printf ("\n");
+	log_debug ("\n");
 #endif
 }
 
@@ -393,10 +393,10 @@ LvmTable::set_alignment (std::uint64_t bytes)
 	long remainder = (bytes_size - reserved->bytes_size) % block_size;
 
 #if 0
-	printf ("size of device   = %10ld\n", bytes_size);
-	printf ("size of reserved = %10ld\n", reserved->bytes_size);
-	printf ("block size       = %10ld\n", block_size);
-	printf ("remainder        = %10ld\n", remainder);
+	log_debug ("size of device   = %10ld\n", bytes_size);
+	log_debug ("size of reserved = %10ld\n", reserved->bytes_size);
+	log_debug ("block size       = %10ld\n", block_size);
+	log_debug ("remainder        = %10ld\n", remainder);
 #endif
 
 	PartitionPtr s = Partition::create();

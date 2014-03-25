@@ -76,7 +76,7 @@ LuksTable::accept (Visitor& v)
 std::vector<Action>
 LuksTable::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.luks_table", true },
 	};
@@ -92,7 +92,7 @@ bool
 LuksTable::perform_action (Action action)
 {
 	if (action.name == "dummy.luks_table") {
-		std::cout << "LuksTable perform: " << action.name << std::endl;
+		log_debug ("LuksTable perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -124,7 +124,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	//l->device      = "/dev/mapper/luks-" + l->uuid;
 
-	//std::cout << "Parent: " << parent->get_device_name() << std::endl;
+	//log_debug ("Parent: %s\n", parent->get_device_name().c_str());
 	l->luks_open (parent->get_device_name(), false);
 
 	PartitionPtr p = Partition::create();
@@ -173,7 +173,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 void
 LuksTable::on_reply (QuestionPtr UNUSED(q))
 {
-	std::cout << "user has answered question" << std::endl;
+	log_debug ("user has answered question\n");
 }
 
 
@@ -181,7 +181,7 @@ bool
 LuksTable::is_mounted (const std::string& device)
 {
 	std::string command = "sudo cryptsetup status " + device;
-	//std::cout << "Command: " << command << std::endl;
+	//log_debug ("Command: %s\n", command.c_str());
 
 	std::string output;
 	int retcode = execute_command3 (command, output);
@@ -202,7 +202,7 @@ LuksTable::is_luks (const std::string& device)
 	// is already mounted?		cryptsetup status
 
 	std::string command = "sudo cryptsetup isLuks " + device;
-	//std::cout << "Command: " << command << std::endl;
+	//log_debug ("Command: %s\n", command.c_str());
 
 	std::string output;
 	int retcode = execute_command3 (command, output);
@@ -242,7 +242,7 @@ LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 	//XXX check that the luks device matches the parent device
 	if (!is_mounted (mapper)) {
 		std::string command = "sudo cryptsetup open --type luks " + parent + " luks-" + uuid;
-		//std::cout << "Command: " << command << std::endl;
+		//log_debug ("Command: %s\n", command.c_str());
 
 		std::string password = "password";
 		execute_command2 (command, password);
@@ -277,7 +277,7 @@ LuksTable::luks_close (void)
 {
 	//XXX close all dependents first, e.g. umount X, vgchange -an, etc
 	std::string command = "cryptsetup close " + device;
-	std::cout << "Command: " << command << std::endl;
+	log_debug ("Command: %s\n", command.c_str());
 	return false;
 }
 

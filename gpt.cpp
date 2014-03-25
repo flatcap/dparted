@@ -20,7 +20,6 @@
 #include <sstream>
 #include <vector>
 #include <utility>
-#include <iostream>
 #include <iterator>
 
 #include "gpt.h"
@@ -70,7 +69,7 @@ Gpt::accept (Visitor& v)
 std::vector<Action>
 Gpt::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.gpt", true },
 	};
@@ -86,7 +85,7 @@ bool
 Gpt::perform_action (Action action)
 {
 	if (action.name == "dummy.gpt") {
-		std::cout << "Gpt perform: " << action.name << std::endl;
+		log_debug ("Gpt perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Table::perform_action (action);
@@ -97,7 +96,7 @@ Gpt::perform_action (Action action)
 void
 delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 {
-	// std::cout << "delete: (" << start << "," << finish << "): ";
+	 //log_debug ("delete: (%d,%d): ", start, finish);
 	for (auto it = std::begin (region); it != std::end (region); it++) {
 		if (finish < (*it).first)
 			continue;
@@ -113,21 +112,21 @@ delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 		 */
 		if (start == (*it).first) {
 			if (finish == (*it).second) {		//1
-				// std::cout << "1\n";
+				 //log_debug ("1\n");
 				region.erase (it);
 				break;
 			} else {				//2
-				// std::cout << "2\n";
+				 //log_debug ("2\n");
 				(*it).first = finish;
 				break;
 			}
 		} else {
 			if (finish == (*it).second) {		//3
-				// std::cout << "3\n";
+				 //log_debug ("3\n");
 				(*it).second = start;
 				break;
 			} else {				//4
-				// std::cout << "4\n";
+				 //log_debug ("4\n");
 				int end = (*it).second;
 				(*it).second = start;
 				region.insert (it+1, { finish, end });
@@ -222,7 +221,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		long start  = *(long*) (buffer+32);
 		long finish = *(long*) (buffer+40);
 
-		//printf ("%2d: %9ld -%9ld  %10ld  %ld\n", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
+		//log_debug ("%2d: %9ld -%9ld  %10ld  %ld\n", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
 
 		delete_region (empty, start-1, finish);
 
@@ -250,7 +249,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	for (auto r : empty) {
-		//printf ("(%d,%d) ", r.first, r.second);
+		//log_debug ("(%d,%d) ", r.first, r.second);
 
 		PartitionPtr p = Partition::create();
 		p->bytes_size = (r.second-r.first+1);	p->bytes_size    *= 512;	//XXX two parts to avoid overflow
@@ -266,7 +265,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		}
 		g->add_child(p);		// change to add_reserved?
 	}
-	//printf ("\n");
+	//log_debug ("\n");
 
 
 #if 0

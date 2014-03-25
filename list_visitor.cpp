@@ -16,7 +16,6 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 
 #include "list_visitor.h"
 #include "container.h"
@@ -67,5 +66,5 @@ ListVisitor::visit (ContainerPtr c)
 void
 ListVisitor::list (void)
 {
-	std::cout << output.str();
+	log_debug ("%s\n", output.str().c_str());
 }

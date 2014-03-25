@@ -57,7 +57,7 @@ LuksPartition::accept (Visitor& v)
 std::vector<Action>
 LuksPartition::get_actions (void)
 {
-	// LOG_TRACE;
+	 //LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.luks_partition", true },
 	};
@@ -73,7 +73,7 @@ bool
 LuksPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.luks_partition") {
-		std::cout << "LuksPartition perform: " << action.name << std::endl;
+		log_debug ("LuksPartition perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

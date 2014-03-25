@@ -16,7 +16,6 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 #include <sstream>
 #include <utility>
 #include <ctime>
@@ -154,7 +153,7 @@ dump_table (std::shared_ptr<T> t, const std::string& props)
 
 	if (c) {
 		std::string colour = get_colour(c);
-		std::string name   = *c->get_prop ("name_default");
+		std::string name   = (std::string) *c->get_prop ("name_default");
 
 		table << "obj_" << (void*) c.get() << " [fillcolor=\"" << colour << "\",label=<<table cellspacing=\"0\" border=\"0\">\n";
 		table << "\t\t<tr><td align=\"left\" bgcolor=\"white\" colspan=\"3\"><font color=\"#000000\" point-size=\"20\"><b>" << name << "</b></font> (" << (void*) c.get() << ")<font color=\"#ff0000\" point-size=\"20\"><b> : " << c.use_count() << "</b></font></td></tr>\n";
@@ -202,7 +201,7 @@ dot_container (std::shared_ptr<T> t)
 
 	for (auto prop : p->get_all_props()) {
 		if (!(prop->flags & BaseProperty::Flags::Dot)) {
-			// std::cout << "Dot ignore : " << prop->name << std::endl;
+			 //log_debug ("Dot ignore : %s\n", prop->name.c_str());
 			continue;
 		}
 
@@ -548,7 +547,6 @@ DotVisitor::get_dot (void)
 void
 DotVisitor::run_dotty (void)
 {
-	return;
 	char timebuf[8];
 	time_t rawtime;
 	struct tm* timeinfo;
