@@ -51,6 +51,7 @@ TextApp::run (int argc, char **argv)
 	lv.list();
 #endif
 
+#if 0
 	ContainerPtr c1 = *top_level->get_children().begin();		// loop
 	// log_debug ("%s\n", c1->dump());
 	ContainerPtr c2 = *c1->get_children().begin();			// gpt
@@ -70,6 +71,7 @@ TextApp::run (int argc, char **argv)
 		std::string s { *p };
 		log_debug ("%s\t%s\n", p->name.c_str(), s.c_str());
 	}
+#endif
 
 	return 0;
 }

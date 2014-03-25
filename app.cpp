@@ -140,10 +140,10 @@ App::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	if (!parent || !buffer || !bufsize)
 		return false;
 
-	if (Table::probe (parent, buffer, bufsize))
+	if (Filesystem::probe (parent, buffer, bufsize))
 		return true;
 
-	if (Filesystem::probe (parent, buffer, bufsize))
+	if (Table::probe (parent, buffer, bufsize))
 		return true;
 
 	if (Misc::probe (parent, buffer, bufsize))
