@@ -233,7 +233,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			v->bytes_size =  tags["LVM2_VG_EXTENT_SIZE"];
 			v->bytes_size *= (long) tags["LVM2_PVSEG_SIZE"];
 
-			//std::cout << "lv uuid = " << lv_uuid << '\n';
+			//log_debug ("lv uuid = %s\n", lv_uuid.c_str());
 			v->uuid    = lv_uuid;
 			//v->missing = true;
 			pieces->just_add_child(v);

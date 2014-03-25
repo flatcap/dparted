@@ -307,7 +307,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 		//return false;
 	} else {
 		if (size > 0) {
-			config = std::string ((char*) (buffer+4096+offset), size-1);
+			config = std::string ((char*) (buffer+4096+offset), size-1);	//XXX validate
 
 			//seq_num = get_seq_num (config);
 
@@ -316,7 +316,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 #if 0
 			log_info ("Config (0x%0x):\n", 4096+offset);
 			format_config (config);
-			std::cout << "\n" << config << "\n";
+			log_debug ("\n%s\n", config.c_str());
 #endif
 		}
 	}

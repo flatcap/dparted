@@ -197,10 +197,10 @@ bool
 Container::perform_action (Action action)
 {
 	if (action.name == "dummy.container") {
-		log_debug ("Container perform: "); << action.name << std::endl;
+		log_debug ("Container perform: "); << action.name << "\n";
 		return true;
 	} else {
-		log_debug ("Unknown action: "); << action.name << std::endl;
+		log_debug ("Unknown action: "); << action.name << "\n";
 		return false;
 	}
 }
@@ -375,7 +375,7 @@ void deleter (Mmap* m)
 
 	std::tie (size, ptr) = *m;
 
-	//log_debug ("mmap deleter: "); << ptr << std::endl;
+	//log_debug ("mmap deleter: "); << ptr << "\n";
 	munmap (ptr, size);
 
 	delete m;
@@ -404,7 +404,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		if (p) {
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
-			std::cout << this << std::endl;
+			std::cout << this << "\n";	//CONTAINER
 			log_error ("%s: no device and no parent\n", __FUNCTION__);
 			return nullptr;
 		}
@@ -572,7 +572,7 @@ Container::get_smart (void)
 		log_debug ("SMART\n");;
 		//XXX who created us? code error
 		ContainerPtr c (this);
-		std::cout << c << std::endl;
+		std::cout << c << "\n";	//CONTAINER
 		weak = c;
 	}
 	return weak.lock();

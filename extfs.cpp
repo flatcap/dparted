@@ -155,7 +155,7 @@ tune2fs (const std::string& dev)
 			continue;
 
 		if (!parse_line (line, key, value)) {
-			std::cout << "Failed: " << line << std::endl;
+			log_debug ("Failed: %s\n", line.c_str());
 			continue;
 		}
 

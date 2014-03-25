@@ -96,7 +96,7 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 	if (shape.w < TAB_WIDTH) {
 #if 0
 		log_debug ("draw_container: too narrow\n");
-		std::cout << cont << std::endl;
+		std::cout << cont << "\n";	//GFXCONT
 #endif
 		return;
 	}
@@ -118,7 +118,7 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 		box.h -= (GAP*2);
 
 		Rect below;
-		//std::cout << "Icon: " << icon << std::endl;
+		//std::cout << "Icon: " << icon << "\n";	//PIXBUF
 		draw_icon (cr, icon, box, below);
 		draw_text (cr, box2, name);
 

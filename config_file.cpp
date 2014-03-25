@@ -106,7 +106,7 @@ ConfigFile::read_file (const std::string& filename)
 		log_debug ("I/O error while reading file.\n");
 		return false;
 	} catch (const libconfig::ParseException& pex) {
-		log_debug ("Parse error at "); << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
+		log_debug ("Parse error at "); << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << "\n";
 		return false;
 	}
 

@@ -69,5 +69,5 @@ PropVisitor::visit (ContainerPtr c)
 void
 PropVisitor::list (void)
 {
-	std::cout << output.str();
+	log_debug ("%s\n", output.str().c_str());
 }

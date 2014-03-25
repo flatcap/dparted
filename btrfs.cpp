@@ -187,7 +187,7 @@ btrfs_show_super (const std::string& dev)
 		} else if (line.empty()) {
 			continue;
 		} else if (!parse_line (line, key, value)) {
-			std::cout << "btrfs failed: " << line << std::endl;
+			log_debug ("btrfs failed: %s\n", line.cstr());
 			continue;
 		}
 

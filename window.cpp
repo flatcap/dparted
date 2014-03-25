@@ -131,7 +131,7 @@ Window::my_idle (void)
 #if 1
 	std::vector<std::string> files;
 	ContainerPtr c = gui_app->scan (files);
-	//std::cout << c->get_children().size() << " children\n";
+	//std::cout << c->get_children().size() << " children\n";	//INT
 	GfxContainerPtr dummy;
 	m_g = GfxContainer::create (dummy, c);
 	set_data (m_g);
@@ -180,7 +180,7 @@ Window::set_focus (GfxContainerPtr cont)
 	treeview.set_focus (focus);
 	drawingarea.set_focus (focus);
 
-	//log_debug ("Focus: "); << cont << std::endl;
+	//log_debug ("Focus: "); << cont << "\n";
 	return true;
 }
 
@@ -255,7 +255,7 @@ Window::on_menu_choices (const Glib::ustring& parameter)
 	else
 		message = "Choice b was selected";
 
-	std::cout << message << std::endl;
+	log_debug ("%s\n", message.c_str());
 }
 
 void
@@ -270,7 +270,7 @@ Window::on_menu_choices_other (int parameter)
 	else
 		message = "Choice 2 was selected";
 
-	std::cout << message << std::endl;
+	log_debug ("%s\n", message.c_str());
 }
 
 void
@@ -330,13 +330,13 @@ Window::on_menu_toggle (void)
 	else
 		message = "Toggle is not active";
 
-	std::cout << message << std::endl;
+	log_debug ("%s\n", message.c_str());
 }
 
 void
 Window::on_menu_view (int option)
 {
-	log_debug ("on_menu_view: "); << option << std::endl;
+	log_debug ("on_menu_view: "); << option << "\n";
 
 	bool val = false;
 	switch (option) {
@@ -405,7 +405,7 @@ Window::init_shortcuts (void)
 	Glib::RefPtr<Gtk::AccelGroup> accel = Gtk::AccelGroup::create();
 
 	for (auto k : keys) {
-		//log_debug ("Keypress: "); << k.first << " : " << k.second << std::endl;
+		//log_debug ("Keypress: "); << k.first << " : " << k.second << "\n";
 		Gtk::MenuItem* i = manage (new Gtk::MenuItem());
 		i->signal_activate().connect (sigc::bind<int,int> (sigc::mem_fun (*this, &Window::on_keypress), k.first, k.second));
 		i->add_accelerator ("activate", accel, k.second, (Gdk::ModifierType) k.first, Gtk::ACCEL_VISIBLE);
@@ -475,7 +475,7 @@ Window::init_actions (void)
 	for (auto a : action_map) {
 		if (a.first[7] < 'n')
 			a.second->set_enabled (false);
-		//std::cout << a.first << std::endl;
+		//std::cout << a.first << "\n";
 	}
 #endif
 }
@@ -707,10 +707,10 @@ Window::set_actions (std::vector<Action>& list)
 	for (auto a : list) {				// Then selectively enable the ones we want
 		auto it = action_map.find (a.name);
 		if (it != std::end (action_map)) {
-			//log_debug ("Enable: "); << a.name << std::endl;
+			//log_debug ("Enable: "); << a.name << "\n";
 			it->second->set_enabled (true);
 		} else {
-			log_debug ("Can't find "); << a.name << std::endl;
+			log_debug ("Can't find "); << a.name << "\n";
 		}
 	}
 }
@@ -718,7 +718,7 @@ Window::set_actions (std::vector<Action>& list)
 void
 Window::on_keypress (int modifier, int key)
 {
-	//log_debug ("Keypress: "); << modifier << " : " << (char) key << std::endl;
+	//log_debug ("Keypress: "); << modifier << " : " << (char) key << "\n";
 
 	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q')) {
 		set_show_menubar(false);

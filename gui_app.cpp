@@ -196,10 +196,10 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 	//LOG_TRACE;
 	log_debug ("Open files:\n");
 	for (auto f : files) {
-		std::cout << f->get_uri() << std::endl;
+		std::cout << f->get_uri() << "\n";
 	}
 
-	std::cout << "hint = " << hint << std::endl << std::endl;
+	log_debug ("hint = %s\n", hint.c_str());
 	Gtk::Application::on_open (files, hint);
 }
 
@@ -219,8 +219,8 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	try {
 		context.parse (argc, argv);
 	} catch (const Glib::Error& ex) {
-		std::cout << "Exception parsing command-line: " << ex.what() << std::endl;
-		std::cout << context.get_help() << std::endl;
+		std::cout << "Exception parsing command-line: " << ex.what() << "\n";
+		std::cout << context.get_help() << "\n";
 		//XXX if running, don't kill the app
 		return EXIT_FAILURE;
 	}
@@ -291,7 +291,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		if (group.config.size()) {
 			log_debug ("config:\n");
 			for (auto c : group.config) {
-				std::cout << '\t' << c << std::endl;
+				log_debug ("\t%s\n", c.c_str());
 				window->load_config (c);
 			}
 		}
@@ -305,7 +305,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		if (group.theme.size()) {
 			log_debug ("theme:\n");
 			for (auto t : group.theme) {
-				std::cout << '\t' << t << std::endl;
+				log_debug ("\t%s\n", t.c_str());
 				window->load_theme (t);
 			}
 		}
@@ -318,9 +318,9 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	ContainerPtr top_level;
 
 	if (disks.size()) {
-		std::cout << "scan only: ";
+		log_debug ("scan only: ");
 		for (auto d : disks) {
-			std::cout << "\"" << d << "\" ";
+			log_debug ("\"%s\" ", d.c_str());
 			if (window) {
 				window->load_disk (d);
 			}
@@ -489,7 +489,7 @@ GuiApp::ask (QuestionPtr q)
 	}
 
 	q->result = dialog.run();
-	std::cout << "question = " << q->result << std::endl;
+	std::cout << "question = " << q->result << "\n";	//INT
 	q->done();
 
 #if 0

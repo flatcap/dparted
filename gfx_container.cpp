@@ -131,7 +131,7 @@ GfxContainer::init (ContainerPtr c)
 #endif
 
 	} catch (const std::string& e) {
-		std::cout << "Exception: " << e << std::endl;
+		log_debug ("Exception: %s\n", e.c_str());
 		exit(1);
 	}
 
@@ -191,7 +191,7 @@ GfxContainer::process_label (const std::string& label_template)
 {
 	std::string l = label_template;
 
-	//std::cout << "Label: " << l << std::endl;
+	//log_debug ("Label: %s\n", l.c_str());
 	ContainerPtr c = get_container();
 	if (!c)
 		return l;
@@ -261,7 +261,7 @@ bool
 GfxContainer::set_focus (bool focus)
 {
 	ContainerPtr c = get_container();
-	//std::cout << "Focus: " << c << " = " << focus << std::endl;
+	//std::cout << "Focus: " << c << " = " << focus << "\n";
 	focussed = focus;
 	return true;
 }
@@ -309,7 +309,7 @@ GfxContainer::process_icon (const std::string& str)
 		return pb;
 
 	pb = theme->get_icon (str);
-	//std::cout << "icon: " << str << " " << pb << std::endl;
+	//std::cout << "icon: " << str << " " << pb << "\n";
 	//pb = Gdk::Pixbuf::create_from_file (str);
 
 	return pb;
@@ -370,7 +370,7 @@ GfxContainer::get_smart (void)
 		log_debug ("SMART\n");
 		//XXX who created us? - code error
 		GfxContainerPtr c (this);
-		std::cout << c << std::endl;
+		std::cout << c << "\n";	//GFXCONT
 		weak = c;
 	}
 	return weak.lock();

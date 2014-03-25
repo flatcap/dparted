@@ -56,7 +56,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 		Gtk::TreeModel::iterator s2 = s1->get_selected();
 		const Gtk::TreeModel::Row& s3 = *s2;
 		GfxContainerPtr c = s3[m_Columns.col_container];
-		std::cout << "Selection: " << c << std::endl;
+		std::cout << "Selection: " << c << "\n";	//GFXCONT
 	}
 #endif
 
@@ -110,7 +110,7 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			}
 
 			x->treepath = m_refTreeModel->get_string (row);
-			//std::cout << x->treepath << '\t' << x << std::endl;
+			//std::cout << x->treepath << '\t' << x << "\n";
 
 			//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
 
@@ -246,7 +246,7 @@ bool
 TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
 #if 1
-	//std::cout << "qtt: " << menu_active << std::endl;
+	//std::cout << "qtt: " << menu_active << "\n";
 	if (keyboard_tooltip)
 		return false;
 	if (menu_active)
@@ -280,7 +280,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 void
 TreeView::set_focus (GfxContainerPtr& c)
 {
-	//std::cout << "focus: " << c->treepath << std::endl;
+	//log_debug ("focus: %s\n", c->treepath.c_str());
 	if (!c)
 		return;
 
@@ -313,7 +313,7 @@ TreeView::on_selection_changed()
 
 	const Gtk::TreeModel::Row& row = *it;
 	GfxContainerPtr c = row[m_Columns.col_gfx_container];
-	//std::cout << "sel: " << c << std::endl;
+	//std::cout << "sel: " << c << "\n";	//GFXCONT
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	dp->set_focus (c);
@@ -394,7 +394,7 @@ TreeView::get_coords (int& x, int& y)
 
 #if 0
 	Gtk::Allocation allocation = get_allocation();
-	std::cout << "size: " << allocation.get_width() << "," << allocation.get_height() << std::endl;
+	std::cout << "size: " << allocation.get_width() << "," << allocation.get_height() << "\n";
 #endif
 	int ccx = 0;
 	int ccy = 0;
@@ -407,7 +407,7 @@ TreeView::get_coords (int& x, int& y)
 		Gtk::TreeModel::Path path = m_refTreeModel->get_path (it);
 		Gdk::Rectangle rect;
 		get_cell_area (path, *get_column(0), rect);
-		std::cout << "rect: " << rect.get_x() << "," << rect.get_y() << "," << rect.get_width() << "," << rect.get_height() << std::endl;
+		std::cout << "rect: " << rect.get_x() << "," << rect.get_y() << "," << rect.get_width() << "," << rect.get_height() << "\n";
 
 		tx += rect.get_x() + rect.get_width();
 		ty += rect.get_y() + rect.get_height();

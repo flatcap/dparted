@@ -208,7 +208,7 @@ Extended::get_buffer (std::uint64_t offset, std::uint64_t size)
 	if (p) {
 		return p->get_buffer (offset + parent_offset, size);
 	} else {
-		std::cout << this << std::endl;
+		std::cout << this << "\n";	//CONTAINER
 		log_error ("%s: no device and no parent\n", __FUNCTION__);
 		return nullptr;
 	}

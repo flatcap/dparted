@@ -66,5 +66,5 @@ ListVisitor::visit (ContainerPtr c)
 void
 ListVisitor::list (void)
 {
-	std::cout << output.str();
+	log_debug ("%s\n", output.str().c_str());
 }

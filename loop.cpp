@@ -70,7 +70,7 @@ Loop::create (const std::string& losetup)
 #if 0
 	log_info ("parts: (%ld)\n", parts.size());
 	for (auto i : parts) {
-		std::cout << "\t" << i << std::endl;
+		log_debug ("\t%s\n", i.c_str());
 	}
 	log_info ("\n");
 #endif
@@ -229,7 +229,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 
 	losetup (output, name);		//XXX retval, exactly one reply
 
-	//std::cout << output[0] << std::endl;
+	//log_debug ("%s\n", output[0].c_str());
 
 	LoopPtr l = create (output[0]);
 

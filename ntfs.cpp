@@ -196,7 +196,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 		}
 
 		if (!parse_line (line, desc, value)) {
-			std::cout << "ntfs failed: " << line << std::endl;
+			log_debug ("ntfs failed: %s\n", line.c_str());
 			continue;
 		}
 

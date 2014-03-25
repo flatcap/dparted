@@ -301,7 +301,7 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 
 	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
 		log_info ("draw_block: too narrow\n");
-		std::cout << cont << std::endl;
+		std::cout << cont << "\n";	//CONTAINER
 		return;
 	}
 
@@ -389,7 +389,7 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 bool
 DrawingArea::on_timeout (int timer_number)
 {
-	std::cout << "timer" << "\n";
+	log_debug ("timer\n");
 	get_window()->invalidate (false); // everything for now
 	//return (m_c->device == "/dev/sdc");
 	return true;
@@ -452,7 +452,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 
-	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+	//std::cout << "top_level: " << get_toplevel()->get_name() << "\n";
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 
 	GfxContainerPtr selection;
@@ -614,7 +614,7 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 {
 	GfxContainerPtr child;
 
-	//std::cout << "1: " << c << "\n";
+	//std::cout << "1: " << c << "\n";	//GFXCONT
 	if (!c)
 		return nullptr;
 
@@ -625,7 +625,7 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 		return nullptr;
 
 	child = c->children[0];
-	//std::cout << "2: " << child << "\n";
+	//std::cout << "2: " << child << "\n";	//GFXCONT
 	if (!child)
 		return nullptr;
 
@@ -636,7 +636,7 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 		return nullptr;
 
 	child = child->children[0];
-	//std::cout << "3: " << child << "\n";
+	//std::cout << "3: " << child << "\n";	//GFXCONT
 	if (!child)
 		return nullptr;
 
@@ -687,7 +687,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	if (!gfx)
 		return;
 
-	//std::cout << gfx << std::endl;
+	//std::cout << gfx << "\n";	//GFXCONT
 
 	ContainerPtr c = gfx->get_container();
 	if (!c) {
@@ -698,11 +698,11 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	std::vector<Action> actions;
 
 	for (; c; c = c->parent.lock()) {
-		std::cout << c->type.back() << std::endl;
+		log_debug ("%s\n", c->type.back().c_str());
 		auto tmp = c->get_actions();
 		actions.insert (std::end (actions), std::begin (tmp), std::end (tmp));
 		for (auto t : tmp) {
-			std::cout << '\t' << t.name << std::endl;
+			log_debug ("\t%s\n", t.name.c_str());
 		}
 	}
 	log_debug ("\n");
@@ -729,7 +729,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 		else
 			colour = 31;
 
-		std::cout << "\t" << "\033[01;" << std::to_string (colour) << "m" << a.name << "\033[0m" << std::endl;
+		std::cout << "\t" << "\033[01;" << std::to_string (colour) << "m" << a.name << "\033[0m" << "\n";
 	}
 	log_debug ("\n");
 #endif
@@ -831,7 +831,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	if (shape.w < TAB_WIDTH) {
 #if 0
 		log_debug ("draw_container: too narrow\n");
-		std::cout << cont << std::endl;
+		std::cout << cont << "\n";	//GFXCONT
 #endif
 		return;
 	}
@@ -854,7 +854,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 
 		Rect below;
 		vRange.push_front ({shape, cont});
-		//std::cout << "Icon: " << icon << std::endl;
+		//std::cout << "Icon: " << icon << "\n";	//PIXBUF
 		draw_icon (cr, icon, box, below);
 		draw_text (cr, box2, name);
 
@@ -984,11 +984,11 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 	bool redraw  = false;
 	bool handled = false;
 
-	//std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << std::endl;
+	//std::cout << "Key: " << std::dec << ev->keyval << " (0x" << std::hex << ev->keyval << ")" << std::dec << "\n";
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
 
-	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		log_debug ("No Window\n");
@@ -1005,7 +1005,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 	int y = 0;
 	switch (ev->keyval) {
 		case GDK_KEY_Return:	// 65293 (0xFF0D)
-			//std::cout << "state = " << ev->state << std::endl;
+			//std::cout << "state = " << ev->state << "\n";	//INT
 			if (ev->state & GDK_MOD1_MASK) {		// Alt-Enter
 				on_menu_select (c, Action {"Properties", true });	// properties
 				handled = true;
@@ -1047,7 +1047,7 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 {
 	//LOG_TRACE;
 
-	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		log_debug ("No Window\n");
@@ -1211,7 +1211,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 #endif
 
 	for (auto a : actions) {
-		//std::cout << a.name << std::endl;
+		//log_debug ("%s\n", a.name.c_str());
 		size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
 			section.clear();
@@ -1275,11 +1275,11 @@ DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 		return;
 
 	if (action.name == "Copy") {
-		std::cout << action.name << std::endl;
+		log_debug ("%s\n", action.name.c_str());
 	} else if (action.name == "Paste") {
-		std::cout << action.name << std::endl;
+		log_debug ("%s\n", action.name.c_str());
 	} else if (action.name == "Paste Special") {
-		std::cout << action.name << std::endl;
+		log_debug ("%s\n", action.name.c_str());
 	} else if (action.name == "Properties") {
 		gui_app->properties (gfx);
 	} else {
@@ -1296,7 +1296,7 @@ DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 bool
 DrawingArea::get_coords (int& x, int& y)
 {
-	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		log_debug ("No Window\n");
@@ -1318,7 +1318,7 @@ DrawingArea::get_coords (int& x, int& y)
 	int oy = 0;
 	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
-	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
+	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
 	if (!window) {
 		return false;
@@ -1363,7 +1363,7 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 #if 0
 	log_debug ("Actions:\n");
 	for (auto a : actions) {
-		std::cout << "\t" << a << std::endl;
+		std::cout << "\t" << a << "\n";
 	}
 #endif
 
