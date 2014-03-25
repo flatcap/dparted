@@ -208,7 +208,7 @@ GfxContainer::process_label (const std::string& label_template)
 		l.replace (start, stop-start+1, value);
 	}
 
-	//printf ("label = %s\n", l.c_str());
+	//log_debug ("label = %s\n", l.c_str());
 
 	return l;
 }

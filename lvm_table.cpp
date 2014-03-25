@@ -354,7 +354,7 @@ LvmTable::add_child (ContainerPtr& child)
 	if (!child)
 		return;
 
-	//printf ("TABLE: parent offset = %ld\n", child->parent_offset);
+	//log_debug ("TABLE: parent offset = %ld\n", child->parent_offset);
 	if (!child->is_a ("Space")) {
 		child->parent_offset += metadata_size;
 	}
@@ -364,9 +364,9 @@ LvmTable::add_child (ContainerPtr& child)
 	//child->open_device();	// get a buffer
 
 #if 0
-	printf ("%p, name %s, type %s, uuid: %s\n", child->mmap_buffer, child->name.c_str(), child->type.back().c_str(), child->uuid.c_str());
+	log_debug ("%p, name %s, type %s, uuid: %s\n", child->mmap_buffer, child->name.c_str(), child->type.back().c_str(), child->uuid.c_str());
 	dump_hex2 (child->mmap_buffer, 0, 4096);
-	printf ("\n");
+	log_debug ("\n");
 #endif
 }
 
@@ -393,10 +393,10 @@ LvmTable::set_alignment (std::uint64_t bytes)
 	long remainder = (bytes_size - reserved->bytes_size) % block_size;
 
 #if 0
-	printf ("size of device   = %10ld\n", bytes_size);
-	printf ("size of reserved = %10ld\n", reserved->bytes_size);
-	printf ("block size       = %10ld\n", block_size);
-	printf ("remainder        = %10ld\n", remainder);
+	log_debug ("size of device   = %10ld\n", bytes_size);
+	log_debug ("size of reserved = %10ld\n", reserved->bytes_size);
+	log_debug ("block size       = %10ld\n", block_size);
+	log_debug ("remainder        = %10ld\n", remainder);
 #endif
 
 	PartitionPtr s = Partition::create();

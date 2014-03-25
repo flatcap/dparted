@@ -185,7 +185,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	long csize = -1;	// total size in clusters
 	long cfree = -1;	// free space in clusters
 
-	//printf ("keys:\n");
+	//log_debug ("keys:\n");
 	for (auto line : output) {
 		if (line.empty())
 			continue;
@@ -214,7 +214,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 		declare_prop_array (section.c_str(), key.c_str(), more_props, more_props.size()-1, desc.c_str());
 	}
 
-	//printf ("%ld, %ld, %ld\n", clust, csize, cfree);
+	//log_debug ("%ld, %ld, %ld\n", clust, csize, cfree);
 	if ((clust > 0) && (csize > 0) && (cfree > 0)) {
 		block_size = clust;
 		bytes_size = csize * clust;

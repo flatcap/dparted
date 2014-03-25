@@ -348,7 +348,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			}
 			t->set_alignment (g->block_size);
 		}
-		// printf ("TRIGGER set_alignment: %ld\n", g->segments.size());
+		// log_debug ("TRIGGER set_alignment: %ld\n", g->segments.size());
 		//g->bytes_used		= g->bytes_size - (long) tags["LVM2_VG_FREE"];
 
 		// LvmGroup
@@ -478,7 +478,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			v->name = v->name.substr (1, v->name.length() - 2);	// Strip the []'s
 
 			v->device = make_device (g->name, v->name);
-			//printf ("DEVNAME = %s\n", v->device.c_str());
+			//log_debug ("DEVNAME = %s\n", v->device.c_str());
 
 			//INTERNAL object => full
 			v->bytes_used = v->bytes_size;
@@ -602,7 +602,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 #if 1
 	//probe leaves
 	std::vector<ContainerPtr> v = find_all_type (pieces, "LvmVolume");
-	//printf ("%ld volumes\n", v.size());
+	//log_debug ("%ld volumes\n", v.size());
 
 	for (auto i : v) {
 		if (i->is_a ("LvmMetadata"))		// nothing interesting here
@@ -615,7 +615,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 #endif
 #if 1
 	std::vector<ContainerPtr> g = find_all_type (pieces, "LvmGroup");
-	//printf ("%ld groups\n", g.size());
+	//log_debug ("%ld groups\n", g.size());
 
 	for (auto i : g) {
 		//std::cout << '\t' << i->uuid << '\t' << i << '\n';

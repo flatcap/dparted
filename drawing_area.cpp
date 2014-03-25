@@ -411,7 +411,7 @@ dump_range (const std::deque<Range>& vRange)
 			type = p->type.back();
 		}
 
-		printf ("\t%d,%d %d,%d %p (%s) - %ld\n", r.x, r.y, r.w, r.h, (void*) p.get(), type.c_str(), p.use_count());
+		log_debug ("\t%d,%d %d,%d %p (%s) - %ld\n", r.x, r.y, r.w, r.h, (void*) p.get(), type.c_str(), p.use_count());
 	}
 }
 
@@ -515,7 +515,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	int tw = 0;
 	int th = 0;
 	layout->get_pixel_size (tw, th);
-	printf ("text width = %d, height = %d\n", tw, th);
+	log_debug ("text width = %d, height = %d\n", tw, th);
 
 	cr->move_to (shape.x + 2, shape.y + 2);
 	layout->set_width (Pango::SCALE * (shape.w - 4));
@@ -828,10 +828,10 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	//Rect tab;
 	Rect inside;
 
-	//printf ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
+	//log_debug ("object = %s (%s) -- %d,%d\n", cont->name.c_str(), cont->uuid.c_str(), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
 #if 0
-		printf ("draw_container: too narrow\n");
+		log_debug ("draw_container: too narrow\n");
 		std::cout << cont << std::endl;
 #endif
 		return;
@@ -930,10 +930,10 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		 *	background
 		 */
 	} else if (display == "empty") {	// Do nothing for now
-		//printf ("EMPTY\n");
+		//log_debug ("EMPTY\n");
 		inside = shape;
 	} else {
-		printf ("unknown display type: %s\n", display.c_str());
+		log_debug ("unknown display type: %s\n", display.c_str());
 		return;
 	}
 
@@ -1336,9 +1336,9 @@ DrawingArea::get_coords (int& x, int& y)
 		return false;
 	}
 #if 0
-	printf ("o %d, %d\n", ox, oy);
-	printf ("t %d, %d\n", tx, ty);
-	printf ("r %d, %d, %d\n", r.x, r.y, r.h);
+	log_debug ("o %d, %d\n", ox, oy);
+	log_debug ("t %d, %d\n", tx, ty);
+	log_debug ("r %d, %d, %d\n", r.x, r.y, r.h);
 #endif
 
 	x = ox + tx + r.x;

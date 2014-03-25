@@ -152,7 +152,7 @@ BaseDrawingArea::draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape,
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - icon label colour
 
 	//int left = std::max (GAP, (shape.w - tw) / 2);
-	//printf ("left = %d\n", left);
+	//log_debug ("left = %d\n", left);
 	//cr->move_to (shape.x + left, shape.y + shape.h - th);	// align to bottom
 	cr->move_to (shape.x + SIDES, shape.y + RADIUS);	// align to top
 

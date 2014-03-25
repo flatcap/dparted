@@ -222,7 +222,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		long start  = *(long*) (buffer+32);
 		long finish = *(long*) (buffer+40);
 
-		//printf ("%2d: %9ld -%9ld  %10ld  %ld\n", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
+		//log_debug ("%2d: %9ld -%9ld  %10ld  %ld\n", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
 
 		delete_region (empty, start-1, finish);
 
@@ -250,7 +250,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	for (auto r : empty) {
-		//printf ("(%d,%d) ", r.first, r.second);
+		//log_debug ("(%d,%d) ", r.first, r.second);
 
 		PartitionPtr p = Partition::create();
 		p->bytes_size = (r.second-r.first+1);	p->bytes_size    *= 512;	//XXX two parts to avoid overflow
@@ -266,7 +266,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		}
 		g->add_child(p);		// change to add_reserved?
 	}
-	//printf ("\n");
+	//log_debug ("\n");
 
 
 #if 0

@@ -117,7 +117,7 @@ LvmVolume::add_child (ContainerPtr& child)
 		return;
 
 	if ((is_a ("LvmMetadata") && (child->is_a ("LvmVolume")))) {	//XXX tmp
-		//printf ("LvmMetadata: %s\n", child->type.back().c_str());
+		//log_debug ("LvmMetadata: %s\n", child->type.back().c_str());
 		sibling = child;
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(child);
 		vol->sibling = get_smart();
@@ -162,7 +162,7 @@ LvmVolume::add_child (ContainerPtr& child)
 ContainerPtr
 LvmVolume::find (const std::string& search)
 {
-	//printf ("find: %s -> %s (%s)\n", search.c_str(), name.c_str(), uuid.c_str());
+	//log_debug ("find: %s -> %s (%s)\n", search.c_str(), name.c_str(), uuid.c_str());
 	std::string search2;
 
 	size_t pos = search.find ("(0)");

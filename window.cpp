@@ -93,7 +93,7 @@ Window::Window (void)
 
 	show_all_children();
 
-	//printf ("%d,%d,%d,%d\n", tb, gx, tv, sb);
+	//log_debug ("%d,%d,%d,%d\n", tb, gx, tv, sb);
 	toolbar->set_visible (tb);
 	drawingarea.set_visible (gx);
 	treeview.set_visible (tv);
@@ -231,8 +231,8 @@ Window::set_geometry (int x, int y, int w, int h)
 	move (x, y);
 	resize (w, h);
 
-	//printf ("pg = %d\n", parse_geometry ("800x400+200+50"));
-	//printf ("pg = %d\n", parse_geometry ("800x400-0-0"));
+	//log_debug ("pg = %d\n", parse_geometry ("800x400+200+50"));
+	//log_debug ("pg = %d\n", parse_geometry ("800x400-0-0"));
 
 	//XXX do something smart with negative x,y?
 #if 0
@@ -731,7 +731,7 @@ Window::on_keypress (int modifier, int key)
 void
 Window::on_action_general (std::string section, std::string name)
 {
-	printf ("%s: %s.%s\n", __FUNCTION__, section.c_str(), name.c_str());
+	log_debug ("%s: %s.%s\n", __FUNCTION__, section.c_str(), name.c_str());
 
 	if (!focus) {
 		std::cout << "no focus" << std::endl;

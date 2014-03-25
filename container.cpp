@@ -396,7 +396,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	if (device_mmap) {
 		void* buf = (*device_mmap).second;
-		//printf ("mmap existing: %p\n", ((std::uint8_t*) buf) + offset);
+		//log_debug ("mmap existing: %p\n", ((std::uint8_t*) buf) + offset);
 		return ((std::uint8_t*) buf) + offset;
 	}
 
@@ -437,7 +437,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	device_mmap = (MmapPtr (new Mmap (size, buf), deleter));
 
-	//printf ("mmap new: %p\n", ((std::uint8_t*) buf) + offset);
+	//log_debug ("mmap new: %p\n", ((std::uint8_t*) buf) + offset);
 	return ((std::uint8_t*) buf) + offset;
 }
 
