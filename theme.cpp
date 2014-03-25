@@ -22,7 +22,6 @@
 #include <cairomm/cairomm.h>
 
 #include <map>
-#include <iostream>
 #include <string>
 
 #include "log.h"

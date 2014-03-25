@@ -17,9 +17,7 @@
  */
 
 #include <cstdarg>
-#include <cstdio>
 #include <cstring>
-#include <iostream>
 
 #include "log.h"
 #include "log_trace.h"

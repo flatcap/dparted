@@ -103,7 +103,7 @@ ConfigFile::read_file (const std::string& filename)
 	try {
 		cfg.readFile (filename.c_str());
 	} catch (const libconfig::FileIOException& fioex) {
-		std::cout << "I/O error while reading file." << std::endl;
+		log_debug ("I/O error while reading file.\n");;
 		return false;
 	} catch (const libconfig::ParseException& pex) {
 		std::cout << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;

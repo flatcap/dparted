@@ -16,7 +16,6 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -185,7 +184,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 
 	std::map<std::string,std::string> info = tune2fs (dev);
 	if (info.empty()) {
-		std::cout << "tune2fs failed" << std::endl;
+		log_debug ("tune2fs failed\n");;
 		return;
 	}
 

@@ -16,7 +16,6 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -175,11 +174,11 @@ btrfs_show_super (const std::string& dev)
 		if (line.substr (0, 11) == "superblock:") {
 			std::string dev2;
 			if (!parse_header (line, dev2)) {
-				std::cout << "btrfs: bad header" << std::endl;
+				log_debug ("btrfs: bad header\n");;
 				break;
 			}
 			if (dev != dev2) {
-				std::cout << "btrfs: devices don't match" << std::endl;
+				log_debug ("btrfs: devices don't match\n");;
 				break;
 			}
 			continue;
@@ -213,7 +212,7 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 
 	std::map<std::string,std::string> info = btrfs_show_super (dev);
 	if (info.empty()) {
-		std::cout << "btrfs_show_super failed" << std::endl;
+		log_debug ("btrfs_show_super failed\n");;
 		return;
 	}
 

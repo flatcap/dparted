@@ -17,7 +17,6 @@
  */
 
 
-#include <iostream>
 
 #include "text_app.h"
 #include "log_trace.h"

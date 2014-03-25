@@ -108,7 +108,7 @@ GuiApp::my_idle (void)
 		return false;	// detach
 	}
 
-	//std::cout << "GuiApp is idle" << std::endl;
+	//log_debug ("GuiApp is idle\n");;
 	return false;	// continue
 }
 
@@ -194,7 +194,7 @@ void
 GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
 	//LOG_TRACE;
-	std::cout << "Open files:" << std::endl;
+	log_debug ("Open files:\n");;
 	for (auto f : files) {
 		std::cout << f->get_uri() << std::endl;
 	}
@@ -231,7 +231,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	}
 
 #if 0
-	std::cout << "values: " << std::endl;
+	log_debug ("values: \n");;
 	std::cout << "\tapp          = " << group.app          << std::endl;
 	std::cout << "\thex          = " << group.hex          << std::endl;
 	std::cout << "\tlist         = " << group.list         << std::endl;
@@ -271,9 +271,9 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 
 	if (!group.app) {
 		if (group.theme.size())
-			std::cout << "theme without app" << std::endl;
+			log_debug ("theme without app\n");;
 		if ((group.x != -1) || (group.y != -1) || (group.w != -1) || (group.h != -1))
-			std::cout << "coords without app" << std::endl;
+			log_debug ("coords without app\n");;
 	}
 
 	bool running = !!window;
@@ -289,7 +289,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		create_window();
 
 		if (group.config.size()) {
-			std::cout << "config:" << std::endl;
+			log_debug ("config:\n");;
 			for (auto c : group.config) {
 				std::cout << '\t' << c << std::endl;
 				window->load_config (c);
@@ -303,7 +303,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		gui_app->set_theme  ("config/theme.conf");
 
 		if (group.theme.size()) {
-			std::cout << "theme:" << std::endl;
+			log_debug ("theme:\n");;
 			for (auto t : group.theme) {
 				std::cout << '\t' << t << std::endl;
 				window->load_theme (t);
@@ -331,7 +331,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		if (running) {
 			top_level = main_app->get_top_level();	// Default to what's there
 		} else {
-			//std::cout << "scan all disks" << std::endl;
+			//log_debug ("scan all disks\n");;
 			//Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
 			top_level = main_app->scan (disks);
 		}

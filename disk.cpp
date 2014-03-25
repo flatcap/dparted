@@ -22,7 +22,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include <cstdio>
 #include <sstream>
 #include <string>
 

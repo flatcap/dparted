@@ -21,7 +21,6 @@
 #include <glibmm.h>
 #include <giomm/menu.h>
 
-#include <iostream>
 #include <algorithm>
 
 #include "window.h"
@@ -85,10 +84,10 @@ Window::Window (void)
 	bool sb = false;
 	ConfigFilePtr cfg = gui_app->get_config();
 	if (cfg) {
-		try { tb = cfg->get_bool ("display.tool_bar");   } catch (const char *msg) { std::cout << "notb\n"; }
-		try { gx = cfg->get_bool ("display.graphics");   } catch (const char *msg) { std::cout << "nogx\n"; }
-		try { tv = cfg->get_bool ("display.tree_view");  } catch (const char *msg) { std::cout << "notv\n"; }
-		try { sb = cfg->get_bool ("display.status_bar"); } catch (const char *msg) { std::cout << "nosb\n"; }
+		try { tb = cfg->get_bool ("display.tool_bar");   } catch (const char *msg) { /*std::cout << "notb\n";*/ }
+		try { gx = cfg->get_bool ("display.graphics");   } catch (const char *msg) { /*std::cout << "nogx\n";*/ }
+		try { tv = cfg->get_bool ("display.tree_view");  } catch (const char *msg) { /*std::cout << "notv\n";*/ }
+		try { sb = cfg->get_bool ("display.status_bar"); } catch (const char *msg) { /*std::cout << "nosb\n";*/ }
 	}
 
 	show_all_children();
@@ -277,7 +276,7 @@ Window::on_menu_choices_other (int parameter)
 void
 Window::on_menu_file_new_generic (void)
 {
-	std::cout << "A File|New menu item was selected." << std::endl;
+	log_debug ("A File|New menu item was selected.\n");;
 }
 
 void
@@ -293,7 +292,7 @@ Window::on_menu_file_quit (void)
 
 	if (ask_user) {
 		ContainerPtr c;
-		QuestionPtr q = Question::create (c, [] (QuestionPtr UNUSED(q)) { std::cout << "reply\n"; } );
+		QuestionPtr q = Question::create (c, [] (QuestionPtr UNUSED(q)) { /*std::cout << "reply\n";*/ } );
 		q->title = "Quit Application?";
 		q->question = "Are you sure?";
 		q->answers = { "No", "Yes" };
@@ -312,7 +311,7 @@ Window::on_menu_file_quit (void)
 void
 Window::on_menu_others (void)
 {
-	std::cout << "A menu item was selected." << std::endl;
+	log_debug ("A menu item was selected.\n");;
 }
 
 void
@@ -734,13 +733,13 @@ Window::on_action_general (std::string section, std::string name)
 	log_debug ("%s: %s.%s\n", __FUNCTION__, section.c_str(), name.c_str());
 
 	if (!focus) {
-		std::cout << "no focus" << std::endl;
+		log_debug ("no focus\n");;
 		return;
 	}
 
 	ContainerPtr c = focus->get_container();
 	if (!c) {
-		std::cout << "no container" << std::endl;
+		log_debug ("no container\n");;
 		return;
 	}
 

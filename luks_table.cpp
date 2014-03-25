@@ -173,7 +173,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 void
 LuksTable::on_reply (QuestionPtr UNUSED(q))
 {
-	std::cout << "user has answered question" << std::endl;
+	log_debug ("user has answered question\n");;
 }
 
 

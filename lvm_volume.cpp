@@ -58,14 +58,14 @@ LvmVolume::accept (Visitor& v)
 		return false;
 
 	if (!visit_children(v)) {
-		std::cout << "LvmVolume visit_children failed" << std::endl;
+		log_debug ("LvmVolume visit_children failed\n");;
 		return false;
 	}
 
 	for (auto i : metadata) {
 		LvmLinearPtr meta = std::dynamic_pointer_cast<LvmLinear>(i);
 		if (!v.visit(meta)) {
-			std::cout << "LvmVolume metadata failed" << std::endl;
+			log_debug ("LvmVolume metadata failed\n");;
 			return false;
 		}
 	}
@@ -74,7 +74,7 @@ LvmVolume::accept (Visitor& v)
 		//XXX need most-derived type, really
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(i);
 		if (!v.visit(vol)) {
-			std::cout << "LvmVolume metadata failed" << std::endl;
+			log_debug ("LvmVolume metadata failed\n");;
 			return false;
 		}
 	}

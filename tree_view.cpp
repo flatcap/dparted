@@ -17,7 +17,6 @@
  */
 
 #include <cstdlib>
-#include <iostream>
 
 #include "tree_view.h"
 #include "log_trace.h"
@@ -286,7 +285,7 @@ TreeView::set_focus (GfxContainerPtr& c)
 		return;
 
 	if (c->treepath.empty()) {
-		//std::cout << "TreeView: not visible" << std::endl;
+		//log_debug ("TreeView: not visible\n");;
 		treeselection->unselect_all();
 		return;
 	}
@@ -369,13 +368,13 @@ TreeView::get_coords (int& x, int& y)
 {
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		std::cout << "No Window" << std::endl;
+		log_debug ("No Window\n");;
 		return false;
 	}
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		//std::cout << "No focus" << std::endl;
+		//log_debug ("No focus\n");;
 		return false;
 	}
 

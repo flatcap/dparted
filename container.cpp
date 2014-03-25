@@ -23,8 +23,6 @@
 #include <unistd.h>
 
 #include <iterator>
-#include <cstdio>
-#include <iostream>
 #include <set>
 #include <sstream>
 #include <string>

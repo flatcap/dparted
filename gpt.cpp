@@ -20,7 +20,6 @@
 #include <sstream>
 #include <vector>
 #include <utility>
-#include <iostream>
 #include <iterator>
 
 #include "gpt.h"

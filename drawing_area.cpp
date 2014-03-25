@@ -24,7 +24,6 @@
 
 #include <cmath>
 #include <cstdlib>
-#include <iostream>
 #include <sstream>
 
 #include "drawing_area.h"
@@ -692,7 +691,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 
 	ContainerPtr c = gfx->get_container();
 	if (!c) {
-		std::cout << "No focus" << std::endl;
+		log_debug ("No focus\n");;
 		return;
 	}
 
@@ -709,20 +708,20 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	std::cout << std::endl;
 
 	if (actions.empty()) {
-		//std::cout << "No actions" << std::endl;
+		//log_debug ("No actions\n");;
 		//return;
 	}
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		std::cout << "No Window" << std::endl;
+		log_debug ("No Window\n");;
 		return;
 	}
 
 	dp->set_actions (actions);
 
 #if 0
-	std::cout << "Actions:" << std::endl;
+	log_debug ("Actions:\n");;
 	for (auto a : actions) {
 		int colour;
 		if (a.enabled)
@@ -992,13 +991,13 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		std::cout << "No Window" << std::endl;
+		log_debug ("No Window\n");;
 		return false;
 	}
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		//std::cout << "No focus" << std::endl;
+		//log_debug ("No focus\n");;
 		return false;
 	}
 
@@ -1051,12 +1050,12 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		std::cout << "No Window" << std::endl;
+		log_debug ("No Window\n");;
 		return false;
 	}
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		//std::cout << "No focus" << std::endl;
+		//log_debug ("No focus\n");;
 		c = get_focus (0, 0);
 		if (c) {
 			dp->set_focus(c);
@@ -1300,13 +1299,13 @@ DrawingArea::get_coords (int& x, int& y)
 	//std::cout << "top_level: " << get_toplevel()->get_name() << std::endl;
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		std::cout << "No Window" << std::endl;
+		log_debug ("No Window\n");;
 		return false;
 	}
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		//std::cout << "No focus" << std::endl;
+		//log_debug ("No focus\n");;
 		return false;
 	}
 
@@ -1351,18 +1350,18 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 {
 	ContainerPtr c = gfx->get_container();
 	if (!c) {
-		std::cout << "No gfx_container" << std::endl;
+		log_debug ("No gfx_container\n");;
 		return;
 	}
 
 	std::vector<Action> actions = c->get_actions();
 	if (actions.empty()) {
-		//std::cout << "No actions" << std::endl;
+		//log_debug ("No actions\n");;
 		//return;
 	}
 
 #if 0
-	std::cout << "Actions:" << std::endl;
+	log_debug ("Actions:\n");;
 	for (auto a : actions) {
 		std::cout << "\t" << a << std::endl;
 	}
