@@ -136,10 +136,10 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 			dump_hex2 (buf, 0, size);
 		} else {
 			dump_hex2 (buf, 0, abbr);
-			std::cout << "\t~~~\n";
+			log_debug ("\t~~~\n");
 			dump_hex2 (buf, size-abbr, abbr);
 		}
-		std::cout << std::endl;
+		log_debug ("\n");
 	} else {
 		std::cout << "\033[01;31m" << c << "\033[0m\n";
 	}

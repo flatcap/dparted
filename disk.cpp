@@ -125,7 +125,7 @@ bool
 Disk::perform_action (Action action)
 {
 	if (action.name == "dummy.disk") {
-		std::cout << "Disk perform: " << action.name << std::endl;
+		log_debug ("Disk perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Block::perform_action (action);

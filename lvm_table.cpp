@@ -88,7 +88,7 @@ bool
 LvmTable::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_table") {
-		std::cout << "LvmTable perform: " << action.name << std::endl;
+		log_debug ("LvmTable perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Table::perform_action (action);

@@ -73,7 +73,7 @@ bool
 MdPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.md_partition") {
-		std::cout << "MdPartition perform: " << action.name << std::endl;
+		log_debug ("MdPartition perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

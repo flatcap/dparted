@@ -37,6 +37,7 @@
 #include "loop.h"
 #include "main.h"
 #include "visitor.h"
+#include "log.h"
 
 Block::Block (void)
 {
@@ -88,7 +89,7 @@ bool
 Block::perform_action (Action action)
 {
 	if (action.name == "dummy.block") {
-		std::cout << "Block perform: " << action.name << std::endl;
+		log_debug ("Block perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);

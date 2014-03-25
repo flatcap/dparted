@@ -83,7 +83,7 @@ bool
 Extended::perform_action (Action action)
 {
 	if (action.name == "dummy.extended") {
-		std::cout << "Extended perform: " << action.name << std::endl;
+		log_debug ("Extended perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Msdos::perform_action (action);

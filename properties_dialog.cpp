@@ -114,7 +114,7 @@ PropertiesDialog::on_dialog_response (int response_id)
 {
 	switch (response_id) {
 		case Gtk::RESPONSE_DELETE_EVENT:
-			//log_debug ("Delete clicked.\n");;
+			//log_debug ("Delete clicked.\n");
 			break;
 		default:
 			std::cout << "Unexpected button clicked, response_id=" << response_id << std::endl;
@@ -127,7 +127,7 @@ PropertiesDialog::on_dialog_response (int response_id)
 bool
 PropertiesDialog::on_parent_delete (GdkEventAny* UNUSED(event))
 {
-	std::cout << "parent delete\n";
+	log_debug ("parent delete\n");
 	delete this;
 	return false;
 }
@@ -190,7 +190,7 @@ PropertiesDialog::my_show (void)
 	//LOG_TRACE;
 	ContainerPtr c = container->get_container();
 	if (!c) {
-		log_debug ("no container\n");;
+		log_debug ("no container\n");
 		return;
 	}
 

@@ -77,7 +77,7 @@ bool
 Ntfs::perform_action (Action action)
 {
 	if (action.name == "dummy.ntfs") {
-		std::cout << "Ntfs perform: " << action.name << std::endl;
+		log_debug ("Ntfs perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Filesystem::perform_action (action);

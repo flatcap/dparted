@@ -146,7 +146,7 @@ bool
 Loop::perform_action (Action action)
 {
 	if (action.name == "dummy.loop") {
-		std::cout << "Loop perform: " << action.name << std::endl;
+		log_debug ("Loop perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Block::perform_action (action);

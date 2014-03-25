@@ -74,7 +74,7 @@ bool
 LvmMirror::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_mirror") {
-		std::cout << "LvmMirror perform: " << action.name << std::endl;
+		log_debug ("LvmMirror perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

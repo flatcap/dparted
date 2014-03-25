@@ -85,7 +85,7 @@ bool
 Gpt::perform_action (Action action)
 {
 	if (action.name == "dummy.gpt") {
-		std::cout << "Gpt perform: " << action.name << std::endl;
+		log_debug ("Gpt perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Table::perform_action (action);
@@ -112,21 +112,21 @@ delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 		 */
 		if (start == (*it).first) {
 			if (finish == (*it).second) {		//1
-				// std::cout << "1\n";
+				// log_debug ("1\n");
 				region.erase (it);
 				break;
 			} else {				//2
-				// std::cout << "2\n";
+				// log_debug ("2\n");
 				(*it).first = finish;
 				break;
 			}
 		} else {
 			if (finish == (*it).second) {		//3
-				// std::cout << "3\n";
+				// log_debug ("3\n");
 				(*it).second = start;
 				break;
 			} else {				//4
-				// std::cout << "4\n";
+				// log_debug ("4\n");
 				int end = (*it).second;
 				(*it).second = start;
 				region.insert (it+1, { finish, end });

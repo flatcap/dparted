@@ -121,7 +121,7 @@ bool
 LvmGroup::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_group") {
-		std::cout << "LvmGroup perform: " << action.name << std::endl;
+		log_debug ("LvmGroup perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Whole::perform_action (action);

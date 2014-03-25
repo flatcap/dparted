@@ -70,7 +70,7 @@ bool
 MsdosPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.msdos_partition") {
-		std::cout << "MsdosPartition perform: " << action.name << std::endl;
+		log_debug ("MsdosPartition perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

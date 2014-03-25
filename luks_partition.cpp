@@ -73,7 +73,7 @@ bool
 LuksPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.luks_partition") {
-		std::cout << "LuksPartition perform: " << action.name << std::endl;
+		log_debug ("LuksPartition perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

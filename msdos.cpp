@@ -88,7 +88,7 @@ bool
 Msdos::perform_action (Action action)
 {
 	if (action.name == "dummy.msdos") {
-		std::cout << "Msdos perform: " << action.name << std::endl;
+		log_debug ("Msdos perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Table::perform_action (action);

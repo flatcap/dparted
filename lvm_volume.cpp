@@ -58,14 +58,14 @@ LvmVolume::accept (Visitor& v)
 		return false;
 
 	if (!visit_children(v)) {
-		log_debug ("LvmVolume visit_children failed\n");;
+		log_debug ("LvmVolume visit_children failed\n");
 		return false;
 	}
 
 	for (auto i : metadata) {
 		LvmLinearPtr meta = std::dynamic_pointer_cast<LvmLinear>(i);
 		if (!v.visit(meta)) {
-			log_debug ("LvmVolume metadata failed\n");;
+			log_debug ("LvmVolume metadata failed\n");
 			return false;
 		}
 	}
@@ -74,7 +74,7 @@ LvmVolume::accept (Visitor& v)
 		//XXX need most-derived type, really
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(i);
 		if (!v.visit(vol)) {
-			log_debug ("LvmVolume metadata failed\n");;
+			log_debug ("LvmVolume metadata failed\n");
 			return false;
 		}
 	}
@@ -102,7 +102,7 @@ bool
 LvmVolume::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_volume") {
-		std::cout << "LvmVolume perform: " << action.name << std::endl;
+		log_debug ("LvmVolume perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Volume::perform_action (action);

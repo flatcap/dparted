@@ -70,7 +70,7 @@ bool
 MdVolume::perform_action (Action action)
 {
 	if (action.name == "dummy.md_volume") {
-		std::cout << "MdVolume perform: " << action.name << std::endl;
+		log_debug ("MdVolume perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Volume::perform_action (action);

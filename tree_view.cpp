@@ -285,7 +285,7 @@ TreeView::set_focus (GfxContainerPtr& c)
 		return;
 
 	if (c->treepath.empty()) {
-		//log_debug ("TreeView: not visible\n");;
+		//log_debug ("TreeView: not visible\n");
 		treeselection->unselect_all();
 		return;
 	}
@@ -347,13 +347,13 @@ TreeView::setup_popup (void)
 void
 TreeView::on_menu_select (int UNUSED(option))
 {
-	std::cout << "A popup menu item was selected.\n";
+	log_debug ("A popup menu item was selected.\n");
 
 	Glib::RefPtr<Gtk::TreeView::Selection> refSelection = get_selection();
 	if (refSelection) {
 		Gtk::TreeModel::iterator iter = refSelection->get_selected();
 		if (iter) {
-			std::cout << "selected something\n";
+			log_debug ("selected something\n");
 		}
 	}
 }
@@ -368,13 +368,13 @@ TreeView::get_coords (int& x, int& y)
 {
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		log_debug ("No Window\n");;
+		log_debug ("No Window\n");
 		return false;
 	}
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		//log_debug ("No focus\n");;
+		//log_debug ("No focus\n");
 		return false;
 	}
 

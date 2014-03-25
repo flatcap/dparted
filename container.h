@@ -32,6 +32,7 @@
 
 #include "property.h"
 #include "mmap.h"
+#include "log.h"
 
 class Container;
 class Visitor;
@@ -171,12 +172,12 @@ protected:
 
 		if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
 			if (!var2) {
-				log_debug ("missing var2, can't create percentage\n");;
+				log_debug ("missing var2, can't create percentage\n");
 				return pv;
 			}
 
 			if (pv->type != var2->type) {
-				log_debug ("types differ, can't create percentage\n");;
+				log_debug ("types differ, can't create percentage\n");
 				return pv;
 			}
 
@@ -206,12 +207,12 @@ protected:
 
 		if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
 			if (!var2) {
-				log_debug ("missing var2, can't create percentage\n");;
+				log_debug ("missing var2, can't create percentage\n");
 				return pf;
 			}
 
 			if (pf->type != var2->type) {
-				log_debug ("types differ, can't create percentage\n");;
+				log_debug ("types differ, can't create percentage\n");
 				return pf;
 			}
 

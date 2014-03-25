@@ -77,7 +77,7 @@ bool
 Btrfs::perform_action (Action action)
 {
 	if (action.name == "dummy.btrfs") {
-		std::cout << "Btrfs perform: " << action.name << std::endl;
+		log_debug ("Btrfs perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -174,11 +174,11 @@ btrfs_show_super (const std::string& dev)
 		if (line.substr (0, 11) == "superblock:") {
 			std::string dev2;
 			if (!parse_header (line, dev2)) {
-				log_debug ("btrfs: bad header\n");;
+				log_debug ("btrfs: bad header\n");
 				break;
 			}
 			if (dev != dev2) {
-				log_debug ("btrfs: devices don't match\n");;
+				log_debug ("btrfs: devices don't match\n");
 				break;
 			}
 			continue;
@@ -212,7 +212,7 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 
 	std::map<std::string,std::string> info = btrfs_show_super (dev);
 	if (info.empty()) {
-		log_debug ("btrfs_show_super failed\n");;
+		log_debug ("btrfs_show_super failed\n");
 		return;
 	}
 

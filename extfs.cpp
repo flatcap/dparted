@@ -77,7 +77,7 @@ bool
 Extfs::perform_action (Action action)
 {
 	if (action.name == "dummy.extfs") {
-		std::cout << "Extfs perform: " << action.name << std::endl;
+		log_debug ("Extfs perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -184,7 +184,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 
 	std::map<std::string,std::string> info = tune2fs (dev);
 	if (info.empty()) {
-		log_debug ("tune2fs failed\n");;
+		log_debug ("tune2fs failed\n");
 		return;
 	}
 

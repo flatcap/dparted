@@ -70,7 +70,7 @@ bool
 MdMirror::perform_action (Action action)
 {
 	if (action.name == "dummy.md_mirror") {
-		std::cout << "MdMirror perform: " << action.name << std::endl;
+		log_debug ("MdMirror perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return MdVolume::perform_action (action);

@@ -108,7 +108,7 @@ GuiApp::my_idle (void)
 		return false;	// detach
 	}
 
-	//log_debug ("GuiApp is idle\n");;
+	//log_debug ("GuiApp is idle\n");
 	return false;	// continue
 }
 
@@ -194,7 +194,7 @@ void
 GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
 	//LOG_TRACE;
-	log_debug ("Open files:\n");;
+	log_debug ("Open files:\n");
 	for (auto f : files) {
 		std::cout << f->get_uri() << std::endl;
 	}
@@ -231,22 +231,22 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	}
 
 #if 0
-	log_debug ("values: \n");;
-	std::cout << "\tapp          = " << group.app          << std::endl;
-	std::cout << "\thex          = " << group.hex          << std::endl;
-	std::cout << "\tlist         = " << group.list         << std::endl;
-	std::cout << "\tproperties   = " << group.properties   << std::endl;
-	std::cout << "\tquit         = " << group.quit         << std::endl;
-	std::cout << "\tx            = " << group.x            << std::endl;
-	std::cout << "\ty            = " << group.y            << std::endl;
-	std::cout << "\tw            = " << group.w            << std::endl;
-	std::cout << "\th            = " << group.h            << std::endl;
+	log_debug ("values: \n");
+	log_debug ("\tapp          = %s\n", group.app);
+	log_debug ("\thex          = %s\n", group.hex);
+	log_debug ("\tlist         = %s\n", group.list);
+	log_debug ("\tproperties   = %s\n", group.properties);
+	log_debug ("\tquit         = %s\n", group.quit);
+	log_debug ("\tx            = %s\n", group.x);
+	log_debug ("\ty            = %s\n", group.y);
+	log_debug ("\tw            = %s\n", group.w);
+	log_debug ("\th            = %s\n", group.h);
 #ifdef DP_DOT
-	std::cout << "\tdot-display  = " << group.dot_display  << std::endl;
-	std::cout << "\tdot-resize   = " << group.dot_resize   << std::endl;
-	std::cout << "\tdot-separate = " << group.dot_separate << std::endl;
-	std::cout << "\tdot-save_gv  = " << group.dot_save_gv  << std::endl;
-	std::cout << "\tdot-save_png = " << group.dot_save_png << std::endl;
+	log_debug ("\tdot-display  = %s\n", group.dot_display);
+	log_debug ("\tdot-resize   = %s\n", group.dot_resize);
+	log_debug ("\tdot-separate = %s\n", group.dot_separate);
+	log_debug ("\tdot-save_gv  = %s\n", group.dot_save_gv);
+	log_debug ("\tdot-save_png = %s\n", group.dot_save_png);
 #endif
 #endif
 
@@ -271,9 +271,9 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 
 	if (!group.app) {
 		if (group.theme.size())
-			log_debug ("theme without app\n");;
+			log_debug ("theme without app\n");
 		if ((group.x != -1) || (group.y != -1) || (group.w != -1) || (group.h != -1))
-			log_debug ("coords without app\n");;
+			log_debug ("coords without app\n");
 	}
 
 	bool running = !!window;
@@ -289,7 +289,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		create_window();
 
 		if (group.config.size()) {
-			log_debug ("config:\n");;
+			log_debug ("config:\n");
 			for (auto c : group.config) {
 				std::cout << '\t' << c << std::endl;
 				window->load_config (c);
@@ -303,7 +303,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		gui_app->set_theme  ("config/theme.conf");
 
 		if (group.theme.size()) {
-			log_debug ("theme:\n");;
+			log_debug ("theme:\n");
 			for (auto t : group.theme) {
 				std::cout << '\t' << t << std::endl;
 				window->load_theme (t);
@@ -325,13 +325,13 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 				window->load_disk (d);
 			}
 		}
-		std::cout << std::endl;
+		log_debug ("\n");
 		top_level = main_app->scan (disks);
 	} else {
 		if (running) {
 			top_level = main_app->get_top_level();	// Default to what's there
 		} else {
-			//log_debug ("scan all disks\n");;
+			//log_debug ("scan all disks\n");
 			//Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
 			top_level = main_app->scan (disks);
 		}

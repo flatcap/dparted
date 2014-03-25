@@ -77,7 +77,7 @@ bool
 Partition::perform_action (Action action)
 {
 	if (action.name == "dummy.partition") {
-		std::cout << "Partition perform: " << action.name << std::endl;
+		log_debug ("Partition perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);

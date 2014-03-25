@@ -95,7 +95,7 @@ bool
 Filesystem::perform_action (Action action)
 {
 	if (action.name == "dummy.filesystem") {
-		std::cout << "Filesystem perform: " << action.name << std::endl;
+		log_debug ("Filesystem perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -153,7 +153,7 @@ Filesystem::get_mounted_usage (ContainerPtr UNUSED(parent))
 void
 Filesystem::delete_filesystem (void)
 {
-	std::cout << __PRETTY_FUNCTION__ << std::endl;
+	LOG_TRACE;
 
 	Question q { "Delete filesystem",
 		     "Are you sure?",

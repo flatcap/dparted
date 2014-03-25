@@ -86,7 +86,7 @@ bool
 MdTable::perform_action (Action action)
 {
 	if (action.name == "dummy.md_table") {
-		std::cout << "MdTable perform: " << action.name << std::endl;
+		log_debug ("MdTable perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Table::perform_action (action);

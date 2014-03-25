@@ -217,7 +217,7 @@ App::scan (const std::vector<std::string>& files)
 			//XXX LOG
 			break;
 		}
-		//std::cout << std::endl;
+		//log_debug ("\n");
 	}
 
 #ifdef DP_LVM

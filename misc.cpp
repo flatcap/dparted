@@ -78,7 +78,7 @@ bool
 Misc::perform_action (Action action)
 {
 	if (action.name == "dummy.misc") {
-		std::cout << "Misc perform: " << action.name << std::endl;
+		log_debug ("Misc perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);

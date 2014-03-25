@@ -197,10 +197,10 @@ bool
 Container::perform_action (Action action)
 {
 	if (action.name == "dummy.container") {
-		std::cout << "Container perform: " << action.name << std::endl;
+		log_debug ("Container perform: "); << action.name << std::endl;
 		return true;
 	} else {
-		std::cout << "Unknown action: " << action.name << std::endl;
+		log_debug ("Unknown action: "); << action.name << std::endl;
 		return false;
 	}
 }
@@ -331,7 +331,7 @@ Container::get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces)
 	//spaces[offset] = size
 	//spaces[0] = 123;
 
-	return spaces.size();;
+	return spaces.size();
 }
 
 
@@ -375,7 +375,7 @@ void deleter (Mmap* m)
 
 	std::tie (size, ptr) = *m;
 
-	//std::cout << "mmap deleter: " << ptr << std::endl;
+	//log_debug ("mmap deleter: "); << ptr << std::endl;
 	munmap (ptr, size);
 
 	delete m;
@@ -496,7 +496,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 bool
 Container::is_a (const std::string& t)
 {
-	//std::cout << "my type = " << type.back() << ", compare to " << t << "\n";
+	//log_debug ("my type = "); << type.back() << ", compare to " << t << "\n";
 
 	// Start with the most derived type
 	for (auto it = type.rbegin(); it != type.rend(); it++) {
@@ -569,7 +569,7 @@ ContainerPtr
 Container::get_smart (void)
 {
 	if (weak.expired()) {
-		std::cout << "SMART\n";
+		log_debug ("SMART\n");;
 		//XXX who created us? code error
 		ContainerPtr c (this);
 		std::cout << c << std::endl;

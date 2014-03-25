@@ -92,7 +92,7 @@ bool
 LuksTable::perform_action (Action action)
 {
 	if (action.name == "dummy.luks_table") {
-		std::cout << "LuksTable perform: " << action.name << std::endl;
+		log_debug ("LuksTable perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -173,7 +173,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 void
 LuksTable::on_reply (QuestionPtr UNUSED(q))
 {
-	log_debug ("user has answered question\n");;
+	log_debug ("user has answered question\n");
 }
 
 

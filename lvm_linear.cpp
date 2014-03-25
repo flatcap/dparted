@@ -73,7 +73,7 @@ bool
 LvmLinear::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_linear") {
-		std::cout << "LvmLinear perform: " << action.name << std::endl;
+		log_debug ("LvmLinear perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

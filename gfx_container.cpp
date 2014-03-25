@@ -121,13 +121,13 @@ GfxContainer::init (ContainerPtr c)
 		usage      = process_bool  (u);
 
 #if 0
-		std::cout << "Config\n";
-		std::cout << "\tbackground: " << background     << std::endl;
-		std::cout << "\tcolour:     " << colour         << std::endl;
-		std::cout << "\tdisplay:    " << display        << std::endl;
-		std::cout << "\ticon:       " << icon           << std::endl;
-		std::cout << "\tlabel:      " << label_template << std::endl;
-		std::cout << "\tusage:      " << usage          << std::endl;
+		log_debug ("Config\n");
+		log_debug ("\tbackground: %s\n", background);
+		log_debug ("\tcolour:     %s\n", colour);
+		log_debug ("\tdisplay:    %s\n", display.c_str());
+		log_debug ("\ticon:       %s\n", icon);
+		log_debug ("\tlabel:      %s\n", label_template.c_str());
+		log_debug ("\tusage:      %d\n", usage);
 #endif
 
 	} catch (const std::string& e) {
@@ -236,17 +236,17 @@ GfxContainer::dump (void)
 	}
 
 #if 0
-	std::cout << tabs << "----------------------" << std::endl;
-	std::cout << tabs << "display        = " << display        << std::endl;
-	std::cout << tabs << "colour         = " << colour         << std::endl;
-	std::cout << tabs << "background     = " << background     << std::endl;
-	std::cout << tabs << "icon           = " << icon           << std::endl;
-	std::cout << tabs << "label          = " << label          << std::endl;
-	std::cout << tabs << "label_template = " << label_template << std::endl;
-	std::cout << tabs << "bytes_size     = " << bytes_size     << std::endl;
-	std::cout << tabs << "bytes_used     = " << bytes_used     << std::endl;
-	std::cout << tabs << "usage          = " << usage          << std::endl;
-	std::cout << tabs << "seqnum         = " << seqnum         << std::endl;
+	log_debug ("%s----------------------", tabs.c_str);
+	log_debug ("%sdisplay        = ", tabs.c_str(), display);
+	log_debug ("%scolour         = ", tabs.c_str(), colour);
+	log_debug ("%sbackground     = ", tabs.c_str(), background);
+	log_debug ("%sicon           = ", tabs.c_str(), icon);
+	log_debug ("%slabel          = ", tabs.c_str(), label);
+	log_debug ("%slabel_template = ", tabs.c_str(), label_template);
+	log_debug ("%sbytes_size     = ", tabs.c_str(), bytes_size);
+	log_debug ("%sbytes_used     = ", tabs.c_str(), bytes_used);
+	log_debug ("%susage          = ", tabs.c_str(), usage);
+	log_debug ("%sseqnum         = ", tabs.c_str(), seqnum);
 #endif
 
 	indent++;
@@ -341,7 +341,7 @@ GfxContainer::get_tooltip (void)
 
 bool GfxContainer::mouse_event (void)
 {
-	//std::cout << __PRETTY_FUNCTION__ << std::endl;
+	//LOG_TRACE;
 	return false;
 }
 
@@ -367,7 +367,7 @@ GfxContainerPtr
 GfxContainer::get_smart (void)
 {
 	if (weak.expired()) {
-		std::cout << "SMART\n";
+		log_debug ("SMART\n");
 		//XXX who created us? - code error
 		GfxContainerPtr c (this);
 		std::cout << c << std::endl;

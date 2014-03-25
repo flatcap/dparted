@@ -92,7 +92,7 @@ bool
 Table::perform_action (Action action)
 {
 	if (action.name == "dummy.table") {
-		std::cout << "Table perform: " << action.name << std::endl;
+		log_debug ("Table perform: %s\n", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);
