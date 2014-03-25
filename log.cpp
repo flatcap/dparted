@@ -37,7 +37,7 @@ log (const char* format, va_list args)
 	int count = vsnprintf (buffer, sizeof (buffer), format, args);
 	//XXX check count against buffer size
 
-	log_debug ("%s\n", buffer.c_str());
+	log_debug ("%s\n", buffer);
 
 	return count;
 }

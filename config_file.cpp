@@ -24,6 +24,7 @@
 
 #include "config_file.h"
 #include "stringnum.h"
+#include "log.h"
 
 ConfigFile::ConfigFile (void)
 {
@@ -106,7 +107,7 @@ ConfigFile::read_file (const std::string& filename)
 		log_debug ("I/O error while reading file.\n");
 		return false;
 	} catch (const libconfig::ParseException& pex) {
-		log_debug ("Parse error at "); << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << "\n";
+		log_debug ("Parse error at %s:%d - %s\n", pex.getFile(), pex.getLine(), pex.getError());
 		return false;
 	}
 
@@ -125,7 +126,7 @@ ConfigFile::dump_config (void)
 {
 	log_debug ("Config:\n");
 	for (auto c : config) {
-		log_debug ("\t"); << c.first << " = " << c.second << "\n";
+		log_debug ("\t%s = %s\n", c.first.c_str(), c.second.c_str());
 	}
 }
 
