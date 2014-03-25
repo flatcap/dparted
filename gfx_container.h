@@ -47,7 +47,7 @@ public:
 	std::vector<GfxContainerPtr> children;
 
 	bool sync (void);
-	void dump (void);
+	void dump2 (void);
 
 	bool set_focus (bool focus);
 	bool get_focus (void);

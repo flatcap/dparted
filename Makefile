@@ -19,21 +19,21 @@
 # Configurables
 V	?= 0		# Verbose
 P	?= 0		# Profiling
-BTRFS	?= 0
-DOT	?= 0
+BTRFS	?= 1
+DOT	?= 1
 EXTFS	?= 1
-FS_MISC	?= 0
+FS_MISC	?= 1
 GPT	?= 1
-GUI	?= 0
-HEX	?= 0
-LIST	?= 0
-LUKS	?= 0
+GUI	?= 1
+HEX	?= 1
+LIST	?= 1
+LUKS	?= 1
 LVM	?= 1
-MD	?= 0
-MSDOS	?= 0
-NTFS	?= 0
-PROP	?= 0
-UNUSED	?= 0
+MD	?= 1
+MSDOS	?= 1
+NTFS	?= 1
+PROP	?= 1
+UNUSED	?= 1
 
 CC	= g++	#clang++
 SCAN	= scan-build

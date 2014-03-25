@@ -187,7 +187,7 @@ btrfs_show_super (const std::string& dev)
 		} else if (line.empty()) {
 			continue;
 		} else if (!parse_line (line, key, value)) {
-			log_debug ("btrfs failed: %s\n", line.cstr());
+			log_debug ("btrfs failed: %s\n", line.c_str());
 			continue;
 		}
 
@@ -227,7 +227,7 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 		//log_debug ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
 
 		more_props.push_back (value);
-		declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str());
+		declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str(), 0);
 	}
 }
 

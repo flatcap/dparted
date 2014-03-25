@@ -100,7 +100,7 @@ GfxContainer::init (ContainerPtr c)
 	if (!c)
 		return false;
 
-	std::string path = c->get_path();
+	std::string path = c->get_path_type();
 	name = c->name;
 	type = c->type.back();
 	device = c->get_device_name();
@@ -226,7 +226,7 @@ bool GfxContainer::update_info (void)
 }
 
 void
-GfxContainer::dump (void)
+GfxContainer::dump2 (void)
 {
 	static int indent = 0;
 	std::string tabs;
@@ -470,7 +470,7 @@ GfxContainer::get_right (void)
 const char*
 GfxContainer::dump (void)
 {
-	stringstream s;
+	std::stringstream s;
 	s << this;
 	return s.str().c_str();
 }

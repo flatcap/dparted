@@ -336,7 +336,7 @@ Window::on_menu_toggle (void)
 void
 Window::on_menu_view (int option)
 {
-	log_debug ("on_menu_view: "); << option << "\n";
+	log_debug ("on_menu_view: %d\n", option);
 
 	bool val = false;
 	switch (option) {
@@ -672,7 +672,7 @@ Window::init_menubar (Gtk::Box& box)
 	try {
 		m_refBuilder->add_from_string (ui_info);
 	} catch (const Glib::Error& ex) {
-		log_debug ("building menus failed: "); << ex.what();
+		log_debug ("building menus failed: %s\n", ex.what().c_str());
 	}
 
 	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object ("dparted-menu");
@@ -710,7 +710,7 @@ Window::set_actions (std::vector<Action>& list)
 			//log_debug ("Enable: "); << a.name << "\n";
 			it->second->set_enabled (true);
 		} else {
-			log_debug ("Can't find "); << a.name << "\n";
+			log_debug ("Can't find %s\n", a.name.c_str());
 		}
 	}
 }

@@ -210,7 +210,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 		key = make_key (desc);
 
 		more_props.push_back (value);
-		declare_prop_array (section.c_str(), key.c_str(), more_props, more_props.size()-1, desc.c_str());
+		declare_prop_array (section.c_str(), key.c_str(), more_props, more_props.size()-1, desc.c_str(), 0);
 	}
 
 	//log_debug ("%ld, %ld, %ld\n", clust, csize, cfree);
