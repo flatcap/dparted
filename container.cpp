@@ -404,7 +404,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		if (p) {
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
-			std::cout << this << "\n";	//CONTAINER
+			log_debug ("%s\n", this->dump());
 			log_error ("%s: no device and no parent\n", __FUNCTION__);
 			return nullptr;
 		}
@@ -572,7 +572,7 @@ Container::get_smart (void)
 		log_debug ("SMART\n");;
 		//XXX who created us? code error
 		ContainerPtr c (this);
-		std::cout << c << "\n";	//CONTAINER
+		log_debug ("%s\n", c->dump());
 		weak = c;
 	}
 	return weak.lock();
@@ -867,6 +867,14 @@ Container::get_uuid_short (void)
 	}
 
 	return u;
+}
+
+const char*
+Container::dump (void)
+{
+	stringstream s;
+	s << this;
+	return s.str().c_str();
 }
 
 

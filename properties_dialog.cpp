@@ -117,7 +117,7 @@ PropertiesDialog::on_dialog_response (int response_id)
 			//log_debug ("Delete clicked.\n");
 			break;
 		default:
-			std::cout << "Unexpected button clicked, response_id=" << response_id << "\n";	//INT
+			log_debug ("Unexpected button clicked, response_id=%d\n", response_id);
 			break;
 	}
 
@@ -159,7 +159,7 @@ PropertiesDialog::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 bool
 PropertiesDialog::on_event (GdkEvent* event)
 {
-	std::cout << "type: " << event->type << "\n";	//INT
+	log_debug ("type: %d\n", event->type);
 	return false;
 }
 

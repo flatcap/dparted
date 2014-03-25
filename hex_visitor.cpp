@@ -78,7 +78,7 @@ HexVisitor::visit (ExtendedPtr c)
 
 	parent = c->parent.lock();
 	if (!parent) {
-		std::cout << "\033[01;31m" << c << "\033[0m\n";	//CONTAINER
+		log_debug ("\033[01;31m%s\033[0m\n", c->dump());
 		return false;
 	}
 
@@ -141,7 +141,7 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 		}
 		log_debug ("\n");
 	} else {
-		std::cout << "\033[01;31m" << c << "\033[0m\n";	//CONTAINER
+		log_debug ("\033[01;31m%s\033[0m\n", c->dump());
 	}
 
 }

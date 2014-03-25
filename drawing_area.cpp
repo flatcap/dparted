@@ -301,7 +301,7 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 
 	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
 		log_info ("draw_block: too narrow\n");
-		std::cout << cont << "\n";	//CONTAINER
+		log_debug ("%s\n", cont->dump());
 		return;
 	}
 
@@ -614,7 +614,7 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 {
 	GfxContainerPtr child;
 
-	//std::cout << "1: " << c << "\n";	//GFXCONT
+	//log_debug ("1: %s\n", c->dump());
 	if (!c)
 		return nullptr;
 
@@ -625,7 +625,7 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 		return nullptr;
 
 	child = c->children[0];
-	//std::cout << "2: " << child << "\n";	//GFXCONT
+	//log_debug ("2: %s\n", child->dump());
 	if (!child)
 		return nullptr;
 
@@ -636,7 +636,7 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 		return nullptr;
 
 	child = child->children[0];
-	//std::cout << "3: " << child << "\n";	//GFXCONT
+	//log_debug ("3: %s\n", child->dump());
 	if (!child)
 		return nullptr;
 
@@ -687,7 +687,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	if (!gfx)
 		return;
 
-	//std::cout << gfx << "\n";	//GFXCONT
+	log_debug ("%s\n", gfx->dump());
 
 	ContainerPtr c = gfx->get_container();
 	if (!c) {
@@ -831,7 +831,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	if (shape.w < TAB_WIDTH) {
 #if 0
 		log_debug ("draw_container: too narrow\n");
-		std::cout << cont << "\n";	//GFXCONT
+		log_debug ("%s\n", cont->dump());
 #endif
 		return;
 	}
@@ -1005,7 +1005,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 	int y = 0;
 	switch (ev->keyval) {
 		case GDK_KEY_Return:	// 65293 (0xFF0D)
-			//std::cout << "state = " << ev->state << "\n";	//INT
+			//log_debug ("state = %d\n", ev->state);
 			if (ev->state & GDK_MOD1_MASK) {		// Alt-Enter
 				on_menu_select (c, Action {"Properties", true });	// properties
 				handled = true;

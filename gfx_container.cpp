@@ -370,7 +370,7 @@ GfxContainer::get_smart (void)
 		log_debug ("SMART\n");
 		//XXX who created us? - code error
 		GfxContainerPtr c (this);
-		std::cout << c << "\n";	//GFXCONT
+		log_debug ("%s\n", c->dump());
 		weak = c;
 	}
 	return weak.lock();
@@ -466,4 +466,13 @@ GfxContainer::get_right (void)
 
 	return empty;
 }
+
+const char*
+GfxContainer::dump (void)
+{
+	stringstream s;
+	s << this;
+	return s.str().c_str();
+}
+
 

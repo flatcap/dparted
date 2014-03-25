@@ -115,6 +115,7 @@ public:
 	}
 
 	void sub_type (const char* name);
+	const char* dump (void);
 
 public:
 	//properties
@@ -262,6 +263,7 @@ protected:
 private:
 	void insert (long offset, long size, void* ptr);
 
+	std::string debug;		// Text representation of self
 };
 
 #endif // _CONTAINER_H_

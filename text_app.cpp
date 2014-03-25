@@ -52,12 +52,12 @@ TextApp::run (int argc, char **argv)
 #endif
 
 	ContainerPtr c1 = *top_level->get_children().begin();		// loop
-	// std::cout << c1 << "\n";	//CONTAINER
+	// log_debug ("%s\n", c1->dump());
 	ContainerPtr c2 = *c1->get_children().begin();			// gpt
 	// std::cout << c2 << " " << c2->get_children().size() << "\n";
 #if 0
 	for (auto i : c2->get_children()) {
-		std::cout << '\t' << i << "\n";	//CONTAINER
+		log_debug ("\t%s\n", i->dump());
 	}
 #endif
 	auto it = c2->get_children().begin();
@@ -65,7 +65,7 @@ TextApp::run (int argc, char **argv)
 	ContainerPtr c3 = *it;
 	ContainerPtr c4 = *c3->get_children().begin();
 
-	std::cout << c4 << "\n";	//CONTAINER
+	log_debug ("%s\n", c4->dump());
 	for (auto p : c4->get_all_props (true)) {
 		std::cout << p->name << "\t" << (std::string) *p<< "\n";
 	}

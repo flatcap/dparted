@@ -131,7 +131,7 @@ Window::my_idle (void)
 #if 1
 	std::vector<std::string> files;
 	ContainerPtr c = gui_app->scan (files);
-	//std::cout << c->get_children().size() << " children\n";	//INT
+	//log_debug ("%d\n", c->get_children().size());
 	GfxContainerPtr dummy;
 	m_g = GfxContainer::create (dummy, c);
 	set_data (m_g);

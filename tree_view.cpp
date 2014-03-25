@@ -56,7 +56,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 		Gtk::TreeModel::iterator s2 = s1->get_selected();
 		const Gtk::TreeModel::Row& s3 = *s2;
 		GfxContainerPtr c = s3[m_Columns.col_container];
-		std::cout << "Selection: " << c << "\n";	//GFXCONT
+		log_debug ("Selection: %s\n", c->dump());
 	}
 #endif
 
@@ -313,7 +313,7 @@ TreeView::on_selection_changed()
 
 	const Gtk::TreeModel::Row& row = *it;
 	GfxContainerPtr c = row[m_Columns.col_gfx_container];
-	//std::cout << "sel: " << c << "\n";	//GFXCONT
+	//log_debug ("sel: %s\n", c->dump());
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	dp->set_focus (c);
