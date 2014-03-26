@@ -16,6 +16,7 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 #include <cstring>
 #include <sstream>
 
@@ -89,8 +90,12 @@ Misc::perform_action (Action action)
 static bool
 is_empty (std::uint8_t* buffer, int bufsize)
 {
+	std::uint64_t* lptr = (std::uint64_t*) buffer;
+
+	bufsize /= sizeof (std::uint64_t);
+
 	for (int i = 0; i < bufsize; i++) {
-		if (buffer[i]) {
+		if (lptr[i]) {
 			return false;
 		}
 	}
@@ -104,9 +109,6 @@ is_random (std::uint8_t* buffer, int bufsize)
 {
 	double mean = 0;
 
-	if (bufsize > 4096)
-		bufsize = 4096;
-
 	for (int i = 0; i < bufsize; i++) {
 		mean += buffer[i];
 	}
@@ -117,7 +119,6 @@ is_random (std::uint8_t* buffer, int bufsize)
 
 	return ((mean > 125) && (mean < 130));
 }
-
 #endif
 
 bool
@@ -127,6 +128,9 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	if (!parent || !buffer || !bufsize)
 		return false;
+
+	// Let's not go crazy and examine the whole device:
+	bufsize = std::min (bufsize, (std::uint64_t) 102400);		// 100KiB
 
 	MiscPtr m;
 	if (is_empty (buffer, bufsize)) {
