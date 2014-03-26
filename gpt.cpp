@@ -138,7 +138,7 @@ read_guid (std::uint8_t* buffer)
 
 	ss << a << '-' << b << '-' << c << '-' << d << '-';
 
-	for (int i = 10; i < 16; ++i) {
+	for (int i = 10; i < 16; i++) {
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
