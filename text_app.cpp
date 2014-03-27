@@ -23,6 +23,9 @@
 #ifdef DP_LIST
 #include "list_visitor.h"
 #endif
+#ifdef DP_DOT
+#include "dot_visitor.h"
+#endif
 
 TextAppPtr text_app;
 
@@ -49,6 +52,13 @@ TextApp::run (int argc, char **argv)
 	ListVisitor lv;
 	top_level->accept (lv);
 	lv.list();
+#endif
+
+#ifdef DP_DOT
+	DotVisitor dv;
+	dv.resize = 60;
+	top_level->accept (dv);
+	dv.run_dotty();
 #endif
 
 #if 0

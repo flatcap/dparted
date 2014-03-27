@@ -21,8 +21,9 @@
 #include <algorithm>
 #include <cstring>
 
-#include "extfs.h"
 #include "action.h"
+#include "endian.h"
+#include "extfs.h"
 #include "log_trace.h"
 #include "utils.h"
 #include "visitor.h"
@@ -260,8 +261,8 @@ Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	if (!parent || !buffer || !bufsize)
 		return nullptr;
 
-	bool b1 = (*(std::uint16_t*) (buffer+0x438) == 0xEF53);		// Magic
-	bool b2 = !(*(std::uint32_t*) (buffer + 0x45C) & 0x0000004);	// Journal
+	bool b1 =  (le16_to_cpup (buffer + 0x438) == 0xEF53);	// Magic
+	bool b2 = !(le32_to_cpup (buffer + 0x45C) & 0x0000004);	// Journal
 
 	ExtfsPtr e;
 	if (b1 && b2) {
@@ -281,10 +282,10 @@ Extfs::get_ext3 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	if (!parent || !buffer || !bufsize)
 		return nullptr;
 
-	bool b1 = (*(std::uint16_t*) (buffer+0x438) == 0xEF53);		// Magic
-	bool b2 = (*(std::uint32_t*) (buffer + 0x45C) & 0x0000004);	// Journal
-	bool b3 = (*(std::uint32_t*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
-	bool b4 = (*(std::uint32_t*) (buffer + 0x464) < 0x0000008);	// Small RO_COMPAT
+	bool b1 = (le16_to_cpup (buffer + 0x438) == 0xEF53);	// Magic
+	bool b2 = (le32_to_cpup (buffer + 0x45C) & 0x0000004);	// Journal
+	bool b3 = (le32_to_cpup (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
+	bool b4 = (le32_to_cpup (buffer + 0x464) < 0x0000008);	// Small RO_COMPAT
 
 	ExtfsPtr e;
 	if (b1 && b2 && b3 && b4) {
@@ -304,11 +305,11 @@ Extfs::get_ext4 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	if (!parent || !buffer || !bufsize)
 		return nullptr;
 
-	bool b1 = (*(std::uint16_t*) (buffer+0x438) == 0xEF53);		// Magic
-	bool b2 = (*(std::uint32_t*) (buffer + 0x45C) & 0x0000004);	// Journal
-	bool b3 = (*(std::uint32_t*) (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
-	bool b4 = (*(std::uint32_t*) (buffer + 0x460) > 0x000003f);	// Large INCOMPAT
-	bool b5 = (*(std::uint32_t*) (buffer + 0x464) > 0x0000007);	// Large RO_COMPAT
+	bool b1 = (le16_to_cpup (buffer + 0x438) == 0xEF53);	// Magic
+	bool b2 = (le32_to_cpup (buffer + 0x45C) & 0x0000004);	// Journal
+	bool b3 = (le32_to_cpup (buffer + 0x460) < 0x0000040);	// Small INCOMPAT
+	bool b4 = (le32_to_cpup (buffer + 0x460) > 0x000003f);	// Large INCOMPAT
+	bool b5 = (le32_to_cpup (buffer + 0x464) > 0x0000007);	// Large RO_COMPAT
 
 	ExtfsPtr e;
 	if (b1 && b2 && ((b3 && b5) || b4)) {

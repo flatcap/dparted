@@ -36,7 +36,7 @@ log (const char* format, va_list args)
 	int count = vsnprintf (log_buffer, sizeof (log_buffer), format, args);
 	//XXX check count against buffer size
 
-	fprintf (stdout, "%s\n", log_buffer);
+	fprintf (stdout, "%s", log_buffer);
 
 	return count;
 }

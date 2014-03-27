@@ -415,7 +415,7 @@ read_uuid1 (std::uint8_t* buffer)
 
 	ss << std::setfill ('0') << std::hex;
 
-	for (int i = 0; i < 16; ++i) {
+	for (int i = 0; i < 16; i++) {
 		if ((i == 4) || (i == 6) || (i == 8) || (i == 10))
 			ss << "-";
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
@@ -431,7 +431,7 @@ read_uuid2 (std::uint8_t* buffer)
 
 	ss << std::setfill ('0') << std::hex;
 
-	for (int i = 0; i < 8; ++i) {
+	for (int i = 0; i < 8; i++) {
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
@@ -445,7 +445,7 @@ read_uuid3 (std::uint8_t* buffer)
 
 	ss << std::setfill ('0') << std::hex;
 
-	for (int i = 0; i < 4; ++i) {
+	for (int i = 0; i < 4; i++) {
 		if (i == 2)
 			ss << "-";
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);

@@ -19,16 +19,16 @@
 #include <sstream>
 #include <cstring>
 
+#include "action.h"
+#include "endian.h"
 #include "log.h"
-#include "utils.h"
 #include "log_trace.h"
-#include "main.h"
+#include "lvm2.h"
 #include "lvm_group.h"
 #include "lvm_partition.h"
-#include "lvm2.h"
-
 #include "lvm_table.h"
-#include "action.h"
+#include "main.h"
+#include "utils.h"
 #include "utils.h"
 #include "visitor.h"
 
@@ -156,7 +156,7 @@ get_mda_header (std::uint8_t* buffer)
 	if (strncmp ((char*) mh->magic, FMTT_MAGIC, 16))
 		return nullptr;
 
-	if (mh->version != FMTT_VERSION)
+	if (le32_to_cpu (mh->version) != FMTT_VERSION)
 		return nullptr;
 
 	//XXX validate checksum
@@ -250,53 +250,57 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	if (!lh)
 		return false;
 
-	//log_info ("'%.8s', %lu, 0x%8x, %u, '%.8s'\n", lh->id, lh->sector_xl, lh->crc_xl, lh->offset_xl, lh->type);
+	//log_info ("'%.8s', %lu, 0x%8x, %u, '%.8s'\n", lh->id, le64_to_cpu (lh->sector), le32_to_cpu (lh->crc), le32_to_cpu (lh->offset), lh->type);
 
-	struct pv_header* ph = get_pv_header (buffer + 512 + lh->offset_xl);
+	struct pv_header* ph = get_pv_header (buffer + 512 + le32_to_cpu (lh->offset));
 	if (!ph)
 		return false;
 
 	std::string pv_uuid = read_uuid_string ((char*) ph->pv_uuid);
 
-	//log_info ("%s, %lu (%s)\n", pv_uuid.c_str(), ph->device_size_xl, get_size (ph->device_size_xl).c_str());
+	//log_info ("%s, %lu (%s)\n", pv_uuid.c_str(), le64_to_cpu (ph->device_size), get_size (le64_to_cpu (ph->device_size)).c_str());
 
 #if 0
 	log_info ("Disk locations:\n");
 	int i;
 	for (i = 0; i < 8; i++) {
-		if (ph->disk_areas_xl[i].offset == 0)
+		if (le64_to_cpu (ph->disk_areas[i].offset) == 0) {
 			break;
-		log_info ("\t%lu, %lu\n", ph->disk_areas_xl[i].offset, ph->disk_areas_xl[i].size);
+		}
+		log_info ("\t%lu, %lu\n", le64_to_cpu (ph->disk_areas[i].offset), le64_to_cpu (ph->disk_areas[i].size));
 	}
 #endif
 
 #if 0
 	log_info ("Metadata locations:\n");
 	for (i++; i < 8; i++) {
-		if (ph->disk_areas_xl[i].offset == 0)
+		if (le64_to_cpu (ph->disk_areas[i].offset) == 0) {
 			break;
-		log_info ("\t%lu, %lu (%lu)\n", ph->disk_areas_xl[i].offset, ph->disk_areas_xl[i].size, ph->disk_areas_xl[i].offset + ph->disk_areas_xl[i].size);
+		}
+		log_info ("\t%lu, %lu (%lu)\n", le64_to_cpu (ph->disk_areas[i].offset), le64_to_cpu (ph->disk_areas[i].size), le64_to_cpu (ph->disk_areas[i].offset) + le64_to_cpu (ph->disk_areas[i].size));
 	}
 #endif
 
 	//XXX 4096 from metadata location
 	struct mda_header* mh = get_mda_header (buffer + 4096);
-	if (!mh)
+	if (!mh) {
 		return false;
+	}
 
-	//log_info ("0x%08x, '%.16s', %u, %lu, %lu\n", mh->checksum_xl, mh->magic, mh->version, mh->start, mh->size);
+	//log_info ("0x%08x, '%.16s', %u, %lu, %lu\n", le32_to_cpu (mh->checksum), mh->magic, le32_to_cpu (mh->version), le64_to_cpu (mh->start), le64_to_cpu (mh->size));
 
 #if 0
 	log_info ("Metadata:\n");
 	for (i = 0; i < 4; i++) {
-		if (mh->raw_locns[i].offset == 0)
+		if (le64_to_cpu (mh->raw_locns[i].offset) == 0) {
 			break;
-		log_info ("\t%lu (0x%lx), %lu, 0x%08x, %u\n", mh->raw_locns[i].offset, mh->raw_locns[i].offset, mh->raw_locns[i].size, mh->raw_locns[i].checksum, mh->raw_locns[i].flags);
+		}
+		log_info ("\t%lu (0x%lx), %lu, 0x%08x, %u\n", le64_to_cpu (mh->raw_locns[i].offset), le64_to_cpu (mh->raw_locns[i].offset), le64_to_cpu (mh->raw_locns[i].size), le32_to_cpu (mh->raw_locns[i].checksum), le32_to_cpu (mh->raw_locns[i].flags));
 	}
 #endif
 
-	std::uint64_t offset = mh->raw_locns[0].offset;
-	std::uint64_t size   = mh->raw_locns[0].size;
+	std::uint64_t offset = le64_to_cpu (mh->raw_locns[0].offset);
+	std::uint64_t size   = le64_to_cpu (mh->raw_locns[0].size);
 
 	std::string config;
 	std::string vol_name;
@@ -324,7 +328,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	t = LvmTable::create();
 	//log_debug ("new LvmTable %s (%p)\n", pv_uuid.c_str(), (void*) t.get());
 
-	t->bytes_size = ph->device_size_xl;
+	t->bytes_size = le64_to_cpu (ph->device_size);
 	t->parent_offset = 0;
 	t->bytes_used = 0;
 	t->config = config;
@@ -406,7 +410,7 @@ LvmTable::set_alignment (std::uint64_t bytes)
 	s->bytes_used = remainder;
 	s->parent_offset = bytes_size - remainder;
 	ContainerPtr c(s);
-	add_child (c);
+	add_child(c);
 
 	return true;
 }

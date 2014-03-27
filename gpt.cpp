@@ -16,15 +16,43 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* GPT -- GUID Partition Table
+ *
+ * https://en.wikipedia.org/wiki/GUID_Partition_Table
+ *
+ * Read from disk:
+ *	A2 A0 D0 EB E5 B9 33 44 87 C0 68 B6 B7 26 99 C7
+ *
+ * From docs:
+ *	EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
+ *
+ * std::uint64_t LE
+ *   dash
+ * std::uint16_t LE
+ *   dash
+ * std::uint16_t LE
+ *   dash
+ * std::uint16_t LE
+ *   dash
+ * std::uint8_t
+ * std::uint8_t
+ * std::uint8_t
+ * std::uint8_t
+ * std::uint8_t
+ * std::uint8_t
+ */
+
 #include <cstring>
-#include <sstream>
-#include <vector>
-#include <utility>
+#include <iomanip>
 #include <iterator>
+#include <sstream>
+#include <utility>
+#include <vector>
 
 #include "gpt.h"
 #include "action.h"
 #include "app.h"
+#include "endian.h"
 #include "filesystem.h"
 #include "log.h"
 #include "log_trace.h"
@@ -92,6 +120,30 @@ Gpt::perform_action (Action action)
 	}
 }
 
+
+static std::string
+read_guid (std::uint8_t* buffer)
+{
+	if (!buffer)
+		return "";
+
+	std::uint32_t a = le32_to_cpup (buffer+0);
+	std::uint16_t b = le16_to_cpup (buffer+4);
+	std::uint16_t c = le16_to_cpup (buffer+6);
+	std::uint16_t d = be16_to_cpup (buffer+8);
+
+	std::stringstream ss;
+
+	ss << std::setfill ('0') << std::hex << std::setiosflags (std::ios::uppercase);
+
+	ss << a << '-' << b << '-' << c << '-' << d << '-';
+
+	for (int i = 10; i < 16; i++) {
+		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
+	}
+
+	return ss.str();
+}
 
 void
 delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
@@ -167,7 +219,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	g->bytes_used = 0;
 	g->parent_offset = 0;
 	g->block_size = 0;
-	g->uuid = read_uuid1 (buffer+568);
+	g->uuid = read_guid (buffer+568);
 
 	parent->add_child(g);
 
@@ -195,7 +247,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	delete_region (empty, 0, 33);
 
-	long sect_offset = (g->bytes_size - res2->bytes_size) / 512;
+	std::uint64_t sect_offset = (g->bytes_size - res2->bytes_size) / 512;
 	delete_region (empty, sect_offset, sect_offset+32);
 
 	buffer += 1024;	//bufsize -= 1024; for range checking
@@ -203,13 +255,13 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	std::string device = g->get_device_name();
 
 	for (int i = 0; i < 128; i++, buffer += 128) {
-		if (*(long*) (buffer+32) == 0)
+		if (le64_to_cpup (buffer+32) == 0)
 			continue;			// Skip empty slots
 
 		GptPartitionPtr p = GptPartition::create();
 		p->bytes_used = 0;
-		p->uuid = read_uuid1 (buffer+16);
-		//p->part_type_uuid = read_guid (buffer+0);
+		p->uuid = read_guid (buffer+16);
+		std::string part_type_uuid = read_guid (buffer+0);		//XXX not saved
 
 		std::string part_name = device;
 		if (isdigit (device.back())) {
@@ -218,8 +270,8 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		part_name += std::to_string (i+1);
 		p->device = part_name;
 
-		long start  = *(long*) (buffer+32);
-		long finish = *(long*) (buffer+40);
+		std::uint64_t start  = le64_to_cpup (buffer+32);
+		std::uint64_t finish = le64_to_cpup (buffer+40);
 
 		//log_debug ("%2d: %9ld -%9ld  %10ld  %ld\n", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
 
@@ -227,22 +279,14 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 		p->parent_offset = start * 512;
 		p->bytes_size = (finish - start + 1) * 512;
-
-		p->name.clear();
-		if (buffer[56]) {
-			for (int j = 0; j < 32; j += 2) {
-				if (buffer[56+j] == 0)
-					break;
-				p->name += buffer[56+j];
-			}
-		}
+		p->name = get_null_str (buffer+56, 72);
 
 #if 0
 		std::string s = get_size (p->bytes_size);
 		log_debug ("\t\tlabel  = %s\n",   p->name.c_str());
-		log_debug ("\t\t\tstart  = %lld\n", *(long*) (buffer+32) * 512);
-		log_debug ("\t\t\tfinish = %lld\n", *(long*) (buffer+40) * 512);
-		log_debug ("\t\t\tsize   = %lld (%s)\n", p->bytes_size, s.c_str());
+		log_debug ("\t\t\tstart  = %ld\n", le64_to_cpup (buffer+32) * 512);
+		log_debug ("\t\t\tfinish = %ld\n", le64_to_cpup (buffer+40) * 512);
+		log_debug ("\t\t\tsize   = %ld (%s)\n", p->bytes_size, s.c_str());
 #endif
 		g->add_child(p);
 		main_app->queue_add_probe(p);

@@ -1,5 +1,4 @@
-/* Copyright (c) 2014 Richard Russon (FlatCap)
- *
+/* Copyright (c) 2014 Richard Russon (FlatCap) *
  * This file is part of DParted.
  *
  * DParted is free software: you can redistribute it and/or modify
@@ -47,10 +46,23 @@ public:
 
 public:
 	//properties
-	std::string cipher_mode;
-	std::string cipher_name;
-	std::string hash_spec;
+	std::string   cipher_mode;
+	std::string   cipher_name;
+	std::string   hash_spec;
+	std::uint32_t key_bits;
+	std::string   mk_digest;
+	std::uint32_t mk_digest_iterations;
+	std::string   mk_digest_salt;
+	std::uint32_t payload_offset;
 	std::uint16_t version;
+
+	std::uint32_t pass1_active;
+	std::uint32_t pass1_iterations;
+	std::string   pass1_salt;
+	std::uint32_t pass1_key_offset;
+	std::uint32_t pass1_stripes;
+
+	std::uint64_t header_size;
 
 protected:
 	LuksTable (void);

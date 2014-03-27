@@ -16,10 +16,11 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <sstream>
-#include <string>
 #include <cstring>
 #include <functional>
+#include <iomanip>
+#include <sstream>
+#include <string>
 
 #include <endian.h>
 #include <byteswap.h>
@@ -27,12 +28,13 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "luks_table.h"
 #include "action.h"
 #include "app.h"
+#include "endian.h"
 #include "log.h"
 #include "log_trace.h"
 #include "luks_partition.h"
+#include "luks_table.h"
 #include "partition.h"
 #include "utils.h"
 #include "visitor.h"
@@ -43,10 +45,15 @@ LuksTable::LuksTable (void)
 
 	sub_type (me);
 
-	declare_prop_var (me, "cipher_mode", cipher_mode, "Cipher Mode", 0);
-	declare_prop_var (me, "cipher_name", cipher_name, "Cipher Name", 0);
-	declare_prop_var (me, "hash_spec",   hash_spec,   "Hash Spec",   0);
-	declare_prop_var (me, "version",     version,     "Version",     0);
+	declare_prop_var (me, "cipher_mode",          cipher_mode,          "Cipher Mode",          0);
+	declare_prop_var (me, "cipher_name",          cipher_name,          "Cipher Name",          0);
+	declare_prop_var (me, "hash_spec",            hash_spec,            "Hash Spec",            0);
+	declare_prop_var (me, "key_bits",             key_bits,             "Key Bits",             0);
+	declare_prop_var (me, "mk_digest",            mk_digest,            "MK Digest",            0);
+	declare_prop_var (me, "mk_digest_iterations", mk_digest_iterations, "MK Digest Iterations", 0);
+	declare_prop_var (me, "mk_digest_salt",       mk_digest_salt,       "MK Digest Salt",       0);
+	declare_prop_var (me, "payload_offset",       payload_offset,       "Payload Offset",       0);
+	declare_prop_var (me, "version",              version,              "Version",              0);
 }
 
 LuksTable::~LuksTable()
@@ -76,7 +83,7 @@ LuksTable::accept (Visitor& v)
 std::vector<Action>
 LuksTable::get_actions (void)
 {
-	 //LOG_TRACE;
+	//LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.luks_table", true },
 	};
@@ -100,6 +107,25 @@ LuksTable::perform_action (Action action)
 }
 
 
+static std::string
+read_hex (std::uint8_t* buffer, unsigned int length)
+{
+	if (!buffer || !length)
+		return "";
+
+	std::stringstream ss;
+
+	ss << std::setfill ('0') << std::hex << std::setiosflags (std::ios::uppercase);
+
+	for (unsigned int i = 0; i < length; i++) {
+		ss << std::setw(2) << static_cast<unsigned> (buffer[i]) << ' ';
+	}
+
+	std::string hex = ss.str();
+	hex.pop_back();
+	return hex;
+}
+
 bool
 LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
@@ -115,12 +141,34 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	LuksTablePtr l = create();
 
-	l->version     = *(std::uint16_t*) (buffer+6);
-	l->cipher_name = get_null_str (buffer+  8, 32);
-	l->cipher_mode = get_null_str (buffer+ 40, 32);
-	l->hash_spec   = get_null_str (buffer+ 72, 96);
-	l->uuid        = get_null_str (buffer+168, 40);
-	l->bytes_size  = parent->bytes_size;
+	l->version              = be16_to_cpup (buffer+  6);
+	l->cipher_name          = get_null_str (buffer+  8, 32);
+	l->cipher_mode          = get_null_str (buffer+ 40, 32);
+	l->hash_spec            = get_null_str (buffer+ 72, 32);
+	l->payload_offset       = be32_to_cpup (buffer+104);
+	l->key_bits             = be32_to_cpup (buffer+108) * 8;	// bytes to bits
+	l->mk_digest            = read_hex     (buffer+112, 20);
+	l->mk_digest_salt       = read_hex     (buffer+132, 32);
+	l->mk_digest_iterations = be32_to_cpup (buffer+164);
+	l->uuid                 = get_null_str (buffer+168, 40);
+	l->bytes_size           = parent->bytes_size;
+
+	//for (int i = 0; i < 16; i++) {
+	l->pass1_active     = be32_to_cpup (buffer+208);	// 0x0000DEAD/0x00AC71F3
+	l->pass1_iterations = be32_to_cpup (buffer+212);
+	l->pass1_salt       = read_hex     (buffer+216, 32);
+	l->pass1_key_offset = be32_to_cpup (buffer+248);
+	l->pass1_stripes    = be32_to_cpup (buffer+252);
+
+	// If there isn't a key to measure, then it doesn't matter,
+	// we can't open the device.
+	std::uint64_t encoded_key_size = l->key_bits * l->pass1_stripes;
+	encoded_key_size = align (encoded_key_size, 32768);	//XXX Fairly arbitrary amount to round the padded keysizes up to 128KiB
+	encoded_key_size += l->payload_offset;
+	encoded_key_size = align (encoded_key_size, 1048576);
+	l->header_size          = encoded_key_size;
+
+	std::cout << l->header_size << std::endl;
 
 	//l->device      = "/dev/mapper/luks-" + l->uuid;
 
@@ -131,21 +179,32 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	p->sub_type ("Space");
 	p->sub_type ("Reserved");
 
-	long header_size = be32toh (*(int*)(buffer+104));
-
-	p->bytes_size = header_size;
-	p->bytes_used = header_size;
+	p->bytes_size = l->header_size;
+	p->bytes_used = l->header_size;
 	l->add_child(p);
 
 #if 0
 	log_info ("LUKS:\n");
-	log_info ("\tversion:     %d\n", l->version);		//XXX wrong endian (version == 1)
-	log_info ("\tcipher name: %s\n", l->cipher_name.c_str());
-	log_info ("\tcipher mode: %s\n", l->cipher_mode.c_str());
-	log_info ("\thash spec:   %s\n", l->hash_spec.c_str());
-	log_info ("\tuuid:        %s\n", l->uuid.c_str());
+	log_info ("\tversion:       %u\n", l->version);		//XXX wrong endian (version == 1)
+	log_info ("\tcipher name:   %s\n", l->cipher_name.c_str());
+	log_info ("\tcipher mode:   %s\n", l->cipher_mode.c_str());
+	log_info ("\thash spec:     %s\n", l->hash_spec.c_str());
+	log_info ("\tuuid:          %s\n", l->uuid.c_str());
+	log_info ("\toffset:        %u\n", l->payload_offset);
+	log_info ("\tkey bits:      %u\n", l->key_bits);
+	log_info ("\tMK digest:     %s\n", l->mk_digest.c_str());
+	log_info ("\tMK salt:       %s\n", l->mk_digest_salt.c_str());
+	log_info ("\tMK iterations: %u\n", l->mk_digest_iterations);
 #endif
+#if 0
 
+	log_info ("\tactive:        %08X\n", l->pass1_active);
+	log_info ("\titerations:    %u\n",   l->pass1_iterations);
+	log_info ("\tsalt:          %s\n",   l->pass1_salt.c_str());
+	log_info ("\tkey offset:    %u\n",   l->pass1_key_offset);
+	log_info ("\tstripes:       %u\n",   l->pass1_stripes);
+
+#endif
 #if 0
 	question_cb_t fn = std::bind(&LuksTable::on_reply, l, std::placeholders::_1);
 	QuestionPtr q = Question::create (l, fn);
@@ -255,8 +314,8 @@ LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 
 	LuksPartitionPtr p = LuksPartition::create();
 
-	p->bytes_size =  bytes_size - 4096;
-	p->parent_offset = 4096;	//XXX header_size
+	p->bytes_size =  bytes_size - 2097152;	// 2MiB
+	p->parent_offset = 2097152;
 	p->device = mapper;
 
 	p->get_fd();
@@ -281,74 +340,4 @@ LuksTable::luks_close (void)
 	return false;
 }
 
-
-#if 0
-cryptsetup status /dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
-	/dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116 is active and is in use.
-	  type:    LUKS1
-	  cipher:  aes-xts-plain64
-	  keysize: 512 bits
-	  device:  /dev/loop4p5
-	  offset:  4096 sectors
-	  size:    33046528 sectors
-	  mode:    read/write
-
-cryptsetup status /dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
-	/dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116 is active.
-	  type:    LUKS1
-	  cipher:  aes-xts-plain64
-	  keysize: 512 bits
-	  device:  /dev/loop4p5
-	  offset:  4096 sectors
-	  size:    33046528 sectors
-	  mode:    read/write
-
-create
-isLuks
-luksAddKey
-luksClose
-luksDelKey
-luksDump
-luksFormat
-luksHeaderBackup
-luksHeaderRestore
-luksKillSlot
-luksOpen
-luksRemoveKey
-luksResume
-luksSuspend
-luksUUID
-remove
-resize
-status
-
-cryptsetup luksDump /dev/sda2
-LUKS header information for /dev/sda2
-
-Version:	1
-Cipher name:	aes
-Cipher mode:	xts-plain64
-Hash spec:	sha1
-Payload offset: 4096
-MK bits:	512
-MK digest:	df 25 17 cb 40 5b ac 5b ce 88 94 5e 82 92 9f fa 70 42 a6 0c
-MK salt:	c7 b7 61 29 5a 9c a9 88 cf 7b 9a 40 74 9c a0 5f
-		fd 7c 3d 83 b7 86 da af 93 32 3c 2c ae d2 17 73
-MK iterations:	52250
-UUID:		bf56d741-efe5-4931-8f4f-91aa934caf4a
-
-Key Slot 0: ENABLED
-	Iterations:		209835
-	Salt:			a2 37 d4 0e ad 47 c7 b2 04 70 d9 df 34 43 a0 9a
-				2e 58 33 98 44 e6 bb 97 b5 24 26 3f bf 1a ab 94
-	Key material offset:	8
-	AF stripes:		4000
-Key Slot 1: DISABLED
-Key Slot 2: DISABLED
-Key Slot 3: DISABLED
-Key Slot 4: DISABLED
-Key Slot 5: DISABLED
-Key Slot 6: DISABLED
-Key Slot 7: DISABLED
-#endif
 
