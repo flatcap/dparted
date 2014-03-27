@@ -18,12 +18,14 @@
 
 #include <cstring>
 
+#include "endian.h"
 #include "log.h"
 #include "log_trace.h"
 
 bool
 identify_reiserfs (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 {
+	//XXX check bufsize.  all other functions too
 	return (!strncmp ((char*) buffer+65588, "ReIsErFs",  8) ||
 		!strncmp ((char*) buffer+65588, "ReIsEr2Fs", 8) ||
 		!strncmp ((char*) buffer+65588, "ReIsEr3Fs", 9));
@@ -51,11 +53,11 @@ identify_vfat (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 			return 0;
 	}
 
-	return ((*(std::uint16_t*) (buffer+510) == 0xAA55) &&
+	return ((le16_to_cpup (buffer+510) == 0xAA55) &&
 		(buffer[3] != 0) &&
-		(*(std::uint16_t*) (buffer+11) != 0) &&
+		(le16_to_cpup (buffer+11) != 0) &&
 		(buffer[13] != 0) &&
-		(*(std::uint16_t*) (buffer+14) != 0) &&
+		(le16_to_cpup (buffer+14) != 0) &&
 		((buffer[16] > 0) || (buffer[16] < 5)));
 }
 

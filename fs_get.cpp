@@ -19,13 +19,12 @@
 #include <string>
 #include <cstring>
 
-#include <endian.h>
-
+#include "endian.h"
+#include "filesystem.h"
 #include "fs_identify.h"
 #include "fs_usage.h"
-#include "filesystem.h"
-#include "utils.h"
 #include "log_trace.h"
+#include "utils.h"
 
 FilesystemPtr
 get_reiserfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
@@ -50,9 +49,9 @@ get_reiserfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	f->uuid = read_uuid1 (buffer + 0x10054);
 
-	short    int block_size   = *(std::uint16_t*) (buffer + 0x1002C);
-	unsigned int blocks_total = *(std::uint32_t*) (buffer + 0x10000);
-	unsigned int blocks_free  = *(std::uint32_t*) (buffer + 0x10004);
+	short    int block_size   = le16_to_cpup (buffer + 0x1002C);
+	unsigned int blocks_total = le32_to_cpup (buffer + 0x10000);
+	unsigned int blocks_free  = le32_to_cpup (buffer + 0x10004);
 
 	f->block_size = block_size;
 	f->bytes_size = (blocks_total * block_size);
@@ -76,13 +75,13 @@ get_swap (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		return nullptr;
 
 	std::string uuid     = read_uuid1 (buffer + 0x40C);
-	std::string vol_name = (char*) (buffer+0x41C);
+	std::string vol_name = get_null_str (buffer+0x41C, 16);
 	long size = 0;
 	long block = 0;
 
 	if (!strncmp ((char*) buffer+4086, "SWAPSPACE2", 10)) {
 		block = 4096;
-		size  = *(std::uint64_t*) (buffer + 0x404) * block;
+		size  = le64_to_cpup (buffer + 0x404) * block;
 	}
 
 	FilesystemPtr f  = Filesystem::create();
@@ -117,17 +116,17 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	f->uuid = read_uuid3 (buffer+0x1C);
 
-	std::uint64_t sectors = *(std::uint32_t*) (buffer + 0x13);
+	std::uint64_t sectors = le32_to_cpup (buffer + 0x13);
 	if (sectors == 0) {
-		sectors = *(std::uint32_t*) (buffer + 0x20);
+		sectors = le32_to_cpup (buffer + 0x20);
 	}
 
 	f->bytes_size = sectors * 512;
 
 #if 1
 	// will likely exceed bufsize
-	std::uint32_t reserved   = *(std::uint16_t*) (buffer + 0x0E);
-	std::uint32_t sect_fat   = *(std::uint16_t*) (buffer + 0x16);
+	std::uint32_t reserved   = le16_to_cpup (buffer + 0x0E);
+	std::uint32_t sect_fat   = le16_to_cpup (buffer + 0x16);
 	std::uint32_t sect_clust = buffer[0x0D];
 	std::uint32_t clusters   = sectors / sect_clust;
 	std::uint32_t free_clust = 0;
@@ -139,12 +138,12 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 #if 0
 		//XXX not stored anywhere
 		if (sect_fat == 0) {
-			sect_fat = *(int*) (buffer + 0x24);
+			sect_fat = le32_to_cpup (buffer + 0x24);
 		}
 #endif
 
 		for (std::uint32_t i = 0; i < clusters; i++) {
-			if (ptr[i] == 0) {
+			if (le32_to_cpu (ptr[i]) == 0) {
 				free_clust++;
 			}
 		}
@@ -174,12 +173,12 @@ get_xfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	FilesystemPtr f  = Filesystem::create();
 	f->sub_type ("xfs");
 
-	f->name = (char*) (buffer+0x6C);
+	f->name = (char*) (buffer+0x6C);		//XXX max 12 chars, not null terminated if that length
 	f->uuid = read_uuid1 (buffer + 0x20);
 
-	std::uint32_t block_size   = *(std::uint32_t*) (buffer + 0x04);
-	std::uint64_t blocks_total = *(std::uint64_t*) (buffer + 0x08);
-	std::uint64_t blocks_free  = *(std::uint64_t*) (buffer + 0x90);
+	std::uint32_t block_size   = le32_to_cpup (buffer + 0x04);
+	std::uint64_t blocks_total = le64_to_cpup (buffer + 0x08);
+	std::uint64_t blocks_free  = le64_to_cpup (buffer + 0x90);
 
 	block_size   = be32toh (block_size);
 	blocks_total = be64toh (blocks_total);
