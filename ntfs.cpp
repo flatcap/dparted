@@ -21,9 +21,10 @@
 #include <algorithm>
 #include <cstring>
 
-#include "ntfs.h"
 #include "action.h"
+#include "endian.h"
 #include "log_trace.h"
+#include "ntfs.h"
 #include "utils.h"
 #include "visitor.h"
 
@@ -235,7 +236,7 @@ Ntfs::get_ntfs (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize
 		return nullptr;
 
 	std::string uuid = read_uuid2 (buffer + 72);
-	long size = *(long*) (buffer + 40) * 512;
+	std::uint64_t size = le64_to_cpup (buffer + 40) * 512;
 
 	NtfsPtr n = Ntfs::create();
 	n->sub_type ("ntfs");
