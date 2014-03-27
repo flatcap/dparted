@@ -335,6 +335,9 @@ dot_md_volume (std::shared_ptr<T> t)
 bool
 DotVisitor::visit (ContainerPtr c)
 {
+	if (c->name == "dummy")	// Ignore top-level containers
+		return true;
+
 	//LOG_TRACE;
 	dot_objects << dump_table (c, dot_container(c));
 	dot_links   << parent_link(c);
