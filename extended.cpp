@@ -23,9 +23,10 @@
 #include <sstream>
 #include <string>
 
-#include "extended.h"
 #include "action.h"
 #include "app.h"
+#include "endian.h"
+#include "extended.h"
 #include "log.h"
 #include "log_trace.h"
 #include "main.h"
@@ -91,13 +92,13 @@ Extended::perform_action (Action action)
 }
 
 
-bool
+ContainerPtr
 Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
 	if (!parent || !buffer || !bufsize)
-		return false;
+		return nullptr;
 
 	ExtendedPtr ext;
 	//off_t seek = 0;
@@ -125,10 +126,10 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	ext->add_child (res1);		// change to add_reserved?
 
 	for (int loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
-		if (*(unsigned short int*) (buffer+510) != 0xAA55) {
+		if (le16_to_cpup (buffer+510) != 0xAA55) {
 			log_error ("not an extended partition\n");
 			//log_debug ("%s (%s), %ld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
-			return false;
+			return nullptr;
 		}
 
 		//log_debug ("extended partition\n");
@@ -141,33 +142,33 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 		if ((num < 0) || (vp.size() > 2)) {
 			log_error ("partition table is corrupt\n");	// bugger
-			return false;
+			return nullptr;
 		}
 
 		for (auto& part : vp) {
 #if 0
 			if ((part.type != 5) || (part.type != 5)) {
-				std::string s1 = get_size (part.start);
-				std::string s2 = get_size (part.size);
+				std::string s1 = get_size (le64_to_cpu (part.start));
+				std::string s2 = get_size (le64_to_cpu (part.size));
 
 				log_debug ("\tpartition (0x%02x)\n", part.type);
-				log_debug ("\t\tstart = %lld (%s)\n", part.start, s1.c_str());
-				log_debug ("\t\tsize  = %lld (%s)\n", part.size,  s2.c_str());
+				log_debug ("\t\tstart = %ld (%s)\n", le64_to_cpu (part.start), s1.c_str());
+				log_debug ("\t\tsize  = %ld (%s)\n", le64_to_cpu (part.size),  s2.c_str());
 				log_debug ("\n");
 			}
 #endif
 			if ((part.type == 0x05) || (part.type == 0x0F)) {
-				table_offset = offset + part.start;
+				table_offset = offset + le64_to_cpu (part.start);
 			} else {
 				MsdosPartitionPtr m;
 
 				m = MsdosPartition::create();
-				m->bytes_size = part.size;
+				m->bytes_size = le64_to_cpu (part.size);
 
-				//m->parent_offset = table_offset + part.start;
+				//m->parent_offset = table_offset + le64_to_cpu (part.start);
 				//m->device = parent->device;
 
-				m->parent_offset = table_offset + part.start - ext->parent_offset;
+				m->parent_offset = table_offset + le64_to_cpu (part.start) - ext->parent_offset;
 
 				std::string part_name = parent->get_device_name();
 				//XXX check part_name isn't empty
@@ -189,7 +190,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	ext->fill_space();		// optional
 
-	return true;
+	return ext;
 }
 
 

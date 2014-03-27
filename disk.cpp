@@ -169,7 +169,7 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 #if 0
 	log_debug ("disk\n");
 	log_debug ("\tname = %s\n", name.c_str());
-	log_debug ("\tsize = %lld\n", file_size_in_bytes);
+	log_debug ("\tsize = %ld\n", file_size_in_bytes);
 #endif
 
 	list.add_child(d);
@@ -243,7 +243,7 @@ Disk::find_devices (ContainerPtr& list)
 #if 0
 		log_debug ("\tmajor: %d\n", major);
 		log_debug ("\tminor: %d\n", minor);
-		log_debug ("\tsize:  %lld\n", size);
+		log_debug ("\tsize:  %ld\n", size);
 		log_debug ("\tmount: %s\n", mount.c_str());
 		log_debug ("\n");
 #endif

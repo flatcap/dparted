@@ -27,13 +27,14 @@
 #include <sstream>
 #include <string>
 
-#include "msdos.h"
 #include "action.h"
 #include "app.h"
+#include "endian.h"
 #include "extended.h"
 #include "log.h"
 #include "log_trace.h"
 #include "main.h"
+#include "msdos.h"
 #include "partition.h"
 #include "utils.h"
 #include "visitor.h"
@@ -107,7 +108,6 @@ Msdos::read_chs (std::uint8_t* buffer, std::uint16_t& cylinder, std::uint8_t& he
 	sector   = buffer[1] & 0x3F;
 	cylinder = buffer[2] + ((buffer[1] & 0xC0) << 2);
 }
-
 #endif
 
 bool
@@ -127,10 +127,10 @@ Msdos::read_partition (std::uint8_t* buffer, int index, struct partition* part)
 
 	part->type = buffer[index + 4];
 
-	part->start = *(std::uint32_t*) (buffer + index + 8);
+	part->start = le32_to_cpup (buffer + index + 8);
 	part->start *= 512;
 
-	part->size = *(std::uint32_t*) (buffer + index + 12);
+	part->size = le32_to_cpup (buffer + index + 12);
 	part->size *= 512;
 
 	return true;
@@ -162,7 +162,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	int count = 0;
 
-	if (*(std::uint16_t*) (buffer+510) != 0xAA55)	//XXX declare magic elsewhere
+	if (le16_to_cpup (buffer+510) != 0xAA55)	//XXX declare magic elsewhere
 		return false;
 
 	// and some other quick checks
@@ -193,12 +193,12 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	for (unsigned int i = 0; i < vp.size(); i++) {
 #if 0
-		std::string s1 = get_size (vp[i].start);
-		std::string s2 = get_size (vp[i].size);
+		std::string s1 = get_size (le64_to_cpu (vp[i].start));
+		std::string s2 = get_size (le64_to_cpu (vp[i].size));
 
 		log_debug ("partition %d (0x%02x)\n", i+1, vp[i].type);
-		log_debug ("\tstart = %lld (%s)\n", vp[i].start, s1.c_str());
-		log_debug ("\tsize  = %lld (%s)\n", vp[i].size,  s2.c_str());
+		log_debug ("\tstart = %ld (%s)\n", le64_to_cpu (vp[i].start), s1.c_str());
+		log_debug ("\tsize  = %ld (%s)\n", le64_to_cpu (vp[i].size),  s2.c_str());
 		log_debug ("\n");
 #endif
 		ContainerPtr c;
@@ -212,24 +212,30 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		part_name << (i+1);
 
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
-			//log_debug ("vp[i].start = %ld\n", vp[i].start);
-			ContainerPtr m2(m);
-			//XXX recalculate buffer?  BELOW IS NOW WRONG RECHECK
+			//XXX validate start&size against parent buffer
 #if 0
-			c = Extended::probe (m2, buffer, bufsize);
+			log_debug ("vp[i].start = %ld (%s)\n", le64_to_cpu (vp[i].start), get_size (le64_to_cpu (vp[i].start)).c_str());
+			log_debug ("vp[i].size  = %ld (%s)\n", le64_to_cpu (vp[i].size),  get_size (le64_to_cpu (vp[i].size)).c_str());
+			std::uint64_t xstart = le64_to_cpu (vp[i].start);
+			std::uint64_t xsize  = le64_to_cpu (vp[i].size);
+			dump_hex2 (buffer, xstart-2000, 4096);
+#endif
+#if 1
+			ContainerPtr m2(m);
+			c = Extended::probe (m2, buffer+le64_to_cpu (vp[i].start), le64_to_cpu (vp[i].size));
 			if (!c)
 				continue;
-#endif
 
-			c->parent_offset = vp[i].start;
+			c->parent_offset = le64_to_cpu (vp[i].start);
 			c->device = part_name.str();
+#endif
 		} else {
 			PartitionPtr p = Partition::create();
 			p->ptype = vp[i].type;
 			c = p;
-			c->bytes_size = vp[i].size;
+			c->bytes_size = le64_to_cpu (vp[i].size);
 
-			c->parent_offset = vp[i].start;
+			c->parent_offset = le64_to_cpu (vp[i].start);
 			c->device = part_name.str();
 
 			main_app->queue_add_probe(c);
