@@ -21,8 +21,9 @@
 #include <algorithm>
 #include <cstring>
 
-#include "btrfs.h"
 #include "action.h"
+#include "btrfs.h"
+#include "endian.h"
 #include "log_trace.h"
 #include "utils.h"
 #include "visitor.h"
@@ -245,12 +246,12 @@ Btrfs::get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int bufsize)
 	BtrfsPtr b = Btrfs::create();
 	b->sub_type ("btrfs");
 
-	b->name = (char*) (buffer+0x1012B);
+	b->name = get_null_str (buffer+0x1012B, 255);
 	b->uuid = read_uuid1 (buffer + 0x10020);
 
-	b->bytes_size = *(std::uint64_t*) (buffer + 0x10070);
-	b->bytes_used = *(std::uint64_t*) (buffer + 0x10078);
-	b->block_size = *(std::uint32_t*) (buffer + 0x10090);
+	b->bytes_size = le64_to_cpup (buffer + 0x10070);
+	b->bytes_used = le64_to_cpup (buffer + 0x10078);
+	b->block_size = le32_to_cpup (buffer + 0x10090);
 
 	b->get_btrfs_sb (parent);
 	b->get_btrfs_usage();
