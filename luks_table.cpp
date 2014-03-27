@@ -168,7 +168,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	encoded_key_size = align (encoded_key_size, 1048576);
 	l->header_size          = encoded_key_size;
 
-	std::cout << l->header_size << std::endl;
+	//log_debug ("header size = %ld\n", l->header_size);
 
 	//l->device      = "/dev/mapper/luks-" + l->uuid;
 

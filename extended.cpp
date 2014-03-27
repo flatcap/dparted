@@ -101,10 +101,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 		return nullptr;
 
 	ExtendedPtr ext;
-	//off_t seek = 0;
-	//ssize_t count = 0;
-	long offset = 0;
-	long table_offset = offset;
+	long table_offset = 0;
 
 	// create extended
 	// add to parent
@@ -115,7 +112,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	ext->bytes_size = bufsize;
 	ext->device = parent->device;
-	ext->parent_offset = 0;		//offset;	//XXX hmm... tricky, where do we get our offset from? our parent?
+	//ext->parent_offset = 0;		// Will be set by our parent
 
 	PartitionPtr res1 = Partition::create();
 	res1->sub_type ("Space");
@@ -126,7 +123,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	ext->add_child (res1);		// change to add_reserved?
 
 	for (int loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
-		if (le16_to_cpup (buffer+510) != 0xAA55) {
+		if (le16_to_cpup (table_offset+buffer+510) != 0xAA55) {
 			log_error ("not an extended partition\n");
 			//log_debug ("%s (%s), %ld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
 			return nullptr;
@@ -136,7 +133,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 		int num = 0;
 		std::vector<struct partition> vp;
-		num = ext->read_table (buffer, bufsize, 0, vp);
+		num = ext->read_table (table_offset+buffer, bufsize, 0, vp);
 		//log_debug ("num = %d\n", num);
 		//dump_hex (buffer, bufsize);
 
@@ -147,7 +144,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 		for (auto& part : vp) {
 #if 0
-			if ((part.type != 5) || (part.type != 5)) {
+			if ((part.type != 0x05) || (part.type != 0x0F)) {
 				std::string s1 = get_size (le64_to_cpu (part.start));
 				std::string s2 = get_size (le64_to_cpu (part.size));
 
@@ -158,7 +155,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 			}
 #endif
 			if ((part.type == 0x05) || (part.type == 0x0F)) {
-				table_offset = offset + le64_to_cpu (part.start);
+				table_offset = le64_to_cpu (part.start);		// This is absolute
 			} else {
 				MsdosPartitionPtr m;
 
@@ -168,7 +165,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 				//m->parent_offset = table_offset + le64_to_cpu (part.start);
 				//m->device = parent->device;
 
-				m->parent_offset = table_offset + le64_to_cpu (part.start) - ext->parent_offset;
+				m->parent_offset = table_offset + le64_to_cpu (part.start) - ext->parent_offset;	// This is relative
 
 				std::string part_name = parent->get_device_name();
 				//XXX check part_name isn't empty
