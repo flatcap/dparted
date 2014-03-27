@@ -18,9 +18,10 @@
 
 #include <string>
 
-#include "md_table.h"
 #include "action.h"
+#include "endian.h"
 #include "log_trace.h"
+#include "md_table.h"
 #include "utils.h"
 #include "visitor.h"
 
@@ -113,7 +114,7 @@ is_mdtable (std::uint8_t* buffer)
 	if (!buffer)
 		return false;
 
-	if ((*(unsigned int*) buffer) != 0xA92B4EFC)
+	if (le32_to_cpup(buffer) != 0xA92B4EFC)
 		return false;
 
 	return true;
@@ -134,30 +135,30 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	if (!is_mdtable (buffer))
 		return false;
 
-	std::string vol_uuid = read_uuid_string (buffer + 16);
+	std::string vol_uuid = read_uuid_string (buffer+16);
 	//log_info ("vol uuid = %s\n", vol_uuid.c_str());
 
-	std::string vol_name ((char*) (buffer + 32));
+	std::string vol_name = get_null_str (buffer+32, 32);
 	//log_info ("vol name = %s\n", vol_name.c_str());
 
-	int raid_type   = buffer[72];
-	int raid_layout = buffer[76];
+	std::int32_t raid_type   = sle32_to_cpup (buffer+72);
+	std::int32_t raid_layout = sle32_to_cpup (buffer+76);
 	//log_info ("raid type = %d (%d)\n", raid_type, raid_layout);
 
-	int raid_disks = buffer[92];
+	std::int32_t raid_disks = sle32_to_cpup (buffer+92);
 	//log_info ("%d raid disks\n", raid_disks);
 
-	int chunk_size = *(int*) (buffer + 88);
+	std::int32_t chunk_size = sle32_to_cpup (buffer+88);
 	//log_info ("chunk size = %d\n", chunk_size);
 
-	long chunks_used = *(long*) (buffer + 80);
+	std::uint64_t chunks_used = le64_to_cpup (buffer+80);
 	//log_info ("chunks used = %ld (%s)\n", chunks_used, get_size (chunk_size * chunks_used).c_str());
 
-	std::string dev_uuid = read_uuid_string (buffer + 168);
+	std::string dev_uuid = read_uuid_string (buffer+168);
 	//log_info ("dev uuid = %s\n", dev_uuid.c_str());
 
-	long data_offset = *(long*) (buffer + 128) * 512;
-	long data_size   = *(long*) (buffer + 136) * 512;
+	std::uint64_t data_offset = le64_to_cpup (buffer+128) * 512;
+	std::uint64_t data_size   = le64_to_cpup (buffer+136) * 512;
 
 	//log_info ("data offset/size = %ld (%s), %ld (%s)\n", data_offset, get_size (data_offset).c_str(), data_size, get_size (data_size).c_str());
 
