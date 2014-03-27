@@ -689,18 +689,18 @@ operator<< (std::ostream& os, const Config& v)
 {
 	os << "V[";
 	switch (v.type) {
-		case Config::Tag::t_unset:  os << "EMPTY";                              break;
-		case Config::Tag::t_string: os << "string," <<               v.s_value; break;
-		case Config::Tag::t_double: os << "double," <<               v.d_value; break;
-		case Config::Tag::t_bool:   os << "bool,"   <<               v.l_value; break;
-		case Config::Tag::t_u8:     os << "u8,"     <<               v.l_value; break;
-		case Config::Tag::t_s8:     os << "s8,"     << (signed long) v.l_value; break;
-		case Config::Tag::t_u16:    os << "u16,"    <<               v.l_value; break;
-		case Config::Tag::t_s16:    os << "s16,"    << (signed long) v.l_value; break;
-		case Config::Tag::t_u32:    os << "u32,"    <<               v.l_value; break;
-		case Config::Tag::t_s32:    os << "s32,"    << (signed long) v.l_value; break;
-		case Config::Tag::t_u64:    os << "u64,"    <<               v.l_value; break;
-		case Config::Tag::t_s64:    os << "s64,"    << (signed long) v.l_value; break;
+		case Config::Tag::t_unset:  os << "EMPTY";                               break;
+		case Config::Tag::t_string: os << "string," <<                v.s_value; break;
+		case Config::Tag::t_double: os << "double," <<                v.d_value; break;
+		case Config::Tag::t_bool:   os << "bool,"   <<                v.l_value; break;
+		case Config::Tag::t_u8:     os << "u8,"     <<                v.l_value; break;
+		case Config::Tag::t_s8:     os << "s8,"     << (std::int64_t) v.l_value; break;
+		case Config::Tag::t_u16:    os << "u16,"    <<                v.l_value; break;
+		case Config::Tag::t_s16:    os << "s16,"    << (std::int64_t) v.l_value; break;
+		case Config::Tag::t_u32:    os << "u32,"    <<                v.l_value; break;
+		case Config::Tag::t_s32:    os << "s32,"    << (std::int64_t) v.l_value; break;
+		case Config::Tag::t_u64:    os << "u64,"    <<                v.l_value; break;
+		case Config::Tag::t_s64:    os << "s64,"    << (std::int64_t) v.l_value; break;
 	}
 	os << "]";
 

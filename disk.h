@@ -65,9 +65,9 @@ public:
 	//std::string	model;
 	//std::string	path;
 	//int		type;
-	//long		sector_size;
-	//long		phys_sector_size;
-	//long	length;
+	//std::uint64_t	sector_size;
+	//std::uint64_t	phys_sector_size;
+	//std::uint64_t	length;
 
 	std::string mounts;	//XXX vector
 

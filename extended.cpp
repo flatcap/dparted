@@ -101,7 +101,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 		return nullptr;
 
 	ExtendedPtr ext;
-	long table_offset = 0;
+	std::uint64_t table_offset = 0;
 
 	// create extended
 	// add to parent

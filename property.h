@@ -118,7 +118,7 @@ public:
 	std::string owner;
 	std::string name;
 	std::string desc;
-	long flags = 0;
+	std::uint64_t flags = 0;
 };
 
 template <typename T>

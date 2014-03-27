@@ -370,7 +370,7 @@ Container::find (const std::string& search)
 
 void deleter (Mmap* m)
 {
-	long  size = 0;
+	std::uint64_t size = 0;
 	void* ptr = nullptr;
 
 	std::tie (size, ptr) = *m;
@@ -421,7 +421,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	// Create an mmap for the entire device
 
-	// const long KERNEL_PAGE_SIZE = 4096;		//XXX from kernel, use block size if bigger?
+	// const std::uint64_t KERNEL_PAGE_SIZE = 4096;		//XXX from kernel, use block size if bigger?
 	// size = std::max (KERNEL_PAGE_SIZE, size);	//XXX test on a 512 byte loop device
 	size = bytes_size;	//XXX round up to PAGE_SIZE?
 
@@ -463,7 +463,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 		return stream;
 #endif
 
-	//long bytes_free = c.bytes_size - c->bytes_used;
+	//std::uint64_t bytes_free = c.bytes_size - c->bytes_used;
 
 	std::string uuid = c->uuid;
 

@@ -143,7 +143,7 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	//	/sys/block/sda/device/model
 
 	int res;
-	long file_size_in_bytes;
+	std::uint64_t file_size_in_bytes;
 
 #if 0
 	std::string readonly = read_file_line ("/sys/block/sda/ro");
@@ -212,7 +212,7 @@ Disk::find_devices (ContainerPtr& list)
 	std::string mount;
 	int major = -1;
 	int minor = -1;
-	long size;
+	std::uint64_t size = 0;
 	std::string part;
 	int scan;
 	std::map<std::string,StringNum> tags;

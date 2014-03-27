@@ -31,8 +31,8 @@
 #include "utils.h"
 #include "log_trace.h"
 
-long
-align (long num, long round)
+std::uint64_t
+align (std::uint64_t num, std::uint64_t round)
 {
 	if (round == 0)
 		return num;

@@ -181,9 +181,9 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	std::string desc;
 	std::string section;
 
-	long clust = -1;	// cluster size
-	long csize = -1;	// total size in clusters
-	long cfree = -1;	// free space in clusters
+	std::uint64_t clust = -1;	// cluster size
+	std::uint64_t csize = -1;	// total size in clusters
+	std::uint64_t cfree = -1;	// free space in clusters
 
 	//log_debug ("keys:\n");
 	for (auto line : output) {

@@ -76,8 +76,8 @@ get_swap (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	std::string uuid     = read_uuid1 (buffer + 0x40C);
 	std::string vol_name = get_null_str (buffer+0x41C, 16);
-	long size = 0;
-	long block = 0;
+	std::uint64_t size = 0;
+	std::uint64_t block = 0;
 
 	if (!strncmp ((char*) buffer+4086, "SWAPSPACE2", 10)) {
 		block = 4096;

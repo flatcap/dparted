@@ -132,7 +132,7 @@ Table::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	return false;
 }
 
-long
+std::uint64_t
 Table::fill_space (void)
 {
 	// iterate through the children and add a Misc for all the unallocated regions

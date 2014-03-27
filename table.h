@@ -52,7 +52,7 @@ public:
 protected:
 	Table (void);
 
-	long fill_space (void);
+	std::uint64_t fill_space (void);
 
 private:
 

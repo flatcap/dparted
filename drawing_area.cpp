@@ -150,7 +150,7 @@ draw_grid (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
  * draw_grid_linear - Major and minor grid lines
  */
 void
-draw_grid_linear (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, long max_size)
+draw_grid_linear (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, std::uint64_t max_size)
 {
 	space.w -= 2;
 
@@ -200,7 +200,7 @@ draw_grid_linear (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, long max_
 }
 
 void
-draw_grid_log (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, long max_size)
+draw_grid_log (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, std::uint64_t max_size)
 {
 }
 
@@ -944,8 +944,8 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 			total = c->bytes_size;		//XXX tmp -- need to get intermediate object
 			bpp   = total / inside.w;
 		}
-		long offset = c->parent_offset / bpp;
-		long size   = c->bytes_size    / bpp;
+		std::uint64_t offset = c->parent_offset / bpp;
+		std::uint64_t size   = c->bytes_size    / bpp;
 
 		Rect next = inside;
 		next.x += offset;

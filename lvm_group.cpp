@@ -231,7 +231,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 				continue;
 			}
 			v->bytes_size =  tags["LVM2_VG_EXTENT_SIZE"];
-			v->bytes_size *= (long) tags["LVM2_PVSEG_SIZE"];
+			v->bytes_size *= (std::uint64_t) tags["LVM2_PVSEG_SIZE"];
 
 			//log_debug ("lv uuid = %s\n", lv_uuid.c_str());
 			v->uuid    = lv_uuid;
@@ -349,7 +349,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			t->set_alignment (g->block_size);
 		}
 		 //log_debug ("TRIGGER set_alignment: %ld\n", g->segments.size());
-		//g->bytes_used		= g->bytes_size - (long) tags["LVM2_VG_FREE"];
+		//g->bytes_used		= g->bytes_size - (std::uint64_t) tags["LVM2_VG_FREE"];
 
 		// LvmGroup
 		g->vg_attr		= tags["LVM2_VG_ATTR"];

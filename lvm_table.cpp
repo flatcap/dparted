@@ -394,7 +394,7 @@ LvmTable::set_alignment (std::uint64_t bytes)
 	ContainerPtr reserved = *children.begin();
 
 	//XXX validate numbers
-	long remainder = (bytes_size - reserved->bytes_size) % block_size;
+	std::uint64_t remainder = (bytes_size - reserved->bytes_size) % block_size;
 
 #if 0
 	log_debug ("size of device   = %10ld\n", bytes_size);

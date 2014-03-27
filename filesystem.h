@@ -52,7 +52,7 @@ protected:
 	Filesystem (void);
 
 private:
-	long ext2_get_usage (void);
+	std::uint64_t ext2_get_usage (void);
 
 };
 

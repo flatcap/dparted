@@ -260,7 +260,7 @@ protected:
 	}
 
 private:
-	void insert (long offset, long size, void* ptr);
+	void insert (std::uint64_t offset, std::uint64_t size, void* ptr);
 
 	std::string debug;		// Text representation of self
 };
