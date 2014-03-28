@@ -18,8 +18,11 @@
 
 #include <cstdlib>
 
-#include "tree_view.h"
+#include "gui_app.h"
 #include "log_trace.h"
+#include "theme.h"
+#include "tree_view.h"
+#include "utils.h"
 #include "window.h"
 
 TreeView::TreeView (void)
@@ -149,6 +152,31 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 void
 TreeView::init_treeview (GfxContainerPtr& c)
 {
+	theme = gui_app->get_theme();
+
+#if 0
+	std::string tvcols = theme->get_config ("App", "", "treeview_columns");
+	std::vector<std::string> tvc;
+	explode (",", tvcols, tvc);
+	for (auto i : tvc) {
+		log_debug ("%s\n", i.c_str());
+	}
+#endif
+	std::string name = "App.treeview_cols";
+	std::vector<std::string> vec = theme->get_children (name);
+	log_debug ("%s children\n", name.c_str());
+	for (auto i : vec) {
+		std::string key = name + "." + i;
+		log_debug ("\t%s = ", i.c_str());
+		try {
+			std::string t = theme->get_config (key, "", "type", false);
+			log_debug ("%s\n", t.c_str());
+		} catch (...) {
+			log_debug ("string");
+		}
+		log_debug ("\n");
+	}
+
 	/*	DEVICE	COLOUR	TYPE	NAME	DISPLAY
 	 *	loop0	none	block	loop0	empty
 	 *	loop0	none	table	gpt	always

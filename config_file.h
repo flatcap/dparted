@@ -43,6 +43,7 @@ public:
 	static ConfigFilePtr read_file (const std::string& filename);
 
 	bool exists (const std::string& name);
+	std::vector<std::string> get_children (const std::string& name);
 
 	bool                     get_bool    (const std::string& name);
 	uint32_t                 get_u32     (const std::string& name);

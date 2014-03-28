@@ -82,6 +82,8 @@ protected:
 	Glib::RefPtr<Gtk::TreeSelection> treeselection;
 	void on_selection_changed();
 
+	ThemePtr theme;
+
 private:
 	// POPUP
 	void setup_popup (void);

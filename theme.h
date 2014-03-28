@@ -44,7 +44,9 @@ public:
 	Glib::RefPtr<Gdk::Pixbuf> add_icon (const std::string& name, const std::string& filename);
 	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string& name);
 
-	std::string get_config (const std::string& path, const std::string& name, const std::string& attr);
+	std::string get_config (const std::string& path, const std::string& name, const std::string& attr, bool recurse = true);
+	//XXX get_config (just_a_path_name);
+	std::vector<std::string> get_children (const std::string& name);
 
 	bool is_valid (void);
 
