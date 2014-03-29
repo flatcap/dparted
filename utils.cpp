@@ -36,6 +36,7 @@ align (std::uint64_t num, std::uint64_t round)
 {
 	if (round == 0)
 		return num;
+
 	return ((num + round - 1) / round * round);
 }
 
@@ -78,27 +79,31 @@ dump_hex2 (void* buf, int start, int length)
 		}
 #endif
 
-		if (off == s)
+		if (off == s) {
 			log_info ("	%6.6x ", start);
-		else
+		} else {
 			log_info ("	%6.6x ", off);
+		}
 
 		for (i = 0; i < 16; ++i) {
-			if (i == 8)
+			if (i == 8) {
 				log_info (" -");
-			if (((off+i) >= start) && ((off+i) < (start+length)))
+			}
+			if (((off+i) >= start) && ((off+i) < (start+length))) {
 				log_info (" %02X", mem[off+i]);
-			else
+			} else {
 				log_info ("   ");
+			}
 		}
 		log_info ("  ");
 		for (i = 0; i < 16; ++i) {
-			if (((off+i) < start) || ((off+i) >= (start+length)))
+			if (((off+i) < start) || ((off+i) >= (start+length))) {
 				log_info (" ");
-			else if (isprint (mem[off + i]))
+			} else if (isprint (mem[off + i])) {
 				log_info ("%c", mem[off + i]);
-			else
+			} else {
 				log_info (".");
+			}
 		}
 		log_info ("\n");
 	}
@@ -133,8 +138,9 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 		n = 0;
 		count = getline (&ptr, &n, file);		//XXX std::getline, istream::getline
 		if (count > 0) {
-			if (ptr[count-1] == '\n')
+			if (ptr[count-1] == '\n') {
 				ptr[count-1] = 0;
+			}
 			output.push_back (ptr);
 			//log_debug ("\t%s\n", ptr);
 		}
@@ -416,8 +422,9 @@ read_uuid1 (std::uint8_t* buffer)
 	ss << std::setfill ('0') << std::hex;
 
 	for (int i = 0; i < 16; ++i) {
-		if ((i == 4) || (i == 6) || (i == 8) || (i == 10))
+		if ((i == 4) || (i == 6) || (i == 8) || (i == 10)) {
 			ss << "-";
+		}
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
@@ -446,8 +453,9 @@ read_uuid3 (std::uint8_t* buffer)
 	ss << std::setfill ('0') << std::hex;
 
 	for (int i = 0; i < 4; ++i) {
-		if (i == 2)
+		if (i == 2) {
 			ss << "-";
+		}
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 

@@ -69,11 +69,11 @@ BaseDrawingArea::checker_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Re
 
 	for (int i = 0; i <= w; i += s) {
 		for (int j = 0; j <= h; j += s) {
-			if (((i+j)/s)&1)
+			if (((i+j)/s)&1) {
 				cr->set_source_rgba (0.8, 0.8, 0.8, 1.0);
-			else
+			} else {
 				cr->set_source_rgba (0.6, 0.6, 0.6, 1.0);
-
+			}
 			cr->rectangle (x+i, y+j, s, s);
 			cr->fill();
 		}
@@ -100,6 +100,7 @@ BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk:
 {
 	if (!cr)
 		return;
+
 	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
 }
 
@@ -197,10 +198,11 @@ BaseDrawingArea::escape_text (std::string &text)
 {
 	std::size_t pos = text.find_first_of ("<>");
 	while (pos != std::string::npos) {
-		if (text[pos] == '<')
+		if (text[pos] == '<') {
 			text.replace (pos, 1, "&#60;");
-		else
+		} else {
 			text.replace (pos, 1, "&#62;");
+		}
 		pos = text.find_first_of ("<>", pos+2);
 	}
 }

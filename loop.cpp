@@ -123,6 +123,7 @@ Loop::accept (Visitor& v)
 	LoopPtr l = std::dynamic_pointer_cast<Loop> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 

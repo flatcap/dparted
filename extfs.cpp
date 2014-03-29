@@ -55,6 +55,7 @@ Extfs::accept (Visitor& v)
 	ExtfsPtr b = std::dynamic_pointer_cast<Extfs> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 

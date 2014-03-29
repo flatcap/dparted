@@ -49,6 +49,7 @@ identify_vfat (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 	for (int i = 3; i < 11; ++i) {
 		if ((buffer[i] > 0) && (buffer[i] < ' '))
 			return 0;
+
 		if (buffer[i] > 126)
 			return 0;
 	}

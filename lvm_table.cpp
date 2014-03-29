@@ -65,6 +65,7 @@ LvmTable::accept (Visitor& v)
 	LvmTablePtr l = std::dynamic_pointer_cast<LvmTable> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -206,6 +207,7 @@ format_config (std::string& config)
 		first = config.find_first_of ("[]{}\n", index);
 		if (first == std::string::npos)
 			break;
+
 		//log_info ("first = %lu '%c'\n", first, config[first] == '\n' ? '@' : config[first]);
 
 		switch (config[first]) {

@@ -50,6 +50,7 @@ MdPartition::accept (Visitor& v)
 	MdPartitionPtr m = std::dynamic_pointer_cast<MdPartition> (get_smart());
 	if (!v.visit(m))
 		return false;
+
 	return visit_children(v);
 }
 

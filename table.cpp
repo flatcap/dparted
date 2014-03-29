@@ -69,6 +69,7 @@ Table::accept (Visitor& v)
 	TablePtr t = std::dynamic_pointer_cast<Table> (get_smart());
 	if (!v.visit(t))
 		return false;
+
 	return visit_children(v);
 }
 

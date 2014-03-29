@@ -53,11 +53,11 @@ get_value (const libconfig::Setting& s)
 		case libconfig::Setting::TypeString:
 			return s.operator std::string();
 		case libconfig::Setting::TypeBoolean:
-			if (bool(s))
+			if (bool(s)) {
 				return "true";
-			else
+			} else {
 				return "false";
-			return "something";
+			}
 		case libconfig::Setting::TypeInt:
 			return std::to_string (int(s));
 		case libconfig::Setting::TypeInt64:

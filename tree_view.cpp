@@ -249,6 +249,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 	//log_debug ("qtt: %d\n", menu_active);
 	if (keyboard_tooltip)
 		return false;
+
 	if (menu_active)
 		return false;
 

@@ -72,6 +72,7 @@ Filesystem::accept (Visitor& v)
 	FilesystemPtr f = std::dynamic_pointer_cast<Filesystem> (get_smart());
 	if (!v.visit(f))
 		return false;
+
 	return visit_children(v);
 }
 

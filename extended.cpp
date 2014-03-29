@@ -61,6 +61,7 @@ Extended::accept (Visitor& v)
 	ExtendedPtr e = std::dynamic_pointer_cast<Extended> (get_smart());
 	if (!v.visit(e))
 		return false;
+
 	return visit_children(v);
 }
 

@@ -64,6 +64,7 @@ MdTable::accept (Visitor& v)
 	MdTablePtr m = std::dynamic_pointer_cast<MdTable> (get_smart());
 	if (!v.visit(m))
 		return false;
+
 	return visit_children(v);
 }
 

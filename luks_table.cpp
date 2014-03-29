@@ -76,6 +76,7 @@ LuksTable::accept (Visitor& v)
 	LuksTablePtr l = std::dynamic_pointer_cast<LuksTable> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 

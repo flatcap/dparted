@@ -235,10 +235,11 @@ DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& sh
 	draw_border (cr, shape);				// Set clipping area
 	//cr->clip();
 
-	if (primary)
+	if (primary) {
 		cr->set_line_width(2);
-	else
+	} else {
 		cr->set_line_width(1);
+	}
 
 	cr->set_dash (dashes, start);
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);		//XXX focus colours from theme
@@ -724,10 +725,11 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	log_debug ("Actions:\n");
 	for (auto a : actions) {
 		int colour;
-		if (a.enabled)
+		if (a.enabled) {
 			colour = 32;
-		else
+		} else {
 			colour = 31;
+		}
 
 		log_debug ("\t\033[01;%dm%s\033[0m\n", colour, a.name.c_str());
 	}
@@ -786,6 +788,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 {
 	if (!cr)
 		return;
+
 	if (!cont)
 		return;
 

@@ -66,6 +66,7 @@ Msdos::accept (Visitor& v)
 	MsdosPtr m = std::dynamic_pointer_cast<Msdos> (get_smart());
 	if (!v.visit(m))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -116,6 +117,7 @@ Msdos::read_partition (std::uint8_t* buffer, int index, struct partition* part)
 	//XXX include this in read_table?
 	if (!buffer || !part)
 		return false;
+
 	if ((index < 0) || (index > 3))
 		return false;
 

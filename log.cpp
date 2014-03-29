@@ -138,6 +138,7 @@ log_close (void)
 {
 	if (!file)
 		return;
+
 	fclose (file);
 	file = nullptr;
 }

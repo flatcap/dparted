@@ -60,6 +60,7 @@ File::accept (Visitor& v)
 	FilePtr f = std::dynamic_pointer_cast<File> (get_smart());
 	if (!v.visit(f))
 		return false;
+
 	return visit_children(v);
 }
 

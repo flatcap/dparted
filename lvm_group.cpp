@@ -73,6 +73,7 @@ LvmGroup::accept (Visitor& v)
 	LvmGroupPtr l = std::dynamic_pointer_cast<LvmGroup> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -607,8 +608,10 @@ LvmGroup::discover (ContainerPtr& top_level)
 	for (auto i : v) {
 		if (i->is_a ("LvmMetadata"))		// nothing interesting here
 			continue;
+
 		if (i->whole)				// we're part of something bigger
 			continue;
+
 		//log_info ("Q: [%s] %s: %s\n", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
 		main_app->queue_add_probe(i);
 	}

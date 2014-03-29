@@ -47,6 +47,7 @@ MdStripe::accept (Visitor& v)
 	MdStripePtr b = std::dynamic_pointer_cast<MdStripe> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 

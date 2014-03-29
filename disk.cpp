@@ -102,6 +102,7 @@ Disk::accept (Visitor& v)
 	DiskPtr d = std::dynamic_pointer_cast<Disk> (get_smart());
 	if (!v.visit(d))
 		return false;
+
 	return visit_children(v);
 }
 

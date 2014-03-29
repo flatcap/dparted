@@ -55,6 +55,7 @@ Ntfs::accept (Visitor& v)
 	NtfsPtr b = std::dynamic_pointer_cast<Ntfs> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -91,6 +92,7 @@ Ntfs::get_ntfs_usage (void)
 {
 	if (device.empty())
 		return false;
+
 	ContainerPtr c = get_smart();
 	if (get_mounted_usage(c))
 		return true;

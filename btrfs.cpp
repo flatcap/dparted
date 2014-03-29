@@ -55,6 +55,7 @@ Btrfs::accept (Visitor& v)
 	BtrfsPtr b = std::dynamic_pointer_cast<Btrfs> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -91,6 +92,7 @@ Btrfs::get_btrfs_usage (void)
 {
 	if (device.empty())
 		return false;
+
 	ContainerPtr c = get_smart();
 	if (get_mounted_usage(c))
 		return true;

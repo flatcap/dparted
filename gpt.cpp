@@ -90,6 +90,7 @@ Gpt::accept (Visitor& v)
 	GptPtr g = std::dynamic_pointer_cast<Gpt> (get_smart());
 	if (!v.visit(g))
 		return false;
+
 	return visit_children(v);
 }
 

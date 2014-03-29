@@ -56,6 +56,7 @@ Misc::accept (Visitor& v)
 	MiscPtr m = std::dynamic_pointer_cast<Misc> (get_smart());
 	if (!v.visit(m))
 		return false;
+
 	return visit_children(v);
 }
 

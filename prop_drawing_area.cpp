@@ -64,6 +64,7 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 {
 	if (!cr)
 		return;
+
 	if (!cont)
 		return;
 

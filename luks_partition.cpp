@@ -50,6 +50,7 @@ LuksPartition::accept (Visitor& v)
 	LuksPartitionPtr m = std::dynamic_pointer_cast<LuksPartition> (get_smart());
 	if (!v.visit(m))
 		return false;
+
 	return visit_children(v);
 }
 

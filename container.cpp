@@ -178,6 +178,7 @@ Container::accept (Visitor& v)
 	ContainerPtr c = get_smart();
 	if (!v.visit(c))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -311,10 +312,11 @@ Container::get_device_name (void)
 		return device;
 
 	ContainerPtr p = parent.lock();
-	if (p)
+	if (p) {
 		return p->get_device_name();
-	else
+	} else {
 		return "UNKNOWN";
+	}
 }
 
 std::uint64_t
@@ -558,6 +560,7 @@ Container::get_all_props (bool inc_hidden /*=false*/)
 	for (auto p : props) {
 		if ((p.second->flags & BaseProperty::Flags::Hide) && !inc_hidden)
 			continue;
+
 		vv.push_back (p.second);
 	}
 

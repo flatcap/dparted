@@ -272,6 +272,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	if (!group.app) {
 		if (group.theme.size())
 			log_debug ("theme without app\n");
+
 		if ((group.x != -1) || (group.y != -1) || (group.w != -1) || (group.h != -1))
 			log_debug ("coords without app\n");
 	}

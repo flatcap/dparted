@@ -47,6 +47,7 @@ MdLinear::accept (Visitor& v)
 	MdLinearPtr b = std::dynamic_pointer_cast<MdLinear> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 

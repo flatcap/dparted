@@ -54,6 +54,7 @@ Partition::accept (Visitor& v)
 	PartitionPtr p = std::dynamic_pointer_cast<Partition> (get_smart());
 	if (!v.visit(p))
 		return false;
+
 	return visit_children(v);
 }
 

@@ -50,6 +50,7 @@ LvmLinear::accept (Visitor& v)
 	LvmLinearPtr l = std::dynamic_pointer_cast<LvmLinear> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 
