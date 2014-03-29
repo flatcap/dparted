@@ -84,7 +84,7 @@ Loop::create (const std::string& losetup)
 	l->file_name  = parts[11];
 
 	l->name = l->device;
-	size_t index = l->name.find_last_of ('/');
+	std::size_t index = l->name.find_last_of ('/');
 	if (index != std::string::npos) {
 		l->name = l->name.substr (index+1);
 	}
@@ -240,7 +240,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	l->bytes_size    = size;
 	l->bytes_used    = 0;
 
-	size_t i = l->device.find_last_of ('/');
+	std::size_t i = l->device.find_last_of ('/');
 	if (i == std::string::npos) {
 		l->name = l->device;
 	} else {
@@ -270,7 +270,7 @@ Loop::get_file_major_minor (void)
 std::string
 Loop::get_file_name_short (void)
 {
-	size_t pos = file_name.find_last_of ('/');
+	std::size_t pos = file_name.find_last_of ('/');
 	if (pos == std::string::npos)
 		return file_name;
 

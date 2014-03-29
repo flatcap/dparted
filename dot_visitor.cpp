@@ -209,7 +209,7 @@ dot_container (std::shared_ptr<T> t)
 		}
 
 		std::string s = (std::string) *prop;
-		size_t pos = s.find_first_of ('<');
+		std::size_t pos = s.find_first_of ('<');
 		if (pos != std::string::npos) {
 			s = s.replace (pos, 1, "(");
 		}

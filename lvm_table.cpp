@@ -167,8 +167,8 @@ get_mda_header (std::uint8_t* buffer)
 static int
 get_seq_num (const std::string& config)
 {
-	size_t index = config.find ("seqno = ");
-	size_t end   = config.find ('\n', index);
+	std::size_t index = config.find ("seqno = ");
+	std::size_t end   = config.find ('\n', index);
 
 	if (index == std::string::npos)
 		return 0;
@@ -185,7 +185,7 @@ get_seq_num (const std::string& config)
 static std::string
 get_vol_name (const std::string& config)
 {
-	size_t end = config.find (" {\n");
+	std::size_t end = config.find (" {\n");
 
 	if (end == std::string::npos)
 		return "";
@@ -198,8 +198,8 @@ get_vol_name (const std::string& config)
 static void
 format_config (std::string& config)
 {
-	size_t index = 0;
-	size_t first;
+	std::size_t index = 0;
+	std::size_t first;
 	std::string indent;
 
 	for (int i = 0; i < 1000; i++) {

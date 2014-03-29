@@ -102,7 +102,7 @@ static bool
 parse_line (std::string line, std::string& key, std::string& value)
 {
 	// Tab, description, colon, space, value
-	size_t pos;
+	std::size_t pos;
 	std::string k;
 	std::string v;
 
@@ -144,7 +144,7 @@ make_key (std::string desc)
 	std::transform (desc.begin(), desc.end(), desc.begin(), ::tolower);
 
 	// space -> underscore
-	size_t pos = -1;
+	std::size_t pos = -1;
 	do {
 		pos = desc.find_first_of (' ', pos+1);
 		if (pos != std::string::npos) {

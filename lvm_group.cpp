@@ -80,7 +80,7 @@ LvmGroup::accept (Visitor& v)
 void
 expand_name (std::string& name)
 {
-	size_t pos = 0;
+	std::size_t pos = 0;
 
 	while ((pos = name.find_first_of ("-", pos)) != std::string::npos) {
 		name.insert (pos, "-");
@@ -505,7 +505,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 				//log_info ("raid metadata\n");
 				// Add an extra dependency for raid metadata
 				std::string dep_name = d;
-				size_t pos = dep_name.find ("_rimage_");
+				std::size_t pos = dep_name.find ("_rimage_");
 				if (pos != std::string::npos) {
 					dep_name.replace (pos, 8, "_rmeta_");
 					//log_debug ("ADD: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());

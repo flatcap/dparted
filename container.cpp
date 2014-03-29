@@ -348,7 +348,7 @@ Container::find (const std::string& search)
 		return c;
 	}
 
-	size_t pos = search.find ("(0)");
+	std::size_t pos = search.find ("(0)");
 	if (pos == (search.length() - 3)) {
 		std::string search2 = search.substr (0, pos);
 		if (name == search2) {
@@ -468,7 +468,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	std::string uuid = c->uuid;
 
 	if (uuid.size() > 8) {
-		size_t index = uuid.find_first_of (":-. ");
+		std::size_t index = uuid.find_first_of (":-. ");
 		uuid = "U:" + uuid.substr (0, index);
 	}
 
@@ -861,7 +861,7 @@ Container::get_uuid_short (void)
 	if (u.length() < 8)
 		return u;
 
-	size_t pos = uuid.find_first_of ("-:");
+	std::size_t pos = uuid.find_first_of ("-:");
 	if (pos != std::string::npos) {
 		u = uuid.substr (0, pos);
 	}

@@ -563,7 +563,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	int xd = 0, yd = 0, wd = 0, hd = 0;
 	int xs = 0, ys = 0, ws = 0, hs = 0;
 
-	size_t pos = labeld.find_last_of ('/');
+	std::size_t pos = labeld.find_last_of ('/');
 	if (pos != std::string::npos) {
 		labeld = labeld.substr (pos+1);
 	}
@@ -1212,7 +1212,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 
 	for (auto a : actions) {
 		//log_debug ("%s\n", a.name.c_str());
-		size_t pos = a.name.find_first_of ('/');
+		std::size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
 			section.clear();
 			key = a.name;

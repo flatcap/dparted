@@ -106,7 +106,7 @@ parse_header (const std::string& header, std::string& dev)
 	if (header.substr (0, 19) != "superblock: bytenr=")
 		return false;
 
-	size_t pos = header.find ("device=");
+	std::size_t pos = header.find ("device=");
 	if (pos == std::string::npos)
 		return false;
 
@@ -118,7 +118,7 @@ static bool
 parse_line (const std::string& line, std::string& key, std::string& value)
 {
 	// Up to 21 chars, tab(s), value
-	size_t pos;
+	std::size_t pos;
 	std::string k;
 	std::string v;
 
@@ -143,7 +143,7 @@ static std::string
 make_desc (std::string key)
 {
 	// underscore/dot -> space
-	size_t pos = -1;
+	std::size_t pos = -1;
 	do {
 		pos = key.find_first_of ("_.", pos+1);
 		if (pos != std::string::npos) {

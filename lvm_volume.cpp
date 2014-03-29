@@ -165,7 +165,7 @@ LvmVolume::find (const std::string& search)
 	//log_debug ("find: %s -> %s (%s)\n", search.c_str(), name.c_str(), uuid.c_str());
 	std::string search2;
 
-	size_t pos = search.find ("(0)");
+	std::size_t pos = search.find ("(0)");
 	if (pos == (search.length() - 3)) {
 		search2 = search.substr (0, pos);
 	}

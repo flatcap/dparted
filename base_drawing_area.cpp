@@ -195,7 +195,7 @@ BaseDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, Glib::RefPt
 void
 BaseDrawingArea::escape_text (std::string &text)
 {
-	size_t pos = text.find_first_of ("<>");
+	std::size_t pos = text.find_first_of ("<>");
 	while (pos != std::string::npos) {
 		if (text[pos] == '<')
 			text.replace (pos, 1, "&#60;");

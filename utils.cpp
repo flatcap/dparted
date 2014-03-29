@@ -112,7 +112,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 {
 	FILE* file = nullptr;
 	char* ptr = nullptr;
-	size_t n = 0;
+	std::size_t n = 0;
 	int count = 0;
 
 	output.clear();
@@ -209,8 +209,8 @@ execute_command3 (const std::string& command, std::string& output)
 unsigned int
 explode (const char* separators, const std::string& input, std::vector<std::string>& parts)
 {
-	size_t start = 0;
-	size_t end   = 0;
+	std::size_t start = 0;
+	std::size_t end   = 0;
 
 	if (!separators)
 		return 0;
@@ -243,8 +243,8 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 unsigned int
 explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max)
 {
-	size_t start = 0;
-	size_t end   = 0;
+	std::size_t start = 0;
+	std::size_t end   = 0;
 
 	if (!separators)
 		return 0;
@@ -401,7 +401,7 @@ read_file_line (const std::string& filename)
 
 	std::string line ((std::istreambuf_iterator<char> (in)), std::istreambuf_iterator<char>());
 
-	size_t pos = line.find_first_of ("\r\n");
+	std::size_t pos = line.find_first_of ("\r\n");
 	if (pos != std::string::npos)
 		line = line.substr (0, pos);
 
@@ -457,7 +457,7 @@ read_uuid3 (std::uint8_t* buffer)
 std::string
 shorten_device (const std::string& device)
 {
-	size_t pos = device.find ("/dev/");
+	std::size_t pos = device.find ("/dev/");
 	if (pos == std::string::npos)
 		return device;
 

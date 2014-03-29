@@ -150,12 +150,12 @@ GfxContainer::init (ContainerPtr c)
  * find_subst - get the position of a {tag}
  */
 bool
-find_subst (const std::string& text, std::string& tag, size_t& start, size_t& stop)
+find_subst (const std::string& text, std::string& tag, std::size_t& start, std::size_t& stop)
 {
 	//XXX on failure, point start at error
 	const char* valid = "abcdefghijklmnopqrstuvwxyz_";
-	size_t open  = std::string::npos;
-	size_t close = std::string::npos;
+	std::size_t open  = std::string::npos;
+	std::size_t close = std::string::npos;
 
 	open = text.find ('{');
 	if (open == std::string::npos) {
@@ -198,8 +198,8 @@ GfxContainer::process_label (const std::string& label_template)
 		return l;
 
 	std::string tag;
-	size_t start = std::string::npos;
-	size_t stop  = std::string::npos;
+	std::size_t start = std::string::npos;
+	std::size_t stop  = std::string::npos;
 	while (find_subst (l, tag, start, stop)) {
 		PPtr prop = c->get_prop (tag);
 		std::string value = (std::string) *prop;

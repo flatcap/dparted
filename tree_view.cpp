@@ -117,7 +117,7 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			row[m_Columns.col_gfx_container] = x;
 
 			std::string dev = x->device;
-			size_t pos = dev.find_last_of ('/');
+			std::size_t pos = dev.find_last_of ('/');
 			if (pos != std::string::npos) {
 				dev = dev.substr (pos+1);
 			}
