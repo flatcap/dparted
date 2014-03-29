@@ -340,11 +340,11 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 
 #ifdef DP_LIST
 	if (group.list && top_level) {
-		log_info ("------------------------------------------------------------\n");
+		log_debug ("------------------------------------------------------------\n");
 		ListVisitor lv;
 		top_level->accept (lv);
 		lv.list();
-		log_info ("------------------------------------------------------------\n");
+		log_debug ("------------------------------------------------------------\n");
 	}
 #endif
 #ifdef DP_PROP
