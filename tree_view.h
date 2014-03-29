@@ -41,7 +41,6 @@ protected:
 	typedef std::shared_ptr<Gtk::TreeModelColumnBase> ModColPtr;
 	std::vector<ModColPtr> mod_cols;
 
-	Gtk::TreeModel::ColumnRecord m_Columns;
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
 
 	bool on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);

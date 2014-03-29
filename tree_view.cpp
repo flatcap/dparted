@@ -18,6 +18,8 @@
 
 #include <cstdlib>
 
+#include <gtkmm/cellrenderertext.h>
+
 #include "gui_app.h"
 #include "log_trace.h"
 #include "theme.h"
@@ -123,13 +125,17 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			row[base] = x;
 #endif
 
-#if 0
+#if 1
 			std::string dev = x->device;
 			std::size_t pos = dev.find_last_of ('/');
 			if (pos != std::string::npos) {
 				dev = dev.substr (pos+1);
 			}
-			row[col_container] = dev;
+#endif
+			//row[col_container] = dev;
+			dev = "hello";
+			row->set_value(0, dev);
+#if 0
 
 			row[col_colour]    = get_colour_as_pixbuf (16, x->colour);
 			row[col_type]      = x->type;
@@ -197,18 +203,18 @@ TreeView::init_treeview (GfxContainerPtr& c)
 		log_debug ("\n");
 	}
 
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<GfxContainerPtr>));		//  0 gfx_container
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<GfxContainerPtr>));		//  0 gfx_container
 	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  1 container
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>>));	//  2 colour
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  3 type
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  4 name
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  5 size
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  6 size_suffix
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  7 used
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  8 used_suffix
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  9 free
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			// 10 free_suffix
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			// 11 empty
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>>));	//  2 colour
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  3 type
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  4 name
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  5 size
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  6 size_suffix
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  7 used
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  8 used_suffix
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  9 free
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			// 10 free_suffix
+	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			// 11 empty
 
 	/*	DEVICE	COLOUR	TYPE	NAME	DISPLAY
 	 *	loop0	none	block	loop0	empty
@@ -230,26 +236,31 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	 *	        `-- loop0p2	vfat	green	vfat_label
 	 */
 
+	Gtk::TreeModel::ColumnRecord m_Columns;
 	m_Columns.add (*mod_cols[ 0]);		//  0 gfx_container
-	m_Columns.add (*mod_cols[ 1]);		//  1 container
-	m_Columns.add (*mod_cols[ 2]);		//  2 colour
-	m_Columns.add (*mod_cols[ 3]);		//  3 type
-	m_Columns.add (*mod_cols[ 4]);		//  4 name
-	m_Columns.add (*mod_cols[ 5]);		//  5 size
-	m_Columns.add (*mod_cols[ 6]);		//  6 size_suffix
-	m_Columns.add (*mod_cols[ 7]);		//  7 used
-	m_Columns.add (*mod_cols[ 8]);		//  8 used_suffix
-	m_Columns.add (*mod_cols[ 9]);		//  9 free
-	m_Columns.add (*mod_cols[10]);		// 10 free_suffix
-	m_Columns.add (*mod_cols[11]);		// 11 empty
+	// m_Columns.add (*mod_cols[ 1]);		//  1 container
+	// m_Columns.add (*mod_cols[ 2]);		//  2 colour
+	// m_Columns.add (*mod_cols[ 3]);		//  3 type
+	// m_Columns.add (*mod_cols[ 4]);		//  4 name
+	// m_Columns.add (*mod_cols[ 5]);		//  5 size
+	// m_Columns.add (*mod_cols[ 6]);		//  6 size_suffix
+	// m_Columns.add (*mod_cols[ 7]);		//  7 used
+	// m_Columns.add (*mod_cols[ 8]);		//  8 used_suffix
+	// m_Columns.add (*mod_cols[ 9]);		//  9 free
+	// m_Columns.add (*mod_cols[10]);		// 10 free_suffix
+	// m_Columns.add (*mod_cols[11]);		// 11 empty
 
 	//Add the TreeView's view columns:
 	Gtk::TreeView::Column* col = nullptr;
 
+#if 1
 	col = Gtk::manage (new Gtk::TreeView::Column ("Container"));
-	col->pack_start (col_container,  true);
+	Gtk::CellRenderer* pCellRenderer = manage(new Gtk::CellRendererText());
+	//col->set_renderer (*pCellRenderer, *mod_cols[1]);
+	col->pack_start (*pCellRenderer,  true);
 	col->set_alignment (0.0);
 	append_column (*col);
+#endif
 
 #if 0
 	col = Gtk::manage (new Gtk::TreeView::Column ("Type"));

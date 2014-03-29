@@ -94,6 +94,7 @@ Window::Window (void)
 
 	//log_debug ("%d,%d,%d,%d\n", tb, gx, tv, sb);
 	toolbar->set_visible (tb);
+	gx = false;
 	drawingarea.set_visible (gx);
 	treeview.set_visible (tv);
 	statusbar.set_visible (sb);
