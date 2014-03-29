@@ -142,9 +142,9 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		}
 #endif
 
-		for (std::uint32_t i = 0; i < clusters; i++) {
+		for (std::uint32_t i = 0; i < clusters; ++i) {
 			if (le32_to_cpu (ptr[i]) == 0) {
-				free_clust++;
+				++free_clust;
 			}
 		}
 

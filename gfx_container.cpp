@@ -250,7 +250,7 @@ GfxContainer::dump2 (void)
 	log_debug ("%sseqnum         = ", tabs.c_str(), seqnum);
 #endif
 
-	indent++;
+	++indent;
 	for (auto c : children) {
 		c->dump();
 	}
@@ -385,7 +385,7 @@ GfxContainer::get_index (const GfxContainerPtr& me)
 		return -1;
 
 	int size = children.size();
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < size; ++i) {
 		if (children[i] == me) {
 			return i;
 		}
@@ -402,7 +402,7 @@ GfxContainer::get_depth (void)
 
 	while (up) {
 		up = up->parent.lock();
-		depth++;
+		++depth;
 	}
 
 	return depth;

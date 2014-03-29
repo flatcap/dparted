@@ -259,7 +259,7 @@ Disk::find_devices (ContainerPtr& list)
 		//d->open_device();
 
 		list->add_child(d);
-		added++;
+		++added;
 	}
 
 	return added;

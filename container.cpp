@@ -247,7 +247,7 @@ Container::just_add_child (ContainerPtr& child)
 void
 Container::delete_child (ContainerPtr& child)
 {
-	for (auto it = children.begin(); it != children.end(); it++) {
+	for (auto it = children.begin(); it != children.end(); ++it) {
 		if (*it == child) {
 			children.erase (it);
 			break;
@@ -499,7 +499,7 @@ Container::is_a (const std::string& t)
 	//log_debug ("my type = %s, compare to %s\n", type.back().c_str(), t.c_str());
 
 	// Start with the most derived type
-	for (auto it = type.rbegin(); it != type.rend(); it++) {
+	for (auto it = type.rbegin(); it != type.rend(); ++it) {
 		if ((*it) == t) {
 			return true;
 		}

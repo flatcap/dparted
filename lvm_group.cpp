@@ -194,7 +194,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			g->uuid    = vg_uuid;
 			//g->missing = true;
 			pieces->just_add_child(g);
-			added++;
+			++added;
 		}
 
 		std::string pv_uuid = tags["LVM2_PV_UUID"];
@@ -205,7 +205,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			t->uuid    = pv_uuid;
 			//t->missing = true;
 			pieces->just_add_child(t);
-			added++;
+			++added;
 		}
 
 		ContainerPtr c(t);
@@ -237,7 +237,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			v->uuid    = lv_uuid;
 			//v->missing = true;
 			pieces->just_add_child(v);
-			added++;
+			++added;
 
 			if (lv_attr[0] == '-') {
 				// Not an image.  Therefore, it's a top-level entity.
@@ -534,7 +534,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 	log_info ("------------------------------------------------------------\n");
 #endif
 
-	//for (int j = 0; j < 5; j++) {
+	//for (int j = 0; j < 5; ++j) {
 	for (auto d : deps) {
 		std::string parent_id = d.first;
 		std::string child_id  = d.second;

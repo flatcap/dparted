@@ -202,7 +202,7 @@ format_config (std::string& config)
 	std::size_t first;
 	std::string indent;
 
-	for (int i = 0; i < 1000; i++) {
+	for (int i = 0; i < 1000; ++i) {
 		first = config.find_first_of ("[]{}\n", index);
 		if (first == std::string::npos)
 			break;
@@ -263,7 +263,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 #if 0
 	log_info ("Disk locations:\n");
 	int i;
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < 8; ++i) {
 		if (le64_to_cpu (ph->disk_areas[i].offset) == 0) {
 			break;
 		}
@@ -273,7 +273,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 #if 0
 	log_info ("Metadata locations:\n");
-	for (i++; i < 8; i++) {
+	for (++i; i < 8; ++i) {
 		if (le64_to_cpu (ph->disk_areas[i].offset) == 0) {
 			break;
 		}
@@ -291,7 +291,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 #if 0
 	log_info ("Metadata:\n");
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 4; ++i) {
 		if (le64_to_cpu (mh->raw_locns[i].offset) == 0) {
 			break;
 		}

@@ -83,7 +83,7 @@ dump_hex2 (void* buf, int start, int length)
 		else
 			log_info ("	%6.6x ", off);
 
-		for (i = 0; i < 16; i++) {
+		for (i = 0; i < 16; ++i) {
 			if (i == 8)
 				log_info (" -");
 			if (((off+i) >= start) && ((off+i) < (start+length)))
@@ -92,7 +92,7 @@ dump_hex2 (void* buf, int start, int length)
 				log_info ("   ");
 		}
 		log_info ("  ");
-		for (i = 0; i < 16; i++) {
+		for (i = 0; i < 16; ++i) {
 			if (((off+i) < start) || ((off+i) >= (start+length)))
 				log_info (" ");
 			else if (isprint (mem[off + i]))
@@ -342,9 +342,9 @@ join (std::vector<std::string> v, const std::string& sep)
 	auto end = std::end(v);
 
 	j = *it;
-	it++;
+	++it;
 
-	for (; it != end; it++) {
+	for (; it != end; ++it) {
 		j += sep + *it;
 	}
 
@@ -415,7 +415,7 @@ read_uuid1 (std::uint8_t* buffer)
 
 	ss << std::setfill ('0') << std::hex;
 
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < 16; ++i) {
 		if ((i == 4) || (i == 6) || (i == 8) || (i == 10))
 			ss << "-";
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
@@ -431,7 +431,7 @@ read_uuid2 (std::uint8_t* buffer)
 
 	ss << std::setfill ('0') << std::hex;
 
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 8; ++i) {
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
@@ -445,7 +445,7 @@ read_uuid3 (std::uint8_t* buffer)
 
 	ss << std::setfill ('0') << std::hex;
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; ++i) {
 		if (i == 2)
 			ss << "-";
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);

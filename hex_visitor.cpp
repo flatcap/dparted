@@ -34,7 +34,7 @@ HexVisitor::~HexVisitor()
 bool
 HexVisitor::visit_enter (ContainerPtr& UNUSED(c))
 {
-	indent++;
+	++indent;
 	return true;
 }
 

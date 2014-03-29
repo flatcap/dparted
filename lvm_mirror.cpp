@@ -115,7 +115,7 @@ LvmMirror::add_child (ContainerPtr& child)
 
 	bool inserted = false;
 
-	for (auto i = children.begin(); i != children.end(); i++) {
+	for (auto i = children.begin(); i != children.end(); ++i) {
 		if ((*i)->parent_offset > child->parent_offset) {
 			children.insert (i, child);
 			inserted = true;

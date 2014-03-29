@@ -179,7 +179,7 @@ draw_grid_linear (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, std::uint
 
 	int count = (w / spacing) + 1;
 
-	for (int i = 0; i <= count; i++) {
+	for (int i = 0; i <= count; ++i) {
 		if ((i % major) == 0) {
 			cr->set_line_width(3);
 			cr->set_source_rgba (0.3, 0.3, 0.8, 0.7);
@@ -255,7 +255,7 @@ DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& sh
 	}
 
 	cr->restore();						// End clipping
-	start++;
+	++start;
 }
 
 /**

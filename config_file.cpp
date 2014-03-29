@@ -72,7 +72,7 @@ get_value (const libconfig::Setting& s)
 void
 parse_config (const libconfig::Setting& setting, std::map<std::string,std::string>& config)
 {
-	for (int i = 0; i < setting.getLength(); i++) {
+	for (int i = 0; i < setting.getLength(); ++i) {
 		const libconfig::Setting& s = setting[i];
 
 		if (s.isScalar()) {
@@ -220,7 +220,7 @@ ConfigFile::get_strings (const std::string& name)
 	std::vector<std::string> vs;
 	std::string array;
 
-	for (int i = 0; i < 64; i++) {
+	for (int i = 0; i < 64; ++i) {
 		array = name + ".[" + std::to_string(i) + "]";
 		if (!exists (array))
 			break;

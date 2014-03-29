@@ -117,7 +117,7 @@ read_hex (std::uint8_t* buffer, unsigned int length)
 
 	ss << std::setfill ('0') << std::hex << std::setiosflags (std::ios::uppercase);
 
-	for (unsigned int i = 0; i < length; i++) {
+	for (unsigned int i = 0; i < length; ++i) {
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]) << ' ';
 	}
 
@@ -153,7 +153,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	l->uuid                 = get_null_str (buffer+168, 40);
 	l->bytes_size           = parent->bytes_size;
 
-	//for (int i = 0; i < 16; i++) {
+	//for (int i = 0; i < 16; ++i) {
 	l->pass1_active     = be32_to_cpup (buffer+208);	// 0x0000DEAD/0x00AC71F3
 	l->pass1_iterations = be32_to_cpup (buffer+212);
 	l->pass1_salt       = read_hex     (buffer+216, 32);

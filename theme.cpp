@@ -170,7 +170,7 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 	std::string dot;
 	std::string search;
 
-	for (auto i = 0; i < 20; i++) {
+	for (auto i = 0; i < 20; ++i) {
 		if (work_path.empty()) {
 			dot.clear();
 		} else {

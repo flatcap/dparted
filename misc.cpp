@@ -94,7 +94,7 @@ is_empty (std::uint8_t* buffer, int bufsize)
 
 	bufsize /= sizeof (std::uint64_t);
 
-	for (int i = 0; i < bufsize; i++) {
+	for (int i = 0; i < bufsize; ++i) {
 		if (lptr[i]) {
 			return false;
 		}
@@ -109,7 +109,7 @@ is_random (std::uint8_t* buffer, int bufsize)
 {
 	double mean = 0;
 
-	for (int i = 0; i < bufsize; i++) {
+	for (int i = 0; i < bufsize; ++i) {
 		mean += buffer[i];
 	}
 

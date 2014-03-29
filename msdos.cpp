@@ -141,7 +141,7 @@ Msdos::read_table (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize), std::uin
 {
 	struct partition part;
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; ++i) {
 		if (!read_partition (buffer, i, &part))	// could flag Msdos object as invalid
 			continue;		//XXX or return -1
 
@@ -191,7 +191,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res1->parent_offset = 0;					// Start of the partition
 	m->add_child (res1);		// change to add_reserved?
 
-	for (unsigned int i = 0; i < vp.size(); i++) {
+	for (unsigned int i = 0; i < vp.size(); ++i) {
 #if 0
 		std::string s1 = get_size (le64_to_cpu (vp[i].start));
 		std::string s2 = get_size (le64_to_cpu (vp[i].size));

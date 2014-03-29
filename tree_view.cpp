@@ -326,7 +326,7 @@ TreeView::setup_popup (void)
 	std::vector<std::string> list = { "_Edit", "_Process", "_Remove" };
 
 	Gtk::MenuItem* item = nullptr;
-	for (unsigned int i = 0; i < list.size(); i++) {
+	for (unsigned int i = 0; i < list.size(); ++i) {
 		item = Gtk::manage (new Gtk::MenuItem (list[i], true));
 		item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &TreeView::on_menu_select), i));
 		m_Menu_Popup.append (*item);
