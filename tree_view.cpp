@@ -58,7 +58,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 		Glib::RefPtr<Gtk::TreeSelection> s1 = get_selection();
 		Gtk::TreeModel::iterator s2 = s1->get_selected();
 		const Gtk::TreeModel::Row& s3 = *s2;
-		GfxContainerPtr c = s3[m_Columns.col_container];
+		GfxContainerPtr c = s3[col_container];
 		log_debug ("Selection: %s\n", c->dump());
 	}
 #endif
@@ -115,29 +115,35 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			x->treepath = m_refTreeModel->get_string (row);
 			//log_debug ("%s\t%s\n", x->treepath.c_str(), x->dump());
 
-			//row[m_Columns.col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
+			//row[col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
 
-			row[m_Columns.col_gfx_container] = x;
+#if 0
+			ModColPtr& m = mod_cols[0];
+			Gtk::TreeModelColumnBase& base = *m;
+			row[base] = x;
+#endif
 
+#if 0
 			std::string dev = x->device;
 			std::size_t pos = dev.find_last_of ('/');
 			if (pos != std::string::npos) {
 				dev = dev.substr (pos+1);
 			}
-			row[m_Columns.col_container] = dev;
+			row[col_container] = dev;
 
-			row[m_Columns.col_colour]    = get_colour_as_pixbuf (16, x->colour);
-			row[m_Columns.col_type]      = x->type;
-			row[m_Columns.col_name]      = x->name;
+			row[col_colour]    = get_colour_as_pixbuf (16, x->colour);
+			row[col_type]      = x->type;
+			row[col_name]      = x->name;
 
-			row[m_Columns.col_size]        = x->bytes_size / 1024 / 1024;
-			row[m_Columns.col_size_suffix] = "MiB";
+			row[col_size]        = x->bytes_size / 1024 / 1024;
+			row[col_size_suffix] = "MiB";
 
-			row[m_Columns.col_used]        = x->bytes_used / 1024 / 1024;
-			row[m_Columns.col_used_suffix] = "MiB";
+			row[col_used]        = x->bytes_used / 1024 / 1024;
+			row[col_used_suffix] = "MiB";
 
-			row[m_Columns.col_free]        = (x->bytes_size - x->bytes_used) / 1024 / 1024;
-			row[m_Columns.col_free_suffix] = "MiB";
+			row[col_free]        = (x->bytes_size - x->bytes_used) / 1024 / 1024;
+			row[col_free_suffix] = "MiB";
+#endif
 		} else {
 			if (parent)
 				row = *parent;
@@ -148,6 +154,20 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 		}
 	}
 }
+
+
+#if 0
+template<class T_ModelColumnType> inline
+void TreeViewColumn::pack_start(const TreeModelColumn<T_ModelColumnType>& column, bool expand)
+{
+	//Generate appropriate Renderer for the column:
+	CellRenderer* pCellRenderer = manage( CellRenderer_Generation::generate_cellrenderer<T_ModelColumnType>() );
+
+	//Use the renderer:
+	pack_start(*pCellRenderer, expand);
+	set_renderer(*pCellRenderer, column);
+}
+#endif
 
 void
 TreeView::init_treeview (GfxContainerPtr& c)
@@ -177,6 +197,19 @@ TreeView::init_treeview (GfxContainerPtr& c)
 		log_debug ("\n");
 	}
 
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<GfxContainerPtr>));		//  0 gfx_container
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  1 container
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>>));	//  2 colour
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  3 type
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  4 name
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  5 size
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  6 size_suffix
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  7 used
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  8 used_suffix
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  9 free
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			// 10 free_suffix
+	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			// 11 empty
+
 	/*	DEVICE	COLOUR	TYPE	NAME	DISPLAY
 	 *	loop0	none	block	loop0	empty
 	 *	loop0	none	table	gpt	always
@@ -197,59 +230,74 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	 *	        `-- loop0p2	vfat	green	vfat_label
 	 */
 
+	m_Columns.add (*mod_cols[ 0]);		//  0 gfx_container
+	m_Columns.add (*mod_cols[ 1]);		//  1 container
+	m_Columns.add (*mod_cols[ 2]);		//  2 colour
+	m_Columns.add (*mod_cols[ 3]);		//  3 type
+	m_Columns.add (*mod_cols[ 4]);		//  4 name
+	m_Columns.add (*mod_cols[ 5]);		//  5 size
+	m_Columns.add (*mod_cols[ 6]);		//  6 size_suffix
+	m_Columns.add (*mod_cols[ 7]);		//  7 used
+	m_Columns.add (*mod_cols[ 8]);		//  8 used_suffix
+	m_Columns.add (*mod_cols[ 9]);		//  9 free
+	m_Columns.add (*mod_cols[10]);		// 10 free_suffix
+	m_Columns.add (*mod_cols[11]);		// 11 empty
+
 	//Add the TreeView's view columns:
 	Gtk::TreeView::Column* col = nullptr;
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Container"));
-	col->pack_start (m_Columns.col_container,  true);
+	col->pack_start (col_container,  true);
 	col->set_alignment (0.0);
 	append_column (*col);
 
+#if 0
 	col = Gtk::manage (new Gtk::TreeView::Column ("Type"));
-	col->pack_start (m_Columns.col_colour, false);
-	col->pack_start (m_Columns.col_type,   false);
+	col->pack_start (col_colour, false);
+	col->pack_start (col_type,   false);
 	col->set_alignment (0.0);
 	append_column (*col);
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Label"));
-	col->pack_start (m_Columns.col_name,   false);
+	col->pack_start (col_name,   false);
 	col->set_alignment (0.0);
 	append_column (*col);
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Size"));
-	col->pack_start (m_Columns.col_size,        false);
-	col->pack_start (m_Columns.col_size_suffix, false);
+	col->pack_start (col_size,        false);
+	col->pack_start (col_size_suffix, false);
 	col->get_first_cell()->set_alignment (1.0, 0.5);
 	col->set_alignment (1.0);
 	append_column (*col);
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Used"));
-	col->pack_start (m_Columns.col_used,        false);
-	col->pack_start (m_Columns.col_used_suffix, false);
+	col->pack_start (col_used,        false);
+	col->pack_start (col_used_suffix, false);
 	col->get_first_cell()->set_alignment (1.0, 0.5);
 	col->set_alignment (1.0);
 	append_column (*col);
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Free"));
-	col->pack_start (m_Columns.col_free,        false);
-	col->pack_start (m_Columns.col_free_suffix, false);
+	col->pack_start (col_free,        false);
+	col->pack_start (col_free_suffix, false);
 	col->get_first_cell()->set_alignment (1.0, 0.5);
 	col->set_alignment (1.0);
 	append_column (*col);
 
 	col = Gtk::manage (new Gtk::TreeView::Column (""));
-	col->pack_start (m_Columns.col_empty, true);
+	col->pack_start (col_empty, true);
 	append_column (*col);
+#endif
 
-	/* col->pack_start (m_Columns.col_icon1,      false); */
-	/* col->pack_start (m_Columns.col_icon2,      false); */
+	/* col->pack_start (col_icon1,      false); */
+	/* col->pack_start (col_icon2,      false); */
 #if 0
-	append_column ("Mount", m_Columns.col_mount);
-	append_column ("Label", m_Columns.col_label);
-	append_column ("Size",  m_Columns.col_size);
-	append_column ("Used",  m_Columns.col_used);
-	append_column ("Free",  m_Columns.col_free);
-	append_column ("Flags", m_Columns.col_flags);
+	append_column ("Mount", col_mount);
+	append_column ("Label", col_label);
+	append_column ("Size",  col_size);
+	append_column ("Used",  col_used);
+	append_column ("Free",  col_free);
+	append_column ("Flags", col_flags);
 #endif
 
 	//Create the Tree model:
@@ -296,7 +344,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 #else
 		Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter (path);
 		Gtk::TreeModel::Row row = *iter;
-		tooltip->set_text (row[m_Columns.col_name] + ":" + row[m_Columns.col_type]);
+		tooltip->set_text (row[col_name] + ":" + row[col_type]);
 #endif
 	} else {
 		// implies mouse over non-data part of textview, e.g. headers, or dead space below
@@ -340,12 +388,14 @@ TreeView::on_selection_changed()
 	if (!it)
 		return;
 
+#if 0
 	const Gtk::TreeModel::Row& row = *it;
-	GfxContainerPtr c = row[m_Columns.col_gfx_container];
+	GfxContainerPtr c = row[col_gfx_container];
 	//log_debug ("sel: %s\n", c->dump());
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	dp->set_focus (c);
+#endif
 }
 
 
