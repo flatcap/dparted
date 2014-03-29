@@ -186,7 +186,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 #if 0
 	log_info ("LUKS:\n");
-	log_info ("\tversion:       %u\n", l->version);		//XXX wrong endian (version == 1)
+	log_info ("\tversion:       %u\n", l->version);
 	log_info ("\tcipher name:   %s\n", l->cipher_name.c_str());
 	log_info ("\tcipher mode:   %s\n", l->cipher_mode.c_str());
 	log_info ("\thash spec:     %s\n", l->hash_spec.c_str());

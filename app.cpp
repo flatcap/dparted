@@ -198,7 +198,6 @@ App::scan (const std::vector<std::string>& files)
 
 	// Process the probe_queue
 	ContainerPtr item;
-	//XXX change probe_queue to use a deque?
 	while (!probe_queue.empty()) {
 		item = probe_queue.front();
 		probe_queue.pop();
@@ -214,7 +213,7 @@ App::scan (const std::vector<std::string>& files)
 		}
 
 		if (!probe (item, buffer, bufsize)) {
-			//XXX LOG
+			//XXX LOG -- should be logged upstream
 			break;
 		}
 		//log_debug ("\n");
@@ -241,7 +240,7 @@ App::scan (const std::vector<std::string>& files)
 		}
 
 		if (!probe (item, buffer, bufsize)) {
-			//XXX LOG
+			//XXX LOG -- should be logged upstream
 			break;
 		}
 	}

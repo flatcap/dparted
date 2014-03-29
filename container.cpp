@@ -159,9 +159,6 @@ Container::visit_children (Visitor& v)
 
 	for (auto c : children) {
 		ContainerPtr p = parent.lock();
-		if (!p && ((c->is_a ("Space") || c->is_a ("Filesystem")))) //XXX tmp
-			continue;
-
 		if (!c->accept(v))
 			return false;
 	}

@@ -121,7 +121,7 @@ dot_row (const char* name, unsigned int value)
  */
 static
 std::string
-dot_row (const char* name, ContainerPtr value)	//XXX template this to std::shared_ptr<T>
+dot_row (const char* name, ContainerPtr value)
 {
 	std::stringstream row;
 	std::string dest;
