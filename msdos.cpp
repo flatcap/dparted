@@ -205,13 +205,8 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 #endif
 		ContainerPtr c;
 
-		std::ostringstream part_name;
-		part_name << parent->device;
-		char last = parent->device[parent->device.length()-1];
-		if (isdigit (last)) {
-			part_name << 'p';
-		}
-		part_name << (i+1);
+		std::string part_name = make_part_dev (parent->device, i+1);
+		//XXX check it's not empty
 
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 			//XXX validate start&size against parent buffer
@@ -229,7 +224,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 				continue;
 
 			c->parent_offset = le64_to_cpu (vp[i].start);
-			c->device = part_name.str();
+			c->device = part_name;
 #endif
 		} else {
 			PartitionPtr p = Partition::create();
@@ -238,7 +233,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			c->bytes_size = le64_to_cpu (vp[i].size);
 
 			c->parent_offset = le64_to_cpu (vp[i].start);
-			c->device = part_name.str();
+			c->device = part_name;
 
 			main_app->queue_add_probe(c);
 		}

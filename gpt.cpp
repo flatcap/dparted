@@ -264,12 +264,8 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		p->uuid = read_guid (buffer+16);
 		std::string part_type_uuid = read_guid (buffer+0);		//XXX not saved
 
-		std::string part_name = device;
-		if (isdigit (device.back())) {
-			part_name += 'p';
-		}
-		part_name += std::to_string (i+1);
-		p->device = part_name;
+		p->device = make_part_dev (device, i+i);
+		//XXX check it's not empty
 
 		std::uint64_t start  = le64_to_cpup (buffer+32);
 		std::uint64_t finish = le64_to_cpup (buffer+40);

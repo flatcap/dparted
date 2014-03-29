@@ -35,6 +35,7 @@ unsigned int  execute_command2 (const std::string& command, std::string& input);
 unsigned int  execute_command3 (const std::string& command, std::string& output);
 unsigned int  explode (const char* separators, const std::string& input, std::vector<std::string>& parts);
 unsigned int  explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max);
+std::string   make_part_dev (std::string device, int number);
 unsigned int  parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map = true);
 std::string   join (std::vector<std::string> v, const std::string& sep);
 std::string   read_file_line (const std::string& filename);

@@ -355,6 +355,23 @@ join (std::vector<std::string> v, const std::string& sep)
 	return j;
 }
 
+std::string
+make_part_dev (std::string device, int number)
+{
+	if (device.empty())
+		return {};
+
+	if (number < 1)
+		return {};
+
+	if (isdigit (device.back())) {
+		device += 'p';
+	}
+	device += std::to_string (number);
+
+	return device;
+}
+
 unsigned int
 parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map /* = true */)
 {
