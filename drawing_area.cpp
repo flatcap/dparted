@@ -828,7 +828,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	}
 
 	//Rect tab;
-	Rect inside;
+	Rect inside { 0,0,0,0 };
 
 	//log_debug ("object = %s -- %d,%d\n", cont->name.c_str(), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
@@ -936,6 +936,11 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		inside = shape;
 	} else {
 		log_debug ("unknown display type: %s\n", display.c_str());
+		return;
+	}
+
+	if (!inside.w) {
+		log_error ("NO WIDTH\n");
 		return;
 	}
 

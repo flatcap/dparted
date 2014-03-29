@@ -877,7 +877,8 @@ Container::dump (void)
 {
 	std::stringstream s;
 	s << this;
-	return s.str().c_str();
+	debug = s.str();
+	return debug.c_str();
 }
 
 
