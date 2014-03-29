@@ -53,14 +53,12 @@ TypeVisitor::visit (ContainerPtr c)
 std::vector<ContainerPtr>
 find_all_type (ContainerPtr c, const std::string& type)
 {
-	std::vector<ContainerPtr> empty;
-
 	if (!c)
-		return empty;
+		return {};
 
 	TypeVisitor tv (type);
 	if (!c->accept (tv))
-		return empty;		// Something went wrong
+		return {};		// Something went wrong
 
 	return tv.matches;
 }

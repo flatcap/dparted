@@ -411,23 +411,22 @@ GfxContainer::get_depth (void)
 GfxContainerPtr
 GfxContainer::get_left (void)
 {
-	GfxContainerPtr empty;
 	GfxContainerPtr me = get_smart();
 
 	GfxContainerPtr gparent = parent.lock();
 	if (!gparent)				// No parent -> no siblings
-		return empty;
+		return nullptr;
 
 	int index = gparent->get_index (me);
 	if (index < 0)				// I'm not my parent's child
-		return empty;
+		return nullptr;
 
 	if (index == 0)				// I'm the first sibling
 		return gparent;
 
 	GfxContainerPtr prev = gparent->children[index-1];
 	if (!prev)				// Empty child!
-		return empty;
+		return nullptr;
 
 	int size;
 	while ((size = prev->children.size()) > 0) {
@@ -440,12 +439,11 @@ GfxContainer::get_left (void)
 GfxContainerPtr
 GfxContainer::get_right (void)
 {
-	GfxContainerPtr empty;
 	GfxContainerPtr me = get_smart();
 
 	GfxContainerPtr gparent = parent.lock();
 	if (!gparent)				// No parent -> no siblings
-		return empty;
+		return nullptr;
 
 	if (me->children.size() > 0)		// Descend to children
 		return me->children[0];
@@ -454,7 +452,7 @@ GfxContainer::get_right (void)
 	do {
 		int index = gparent->get_index (me);
 		if (index < 0)				// I'm not my parent's child
-			return empty;
+			return nullptr;
 
 		last_sib = gparent->children.size()-1;
 		if (index < last_sib) {
@@ -465,7 +463,7 @@ GfxContainer::get_right (void)
 	}
 	while (gparent);
 
-	return empty;
+	return nullptr;
 }
 
 const char*
