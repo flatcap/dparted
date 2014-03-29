@@ -35,7 +35,7 @@ MsdosPartitionPtr
 MsdosPartition::create (void)
 {
 	MsdosPartitionPtr p (new MsdosPartition());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

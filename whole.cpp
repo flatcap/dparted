@@ -40,7 +40,7 @@ WholePtr
 Whole::create (void)
 {
 	WholePtr p (new Whole());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

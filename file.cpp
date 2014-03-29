@@ -48,7 +48,7 @@ FilePtr
 File::create (void)
 {
 	FilePtr p (new File());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

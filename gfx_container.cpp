@@ -33,7 +33,7 @@ GfxContainerPtr
 GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 {
 	GfxContainerPtr g (new GfxContainer());
-	g->weak = g;
+	g->self = g;
 
 	g->parent = p;
 	g->container = c;
@@ -367,14 +367,14 @@ operator<< (std::ostream& stream, const GfxContainerPtr& g)
 GfxContainerPtr
 GfxContainer::get_smart (void)
 {
-	if (weak.expired()) {
+	if (self.expired()) {
 		log_debug ("SMART\n");
 		//XXX who created us? - code error
 		GfxContainerPtr c (this);
 		log_debug ("%s\n", c->dump());
-		weak = c;
+		self = c;
 	}
-	return weak.lock();
+	return self.lock();
 }
 
 

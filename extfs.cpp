@@ -43,7 +43,7 @@ ExtfsPtr
 Extfs::create (void)
 {
 	ExtfsPtr p (new Extfs());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

@@ -78,7 +78,7 @@ GptPtr
 Gpt::create (void)
 {
 	GptPtr p (new Gpt());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

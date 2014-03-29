@@ -35,7 +35,7 @@ MdMirrorPtr
 MdMirror::create (void)
 {
 	MdMirrorPtr p (new MdMirror());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

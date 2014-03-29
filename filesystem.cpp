@@ -60,7 +60,7 @@ FilesystemPtr
 Filesystem::create (void)
 {
 	FilesystemPtr p (new Filesystem());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

@@ -38,7 +38,7 @@ LvmStripePtr
 LvmStripe::create (void)
 {
 	LvmStripePtr p (new LvmStripe());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

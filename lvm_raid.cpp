@@ -39,7 +39,7 @@ LvmRaidPtr
 LvmRaid::create (void)
 {
 	LvmRaidPtr p (new LvmRaid());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

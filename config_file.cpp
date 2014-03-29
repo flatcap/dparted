@@ -38,7 +38,7 @@ ConfigFilePtr
 ConfigFile::create (void)
 {
 	ConfigFilePtr c (new ConfigFile());
-	c->weak = c;
+	c->self = c;
 
 	return c;
 }

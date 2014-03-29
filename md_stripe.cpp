@@ -35,7 +35,7 @@ MdStripePtr
 MdStripe::create (void)
 {
 	MdStripePtr p (new MdStripe());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

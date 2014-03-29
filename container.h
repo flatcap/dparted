@@ -170,7 +170,7 @@ public:
 protected:
 	Container (void);
 
-	std::weak_ptr<Container> weak;	//XXX private?
+	std::weak_ptr<Container> self;
 
 	bool visit_children (Visitor& v);
 

@@ -49,7 +49,7 @@ ExtendedPtr
 Extended::create (void)
 {
 	ExtendedPtr p (new Extended());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

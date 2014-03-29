@@ -52,7 +52,7 @@ MdTablePtr
 MdTable::create (void)
 {
 	MdTablePtr p (new MdTable());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

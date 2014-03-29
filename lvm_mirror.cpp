@@ -39,7 +39,7 @@ LvmMirrorPtr
 LvmMirror::create (void)
 {
 	LvmMirrorPtr p (new LvmMirror());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

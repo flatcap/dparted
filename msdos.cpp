@@ -54,7 +54,7 @@ MsdosPtr
 Msdos::create (void)
 {
 	MsdosPtr p (new Msdos());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

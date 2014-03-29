@@ -39,7 +39,7 @@ VolumePtr
 Volume::create (void)
 {
 	VolumePtr p (new Volume());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

@@ -38,7 +38,7 @@ LvmLinearPtr
 LvmLinear::create (void)
 {
 	LvmLinearPtr p (new LvmLinear());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

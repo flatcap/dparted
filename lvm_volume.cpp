@@ -44,7 +44,7 @@ LvmVolumePtr
 LvmVolume::create (void)
 {
 	LvmVolumePtr p (new LvmVolume());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

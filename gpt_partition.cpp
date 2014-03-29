@@ -35,7 +35,7 @@ GptPartitionPtr
 GptPartition::create (void)
 {
 	GptPartitionPtr p (new GptPartition());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

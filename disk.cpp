@@ -61,7 +61,7 @@ DiskPtr
 Disk::create (void)
 {
 	DiskPtr p (new Disk());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

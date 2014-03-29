@@ -35,7 +35,7 @@ MdLinearPtr
 MdLinear::create (void)
 {
 	MdLinearPtr p (new MdLinear());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

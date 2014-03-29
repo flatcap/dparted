@@ -61,7 +61,7 @@ LvmGroupPtr
 LvmGroup::create (void)
 {
 	LvmGroupPtr p (new LvmGroup());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

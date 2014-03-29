@@ -38,7 +38,7 @@ LvmPartitionPtr
 LvmPartition::create (void)
 {
 	LvmPartitionPtr p (new LvmPartition());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

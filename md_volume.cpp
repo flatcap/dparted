@@ -35,7 +35,7 @@ MdVolumePtr
 MdVolume::create (void)
 {
 	MdVolumePtr p (new MdVolume());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

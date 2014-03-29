@@ -48,8 +48,8 @@ public:
 
 	std::string title;
 
-protected:
-	std::weak_ptr<PasswordDialog> weak;
+private:
+	std::weak_ptr<PasswordDialog> self;
 
 };
 

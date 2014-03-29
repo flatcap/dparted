@@ -38,7 +38,7 @@ LuksPartitionPtr
 LuksPartition::create (void)
 {
 	LuksPartitionPtr p (new LuksPartition());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

@@ -144,7 +144,7 @@ ContainerPtr
 Container::create (void)
 {
 	ContainerPtr p (new Container());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -568,14 +568,14 @@ Container::get_all_props (bool inc_hidden /*=false*/)
 ContainerPtr
 Container::get_smart (void)
 {
-	if (weak.expired()) {
+	if (self.expired()) {
 		log_debug ("SMART\n");
 		//XXX who created us? code error
 		ContainerPtr c (this);
 		log_debug ("%s\n", c->dump());
-		weak = c;
+		self = c;
 	}
-	return weak.lock();
+	return self.lock();
 }
 
 
@@ -761,7 +761,7 @@ Container::get_object_addr (void)
 {
 	std::stringstream addr;
 
-	ContainerPtr c = weak.lock();
+	ContainerPtr c = self.lock();
 	if (c) {
 		addr << "0x" << (void*) c.get();
 	}
@@ -814,7 +814,7 @@ Container::get_path_type (void)
 std::int64_t
 Container::get_ref_count (void)
 {
-	return weak.use_count();
+	return self.use_count();
 }
 
 std::uint64_t

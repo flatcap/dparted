@@ -53,7 +53,7 @@ LvmTablePtr
 LvmTable::create (void)
 {
 	LvmTablePtr p (new LvmTable());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

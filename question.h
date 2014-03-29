@@ -61,7 +61,8 @@ protected:
 
 	question_cb_t done_fn = nullptr;
 
-	std::weak_ptr<Question> weak;
+private:
+	std::weak_ptr<Question> self;
 };
 
 #endif // _QUESTION_H_

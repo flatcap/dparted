@@ -43,7 +43,7 @@ BtrfsPtr
 Btrfs::create (void)
 {
 	BtrfsPtr p (new Btrfs());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

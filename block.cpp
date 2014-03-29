@@ -54,7 +54,7 @@ BlockPtr
 Block::create (void)
 {
 	BlockPtr p (new Block());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

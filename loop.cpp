@@ -78,7 +78,7 @@ Loop::create (const std::string& losetup)
 	//XXX validate all input, else throw()
 
 	LoopPtr l (new Loop());
-	l->weak = l;
+	l->self = l;
 
 	l->device     = parts[0];
 	l->file_name  = parts[11];

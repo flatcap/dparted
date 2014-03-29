@@ -64,7 +64,7 @@ LuksTablePtr
 LuksTable::create (void)
 {
 	LuksTablePtr p (new LuksTable());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

@@ -44,7 +44,7 @@ MiscPtr
 Misc::create (void)
 {
 	MiscPtr p (new Misc());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

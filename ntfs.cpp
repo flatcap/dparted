@@ -43,7 +43,7 @@ NtfsPtr
 Ntfs::create (void)
 {
 	NtfsPtr p (new Ntfs());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

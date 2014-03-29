@@ -42,7 +42,7 @@ PartitionPtr
 Partition::create (void)
 {
 	PartitionPtr p (new Partition());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

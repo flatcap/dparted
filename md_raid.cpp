@@ -35,7 +35,7 @@ MdRaidPtr
 MdRaid::create (void)
 {
 	MdRaidPtr p (new MdRaid());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

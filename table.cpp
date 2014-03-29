@@ -57,7 +57,7 @@ TablePtr
 Table::create (void)
 {
 	TablePtr p (new Table());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

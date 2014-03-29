@@ -38,7 +38,7 @@ MdPartitionPtr
 MdPartition::create (void)
 {
 	MdPartitionPtr p (new MdPartition());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
