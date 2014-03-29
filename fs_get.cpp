@@ -40,13 +40,7 @@ get_reiserfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	FilesystemPtr f = Filesystem::create();
 	f->sub_type ("reiserfs");
 
-	//XXX c++ this
-	const int max_len = 16;			// Maximum length of a reiserfs label
-	char label[max_len+1];
-	memset (label, 0, sizeof (label));
-	memcpy (label, buffer+0x10064, max_len);
-	f->name = label;
-
+	f->name = get_fixed_str (buffer+0x10064, 16);
 	f->uuid = read_uuid1 (buffer + 0x10054);
 
 	short    int block_size   = le16_to_cpup (buffer + 0x1002C);
@@ -75,7 +69,7 @@ get_swap (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		return nullptr;
 
 	std::string uuid     = read_uuid1 (buffer + 0x40C);
-	std::string vol_name = get_null_str (buffer+0x41C, 16);
+	std::string vol_name = get_fixed_str (buffer+0x41C, 16);
 	std::uint64_t size = 0;
 	std::uint64_t block = 0;
 
@@ -173,7 +167,7 @@ get_xfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	FilesystemPtr f  = Filesystem::create();
 	f->sub_type ("xfs");
 
-	f->name = (char*) (buffer+0x6C);		//XXX max 12 chars, not null terminated if that length
+	f->name = get_fixed_str (buffer+0x6C, 12);
 	f->uuid = read_uuid1 (buffer + 0x20);
 
 	std::uint32_t block_size   = le32_to_cpup (buffer + 0x04);

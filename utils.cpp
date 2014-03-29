@@ -291,16 +291,14 @@ explode_n (const char* separators, const std::string& input, std::vector<std::st
 	return parts.size();
 }
 
-const char*
-get_null_str (void *buffer, std::uint32_t maxlen)
+std::string
+get_fixed_str (const void *buffer, std::uint32_t maxlen)
 {
 	if (!buffer || !maxlen)
-		return nullptr;
+		return {};
 
-	if (strnlen ((const char*) buffer, maxlen) == maxlen)
-		return nullptr;
-
-	return (const char*) buffer;
+	int len = strnlen ((const char*) buffer, maxlen);
+	return std::string ((const char*) buffer, len);
 }
 
 std::string

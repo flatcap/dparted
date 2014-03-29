@@ -142,16 +142,16 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	LuksTablePtr l = create();
 
-	l->version              = be16_to_cpup (buffer+  6);
-	l->cipher_name          = get_null_str (buffer+  8, 32);
-	l->cipher_mode          = get_null_str (buffer+ 40, 32);
-	l->hash_spec            = get_null_str (buffer+ 72, 32);
-	l->payload_offset       = be32_to_cpup (buffer+104);
-	l->key_bits             = be32_to_cpup (buffer+108) * 8;	// bytes to bits
-	l->mk_digest            = read_hex     (buffer+112, 20);
-	l->mk_digest_salt       = read_hex     (buffer+132, 32);
-	l->mk_digest_iterations = be32_to_cpup (buffer+164);
-	l->uuid                 = get_null_str (buffer+168, 40);
+	l->version              = be16_to_cpup  (buffer+  6);
+	l->cipher_name          = get_fixed_str (buffer+  8, 32);
+	l->cipher_mode          = get_fixed_str (buffer+ 40, 32);
+	l->hash_spec            = get_fixed_str (buffer+ 72, 32);
+	l->payload_offset       = be32_to_cpup  (buffer+104);
+	l->key_bits             = be32_to_cpup  (buffer+108) * 8;	// bytes to bits
+	l->mk_digest            = read_hex      (buffer+112, 20);
+	l->mk_digest_salt       = read_hex      (buffer+132, 32);
+	l->mk_digest_iterations = be32_to_cpup  (buffer+164);
+	l->uuid                 = get_fixed_str (buffer+168, 40);
 	l->bytes_size           = parent->bytes_size;
 
 	//for (int i = 0; i < 16; ++i) {

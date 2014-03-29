@@ -280,7 +280,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 		p->parent_offset = start * 512;
 		p->bytes_size = (finish - start + 1) * 512;
-		p->name = get_null_str (buffer+56, 72);
+		p->name = get_fixed_str (buffer+56, 72);
 
 #if 0
 		std::string s = get_size (p->bytes_size);

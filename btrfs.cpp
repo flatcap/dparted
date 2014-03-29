@@ -248,7 +248,7 @@ Btrfs::get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int bufsize)
 	BtrfsPtr b = Btrfs::create();
 	b->sub_type ("btrfs");
 
-	b->name = get_null_str (buffer+0x1012B, 255);
+	b->name = get_fixed_str (buffer+0x1012B, 255);
 	b->uuid = read_uuid1 (buffer + 0x10020);
 
 	b->bytes_size = le64_to_cpup (buffer + 0x10070);
