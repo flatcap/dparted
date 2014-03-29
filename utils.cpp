@@ -16,15 +16,16 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cerrno>
 #include <cmath>
 #include <cstdarg>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+#include <iomanip>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
-#include <iomanip>
 
 #include "log.h"
 #include "stringnum.h"
@@ -128,7 +129,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "r");
 	if (file == nullptr) {
-		//log_error ("popen failed");	//XXX log_perror
+		log_error ("popen failed: %s\n", strerror (errno));
 		return -1;
 	}
 
@@ -156,7 +157,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 	int retcode = pclose (file);
 	//log_info ("command %s returned %d\n", command.c_str(), retcode);
 	if (retcode == -1) {
-		//log_error ("pclose failed");	//XXX log_perror
+		log_error ("pclose failed: %s\n", strerror (errno));
 		return -1;
 	}
 
@@ -176,7 +177,7 @@ execute_command2 (const std::string& command, std::string& input)
 	//log_debug ("running command: %s\n", command.c_str());
 	file = popen (command.c_str(), "we");
 	if (file == nullptr) {
-		log_error ("popen failed");	//XXX log_perror
+		log_error ("popen failed: %s\n", strerror (errno));
 		return -1;
 	}
 
@@ -186,7 +187,7 @@ execute_command2 (const std::string& command, std::string& input)
 
 	int retcode = pclose (file);
 	if (retcode == -1) {
-		log_error ("pclose failed");	//XXX log_perror
+		log_error ("pclose failed: %s\n", strerror (errno));
 		return -1;
 	}
 

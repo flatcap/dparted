@@ -17,17 +17,19 @@
  */
 
 #include <fcntl.h>
+#include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/mman.h>
 #include <unistd.h>
 
+#include <algorithm>
+#include <cerrno>
+#include <cstring>
 #include <iterator>
 #include <set>
 #include <sstream>
 #include <string>
 #include <typeinfo>
-#include <algorithm>
 
 #include "container.h"
 #include "action.h"
@@ -426,7 +428,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, 0);
 	if (buf == MAP_FAILED) {
-		log_error ("%s: alloc failed\n", __FUNCTION__);	//XXX perror
+		log_error ("%s: alloc failed: %s\n", __FUNCTION__, strerror (errno));
 		//close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
@@ -444,10 +446,11 @@ Container::close_buffer (std::uint8_t* buffer, std::uint64_t size)
 	if (!buffer)
 		return;
 
-	if (munmap (buffer, size) != 0)
-		perror ("munmap");
+	if (munmap (buffer, size) != 0) {
+		log_error ("munmap failed: %s\n", strerror (errno));
+		// nothing else we can do
+	}
 
-	//XXX nothing else we can do
 }
 
 
