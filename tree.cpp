@@ -12,14 +12,6 @@ protected:
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
 };
 
-int
-main(int argc, char *argv[])
-{
-	auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
-	Tree window;
-	return app->run(window);
-}
-
 Tree::Tree()
 {
 	set_default_size(400, 200);
@@ -44,5 +36,13 @@ Tree::Tree()
 	m_TreeView.append_column("Name", m_col_name);
 
 	show_all_children();
+}
+
+int
+main(int argc, char *argv[])
+{
+	auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
+	Tree window;
+	return app->run(window);
 }
 
