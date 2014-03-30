@@ -10,20 +10,10 @@ public:
 	virtual ~Tree() = default;
 
 protected:
-	class ModelColumns : public Gtk::TreeModel::ColumnRecord
-	{
-	public:
-		ModelColumns()
-		{
-			add(m_col_id);
-			add(m_col_name);
-		}
+	Gtk::TreeModel::ColumnRecord m_Columns;
 
-		Gtk::TreeModelColumn<int> m_col_id;
-		Gtk::TreeModelColumn<Glib::ustring> m_col_name;
-	};
-
-	ModelColumns m_Columns;
+	Gtk::TreeModelColumn<int> m_col_id;
+	Gtk::TreeModelColumn<Glib::ustring> m_col_name;
 
 	Gtk::TreeView m_TreeView;
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;

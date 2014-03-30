@@ -18,15 +18,18 @@ Tree::Tree()
 
 	add(m_TreeView);
 
+	m_Columns.add(m_col_id);
+	m_Columns.add(m_col_name);
+
 	m_refTreeModel = Gtk::TreeStore::create(m_Columns);
 	m_TreeView.set_model(m_refTreeModel);
 
 	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
-	row[m_Columns.m_col_id] = 1;
-	row[m_Columns.m_col_name] = "jim";
+	row[m_col_id] = 1;
+	row[m_col_name] = "jim";
 
-	m_TreeView.append_column("ID",   m_Columns.m_col_id);
-	m_TreeView.append_column("Name", m_Columns.m_col_name);
+	m_TreeView.append_column("ID",   m_col_id);
+	m_TreeView.append_column("Name", m_col_name);
 
 	show_all_children();
 }
