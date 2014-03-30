@@ -7,7 +7,7 @@ class Tree : public Gtk::Window
 {
 public:
 	Tree();
-	virtual ~Tree();
+	virtual ~Tree() = default;
 
 protected:
 	class ModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -24,8 +24,6 @@ protected:
 	};
 
 	ModelColumns m_Columns;
-
-	Gtk::Box m_VBox;
 
 	Gtk::TreeView m_TreeView;
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;

@@ -2,7 +2,8 @@
 #include <gtkmm/application.h>
 #include "tree.h"
 
-int main(int argc, char *argv[])
+int
+main(int argc, char *argv[])
 {
 	auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
 
@@ -11,14 +12,11 @@ int main(int argc, char *argv[])
 	return app->run(window);
 }
 
-Tree::Tree() :
-	m_VBox(Gtk::ORIENTATION_VERTICAL)
+Tree::Tree()
 {
 	set_default_size(400, 200);
 
-	add(m_VBox);
-
-	m_VBox.pack_start(m_TreeView);
+	add(m_TreeView);
 
 	m_refTreeModel = Gtk::TreeStore::create(m_Columns);
 	m_TreeView.set_model(m_refTreeModel);
@@ -51,9 +49,5 @@ Tree::Tree() :
 	m_TreeView.append_column("Name", m_Columns.m_col_name);
 
 	show_all_children();
-}
-
-Tree::~Tree()
-{
 }
 
