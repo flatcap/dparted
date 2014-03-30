@@ -71,10 +71,12 @@ Tree::Tree()
 	//Add the TreeView's view columns:
 	pCellRenderer = manage(new Gtk::CellRendererText());
 	col = Gtk::manage (new Gtk::TreeView::Column ("ID", *pCellRenderer));
+	col->set_renderer(*pCellRenderer, *mod_cols[0]);
 	m_TreeView.append_column (*col);
 
 	pCellRenderer = manage(new Gtk::CellRendererText());
 	col = Gtk::manage (new Gtk::TreeView::Column ("Name", *pCellRenderer));
+	col->set_renderer(*pCellRenderer, *mod_cols[1]);
 	m_TreeView.append_column (*col);
 #else
 	m_TreeView.append_column("ID",   m_col_id);
