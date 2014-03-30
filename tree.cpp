@@ -1,14 +1,22 @@
 #include <iostream>
-#include <gtkmm/application.h>
-#include "tree.h"
+#include <gtkmm.h>
+
+class Tree : public Gtk::Window
+{
+public:
+	Tree();
+	virtual ~Tree() = default;
+
+protected:
+	Gtk::TreeView m_TreeView;
+	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
+};
 
 int
 main(int argc, char *argv[])
 {
 	auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
-
 	Tree window;
-
 	return app->run(window);
 }
 
@@ -29,7 +37,7 @@ Tree::Tree()
 	m_TreeView.set_model(m_refTreeModel);
 
 	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
-	row[m_col_id] = 1;
+	row[m_col_id]   = 1;
 	row[m_col_name] = "jim";
 
 	m_TreeView.append_column("ID",   m_col_id);
