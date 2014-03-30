@@ -18,10 +18,14 @@ Tree::Tree()
 
 	add(m_TreeView);
 
-	m_Columns.add(m_col_id);
-	m_Columns.add(m_col_name);
+	Gtk::TreeModel::ColumnRecord cols;
+	Gtk::TreeModelColumn<int> m_col_id;
+	Gtk::TreeModelColumn<Glib::ustring> m_col_name;
 
-	m_refTreeModel = Gtk::TreeStore::create(m_Columns);
+	cols.add(m_col_id);
+	cols.add(m_col_name);
+
+	m_refTreeModel = Gtk::TreeStore::create(cols);
 	m_TreeView.set_model(m_refTreeModel);
 
 	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
