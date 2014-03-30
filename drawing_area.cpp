@@ -179,7 +179,7 @@ draw_grid_linear (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, std::uint
 
 	int count = (w / spacing) + 1;
 
-	for (int i = 0; i <= count; i++) {
+	for (int i = 0; i <= count; ++i) {
 		if ((i % major) == 0) {
 			cr->set_line_width(3);
 			cr->set_source_rgba (0.3, 0.3, 0.8, 0.7);
@@ -235,10 +235,11 @@ DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& sh
 	draw_border (cr, shape);				// Set clipping area
 	//cr->clip();
 
-	if (primary)
+	if (primary) {
 		cr->set_line_width(2);
-	else
+	} else {
 		cr->set_line_width(1);
+	}
 
 	cr->set_dash (dashes, start);
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);		//XXX focus colours from theme
@@ -255,7 +256,7 @@ DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& sh
 	}
 
 	cr->restore();						// End clipping
-	start++;
+	++start;
 }
 
 /**
@@ -563,7 +564,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	int xd = 0, yd = 0, wd = 0, hd = 0;
 	int xs = 0, ys = 0, ws = 0, hs = 0;
 
-	size_t pos = labeld.find_last_of ('/');
+	std::size_t pos = labeld.find_last_of ('/');
 	if (pos != std::string::npos) {
 		labeld = labeld.substr (pos+1);
 	}
@@ -724,10 +725,11 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	log_debug ("Actions:\n");
 	for (auto a : actions) {
 		int colour;
-		if (a.enabled)
+		if (a.enabled) {
 			colour = 32;
-		else
+		} else {
 			colour = 31;
+		}
 
 		log_debug ("\t\033[01;%dm%s\033[0m\n", colour, a.name.c_str());
 	}
@@ -786,6 +788,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 {
 	if (!cr)
 		return;
+
 	if (!cont)
 		return;
 
@@ -825,7 +828,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	}
 
 	//Rect tab;
-	Rect inside;
+	Rect inside { 0,0,0,0 };
 
 	//log_debug ("object = %s -- %d,%d\n", cont->name.c_str(), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
@@ -933,6 +936,11 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		inside = shape;
 	} else {
 		log_debug ("unknown display type: %s\n", display.c_str());
+		return;
+	}
+
+	if (!inside.w) {
+		log_error ("NO WIDTH\n");
 		return;
 	}
 
@@ -1212,7 +1220,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 
 	for (auto a : actions) {
 		//log_debug ("%s\n", a.name.c_str());
-		size_t pos = a.name.find_first_of ('/');
+		std::size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
 			section.clear();
 			key = a.name;

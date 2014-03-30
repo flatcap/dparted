@@ -16,15 +16,16 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cerrno>
 #include <cmath>
 #include <cstdarg>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+#include <iomanip>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
-#include <iomanip>
 
 #include "log.h"
 #include "stringnum.h"
@@ -36,6 +37,7 @@ align (std::uint64_t num, std::uint64_t round)
 {
 	if (round == 0)
 		return num;
+
 	return ((num + round - 1) / round * round);
 }
 
@@ -78,27 +80,31 @@ dump_hex2 (void* buf, int start, int length)
 		}
 #endif
 
-		if (off == s)
+		if (off == s) {
 			log_info ("	%6.6x ", start);
-		else
+		} else {
 			log_info ("	%6.6x ", off);
+		}
 
-		for (i = 0; i < 16; i++) {
-			if (i == 8)
+		for (i = 0; i < 16; ++i) {
+			if (i == 8) {
 				log_info (" -");
-			if (((off+i) >= start) && ((off+i) < (start+length)))
+			}
+			if (((off+i) >= start) && ((off+i) < (start+length))) {
 				log_info (" %02X", mem[off+i]);
-			else
+			} else {
 				log_info ("   ");
+			}
 		}
 		log_info ("  ");
-		for (i = 0; i < 16; i++) {
-			if (((off+i) < start) || ((off+i) >= (start+length)))
+		for (i = 0; i < 16; ++i) {
+			if (((off+i) < start) || ((off+i) >= (start+length))) {
 				log_info (" ");
-			else if (isprint (mem[off + i]))
+			} else if (isprint (mem[off + i])) {
 				log_info ("%c", mem[off + i]);
-			else
+			} else {
 				log_info (".");
+			}
 		}
 		log_info ("\n");
 	}
@@ -112,7 +118,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 {
 	FILE* file = nullptr;
 	char* ptr = nullptr;
-	size_t n = 0;
+	std::size_t n = 0;
 	int count = 0;
 
 	output.clear();
@@ -123,7 +129,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "r");
 	if (file == nullptr) {
-		//log_error ("popen failed");	//XXX log_perror
+		log_error ("popen failed: %s\n", strerror (errno));
 		return -1;
 	}
 
@@ -133,8 +139,9 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 		n = 0;
 		count = getline (&ptr, &n, file);		//XXX std::getline, istream::getline
 		if (count > 0) {
-			if (ptr[count-1] == '\n')
+			if (ptr[count-1] == '\n') {
 				ptr[count-1] = 0;
+			}
 			output.push_back (ptr);
 			//log_debug ("\t%s\n", ptr);
 		}
@@ -150,7 +157,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 	int retcode = pclose (file);
 	//log_info ("command %s returned %d\n", command.c_str(), retcode);
 	if (retcode == -1) {
-		//log_error ("pclose failed");	//XXX log_perror
+		log_error ("pclose failed: %s\n", strerror (errno));
 		return -1;
 	}
 
@@ -170,7 +177,7 @@ execute_command2 (const std::string& command, std::string& input)
 	//log_debug ("running command: %s\n", command.c_str());
 	file = popen (command.c_str(), "we");
 	if (file == nullptr) {
-		log_error ("popen failed");	//XXX log_perror
+		log_error ("popen failed: %s\n", strerror (errno));
 		return -1;
 	}
 
@@ -180,7 +187,7 @@ execute_command2 (const std::string& command, std::string& input)
 
 	int retcode = pclose (file);
 	if (retcode == -1) {
-		log_error ("pclose failed");	//XXX log_perror
+		log_error ("pclose failed: %s\n", strerror (errno));
 		return -1;
 	}
 
@@ -209,8 +216,8 @@ execute_command3 (const std::string& command, std::string& output)
 unsigned int
 explode (const char* separators, const std::string& input, std::vector<std::string>& parts)
 {
-	size_t start = 0;
-	size_t end   = 0;
+	std::size_t start = 0;
+	std::size_t end   = 0;
 
 	if (!separators)
 		return 0;
@@ -243,8 +250,8 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 unsigned int
 explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max)
 {
-	size_t start = 0;
-	size_t end   = 0;
+	std::size_t start = 0;
+	std::size_t end   = 0;
 
 	if (!separators)
 		return 0;
@@ -285,16 +292,14 @@ explode_n (const char* separators, const std::string& input, std::vector<std::st
 	return parts.size();
 }
 
-const char*
-get_null_str (void *buffer, std::uint32_t maxlen)
+std::string
+get_fixed_str (const void *buffer, std::uint32_t maxlen)
 {
 	if (!buffer || !maxlen)
-		return nullptr;
+		return {};
 
-	if (strnlen ((const char*) buffer, maxlen) == maxlen)
-		return nullptr;
-
-	return (const char*) buffer;
+	int len = strnlen ((const char*) buffer, maxlen);
+	return std::string ((const char*) buffer, len);
 }
 
 std::string
@@ -342,13 +347,30 @@ join (std::vector<std::string> v, const std::string& sep)
 	auto end = std::end(v);
 
 	j = *it;
-	it++;
+	++it;
 
-	for (; it != end; it++) {
+	for (; it != end; ++it) {
 		j += sep + *it;
 	}
 
 	return j;
+}
+
+std::string
+make_part_dev (std::string device, int number)
+{
+	if (device.empty())
+		return {};
+
+	if (number < 1)
+		return {};
+
+	if (isdigit (device.back())) {
+		device += 'p';
+	}
+	device += std::to_string (number);
+
+	return device;
 }
 
 unsigned int
@@ -401,7 +423,7 @@ read_file_line (const std::string& filename)
 
 	std::string line ((std::istreambuf_iterator<char> (in)), std::istreambuf_iterator<char>());
 
-	size_t pos = line.find_first_of ("\r\n");
+	std::size_t pos = line.find_first_of ("\r\n");
 	if (pos != std::string::npos)
 		line = line.substr (0, pos);
 
@@ -415,9 +437,10 @@ read_uuid1 (std::uint8_t* buffer)
 
 	ss << std::setfill ('0') << std::hex;
 
-	for (int i = 0; i < 16; i++) {
-		if ((i == 4) || (i == 6) || (i == 8) || (i == 10))
+	for (int i = 0; i < 16; ++i) {
+		if ((i == 4) || (i == 6) || (i == 8) || (i == 10)) {
 			ss << "-";
+		}
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
@@ -431,7 +454,7 @@ read_uuid2 (std::uint8_t* buffer)
 
 	ss << std::setfill ('0') << std::hex;
 
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 8; ++i) {
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
@@ -445,9 +468,10 @@ read_uuid3 (std::uint8_t* buffer)
 
 	ss << std::setfill ('0') << std::hex;
 
-	for (int i = 0; i < 4; i++) {
-		if (i == 2)
+	for (int i = 0; i < 4; ++i) {
+		if (i == 2) {
 			ss << "-";
+		}
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
@@ -457,7 +481,7 @@ read_uuid3 (std::uint8_t* buffer)
 std::string
 shorten_device (const std::string& device)
 {
-	size_t pos = device.find ("/dev/");
+	std::size_t pos = device.find ("/dev/");
 	if (pos == std::string::npos)
 		return device;
 

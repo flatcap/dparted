@@ -92,7 +92,6 @@ protected:
 	GfxContainerPtr get_smart (void);
 
 	std::weak_ptr<Container> container;
-	std::weak_ptr<GfxContainer> weak;
 	std::weak_ptr<GfxContainer> parent;
 
 	Gdk::RGBA                 process_colour (const std::string& str);
@@ -109,6 +108,8 @@ protected:
 	friend std::ostream& operator<< (std::ostream& stream, const GfxContainerPtr& c);
 
 private:
+	std::weak_ptr<GfxContainer> self;
+
 	std::string debug;		// Text representation of self
 };
 

@@ -43,7 +43,7 @@ NtfsPtr
 Ntfs::create (void)
 {
 	NtfsPtr p (new Ntfs());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -55,6 +55,7 @@ Ntfs::accept (Visitor& v)
 	NtfsPtr b = std::dynamic_pointer_cast<Ntfs> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -91,6 +92,7 @@ Ntfs::get_ntfs_usage (void)
 {
 	if (device.empty())
 		return false;
+
 	ContainerPtr c = get_smart();
 	if (get_mounted_usage(c))
 		return true;
@@ -102,7 +104,7 @@ static bool
 parse_line (std::string line, std::string& key, std::string& value)
 {
 	// Tab, description, colon, space, value
-	size_t pos;
+	std::size_t pos;
 	std::string k;
 	std::string v;
 
@@ -144,7 +146,7 @@ make_key (std::string desc)
 	std::transform (desc.begin(), desc.end(), desc.begin(), ::tolower);
 
 	// space -> underscore
-	size_t pos = -1;
+	std::size_t pos = -1;
 	do {
 		pos = desc.find_first_of (' ', pos+1);
 		if (pos != std::string::npos) {

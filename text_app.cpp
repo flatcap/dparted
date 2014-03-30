@@ -42,7 +42,7 @@ int
 TextApp::run (int argc, char **argv)
 {
 	std::vector<std::string> disks;			// Mop up any remaining args
-	for (; argc > 1; argc--, argv++) {
+	for (; argc > 1; argc--, ++argv) {
 		//disks.push_back (argv[1]);
 	}
 
@@ -72,7 +72,7 @@ TextApp::run (int argc, char **argv)
 	}
 #endif
 	auto it = c2->get_children().begin();
-	it++; it++; it++; it++; it++; it++; it++; it++; it++; it++; it++; it++; it++; it++; it++;
+	std::advance (it, 15);
 	ContainerPtr c3 = *it;
 	ContainerPtr c4 = *c3->get_children().begin();
 

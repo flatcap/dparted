@@ -170,7 +170,7 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 	std::string dot;
 	std::string search;
 
-	for (auto i = 0; i < 20; i++) {
+	for (auto i = 0; i < 20; ++i) {
 		if (work_path.empty()) {
 			dot.clear();
 		} else {
@@ -191,7 +191,7 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 			return config_file->get_string (search);
 		}
 
-		size_t pos = work_path.find_last_of (".");
+		std::size_t pos = work_path.find_last_of (".");
 		if (pos == std::string::npos) {
 			if (work_path.empty()) {
 				break;

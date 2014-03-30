@@ -35,7 +35,7 @@ MdVolumePtr
 MdVolume::create (void)
 {
 	MdVolumePtr p (new MdVolume());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -47,6 +47,7 @@ MdVolume::accept (Visitor& v)
 	MdVolumePtr b = std::dynamic_pointer_cast<MdVolume> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 

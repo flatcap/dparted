@@ -64,7 +64,7 @@ LuksTablePtr
 LuksTable::create (void)
 {
 	LuksTablePtr p (new LuksTable());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -76,6 +76,7 @@ LuksTable::accept (Visitor& v)
 	LuksTablePtr l = std::dynamic_pointer_cast<LuksTable> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -117,7 +118,7 @@ read_hex (std::uint8_t* buffer, unsigned int length)
 
 	ss << std::setfill ('0') << std::hex << std::setiosflags (std::ios::uppercase);
 
-	for (unsigned int i = 0; i < length; i++) {
+	for (unsigned int i = 0; i < length; ++i) {
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]) << ' ';
 	}
 
@@ -141,19 +142,19 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	LuksTablePtr l = create();
 
-	l->version              = be16_to_cpup (buffer+  6);
-	l->cipher_name          = get_null_str (buffer+  8, 32);
-	l->cipher_mode          = get_null_str (buffer+ 40, 32);
-	l->hash_spec            = get_null_str (buffer+ 72, 32);
-	l->payload_offset       = be32_to_cpup (buffer+104);
-	l->key_bits             = be32_to_cpup (buffer+108) * 8;	// bytes to bits
-	l->mk_digest            = read_hex     (buffer+112, 20);
-	l->mk_digest_salt       = read_hex     (buffer+132, 32);
-	l->mk_digest_iterations = be32_to_cpup (buffer+164);
-	l->uuid                 = get_null_str (buffer+168, 40);
+	l->version              = be16_to_cpup  (buffer+  6);
+	l->cipher_name          = get_fixed_str (buffer+  8, 32);
+	l->cipher_mode          = get_fixed_str (buffer+ 40, 32);
+	l->hash_spec            = get_fixed_str (buffer+ 72, 32);
+	l->payload_offset       = be32_to_cpup  (buffer+104);
+	l->key_bits             = be32_to_cpup  (buffer+108) * 8;	// bytes to bits
+	l->mk_digest            = read_hex      (buffer+112, 20);
+	l->mk_digest_salt       = read_hex      (buffer+132, 32);
+	l->mk_digest_iterations = be32_to_cpup  (buffer+164);
+	l->uuid                 = get_fixed_str (buffer+168, 40);
 	l->bytes_size           = parent->bytes_size;
 
-	//for (int i = 0; i < 16; i++) {
+	//for (int i = 0; i < 16; ++i) {
 	l->pass1_active     = be32_to_cpup (buffer+208);	// 0x0000DEAD/0x00AC71F3
 	l->pass1_iterations = be32_to_cpup (buffer+212);
 	l->pass1_salt       = read_hex     (buffer+216, 32);
@@ -185,7 +186,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 #if 0
 	log_info ("LUKS:\n");
-	log_info ("\tversion:       %u\n", l->version);		//XXX wrong endian (version == 1)
+	log_info ("\tversion:       %u\n", l->version);
 	log_info ("\tcipher name:   %s\n", l->cipher_name.c_str());
 	log_info ("\tcipher mode:   %s\n", l->cipher_mode.c_str());
 	log_info ("\thash spec:     %s\n", l->hash_spec.c_str());

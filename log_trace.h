@@ -57,7 +57,7 @@ protected:
 
 private:
 	// Stop users dynamically creating this object
-	void* operator new (size_t s);
+	void* operator new (std::size_t s);
 };
 
 

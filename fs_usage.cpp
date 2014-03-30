@@ -31,6 +31,7 @@ get_mounted_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
+
 	if (f->get_device_name().empty())
 		return false;
 
@@ -43,8 +44,10 @@ get_reiserfs_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
+
 	if (f->device.empty())
 		return false;
+
 	if (get_mounted_usage(f))
 		return true;
 
@@ -56,8 +59,10 @@ get_swap_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
+
 	if (f->device.empty())
 		return false;
+
 	if (get_mounted_usage(f))
 		return true;
 
@@ -69,8 +74,10 @@ get_vfat_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
+
 	if (f->device.empty())
 		return false;
+
 	if (get_mounted_usage(f))
 		return true;
 
@@ -82,8 +89,10 @@ get_xfs_usage (FilesystemPtr f)
 {
 	if (!f)
 		return false;
+
 	if (f->device.empty())
 		return false;
+
 	if (get_mounted_usage(f))
 		return true;
 

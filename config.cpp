@@ -675,10 +675,11 @@ Config::operator int64_t()
 std::ostream&
 operator<< (std::ostream& os, const Config* v)
 {
-	if (v)
+	if (v) {
 		return operator<< (os, *v);
-	else
+	} else {
 		return os;
+	}
 }
 
 /**

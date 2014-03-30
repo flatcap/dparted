@@ -54,7 +54,7 @@ MsdosPtr
 Msdos::create (void)
 {
 	MsdosPtr p (new Msdos());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -66,6 +66,7 @@ Msdos::accept (Visitor& v)
 	MsdosPtr m = std::dynamic_pointer_cast<Msdos> (get_smart());
 	if (!v.visit(m))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -116,6 +117,7 @@ Msdos::read_partition (std::uint8_t* buffer, int index, struct partition* part)
 	//XXX include this in read_table?
 	if (!buffer || !part)
 		return false;
+
 	if ((index < 0) || (index > 3))
 		return false;
 
@@ -141,7 +143,7 @@ Msdos::read_table (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize), std::uin
 {
 	struct partition part;
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; ++i) {
 		if (!read_partition (buffer, i, &part))	// could flag Msdos object as invalid
 			continue;		//XXX or return -1
 
@@ -191,7 +193,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res1->parent_offset = 0;					// Start of the partition
 	m->add_child (res1);		// change to add_reserved?
 
-	for (unsigned int i = 0; i < vp.size(); i++) {
+	for (unsigned int i = 0; i < vp.size(); ++i) {
 #if 0
 		std::string s1 = get_size (le64_to_cpu (vp[i].start));
 		std::string s2 = get_size (le64_to_cpu (vp[i].size));
@@ -203,13 +205,8 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 #endif
 		ContainerPtr c;
 
-		std::ostringstream part_name;
-		part_name << parent->device;
-		char last = parent->device[parent->device.length()-1];
-		if (isdigit (last)) {
-			part_name << 'p';
-		}
-		part_name << (i+1);
+		std::string part_name = make_part_dev (parent->device, i+1);
+		//XXX check it's not empty
 
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 			//XXX validate start&size against parent buffer
@@ -227,7 +224,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 				continue;
 
 			c->parent_offset = le64_to_cpu (vp[i].start);
-			c->device = part_name.str();
+			c->device = part_name;
 #endif
 		} else {
 			PartitionPtr p = Partition::create();
@@ -236,7 +233,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			c->bytes_size = le64_to_cpu (vp[i].size);
 
 			c->parent_offset = le64_to_cpu (vp[i].start);
-			c->device = part_name.str();
+			c->device = part_name;
 
 			main_app->queue_add_probe(c);
 		}

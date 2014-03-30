@@ -49,7 +49,7 @@ ExtendedPtr
 Extended::create (void)
 {
 	ExtendedPtr p (new Extended());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -61,6 +61,7 @@ Extended::accept (Visitor& v)
 	ExtendedPtr e = std::dynamic_pointer_cast<Extended> (get_smart());
 	if (!v.visit(e))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -122,7 +123,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	res1->parent_offset = 0;					// Start of the partition
 	ext->add_child (res1);		// change to add_reserved?
 
-	for (int loop = 0; loop < 50; loop++) {		//what's the upper limit? prob 255 in the kernel
+	for (int loop = 0; loop < 50; ++loop) {		//what's the upper limit? prob 255 in the kernel
 		if (le16_to_cpup (table_offset+buffer+510) != 0xAA55) {
 			log_error ("not an extended partition\n");
 			//log_debug ("%s (%s), %ld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
@@ -167,15 +168,8 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 				m->parent_offset = table_offset + le64_to_cpu (part.start) - ext->parent_offset;	// This is relative
 
-				std::string part_name = parent->get_device_name();
-				//XXX check part_name isn't empty
-				//XXX extract partition naming into function
-				if (isdigit (part_name.back())) {
-					part_name += 'p';
-				}
-				part_name += std::to_string (loop+5);
-
-				m->device = part_name;
+				m->device = make_part_dev (parent->get_device_name(), loop+5);
+				//XXX check it's not empty
 
 				ext->add_child(m);
 				main_app->queue_add_probe(m);

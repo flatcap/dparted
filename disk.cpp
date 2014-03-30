@@ -61,7 +61,7 @@ DiskPtr
 Disk::create (void)
 {
 	DiskPtr p (new Disk());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -102,6 +102,7 @@ Disk::accept (Visitor& v)
 	DiskPtr d = std::dynamic_pointer_cast<Disk> (get_smart());
 	if (!v.visit(d))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -259,7 +260,7 @@ Disk::find_devices (ContainerPtr& list)
 		//d->open_device();
 
 		list->add_child(d);
-		added++;
+		++added;
 	}
 
 	return added;

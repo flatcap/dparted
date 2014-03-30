@@ -61,7 +61,7 @@ LvmGroupPtr
 LvmGroup::create (void)
 {
 	LvmGroupPtr p (new LvmGroup());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -73,6 +73,7 @@ LvmGroup::accept (Visitor& v)
 	LvmGroupPtr l = std::dynamic_pointer_cast<LvmGroup> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -80,7 +81,7 @@ LvmGroup::accept (Visitor& v)
 void
 expand_name (std::string& name)
 {
-	size_t pos = 0;
+	std::size_t pos = 0;
 
 	while ((pos = name.find_first_of ("-", pos)) != std::string::npos) {
 		name.insert (pos, "-");
@@ -194,7 +195,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			g->uuid    = vg_uuid;
 			//g->missing = true;
 			pieces->just_add_child(g);
-			added++;
+			++added;
 		}
 
 		std::string pv_uuid = tags["LVM2_PV_UUID"];
@@ -205,7 +206,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			t->uuid    = pv_uuid;
 			//t->missing = true;
 			pieces->just_add_child(t);
-			added++;
+			++added;
 		}
 
 		ContainerPtr c(t);
@@ -237,7 +238,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			v->uuid    = lv_uuid;
 			//v->missing = true;
 			pieces->just_add_child(v);
-			added++;
+			++added;
 
 			if (lv_attr[0] == '-') {
 				// Not an image.  Therefore, it's a top-level entity.
@@ -505,7 +506,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 				//log_info ("raid metadata\n");
 				// Add an extra dependency for raid metadata
 				std::string dep_name = d;
-				size_t pos = dep_name.find ("_rimage_");
+				std::size_t pos = dep_name.find ("_rimage_");
 				if (pos != std::string::npos) {
 					dep_name.replace (pos, 8, "_rmeta_");
 					//log_debug ("ADD: %s -> %s\n", v->uuid.c_str(), dep_name.c_str());
@@ -534,7 +535,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 	log_info ("------------------------------------------------------------\n");
 #endif
 
-	//for (int j = 0; j < 5; j++) {
+	//for (int j = 0; j < 5; ++j) {
 	for (auto d : deps) {
 		std::string parent_id = d.first;
 		std::string child_id  = d.second;
@@ -607,8 +608,10 @@ LvmGroup::discover (ContainerPtr& top_level)
 	for (auto i : v) {
 		if (i->is_a ("LvmMetadata"))		// nothing interesting here
 			continue;
+
 		if (i->whole)				// we're part of something bigger
 			continue;
+
 		//log_info ("Q: [%s] %s: %s\n", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
 		main_app->queue_add_probe(i);
 	}

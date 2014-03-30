@@ -33,7 +33,7 @@ GfxContainerPtr
 GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 {
 	GfxContainerPtr g (new GfxContainer());
-	g->weak = g;
+	g->self = g;
 
 	g->parent = p;
 	g->container = c;
@@ -150,12 +150,12 @@ GfxContainer::init (ContainerPtr c)
  * find_subst - get the position of a {tag}
  */
 bool
-find_subst (const std::string& text, std::string& tag, size_t& start, size_t& stop)
+find_subst (const std::string& text, std::string& tag, std::size_t& start, std::size_t& stop)
 {
 	//XXX on failure, point start at error
 	const char* valid = "abcdefghijklmnopqrstuvwxyz_";
-	size_t open  = std::string::npos;
-	size_t close = std::string::npos;
+	std::size_t open  = std::string::npos;
+	std::size_t close = std::string::npos;
 
 	open = text.find ('{');
 	if (open == std::string::npos) {
@@ -198,8 +198,8 @@ GfxContainer::process_label (const std::string& label_template)
 		return l;
 
 	std::string tag;
-	size_t start = std::string::npos;
-	size_t stop  = std::string::npos;
+	std::size_t start = std::string::npos;
+	std::size_t stop  = std::string::npos;
 	while (find_subst (l, tag, start, stop)) {
 		PPtr prop = c->get_prop (tag);
 		std::string value = (std::string) *prop;
@@ -250,7 +250,7 @@ GfxContainer::dump2 (void)
 	log_debug ("%sseqnum         = ", tabs.c_str(), seqnum);
 #endif
 
-	indent++;
+	++indent;
 	for (auto c : children) {
 		c->dump();
 	}
@@ -367,14 +367,14 @@ operator<< (std::ostream& stream, const GfxContainerPtr& g)
 GfxContainerPtr
 GfxContainer::get_smart (void)
 {
-	if (weak.expired()) {
+	if (self.expired()) {
 		log_debug ("SMART\n");
 		//XXX who created us? - code error
 		GfxContainerPtr c (this);
 		log_debug ("%s\n", c->dump());
-		weak = c;
+		self = c;
 	}
-	return weak.lock();
+	return self.lock();
 }
 
 
@@ -385,7 +385,7 @@ GfxContainer::get_index (const GfxContainerPtr& me)
 		return -1;
 
 	int size = children.size();
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < size; ++i) {
 		if (children[i] == me) {
 			return i;
 		}
@@ -402,7 +402,7 @@ GfxContainer::get_depth (void)
 
 	while (up) {
 		up = up->parent.lock();
-		depth++;
+		++depth;
 	}
 
 	return depth;
@@ -411,23 +411,22 @@ GfxContainer::get_depth (void)
 GfxContainerPtr
 GfxContainer::get_left (void)
 {
-	GfxContainerPtr empty;
 	GfxContainerPtr me = get_smart();
 
 	GfxContainerPtr gparent = parent.lock();
 	if (!gparent)				// No parent -> no siblings
-		return empty;
+		return nullptr;
 
 	int index = gparent->get_index (me);
 	if (index < 0)				// I'm not my parent's child
-		return empty;
+		return nullptr;
 
 	if (index == 0)				// I'm the first sibling
 		return gparent;
 
 	GfxContainerPtr prev = gparent->children[index-1];
 	if (!prev)				// Empty child!
-		return empty;
+		return nullptr;
 
 	int size;
 	while ((size = prev->children.size()) > 0) {
@@ -440,12 +439,11 @@ GfxContainer::get_left (void)
 GfxContainerPtr
 GfxContainer::get_right (void)
 {
-	GfxContainerPtr empty;
 	GfxContainerPtr me = get_smart();
 
 	GfxContainerPtr gparent = parent.lock();
 	if (!gparent)				// No parent -> no siblings
-		return empty;
+		return nullptr;
 
 	if (me->children.size() > 0)		// Descend to children
 		return me->children[0];
@@ -454,7 +452,7 @@ GfxContainer::get_right (void)
 	do {
 		int index = gparent->get_index (me);
 		if (index < 0)				// I'm not my parent's child
-			return empty;
+			return nullptr;
 
 		last_sib = gparent->children.size()-1;
 		if (index < last_sib) {
@@ -465,7 +463,7 @@ GfxContainer::get_right (void)
 	}
 	while (gparent);
 
-	return empty;
+	return nullptr;
 }
 
 const char*
@@ -473,7 +471,8 @@ GfxContainer::dump (void)
 {
 	std::stringstream s;
 	s << this;
-	return s.str().c_str();
+	debug = s.str();
+	return debug.c_str();
 }
 
 

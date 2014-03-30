@@ -34,7 +34,7 @@ PasswordDialogPtr
 PasswordDialog::create (void)
 {
 	PasswordDialogPtr p (new PasswordDialog("hello"));
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }

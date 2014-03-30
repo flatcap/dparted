@@ -63,7 +63,9 @@ protected:
 	bool valid = false;
 
 	std::map<std::string,std::string> config;
-	std::weak_ptr<ConfigFile> weak;	//XXX private?
+
+private:
+	std::weak_ptr<ConfigFile> self;
 };
 
 

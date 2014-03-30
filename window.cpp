@@ -250,10 +250,11 @@ Window::on_menu_choices (const Glib::ustring& parameter)
 	m_refChoice->change_state (parameter);
 
 	Glib::ustring message;
-	if (parameter == "a")
+	if (parameter == "a") {
 		message = "Choice a was selected.";
-	else
+	} else {
 		message = "Choice b was selected";
+	}
 
 	log_debug ("%s\n", message.c_str());
 }
@@ -265,10 +266,11 @@ Window::on_menu_choices_other (int parameter)
 	m_refChoiceOther->change_state (parameter);
 
 	Glib::ustring message;
-	if (parameter == 1)
+	if (parameter == 1) {
 		message = "Choice 1 was selected.";
-	else
+	} else {
 		message = "Choice 2 was selected";
+	}
 
 	log_debug ("%s\n", message.c_str());
 }
@@ -325,10 +327,11 @@ Window::on_menu_toggle (void)
 	active = !active;
 
 	Glib::ustring message;
-	if (active)
+	if (active) {
 		message = "Toggle is active.";
-	else
+	} else {
 		message = "Toggle is not active";
+	}
 
 	log_debug ("%s\n", message.c_str());
 }
@@ -344,37 +347,41 @@ Window::on_menu_view (int option)
 			m_refViewGfx ->get_state (val);
 			val = !val;
 			m_refViewGfx->change_state (val);
-			if (val)
+			if (val) {
 				drawingarea.show_all();
-			else
+			} else {
 				drawingarea.hide();
+			}
 			break;
 		case 2:
 			m_refViewTree->get_state (val);
 			val = !val;
 			m_refViewTree->change_state (val);
-			if (val)
+			if (val) {
 				treeview.show_all();
-			else
+			} else {
 				treeview.hide();
+			}
 			break;
 		case 3:
 			m_refViewToolbar->get_state (val);
 			val = !val;
 			m_refViewToolbar->change_state (val);
-			if (val)
+			if (val) {
 				toolbar->show_all();
-			else
+			} else {
 				toolbar->hide();
+			}
 			break;
 		case 4:
 			m_refViewStatus->get_state (val);
 			val = !val;
 			m_refViewStatus->change_state (val);
-			if (val)
+			if (val) {
 				statusbar.show_all();
-			else
+			} else {
 				statusbar.hide();
+			}
 			break;
 	}
 }
@@ -473,8 +480,9 @@ Window::init_actions (void)
 #endif
 #if 0
 	for (auto a : action_map) {
-		if (a.first[7] < 'n')
+		if (a.first[7] < 'n') {
 			a.second->set_enabled (false);
+		}
 		log_debug ("%s\n", a.first.c_str());
 	}
 #endif

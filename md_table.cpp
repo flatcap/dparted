@@ -52,7 +52,7 @@ MdTablePtr
 MdTable::create (void)
 {
 	MdTablePtr p (new MdTable());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -64,6 +64,7 @@ MdTable::accept (Visitor& v)
 	MdTablePtr m = std::dynamic_pointer_cast<MdTable> (get_smart());
 	if (!v.visit(m))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -138,7 +139,7 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	std::string vol_uuid = read_uuid_string (buffer+16);
 	//log_info ("vol uuid = %s\n", vol_uuid.c_str());
 
-	std::string vol_name = get_null_str (buffer+32, 32);
+	std::string vol_name = get_fixed_str (buffer+32, 32);
 	//log_info ("vol name = %s\n", vol_name.c_str());
 
 	std::int32_t raid_type   = sle32_to_cpup (buffer+72);

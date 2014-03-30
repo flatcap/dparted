@@ -43,7 +43,7 @@ BtrfsPtr
 Btrfs::create (void)
 {
 	BtrfsPtr p (new Btrfs());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -55,6 +55,7 @@ Btrfs::accept (Visitor& v)
 	BtrfsPtr b = std::dynamic_pointer_cast<Btrfs> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -91,6 +92,7 @@ Btrfs::get_btrfs_usage (void)
 {
 	if (device.empty())
 		return false;
+
 	ContainerPtr c = get_smart();
 	if (get_mounted_usage(c))
 		return true;
@@ -106,7 +108,7 @@ parse_header (const std::string& header, std::string& dev)
 	if (header.substr (0, 19) != "superblock: bytenr=")
 		return false;
 
-	size_t pos = header.find ("device=");
+	std::size_t pos = header.find ("device=");
 	if (pos == std::string::npos)
 		return false;
 
@@ -118,7 +120,7 @@ static bool
 parse_line (const std::string& line, std::string& key, std::string& value)
 {
 	// Up to 21 chars, tab(s), value
-	size_t pos;
+	std::size_t pos;
 	std::string k;
 	std::string v;
 
@@ -143,7 +145,7 @@ static std::string
 make_desc (std::string key)
 {
 	// underscore/dot -> space
-	size_t pos = -1;
+	std::size_t pos = -1;
 	do {
 		pos = key.find_first_of ("_.", pos+1);
 		if (pos != std::string::npos) {
@@ -246,7 +248,7 @@ Btrfs::get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int bufsize)
 	BtrfsPtr b = Btrfs::create();
 	b->sub_type ("btrfs");
 
-	b->name = get_null_str (buffer+0x1012B, 255);
+	b->name = get_fixed_str (buffer+0x1012B, 255);
 	b->uuid = read_uuid1 (buffer + 0x10020);
 
 	b->bytes_size = le64_to_cpup (buffer + 0x10070);

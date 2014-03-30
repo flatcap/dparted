@@ -17,17 +17,19 @@
  */
 
 #include <fcntl.h>
+#include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/mman.h>
 #include <unistd.h>
 
+#include <algorithm>
+#include <cerrno>
+#include <cstring>
 #include <iterator>
 #include <set>
 #include <sstream>
 #include <string>
 #include <typeinfo>
-#include <algorithm>
 
 #include "container.h"
 #include "action.h"
@@ -144,7 +146,7 @@ ContainerPtr
 Container::create (void)
 {
 	ContainerPtr p (new Container());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -159,9 +161,6 @@ Container::visit_children (Visitor& v)
 
 	for (auto c : children) {
 		ContainerPtr p = parent.lock();
-		if (!p && ((c->is_a ("Space") || c->is_a ("Filesystem")))) //XXX tmp
-			continue;
-
 		if (!c->accept(v))
 			return false;
 	}
@@ -178,6 +177,7 @@ Container::accept (Visitor& v)
 	ContainerPtr c = get_smart();
 	if (!v.visit(c))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -247,7 +247,7 @@ Container::just_add_child (ContainerPtr& child)
 void
 Container::delete_child (ContainerPtr& child)
 {
-	for (auto it = children.begin(); it != children.end(); it++) {
+	for (auto it = children.begin(); it != children.end(); ++it) {
 		if (*it == child) {
 			children.erase (it);
 			break;
@@ -311,10 +311,11 @@ Container::get_device_name (void)
 		return device;
 
 	ContainerPtr p = parent.lock();
-	if (p)
+	if (p) {
 		return p->get_device_name();
-	else
+	} else {
 		return "UNKNOWN";
+	}
 }
 
 std::uint64_t
@@ -348,7 +349,7 @@ Container::find (const std::string& search)
 		return c;
 	}
 
-	size_t pos = search.find ("(0)");
+	std::size_t pos = search.find ("(0)");
 	if (pos == (search.length() - 3)) {
 		std::string search2 = search.substr (0, pos);
 		if (name == search2) {
@@ -427,7 +428,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, 0);
 	if (buf == MAP_FAILED) {
-		log_error ("%s: alloc failed\n", __FUNCTION__);	//XXX perror
+		log_error ("%s: alloc failed: %s\n", __FUNCTION__, strerror (errno));
 		//close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
@@ -445,10 +446,11 @@ Container::close_buffer (std::uint8_t* buffer, std::uint64_t size)
 	if (!buffer)
 		return;
 
-	if (munmap (buffer, size) != 0)
-		perror ("munmap");
+	if (munmap (buffer, size) != 0) {
+		log_error ("munmap failed: %s\n", strerror (errno));
+		// nothing else we can do
+	}
 
-	//XXX nothing else we can do
 }
 
 
@@ -468,7 +470,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	std::string uuid = c->uuid;
 
 	if (uuid.size() > 8) {
-		size_t index = uuid.find_first_of (":-. ");
+		std::size_t index = uuid.find_first_of (":-. ");
 		uuid = "U:" + uuid.substr (0, index);
 	}
 
@@ -499,7 +501,7 @@ Container::is_a (const std::string& t)
 	//log_debug ("my type = %s, compare to %s\n", type.back().c_str(), t.c_str());
 
 	// Start with the most derived type
-	for (auto it = type.rbegin(); it != type.rend(); it++) {
+	for (auto it = type.rbegin(); it != type.rend(); ++it) {
 		if ((*it) == t) {
 			return true;
 		}
@@ -558,6 +560,7 @@ Container::get_all_props (bool inc_hidden /*=false*/)
 	for (auto p : props) {
 		if ((p.second->flags & BaseProperty::Flags::Hide) && !inc_hidden)
 			continue;
+
 		vv.push_back (p.second);
 	}
 
@@ -568,14 +571,14 @@ Container::get_all_props (bool inc_hidden /*=false*/)
 ContainerPtr
 Container::get_smart (void)
 {
-	if (weak.expired()) {
+	if (self.expired()) {
 		log_debug ("SMART\n");
 		//XXX who created us? code error
 		ContainerPtr c (this);
 		log_debug ("%s\n", c->dump());
-		weak = c;
+		self = c;
 	}
-	return weak.lock();
+	return self.lock();
 }
 
 
@@ -761,7 +764,7 @@ Container::get_object_addr (void)
 {
 	std::stringstream addr;
 
-	ContainerPtr c = weak.lock();
+	ContainerPtr c = self.lock();
 	if (c) {
 		addr << "0x" << (void*) c.get();
 	}
@@ -814,7 +817,7 @@ Container::get_path_type (void)
 std::int64_t
 Container::get_ref_count (void)
 {
-	return weak.use_count();
+	return self.use_count();
 }
 
 std::uint64_t
@@ -861,7 +864,7 @@ Container::get_uuid_short (void)
 	if (u.length() < 8)
 		return u;
 
-	size_t pos = uuid.find_first_of ("-:");
+	std::size_t pos = uuid.find_first_of ("-:");
 	if (pos != std::string::npos) {
 		u = uuid.substr (0, pos);
 	}
@@ -874,7 +877,8 @@ Container::dump (void)
 {
 	std::stringstream s;
 	s << this;
-	return s.str().c_str();
+	debug = s.str();
+	return debug.c_str();
 }
 
 

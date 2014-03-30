@@ -35,7 +35,7 @@ MdLinearPtr
 MdLinear::create (void)
 {
 	MdLinearPtr p (new MdLinear());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -47,6 +47,7 @@ MdLinear::accept (Visitor& v)
 	MdLinearPtr b = std::dynamic_pointer_cast<MdLinear> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 

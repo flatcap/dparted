@@ -38,7 +38,7 @@ LvmPartitionPtr
 LvmPartition::create (void)
 {
 	LvmPartitionPtr p (new LvmPartition());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -50,6 +50,7 @@ LvmPartition::accept (Visitor& v)
 	LvmPartitionPtr l = std::dynamic_pointer_cast<LvmPartition> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 

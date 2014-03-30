@@ -39,7 +39,7 @@ VolumePtr
 Volume::create (void)
 {
 	VolumePtr p (new Volume());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -51,6 +51,7 @@ Volume::accept (Visitor& v)
 	VolumePtr p = std::dynamic_pointer_cast<Volume> (get_smart());
 	if (!v.visit(p))
 		return false;
+
 	return visit_children(v);
 }
 

@@ -39,7 +39,7 @@ LvmMirrorPtr
 LvmMirror::create (void)
 {
 	LvmMirrorPtr p (new LvmMirror());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -51,6 +51,7 @@ LvmMirror::accept (Visitor& v)
 	LvmMirrorPtr l = std::dynamic_pointer_cast<LvmMirror> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -115,7 +116,7 @@ LvmMirror::add_child (ContainerPtr& child)
 
 	bool inserted = false;
 
-	for (auto i = children.begin(); i != children.end(); i++) {
+	for (auto i = children.begin(); i != children.end(); ++i) {
 		if ((*i)->parent_offset > child->parent_offset) {
 			children.insert (i, child);
 			inserted = true;

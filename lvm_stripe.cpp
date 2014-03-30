@@ -38,7 +38,7 @@ LvmStripePtr
 LvmStripe::create (void)
 {
 	LvmStripePtr p (new LvmStripe());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -50,6 +50,7 @@ LvmStripe::accept (Visitor& v)
 	LvmStripePtr l = std::dynamic_pointer_cast<LvmStripe> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 

@@ -35,7 +35,7 @@ MdRaidPtr
 MdRaid::create (void)
 {
 	MdRaidPtr p (new MdRaid());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -47,6 +47,7 @@ MdRaid::accept (Visitor& v)
 	MdRaidPtr b = std::dynamic_pointer_cast<MdRaid> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 

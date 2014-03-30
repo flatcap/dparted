@@ -44,7 +44,7 @@ MiscPtr
 Misc::create (void)
 {
 	MiscPtr p (new Misc());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -56,6 +56,7 @@ Misc::accept (Visitor& v)
 	MiscPtr m = std::dynamic_pointer_cast<Misc> (get_smart());
 	if (!v.visit(m))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -94,7 +95,7 @@ is_empty (std::uint8_t* buffer, int bufsize)
 
 	bufsize /= sizeof (std::uint64_t);
 
-	for (int i = 0; i < bufsize; i++) {
+	for (int i = 0; i < bufsize; ++i) {
 		if (lptr[i]) {
 			return false;
 		}
@@ -109,7 +110,7 @@ is_random (std::uint8_t* buffer, int bufsize)
 {
 	double mean = 0;
 
-	for (int i = 0; i < bufsize; i++) {
+	for (int i = 0; i < bufsize; ++i) {
 		mean += buffer[i];
 	}
 

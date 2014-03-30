@@ -43,7 +43,7 @@ ExtfsPtr
 Extfs::create (void)
 {
 	ExtfsPtr p (new Extfs());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -55,6 +55,7 @@ Extfs::accept (Visitor& v)
 	ExtfsPtr b = std::dynamic_pointer_cast<Extfs> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -92,7 +93,7 @@ parse_line (const std::string& line, std::string& key, std::string& value)
 	// 23 chars, colon, 2+ spaces, value
 	// ^[a-z #]+:  +[^ ].*$
 	// find ":  "
-	size_t pos;
+	std::size_t pos;
 	std::string k;
 	std::string v;
 
@@ -119,7 +120,7 @@ make_key (std::string desc)
 	std::transform (desc.begin(), desc.end(), desc.begin(), ::tolower);
 
 	// # -> number
-	size_t pos = desc.find_first_of ('#');
+	std::size_t pos = desc.find_first_of ('#');
 	if (pos != std::string::npos) {
 		desc.replace (pos, 1, "number");
 	}

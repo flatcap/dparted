@@ -35,7 +35,7 @@ GptPartitionPtr
 GptPartition::create (void)
 {
 	GptPartitionPtr p (new GptPartition());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -47,6 +47,7 @@ GptPartition::accept (Visitor& v)
 	GptPartitionPtr b = std::dynamic_pointer_cast<GptPartition> (get_smart());
 	if (!v.visit(b))
 		return false;
+
 	return visit_children(v);
 }
 

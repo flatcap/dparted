@@ -164,7 +164,6 @@ file size option : human-comparable
 	NO to 	1MB, 1GB
 	YES to	1MB, 1024MB
 document exception handling in comments and/or header
-int16_t or std::int16_t?
 external (to container) iterator class (depth/breadth) first?
 prefer make_shared over shared_ptr x (new Y)
 
@@ -204,11 +203,7 @@ move friends to public, protected, private?
 
 question dialog -- [X] remember settings button
 
-derive text_app
-
 gpart --id partition contents
-
-container.h -> mmap.h
 
 class_dparted.gv update
 
@@ -266,8 +261,6 @@ test against GParted -- compare work command lines
 vm image tool -- find (list) mountable drives & mount them (including swap)
 
 inxi script -- data from where?
-
-weak -> self?
 
 expand Rect in Range.  No.  Need rect separate
 
@@ -448,8 +441,6 @@ tool: set uuid on _any_ object to a test-specific number
 view key (for gfx): colour key (just those types in use)
 	[X] show all
 
-linked list for properties (or map)
-
 app: cd / on startup
 	(but maintain pointer to start dir)
 
@@ -523,8 +514,6 @@ Misc:Alignment : sub_type ~= Reserved?
 
 Tools menu, combine with plugins?
 
-multiple inheritance breaks theming
-
 "category" theme -- match dot hierarchy
 
 actions -- select siblings, etc
@@ -547,12 +536,6 @@ treeiter on container?
 
 shadow objects -- entire gui set of objs
 	call all virtual methods on orig lib objects
-
-Container
-	bytes_size
-	bytes_used
-	bytes_free
-	bytes_reserved
 
 bytes reserved will change if container::alignment is altered
 
@@ -595,9 +578,6 @@ What's the visual difference between
 	Disk/LvmTable/LvmGroup
 	Disk/LvmTable/LvmGroup/LvmVolume
 
-git pre-commit hook -- file type sensitive
-	i.e. allow spaces to indent svg, etc
-
 config - default options for all commands, e.g.
 	options for mkfs.ext2
 	options for lvs
@@ -606,14 +586,7 @@ be able to configure each command?
 
 tests: get_next_free_md() function
 
-make stats target
-
 Table::set_alignment
-
-debug object properties:
-	mem_addr
-	ref_count
-	etc
 
 resize dialog "Usable space" option may need input from the filesystem
 	i.e.  how much metadata do you have?
@@ -623,15 +596,6 @@ turn parent_offset to child_offset (and move to parent)
 	NO.  can't distinguish between
 		external get_buffer
 		child get_buffer
-
-"long" property:
-	"type" -> "container.block.disk"
-
-property - "default_name" (name may be empty)
-
-expand all command names and their options
-	lvs -x
-	lvscan --xyx
 
 can i run zerofree on luks partitions?
 	punch holes?
@@ -672,11 +636,6 @@ of the user naming them?
 
 pathbar below menu (and on view menu)
 	tie in to focus
-
-#ifdef out lvm, md, each fs, etc
-	from makefile
-
-new quiet makefile
 
 treeview percentage -- option to display as bargraph
 

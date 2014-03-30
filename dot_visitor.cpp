@@ -121,7 +121,7 @@ dot_row (const char* name, unsigned int value)
  */
 static
 std::string
-dot_row (const char* name, ContainerPtr value)	//XXX template this to std::shared_ptr<T>
+dot_row (const char* name, ContainerPtr value)
 {
 	std::stringstream row;
 	std::string dest;
@@ -209,7 +209,7 @@ dot_container (std::shared_ptr<T> t)
 		}
 
 		std::string s = (std::string) *prop;
-		size_t pos = s.find_first_of ('<');
+		std::size_t pos = s.find_first_of ('<');
 		if (pos != std::string::npos) {
 			s = s.replace (pos, 1, "(");
 		}

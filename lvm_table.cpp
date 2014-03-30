@@ -53,7 +53,7 @@ LvmTablePtr
 LvmTable::create (void)
 {
 	LvmTablePtr p (new LvmTable());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -65,6 +65,7 @@ LvmTable::accept (Visitor& v)
 	LvmTablePtr l = std::dynamic_pointer_cast<LvmTable> (get_smart());
 	if (!v.visit(l))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -167,8 +168,8 @@ get_mda_header (std::uint8_t* buffer)
 static int
 get_seq_num (const std::string& config)
 {
-	size_t index = config.find ("seqno = ");
-	size_t end   = config.find ('\n', index);
+	std::size_t index = config.find ("seqno = ");
+	std::size_t end   = config.find ('\n', index);
 
 	if (index == std::string::npos)
 		return 0;
@@ -185,7 +186,7 @@ get_seq_num (const std::string& config)
 static std::string
 get_vol_name (const std::string& config)
 {
-	size_t end = config.find (" {\n");
+	std::size_t end = config.find (" {\n");
 
 	if (end == std::string::npos)
 		return "";
@@ -198,14 +199,15 @@ get_vol_name (const std::string& config)
 static void
 format_config (std::string& config)
 {
-	size_t index = 0;
-	size_t first;
+	std::size_t index = 0;
+	std::size_t first;
 	std::string indent;
 
-	for (int i = 0; i < 1000; i++) {
+	for (int i = 0; i < 1000; ++i) {
 		first = config.find_first_of ("[]{}\n", index);
 		if (first == std::string::npos)
 			break;
+
 		//log_info ("first = %lu '%c'\n", first, config[first] == '\n' ? '@' : config[first]);
 
 		switch (config[first]) {
@@ -263,7 +265,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 #if 0
 	log_info ("Disk locations:\n");
 	int i;
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < 8; ++i) {
 		if (le64_to_cpu (ph->disk_areas[i].offset) == 0) {
 			break;
 		}
@@ -273,7 +275,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 #if 0
 	log_info ("Metadata locations:\n");
-	for (i++; i < 8; i++) {
+	for (++i; i < 8; ++i) {
 		if (le64_to_cpu (ph->disk_areas[i].offset) == 0) {
 			break;
 		}
@@ -291,7 +293,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 #if 0
 	log_info ("Metadata:\n");
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 4; ++i) {
 		if (le64_to_cpu (mh->raw_locns[i].offset) == 0) {
 			break;
 		}

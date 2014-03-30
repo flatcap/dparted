@@ -226,7 +226,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	}
 
 	std::vector<std::string> disks;			// Mop up any remaining args
-	for (; argc > 1; argc--, argv++) {
+	for (; argc > 1; argc--, ++argv) {
 		disks.push_back (argv[1]);
 	}
 
@@ -272,6 +272,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	if (!group.app) {
 		if (group.theme.size())
 			log_debug ("theme without app\n");
+
 		if ((group.x != -1) || (group.y != -1) || (group.w != -1) || (group.h != -1))
 			log_debug ("coords without app\n");
 	}
@@ -339,11 +340,11 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 
 #ifdef DP_LIST
 	if (group.list && top_level) {
-		log_info ("------------------------------------------------------------\n");
+		log_debug ("------------------------------------------------------------\n");
 		ListVisitor lv;
 		top_level->accept (lv);
 		lv.list();
-		log_info ("------------------------------------------------------------\n");
+		log_debug ("------------------------------------------------------------\n");
 	}
 #endif
 #ifdef DP_PROP
@@ -485,7 +486,7 @@ GuiApp::ask (QuestionPtr q)
 
 	int id = 0;
 	for (auto a : q->answers) {
-		dialog.add_button (a, id++);
+		dialog.add_button (a, ++id);
 	}
 
 	q->result = dialog.run();

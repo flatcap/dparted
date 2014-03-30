@@ -18,107 +18,45 @@
 
 #include <cstdarg>
 #include <cstring>
+#include <vector>
 
 #include "log.h"
 #include "log_trace.h"
 
 //static unsigned int log_level = ~0;
 static FILE* file = nullptr;
-static char log_buffer[10240];
-
-__attribute__ ((format (printf, 1, 0)))
-static int
-log (const char* format, va_list args)
-{
-	if (!file)
-		return 0;
-
-	int count = vsnprintf (log_buffer, sizeof (log_buffer), format, args);
-	//XXX check count against buffer size
-
-	fprintf (stdout, "%s", log_buffer);
-
-	return count;
-}
-
 
 __attribute__ ((format (printf, 1, 2)))
 int
 log_debug (const char* format, ...)
 {
-	va_list args;
-	int retval;
-
 	if (!file)
 		return 0;
 
+	va_list args;
 	va_start (args, format);
 	//fprintf (file, "\e[38;5;229m");
-	retval = log (format, args);
+
+	std::vector<char> buffer;
+	int buf_len = 1024;
+	buffer.resize (buf_len);		// Most log lines should be shorter than 1KiB
+	buf_len = buffer.size();
+
+	int count = vsnprintf (buffer.data(), buf_len-1, format, args);
+	if (count >= buf_len) {
+		va_end (args);
+		va_start (args, format);
+		buffer.resize (count+2);	// Make enough room this time
+		buf_len = buffer.size();
+		count = vsnprintf (buffer.data(), buf_len-1, format, args);
+	}
+
+	fprintf (stdout, "%s", buffer.data());
 	//fprintf (file, "\e[0m");
 	va_end (args);
 
-	return retval;
+	return count;
 }
-
-__attribute__ ((format (printf, 1, 2)))
-int
-log_error (const char* format, ...)
-{
-	va_list args;
-	int retval;
-
-	if (!file)
-		return 0;
-
-	va_start (args, format);
-	//fprintf (file, "\033[01;31m");
-	retval = log (format, args);
-	//fprintf (file, "\033[0m");
-	va_end (args);
-
-	return retval;
-}
-
-__attribute__ ((format (printf, 1, 2)))
-int
-log_info (const char* format, ...)
-{
-	va_list args;
-	int retval;
-
-	if (!file)
-		return 0;
-
-	va_start (args, format);
-	//fprintf (file, "\e[38;5;79m");
-	retval = log (format, args);
-	//fprintf (file, "\e[0m");
-	va_end (args);
-
-	return retval;
-}
-
-__attribute__ ((format (printf, 1, 2)))
-int
-log_trace (const char* format, ...)
-{
-	va_list args;
-	int retval;
-
-	if (!file)
-		return 0;
-
-	va_start (args, format);
-	//fprintf (file, "\033[38;5;70m");
-	retval = log (format, args);
-	//fprintf (file, "\033[0m");
-	va_end (args);
-	fflush (file);
-
-	return retval;
-}
-
 
 bool
 log_init (const char* name)
@@ -138,6 +76,7 @@ log_close (void)
 {
 	if (!file)
 		return;
+
 	fclose (file);
 	file = nullptr;
 }

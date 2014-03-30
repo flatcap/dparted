@@ -78,7 +78,7 @@ GptPtr
 Gpt::create (void)
 {
 	GptPtr p (new Gpt());
-	p->weak = p;
+	p->self = p;
 
 	return p;
 }
@@ -90,6 +90,7 @@ Gpt::accept (Visitor& v)
 	GptPtr g = std::dynamic_pointer_cast<Gpt> (get_smart());
 	if (!v.visit(g))
 		return false;
+
 	return visit_children(v);
 }
 
@@ -138,7 +139,7 @@ read_guid (std::uint8_t* buffer)
 
 	ss << a << '-' << b << '-' << c << '-' << d << '-';
 
-	for (int i = 10; i < 16; i++) {
+	for (int i = 10; i < 16; ++i) {
 		ss << std::setw(2) << static_cast<unsigned> (buffer[i]);
 	}
 
@@ -149,7 +150,7 @@ void
 delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 {
 	 //log_debug ("delete: (%d,%d): ", start, finish);
-	for (auto it = std::begin (region); it != std::end (region); it++) {
+	for (auto it = std::begin (region); it != std::end (region); ++it) {
 		if (finish < (*it).first)
 			continue;
 
@@ -254,7 +255,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	std::string device = g->get_device_name();
 
-	for (int i = 0; i < 128; i++, buffer += 128) {
+	for (int i = 0; i < 128; ++i, buffer += 128) {
 		if (le64_to_cpup (buffer+32) == 0)
 			continue;			// Skip empty slots
 
@@ -263,12 +264,8 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		p->uuid = read_guid (buffer+16);
 		std::string part_type_uuid = read_guid (buffer+0);		//XXX not saved
 
-		std::string part_name = device;
-		if (isdigit (device.back())) {
-			part_name += 'p';
-		}
-		part_name += std::to_string (i+1);
-		p->device = part_name;
+		p->device = make_part_dev (device, i+i);
+		//XXX check it's not empty
 
 		std::uint64_t start  = le64_to_cpup (buffer+32);
 		std::uint64_t finish = le64_to_cpup (buffer+40);
@@ -279,7 +276,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 		p->parent_offset = start * 512;
 		p->bytes_size = (finish - start + 1) * 512;
-		p->name = get_null_str (buffer+56, 72);
+		p->name = get_fixed_str (buffer+56, 72);
 
 #if 0
 		std::string s = get_size (p->bytes_size);

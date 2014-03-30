@@ -32,7 +32,7 @@ QuestionPtr
 Question::create (ContainerPtr UNUSED(c), question_cb_t fn)
 {
 	QuestionPtr q (new Question());
-	q->weak = q;
+	q->self = q;
 	q->done_fn = fn;
 
 	return q;
@@ -42,7 +42,7 @@ void
 Question::done (void)
 {
 	if (done_fn) {
-		done_fn (weak.lock());
+		done_fn (self.lock());
 	}
 }
 

@@ -117,7 +117,7 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			row[m_Columns.col_gfx_container] = x;
 
 			std::string dev = x->device;
-			size_t pos = dev.find_last_of ('/');
+			std::size_t pos = dev.find_last_of ('/');
 			if (pos != std::string::npos) {
 				dev = dev.substr (pos+1);
 			}
@@ -249,6 +249,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 	//log_debug ("qtt: %d\n", menu_active);
 	if (keyboard_tooltip)
 		return false;
+
 	if (menu_active)
 		return false;
 
@@ -326,7 +327,7 @@ TreeView::setup_popup (void)
 	std::vector<std::string> list = { "_Edit", "_Process", "_Remove" };
 
 	Gtk::MenuItem* item = nullptr;
-	for (unsigned int i = 0; i < list.size(); i++) {
+	for (unsigned int i = 0; i < list.size(); ++i) {
 		item = Gtk::manage (new Gtk::MenuItem (list[i], true));
 		item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &TreeView::on_menu_select), i));
 		m_Menu_Popup.append (*item);
