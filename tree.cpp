@@ -1,6 +1,8 @@
 #include <iostream>
 #include <gtkmm.h>
 
+typedef std::shared_ptr<Gtk::TreeModelColumnBase> ModColPtr;
+
 /**
  * class Tree
  */
@@ -15,24 +17,26 @@ protected:
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
 
 private:
-#if 0
 	void add_int_column    (Gtk::TreeModel::ColumnRecord& cols, std::string title);
 	void add_string_column (Gtk::TreeModel::ColumnRecord& cols, std::string title);
-#endif
+
+	std::vector<ModColPtr> mod_cols;
 };
 
-#if 0
 void
 Tree::add_int_column (Gtk::TreeModel::ColumnRecord& cols, std::string title)
 {
+	(void) cols;
+	(void) title;
 }
 
 void
 Tree::add_string_column (Gtk::TreeModel::ColumnRecord& cols, std::string title)
 {
+	(void) cols;
+	(void) title;
 }
 
-#endif
 Tree::Tree()
 {
 	set_default_size (400, 200);
@@ -46,23 +50,27 @@ Tree::Tree()
 
 	//---------------------------
 
-	Gtk::TreeModelColumn<int> m_col_id;
-	Gtk::TreeModelColumn<std::string> m_col_name;
-	Gtk::TreeModelColumn<std::string> m_col_surname;
+	Gtk::TreeModelColumn<int>*         p_col_id	= new Gtk::TreeModelColumn<int>;
+	Gtk::TreeModelColumn<std::string>* p_col_name	= new Gtk::TreeModelColumn<std::string>;
+	Gtk::TreeModelColumn<std::string>* p_col_surname= new Gtk::TreeModelColumn<std::string>;
 
-	cols.add (m_col_id);
-	cols.add (m_col_name);
-	cols.add (m_col_surname);
+	mod_cols.push_back (ModColPtr (p_col_id));
+	mod_cols.push_back (ModColPtr (p_col_name));
+	mod_cols.push_back (ModColPtr (p_col_surname));
+
+	cols.add (*mod_cols[0]);
+	cols.add (*mod_cols[1]);
+	cols.add (*mod_cols[2]);
 
 	//---------------------------
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("ID"));
-	col->pack_start (m_col_id, false);
+	col->pack_start (*p_col_id, false);
 	m_TreeView.append_column (*col);
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Name"));
-	col->pack_start (m_col_name,    false);
-	col->pack_start (m_col_surname, true);
+	col->pack_start (*p_col_name,    false);
+	col->pack_start (*p_col_surname, true);
 	m_TreeView.append_column (*col);
 
 	//---------------------------
