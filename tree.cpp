@@ -1,6 +1,11 @@
 #include <iostream>
 #include <gtkmm.h>
 
+typedef std::shared_ptr<Gtk::TreeModelColumnBase> ModColPtr;
+
+/**
+ * class Tree
+ */
 class Tree : public Gtk::Window
 {
 public:
@@ -9,66 +14,68 @@ public:
 
 protected:
 	Gtk::TreeView m_TreeView;
-	Glib::RefPtr<Gtk::TreeStore> m_TreeStore;
+	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
+
+private:
+	template <class T>
+	void add_column (Gtk::TreeModel::ColumnRecord& cols, Gtk::TreeView::Column* col)
+	{
+		Gtk::TreeModelColumn<T>* tmc = new Gtk::TreeModelColumn<T>;
+		mod_cols.push_back (ModColPtr (tmc));
+		cols.add (*tmc);
+		col->pack_start (*tmc, false);
+	}
+
+	std::vector<ModColPtr> mod_cols;
 };
-
-int
-main(int argc, char *argv[])
-{
-	auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
-	Tree window;
-	return app->run(window);
-}
-
-
-typedef std::shared_ptr<Gtk::TreeModelColumnBase> ModColPtr;
-std::vector<ModColPtr> mod_cols;
 
 Tree::Tree()
 {
-	set_default_size(400, 200);
+	set_default_size (400, 200);
 
-	add(m_TreeView);
+	add (m_TreeView);
+
+	//=====================================================
 
 	Gtk::TreeModel::ColumnRecord cols;
-
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<int>));		// 0 id
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));	// 1 name
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));	// 2 family
-
-	cols.add(*mod_cols[0]);	// id
-	cols.add(*mod_cols[1]); // name
-	cols.add(*mod_cols[2]); // family
-
-	m_TreeStore = Gtk::TreeStore::create(cols);
-	m_TreeView.set_model(m_TreeStore);
-
-	Gtk::CellRenderer* pCellRenderer = nullptr;
 	Gtk::TreeView::Column* col = nullptr;
 
-	pCellRenderer = manage(new Gtk::CellRendererText());
-	col = Gtk::manage (new Gtk::TreeView::Column ("ID", *pCellRenderer));
-	col->set_renderer(*pCellRenderer, *mod_cols[0]);
+	//---------------------------
+
+	col = Gtk::manage (new Gtk::TreeView::Column ("ID"));
+	add_column<int> (cols, col);
 	m_TreeView.append_column (*col);
 
-	pCellRenderer = manage(new Gtk::CellRendererText());
-	col = Gtk::manage (new Gtk::TreeView::Column ("Name", *pCellRenderer));
-	col->set_renderer(*pCellRenderer, *mod_cols[1]);
+	//---------------------------
+
+	col = Gtk::manage (new Gtk::TreeView::Column ("Name"));
+	add_column<std::string> (cols, col);
+	add_column<std::string> (cols, col);
 	m_TreeView.append_column (*col);
 
-	pCellRenderer = manage(new Gtk::CellRendererText());
-	col = Gtk::manage (new Gtk::TreeView::Column ("Surname", *pCellRenderer));
-	col->set_renderer(*pCellRenderer, *mod_cols[2]);
-	m_TreeView.append_column (*col);
+	//---------------------------
 
-	Gtk::TreeModel::Row row = *(m_TreeStore->append());		// iterator
-	std::string name    = "James";
-	std::string surname = "Cagney";
+	m_refTreeModel = Gtk::TreeStore::create (cols);
+	m_TreeView.set_model (m_refTreeModel);
 
-	row->set_value (0, 42);
-	row->set_value (1, name);
-	row->set_value (2, surname);
+	//=====================================================
+
+	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
+	std::string jim = "Jim";
+	std::string bob = "Bob";
+	row.set_value (0, 42);
+	row.set_value (1, jim);
+	row.set_value (2, bob);
 
 	show_all_children();
 }
+
+int
+main (int argc, char *argv[])
+{
+	auto app = Gtk::Application::create (argc, argv, "org.gtkmm.example");
+	Tree window;
+	return app->run (window);
+}
+
 
