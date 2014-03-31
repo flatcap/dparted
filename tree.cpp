@@ -17,24 +17,28 @@ protected:
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
 
 private:
-	void add_int_column    (Gtk::TreeModel::ColumnRecord& cols, std::string title);
-	void add_string_column (Gtk::TreeModel::ColumnRecord& cols, std::string title);
+	void add_int_column    (Gtk::TreeModel::ColumnRecord& cols, Gtk::TreeView::Column* col);
+	void add_string_column (Gtk::TreeModel::ColumnRecord& cols, Gtk::TreeView::Column* col);
 
 	std::vector<ModColPtr> mod_cols;
 };
 
 void
-Tree::add_int_column (Gtk::TreeModel::ColumnRecord& cols, std::string title)
+Tree::add_int_column (Gtk::TreeModel::ColumnRecord& cols, Gtk::TreeView::Column* col)
 {
-	(void) cols;
-	(void) title;
+	Gtk::TreeModelColumn<int>* tmc = new Gtk::TreeModelColumn<int>;
+	mod_cols.push_back (ModColPtr (tmc));
+	cols.add (*tmc);
+	col->pack_start (*tmc, false);
 }
 
 void
-Tree::add_string_column (Gtk::TreeModel::ColumnRecord& cols, std::string title)
+Tree::add_string_column (Gtk::TreeModel::ColumnRecord& cols, Gtk::TreeView::Column* col)
 {
-	(void) cols;
-	(void) title;
+	Gtk::TreeModelColumn<std::string>* tmc = new Gtk::TreeModelColumn<std::string>;
+	mod_cols.push_back (ModColPtr (tmc));
+	cols.add (*tmc);
+	col->pack_start (*tmc, false);
 }
 
 Tree::Tree()
@@ -51,32 +55,14 @@ Tree::Tree()
 	//---------------------------
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("ID"));
-
-	Gtk::TreeModelColumn<int>* p_col_id = new Gtk::TreeModelColumn<int>;
-	mod_cols.push_back (ModColPtr (p_col_id));
-	//cols.add (*mod_cols[0]);
-	cols.add (*p_col_id);
-	col->pack_start (*p_col_id, false);
-
+	add_int_column (cols, col);
 	m_TreeView.append_column (*col);
 
 	//---------------------------
 
 	col = Gtk::manage (new Gtk::TreeView::Column ("Name"));
-
-	Gtk::TreeModelColumn<std::string>* p_col_name = new Gtk::TreeModelColumn<std::string>;
-	mod_cols.push_back (ModColPtr (p_col_name));
-	//cols.add (*mod_cols[1]);
-	cols.add (*p_col_name);
-	col->pack_start (*p_col_name, false);
-
-
-	Gtk::TreeModelColumn<std::string>* p_col_surname= new Gtk::TreeModelColumn<std::string>;
-	mod_cols.push_back (ModColPtr (p_col_surname));
-	//cols.add (*mod_cols[2]);
-	cols.add (*p_col_surname);
-	col->pack_start (*p_col_surname, true);
-
+	add_string_column (cols, col);
+	add_string_column (cols, col);
 	m_TreeView.append_column (*col);
 
 	//---------------------------
