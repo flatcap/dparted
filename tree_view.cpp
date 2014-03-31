@@ -200,14 +200,6 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	 *	        `-- loop0p2	vfat	green	vfat_label
 	 */
 
-#if 0
-	std::string tvcols = theme->get_config ("App", "", "treeview_columns");
-	std::vector<std::string> tvc;
-	explode (",", tvcols, tvc);
-	for (auto i : tvc) {
-		log_debug ("%s\n", i.c_str());
-	}
-#endif
 	Gtk::TreeModel::ColumnRecord col_rec;
 	Gtk::TreeView::Column* col = nullptr;
 
