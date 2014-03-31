@@ -52,6 +52,15 @@ protected:
 
 	ThemePtr theme;
 
+	template <class T>
+	void add_column (Gtk::TreeModel::ColumnRecord& col_rec, Gtk::TreeView::Column* col)
+	{
+		Gtk::TreeModelColumn<T>* tmc = new Gtk::TreeModelColumn<T>;
+		mod_cols.push_back (ModColPtr (tmc));
+		col_rec.add (*tmc);
+		col->pack_start (*tmc, false);
+	}
+
 private:
 	// POPUP
 	void setup_popup (void);

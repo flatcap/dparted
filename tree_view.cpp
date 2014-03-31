@@ -180,42 +180,6 @@ TreeView::init_treeview (GfxContainerPtr& c)
 {
 	theme = gui_app->get_theme();
 
-#if 0
-	std::string tvcols = theme->get_config ("App", "", "treeview_columns");
-	std::vector<std::string> tvc;
-	explode (",", tvcols, tvc);
-	for (auto i : tvc) {
-		log_debug ("%s\n", i.c_str());
-	}
-#endif
-	std::string name = "App.treeview_cols";
-	std::vector<std::string> vec = theme->get_children (name);
-	log_debug ("%s children\n", name.c_str());
-	for (auto i : vec) {
-		std::string key = name + "." + i;
-		log_debug ("\t%s = ", i.c_str());
-		try {
-			std::string t = theme->get_config (key, "", "type", false);
-			log_debug ("%s\n", t.c_str());
-		} catch (...) {
-			log_debug ("string");
-		}
-		log_debug ("\n");
-	}
-
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<GfxContainerPtr>));		//  0 gfx_container
-	mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  1 container
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>>));	//  2 colour
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  3 type
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  4 name
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  5 size
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  6 size_suffix
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  7 used
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			//  8 used_suffix
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<uint64_t>));			//  9 free
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			// 10 free_suffix
-	// mod_cols.push_back (ModColPtr (new Gtk::TreeModelColumn<std::string>));			// 11 empty
-
 	/*	DEVICE	COLOUR	TYPE	NAME	DISPLAY
 	 *	loop0	none	block	loop0	empty
 	 *	loop0	none	table	gpt	always
@@ -236,84 +200,38 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	 *	        `-- loop0p2	vfat	green	vfat_label
 	 */
 
-	Gtk::TreeModel::ColumnRecord m_Columns;
-	m_Columns.add (*mod_cols[ 0]);		//  0 gfx_container
-	// m_Columns.add (*mod_cols[ 1]);		//  1 container
-	// m_Columns.add (*mod_cols[ 2]);		//  2 colour
-	// m_Columns.add (*mod_cols[ 3]);		//  3 type
-	// m_Columns.add (*mod_cols[ 4]);		//  4 name
-	// m_Columns.add (*mod_cols[ 5]);		//  5 size
-	// m_Columns.add (*mod_cols[ 6]);		//  6 size_suffix
-	// m_Columns.add (*mod_cols[ 7]);		//  7 used
-	// m_Columns.add (*mod_cols[ 8]);		//  8 used_suffix
-	// m_Columns.add (*mod_cols[ 9]);		//  9 free
-	// m_Columns.add (*mod_cols[10]);		// 10 free_suffix
-	// m_Columns.add (*mod_cols[11]);		// 11 empty
-
-	//Add the TreeView's view columns:
+#if 0
+	std::string tvcols = theme->get_config ("App", "", "treeview_columns");
+	std::vector<std::string> tvc;
+	explode (",", tvcols, tvc);
+	for (auto i : tvc) {
+		log_debug ("%s\n", i.c_str());
+	}
+#endif
+	Gtk::TreeModel::ColumnRecord col_rec;
 	Gtk::TreeView::Column* col = nullptr;
 
-#if 1
-	col = Gtk::manage (new Gtk::TreeView::Column ("Container"));
-	Gtk::CellRenderer* pCellRenderer = manage(new Gtk::CellRendererText());
-	//col->set_renderer (*pCellRenderer, *mod_cols[1]);
-	col->pack_start (*pCellRenderer,  true);
-	col->set_alignment (0.0);
-	append_column (*col);
-#endif
+	std::string name = "App.treeview_cols";
+	std::vector<std::string> vec = theme->get_children (name);
+	log_debug ("%s children\n", name.c_str());
+	for (auto i : vec) {
+		std::string key = name + "." + i;
+		log_debug ("\t%s = ", i.c_str());
+		col = Gtk::manage (new Gtk::TreeView::Column (i));
+		try {
+			std::string t = theme->get_config (key, "", "type", false);
+			log_debug ("%s ", t.c_str());
+			add_column<int> (col_rec, col);
+		} catch (...) {
+			log_debug ("string");
+			add_column<std::string> (col_rec, col);
+		}
+		append_column (*col);
+		log_debug ("\n");
+	}
 
-#if 0
-	col = Gtk::manage (new Gtk::TreeView::Column ("Type"));
-	col->pack_start (col_colour, false);
-	col->pack_start (col_type,   false);
-	col->set_alignment (0.0);
-	append_column (*col);
-
-	col = Gtk::manage (new Gtk::TreeView::Column ("Label"));
-	col->pack_start (col_name,   false);
-	col->set_alignment (0.0);
-	append_column (*col);
-
-	col = Gtk::manage (new Gtk::TreeView::Column ("Size"));
-	col->pack_start (col_size,        false);
-	col->pack_start (col_size_suffix, false);
-	col->get_first_cell()->set_alignment (1.0, 0.5);
-	col->set_alignment (1.0);
-	append_column (*col);
-
-	col = Gtk::manage (new Gtk::TreeView::Column ("Used"));
-	col->pack_start (col_used,        false);
-	col->pack_start (col_used_suffix, false);
-	col->get_first_cell()->set_alignment (1.0, 0.5);
-	col->set_alignment (1.0);
-	append_column (*col);
-
-	col = Gtk::manage (new Gtk::TreeView::Column ("Free"));
-	col->pack_start (col_free,        false);
-	col->pack_start (col_free_suffix, false);
-	col->get_first_cell()->set_alignment (1.0, 0.5);
-	col->set_alignment (1.0);
-	append_column (*col);
-
-	col = Gtk::manage (new Gtk::TreeView::Column (""));
-	col->pack_start (col_empty, true);
-	append_column (*col);
-#endif
-
-	/* col->pack_start (col_icon1,      false); */
-	/* col->pack_start (col_icon2,      false); */
-#if 0
-	append_column ("Mount", col_mount);
-	append_column ("Label", col_label);
-	append_column ("Size",  col_size);
-	append_column ("Used",  col_used);
-	append_column ("Free",  col_free);
-	append_column ("Flags", col_flags);
-#endif
-
-	//Create the Tree model:
-	m_refTreeModel = Gtk::TreeStore::create (m_Columns);
-	//set_model (m_refTreeModel);
+	m_refTreeModel = Gtk::TreeStore::create (col_rec);
+	set_model (m_refTreeModel);
 
 	set_level_indentation (10);
 
@@ -323,9 +241,10 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	treeselection = get_selection();
 	treeselection->signal_changed().connect (sigc::mem_fun (*this, &TreeView::on_selection_changed));
 
-	tree_add_row (c, nullptr);
+	//tree_add_row (c, nullptr);
+	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
+	row.set_value (0, std::string ("/dev/loop0"));
 
-	set_model (m_refTreeModel);
 	expand_all();
 }
 
