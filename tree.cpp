@@ -23,23 +23,33 @@ Tree::Tree()
 	Gtk::TreeModel::ColumnRecord cols;
 
 	Gtk::TreeModelColumn<int> m_col_id;
-	Gtk::TreeModelColumn<Glib::ustring> m_col_name;
+	Gtk::TreeModelColumn<std::string> m_col_name;
+	Gtk::TreeModelColumn<std::string> m_col_surname;
 
 	cols.add (m_col_id);
 	cols.add (m_col_name);
+	cols.add (m_col_surname);
 
 	m_refTreeModel = Gtk::TreeStore::create (cols);
 	m_TreeView.set_model (m_refTreeModel);
 
 	m_TreeView.append_column ("ID",   m_col_id);
-	m_TreeView.append_column ("Name", m_col_name);
+	//m_TreeView.append_column ("Name", m_col_name);
+
+	Gtk::TreeView::Column* col = nullptr;
+	col = Gtk::manage (new Gtk::TreeView::Column ("Name"));
+	col->pack_start (m_col_name,    false);
+	col->pack_start (m_col_surname, true);
+	m_TreeView.append_column (*col);
 
 	//-----------------------------------------------------
 
 	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
 	std::string jim = "Jim";
+	std::string bob = "Bob";
 	row.set_value (0, 42);
 	row.set_value (1, jim);
+	row.set_value (2, bob);
 
 	show_all_children();
 }
