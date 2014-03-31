@@ -50,27 +50,33 @@ Tree::Tree()
 
 	//---------------------------
 
-	Gtk::TreeModelColumn<int>*         p_col_id	= new Gtk::TreeModelColumn<int>;
-	Gtk::TreeModelColumn<std::string>* p_col_name	= new Gtk::TreeModelColumn<std::string>;
-	Gtk::TreeModelColumn<std::string>* p_col_surname= new Gtk::TreeModelColumn<std::string>;
+	col = Gtk::manage (new Gtk::TreeView::Column ("ID"));
 
+	Gtk::TreeModelColumn<int>* p_col_id = new Gtk::TreeModelColumn<int>;
 	mod_cols.push_back (ModColPtr (p_col_id));
-	mod_cols.push_back (ModColPtr (p_col_name));
-	mod_cols.push_back (ModColPtr (p_col_surname));
+	//cols.add (*mod_cols[0]);
+	cols.add (*p_col_id);
+	col->pack_start (*p_col_id, false);
 
-	cols.add (*mod_cols[0]);
-	cols.add (*mod_cols[1]);
-	cols.add (*mod_cols[2]);
+	m_TreeView.append_column (*col);
 
 	//---------------------------
 
-	col = Gtk::manage (new Gtk::TreeView::Column ("ID"));
-	col->pack_start (*p_col_id, false);
-	m_TreeView.append_column (*col);
-
 	col = Gtk::manage (new Gtk::TreeView::Column ("Name"));
-	col->pack_start (*p_col_name,    false);
+
+	Gtk::TreeModelColumn<std::string>* p_col_name = new Gtk::TreeModelColumn<std::string>;
+	mod_cols.push_back (ModColPtr (p_col_name));
+	//cols.add (*mod_cols[1]);
+	cols.add (*p_col_name);
+	col->pack_start (*p_col_name, false);
+
+
+	Gtk::TreeModelColumn<std::string>* p_col_surname= new Gtk::TreeModelColumn<std::string>;
+	mod_cols.push_back (ModColPtr (p_col_surname));
+	//cols.add (*mod_cols[2]);
+	cols.add (*p_col_surname);
 	col->pack_start (*p_col_surname, true);
+
 	m_TreeView.append_column (*col);
 
 	//---------------------------
