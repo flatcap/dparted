@@ -1,0 +1,19 @@
+columns: name, type, title, alignment, expand, show (always,used,never)
+
+map: name => { column index, type, title set?, visible }
+
+groups:
+	{colour, type}
+	{size, suffix}
+	{icons}
+
+lists:	warnings, mounts, flags, siblings
+
+types: integer, float, human, percentage, icon, colour, list, graph, string, size
+
+code:
+	col->set_alignment (Gtk::ALIGN_END);
+	m_TreeView.insert_column (*col, 0);
+	col->set_visible (false);
+	col->set_visible (true);
+
