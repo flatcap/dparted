@@ -651,3 +651,11 @@ where should the catchs go
 	low-level -- near the new
 	high-level -- near the action that started it
 
+props flags - advanced?
+
+study <algorithm>
+
+identify spelling in all config: colou?r, etc
+
+option: treeview hide empty columns
+
