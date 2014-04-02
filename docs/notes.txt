@@ -36,7 +36,7 @@ Objects - backup
 
 Timestamp the timeline
 	lose the changes from the last n minutes?
-Follow the datea/parts -> optimisations
+Follow the data/parts -> optimisations
 	offer to reorder to save time?
 Use volume redundancy info to save time
 IBackup interface on Container
@@ -205,8 +205,6 @@ question dialog -- [X] remember settings button
 
 gpart --id partition contents
 
-class_dparted.gv update
-
 smart pointer around FILE handles
 
 drop case defaults -> checkall enums used
@@ -262,8 +260,6 @@ vm image tool -- find (list) mountable drives & mount them (including swap)
 
 inxi script -- data from where?
 
-expand Rect in Range.  No.  Need rect separate
-
 gfx plugin - pre/post render -- if pre returns false, stop
 
 Display blocks, e.g. Graphical, TreeView, etc [^] [X] (new window, close) icons?
@@ -308,8 +304,6 @@ export data as csv [X] include hidden parts
 tree/list totals row (excluded from sort)
 
 partition view, show free space amalgamated
-
-create size type uint64 => can be abbreviated MiB, GiB, etc
 
 Run external commands in C locale?  translate errors how?
 	hijack command's message lookups?
@@ -617,8 +611,6 @@ menu: examine -> hex dump
 zero object: test end of container, too
 
 dot: msdos/extended: rank=same
-
-conceal string::npos?
 
 action lvm -- view config (not properties)
 
