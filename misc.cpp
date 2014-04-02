@@ -64,7 +64,7 @@ Misc::accept (Visitor& v)
 std::vector<Action>
 Misc::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.misc", true },
 	};

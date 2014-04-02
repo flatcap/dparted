@@ -55,7 +55,7 @@ MdRaid::accept (Visitor& v)
 std::vector<Action>
 MdRaid::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.md_raid", true },
 	};

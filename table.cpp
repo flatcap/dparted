@@ -77,7 +77,7 @@ Table::accept (Visitor& v)
 std::vector<Action>
 Table::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.table", true },
 	};

@@ -98,7 +98,7 @@ Gpt::accept (Visitor& v)
 std::vector<Action>
 Gpt::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.gpt", true },
 	};
@@ -149,7 +149,7 @@ read_guid (std::uint8_t* buffer)
 void
 delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 {
-	 //log_debug ("delete: (%d,%d): ", start, finish);
+	// log_debug ("delete: (%d,%d): ", start, finish);
 	for (auto it = std::begin (region); it != std::end (region); ++it) {
 		if (finish < (*it).first)
 			continue;
@@ -165,21 +165,21 @@ delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 		 */
 		if (start == (*it).first) {
 			if (finish == (*it).second) {		//1
-				 //log_debug ("1\n");
+				// log_debug ("1\n");
 				region.erase (it);
 				break;
 			} else {				//2
-				 //log_debug ("2\n");
+				// log_debug ("2\n");
 				(*it).first = finish;
 				break;
 			}
 		} else {
 			if (finish == (*it).second) {		//3
-				 //log_debug ("3\n");
+				// log_debug ("3\n");
 				(*it).second = start;
 				break;
 			} else {				//4
-				 //log_debug ("4\n");
+				// log_debug ("4\n");
 				int end = (*it).second;
 				(*it).second = start;
 				region.insert (it+1, { finish, end });

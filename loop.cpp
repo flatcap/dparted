@@ -131,7 +131,7 @@ Loop::accept (Visitor& v)
 std::vector<Action>
 Loop::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.loop", true },
 	};

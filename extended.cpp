@@ -69,7 +69,7 @@ Extended::accept (Visitor& v)
 std::vector<Action>
 Extended::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.extended", true },
 	};
