@@ -176,7 +176,7 @@ void TreeViewColumn::pack_start(const TreeModelColumn<T_ModelColumnType>& column
 #endif
 
 void
-TreeView::init_treeview (GfxContainerPtr& c)
+TreeView::init_treeview (GfxContainerPtr& UNUSED(c))
 {
 	theme = gui_app->get_theme();
 
@@ -203,24 +203,57 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	Gtk::TreeModel::ColumnRecord col_rec;
 	Gtk::TreeView::Column* col = nullptr;
 
+	// Dummy column to store the container ptr
+	Gtk::TreeModelColumn<GfxContainerPtr>* tmc = new Gtk::TreeModelColumn<GfxContainerPtr>;
+	mod_cols.push_back (ModColPtr (tmc));
+	col_rec.add (*tmc);
+
 	std::string name = "App.treeview_cols";
-	std::vector<std::string> vec = theme->get_children (name);
-	log_debug ("%s children\n", name.c_str());
-	for (auto i : vec) {
-		std::string key = name + "." + i;
-		log_debug ("\t%s = ", i.c_str());
-		col = Gtk::manage (new Gtk::TreeView::Column (i));
+	std::string display = theme->get_config (name, "", "display", false);
+	std::vector<std::string> parts;
+	explode (",", display, parts);
+	for (auto i : parts) {
+		std::vector<std::string> multi;
+		explode ("+", i, multi);
+
+		std::string key = name + "." + multi[0];
+		std::string title;
 		try {
-			std::string t = theme->get_config (key, "", "type", false);
-			log_debug ("%s ", t.c_str());
-			add_column<int> (col_rec, col);
+			title = theme->get_config (key, "", "title", false);
 		} catch (...) {
-			log_debug ("string");
-			add_column<std::string> (col_rec, col);
+			log_error ("Missing: %s.title\n", key.c_str());
+		}
+
+		log_debug ("\t%s = ", i.c_str());
+		col = Gtk::manage (new Gtk::TreeView::Column (title));
+
+		for (auto j : multi) {
+			key = name + "." + j;
+			try {
+				std::string t = theme->get_config (key, "", "type", false);
+				log_debug ("%s ", t.c_str());
+				if (t == "integer") {
+					add_column<std::int64_t> (col_rec, col);
+				} else if (t == "icon") {
+					add_column<Glib::RefPtr<Gdk::Pixbuf>> (col_rec, col);
+				} else if (t == "float") {
+					add_column<double> (col_rec, col);
+				} else {
+					add_column<std::string> (col_rec, col);
+				}
+			} catch (...) {
+				log_debug ("string");
+				add_column<std::string> (col_rec, col);
+			}
 		}
 		append_column (*col);
 		log_debug ("\n");
 	}
+
+	// Dummy empty column to pad out treeview
+	col = Gtk::manage (new Gtk::TreeView::Column (""));
+	add_column<std::string> (col_rec, col);
+	append_column (*col);
 
 	m_refTreeModel = Gtk::TreeStore::create (col_rec);
 	set_model (m_refTreeModel);
@@ -235,7 +268,15 @@ TreeView::init_treeview (GfxContainerPtr& c)
 
 	//tree_add_row (c, nullptr);
 	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
-	row.set_value (0, std::string ("/dev/loop0"));
+	//row.set_value (0, std::string ("/dev/loop0"));
+	row.set_value (1, std::string("/dev/loop0"));
+	Glib::RefPtr<Gdk::Pixbuf> red = get_colour_as_pixbuf (16, theme->get_colour ("#ff0000"));
+	row.set_value (2, red);
+	row.set_value (3, std::string("ext4"));
+	row.set_value (4, std::string("apple"));
+	row.set_value (5, 1000000);
+	row.set_value (6,  400000);
+	row.set_value (7,  600000);
 
 	expand_all();
 }

@@ -643,3 +643,8 @@ where should the catchs go
 	low-level -- near the new
 	high-level -- near the action that started it
 
+list of tasks for others
+	identify all other filesystems
+
+derive own tree components & check lifetime, leakage
+

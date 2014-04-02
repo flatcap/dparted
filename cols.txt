@@ -9,11 +9,20 @@ groups:
 
 lists:	warnings, mounts, flags, siblings
 
-types: integer, float, human, percentage, icon, colour, list, graph, string, size
-
 code:
 	col->set_alignment (Gtk::ALIGN_END);
 	m_TreeView.insert_column (*col, 0);
 	col->set_visible (false);
 	col->set_visible (true);
+
+types:
+	integer		right
+	float		right		precision 3
+	human		right,left	number,suffix
+	percentage	right		add %
+	icon		fixed		string
+	colour		fixed		pixbuf
+	list		left		vector
+	graph		fixed		size, 100
+	string		left
 
