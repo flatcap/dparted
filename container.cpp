@@ -107,7 +107,6 @@ Container::Container (void)
 	declare_prop_var (me, "device_major",  device_major,  "Major",             0);
 	declare_prop_var (me, "device_minor",  device_minor,  "Minor",             0);
 	declare_prop_var (me, "name",          name,          "Name",              0);
-	declare_prop_var (me, "parent_offset", parent_offset, "Parent Offset",     d);
 	declare_prop_var (me, "parent_offset", parent_offset, "Parent Offset",     d|s|p, ps);
 	declare_prop_var (me, "uuid",          uuid,          "UUID",              0);
 	declare_prop_var (me, "file_desc",     fd,            "desc of ref_count", 0);

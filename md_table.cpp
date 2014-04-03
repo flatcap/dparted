@@ -127,11 +127,14 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
+	if (!parent || !buffer)
+		return false;
+
+	if (bufsize < 20480)		// Min size for MD is 20KiB
 		return false;
 
 	buffer  += 4096;	// Ignore the first 4KiB
-	//bufsize -= 4096;
+	bufsize -= 4096;
 
 	if (!is_mdtable (buffer))
 		return false;

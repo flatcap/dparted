@@ -239,7 +239,10 @@ Btrfs::get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int bufsize)
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
+	if (!parent || !buffer)
+		return nullptr;
+
+	if (bufsize < 1048576)		// Min btrfs size is 1MiB
 		return nullptr;
 
 	if (strncmp ((char*) buffer+65600, "_BHRfS_M", 8) != 0)

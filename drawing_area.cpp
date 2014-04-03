@@ -952,6 +952,10 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 			total = c->bytes_size;		//XXX tmp -- need to get intermediate object
 			bpp   = total / inside.w;
 		}
+		if (bpp == 0) {
+			log_error ("no bpp\n");
+			continue;
+		}
 		std::uint64_t offset = c->parent_offset / bpp;
 		std::uint64_t size   = c->bytes_size    / bpp;
 
