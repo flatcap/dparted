@@ -259,7 +259,10 @@ Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
+	if (!parent || !buffer)
+		return nullptr;
+
+	if (bufsize < 61440)		// Min size for ext2 is 60KiB
 		return nullptr;
 
 	bool b1 =  (le16_to_cpup (buffer + 0x438) == 0xEF53);	// Magic
@@ -280,7 +283,10 @@ Extfs::get_ext3 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
+	if (!parent || !buffer)
+		return nullptr;
+
+	if (bufsize < 61440)		// Min size for ext3 is 60KiB
 		return nullptr;
 
 	bool b1 = (le16_to_cpup (buffer + 0x438) == 0xEF53);	// Magic
@@ -303,7 +309,10 @@ Extfs::get_ext4 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
+	if (!parent || !buffer)
+		return nullptr;
+
+	if (bufsize < 61440)		// Min size for ext4 is 60KiB
 		return nullptr;
 
 	bool b1 = (le16_to_cpup (buffer + 0x438) == 0xEF53);	// Magic

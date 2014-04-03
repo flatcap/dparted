@@ -241,12 +241,13 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
+	if (!parent || !buffer)
+		return false;
+
+	if (bufsize < 1048576)		// Min size for LVMPV is 1MiB
 		return false;
 
 	LvmTablePtr t;
-
-	//XXX check bufsize gives us all the data we need
 
 	struct label_header* lh = get_label_header (buffer+512);
 	if (!lh)

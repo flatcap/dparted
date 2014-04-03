@@ -132,7 +132,10 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
+	if (!parent || !buffer)
+		return false;
+
+	if (bufsize < 1048576)		// Min size for Luks is 1MiB
 		return false;
 
 	const char* signature = "LUKS\xBA\xBE";

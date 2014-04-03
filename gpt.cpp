@@ -194,7 +194,10 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
+	if (!parent || !buffer)
+		return false;
+
+	if (bufsize < 36864)		// Min size for gpt is 36KiB
 		return false;
 
 	//XXX check min size against bufsize ((34*512) + (33*512)) bytes and all other probes

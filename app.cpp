@@ -205,7 +205,7 @@ App::scan (const std::vector<std::string>& files)
 		//log_debug ("Item: %s\n", item->dump());
 
 		std::uint64_t bufsize = item->bytes_size;
-		std::uint8_t* buffer  = item   ->get_buffer (0, bufsize);
+		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
 
 		if (!buffer) {
 			//log_error ("can't get buffer\n");

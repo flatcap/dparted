@@ -231,7 +231,10 @@ Ntfs::get_ntfs (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
+	if (!parent || !buffer)
+		return nullptr;
+
+	if (bufsize < 1048576)		// Min ntfs size is 1MiB
 		return nullptr;
 
 	if (strncmp ((char*) buffer+3, "NTFS    ", 8) != 0)

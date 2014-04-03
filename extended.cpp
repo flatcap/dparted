@@ -98,7 +98,10 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
+	if (!parent || !buffer)
+		return nullptr;
+
+	if (bufsize < 512)
 		return nullptr;
 
 	ExtendedPtr ext;

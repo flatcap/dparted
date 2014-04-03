@@ -23,17 +23,28 @@
 #include "log_trace.h"
 
 bool
-identify_reiserfs (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+identify_reiserfs (std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//XXX check bufsize.  all other functions too
+	if (!buffer)
+		return false;
+
+	if (bufsize < 66048)
+		return false;
+
 	return (!strncmp ((char*) buffer+65588, "ReIsErFs",  8) ||
 		!strncmp ((char*) buffer+65588, "ReIsEr2Fs", 8) ||
 		!strncmp ((char*) buffer+65588, "ReIsEr3Fs", 9));
 }
 
 bool
-identify_swap (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+identify_swap (std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	if (!buffer)
+		return false;
+
+	if (bufsize < 4096)
+		return false;
+
 	return (!strncmp ((char*) buffer+4086, "SWAPSPACE2",           10) ||
 		!strncmp ((char*) buffer+4086, "SWAP-SPACE",           10) ||
 		!strncmp ((char*) buffer+4076, "SWAPSPACE2S1SUSPEND",  19) ||
@@ -44,8 +55,14 @@ identify_swap (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 }
 
 bool
-identify_vfat (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+identify_vfat (std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	if (!buffer)
+		return false;
+
+	if (bufsize < 512)
+		return false;
+
 	for (int i = 3; i < 11; ++i) {
 		if ((buffer[i] > 0) && (buffer[i] < ' '))
 			return 0;
@@ -63,20 +80,38 @@ identify_vfat (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
 }
 
 bool
-identify_xfs (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+identify_xfs (std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	if (!buffer)
+		return false;
+
+	if (bufsize < 512)
+		return false;
+
 	return (strncmp ((char*) buffer, "XFSB", 4) == 0);
 }
 
 bool
-identify_lvm (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+identify_lvm (std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	if (!buffer)
+		return false;
+
+	if (bufsize < 1024)
+		return false;
+
 	return (strncmp ((char*) buffer+536, "LVM2 001", 8) == 0);
 }
 
 bool
-identify_lvm_mlog (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize))
+identify_lvm_mlog (std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	if (!buffer)
+		return false;
+
+	if (bufsize < 512)
+		return false;
+
 	return (strncmp ((char*) buffer+0, "rRiM", 4) == 0);
 }
 

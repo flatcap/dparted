@@ -139,8 +139,14 @@ Msdos::read_partition (std::uint8_t* buffer, int index, struct partition* part)
 }
 
 unsigned int
-Msdos::read_table (std::uint8_t* buffer, std::uint64_t UNUSED(bufsize), std::uint64_t UNUSED(offset), std::vector<struct partition>& vp)
+Msdos::read_table (std::uint8_t* buffer, std::uint64_t bufsize, std::uint64_t offset, std::vector<struct partition>& vp)
 {
+	if (!buffer)
+		return 0;
+
+	if ((offset+512) > bufsize)		// Min size for Msdos is 512B
+		return 0;
+
 	struct partition part;
 
 	for (int i = 0; i < 4; ++i) {
