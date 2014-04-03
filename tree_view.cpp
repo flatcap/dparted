@@ -92,7 +92,7 @@ get_colour_as_pixbuf (int size, Gdk::RGBA colour)
 }
 
 void
-TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
+TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent /*=nullptr*/)
 {
 	Gtk::TreeModel::Row row;
 
@@ -115,41 +115,22 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent)
 			}
 
 			x->treepath = m_refTreeModel->get_string (row);
-			//log_debug ("%s\t%s\n", x->treepath.c_str(), x->dump());
 
-			//row[col_icon]      = render_icon_pixbuf (Gtk::Stock::DND, Gtk::ICON_SIZE_MENU);
-
-#if 0
-			ModColPtr& m = mod_cols[0];
-			Gtk::TreeModelColumnBase& base = *m;
-			row[base] = x;
-#endif
-
-#if 1
 			std::string dev = x->device;
 			std::size_t pos = dev.find_last_of ('/');
 			if (pos != std::string::npos) {
 				dev = dev.substr (pos+1);
 			}
-#endif
-			//row[col_container] = dev;
-			dev = "hello";
-			row->set_value(0, dev);
-#if 0
 
-			row[col_colour]    = get_colour_as_pixbuf (16, x->colour);
-			row[col_type]      = x->type;
-			row[col_name]      = x->name;
+			row.set_value (0, x);
+			row.set_value (1, dev);
+			row.set_value (2, get_colour_as_pixbuf (16, x->colour));
+			row.set_value (3, x->type);
+			row.set_value (4, x->name);
+			row.set_value (5, x->bytes_size);
+			row.set_value (6, x->bytes_used);
+			row.set_value (7, (x->bytes_size - x->bytes_used));
 
-			row[col_size]        = x->bytes_size / 1024 / 1024;
-			row[col_size_suffix] = "MiB";
-
-			row[col_used]        = x->bytes_used / 1024 / 1024;
-			row[col_used_suffix] = "MiB";
-
-			row[col_free]        = (x->bytes_size - x->bytes_used) / 1024 / 1024;
-			row[col_free_suffix] = "MiB";
-#endif
 		} else {
 			if (parent)
 				row = *parent;
@@ -176,7 +157,7 @@ void TreeViewColumn::pack_start(const TreeModelColumn<T_ModelColumnType>& column
 #endif
 
 void
-TreeView::init_treeview (GfxContainerPtr& UNUSED(c))
+TreeView::init_treeview (GfxContainerPtr& c)
 {
 	theme = gui_app->get_theme();
 
@@ -266,17 +247,7 @@ TreeView::init_treeview (GfxContainerPtr& UNUSED(c))
 	treeselection = get_selection();
 	treeselection->signal_changed().connect (sigc::mem_fun (*this, &TreeView::on_selection_changed));
 
-	//tree_add_row (c, nullptr);
-	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
-	//row.set_value (0, std::string ("/dev/loop0"));
-	row.set_value (1, std::string("/dev/loop0"));
-	Glib::RefPtr<Gdk::Pixbuf> red = get_colour_as_pixbuf (16, theme->get_colour ("#ff0000"));
-	row.set_value (2, red);
-	row.set_value (3, std::string("ext4"));
-	row.set_value (4, std::string("apple"));
-	row.set_value (5, 1000000);
-	row.set_value (6,  400000);
-	row.set_value (7,  600000);
+	tree_add_row (c);
 
 	expand_all();
 }

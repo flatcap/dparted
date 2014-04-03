@@ -45,7 +45,7 @@ protected:
 
 	bool on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 
-	void tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent);
+	void tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent = nullptr);
 
 	Glib::RefPtr<Gtk::TreeSelection> treeselection;
 	void on_selection_changed();
