@@ -68,7 +68,7 @@ File::accept (Visitor& v)
 std::vector<Action>
 File::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.file", true },
 	};

@@ -55,7 +55,7 @@ MdLinear::accept (Visitor& v)
 std::vector<Action>
 MdLinear::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.md_linear", true },
 	};

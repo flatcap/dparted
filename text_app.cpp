@@ -63,7 +63,7 @@ TextApp::run (int argc, char **argv)
 
 #if 0
 	ContainerPtr c1 = *top_level->get_children().begin();		// loop
-	 //log_debug ("%s\n", c1->dump());
+	// log_debug ("%s\n", c1->dump());
 	ContainerPtr c2 = *c1->get_children().begin();			// gpt
 	log_debug ("%s %ld\n", c2->dump(), c2->get_children().size());
 #if 0

@@ -63,7 +63,7 @@ Extfs::accept (Visitor& v)
 std::vector<Action>
 Extfs::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.extfs", true },
 	};

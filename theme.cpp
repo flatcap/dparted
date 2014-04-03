@@ -164,7 +164,7 @@ Theme::get_icon (const std::string& name)
  *	PATH1.ATTR
  */
 std::string
-Theme::get_config (const std::string& path, const std::string& name, const std::string& attr)
+Theme::get_config (const std::string& path, const std::string& name, const std::string& attr, bool recurse /*=true*/)
 {
 	std::string work_path = path;
 	std::string dot;
@@ -191,6 +191,10 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 			return config_file->get_string (search);
 		}
 
+		if (!recurse) {
+			break;
+		}
+
 		std::size_t pos = work_path.find_last_of (".");
 		if (pos == std::string::npos) {
 			if (work_path.empty()) {
@@ -205,6 +209,14 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 	throw "can't find config: " + path + "/" + name + "/" + attr;
 }
 
+std::vector<std::string>
+Theme::get_children (const std::string& name)
+{
+	if (config_file)
+		return config_file->get_children (name);
+
+	return {};
+}
 
 bool
 Theme::is_valid (void)
@@ -234,4 +246,5 @@ Theme::read_file (const std::string& filename)
 
 	return tp;
 }
+
 

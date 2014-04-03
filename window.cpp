@@ -193,7 +193,11 @@ Window::get_focus (void)
 void
 Window::set_data (GfxContainerPtr c)
 {
-	treeview.init_treeview(c);
+	try {
+		treeview.init_treeview(c);
+	} catch (...) {
+		std::cout << "exception" << std::endl;
+	}
 	drawingarea.set_data(c);
 }
 

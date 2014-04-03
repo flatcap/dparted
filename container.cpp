@@ -185,7 +185,7 @@ Container::accept (Visitor& v)
 std::vector<Action>
 Container::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.container", true },
 	};

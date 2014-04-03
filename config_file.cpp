@@ -72,6 +72,11 @@ get_value (const libconfig::Setting& s)
 void
 parse_config (const libconfig::Setting& setting, std::map<std::string,std::string>& config)
 {
+	if (setting.getLength() == 0) {
+		config[setting.getPath()] = "{empty}";
+		return;
+	}
+
 	for (int i = 0; i < setting.getLength(); ++i) {
 		const libconfig::Setting& s = setting[i];
 
@@ -233,5 +238,32 @@ ConfigFile::get_strings (const std::string& name)
 	}
 
 	return vs;
+}
+
+std::vector<std::string>
+ConfigFile::get_children (const std::string& name)
+{
+	std::vector<std::string> children;
+
+	int len = name.length();
+	for (auto it : config) {
+		bool match = (it.first.compare (0, len, name) == 0);
+		if (match) {
+			std::string s = it.first.substr (len+1);
+			size_t pos = s.find_first_of ('.');
+			if (pos != std::string::npos) {
+				s = s.substr (0, pos);
+			}
+
+			if (children.empty() || (children.size() && (s != children.back()))) {
+				children.push_back (s);
+			}
+		} else {
+			if (children.size())
+				break;
+		}
+	}
+
+	return children;
 }
 

@@ -106,7 +106,7 @@ make_device (std::string group, std::string volume)
 std::vector<Action>
 LvmGroup::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_group", true },
 	};
@@ -349,7 +349,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			}
 			t->set_alignment (g->block_size);
 		}
-		 //log_debug ("TRIGGER set_alignment: %ld\n", g->segments.size());
+		// log_debug ("TRIGGER set_alignment: %ld\n", g->segments.size());
 		//g->bytes_used		= g->bytes_size - (std::uint64_t) tags["LVM2_VG_FREE"];
 
 		// LvmGroup

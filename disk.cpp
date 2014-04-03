@@ -110,7 +110,7 @@ Disk::accept (Visitor& v)
 std::vector<Action>
 Disk::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.disk", true },
 	};

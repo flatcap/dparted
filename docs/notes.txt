@@ -1,42 +1,42 @@
-default theme has: colours, labels, icons -> DefaultTheme object?
-	table = "/usr/share/icons/table.png"
-who populates the default theme?  -- GuiApp?
-	deriving => fine-grained custom colours, etc
-need to be able to _revert_ to default theme
+	default theme has: colours, labels, icons -> DefaultTheme object?
+		table = "/usr/share/icons/table.png"
+	who populates the default theme?  -- GuiApp?
+		deriving => fine-grained custom colours, etc
+	need to be able to _revert_ to default theme
 
-Menu - Theme
-	Default -> object
-	Zany -> load_file & icons, etc
-	B&w  -> load_file & icons, etc
+	Menu - Theme
+		Default -> object
+		Zany -> load_file & icons, etc
+		B&w  -> load_file & icons, etc
 
-Missing icons, invalid colours, invalid options
-	App.QueueMessages()
-	App.Message() * n
-	App.FlushQueue()
-		Coalesce if titles are the same, e.g.
-			Error reading theme files
+	Missing icons, invalid colours, invalid options
+		App.QueueMessages()
+		App.Message() * n
+		App.FlushQueue()
+			Coalesce if titles are the same, e.g.
+				Error reading theme files
 
-config_file	table = "/usr/share/..."
-		colour = "cyan"
-		block.icon = "table"
-theme		table -> pixbuf
-		colour = RGBA
-gfx_container	icon -> pixbuf
-		colour = RGBA
+	config_file	table = "/usr/share/..."
+			colour = "cyan"
+			block.icon = "table"
+	theme		table -> pixbuf
+			colour = RGBA
+	gfx_container	icon -> pixbuf
+			colour = RGBA
 
-if theme seqnum incremented => gfx_container.retheme()
-if new theme, build new gfx_container tree then subst?
+	if theme seqnum incremented => gfx_container.retheme()
+	if new theme, build new gfx_container tree then subst?
 
-Objects - backup
-	alter contents
-	create
-	delete
-	move
-	resize
+	Objects - backup
+		alter contents
+		create
+		delete
+		move
+		resize
 
 Timestamp the timeline
 	lose the changes from the last n minutes?
-Follow the datea/parts -> optimisations
+Follow the data/parts -> optimisations
 	offer to reorder to save time?
 Use volume redundancy info to save time
 IBackup interface on Container
@@ -205,8 +205,6 @@ question dialog -- [X] remember settings button
 
 gpart --id partition contents
 
-class_dparted.gv update
-
 smart pointer around FILE handles
 
 drop case defaults -> checkall enums used
@@ -262,8 +260,6 @@ vm image tool -- find (list) mountable drives & mount them (including swap)
 
 inxi script -- data from where?
 
-expand Rect in Range.  No.  Need rect separate
-
 gfx plugin - pre/post render -- if pre returns false, stop
 
 Display blocks, e.g. Graphical, TreeView, etc [^] [X] (new window, close) icons?
@@ -308,8 +304,6 @@ export data as csv [X] include hidden parts
 tree/list totals row (excluded from sort)
 
 partition view, show free space amalgamated
-
-create size type uint64 => can be abbreviated MiB, GiB, etc
 
 Run external commands in C locale?  translate errors how?
 	hijack command's message lookups?
@@ -618,8 +612,6 @@ zero object: test end of container, too
 
 dot: msdos/extended: rank=same
 
-conceal string::npos?
-
 action lvm -- view config (not properties)
 
 lvm2 release -- when did _mlog become _meta?
@@ -658,4 +650,9 @@ study <algorithm>
 identify spelling in all config: colou?r, etc
 
 option: treeview hide empty columns
+
+list of tasks for others
+	identify all other filesystems
+
+derive own tree components & check lifetime, leakage
 

@@ -72,7 +72,7 @@ MdTable::accept (Visitor& v)
 std::vector<Action>
 MdTable::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.md_table", true },
 	};

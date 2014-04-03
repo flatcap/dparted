@@ -74,7 +74,7 @@ Msdos::accept (Visitor& v)
 std::vector<Action>
 Msdos::get_actions (void)
 {
-	 //LOG_TRACE;
+	// LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.msdos", true },
 	};
