@@ -120,6 +120,8 @@ public:
 	void sub_type (const char* name);
 	const char* dump (void);
 
+	PPtr add_string_prop (const std::string& owner, const std::string& name, const std::string& value);
+
 	// Property helper functions
 	std::uint64_t get_absolute_offset            (void);
 	std::uint64_t get_bytes_free                 (void);
@@ -183,6 +185,8 @@ protected:
 
 	std::map<std::string,PPtr> props;
 	std::set<ContainerPtr, compare> children;
+
+	std::vector<std::string> more_props;
 
 	template<typename T>
 	PPtr
