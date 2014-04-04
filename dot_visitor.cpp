@@ -356,11 +356,11 @@ bool
 DotVisitor::visit (ContainerPtr c)
 {
 	return_val_if_fail (c, false);
+	//LOG_TRACE;
 
 	if (c->name == "dummy")	// Ignore top-level containers
 		return true;
 
-	//LOG_TRACE;
 	dot_objects << dump_table (c, dot_container(c));
 	dot_links   << parent_link(c);
 

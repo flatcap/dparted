@@ -259,8 +259,8 @@ Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	return_val_if_fail (parent, nullptr);
 	return_val_if_fail (buffer, nullptr);
-
 	//LOG_TRACE;
+
 	if (bufsize < 61440)		// Min size for ext2 is 60KiB
 		return nullptr;
 
