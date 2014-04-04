@@ -177,8 +177,7 @@ void
 Extfs::get_ext_sb (ContainerPtr parent)
 {
 	//XXX return bool -- a quick match on the sb might not be enough -- tune2fs could fail
-	if (!parent)
-		return;
+	return_if_fail (parent);
 
 	std::string dev = parent->get_device_name();
 	if (dev.empty())	//XXX shouldn't happen
@@ -259,8 +258,8 @@ Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer)
-		return nullptr;
+	return_val_if_fail (parent, nullptr);
+	return_val_if_fail (buffer, nullptr);
 
 	if (bufsize < 61440)		// Min size for ext2 is 60KiB
 		return nullptr;
@@ -283,8 +282,8 @@ Extfs::get_ext3 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer)
-		return nullptr;
+	return_val_if_fail (parent, nullptr);
+	return_val_if_fail (buffer, nullptr);
 
 	if (bufsize < 61440)		// Min size for ext3 is 60KiB
 		return nullptr;
@@ -309,8 +308,8 @@ Extfs::get_ext4 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer)
-		return nullptr;
+	return_val_if_fail (parent, nullptr);
+	return_val_if_fail (buffer, nullptr);
 
 	if (bufsize < 61440)		// Min size for ext4 is 60KiB
 		return nullptr;

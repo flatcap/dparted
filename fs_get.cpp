@@ -31,8 +31,8 @@ get_reiserfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer)
-		return nullptr;
+	return_val_if_fail (parent, nullptr);
+	return_val_if_fail (buffer, nullptr);
 
 	if (bufsize < 1048576)		// Min reiserfs size is 1MiB
 		return nullptr;
@@ -65,8 +65,8 @@ get_swap (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer)
-		return nullptr;
+	return_val_if_fail (parent, nullptr);
+	return_val_if_fail (buffer, nullptr);
 
 	if (bufsize < 40960)		// Min swap size is 40KiB
 		return nullptr;
@@ -101,8 +101,8 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer)
-		return nullptr;
+	return_val_if_fail (parent, nullptr);
+	return_val_if_fail (buffer, nullptr);
 
 	if (bufsize < 36864)		// Min vfat size is about 36KiB
 		return nullptr;
@@ -167,8 +167,8 @@ get_xfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer)
-		return nullptr;
+	return_val_if_fail (parent, nullptr);
+	return_val_if_fail (buffer, nullptr);
 
 	if (bufsize < 1048576)		// Min xfs size is 1MiB
 		return nullptr;

@@ -189,7 +189,7 @@ protected:
 	declare_prop_var (const char* owner, const char* name, T& var1, const char* desc, int flags, PPtr var2 = nullptr)
 	{
 		return_val_if_fail (owner, nullptr);
-		return_val_if_fail (var1,  nullptr);
+		return_val_if_fail (name,  nullptr);
 		return_val_if_fail (desc,  nullptr);
 
 		if (flags & BaseProperty::Flags::Size) {		// Create a fake property

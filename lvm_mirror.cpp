@@ -86,6 +86,8 @@ LvmMirror::perform_action (Action action)
 void
 LvmMirror::add_child (ContainerPtr& child)
 {
+	return_if_fail (child);
+
 	/* Check:
 	 *	available space
 	 *	alignment type

@@ -100,8 +100,7 @@ LvmTable::perform_action (Action action)
 std::string
 read_uuid_string (char* buffer)
 {
-	if (!buffer)
-		return "";
+	return_val_if_fail (buffer, {});
 
 	std::string uuid ((char*) buffer, 32);
 
@@ -121,8 +120,7 @@ get_label_header (std::uint8_t* buffer)
 {
 	struct label_header* lh = (struct label_header*) buffer;
 
-	if (!lh)
-		return nullptr;
+	return_val_if_fail (lh, nullptr);
 
 	if (strncmp ((char*) lh->id, "LABELONE", 8))
 		return nullptr;
@@ -139,8 +137,7 @@ get_pv_header (std::uint8_t* buffer)
 {
 	struct pv_header* ph = (struct pv_header*) buffer;
 
-	if (!ph)
-		return nullptr;
+	return_val_if_fail (ph, nullptr);
 
 	//XXX validate chars in uuid, disk_areas
 	return ph;
@@ -151,8 +148,7 @@ get_mda_header (std::uint8_t* buffer)
 {
 	struct mda_header* mh = (struct mda_header*) buffer;
 
-	if (!mh)
-		return nullptr;
+	return_val_if_fail (mh, nullptr);
 
 	if (strncmp ((char*) mh->magic, FMTT_MAGIC, 16))
 		return nullptr;
@@ -241,8 +237,8 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer)
-		return false;
+	return_val_if_fail (parent, false);
+	return_val_if_fail (buffer, false);
 
 	if (bufsize < 1048576)		// Min size for LVMPV is 1MiB
 		return false;
@@ -358,8 +354,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 void
 LvmTable::add_child (ContainerPtr& child)
 {
-	if (!child)
-		return;
+	return_if_fail (child);
 
 	//log_debug ("TABLE: parent offset = %ld\n", child->parent_offset);
 	if (!child->is_a ("Space")) {

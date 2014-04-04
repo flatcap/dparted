@@ -109,8 +109,9 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer || !bufsize)
-		return false;
+	return_val_if_fail (parent,  false);
+	return_val_if_fail (buffer,  false);
+	return_val_if_fail (bufsize, false);
 
 	FilesystemPtr f;
 

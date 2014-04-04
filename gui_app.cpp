@@ -479,6 +479,8 @@ GuiApp::on_action_help (void)
 bool
 GuiApp::ask (QuestionPtr q)
 {
+	return_val_if_fail (q, false);
+
 	//vq.push_back (q);
 	Gtk::MessageDialog dialog (q->question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
 

@@ -25,6 +25,8 @@
 #include <memory>
 #include <vector>
 
+#include "log.h"
+
 class BaseProperty;
 
 typedef std::shared_ptr<BaseProperty> PPtr;
