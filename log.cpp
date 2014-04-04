@@ -22,6 +22,7 @@
 
 #include "log.h"
 #include "log_trace.h"
+#include "utils.h"
 
 //static unsigned int log_level = ~0;
 static FILE* file = nullptr;
@@ -81,6 +82,19 @@ log_close (void)
 	file = nullptr;
 }
 
+void
+assertion_failure (const char* file, int line, const char* test, const char* function)
+{
+	std::vector<std::string> bt = get_backtrace();
+	log_code ("%s:%d: assertion failed: (%s) in %s\n", file, line, test, function);
+	log_code ("Backtrace:\n");
+	for (auto i : bt) {
+		if (i.substr (0, 17) == "assertion_failure")	// Skip me
+			continue;
+		log_code ("\t%s\n", i.c_str());
+	}
+	log_code ("\n");
+}
 
 #if 0
 unsigned int
