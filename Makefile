@@ -107,7 +107,7 @@ CFLAGS	+= -Wall
 CFLAGS	+= -Wextra
 CFLAGS	+= -Wpedantic
 #CFLAGS	+= -fcolor-diagnostics
-CFLAGS	+= -rdynamic
+LDFLAGS	+= -rdynamic
 
 CFLAGS	+= -fno-omit-frame-pointer
 CFLAGS	+= -fno-optimize-sibling-calls

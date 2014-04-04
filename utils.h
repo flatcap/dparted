@@ -34,7 +34,7 @@ unsigned int             execute_command2 (const std::string& command, std::stri
 unsigned int             execute_command3 (const std::string& command, std::string& output);
 unsigned int             explode (const char* separators, const std::string& input, std::vector<std::string>& parts);
 unsigned int             explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max);
-std::vector<std::string> get_backtrace (bool reverse = true);
+std::vector<std::string> get_backtrace (bool reverse = false);
 std::string              get_fixed_str (const void *buffer, std::uint32_t maxlen);
 std::string              get_size (std::uint64_t size);
 std::string              join (std::vector<std::string> v, const std::string& sep);

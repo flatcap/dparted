@@ -41,18 +41,24 @@ int log_debug (const char* format, ...) __attribute__ ((format (printf, 1, 2)));
 #define log_trace log_debug
 #define log_code  log_debug
 
-#define BOOLEAN_EXPR(expr) ({ int b; if (expr) 1; else 0; })
+void assertion_failure (const char* file, int line, const char* test, const char* function);
 
-#define return_if_fail(TEST)		do { if (TEST) {} else { \
-	log_code ("%s:%d: assertion failed: (%s) in %s\n", __FILE__, __LINE__, #TEST, __PRETTY_FUNCTION__); \
-	return; \
-	}			\
+#define return_if_fail(TEST)									\
+	do {											\
+		if (TEST) {									\
+		} else {									\
+			assertion_failure (__FILE__, __LINE__, #TEST, __PRETTY_FUNCTION__);	\
+			return;									\
+		}										\
 	} while(0)
 
-#define return_val_if_fail(TEST,VALUE)	do { if (TEST) {} else { \
-	log_code ("%s:%d: assertion failed: (%s) in %s\n", __FILE__, __LINE__, #TEST, __PRETTY_FUNCTION__); \
-	return VALUE; \
-	}			\
+#define return_val_if_fail(TEST,VALUE)								\
+	do {											\
+		if (TEST) {									\
+		} else {									\
+			assertion_failure (__FILE__, __LINE__, #TEST, __PRETTY_FUNCTION__);	\
+			return VALUE;								\
+		}										\
 	} while(0)
 
 // return_if_reached

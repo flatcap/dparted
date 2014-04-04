@@ -330,7 +330,7 @@ explode_n (const char* separators, const std::string& input, std::vector<std::st
 }
 
 std::vector<std::string>
-get_backtrace (bool reverse /*=true*/)
+get_backtrace (bool reverse /*=false*/)
 {
 	const int MAX_FRAMES = 100;
 	std::vector<std::string> bt;
