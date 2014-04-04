@@ -12,13 +12,13 @@ int main()
 	int     status;
 	char   *realname;
 
-	// exception classes not in <stdexcept>, thrown by the implementation
-	// instead of the user
+#if 0
+	// exception classes not in <stdexcept>, thrown by the implementation instead of the user
 	std::bad_exception  e;
 	realname = abi::__cxa_demangle(e.what(), 0, 0, &status);
 	std::cout << e.what() << "\t=> " << realname << "\t: " << status << '\n';
 	free(realname);
-
+#endif
 
 	// typeid
 	bar<empty,17>          u;
