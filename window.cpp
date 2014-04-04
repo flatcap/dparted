@@ -165,10 +165,11 @@ Window::on_mouse_click (GdkEventButton* UNUSED(event))
 bool
 Window::set_focus (GfxContainerPtr cont)
 {
-	return_val_if_fail (cont, false);
-
-	if (focus == cont)
+	if (focus == cont)		// no change
 		return false;
+
+	if (!cont)			// no focus is ok
+		return true;
 
 	if (focus) {
 		focus->set_focus (false);
