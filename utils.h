@@ -25,25 +25,26 @@
 
 #include "stringnum.h"
 
-std::uint64_t align (std::uint64_t num, std::uint64_t round);
-std::string   get_fixed_str (const void *buffer, std::uint32_t maxlen);
-std::string   demangle (const char* symbol);
-void          dump_hex2 (void* buf, int start, int length);
-void          dump_hex (std::uint8_t* buffer, int bufsize);
-std::string   get_size (std::uint64_t size);
-unsigned int  execute_command1 (const std::string& command, std::vector<std::string>& output);
-unsigned int  execute_command2 (const std::string& command, std::string& input);
-unsigned int  execute_command3 (const std::string& command, std::string& output);
-unsigned int  explode (const char* separators, const std::string& input, std::vector<std::string>& parts);
-unsigned int  explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max);
-std::string   make_part_dev (std::string device, int number);
-unsigned int  parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map = true);
-std::string   join (std::vector<std::string> v, const std::string& sep);
-std::string   read_file_line (const std::string& filename);
-std::string   read_uuid1 (std::uint8_t* buffer);
-std::string   read_uuid2 (std::uint8_t* buffer);
-std::string   read_uuid3 (std::uint8_t* buffer);
-std::string   shorten_device (const std::string& device);
+std::uint64_t            align (std::uint64_t num, std::uint64_t round);
+std::string              demangle (const char* symbol);
+void                     dump_hex2 (void* buf, int start, int length);
+void                     dump_hex (std::uint8_t* buffer, int bufsize);
+unsigned int             execute_command1 (const std::string& command, std::vector<std::string>& output);
+unsigned int             execute_command2 (const std::string& command, std::string& input);
+unsigned int             execute_command3 (const std::string& command, std::string& output);
+unsigned int             explode (const char* separators, const std::string& input, std::vector<std::string>& parts);
+unsigned int             explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max);
+std::vector<std::string> get_backtrace (bool reverse = true);
+std::string              get_fixed_str (const void *buffer, std::uint32_t maxlen);
+std::string              get_size (std::uint64_t size);
+std::string              join (std::vector<std::string> v, const std::string& sep);
+std::string              make_part_dev (std::string device, int number);
+unsigned int             parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map = true);
+std::string              read_file_line (const std::string& filename);
+std::string              read_uuid1 (std::uint8_t* buffer);
+std::string              read_uuid2 (std::uint8_t* buffer);
+std::string              read_uuid3 (std::uint8_t* buffer);
+std::string              shorten_device (const std::string& device);
 
 #endif // _UTILS_H_
 
