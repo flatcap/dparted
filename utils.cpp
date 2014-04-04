@@ -35,8 +35,7 @@
 std::uint64_t
 align (std::uint64_t num, std::uint64_t round)
 {
-	if (round == 0)
-		return num;
+	return_val_if_fail (round, num);
 
 	return ((num + round - 1) / round * round);
 }
@@ -216,11 +215,10 @@ execute_command3 (const std::string& command, std::string& output)
 unsigned int
 explode (const char* separators, const std::string& input, std::vector<std::string>& parts)
 {
+	return_val_if_fail (separators, 0);
+
 	std::size_t start = 0;
 	std::size_t end   = 0;
-
-	if (!separators)
-		return 0;
 
 	parts.clear();
 
@@ -250,11 +248,10 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 unsigned int
 explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max)
 {
+	return_val_if_fail (separators, 0);
+
 	std::size_t start = 0;
 	std::size_t end   = 0;
-
-	if (!separators)
-		return 0;
 
 	parts.clear();
 
@@ -295,8 +292,8 @@ explode_n (const char* separators, const std::string& input, std::vector<std::st
 std::string
 get_fixed_str (const void *buffer, std::uint32_t maxlen)
 {
-	if (!buffer || !maxlen)
-		return {};
+	return_val_if_fail (buffer, {});
+	return_val_if_fail (maxlen, {});
 
 	int len = strnlen ((const char*) buffer, maxlen);
 	return std::string ((const char*) buffer, len);

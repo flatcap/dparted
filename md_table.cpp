@@ -99,6 +99,8 @@ MdTable::perform_action (Action action)
 std::string
 read_uuid_string (std::uint8_t* buffer)
 {
+	return_val_if_fail (buffer, "");
+
 	char uuid[40];
 
 	//XXX stringstream?
@@ -112,8 +114,7 @@ read_uuid_string (std::uint8_t* buffer)
 static bool
 is_mdtable (std::uint8_t* buffer)
 {
-	if (!buffer)
-		return false;
+	return_val_if_fail (buffer, false);
 
 	if (le32_to_cpup(buffer) != 0xA92B4EFC)
 		return false;
@@ -127,8 +128,8 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer)
-		return false;
+	return_val_if_fail (parent, false);
+	return_val_if_fail (buffer, false);
 
 	if (bufsize < 20480)		// Min size for MD is 20KiB
 		return false;

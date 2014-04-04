@@ -292,8 +292,7 @@ void
 TreeView::set_focus (GfxContainerPtr& c)
 {
 	//log_debug ("focus: %s\n", c->treepath.c_str());
-	if (!c)
-		return;
+	return_if_fail (c);
 
 	if (c->treepath.empty()) {
 		//log_debug ("TreeView: not visible\n");

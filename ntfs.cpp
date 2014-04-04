@@ -163,8 +163,7 @@ void
 Ntfs::get_ntfs_sb (ContainerPtr parent)
 {
 	//XXX return bool -- a quick match on the sb might not be enough -- ntfsinfo could fail
-	if (!parent)
-		return;
+	return_if_fail (parent);
 
 	std::string dev = parent->get_device_name();
 	if (dev.empty())	//XXX shouldn't happen
@@ -231,8 +230,8 @@ Ntfs::get_ntfs (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize
 {
 	//LOG_TRACE;
 
-	if (!parent || !buffer)
-		return nullptr;
+	return_val_if_fail (parent, nullptr);
+	return_val_if_fail (buffer, nullptr);
 
 	if (bufsize < 1048576)		// Min ntfs size is 1MiB
 		return nullptr;

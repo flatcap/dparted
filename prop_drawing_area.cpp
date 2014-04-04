@@ -39,8 +39,7 @@ bool
 PropDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	//return Gtk::DrawingArea::on_draw (cr);
-	if (!top_level)
-		return true;
+	return_val_if_fail (top_level, true);
 
 	Gtk::Allocation allocation = get_allocation();
 
@@ -62,11 +61,8 @@ PropDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 void
 PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape)
 {
-	if (!cr)
-		return;
-
-	if (!cont)
-		return;
+	return_if_fail (cr);
+	return_if_fail (cont);
 
 #if 0
 	if (!top_level->update_info())
