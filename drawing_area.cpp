@@ -353,8 +353,8 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 bool
 DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
-	//LOG_TRACE;
 	return_val_if_fail (top_level, true);
+	//LOG_TRACE;
 
 	vRange.clear();
 
@@ -1271,9 +1271,8 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 void
 DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 {
-	//LOG_TRACE;
-
 	return_if_fail (gfx);
+	//LOG_TRACE;
 
 	ContainerPtr c = gfx->get_container();
 	if (!c)

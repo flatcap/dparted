@@ -235,10 +235,9 @@ format_config (std::string& config)
 bool
 LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//LOG_TRACE;
-
 	return_val_if_fail (parent, false);
 	return_val_if_fail (buffer, false);
+	//LOG_TRACE;
 
 	if (bufsize < 1048576)		// Min size for LVMPV is 1MiB
 		return false;

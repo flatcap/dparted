@@ -373,8 +373,8 @@ DotVisitor::visit (ContainerPtr c)
 bool
 DotVisitor::visit (LoopPtr l)
 {
-	//LOG_TRACE;
 	return_val_if_fail (l, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (l, dot_container(l));
 	dot_links   << parent_link(l);
@@ -389,8 +389,8 @@ DotVisitor::visit (LoopPtr l)
 bool
 DotVisitor::visit (GptPtr g)
 {
-	//LOG_TRACE;
 	return_val_if_fail (g, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (g, dot_container(g));
 	dot_links   << parent_link(g);
@@ -406,8 +406,8 @@ DotVisitor::visit (GptPtr g)
 bool
 DotVisitor::visit (MsdosPtr m)
 {
-	//LOG_TRACE;
 	return_val_if_fail (m, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (m, dot_container(m));
 	dot_links   << parent_link(m);
@@ -421,8 +421,8 @@ DotVisitor::visit (MsdosPtr m)
 bool
 DotVisitor::visit (ExtendedPtr m)
 {
-	//LOG_TRACE;
 	return_val_if_fail (m, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (m, dot_container(m));
 
@@ -443,8 +443,8 @@ DotVisitor::visit (ExtendedPtr m)
 bool
 DotVisitor::visit (MiscPtr m)
 {
-	//LOG_TRACE;
 	return_val_if_fail (m, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (m, dot_container(m));
 	dot_links   << parent_link(m);
@@ -458,8 +458,8 @@ DotVisitor::visit (MiscPtr m)
 bool
 DotVisitor::visit (PartitionPtr p)
 {
-	//LOG_TRACE;
 	return_val_if_fail (p, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (p, dot_container(p));
 	dot_links   << parent_link(p);
@@ -473,8 +473,8 @@ DotVisitor::visit (PartitionPtr p)
 bool
 DotVisitor::visit (FilesystemPtr f)
 {
-	//LOG_TRACE;
 	return_val_if_fail (f, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (f, dot_container(f));
 	dot_links   << parent_link(f);
@@ -489,8 +489,8 @@ DotVisitor::visit (FilesystemPtr f)
 bool
 DotVisitor::visit (WholePtr f)
 {
-	//LOG_TRACE;
 	return_val_if_fail (f, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (f, dot_whole(f));
 	dot_links   << parent_link(f);
@@ -510,8 +510,8 @@ DotVisitor::visit (WholePtr f)
 bool
 DotVisitor::visit (LvmVolumePtr f)
 {
-	//LOG_TRACE;
 	return_val_if_fail (f, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (f, dot_lvm_volume(f));
 	dot_links   << parent_link(f);
@@ -525,8 +525,8 @@ DotVisitor::visit (LvmVolumePtr f)
 bool
 DotVisitor::visit (LvmRaidPtr f)
 {
-	//LOG_TRACE;
 	return_val_if_fail (f, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (f, dot_lvm_volume(f));
 	dot_links   << parent_link(f);
@@ -540,8 +540,8 @@ DotVisitor::visit (LvmRaidPtr f)
 bool
 DotVisitor::visit (LvmGroupPtr f)
 {
-	//LOG_TRACE;
 	return_val_if_fail (f, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (f, dot_container(f));
 	dot_links   << parent_link(f);
@@ -555,8 +555,8 @@ DotVisitor::visit (LvmGroupPtr f)
 bool
 DotVisitor::visit (LvmLinearPtr f)
 {
-	//LOG_TRACE;
 	return_val_if_fail (f, false);
+	//LOG_TRACE;
 
 	dot_objects << dump_table (f, dot_lvm_volume(f));
 	dot_links   << parent_link(f);

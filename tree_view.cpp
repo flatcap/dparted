@@ -44,11 +44,11 @@ TreeView::~TreeView()
 bool
 TreeView::on_button_press_event (GdkEventButton* event)
 {
-	bool return_value = false;
+	bool retval = false;
 
 	//Call base class, to allow normal handling,
 	//such as allowing the row to be selected by the right-click:
-	return_value = Gtk::TreeView::on_button_press_event (event);
+	retval = Gtk::TreeView::on_button_press_event (event);
 
 	//Then do our custom stuff:
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
@@ -66,7 +66,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 	}
 #endif
 
-	return return_value;
+	return retval;
 }
 
 Glib::RefPtr<Gdk::Pixbuf>

@@ -138,10 +138,10 @@ mounts_get_list (ContainerPtr& mounts)
 bool
 App::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//LOG_TRACE;
 	return_val_if_fail (parent,  false);
 	return_val_if_fail (buffer,  false);
 	return_val_if_fail (bufsize, false);
+	//LOG_TRACE;
 
 	if (Filesystem::probe (parent, buffer, bufsize))
 		return true;

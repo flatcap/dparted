@@ -229,10 +229,9 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 NtfsPtr
 Ntfs::get_ntfs (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//LOG_TRACE;
-
 	return_val_if_fail (parent, nullptr);
 	return_val_if_fail (buffer, nullptr);
+	//LOG_TRACE;
 
 	if (bufsize < 1048576)		// Min ntfs size is 1MiB
 		return nullptr;

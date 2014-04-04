@@ -104,11 +104,10 @@ Table::perform_action (Action action)
 bool
 Table::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//LOG_TRACE;
-
 	return_val_if_fail (parent,  false);
 	return_val_if_fail (buffer,  false);
 	return_val_if_fail (bufsize, false);
+	//LOG_TRACE;
 
 #ifdef DP_GPT
 	if (Gpt::probe (parent, buffer, bufsize))

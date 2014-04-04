@@ -191,10 +191,9 @@ delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 bool
 Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//LOG_TRACE;
-
 	return_val_if_fail (parent, false);
 	return_val_if_fail (buffer, false);
+	//LOG_TRACE;
 
 	if (bufsize < 36864)		// Min size for gpt is 36KiB
 		return false;

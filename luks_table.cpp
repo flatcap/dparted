@@ -130,10 +130,9 @@ read_hex (std::uint8_t* buffer, unsigned int length)
 bool
 LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	//LOG_TRACE;
-
 	return_val_if_fail (parent, false);
 	return_val_if_fail (buffer, false);
+	//LOG_TRACE;
 
 	if (bufsize < 1048576)		// Min size for Luks is 1MiB
 		return false;

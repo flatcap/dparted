@@ -308,8 +308,8 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 void
 Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 {
-	//LOG_TRACE;
 	return_if_fail (top_level);
+	//LOG_TRACE;
 
 	std::vector<std::string> output;
 
@@ -329,8 +329,8 @@ Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 void
 Disk::identify (ContainerPtr& top_level, const char* name, int UNUSED(fd), struct stat& UNUSED(st))
 {
-	//LOG_TRACE;
 	return_if_fail (top_level);
+	//LOG_TRACE;
 
 	std::vector<std::string> output;
 
