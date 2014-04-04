@@ -27,6 +27,9 @@
 #include <string>
 #include <vector>
 
+#include <cxxabi.h>
+#include <execinfo.h>
+
 #include "log.h"
 #include "stringnum.h"
 #include "utils.h"
@@ -38,6 +41,30 @@ align (std::uint64_t num, std::uint64_t round)
 	return_val_if_fail (round, num);
 
 	return ((num + round - 1) / round * round);
+}
+
+std::string
+demangle (const char* symbol)
+{
+	size_t size;
+	int status;
+	char temp[128];
+	char* demangled;
+	//first, try to demangle a c++ name
+	if (1 == sscanf(symbol, "%*[^(]%*[^_]%127[^)+]", temp)) {
+		if (NULL != (demangled = abi::__cxa_demangle(temp, NULL, &size, &status))) {
+			std::string result(demangled);
+			free(demangled);
+			return result;
+		}
+	}
+	//if that didn't work, try to get a regular c symbol
+	if (1 == sscanf(symbol, "%127s", temp)) {
+		return temp;
+	}
+
+	//if all else fails, just return the symbol
+	return symbol;
 }
 
 void

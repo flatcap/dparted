@@ -27,6 +27,7 @@
 
 std::uint64_t align (std::uint64_t num, std::uint64_t round);
 std::string   get_fixed_str (const void *buffer, std::uint32_t maxlen);
+std::string   demangle (const char* symbol);
 void          dump_hex2 (void* buf, int start, int length);
 void          dump_hex (std::uint8_t* buffer, int bufsize);
 std::string   get_size (std::uint64_t size);
