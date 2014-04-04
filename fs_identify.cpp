@@ -25,8 +25,7 @@
 bool
 identify_reiserfs (std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	if (!buffer)
-		return false;
+	return_val_if_fail (buffer, false);
 
 	if (bufsize < 66048)
 		return false;
@@ -39,8 +38,7 @@ identify_reiserfs (std::uint8_t* buffer, std::uint64_t bufsize)
 bool
 identify_swap (std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	if (!buffer)
-		return false;
+	return_val_if_fail (buffer, false);
 
 	if (bufsize < 4096)
 		return false;
@@ -57,8 +55,7 @@ identify_swap (std::uint8_t* buffer, std::uint64_t bufsize)
 bool
 identify_vfat (std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	if (!buffer)
-		return false;
+	return_val_if_fail (buffer, false);
 
 	if (bufsize < 512)
 		return false;
@@ -82,8 +79,7 @@ identify_vfat (std::uint8_t* buffer, std::uint64_t bufsize)
 bool
 identify_xfs (std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	if (!buffer)
-		return false;
+	return_val_if_fail (buffer, false);
 
 	if (bufsize < 512)
 		return false;
@@ -94,8 +90,7 @@ identify_xfs (std::uint8_t* buffer, std::uint64_t bufsize)
 bool
 identify_lvm (std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	if (!buffer)
-		return false;
+	return_val_if_fail (buffer, false);
 
 	if (bufsize < 1024)
 		return false;
@@ -106,8 +101,7 @@ identify_lvm (std::uint8_t* buffer, std::uint64_t bufsize)
 bool
 identify_lvm_mlog (std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	if (!buffer)
-		return false;
+	return_val_if_fail (buffer, false);
 
 	if (bufsize < 512)
 		return false;

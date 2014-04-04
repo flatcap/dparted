@@ -27,6 +27,7 @@
 #include "log_trace.h"
 #include "utils.h"
 #include "visitor.h"
+#include "log.h"
 
 Btrfs::Btrfs (void)
 {
@@ -206,8 +207,7 @@ void
 Btrfs::get_btrfs_sb (ContainerPtr parent)
 {
 	//XXX return bool -- a quick match on the sb might not be enough -- tune2fs could fail
-	if (!parent)
-		return;
+	return_if_fail (parent);
 
 	std::string dev = parent->get_device_name();
 	if (dev.empty())	//XXX shouldn't happen
@@ -237,10 +237,9 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 BtrfsPtr
 Btrfs::get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int bufsize)
 {
+	return_val_if_fail (parent, nullptr);
+	return_val_if_fail (buffer, nullptr);
 	//LOG_TRACE;
-
-	if (!parent || !buffer)
-		return nullptr;
 
 	if (bufsize < 1048576)		// Min btrfs size is 1MiB
 		return nullptr;

@@ -98,8 +98,7 @@ GfxContainer::sync (void)
 bool
 GfxContainer::init (ContainerPtr c)
 {
-	if (!c)
-		return false;
+	return_val_if_fail (c, false);
 
 	std::string path = c->get_type_long();
 	name = c->name;
@@ -353,6 +352,8 @@ bool GfxContainer::mouse_event (void)
 std::ostream&
 operator<< (std::ostream& stream, const GfxContainerPtr& g)
 {
+	return_val_if_fail (g, stream);
+
 	ContainerPtr c = g->get_container();
 	if (c) {
 		stream << c;
@@ -381,8 +382,7 @@ GfxContainer::get_smart (void)
 int
 GfxContainer::get_index (const GfxContainerPtr& me)
 {
-	if (!me)
-		return -1;
+	return_val_if_fail (me, -1);
 
 	int size = children.size();
 	for (int i = 0; i < size; ++i) {

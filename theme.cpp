@@ -212,10 +212,9 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 std::vector<std::string>
 Theme::get_children (const std::string& name)
 {
-	if (config_file)
-		return config_file->get_children (name);
+	return_val_if_fail (config_file, {});
 
-	return {};
+	return config_file->get_children (name);
 }
 
 bool

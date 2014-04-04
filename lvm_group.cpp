@@ -294,6 +294,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 void
 LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& UNUSED(deps))
 {
+	return_if_fail (pieces);
 	//LOG_TRACE;
 
 	std::string command;
@@ -372,6 +373,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 void
 LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 {
+	return_if_fail (pieces);
 	//LOG_TRACE;
 
 	std::string command;
@@ -576,6 +578,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 void
 LvmGroup::discover (ContainerPtr& top_level)
 {
+	return_if_fail (top_level);
 	//LOG_TRACE;
 
 	ContainerPtr pieces = Container::create();

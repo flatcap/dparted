@@ -102,8 +102,7 @@ Msdos::perform_action (Action action)
 void
 Msdos::read_chs (std::uint8_t* buffer, std::uint16_t& cylinder, std::uint8_t& head, std::uint8_t& sector)
 {
-	if (!buffer)
-		return;
+	return_if_fail (buffer);
 
 	head     = buffer[0];
 	sector   = buffer[1] & 0x3F;
@@ -115,8 +114,8 @@ bool
 Msdos::read_partition (std::uint8_t* buffer, int index, struct partition* part)
 {
 	//XXX include this in read_table?
-	if (!buffer || !part)
-		return false;
+	return_val_if_fail (buffer, false);
+	return_val_if_fail (part,   false);
 
 	if ((index < 0) || (index > 3))
 		return false;
@@ -141,8 +140,7 @@ Msdos::read_partition (std::uint8_t* buffer, int index, struct partition* part)
 unsigned int
 Msdos::read_table (std::uint8_t* buffer, std::uint64_t bufsize, std::uint64_t offset, std::vector<struct partition>& vp)
 {
-	if (!buffer)
-		return 0;
+	return_val_if_fail (buffer, 0);
 
 	if ((offset+512) > bufsize)		// Min size for Msdos is 512B
 		return 0;
@@ -163,10 +161,10 @@ Msdos::read_table (std::uint8_t* buffer, std::uint64_t bufsize, std::uint64_t of
 bool
 Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	return_val_if_fail (parent,  false);
+	return_val_if_fail (buffer,  false);
+	return_val_if_fail (bufsize, false);
 	//LOG_TRACE;
-
-	if (!parent || !buffer || !bufsize)
-		return false;
 
 	int count = 0;
 

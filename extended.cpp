@@ -96,10 +96,9 @@ Extended::perform_action (Action action)
 ContainerPtr
 Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	return_val_if_fail (parent, nullptr);
+	return_val_if_fail (buffer, nullptr);
 	//LOG_TRACE;
-
-	if (!parent || !buffer)
-		return nullptr;
 
 	if (bufsize < 512)
 		return nullptr;

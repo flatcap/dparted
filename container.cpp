@@ -208,8 +208,7 @@ Container::perform_action (Action action)
 void
 Container::add_child (ContainerPtr& child)
 {
-	if (!child)
-		return;
+	return_if_fail (child);
 
 	/* Check:
 	 *	available space
@@ -237,9 +236,9 @@ Container::add_child (ContainerPtr& child)
 void
 Container::just_add_child (ContainerPtr& child)
 {
-	if (child) {
-		children.insert (child);
-	}
+	return_if_fail (child);
+
+	children.insert (child);
 	//log_debug ("just: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 }
 
@@ -370,6 +369,8 @@ Container::find (const std::string& search)
 
 void deleter (Mmap* m)
 {
+	return_if_fail (m);
+
 	std::uint64_t size = 0;
 	void* ptr = nullptr;
 
@@ -442,8 +443,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 void
 Container::close_buffer (std::uint8_t* buffer, std::uint64_t size)
 {
-	if (!buffer)
-		return;
+	return_if_fail (buffer);
 
 	if (munmap (buffer, size) != 0) {
 		log_error ("munmap failed: %s\n", strerror (errno));
@@ -459,6 +459,7 @@ Container::close_buffer (std::uint8_t* buffer, std::uint64_t size)
 std::ostream&
 operator<< (std::ostream& stream, const ContainerPtr& c)
 {
+	return_val_if_fail (c, stream);
 #if 0
 	if (c.type.back() == "filesystem")
 		return stream;

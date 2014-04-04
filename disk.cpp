@@ -196,6 +196,8 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 unsigned int
 Disk::find_devices (ContainerPtr& list)
 {
+	return_val_if_fail (list, 0);
+
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
 	//XXX use LOOP_MAJOR <linux/major.h>
 	std::string command = "lsblk --bytes --pairs --exclude 7";
@@ -306,6 +308,7 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 void
 Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 {
+	return_if_fail (top_level);
 	//LOG_TRACE;
 
 	std::vector<std::string> output;
@@ -326,7 +329,9 @@ Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 void
 Disk::identify (ContainerPtr& top_level, const char* name, int UNUSED(fd), struct stat& UNUSED(st))
 {
+	return_if_fail (top_level);
 	//LOG_TRACE;
+
 	std::vector<std::string> output;
 
 	if (!lsblk (output, name))

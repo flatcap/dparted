@@ -18,6 +18,7 @@
 
 #include "filesystem.h"
 #include "log_trace.h"
+#include "log.h"
 
 #if 0
 reiserfs	reiserfstune {device}
@@ -29,8 +30,7 @@ xfs		xfs_db {device}, sb, p
 bool
 get_mounted_usage (FilesystemPtr f)
 {
-	if (!f)
-		return false;
+	return_val_if_fail (f, false);
 
 	if (f->get_device_name().empty())
 		return false;
@@ -42,8 +42,7 @@ get_mounted_usage (FilesystemPtr f)
 bool
 get_reiserfs_usage (FilesystemPtr f)
 {
-	if (!f)
-		return false;
+	return_val_if_fail (f, false);
 
 	if (f->device.empty())
 		return false;
@@ -57,8 +56,7 @@ get_reiserfs_usage (FilesystemPtr f)
 bool
 get_swap_usage (FilesystemPtr f)
 {
-	if (!f)
-		return false;
+	return_val_if_fail (f, false);
 
 	if (f->device.empty())
 		return false;
@@ -72,8 +70,7 @@ get_swap_usage (FilesystemPtr f)
 bool
 get_vfat_usage (FilesystemPtr f)
 {
-	if (!f)
-		return false;
+	return_val_if_fail (f, false);
 
 	if (f->device.empty())
 		return false;
@@ -87,8 +84,7 @@ get_vfat_usage (FilesystemPtr f)
 bool
 get_xfs_usage (FilesystemPtr f)
 {
-	if (!f)
-		return false;
+	return_val_if_fail (f, false);
 
 	if (f->device.empty())
 		return false;

@@ -39,6 +39,25 @@ int log_debug (const char* format, ...) __attribute__ ((format (printf, 1, 2)));
 #define log_info  log_debug
 #define log_error log_debug
 #define log_trace log_debug
+#define log_code  log_debug
+
+#define BOOLEAN_EXPR(expr) ({ int b; if (expr) 1; else 0; })
+
+#define return_if_fail(TEST)		do { if (TEST) {} else { \
+	log_code ("%s:%d: assertion failed: (%s) in %s\n", __FILE__, __LINE__, #TEST, __PRETTY_FUNCTION__); \
+	return; \
+	}			\
+	} while(0)
+
+#define return_val_if_fail(TEST,VALUE)	do { if (TEST) {} else { \
+	log_code ("%s:%d: assertion failed: (%s) in %s\n", __FILE__, __LINE__, #TEST, __PRETTY_FUNCTION__); \
+	return VALUE; \
+	}			\
+	} while(0)
+
+// return_if_reached
+// warn_if_reached
+// warn_if_fail
 
 bool log_init (const char* name);
 void log_close (void);

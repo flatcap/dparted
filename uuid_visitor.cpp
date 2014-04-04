@@ -17,6 +17,7 @@
  */
 
 #include "uuid_visitor.h"
+#include "log.h"
 
 UuidVisitor::UuidVisitor (const std::string& search) :
 	uuid (search)
@@ -54,8 +55,7 @@ UuidVisitor::visit (ContainerPtr c)
 ContainerPtr
 find_first_uuid (ContainerPtr c, const std::string& uuid)
 {
-	if (!c)
-		return nullptr;
+	return_val_if_fail (c, nullptr);
 
 	UuidVisitor uv (uuid);
 	if (c->accept (uv))

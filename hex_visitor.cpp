@@ -21,6 +21,7 @@
 
 #include "container.h"
 #include "utils.h"
+#include "log.h"
 
 HexVisitor::HexVisitor (void)
 {
@@ -52,6 +53,8 @@ HexVisitor::visit_leave (void)
 bool
 HexVisitor::visit (ContainerPtr c)
 {
+	return_val_if_fail (c, false);
+
 	if (c->name == "dummy")
 		return true;
 
@@ -71,6 +74,8 @@ HexVisitor::visit (ContainerPtr c)
 bool
 HexVisitor::visit (ExtendedPtr c)
 {
+	return_val_if_fail (c, false);
+
 	// An Extended has size, but the device is limited to 1KiB
 	std::uint8_t* buf = nullptr;
 	int bufsize = 0;
@@ -98,6 +103,8 @@ HexVisitor::visit (ExtendedPtr c)
 bool
 HexVisitor::visit (LvmGroupPtr c)
 {
+	return_val_if_fail (c, false);
+
 	// An LvmGroup has segments, but no device
 	std::uint8_t* buf = nullptr;
 	int bufsize = 0;
@@ -117,8 +124,8 @@ HexVisitor::visit (LvmGroupPtr c)
 void
 HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 {
-	if (!c)
-		return;
+	return_if_fail (c);
+	return_if_fail (buf);
 
 	std::string type;
 	for (auto i : c->type) {

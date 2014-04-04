@@ -76,6 +76,9 @@ public:
 	{
 		bool operator() (const ContainerPtr a, const ContainerPtr b)
 		{
+			return_val_if_fail (a, false);
+			return_val_if_fail (b, false);
+
 			if (a->parent_offset != b->parent_offset)
 				return (a->parent_offset < b->parent_offset);
 
@@ -185,6 +188,10 @@ protected:
 	PPtr
 	declare_prop_var (const char* owner, const char* name, T& var1, const char* desc, int flags, PPtr var2 = nullptr)
 	{
+		return_val_if_fail (owner, nullptr);
+		return_val_if_fail (name,  nullptr);
+		return_val_if_fail (desc,  nullptr);
+
 		if (flags & BaseProperty::Flags::Size) {		// Create a fake property
 			std::string human = std::string (name) + "_human";
 			PPtr pvh (new PropVar<T> (owner, human.c_str(), var1, desc, flags & ~BaseProperty::Flags::Dot));
@@ -219,6 +226,10 @@ protected:
 	PPtr
 	declare_prop_fn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags, PPtr var2 = nullptr)
 	{
+		return_val_if_fail (owner, nullptr);
+		return_val_if_fail (name,  nullptr);
+		return_val_if_fail (desc,  nullptr);
+
 		if (flags & BaseProperty::Flags::Size) {		// Create a fake property
 			std::string human (name);
 			human += "_human";
@@ -253,6 +264,10 @@ protected:
 	PPtr
 	declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags)
 	{
+		return_val_if_fail (owner, nullptr);
+		return_val_if_fail (name,  nullptr);
+		return_val_if_fail (desc,  nullptr);
+
 		PPtr pv (new PropArray (owner, name, v, index, desc, flags));
 		props[name] = pv;
 

@@ -125,8 +125,7 @@ Gpt::perform_action (Action action)
 static std::string
 read_guid (std::uint8_t* buffer)
 {
-	if (!buffer)
-		return "";
+	return_val_if_fail (buffer, "");
 
 	std::uint32_t a = le32_to_cpup (buffer+0);
 	std::uint16_t b = le16_to_cpup (buffer+4);
@@ -192,10 +191,9 @@ delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
 bool
 Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	return_val_if_fail (parent, false);
+	return_val_if_fail (buffer, false);
 	//LOG_TRACE;
-
-	if (!parent || !buffer)
-		return false;
 
 	if (bufsize < 36864)		// Min size for gpt is 36KiB
 		return false;

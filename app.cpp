@@ -53,6 +53,8 @@ App::~App()
 bool
 App::ask (QuestionPtr q)
 {
+	return_val_if_fail (q, false);
+
 	log_debug ("%s\n", q->title.c_str());
 	log_debug ("%s\n", q->question.c_str());
 	log_debug ("\t");
@@ -102,8 +104,7 @@ App::get_config (void)
 void
 App::queue_add_probe (ContainerPtr& item)
 {
-	if (!item)
-		return;
+	return_if_fail (item);
 
 	probe_queue.push (item);
 	std::string s = get_size (item->parent_offset);
@@ -116,6 +117,8 @@ App::queue_add_probe (ContainerPtr& item)
 unsigned int
 mounts_get_list (ContainerPtr& mounts)
 {
+	return_val_if_fail (mounts, 0);
+
 	std::string command;
 	std::vector<std::string> output;
 	std::string error;
@@ -135,10 +138,10 @@ mounts_get_list (ContainerPtr& mounts)
 bool
 App::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	return_val_if_fail (parent,  false);
+	return_val_if_fail (buffer,  false);
+	return_val_if_fail (bufsize, false);
 	//LOG_TRACE;
-
-	if (!parent || !buffer || !bufsize)
-		return false;
 
 	if (Filesystem::probe (parent, buffer, bufsize))
 		return true;

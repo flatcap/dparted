@@ -353,9 +353,8 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 bool
 DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
+	return_val_if_fail (top_level, true);
 	//LOG_TRACE;
-	if (!top_level)
-		return true;
 
 	vRange.clear();
 
@@ -491,8 +490,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 void
 draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr cont, Rect shape, Rect* right)
 {
-	if (!cont)
-		return;
+	return_if_fail (cont);
 
 #if 0 // icon + label above
 	Rect inside;
@@ -613,11 +611,11 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 TablePtr
 DrawingArea::get_protective (GfxContainerPtr& c)
 {
+	return_val_if_fail (c, nullptr);
+
 	GfxContainerPtr child;
 
 	//log_debug ("1: %s\n", c->dump());
-	if (!c)
-		return nullptr;
 
 	if (!c->is_a ("Table"))
 		return nullptr;
@@ -652,12 +650,11 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 void
 DrawingArea::set_data (GfxContainerPtr& c)
 {
+	return_if_fail (c);
+
 	BaseDrawingArea::set_data (c);
 
 	// check we've been given a top level object?
-
-	if (!c)
-		return;
 
 	// invalidate window
 	unsigned int children = c->children.size();
@@ -685,8 +682,7 @@ DrawingArea::get_focus (int x, int y)
 void
 DrawingArea::set_focus (GfxContainerPtr& gfx)
 {
-	if (!gfx)
-		return;
+	return_if_fail (gfx);
 
 	log_debug ("%s\n", gfx->dump());
 
@@ -763,8 +759,7 @@ DrawingArea::on_textview_query_tooltip (int x, int y, bool UNUSED(keyboard_toolt
 bool
 is_empty (const GfxContainerPtr& c)
 {
-	if (!c)
-		return true;
+	return_val_if_fail (c, true);
 
 	int children = c->children.size();
 	if (children == 0)
@@ -786,11 +781,8 @@ is_empty (const GfxContainerPtr& c)
 void
 DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape)
 {
-	if (!cr)
-		return;
-
-	if (!cont)
-		return;
+	return_if_fail (cr);
+	return_if_fail (cont);
 
 #if 0
 	if (!top_level->update_info())
@@ -978,8 +970,8 @@ Rect
 DrawingArea::get_rect (GfxContainerPtr g)
 {
 	Rect r = { -1, -1, -1, -1 };
-	if (!g)
-		return r;
+
+	return_val_if_fail (g, r);
 
 	for (const auto& rg : vRange) {
 		if (rg.p == g) {
@@ -993,6 +985,8 @@ DrawingArea::get_rect (GfxContainerPtr g)
 bool
 DrawingArea::on_keypress (GdkEventKey* ev)
 {
+	return_val_if_fail (ev, false);
+
 	bool redraw  = false;
 	bool handled = false;
 
@@ -1115,8 +1109,7 @@ DrawingArea::get_cont_recurse (void)
 bool
 DrawingArea::is_visible (const GfxContainerPtr& c)
 {
-	if (!c)
-		return false;
+	return_val_if_fail (c, false);
 
 	std::string& display = c->display;
 
@@ -1135,8 +1128,7 @@ DrawingArea::is_visible (const GfxContainerPtr& c)
 GfxContainerPtr
 DrawingArea::left (GfxContainerPtr c)
 {
-	if (!c)
-		return nullptr;
+	return_val_if_fail (c, nullptr);
 
 	do {
 		if (c->get_depth() == 1)	// Already at a top-level object
@@ -1155,10 +1147,9 @@ DrawingArea::left (GfxContainerPtr c)
 GfxContainerPtr
 DrawingArea::right (GfxContainerPtr c)
 {
-	//XXX ugly, clumsy
+	return_val_if_fail (c, nullptr);
 
-	if (!c)
-		return nullptr;
+	//XXX ugly, clumsy
 
 	int y = get_rect(c).y + 30;	// plus half a row
 
@@ -1178,8 +1169,7 @@ DrawingArea::right (GfxContainerPtr c)
 GfxContainerPtr
 DrawingArea::up (GfxContainerPtr c)
 {
-	if (!c)
-		return nullptr;
+	return_val_if_fail (c, nullptr);
 
 	Rect r = get_rect(c);
 	r.y = ((r.y/cont_height) * cont_height) - (cont_height/2);
@@ -1189,8 +1179,7 @@ DrawingArea::up (GfxContainerPtr c)
 GfxContainerPtr
 DrawingArea::down (GfxContainerPtr c)
 {
-	if (!c)
-		return nullptr;
+	return_val_if_fail (c, nullptr);
 
 	Rect r = get_rect(c);
 	r.y = ((r.y/cont_height) * cont_height) + cont_height + (cont_height/2);
@@ -1201,6 +1190,8 @@ DrawingArea::down (GfxContainerPtr c)
 void
 DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 {
+	return_if_fail (gfx);
+
 	std::vector<Widget*> items = m_Menu_Popup.get_children();
 	for (auto i : items) {
 		m_Menu_Popup.remove(*i);
@@ -1280,6 +1271,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 void
 DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 {
+	return_if_fail (gfx);
 	//LOG_TRACE;
 
 	ContainerPtr c = gfx->get_container();
@@ -1360,6 +1352,8 @@ DrawingArea::get_coords (int& x, int& y)
 void
 DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 {
+	return_if_fail (gfx);
+
 	ContainerPtr c = gfx->get_container();
 	if (!c) {
 		log_debug ("No gfx_container\n");
@@ -1388,6 +1382,8 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 bool
 DrawingArea::popup_on_keypress (GdkEventKey* ev)
 {
+	return_val_if_fail (ev, false);
+
 	if (ev->keyval == GDK_KEY_Menu) {
 		m_Menu_Popup.popdown();
 		return true;

@@ -125,10 +125,10 @@ is_random (std::uint8_t* buffer, int bufsize)
 bool
 Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	return_val_if_fail (parent,  false);
+	return_val_if_fail (buffer,  false);
+	return_val_if_fail (bufsize, false);
 	//LOG_TRACE;
-
-	if (!parent || !buffer || !bufsize)
-		return false;
 
 	// Let's not go crazy and examine the whole device:
 	bufsize = std::min (bufsize, (std::uint64_t) 102400);		// 100KiB

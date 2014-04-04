@@ -29,6 +29,7 @@
 #include "stringnum.h"
 #include "utils.h"
 #include "visitor.h"
+#include "log.h"
 
 Loop::Loop (void)
 {
@@ -199,6 +200,8 @@ Loop::losetup (std::vector <std::string>& output, std::string device)
 void
 Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 {
+	return_if_fail (top_level);
+
 	std::vector <std::string> output;
 
 	if (!losetup (output))
@@ -222,6 +225,8 @@ Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 void
 Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& UNUSED(st))
 {
+	return_if_fail (top_level);
+	return_if_fail (name);
 	//LOG_TRACE;
 
 	off_t size;

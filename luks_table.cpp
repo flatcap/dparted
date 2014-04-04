@@ -111,8 +111,8 @@ LuksTable::perform_action (Action action)
 static std::string
 read_hex (std::uint8_t* buffer, unsigned int length)
 {
-	if (!buffer || !length)
-		return "";
+	return_val_if_fail (buffer, {});
+	return_val_if_fail (length, {});
 
 	std::stringstream ss;
 
@@ -130,10 +130,9 @@ read_hex (std::uint8_t* buffer, unsigned int length)
 bool
 LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
+	return_val_if_fail (parent, false);
+	return_val_if_fail (buffer, false);
 	//LOG_TRACE;
-
-	if (!parent || !buffer)
-		return false;
 
 	if (bufsize < 1048576)		// Min size for Luks is 1MiB
 		return false;

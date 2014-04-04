@@ -20,6 +20,7 @@
 #include "list_visitor.h"
 #include "container.h"
 #include "log_trace.h"
+#include "log.h"
 
 ListVisitor::ListVisitor (void)
 {
@@ -51,6 +52,8 @@ ListVisitor::visit_leave (void)
 bool
 ListVisitor::visit (ContainerPtr c)
 {
+	return_val_if_fail (c, false);
+
 	if (c->name != "dummy") {
 		std::string tabs;
 		if (indent > 0) {

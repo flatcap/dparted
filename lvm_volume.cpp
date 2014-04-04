@@ -22,6 +22,7 @@
 #include "action.h"
 #include "log_trace.h"
 #include "visitor.h"
+#include "log.h"
 
 LvmVolume::LvmVolume (void)
 {
@@ -113,8 +114,7 @@ LvmVolume::perform_action (Action action)
 void
 LvmVolume::add_child (ContainerPtr& child)
 {
-	if (!child)
-		return;
+	return_if_fail (child);
 
 	if ((is_a ("LvmMetadata") && (child->is_a ("LvmVolume")))) {	//XXX tmp
 		//log_debug ("LvmMetadata: %s\n", child->type.back().c_str());

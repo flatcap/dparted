@@ -25,6 +25,8 @@
 #include <memory>
 #include <vector>
 
+#include "log.h"
+
 class BaseProperty;
 
 typedef std::shared_ptr<BaseProperty> PPtr;
@@ -51,6 +53,9 @@ public:
 		desc  (desc),
 		flags (flags)
 	{
+		return_if_fail (owner);
+		return_if_fail (name);
+		return_if_fail (desc);
 	}
 
 	BaseProperty (void)     = default;
@@ -129,6 +134,10 @@ public:
 		BaseProperty (owner, name, desc, flags),
 		value(v)
 	{
+		return_if_fail (owner);
+		return_if_fail (name);
+		return_if_fail (desc);
+
 		set_type(v);
 	}
 
@@ -161,6 +170,10 @@ public:
 		BaseProperty (owner, name, desc, flags),
 		fn(fn)
 	{
+		return_if_fail (owner);
+		return_if_fail (name);
+		return_if_fail (desc);
+
 		T dummy = {};
 		set_type(dummy);
 	}
@@ -194,6 +207,10 @@ public:
 		num(numerator),
 		denom(denominator)
 	{
+		return_if_fail (owner);
+		return_if_fail (name);
+		return_if_fail (desc);
+
 		type = Tag::t_u8;	// Pretend to be a std::uint8_t
 	}
 
@@ -211,7 +228,11 @@ public:
 
 	virtual operator std::uint8_t (void)
 	{
-		//XXX check num & denom
+		if (denom == 0) {
+			log_error ("no denominator\n");
+			return 0;
+		}
+
 		double dn = (std::uint64_t) *num;
 		double dd = (std::uint64_t) *denom;
 
@@ -231,6 +252,10 @@ public:
 		v(vec),
 		index(index)
 	{
+		return_if_fail (owner);
+		return_if_fail (name);
+		return_if_fail (desc);
+
 		type = Tag::t_string;		// Pretend to be a std::string
 	}
 
