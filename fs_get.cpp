@@ -25,6 +25,7 @@
 #include "fs_usage.h"
 #include "log_trace.h"
 #include "utils.h"
+#include "log.h"
 
 FilesystemPtr
 get_reiserfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)

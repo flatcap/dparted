@@ -26,6 +26,7 @@
 #include "tree_view.h"
 #include "utils.h"
 #include "window.h"
+#include "log.h"
 
 TreeView::TreeView (void)
 {

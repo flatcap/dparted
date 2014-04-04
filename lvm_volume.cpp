@@ -22,6 +22,7 @@
 #include "action.h"
 #include "log_trace.h"
 #include "visitor.h"
+#include "log.h"
 
 LvmVolume::LvmVolume (void)
 {

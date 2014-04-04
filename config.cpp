@@ -21,6 +21,7 @@
 #include <cstdint>
 
 #include "config.h"
+#include "log.h"
 
 /**
  * Config (std::string)
@@ -675,11 +676,9 @@ Config::operator int64_t()
 std::ostream&
 operator<< (std::ostream& os, const Config* v)
 {
-	if (v) {
-		return operator<< (os, *v);
-	} else {
-		return os;
-	}
+	return_val_if_fail (v, os);
+
+	return operator<< (os, *v);
 }
 
 /**

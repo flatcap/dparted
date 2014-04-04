@@ -24,6 +24,7 @@
 #include "md_table.h"
 #include "utils.h"
 #include "visitor.h"
+#include "log.h"
 
 MdTable::MdTable (void)
 {

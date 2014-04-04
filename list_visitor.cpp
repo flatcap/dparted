@@ -20,6 +20,7 @@
 #include "list_visitor.h"
 #include "container.h"
 #include "log_trace.h"
+#include "log.h"
 
 ListVisitor::ListVisitor (void)
 {

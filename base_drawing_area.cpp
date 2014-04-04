@@ -98,8 +98,7 @@ BaseDrawingArea::fill_area (const Cairo::RefPtr<Cairo::Context>& cr, const Rect&
 void
 BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk::RGBA& rgba)
 {
-	if (!cr)
-		return;
+	return_if_fail (cr);
 
 	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
 }
@@ -170,10 +169,9 @@ BaseDrawingArea::draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape,
 void
 BaseDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, Glib::RefPtr<Gdk::Pixbuf> icon, const Rect& shape, Rect& below)
 {
-	Rect work = shape;
+	return_if_fail (icon);
 
-	if (!icon)
-		return;
+	Rect work = shape;
 
 	cr->save();
 

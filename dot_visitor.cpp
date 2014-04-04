@@ -39,6 +39,7 @@
 #endif
 #include "log_trace.h"
 #include "utils.h"
+#include "log.h"
 
 DotVisitor::DotVisitor (void)
 {

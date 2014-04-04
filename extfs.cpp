@@ -27,6 +27,7 @@
 #include "log_trace.h"
 #include "utils.h"
 #include "visitor.h"
+#include "log.h"
 
 Extfs::Extfs (void)
 {

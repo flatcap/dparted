@@ -29,6 +29,7 @@
 #include "stringnum.h"
 #include "utils.h"
 #include "visitor.h"
+#include "log.h"
 
 Loop::Loop (void)
 {

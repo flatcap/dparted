@@ -21,6 +21,7 @@
 
 #include "container.h"
 #include "utils.h"
+#include "log.h"
 
 HexVisitor::HexVisitor (void)
 {

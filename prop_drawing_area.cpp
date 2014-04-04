@@ -18,6 +18,7 @@
 
 #include "prop_drawing_area.h"
 #include "gui_app.h"
+#include "log.h"
 
 PropDrawingArea::PropDrawingArea (void)
 {
