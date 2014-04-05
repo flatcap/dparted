@@ -19,6 +19,7 @@
 #include <cstdlib>
 
 #include <gtkmm/cellrenderertext.h>
+#include <gtkmm/cellrendererprogress.h>
 
 #include "gui_app.h"
 #include "log_trace.h"
@@ -149,13 +150,14 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 					continue;
 				}
 
-				std::cout << "\tType: " << (int)prop->type << std::endl;
+				std::cout << "\tType: " << prop->get_type_name() << std::endl;
 
 				if (i.first == "colour") {
 					row.set_value (index, get_colour_as_pixbuf (16, x->colour));
 				} else if (prop->type == BaseProperty::Tag::t_string) {
 					row.set_value (index, (std::string) *prop);
-				} else if (prop->type == BaseProperty::Tag::t_u64) {
+				} else if ((prop->type == BaseProperty::Tag::t_u64) ||
+					   (prop->type == BaseProperty::Tag::t_u8)) {
 					row.set_value (index, (std::uint64_t) *prop);
 				} else {
 					std::cout << "\tNOT HANDLED" << std::endl;
@@ -243,14 +245,23 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 			std::string t = "string";
 			try {
 				t = theme->get_config (key, "", "type", false);
-				//log_debug ("%s ", t.c_str());
-				if (t == "integer") {
-					add_column<std::int64_t> (col_rec, col);
-				} else if (t == "icon") {
+				//log_debug ("(%s) ", t.c_str());
+				if ((t == "float") || (t == "integer") || (t == "string")) {
+					add_column<std::string> (col_rec, col);
+				} else if ((t == "icon") || (t == "colour")) {
 					add_column<Glib::RefPtr<Gdk::Pixbuf>> (col_rec, col);
-				} else if (t == "float") {
-					add_column<double> (col_rec, col);
+				} else if (t == "graph") {
+					Gtk::TreeModelColumn<int>* tmc = new Gtk::TreeModelColumn<int>;
+					mod_cols.push_back (ModColPtr (tmc));
+					col_rec.add (*tmc);
+
+					Gtk::CellRendererProgress* cell = Gtk::manage(new Gtk::CellRendererProgress);
+					col = Gtk::manage (new Gtk::TreeView::Column ("Percentage"));
+					col->pack_start (*cell, false);
+					col->add_attribute(cell->property_value(), *tmc);
+					append_column (*col);
 				} else {
+					log_error ("unknown type '%s'\n", t.c_str());
 					add_column<std::string> (col_rec, col);
 				}
 			} catch (...) {
@@ -263,6 +274,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 		append_column (*col);
 		//log_debug ("\n");
 	}
+	//log_debug ("\n");
 
 	std::cout << "Cols" << std::endl;
 	for (auto i : col_list) {
