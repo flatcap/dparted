@@ -83,6 +83,17 @@ Theme::init_icons (void)
 	add_icon ("network","/usr/share/icons/gnome/48x48/status/connect_established.png");
 
 	add_icon ("warning", "/usr/share/icons/gnome/24x24/status/dialog-warning.png");
+
+	add_icon ("os_apple"   , "icons/os/apple.png");
+	add_icon ("os_bsd"     , "icons/os/bsd.png");
+	add_icon ("os_debian"  , "icons/os/debian.png");
+	add_icon ("os_fedora"  , "icons/os/fedora.png");
+	add_icon ("os_linux"   , "icons/os/linux.png");
+	add_icon ("os_redhat"  , "icons/os/redhat.png");
+	add_icon ("os_suse"    , "icons/os/suse.png");
+	add_icon ("os_swap"    , "icons/os/swap.png");
+	add_icon ("os_ubuntu"  , "icons/os/ubuntu.png");
+	add_icon ("os_windows" , "icons/os/windows.png");
 }
 
 Glib::RefPtr<Gdk::Pixbuf>

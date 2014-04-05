@@ -17,6 +17,7 @@
  */
 
 #include <cstdlib>
+#include <iomanip>
 
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/cellrendererprogress.h>
@@ -94,6 +95,7 @@ get_colour_as_pixbuf (int size, Gdk::RGBA colour)
 	return pixbuf;
 }
 
+
 void
 TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nullptr*/)
 {
@@ -129,9 +131,10 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 
 			row.set_value (0, x);		// Column zero is always the GfxContainer
 
-			std::cout << std::endl;
+			//std::cout << std::endl;
+			std::cout << "Columns:" << std::endl;
 			for (auto i : col_list) {
-				std::cout << "Column: " << i.first << std::endl;
+				std::cout << "\t" << i.first << std::endl;
 				ContainerPtr c = x->get_container();
 				if (!c) {
 					std::cout << "\tNO CONTAINER" << std::endl;
@@ -150,12 +153,20 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 					continue;
 				}
 
-				std::cout << "\tType: " << prop->get_type_name() << std::endl;
+				//std::cout << "\tType: " << prop->get_type_name() << std::endl;
 
 				if (i.first == "colour") {
 					row.set_value (index, get_colour_as_pixbuf (16, x->colour));
+				} else if (type == "icon") {
+					Glib::RefPtr<Gdk::Pixbuf> icon = theme->get_icon ((std::string) *prop);
+					if (icon) {
+						//std::cout << "index = " << index << ", " << "icon = " << (void*) icon.operator->() << std::endl;
+						row.set_value (index, icon);
+					} else {
+						std::cout << "NO ICON" << std::endl;
+					}
 				} else if (prop->type == BaseProperty::Tag::t_string) {
-					std::cout << "Value: " << (std::string) *prop << std::endl;
+					//std::cout << "Value: " << (std::string) *prop << std::endl;
 					row.set_value (index, (std::string) *prop);
 				} else if ((prop->type == BaseProperty::Tag::t_u64) ||
 					   (prop->type == BaseProperty::Tag::t_u8)) {
@@ -174,20 +185,6 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 		}
 	}
 }
-
-
-#if 0
-template<class T_ModelColumnType> inline
-void TreeViewColumn::pack_start(const TreeModelColumn<T_ModelColumnType>& column, bool expand)
-{
-	//Generate appropriate Renderer for the column:
-	CellRenderer* pCellRenderer = manage( CellRenderer_Generation::generate_cellrenderer<T_ModelColumnType>() );
-
-	//Use the renderer:
-	pack_start(*pCellRenderer, expand);
-	set_renderer(*pCellRenderer, column);
-}
-#endif
 
 void
 TreeView::init_treeview (GfxContainerPtr& gfx)
@@ -249,7 +246,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 				//log_debug ("(%s) ", t.c_str());
 				if ((t == "float") || (t == "integer") || (t == "string")) {
 					add_column<std::string> (col_rec, col);
-				} else if ((t == "icon") || (t == "colour")) {
+				} else if (t == "icon") {
 					add_column<Glib::RefPtr<Gdk::Pixbuf>> (col_rec, col);
 				} else if (t == "graph") {
 					Gtk::TreeModelColumn<int>* tmc = new Gtk::TreeModelColumn<int>;
@@ -266,7 +263,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 					add_column<std::string> (col_rec, col);
 				}
 			} catch (...) {
-				//log_debug ("string");
+				log_debug ("NO TYPE\n");
 				add_column<std::string> (col_rec, col);
 			}
 			//std::cout << col_rec.size()-1;
@@ -282,7 +279,8 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 		int index;
 		std::string type;
 		std::tie (index, type) = i.second;
-		std::cout << '\t' << index << " " << type << " " << i.first << std::endl;
+		std::cout.flags (std::ios::left);
+		std::cout << '\t' << index << " " << std::setw(10) << type << " " << i.first << std::endl;
 	}
 
 	// Dummy empty column to pad out treeview
@@ -305,6 +303,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 
 	expand_all();
 }
+
 
 bool
 TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)

@@ -694,6 +694,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 
 	std::vector<Action> actions;
 
+#if 0
 	for (; c; c = c->parent.lock()) {
 		log_debug ("%s\n", c->type.back().c_str());
 		auto tmp = c->get_actions();
@@ -703,6 +704,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 		}
 	}
 	log_debug ("\n");
+#endif
 
 	if (actions.empty()) {
 		//log_debug ("No actions\n");
