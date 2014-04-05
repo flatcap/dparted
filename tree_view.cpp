@@ -141,7 +141,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 				int index;
 				std::string type;
 				std::tie (index, type) = i.second;
-				std::cout << "\tindex: " << index << std::endl;
+				//std::cout << "\tindex: " << index << std::endl;
 
 				PPtr prop = c->get_prop (i.first);
 
@@ -155,6 +155,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 				if (i.first == "colour") {
 					row.set_value (index, get_colour_as_pixbuf (16, x->colour));
 				} else if (prop->type == BaseProperty::Tag::t_string) {
+					std::cout << "Value: " << (std::string) *prop << std::endl;
 					row.set_value (index, (std::string) *prop);
 				} else if ((prop->type == BaseProperty::Tag::t_u64) ||
 					   (prop->type == BaseProperty::Tag::t_u8)) {
