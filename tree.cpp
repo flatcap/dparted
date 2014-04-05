@@ -18,12 +18,12 @@ protected:
 
 private:
 	template <class T>
-	void add_column (Gtk::TreeModel::ColumnRecord& cols, Gtk::TreeView::Column* col)
+	void add_column (Gtk::TreeModel::ColumnRecord& mod_col_set, Gtk::TreeView::Column* view_col)
 	{
-		Gtk::TreeModelColumn<T>* tmc = new Gtk::TreeModelColumn<T>;
-		mod_cols.push_back (ModColPtr (tmc));
-		cols.add (*tmc);
-		col->pack_start (*tmc, false);
+		Gtk::TreeModelColumn<T>* mod_col = new Gtk::TreeModelColumn<T>;
+		mod_cols.push_back (ModColPtr (mod_col));
+		mod_col_set.add (*mod_col);
+		view_col->pack_start (*mod_col, false);
 	}
 
 	std::vector<ModColPtr> mod_cols;
@@ -37,25 +37,41 @@ Tree::Tree()
 
 	//=====================================================
 
-	Gtk::TreeModel::ColumnRecord cols;
-	Gtk::TreeView::Column* col = nullptr;
+	Gtk::TreeModel::ColumnRecord mod_col_set;
+	Gtk::TreeView::Column* view_col = nullptr;
 
 	//---------------------------
 
-	col = Gtk::manage (new Gtk::TreeView::Column ("ID"));
-	add_column<int> (cols, col);
-	m_TreeView.append_column (*col);
+	view_col = Gtk::manage (new Gtk::TreeView::Column ("ID"));
+	add_column<int> (mod_col_set, view_col);
+	m_TreeView.append_column (*view_col);
 
 	//---------------------------
 
-	col = Gtk::manage (new Gtk::TreeView::Column ("Name"));
-	add_column<std::string> (cols, col);
-	add_column<std::string> (cols, col);
-	m_TreeView.append_column (*col);
+	view_col = Gtk::manage (new Gtk::TreeView::Column ("Name"));
+	add_column<std::string> (mod_col_set, view_col);
+	add_column<std::string> (mod_col_set, view_col);
+	m_TreeView.append_column (*view_col);
 
 	//---------------------------
 
-	m_refTreeModel = Gtk::TreeStore::create (cols);
+	Gtk::TreeModelColumn<int>* mod_col = new Gtk::TreeModelColumn<int>;
+	mod_cols.push_back (ModColPtr (mod_col));
+	mod_col_set.add (*mod_col);
+
+	Gtk::CellRendererProgress* cell = Gtk::manage(new Gtk::CellRendererProgress);
+
+	int cols_count = m_TreeView.append_column("P%", *cell);
+
+	Gtk::TreeViewColumn* pColumn = m_TreeView.get_column(cols_count - 1);
+	if(pColumn)
+	{
+		pColumn->add_attribute(cell->property_value(), *mod_col);
+	}
+
+	//---------------------------
+
+	m_refTreeModel = Gtk::TreeStore::create (mod_col_set);
 	m_TreeView.set_model (m_refTreeModel);
 
 	//=====================================================
@@ -66,6 +82,7 @@ Tree::Tree()
 	row.set_value (0, 42);
 	row.set_value (1, jim);
 	row.set_value (2, bob);
+	row.set_value (3, 70);
 
 	show_all_children();
 }
