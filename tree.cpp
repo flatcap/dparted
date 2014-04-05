@@ -61,13 +61,12 @@ Tree::Tree()
 
 	Gtk::CellRendererProgress* cell = Gtk::manage(new Gtk::CellRendererProgress);
 
-	int cols_count = m_TreeView.append_column("P%", *cell);
+	view_col = Gtk::manage (new Gtk::TreeView::Column ("Percentage"));
 
-	Gtk::TreeViewColumn* pColumn = m_TreeView.get_column(cols_count - 1);
-	if(pColumn)
-	{
-		pColumn->add_attribute(cell->property_value(), *mod_col);
-	}
+	view_col->pack_start (*cell, false);
+
+	view_col->add_attribute(cell->property_value(), *mod_col);
+	m_TreeView.append_column (*view_col);
 
 	//---------------------------
 
