@@ -45,6 +45,7 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 	g->theme = gui_app->get_theme();
 
 	g->sync();
+	c->add_string_prop (std::string("gfx"), std::string("colour"), g->colour2);
 
 	return g;
 }
@@ -115,10 +116,11 @@ GfxContainer::init (ContainerPtr c)
 		std::string i  = theme->get_config (path, name, "icon");
 		std::string u  = theme->get_config (path, name, "usage");
 
-		colour     = process_colour(c);
+		colour     = process_colour (c);
+		colour2    = c;
 		background = process_colour (bg);
-		icon       = process_icon  (i);
-		usage      = process_bool  (u);
+		icon       = process_icon   (i);
+		usage      = process_bool   (u);
 
 #if 0
 		log_debug ("Config\n");

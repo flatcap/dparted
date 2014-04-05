@@ -61,6 +61,8 @@ protected:
 		col->pack_start (*tmc, false);
 	}
 
+	std::map<std::string,std::tuple<int,std::string>> col_list;	// Map prop_name -> col_index, type
+
 private:
 	// POPUP
 	void setup_popup (void);

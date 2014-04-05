@@ -932,7 +932,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	}
 
 	if (!inside.w) {
-		log_error ("NO WIDTH\n");
+		//log_error ("NO WIDTH\n");
 		return;
 	}
 

@@ -131,6 +131,8 @@ Container::Container (void)
 	declare_prop_fn (me, "ref_count",                  (get_int64_t)  std::bind(&Container::get_ref_count,                  this), "desc of ref_count",          0);
 	declare_prop_fn (me, "mmap_addr",                  (get_string_t) std::bind(&Container::get_mmap_addr,                  this), "desc of ref_count",          0);
 	declare_prop_fn (me, "mmap_size",                  (get_uint64_t) std::bind(&Container::get_mmap_size,                  this), "desc of ref_count",          0);
+
+	more_props.resize (10);		//XXX this will break the properties if it gets reallocated
 }
 
 Container::~Container()
@@ -565,6 +567,15 @@ Container::get_all_props (bool inc_hidden /*=false*/)
 	}
 
 	return vv;
+}
+
+
+PPtr
+Container::add_string_prop (const std::string& owner, const std::string& name, const std::string& value)
+{
+	more_props.push_back (value);
+	PPtr p = declare_prop_var (owner.c_str(), name.c_str(), more_props.back(), "desc", 0);
+	return p;
 }
 
 

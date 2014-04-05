@@ -27,6 +27,7 @@
 #include "utils.h"
 #include "window.h"
 #include "log.h"
+#include "property.h"
 
 TreeView::TreeView (void)
 {
@@ -93,11 +94,13 @@ get_colour_as_pixbuf (int size, Gdk::RGBA colour)
 }
 
 void
-TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent /*=nullptr*/)
+TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nullptr*/)
 {
+	return_if_fail (gfx);
+
 	Gtk::TreeModel::Row row;
 
-	for (auto x : c->children) {
+	for (auto x : gfx->children) {
 		std::string type = x->type;
 
 		bool display = false;
@@ -123,15 +126,41 @@ TreeView::tree_add_row (GfxContainerPtr& c, Gtk::TreeModel::Row* parent /*=nullp
 				dev = dev.substr (pos+1);
 			}
 
-			row.set_value (0, x);
-			row.set_value (1, dev);
-			row.set_value (2, get_colour_as_pixbuf (16, x->colour));
-			row.set_value (3, x->type);
-			row.set_value (4, x->name);
-			row.set_value (5, x->bytes_size);
-			row.set_value (6, x->bytes_used);
-			row.set_value (7, (x->bytes_size - x->bytes_used));
+			row.set_value (0, x);		// Column zero is always the GfxContainer
 
+			std::cout << std::endl;
+			for (auto i : col_list) {
+				std::cout << "Column: " << i.first << std::endl;
+				ContainerPtr c = x->get_container();
+				if (!c) {
+					std::cout << "\tNO CONTAINER" << std::endl;
+					continue;
+				}
+
+				int index;
+				std::string type;
+				std::tie (index, type) = i.second;
+				std::cout << "\tindex: " << index << std::endl;
+
+				PPtr prop = c->get_prop (i.first);
+
+				if (!prop) {
+					std::cout << "\tMISSING" << std::endl;
+					continue;
+				}
+
+				std::cout << "\tType: " << (int)prop->type << std::endl;
+
+				if (i.first == "colour") {
+					row.set_value (index, get_colour_as_pixbuf (16, x->colour));
+				} else if (prop->type == BaseProperty::Tag::t_string) {
+					row.set_value (index, (std::string) *prop);
+				} else if (prop->type == BaseProperty::Tag::t_u64) {
+					row.set_value (index, (std::uint64_t) *prop);
+				} else {
+					std::cout << "\tNOT HANDLED" << std::endl;
+				}
+			}
 		} else {
 			if (parent)
 				row = *parent;
@@ -158,7 +187,7 @@ void TreeViewColumn::pack_start(const TreeModelColumn<T_ModelColumnType>& column
 #endif
 
 void
-TreeView::init_treeview (GfxContainerPtr& c)
+TreeView::init_treeview (GfxContainerPtr& gfx)
 {
 	theme = gui_app->get_theme();
 
@@ -206,14 +235,15 @@ TreeView::init_treeview (GfxContainerPtr& c)
 			log_error ("Missing: %s.title\n", key.c_str());
 		}
 
-		log_debug ("\t%s = ", i.c_str());
+		//log_debug ("\t%s = ", i.c_str());
 		col = Gtk::manage (new Gtk::TreeView::Column (title));
 
 		for (auto j : multi) {
 			key = name + "." + j;
+			std::string t = "string";
 			try {
-				std::string t = theme->get_config (key, "", "type", false);
-				log_debug ("%s ", t.c_str());
+				t = theme->get_config (key, "", "type", false);
+				//log_debug ("%s ", t.c_str());
 				if (t == "integer") {
 					add_column<std::int64_t> (col_rec, col);
 				} else if (t == "icon") {
@@ -224,12 +254,22 @@ TreeView::init_treeview (GfxContainerPtr& c)
 					add_column<std::string> (col_rec, col);
 				}
 			} catch (...) {
-				log_debug ("string");
+				//log_debug ("string");
 				add_column<std::string> (col_rec, col);
 			}
+			//std::cout << col_rec.size()-1;
+			col_list[j] = std::make_tuple (col_rec.size()-1, t);
 		}
 		append_column (*col);
-		log_debug ("\n");
+		//log_debug ("\n");
+	}
+
+	std::cout << "Cols" << std::endl;
+	for (auto i : col_list) {
+		int index;
+		std::string type;
+		std::tie (index, type) = i.second;
+		std::cout << '\t' << index << " " << type << " " << i.first << std::endl;
 	}
 
 	// Dummy empty column to pad out treeview
@@ -248,7 +288,7 @@ TreeView::init_treeview (GfxContainerPtr& c)
 	treeselection = get_selection();
 	treeselection->signal_changed().connect (sigc::mem_fun (*this, &TreeView::on_selection_changed));
 
-	tree_add_row (c);
+	tree_add_row (gfx);
 
 	expand_all();
 }

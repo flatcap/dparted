@@ -64,6 +64,7 @@ public:
 	std::string               display;
 	std::string               treeview;
 	Gdk::RGBA                 colour;
+	std::string               colour2;
 	Gdk::RGBA                 background;
 	Glib::RefPtr<Gdk::Pixbuf> icon;
 	std::string               label;
