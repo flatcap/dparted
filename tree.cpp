@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 #include <gtkmm.h>
 
 typedef std::shared_ptr<Gtk::TreeModelColumnBase> ModColPtr;
@@ -13,8 +14,13 @@ public:
 	virtual ~Tree() = default;
 
 protected:
-	Gtk::TreeView m_TreeView;
+	Gtk::Box vbox;
+	Gtk::ButtonBox bbox;
+	Gtk::Button action;
+	Gtk::TreeView treeview;
 	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
+
+	void on_action (void);
 
 private:
 	template <class T>
@@ -29,11 +35,20 @@ private:
 	std::vector<ModColPtr> mod_cols;
 };
 
-Tree::Tree()
+Tree::Tree() :
+	vbox (Gtk::ORIENTATION_VERTICAL),
+	action ("Action")
 {
 	set_default_size (400, 200);
 
-	add (m_TreeView);
+	add (vbox);
+
+	vbox.pack_start (treeview);
+	vbox.pack_start (bbox, Gtk::PACK_SHRINK);
+	bbox.pack_start (action);
+	bbox.set_layout(Gtk::BUTTONBOX_END);
+
+	action.signal_clicked().connect (sigc::mem_fun (*this, &Tree::on_action));
 
 	//=====================================================
 
@@ -44,14 +59,14 @@ Tree::Tree()
 
 	view_col = Gtk::manage (new Gtk::TreeView::Column ("ID"));
 	add_column<int> (mod_col_set, view_col);
-	m_TreeView.append_column (*view_col);
+	treeview.append_column (*view_col);
 
 	//---------------------------
 
 	view_col = Gtk::manage (new Gtk::TreeView::Column ("Name"));
 	add_column<std::string> (mod_col_set, view_col);
 	add_column<std::string> (mod_col_set, view_col);
-	m_TreeView.append_column (*view_col);
+	treeview.append_column (*view_col);
 
 	//---------------------------
 
@@ -66,12 +81,12 @@ Tree::Tree()
 	view_col->pack_start (*cell, false);
 
 	view_col->add_attribute(cell->property_value(), *mod_col);
-	m_TreeView.append_column (*view_col);
+	treeview.append_column (*view_col);
 
 	//---------------------------
 
 	m_refTreeModel = Gtk::TreeStore::create (mod_col_set);
-	m_TreeView.set_model (m_refTreeModel);
+	treeview.set_model (m_refTreeModel);
 
 	//=====================================================
 
@@ -86,9 +101,17 @@ Tree::Tree()
 	show_all_children();
 }
 
+void
+Tree::on_action (void)
+{
+	std::cout << "action" << std::endl;
+}
+
 int
 main (int argc, char *argv[])
 {
+	srandom (time (nullptr));
+
 	auto app = Gtk::Application::create (argc, argv, "org.gtkmm.example");
 	Tree window;
 	return app->run (window);
