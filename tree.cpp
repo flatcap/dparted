@@ -98,7 +98,6 @@ Tree::on_action (void)
 	static int init = 0;
 
 	if (init == 4) {
-		std::cout << "add column" << std::endl;
 		Gtk::TreeViewColumn *view_col = treeview.get_column(0);
 
 		Gtk::TreeModelColumn<int>* mod_col = new Gtk::TreeModelColumn<int>;
@@ -112,14 +111,7 @@ Tree::on_action (void)
 		treeview.set_model (treestore);
 	}
 
-	if ((init > 6) && (init < 10)) {
-		Gtk::TreeViewColumn *view_col = treeview.get_column(2);
-		view_col->set_visible (false);
-	} else {
-		Gtk::TreeViewColumn *view_col = treeview.get_column(2);
-		view_col->set_visible (true);
-	}
-
+	treeview.get_column(2)->set_visible ((init < 6) || (init > 12));
 	init++;
 
 	Gtk::TreeModel::Row row = *(treestore->append());
