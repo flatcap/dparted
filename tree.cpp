@@ -18,7 +18,7 @@ protected:
 	Gtk::ButtonBox bbox;
 	Gtk::Button action;
 	Gtk::TreeView treeview;
-	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
+	Glib::RefPtr<Gtk::TreeStore> treestore;
 
 	void on_action (void);
 
@@ -85,18 +85,10 @@ Tree::Tree() :
 
 	//---------------------------
 
-	m_refTreeModel = Gtk::TreeStore::create (mod_col_set);
-	treeview.set_model (m_refTreeModel);
+	treestore = Gtk::TreeStore::create (mod_col_set);
+	treeview.set_model (treestore);
 
 	//=====================================================
-
-	Gtk::TreeModel::Row row = *(m_refTreeModel->append());
-	std::string jim = "Jim";
-	std::string bob = "Bob";
-	row.set_value (0, 42);
-	row.set_value (1, jim);
-	row.set_value (2, bob);
-	row.set_value (3, 70);
 
 	show_all_children();
 }
@@ -104,7 +96,16 @@ Tree::Tree() :
 void
 Tree::on_action (void)
 {
-	std::cout << "action" << std::endl;
+	std::vector<std::string> fruit = { "apple", "banana", "cherry", "damson", "elderberry", "fig", "guava", "hawthorn", "ilama", "jackfruit", "kumquat", "lemon", "mango", "nectarine", "olive", "papaya", "quince", "raspberry", "strawberry", "tangerine", "ugli", "vanilla", "wolfberry", "xigua", "yew", "ziziphus" };
+
+	Gtk::TreeModel::Row row = *(treestore->append());
+	std::string jim = fruit[random()%26];
+	std::string bob = fruit[random()%26];
+	row.set_value (0, random() % 1000);
+	row.set_value (1, jim);
+	row.set_value (2, bob);
+	row.set_value (3, random() % 100);
+
 }
 
 int
