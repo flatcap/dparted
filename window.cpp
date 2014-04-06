@@ -196,7 +196,7 @@ Window::set_data (GfxContainerPtr c)
 	try {
 		treeview.init_treeview(c);
 	} catch (...) {
-		std::cout << "exception" << std::endl;
+		log_error ("exception\n");
 	}
 	drawingarea.set_data(c);
 }

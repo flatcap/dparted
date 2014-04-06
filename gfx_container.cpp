@@ -65,7 +65,7 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 			case 8:	os = "os_ubuntu";  break;
 			case 9:	os = "os_windows"; break;
 		}
-		//std::cout << "Filesystem: " << c->get_device_inherit() << " " << os << std::endl;
+		//log_debug ("Filesystem: %s : %s\n", c->get_device_inherit().c_str(), os.c_str());
 		c->add_string_prop (std::string("gfx"), std::string("operating_system"), os);
 	}
 
