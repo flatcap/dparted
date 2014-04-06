@@ -32,6 +32,7 @@ private:
 		view_col->pack_start (*mod_col, false);
 	}
 
+	Gtk::TreeModel::ColumnRecord mod_col_set;
 	std::vector<ModColPtr> mod_cols;
 };
 
@@ -52,13 +53,12 @@ Tree::Tree() :
 
 	//=====================================================
 
-	Gtk::TreeModel::ColumnRecord mod_col_set;
 	Gtk::TreeView::Column* view_col = nullptr;
 
 	//---------------------------
 
 	view_col = Gtk::manage (new Gtk::TreeView::Column ("ID"));
-	add_column<int> (mod_col_set, view_col);
+	//add_column<int> (mod_col_set, view_col);
 	treeview.append_column (*view_col);
 
 	//---------------------------
@@ -74,13 +74,10 @@ Tree::Tree() :
 	mod_cols.push_back (ModColPtr (mod_col));
 	mod_col_set.add (*mod_col);
 
-	Gtk::CellRendererProgress* cell = Gtk::manage(new Gtk::CellRendererProgress);
-
+	Gtk::CellRendererProgress* rend = Gtk::manage(new Gtk::CellRendererProgress);
 	view_col = Gtk::manage (new Gtk::TreeView::Column ("Percentage"));
-
-	view_col->pack_start (*cell, false);
-
-	view_col->add_attribute(cell->property_value(), *mod_col);
+	view_col->pack_start (*rend, false);
+	view_col->add_attribute(rend->property_value(), *mod_col);
 	treeview.append_column (*view_col);
 
 	//---------------------------
@@ -98,14 +95,41 @@ Tree::on_action (void)
 {
 	std::vector<std::string> fruit = { "apple", "banana", "cherry", "damson", "elderberry", "fig", "guava", "hawthorn", "ilama", "jackfruit", "kumquat", "lemon", "mango", "nectarine", "olive", "papaya", "quince", "raspberry", "strawberry", "tangerine", "ugli", "vanilla", "wolfberry", "xigua", "yew", "ziziphus" };
 
-	Gtk::TreeModel::Row row = *(treestore->append());
-	std::string jim = fruit[random()%26];
-	std::string bob = fruit[random()%26];
-	row.set_value (0, random() % 1000);
-	row.set_value (1, jim);
-	row.set_value (2, bob);
-	row.set_value (3, random() % 100);
+	static int init = 0;
 
+	if (init == 4) {
+		std::cout << "add column" << std::endl;
+		Gtk::TreeViewColumn *view_col = treeview.get_column(0);
+
+		Gtk::TreeModelColumn<int>* mod_col = new Gtk::TreeModelColumn<int>;
+
+		mod_cols.push_back (ModColPtr (mod_col));
+		mod_col_set.add (*mod_col);
+
+		view_col->pack_start (*mod_col, false);
+
+		treestore = Gtk::TreeStore::create (mod_col_set);
+		treeview.set_model (treestore);
+	}
+
+	if ((init > 6) && (init < 10)) {
+		Gtk::TreeViewColumn *view_col = treeview.get_column(2);
+		view_col->set_visible (false);
+	} else {
+		Gtk::TreeViewColumn *view_col = treeview.get_column(2);
+		view_col->set_visible (true);
+	}
+
+	init++;
+
+	Gtk::TreeModel::Row row = *(treestore->append());
+	int index = 0;
+	row.set_value (index++, fruit[random()%26]);
+	row.set_value (index++, fruit[random()%26]);
+	row.set_value (index++, random() % 100);
+	if (init > 4) {
+		row.set_value (index++, random() % 1000);
+	}
 }
 
 int
