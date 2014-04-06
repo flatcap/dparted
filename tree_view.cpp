@@ -147,7 +147,6 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 				//log_debug ("\tindex: %d\n", index);
 
 				PPtr prop = c->get_prop (i.first);
-
 				if (!prop) {
 					//log_debug ("\tMISSING\n");	// Not an error
 					continue;
@@ -165,6 +164,8 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 					} else {
 						log_debug ("\tNO ICON\n");
 					}
+				} else if (prop->flags & BaseProperty::Flags::Size) {
+					row.set_value (index, (std::string) *prop);
 				} else if (prop->type == BaseProperty::Tag::t_string) {
 					//log_debug ("Value: %s\n", (std::string) *prop);
 					row.set_value (index, (std::string) *prop);
