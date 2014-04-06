@@ -684,7 +684,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 {
 	return_if_fail (gfx);
 
-	log_debug ("%s\n", gfx->dump());
+	//log_debug ("%s\n", gfx->dump());
 
 	ContainerPtr c = gfx->get_container();
 	if (!c) {

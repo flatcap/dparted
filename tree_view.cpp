@@ -132,9 +132,9 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 			row.set_value (0, x);		// Column zero is always the GfxContainer
 
 			//log_debug ("\n");
-			log_debug ("Columns:\n");
+			//log_debug ("Columns:\n");
 			for (auto i : col_list) {
-				log_debug ("\t%s\n", i.first.c_str());
+				//log_debug ("\t%s\n", i.first.c_str());
 				ContainerPtr c = x->get_container();
 				if (!c) {
 					log_debug ("\tNO CONTAINER\n");
@@ -149,7 +149,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 				PPtr prop = c->get_prop (i.first);
 
 				if (!prop) {
-					log_debug ("\tMISSING\n");
+					//log_debug ("\tMISSING\n");	// Not an error
 					continue;
 				}
 
@@ -256,7 +256,6 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 					Gtk::CellRendererProgress* cell = Gtk::manage(new Gtk::CellRendererProgress);
 					col->pack_start (*cell, false);
 					col->add_attribute(cell->property_value(), *tmc);
-					append_column (*col);
 				} else {
 					log_error ("unknown type '%s'\n", t.c_str());
 					add_column<std::string> (col_rec, col);
@@ -265,7 +264,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 				log_debug ("NO TYPE\n");
 				add_column<std::string> (col_rec, col);
 			}
-			//log_debug ("%ld\n", col_rec.size()-1);
+			//log_debug ("%u\n", col_rec.size()-1);
 			col_list[j] = std::make_tuple (col_rec.size()-1, t);
 		}
 		append_column (*col);
@@ -273,6 +272,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 	}
 	//log_debug ("\n");
 
+#if 0
 	log_debug ("Cols\n");
 	for (auto i : col_list) {
 		int index;
@@ -280,6 +280,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 		std::tie (index, type) = i.second;
 		log_debug ("\t%2d %8s %s\n", index, type.c_str(), i.first.c_str());
 	}
+#endif
 
 	// Dummy empty column to pad out treeview
 	col = Gtk::manage (new Gtk::TreeView::Column (""));
