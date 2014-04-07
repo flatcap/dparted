@@ -176,7 +176,20 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 						row.set_value (index, (std::uint8_t) *prop);
 						break;
 					case ct_human:
-						log_error ("notimpl human\n");
+						{
+							std::string num = (std::string) *prop;
+							std::string suf;
+							std::size_t pos = num.find_first_of (" ");
+							if (pos != std::string::npos) {
+								std::size_t end = num.find_first_not_of (" ", pos+1);
+								if (end != std::string::npos) {
+									suf = num.substr (end);
+								}
+								num = num.substr (0, pos);
+							}
+							row.set_value (index,   num);
+							row.set_value (index+1, suf);
+						}
 						break;
 					case ct_icon:
 						row.set_value (index, theme->get_icon ((std::string) *prop));
@@ -404,7 +417,13 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 					index     = add_column<std::int64_t> (col_rec, col, align, size);
 					break;
 
-				case ct_human:		// For now
+				case ct_human:
+					align     = parse_alignment (theme->get_config (key, "", "align", false), 1.0);
+					size      = parse_size (theme->get_config (key, "", "size", false), 0);
+					index     = add_column<std::string> (col_rec, col, 1.0, size);
+					            add_column<std::string> (col_rec, col, 0.0, 0);
+					break;
+
 				default:
 					log_error ("unknown type '%d'\n", type);
 
