@@ -16,6 +16,10 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+#include <cstdlib>
+#include <ctime>
+
 #include "gfx_container.h"
 #include "gui_app.h"
 #include "log.h"
@@ -46,6 +50,24 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 
 	g->sync();
 	c->add_string_prop (std::string("gfx"), std::string("colour"), g->colour2);
+
+	if (c->is_a ("Filesystem")) {
+		std::string os;
+		switch (random() % 10) {
+			case 0:	os = "os_apple";   break;
+			case 1:	os = "os_bsd";     break;
+			case 2:	os = "os_debian";  break;
+			case 3:	os = "os_fedora";  break;
+			case 4:	os = "os_linux";   break;
+			case 5:	os = "os_redhat";  break;
+			case 6:	os = "os_suse";    break;
+			case 7:	os = "os_swap";    break;
+			case 8:	os = "os_ubuntu";  break;
+			case 9:	os = "os_windows"; break;
+		}
+		//log_debug ("Filesystem: %s : %s\n", c->get_device_inherit().c_str(), os.c_str());
+		c->add_string_prop (std::string("gfx"), std::string("operating_system"), os);
+	}
 
 	return g;
 }

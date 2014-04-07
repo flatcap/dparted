@@ -17,6 +17,7 @@
  */
 
 #include <memory>
+#include <ctime>
 
 #ifdef DP_GUI
 #include "gui_app.h"
@@ -28,6 +29,7 @@
 int
 main (int argc, char *argv[])
 {
+	srandom (time (nullptr));
 	log_init ("/dev/stdout");
 
 	int status = 0;

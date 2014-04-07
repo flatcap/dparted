@@ -47,9 +47,9 @@ public:
 	std::uint64_t	chunks_used;
 	std::uint64_t	data_offset;
 	std::uint64_t	data_size;
-	int		raid_disks;
-	int		raid_layout;
-	int		raid_type;
+	std::uint32_t	raid_disks;
+	std::uint32_t	raid_layout;
+	std::uint32_t	raid_type;
 	std::string	vol_name;
 	std::string	vol_uuid;
 
