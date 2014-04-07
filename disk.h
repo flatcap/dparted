@@ -53,18 +53,18 @@ public:
 
 public:
 	//properties
-	int		bios_cylinders = 0;	//XXX types
-	int		bios_heads     = 0;
-	int		bios_sectors   = 0;
-	int		did            = 0;
-	int		host           = 0;
-	int		hw_cylinders   = 0;
-	int		hw_heads       = 0;
-	int		hw_sectors     = 0;
+	std::uint32_t	bios_cylinders = 0;	//XXX types
+	std::uint32_t	bios_heads     = 0;
+	std::uint32_t	bios_sectors   = 0;
+	std::uint32_t	did            = 0;
+	std::uint32_t	host           = 0;
+	std::uint32_t	hw_cylinders   = 0;
+	std::uint32_t	hw_heads       = 0;
+	std::uint32_t	hw_sectors     = 0;
 	bool		read_only      = false;
 	//std::string	model;
 	//std::string	path;
-	//int		type;
+	//std::uint32_t	type;
 	//std::uint64_t	sector_size;
 	//std::uint64_t	phys_sector_size;
 	//std::uint64_t	length;

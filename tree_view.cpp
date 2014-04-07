@@ -219,6 +219,9 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 ColType
 parse_type (const std::string& type)
 {
+	if (type.empty())
+		return ct_string;
+
 	if ((type == "colour") || (type == "color"))
 		return ct_colour;
 
@@ -247,6 +250,9 @@ parse_type (const std::string& type)
 float
 parse_alignment (const std::string& align, float def)
 {
+	if (align.empty())
+		return def;
+
 	if ((align == "left") || (align == "start"))
 		return 0.0;
 
@@ -263,6 +269,9 @@ parse_alignment (const std::string& align, float def)
 int
 parse_precision (const std::string& prec, int def)
 {
+	if (prec.empty())
+		return def;
+
 	size_t pos = prec.find_first_not_of ("0123456789");
 	if (pos != std::string::npos) {
 		log_error ("Invalid precision: %s\n", prec.c_str());
@@ -282,6 +291,9 @@ parse_precision (const std::string& prec, int def)
 int
 parse_size (const std::string& size, int def)
 {
+	if (size.empty())
+		return def;
+
 	size_t pos = size.find_first_not_of ("0123456789");
 	if (pos != std::string::npos) {
 		log_error ("Invalid size: %s\n", size.c_str());
@@ -360,11 +372,9 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 		explode ("+", i, multi);
 
 		std::string key = name + "." + multi[0];
-		std::string title;
-		try {
-			title = theme->get_config (key, "", "title", false);
-		} catch (...) {
-			log_error ("Missing: %s.title\n", key.c_str());
+		std::string title = theme->get_config (key, "", "title", false);
+		if (title.empty()) {
+			title = multi[0];	// Replace abc_def with Abc Def?
 		}
 
 		//log_debug ("\t%s = ", i.c_str());
