@@ -168,13 +168,16 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 						row.set_value (index, get_colour_as_pixbuf (size, (std::string) *prop));
 						break;
 					case ct_float:
+						//XXX check type
 						row.set_value (index, (double) *prop);
 						break;
 					case ct_graph:
+						//XXX check type
 						row.set_value (index, (std::uint8_t) *prop);
 						break;
 					case ct_human:
 						{
+							//XXX check type
 							std::string num = (std::string) *prop;
 							std::string suf;
 							std::size_t pos = num.find_first_of (" ");
@@ -193,7 +196,40 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 						row.set_value (index, theme->get_icon ((std::string) *prop));
 						break;
 					case ct_integer:
-						row.set_value (index, (std::int64_t) *prop);
+						//XXX this isn't 64-bit clean
+						{
+							std::int64_t  val;
+							std::uint64_t u;
+							switch (prop->type) {
+								case BaseProperty::Tag::t_bool:
+								case BaseProperty::Tag::t_u8:
+								case BaseProperty::Tag::t_u16:
+								case BaseProperty::Tag::t_u32:
+									val = (std::uint32_t) *prop;		// Unsigned, but fit into std::int64_t
+									break;
+
+								case BaseProperty::Tag::t_u64:
+									u = (std::uint64_t) *prop;
+									if (u & (1LL<<63)) {
+										log_error ("value too large\n");
+										break;
+									}
+									val = (std::int64_t) u;
+									break;
+
+								case BaseProperty::Tag::t_s16:
+								case BaseProperty::Tag::t_s32:
+								case BaseProperty::Tag::t_s64:
+								case BaseProperty::Tag::t_s8:
+									val = (std::int64_t) *prop;			// Signed and fit into std::int64_t
+									break;
+
+								default:
+									log_error ("wrong type\n");
+									break;
+							}
+							row.set_value (index, val);
+						}
 						break;
 					case ct_string:
 						row.set_value (index, (std::string) *prop);
