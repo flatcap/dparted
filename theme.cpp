@@ -217,7 +217,8 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 		}
 	}
 
-	throw "can't find config: " + path + "/" + name + "/" + attr;
+	return "";
+	//throw "can't find config: " + path + "/" + name + "/" + attr;
 }
 
 std::vector<std::string>

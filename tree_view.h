@@ -53,15 +53,20 @@ protected:
 	ThemePtr theme;
 
 	template <class T>
-	void add_column (Gtk::TreeModel::ColumnRecord& col_rec, Gtk::TreeView::Column* col)
+	int add_column (Gtk::TreeModel::ColumnRecord& col_rec, Gtk::TreeView::Column* col)
 	{
 		Gtk::TreeModelColumn<T>* tmc = new Gtk::TreeModelColumn<T>;
 		mod_cols.push_back (ModColPtr (tmc));
 		col_rec.add (*tmc);
 		col->pack_start (*tmc, false);
+
+		return (col_rec.size()-1);
 	}
 
-	std::map<std::string,std::tuple<int,std::string>> col_list;	// Map prop_name -> col_index, type
+	Glib::RefPtr<Gdk::Pixbuf> get_colour_as_pixbuf (int size, const std::string& colstr);
+
+	// Map prop_name -> col_index, col type, align, precision, size
+	std::map<std::string,std::tuple<int,int,float,int,int>> col_list;
 
 private:
 	// POPUP

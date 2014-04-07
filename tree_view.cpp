@@ -31,6 +31,16 @@
 #include "log.h"
 #include "property.h"
 
+enum ColType {
+	ct_colour,
+	ct_float,
+	ct_graph,
+	ct_human,
+	ct_icon,
+	ct_integer,
+	ct_string
+};
+
 TreeView::TreeView (void)
 {
 	setup_popup();
@@ -73,11 +83,10 @@ TreeView::on_button_press_event (GdkEventButton* event)
 }
 
 Glib::RefPtr<Gdk::Pixbuf>
-get_colour_as_pixbuf (int size, Gdk::RGBA colour)
+TreeView::get_colour_as_pixbuf (int size, const std::string& colstr)
 {
-	//XXX circle, of specified colour, transparent background
-	//XXX get size from size of treerow (minus a small margin)
-	//XXX what if one row is double height?
+	//circle, of specified colour, transparent background
+	Gdk::RGBA colour = theme->get_colour (colstr);
 
 	Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create (Gdk::COLORSPACE_RGB, true, 8, size, size);
 	Cairo::RefPtr<Cairo::ImageSurface> surface = Cairo::ImageSurface::create (Cairo::FORMAT_ARGB32, size, size);
@@ -134,17 +143,19 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 			//log_debug ("\n");
 			//log_debug ("Columns:\n");
 			for (auto i : col_list) {
-				//log_debug ("\t%s\n", i.first.c_str());
+				int index = -1;
+				int type = ct_string;
+				float align = 0;
+				int precision = 3;
+				int size = 0;
+
+				std::tie (index, type, align, precision, size) = i.second;
+
 				ContainerPtr c = x->get_container();
 				if (!c) {
 					log_debug ("\tNO CONTAINER\n");
 					continue;
 				}
-
-				int index;
-				std::string type;
-				std::tie (index, type) = i.second;
-				//log_debug ("\tindex: %d\n", index);
 
 				PPtr prop = c->get_prop (i.first);
 				if (!prop) {
@@ -154,26 +165,30 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 
 				//log_debug ("\tType: %s\n", prop->get_type_name().c_str());
 
-				if (i.first == "colour") {
-					row.set_value (index, get_colour_as_pixbuf (16, x->colour));
-				} else if (type == "icon") {
-					Glib::RefPtr<Gdk::Pixbuf> icon = theme->get_icon ((std::string) *prop);
-					if (icon) {
-						//log_debug ("index = %d, icon = 0x%p\n", index, (void*) icon->operator->());
-						row.set_value (index, icon);
-					} else {
-						log_debug ("\tNO ICON\n");
-					}
-				} else if (prop->flags & BaseProperty::Flags::Size) {
-					row.set_value (index, (std::string) *prop);
-				} else if (prop->type == BaseProperty::Tag::t_string) {
-					//log_debug ("Value: %s\n", (std::string) *prop);
-					row.set_value (index, (std::string) *prop);
-				} else if ((prop->type == BaseProperty::Tag::t_u64) ||
-					   (prop->type == BaseProperty::Tag::t_u8)) {
-					row.set_value (index, (std::uint64_t) *prop);
-				} else {
-					log_debug ("\tNOT HANDLED\n");
+				switch (type) {
+					case ct_colour:
+						row.set_value (index, get_colour_as_pixbuf (size, (std::string) *prop));
+						break;
+					case ct_float:
+						row.set_value (index, (double) *prop);
+						break;
+					case ct_graph:
+						row.set_value (index, (std::uint8_t) *prop);
+						break;
+					case ct_human:
+						log_error ("notimpl human\n");
+						break;
+					case ct_icon:
+						row.set_value (index, theme->get_icon ((std::string) *prop));
+						break;
+					case ct_integer:
+						row.set_value (index, (std::int64_t) *prop);
+						break;
+					case ct_string:
+						row.set_value (index, (std::string) *prop);
+						break;
+					default:
+						log_error ("notimpl\n");
 				}
 			}
 		} else {
@@ -186,6 +201,90 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 		}
 	}
 }
+
+
+ColType
+parse_type (const std::string& type)
+{
+	if ((type == "colour") || (type == "color"))
+		return ct_colour;
+
+	if (type == "float")
+		return ct_float;
+
+	if (type == "graph")
+		return ct_graph;
+
+	if (type == "human")
+		return ct_human;
+
+	if (type == "icon")
+		return ct_icon;
+
+	if (type == "integer")
+		return ct_integer;
+
+	if (type == "string")
+		return ct_string;
+
+	log_error ("Unknown type %s, defaulting to string\n", type.c_str());
+	return ct_string;
+}
+
+Gtk::Align
+parse_alignment (const std::string& align, Gtk::Align def)
+{
+	if ((align == "left") || (align == "start"))
+		return Gtk::Align::ALIGN_START;
+
+	if ((align == "right") || (align == "end"))
+		return Gtk::Align::ALIGN_END;
+
+	if ((align == "middle") || (align == "center") || (align == "centre"))
+		return Gtk::Align::ALIGN_CENTER;
+
+	log_error ("Unknown alignment: %s\n", align.c_str());
+	return def;
+}
+
+int
+parse_precision (const std::string& prec, int def)
+{
+	size_t pos = prec.find_first_not_of ("0123456789");
+	if (pos != std::string::npos) {
+		log_error ("Invalid precision: %s\n", prec.c_str());
+		return def;
+	}
+
+	StringNum s (prec);
+	int val = (int) s;
+	if (val > 10) {
+		log_error ("Invalid precision: %s\n", prec.c_str());
+		return def;
+	}
+
+	return val;
+}
+
+int
+parse_size (const std::string& size, int def)
+{
+	size_t pos = size.find_first_not_of ("0123456789");
+	if (pos != std::string::npos) {
+		log_error ("Invalid size: %s\n", size.c_str());
+		return def;
+	}
+
+	StringNum s (size);
+	int val = (int) s;
+	if (val > 4096) {		// Arbitrary
+		log_error ("Invalid size: %s\n", size.c_str());
+		return def;
+	}
+
+	return val;
+}
+
 
 void
 TreeView::init_treeview (GfxContainerPtr& gfx)
@@ -239,34 +338,66 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 		//log_debug ("\t%s = ", i.c_str());
 		col = Gtk::manage (new Gtk::TreeView::Column (title));
 
+		Gtk::TreeModelColumn<int>* tmc = nullptr;
+		Gtk::CellRendererProgress* cell = nullptr;
 		for (auto j : multi) {
+			int index = -1;
+			int type = ct_string;
+			float align = 0;
+			int precision = 3;
+			int size = 0;
+
 			key = name + "." + j;
-			std::string t = "string";
-			try {
-				t = theme->get_config (key, "", "type", false);
-				//log_debug ("(%s) ", t.c_str());
-				if ((t == "float") || (t == "integer") || (t == "string")) {
-					add_column<std::string> (col_rec, col);
-				} else if (t == "icon") {
-					add_column<Glib::RefPtr<Gdk::Pixbuf>> (col_rec, col);
-				} else if (t == "graph") {
-					Gtk::TreeModelColumn<int>* tmc = new Gtk::TreeModelColumn<int>;
+			type  = parse_type (theme->get_config (key, "", "type", false));
+			switch (type) {
+				case ct_colour:
+					index     = add_column<Glib::RefPtr<Gdk::Pixbuf>> (col_rec, col);
+					size      = parse_size (theme->get_config (key, "", "size", false), 16);
+					break;
+
+				case ct_float:
+					index     = add_column<double> (col_rec, col);
+					align     = parse_alignment (theme->get_config (key, "", "align",     false), Gtk::Align::ALIGN_END);
+					precision = parse_precision (theme->get_config (key, "", "precision", false), 3);
+					size      = parse_size (theme->get_config (key, "", "size", false), 0);
+					break;
+
+				case ct_graph:
+					tmc = new Gtk::TreeModelColumn<int>;
+					cell = Gtk::manage(new Gtk::CellRendererProgress);
 					mod_cols.push_back (ModColPtr (tmc));
 					col_rec.add (*tmc);
-
-					Gtk::CellRendererProgress* cell = Gtk::manage(new Gtk::CellRendererProgress);
 					col->pack_start (*cell, false);
 					col->add_attribute(cell->property_value(), *tmc);
-				} else {
-					log_error ("unknown type '%s'\n", t.c_str());
-					add_column<std::string> (col_rec, col);
-				}
-			} catch (...) {
-				log_debug ("NO TYPE\n");
-				add_column<std::string> (col_rec, col);
+
+					index     = (col_rec.size()-1);
+					size      = parse_size (theme->get_config (key, "", "size", false), 0);
+					break;
+
+				case ct_icon:
+					index     = add_column<Glib::RefPtr<Gdk::Pixbuf>> (col_rec, col);
+					size      = parse_size (theme->get_config (key, "", "size", false), 16);
+					break;
+
+				case ct_integer:
+					index     = add_column<std::int64_t> (col_rec, col);
+					align     = parse_alignment (theme->get_config (key, "", "align",     false), Gtk::Align::ALIGN_END);
+					size      = parse_size (theme->get_config (key, "", "size", false), 0);
+					break;
+
+				case ct_human:		// For now
+				default:
+					log_error ("unknown type '%d'\n", type);
+
+				case ct_string:
+					index     = add_column<std::string> (col_rec, col);
+					align     = parse_alignment (theme->get_config (key, "", "align", false), Gtk::Align::ALIGN_START);
+					size      = parse_size (theme->get_config (key, "", "size", false), 0);
+					break;
 			}
+
 			//log_debug ("%u\n", col_rec.size()-1);
-			col_list[j] = std::make_tuple (col_rec.size()-1, t);
+			col_list[j] = std::make_tuple (index, type, align, precision, size);
 		}
 		append_column (*col);
 		//log_debug ("\n");
