@@ -113,8 +113,6 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 	Gtk::TreeModel::Row row;
 
 	for (auto x : gfx->children) {
-		std::string type = x->type;
-
 		bool display = false;
 
 		if (x->treeview == "always")
