@@ -48,6 +48,17 @@ protected:
 	void dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size);
 };
 
+// Simple wrapper
+template<class T>
+void run_hex (std::shared_ptr<T>& top)
+{
+	ContainerPtr c (top);
+	if (!c)
+		return;
+
+	HexVisitor hv;
+	c->accept (hv);
+}
 
 #endif // _HEX_VISITOR_H_
 

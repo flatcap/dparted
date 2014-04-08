@@ -42,6 +42,18 @@ protected:
 	int indent = -1;
 };
 
+// Simple wrapper
+template<class T>
+void run_prop (std::shared_ptr<T>& top)
+{
+	ContainerPtr c (top);
+	if (!c)
+		return;
+
+	PropVisitor pv;
+	c->accept (pv);
+	pv.list();
+}
 
 #endif // _PROP_VISITOR_H_
 
