@@ -46,18 +46,18 @@ TextApp::~TextApp()
 
 void usage (void)
 {
-	std::log_info ("Usage: dparted [options] [device]\n");
+	log_info ("Usage: dparted [options] [device]\n");
 #ifdef DP_DOT
-	std::log_info ("\t-d dotty\n");
+	log_info ("\t-d dotty\n");
 #endif
 #ifdef DP_HEX
-	std::log_info ("\t-h hex dump\n");
+	log_info ("\t-h hex dump\n");
 #endif
 #ifdef DP_LIST
-	std::log_info ("\t-l list\n");
+	log_info ("\t-l list\n");
 #endif
 #ifdef DP_PROP
-	std::log_info ("\t-p properties\n");
+	log_info ("\t-p properties\n");
 #endif
 }
 
