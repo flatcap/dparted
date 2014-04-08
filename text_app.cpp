@@ -16,16 +16,22 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#include <cstring>
 
 #include "text_app.h"
-#include "log_trace.h"
 #ifdef DP_LIST
 #include "list_visitor.h"
 #endif
 #ifdef DP_DOT
 #include "dot_visitor.h"
 #endif
+#ifdef DP_PROP
+#include "prop_visitor.h"
+#endif
+#ifdef DP_HEX
+#include "hex_visitor.h"
+#endif
+#include "log_trace.h"
 
 TextAppPtr text_app;
 
@@ -38,27 +44,91 @@ TextApp::~TextApp()
 }
 
 
+void usage (void)
+{
+	std::log_info ("Usage: dparted [options] [device]\n");
+#ifdef DP_DOT
+	std::log_info ("\t-d dotty\n");
+#endif
+#ifdef DP_HEX
+	std::log_info ("\t-h hex dump\n");
+#endif
+#ifdef DP_LIST
+	std::log_info ("\t-l list\n");
+#endif
+#ifdef DP_PROP
+	std::log_info ("\t-p properties\n");
+#endif
+}
+
 int
 TextApp::run (int argc, char **argv)
 {
+#ifdef DP_DOT
+	bool dot  = false;
+#endif
+#ifdef DP_HEX
+	bool hex  = false;
+#endif
+#ifdef DP_LIST
+	bool list = false;
+#endif
+#ifdef DP_PROP
+	bool prop = false;
+#endif
+	bool error = false;
+
 	std::vector<std::string> disks;			// Mop up any remaining args
 	for (; argc > 1; --argc, ++argv) {
-		//disks.push_back (argv[1]);
+		if (argv[1][0] == '-') {
+			int len  = strlen (argv[1]);
+			if (len == 1) {
+				log_error ("no option given\n");
+				error = true;
+				continue;
+			}
+			for (int i = 1; i < len; ++i) {
+				switch (argv[1][i]) {
+#ifdef DP_DOT
+					case 'd': dot  = true; break;
+#endif
+#ifdef DP_HEX
+					case 'h': hex  = true; break;
+#endif
+#ifdef DP_LIST
+					case 'l': list = true; break;
+#endif
+#ifdef DP_PROP
+					case 'p': prop = true; break;
+#endif
+					default:
+						log_error ("Unknown option: -%c\n", argv[1][i]);
+						error = true;
+				}
+			}
+			continue;
+		}
+		disks.push_back (argv[1]);
+	}
+
+	if (error) {
+		usage();
+		exit(1);
 	}
 
 	top_level = main_app->scan (disks);
 
-#ifdef DP_LIST
-	ListVisitor lv;
-	top_level->accept (lv);
-	lv.list();
-#endif
-
 #ifdef DP_DOT
-	DotVisitor dv;
-	dv.resize = 60;
-	top_level->accept (dv);
-	dv.run_dotty();
+	if (dot) run_dotty (top_level);
+#endif
+#ifdef DP_HEX
+	if (hex) run_hex (top_level);
+#endif
+#ifdef DP_LIST
+	if (list) run_list (top_level);
+#endif
+#ifdef DP_PROP
+	if (prop) run_prop (top_level);
 #endif
 
 #if 0
