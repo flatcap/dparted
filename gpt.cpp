@@ -252,7 +252,8 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	std::uint64_t sect_offset = (g->bytes_size - res2->bytes_size) / 512;
 	delete_region (empty, sect_offset, sect_offset+32);
 
-	buffer += 1024;	//bufsize -= 1024; for range checking
+	buffer += 1024;
+	bufsize -= 1024;	// for range checking
 
 	std::string device = g->get_device_name();
 
@@ -277,7 +278,18 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 		p->parent_offset = start * 512;
 		p->bytes_size = (finish - start + 1) * 512;
-		p->name = get_fixed_str (buffer+56, 72);
+#if 0
+		p->name = get_fixed_str (buffer+56, 72);		// utf-16?
+#else
+		if (buffer[56]) {
+			p->name.clear();
+			for (int j = 0; j < 32; j += 2) {
+				if (buffer[56+j] == 0)
+					break;
+				p->name += buffer[56+j];
+			}
+		}
+#endif
 
 #if 0
 		std::string s = get_size (p->bytes_size);
