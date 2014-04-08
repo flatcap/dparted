@@ -40,7 +40,7 @@ PropVisitor::visit_enter (ContainerPtr& UNUSED(c))
 bool
 PropVisitor::visit_leave (void)
 {
-	indent--;
+	--indent;
 	return true;
 }
 

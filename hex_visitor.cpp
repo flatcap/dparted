@@ -42,7 +42,7 @@ HexVisitor::visit_enter (ContainerPtr& UNUSED(c))
 bool
 HexVisitor::visit_leave (void)
 {
-	indent--;
+	--indent;
 	return true;
 }
 

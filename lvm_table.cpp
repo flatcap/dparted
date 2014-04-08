@@ -216,7 +216,7 @@ format_config (std::string& config)
 				indent = indent.substr(1);
 				if (config[first-1] == '\t') {
 					config.erase (first-1, 1);
-					first--;
+					--first;
 				}
 				break;
 			case '\n':

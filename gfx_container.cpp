@@ -277,7 +277,7 @@ GfxContainer::dump2 (void)
 	for (auto c : children) {
 		c->dump();
 	}
-	indent--;
+	--indent;
 }
 
 

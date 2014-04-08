@@ -226,7 +226,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	}
 
 	std::vector<std::string> disks;			// Mop up any remaining args
-	for (; argc > 1; argc--, ++argv) {
+	for (; argc > 1; --argc, ++argv) {
 		disks.push_back (argv[1]);
 	}
 
