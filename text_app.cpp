@@ -51,13 +51,14 @@ void usage (void)
 	log_info ("\t-?  help\n");
 #ifdef DP_DOT
 	log_info ("\t-d  dotty\n");
-	log_info ("\t\t--dot-resize NUM  Percentage scale of display\n");
-	log_info ("\t\t--dot-separate    Separate graphviz diagrams\n");
-	log_info ("\t\t--dot-save-gv     Save graphviz diagrams\n");
-	log_info ("\t\t--dot-save-png    Save png images\n");
+	log_info ("\t\t--dot-resize NUM      Percentage scale of display\n");
+	log_info ("\t\t--dot-separate        Separate graphviz diagrams\n");
+	log_info ("\t\t--dot-save-gv         Save graphviz diagrams\n");
+	log_info ("\t\t--dot-save-png        Save png images\n");
 #endif
 #ifdef DP_HEX
 	log_info ("\t-h  hex dump\n");
+	log_info ("\t\t--hex-abbreviate NUM  Show leading/trailing bytes\n");
 #endif
 #ifdef DP_LIST
 	log_info ("\t-l  list\n");
@@ -78,7 +79,8 @@ TextApp::run (int argc, char **argv)
 	bool dot_save_png = false;
 #endif
 #ifdef DP_HEX
-	bool hex  = false;
+	bool hex            = false;
+	int  hex_abbreviate = 256;
 #endif
 #ifdef DP_LIST
 	bool list = false;
@@ -100,6 +102,18 @@ TextApp::run (int argc, char **argv)
 			for (int i = 1; i < len; ++i) {
 				if (strncmp (argv[1], "--", 2) == 0) {
 					if (false) {
+#ifdef DP_HEX
+					} else if (strcmp (argv[1], "--hex-abbreviate") == 0) {
+						if (argc < 3) {
+							log_error ("No argument for --hex-abbreviate\n");
+							error = true;
+							break;
+						}
+						StringNum s (argv[2]);
+						hex_abbreviate = (int) s;
+						--argc;
+						++argv;
+#endif
 #ifdef DP_DOT
 					} else if (strcmp (argv[1], "--dot-resize") == 0) {
 						if (argc < 3) {
@@ -180,7 +194,11 @@ TextApp::run (int argc, char **argv)
 	}
 #endif
 #ifdef DP_HEX
-	if (hex) run_hex (top_level);
+	if (hex) {
+		HexVisitor hv;
+		hv.abbreviate = hex_abbreviate;
+		top_level->accept (hv);
+	}
 #endif
 #ifdef DP_LIST
 	if (list) run_list (top_level);
