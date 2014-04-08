@@ -38,19 +38,6 @@
 #include "log.h"
 #include "log_trace.h"
 #include "option_group.h"
-
-#ifdef DP_DOT
-#include "dot_visitor.h"
-#endif
-#ifdef DP_HEX
-#include "hex_visitor.h"
-#endif
-#ifdef DP_LIST
-#include "list_visitor.h"
-#endif
-#ifdef DP_PROP
-#include "prop_visitor.h"
-#endif
 #include "utils.h"
 
 GuiAppPtr gui_app;
@@ -226,169 +213,46 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	}
 
 	std::vector<std::string> disks;			// Mop up any remaining args
-	for (; argc > 1; argc--, ++argv) {
+	for (; argc > 1; --argc, ++argv) {
 		disks.push_back (argv[1]);
-	}
-
-#if 0
-	log_debug ("values: \n");
-	log_debug ("\tapp          = %s\n", group.app);
-	log_debug ("\thex          = %s\n", group.hex);
-	log_debug ("\tlist         = %s\n", group.list);
-	log_debug ("\tproperties   = %s\n", group.properties);
-	log_debug ("\tquit         = %s\n", group.quit);
-	log_debug ("\tx            = %s\n", group.x);
-	log_debug ("\ty            = %s\n", group.y);
-	log_debug ("\tw            = %s\n", group.w);
-	log_debug ("\th            = %s\n", group.h);
-#ifdef DP_DOT
-	log_debug ("\tdot-display  = %s\n", group.dot_display);
-	log_debug ("\tdot-resize   = %s\n", group.dot_resize);
-	log_debug ("\tdot-separate = %s\n", group.dot_separate);
-	log_debug ("\tdot-save_gv  = %s\n", group.dot_save_gv);
-	log_debug ("\tdot-save_png = %s\n", group.dot_save_png);
-#endif
-#endif
-
-	if (!group.app &&
-#ifdef DP_LIST
-	    !group.list &&
-#endif
-#ifdef DP_PROP
-	    !group.properties &&
-#endif
-#ifdef DP_DOT
-	    !group.dot_display &&
-	    !group.dot_save_gv &&
-	    !group.dot_save_png &&
-#endif
-#ifdef DP_HEX
-	    !group.hex &&
-#endif
-	    !group.quit) {
-		group.app = true;
-	}
-
-	if (!group.app) {
-		if (group.theme.size())
-			log_debug ("theme without app\n");
-
-		if ((group.x != -1) || (group.y != -1) || (group.w != -1) || (group.h != -1))
-			log_debug ("coords without app\n");
 	}
 
 	bool running = !!window;
 
-	if (running && group.quit) {
-		//XXX need to ASK the window to close => WindowPtr
-		delete window;
-		window = nullptr;
-		running = false;
-	}
-
-	if (group.app) {
-		create_window();
-
-		if (group.config.size()) {
-			log_debug ("config:\n");
-			for (auto c : group.config) {
-				log_debug ("\t%s\n", c.c_str());
-				window->load_config (c);
-			}
-		}
-
-		//XXX temporaray defaults
-		gui_app->set_config ("config/dparted.conf");
-
-		//XXX temporaray defaults
-		gui_app->set_theme  ("config/theme.conf");
-
-		if (group.theme.size()) {
-			log_debug ("theme:\n");
-			for (auto t : group.theme) {
-				log_debug ("\t%s\n", t.c_str());
-				window->load_theme (t);
-			}
-		}
-
-		if ((group.x > -1) || (group.y > -1) || (group.w > -1) || (group.h > -1)) {
-			window->set_geometry (group.x, group.y, group.w, group.h);
-		}
-	}
-
-	ContainerPtr top_level;
-
-	if (disks.size()) {
-		log_debug ("scan only: ");
-		for (auto d : disks) {
-			log_debug ("\"%s\" ", d.c_str());
-			if (window) {
-				window->load_disk (d);
-			}
-		}
-		log_debug ("\n");
-		top_level = main_app->scan (disks);
-	} else {
+	if (group.quit) {
 		if (running) {
-			top_level = main_app->get_top_level();	// Default to what's there
-		} else {
-			//log_debug ("scan all disks\n");
-			//Glib::signal_idle().connect (sigc::mem_fun (*this, &GuiApp::my_idle));
-			top_level = main_app->scan (disks);
+			//XXX need to ASK the window to close => WindowPtr
+			delete window;
+			window = nullptr;
+			running = false;
+		}
+		return EXIT_SUCCESS;
+	}
+
+	create_window();
+
+	if (group.config.size()) {
+		log_debug ("config:\n");
+		for (auto c : group.config) {
+			log_debug ("\t%s\n", c.c_str());
+			window->load_config (c);
 		}
 	}
 
-#ifdef DP_LIST
-	if (group.list && top_level) {
-		log_debug ("------------------------------------------------------------\n");
-		ListVisitor lv;
-		top_level->accept (lv);
-		lv.list();
-		log_debug ("------------------------------------------------------------\n");
-	}
-#endif
-#ifdef DP_PROP
-	if (group.properties && top_level) {
-		log_info ("------------------------------------------------------------\n");
-		PropVisitor pv;
-		top_level->accept (pv);
-		pv.list();
-		log_info ("------------------------------------------------------------\n");
-	}
-#endif
-#ifdef DP_HEX
-	if (group.hex && top_level) {
-		log_info ("------------------------------------------------------------\n");
-		HexVisitor hv;
-		top_level->accept (hv);
-		log_info ("------------------------------------------------------------\n");
-	}
-#endif
-#ifdef DP_DOT
-	if ((group.dot_display || group.dot_save_gv || group.dot_save_png) && top_level) {
-		if (group.dot_separate) {
-			for (auto c : top_level->get_children()) {
-				DotVisitor dv;
-				dv.display  = group.dot_display;
-				dv.resize   = group.dot_resize;
-				dv.save_gv  = group.dot_save_gv;
-				dv.save_png = group.dot_save_png;
-				c->accept (dv);
-				dv.run_dotty();
-			}
-		} else {
-			DotVisitor dv;
-			dv.display  = group.dot_display;
-			dv.resize   = group.dot_resize;
-			dv.save_gv  = group.dot_save_gv;
-			dv.save_png = group.dot_save_png;
-			for (auto c : top_level->get_children()) {
-				c->accept (dv);
-			}
-			dv.run_dotty();
+	gui_app->set_config ("config/dparted.conf");	//XXX temporaray defaults
+	gui_app->set_theme  ("config/theme.conf");	//XXX temporaray defaults
+
+	if (group.theme.size()) {
+		log_debug ("theme:\n");
+		for (auto t : group.theme) {
+			log_debug ("\t%s\n", t.c_str());
+			window->load_theme (t);
 		}
 	}
-#endif
+
+	if ((group.x > -1) || (group.y > -1) || (group.w > -1) || (group.h > -1)) {
+		window->set_geometry (group.x, group.y, group.w, group.h);
+	}
 
 	show_window();
 

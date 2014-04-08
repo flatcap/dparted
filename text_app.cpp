@@ -16,16 +16,23 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#include <cstring>
 
 #include "text_app.h"
-#include "log_trace.h"
 #ifdef DP_LIST
 #include "list_visitor.h"
 #endif
 #ifdef DP_DOT
 #include "dot_visitor.h"
 #endif
+#ifdef DP_PROP
+#include "prop_visitor.h"
+#endif
+#ifdef DP_HEX
+#include "hex_visitor.h"
+#endif
+#include "log_trace.h"
+#include "stringnum.h"
 
 TextAppPtr text_app;
 
@@ -38,27 +45,166 @@ TextApp::~TextApp()
 }
 
 
+void usage (void)
+{
+	log_info ("Usage: dparted [options] [device]\n");
+	log_info ("\t-?  help\n");
+#ifdef DP_DOT
+	log_info ("\t-d  dotty\n");
+	log_info ("\t\t--dot-resize NUM      Percentage scale of display\n");
+	log_info ("\t\t--dot-separate        Separate graphviz diagrams\n");
+	log_info ("\t\t--dot-save-gv         Save graphviz diagrams\n");
+	log_info ("\t\t--dot-save-png        Save png images\n");
+#endif
+#ifdef DP_HEX
+	log_info ("\t-h  hex dump\n");
+	log_info ("\t\t--hex-abbreviate NUM  Show leading/trailing bytes\n");
+#endif
+#ifdef DP_LIST
+	log_info ("\t-l  list\n");
+#endif
+#ifdef DP_PROP
+	log_info ("\t-p  properties\n");
+#endif
+}
+
 int
 TextApp::run (int argc, char **argv)
 {
+#ifdef DP_DOT
+	bool dot          = false;
+	int  dot_resize   = 100;
+	bool dot_separate = false;
+	bool dot_save_gv  = false;
+	bool dot_save_png = false;
+#endif
+#ifdef DP_HEX
+	bool hex            = false;
+	int  hex_abbreviate = 256;
+#endif
+#ifdef DP_LIST
+	bool list = false;
+#endif
+#ifdef DP_PROP
+	bool prop = false;
+#endif
+	bool error = false;
+
 	std::vector<std::string> disks;			// Mop up any remaining args
-	for (; argc > 1; argc--, ++argv) {
-		//disks.push_back (argv[1]);
+	for (; argc > 1; --argc, ++argv) {
+		if (argv[1][0] == '-') {
+			int len = strlen (argv[1]);
+			if (len == 1) {
+				log_error ("no option given\n");
+				error = true;
+				continue;
+			}
+			for (int i = 1; i < len; ++i) {
+				if (strncmp (argv[1], "--", 2) == 0) {
+					if (false) {
+#ifdef DP_HEX
+					} else if (strcmp (argv[1], "--hex-abbreviate") == 0) {
+						if (argc < 3) {
+							log_error ("No argument for --hex-abbreviate\n");
+							error = true;
+							break;
+						}
+						StringNum s (argv[2]);
+						hex_abbreviate = (int) s;
+						--argc;
+						++argv;
+#endif
+#ifdef DP_DOT
+					} else if (strcmp (argv[1], "--dot-resize") == 0) {
+						if (argc < 3) {
+							log_error ("No argument for --dot-resize\n");
+							error = true;
+							break;
+						}
+						StringNum s (argv[2]);
+						dot_resize = (int) s;
+						--argc;
+						++argv;
+					} else if (strcmp (argv[1], "--dot-separate") == 0) {
+						dot_separate = true;
+					} else if (strcmp (argv[1], "--dot-save-gv") == 0) {
+						dot_save_gv = true;
+					} else if (strcmp (argv[1], "--dot-save-png") == 0) {
+						dot_save_png = true;
+#endif
+					} else {
+						log_error ("Unknown option %s\n", argv[1]);
+						error = true;
+					}
+					break;
+				}
+
+				switch (argv[1][i]) {
+					case '?': error = true; break;
+#ifdef DP_DOT
+					case 'd': dot   = true; break;
+#endif
+#ifdef DP_HEX
+					case 'h': hex   = true; break;
+#endif
+#ifdef DP_LIST
+					case 'l': list  = true; break;
+#endif
+#ifdef DP_PROP
+					case 'p': prop  = true; break;
+#endif
+					default:
+						log_error ("Unknown option: -%c\n", argv[1][i]);
+						error = true;
+				}
+			}
+			continue;
+		}
+		disks.push_back (argv[1]);
+	}
+
+	if (error) {
+		usage();
+		exit(1);
 	}
 
 	top_level = main_app->scan (disks);
 
-#ifdef DP_LIST
-	ListVisitor lv;
-	top_level->accept (lv);
-	lv.list();
-#endif
-
 #ifdef DP_DOT
-	DotVisitor dv;
-	dv.resize = 60;
-	top_level->accept (dv);
-	dv.run_dotty();
+	if (dot) {
+		if (dot_separate) {
+			for (auto c : top_level->get_children()) {
+				DotVisitor dv;
+				dv.display  = !(dot_save_gv || dot_save_png);
+				dv.resize   = dot_resize;
+				dv.save_gv  = dot_save_gv;
+				dv.save_png = dot_save_png;
+				c->accept (dv);
+				dv.run_dotty();
+			}
+		} else {
+			DotVisitor dv;
+			dv.display  = !(dot_save_gv || dot_save_png);
+			dv.resize   = dot_resize;
+			dv.save_gv  = dot_save_gv;
+			dv.save_png = dot_save_png;
+			top_level->accept (dv);
+			dv.run_dotty();
+		}
+	}
+#endif
+#ifdef DP_HEX
+	if (hex) {
+		HexVisitor hv;
+		hv.abbreviate = hex_abbreviate;
+		top_level->accept (hv);
+	}
+#endif
+#ifdef DP_LIST
+	if (list) run_list (top_level);
+#endif
+#ifdef DP_PROP
+	if (prop) run_prop (top_level);
 #endif
 
 #if 0

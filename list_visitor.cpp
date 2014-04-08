@@ -41,7 +41,7 @@ ListVisitor::visit_enter (ContainerPtr& UNUSED(c))
 bool
 ListVisitor::visit_leave (void)
 {
-	indent--;
+	--indent;
 	return true;
 }
 

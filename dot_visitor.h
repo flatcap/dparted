@@ -72,6 +72,19 @@ protected:
 	std::stringstream dot_links;
 };
 
+// Simple wrapper
+template<class T>
+void run_dotty (std::shared_ptr<T>& top)
+{
+	ContainerPtr c (top);
+	if (!c)
+		return;
+
+	DotVisitor dv;
+	dv.resize = 60;
+	c->accept (dv);
+	dv.run_dotty();
+}
 
 #endif // _DOT_VISITOR_H_
 

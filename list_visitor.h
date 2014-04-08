@@ -42,6 +42,18 @@ protected:
 	int indent = -1;
 };
 
+// Simple wrapper
+template<class T>
+void run_list (std::shared_ptr<T>& top)
+{
+	ContainerPtr c (top);
+	if (!c)
+		return;
+
+	ListVisitor lv;
+	c->accept (lv);
+	lv.list();
+}
 
 #endif // _LIST_VISITOR_H_
 
