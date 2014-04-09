@@ -751,7 +751,7 @@ Container::get_mmap_addr (void)
 	std::stringstream addr;
 
 	if (device_mmap) {
-		addr << "0x" << (void*) device_mmap->second;
+		addr << (void*) device_mmap->second;
 	}
 
 	return addr.str();
@@ -784,7 +784,7 @@ Container::get_object_addr (void)
 
 	ContainerPtr c = self.lock();
 	if (c) {
-		addr << "0x" << (void*) c.get();
+		addr << (void*) c.get();
 	}
 
 	return addr.str();
