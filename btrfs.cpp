@@ -224,8 +224,8 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
 	//log_debug ("Props:\n");
 	for (auto i : info) {
-		std::string key   = i.first;
-		std::string desc  = make_desc (key);
+		std::string key   = "btrfs." + i.first;
+		std::string desc  = make_desc (i.first);
 		std::string value = i.second;
 		//log_debug ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
 

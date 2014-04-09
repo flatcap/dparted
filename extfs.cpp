@@ -136,7 +136,7 @@ make_key (std::string desc)
 
 	} while (pos != std::string::npos);
 
-	return "extfs_" + desc;
+	return "extfs." + desc;
 }
 
 std::map<std::string,std::string>

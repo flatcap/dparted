@@ -156,7 +156,7 @@ make_key (std::string desc)
 
 	} while (pos != std::string::npos);
 
-	return "ntfs_" + desc;
+	return "ntfs." + desc;
 }
 
 
