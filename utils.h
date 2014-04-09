@@ -26,9 +26,11 @@
 #include "stringnum.h"
 
 std::uint64_t            align (std::uint64_t num, std::uint64_t round);
+void                     delete_region (std::vector<std::pair<std::uint64_t,std::uint64_t>>& region, std::uint64_t start, std::uint64_t size);
 std::string              demangle (const char* symbol);
 void                     dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length);
 void                     dump_hex (std::uint8_t* buffer, std::uint64_t bufsize);
+void                     dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::uint64_t>>& region);
 unsigned int             execute_command1 (const std::string& command, std::vector<std::string>& output);
 unsigned int             execute_command2 (const std::string& command, std::string& input);
 unsigned int             execute_command3 (const std::string& command, std::string& output);
@@ -47,4 +49,5 @@ std::string              read_uuid3 (std::uint8_t* buffer);
 std::string              shorten_device (const std::string& device);
 
 #endif // _UTILS_H_
+
 

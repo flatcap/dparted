@@ -145,49 +145,6 @@ read_guid (std::uint8_t* buffer)
 	return ss.str();
 }
 
-void
-delete_region (std::vector<std::pair<int,int>>& region, int start, int finish)
-{
-	// log_debug ("delete: (%d,%d): ", start, finish);
-	for (auto it = std::begin (region); it != std::end (region); ++it) {
-		if (finish < (*it).first)
-			continue;
-
-		if (start > (*it).second)
-			continue;
-
-		/* xxxx = Delete, <--> = Remainder
-		 * 1 |xxxxxxxxxxx|	 s &  f		delete entire region
-		 * 2 |xxx<------>|	 s & !f		move start
-		 * 3 |<------>xxx|	!s &  f		move end
-		 * 4 |<-->xxx<-->|	!s & !f		split region
-		 */
-		if (start == (*it).first) {
-			if (finish == (*it).second) {		//1
-				// log_debug ("1\n");
-				region.erase (it);
-				break;
-			} else {				//2
-				// log_debug ("2\n");
-				(*it).first = finish;
-				break;
-			}
-		} else {
-			if (finish == (*it).second) {		//3
-				// log_debug ("3\n");
-				(*it).second = start;
-				break;
-			} else {				//4
-				// log_debug ("4\n");
-				int end = (*it).second;
-				(*it).second = start;
-				region.insert (it+1, { finish, end });
-				break;
-			}
-		}
-	}
-}
-
 bool
 Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
@@ -214,7 +171,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	GptPtr g = create();
 
-	std::vector<std::pair<int,int>> empty = { { 0, (parent->bytes_size/512)-1 } };
+	std::vector<std::pair<std::uint64_t,std::uint64_t>> empty = { { 0, (parent->bytes_size/512)-1 } };
 
 	g->bytes_size = parent->bytes_size;
 	g->bytes_used = 0;
@@ -249,7 +206,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	delete_region (empty, 0, 34);
 
 	std::uint64_t sect_offset = (g->bytes_size - res2->bytes_size) / 512;
-	delete_region (empty, sect_offset-1, sect_offset+33);
+	delete_region (empty, sect_offset, 33);
 
 	buffer += 1024;
 	bufsize -= 1024;	// for range checking
@@ -273,7 +230,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 		//log_debug ("%2d: %9ld -%9ld  %10ld  %ld\n", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
 
-		delete_region (empty, start-1, finish+1);
+		delete_region (empty, start, finish-start+1);
 
 		p->parent_offset = start * 512;
 		p->bytes_size = (finish - start + 1) * 512;
@@ -302,8 +259,6 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	for (auto r : empty) {
-		//log_debug ("(%d,%d) ", r.first, r.second);
-
 		PartitionPtr p = Partition::create();
 		p->bytes_size = (r.second-r.first+1);	p->bytes_size    *= 512;	//XXX two parts to avoid overflow
 		p->parent_offset = r.first;		p->parent_offset *= 512;
@@ -319,11 +274,6 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		g->add_child(p);		// change to add_reserved?
 	}
 	//log_debug ("\n");
-
-
-#if 0
-	g->fill_space();		// optional
-#endif
 
 	return true;
 }
