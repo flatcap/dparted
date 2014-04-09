@@ -81,10 +81,10 @@ demangle (const char* symbol)
 }
 
 void
-dump_hex (std::uint8_t* buffer, int bufsize)
+dump_hex (std::uint8_t* buffer, std::uint64_t bufsize)
 {
-	for (int i = 0; i < bufsize; i += 16) {
-		log_debug ("%06x  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
+	for (std::uint64_t i = 0; i < bufsize; i += 16) {
+		log_debug ("%06lx  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
 			i,
 			buffer[i +  0], buffer[i +  1], buffer[i +  2], buffer[i +  3], buffer[i +  4], buffer[i +  5], buffer[i +  6], buffer[i +  7],
 			buffer[i +  8], buffer[i +  9], buffer[i + 10], buffer[i + 11], buffer[i + 12], buffer[i + 13], buffer[i + 14], buffer[i + 15]);
@@ -92,14 +92,14 @@ dump_hex (std::uint8_t* buffer, int bufsize)
 }
 
 void
-dump_hex2 (void* buf, int start, int length)
+dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 {
-	int off, i, s, e;
+	std::uint64_t off, i, s, e;
 	std::uint8_t* mem = (std::uint8_t*) buf;
 
 #if 1
 	std::uint8_t last[16];
-	int same = 0;
+	bool same = false;
 #endif
 	s =  start                & ~15;	// round down
 	e = (start + length + 15) & ~15;	// round up
@@ -110,19 +110,19 @@ dump_hex2 (void* buf, int start, int length)
 			((off + 16) < e) && (off > s)) {
 			if (!same) {
 				log_info ("	        ...\n");
-				same = 1;
+				same = true;
 			}
 			continue;
 		} else {
-			same = 0;
+			same = false;
 			memcpy (last, (char*) buf+off, sizeof (last));
 		}
 #endif
 
 		if (off == s) {
-			log_info ("	%6.6x ", start);
+			log_info ("	%6.6lx ", start);
 		} else {
-			log_info ("	%6.6x ", off);
+			log_info ("	%6.6lx ", off);
 		}
 
 		for (i = 0; i < 16; ++i) {

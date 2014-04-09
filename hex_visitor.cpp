@@ -59,7 +59,7 @@ HexVisitor::visit (ContainerPtr c)
 		return true;
 
 	std::uint8_t* buf = nullptr;
-	int bufsize = c->bytes_size;
+	std::uint64_t bufsize = c->bytes_size;
 
 	buf = c->get_buffer (0, bufsize);
 	dump (c, buf, bufsize);
@@ -78,7 +78,7 @@ HexVisitor::visit (ExtendedPtr c)
 
 	// An Extended has size, but the device is limited to 1KiB
 	std::uint8_t* buf = nullptr;
-	int bufsize = 0;
+	std::uint64_t bufsize = 0;
 	ContainerPtr parent;
 
 	parent = c->parent.lock();
@@ -107,7 +107,7 @@ HexVisitor::visit (LvmGroupPtr c)
 
 	// An LvmGroup has segments, but no device
 	std::uint8_t* buf = nullptr;
-	int bufsize = 0;
+	std::uint64_t bufsize = 0;
 
 	//XXX offsets should be cumulative across the segments
 	for (auto i : c->segments) {

@@ -27,8 +27,8 @@
 
 std::uint64_t            align (std::uint64_t num, std::uint64_t round);
 std::string              demangle (const char* symbol);
-void                     dump_hex2 (void* buf, int start, int length);
-void                     dump_hex (std::uint8_t* buffer, int bufsize);
+void                     dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length);
+void                     dump_hex (std::uint8_t* buffer, std::uint64_t bufsize);
 unsigned int             execute_command1 (const std::string& command, std::vector<std::string>& output);
 unsigned int             execute_command2 (const std::string& command, std::string& input);
 unsigned int             execute_command3 (const std::string& command, std::string& output);

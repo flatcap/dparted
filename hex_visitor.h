@@ -40,7 +40,7 @@ public:
 	virtual bool visit (LvmGroupPtr  p);
 #endif
 
-	int abbreviate = 256;
+	std::uint64_t abbreviate = 256;
 
 protected:
 	int indent = -1;
