@@ -117,7 +117,7 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	f->uuid = read_uuid3 (buffer+0x1C);
 
-	std::uint64_t sectors = le32_to_cpup (buffer + 0x13);
+	std::uint64_t sectors = le16_to_cpup (buffer + 0x13);
 	if (sectors == 0) {
 		sectors = le32_to_cpup (buffer + 0x20);
 	}
@@ -125,7 +125,6 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	f->bytes_size = sectors * 512;
 
 #if 1
-	// will likely exceed bufsize
 	std::uint32_t reserved   = le16_to_cpup (buffer + 0x0E);
 	std::uint32_t sect_fat   = le16_to_cpup (buffer + 0x16);
 	std::uint32_t sect_clust = buffer[0x0D];
