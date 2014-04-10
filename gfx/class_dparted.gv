@@ -60,6 +60,7 @@ digraph G
 	Reserved       [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Reserved</td><td>&nbsp;</td></tr> </table> > ]
 	Alignment      [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Alignment</td><td>&nbsp;</td></tr> </table> > ]
 	Unallocated    [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Unallocated</td><td>&nbsp;</td></tr> </table> > ]
+	Unreachable    [ color="#B0D0B0" fontcolor=white style=solid penwidth=1 label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Unreachable</td><td>&nbsp;</td></tr> </table> > ]
 
 	Filesystem     [ fillcolor="#B4A0F3"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Filesystem</td><td>&nbsp;</td></tr> </table> > ]
 	Extfs          [ fillcolor="#B4A0F3"                                    label=< <table border="0" cellspacing="0" cellpadding="0"> <tr><td width="70" align="left">Extfs</td><td>&nbsp;</td></tr> </table> > ]
@@ -166,7 +167,7 @@ digraph G
 		Reserved             -> Space;
 		Alignment            -> Space;
 		Unallocated          -> Space;
-
+		Unreachable          -> Space;
 	}
 
 	subgraph cluster_5 {

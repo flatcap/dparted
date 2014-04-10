@@ -80,7 +80,8 @@ get_swap (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	if (!strncmp ((char*) buffer+4086, "SWAPSPACE2", 10)) {
 		block = 4096;
-		size  = le64_to_cpup (buffer + 0x404) * block;
+		size  = le64_to_cpup (buffer + 0x404) * block;	// Number of pages of swap
+		size += 4096;					// Plus the header
 	}
 
 	FilesystemPtr f  = Filesystem::create();

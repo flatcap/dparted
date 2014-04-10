@@ -219,7 +219,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	//log_debug ("%ld, %ld, %ld\n", clust, csize, cfree);
 	if ((clust > 0) && (csize > 0) && (cfree > 0)) {
 		block_size = clust;
-		bytes_size = csize * clust;
+		bytes_size = (csize+1) * clust;		// 1 extra cluster at the end for a backup MFT Header
 		bytes_used = bytes_size - (cfree * clust);
 	} else {
 		//XXX failed to get vital info
