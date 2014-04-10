@@ -19,7 +19,7 @@
 #ifndef _SEVERITY_H_
 #define _SEVERITY_H_
 
-enum Severity {
+enum class Severity {
 	// EMERG   0 system is unusable
 	SystemEmergency = 0 + ( 0 << 3),	// Kernel panic
 

@@ -6,11 +6,13 @@ public:
 	int format (const char* msg)
 	{
 		std::cout << msg << std::endl;
+
+		return 42;
 	}
 };
 
 int
-main (int argc, char *argv[])
+main()
 {
 	Log l (std::cout);
 
