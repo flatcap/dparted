@@ -211,7 +211,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 								case BaseProperty::Tag::t_u64:
 									u = (std::uint64_t) *prop;
 									if (u & (1LL<<63)) {
-										log_error ("value too large\n");
+										log_error ("value too large: %lu\n", u);
 										break;
 									}
 									val = (std::int64_t) u;

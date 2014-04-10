@@ -233,6 +233,13 @@ Container::add_child (ContainerPtr& child)
 	//log_debug ("child: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
 	child->parent = get_smart();
+#if 0
+	log_debug ("%12lu %12lu %12lu %12lu\n",
+		child->parent_offset,
+		child->bytes_size,
+		child->bytes_used,
+		child->get_bytes_free());
+#endif
 }
 
 void
@@ -744,7 +751,7 @@ Container::get_mmap_addr (void)
 	std::stringstream addr;
 
 	if (device_mmap) {
-		addr << "0x" << (void*) device_mmap->second;
+		addr << (void*) device_mmap->second;
 	}
 
 	return addr.str();
@@ -777,7 +784,7 @@ Container::get_object_addr (void)
 
 	ContainerPtr c = self.lock();
 	if (c) {
-		addr << "0x" << (void*) c.get();
+		addr << (void*) c.get();
 	}
 
 	return addr.str();

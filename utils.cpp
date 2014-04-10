@@ -44,6 +44,46 @@ align (std::uint64_t num, std::uint64_t round)
 	return ((num + round - 1) / round * round);
 }
 
+void
+delete_region (std::vector<std::pair<std::uint64_t,std::uint64_t>>& region, std::uint64_t start, std::uint64_t size)
+{
+	std::uint64_t finish = start+size-1;
+
+	for (auto it = std::begin (region); it != std::end (region); ++it) {
+		if (finish < (*it).first)
+			continue;
+
+		if (start > (*it).second)
+			continue;
+
+		/* xxxx = Delete, <--> = Remainder
+		 * 1 |xxxxxxxxxxx|	 s &  f		delete entire region
+		 * 2 |xxx<------>|	 s & !f		move start
+		 * 3 |<------>xxx|	!s &  f		move end
+		 * 4 |<-->xxx<-->|	!s & !f		split region
+		 */
+		if (start == (*it).first) {
+			if (finish == (*it).second) {		//1
+				region.erase (it);
+				break;
+			} else {				//2
+				(*it).first = finish+1;
+				break;
+			}
+		} else {
+			if (finish == (*it).second) {		//3
+				(*it).second = start-1;
+				break;
+			} else {				//4
+				int end = (*it).second;
+				(*it).second = start-1;
+				region.insert (it+1, { finish+1, end });
+				break;
+			}
+		}
+	}
+}
+
 std::string
 demangle (const char* symbol)
 {
@@ -147,6 +187,19 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 		}
 		log_info ("\n");
 	}
+}
+
+void
+dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::uint64_t>>& region)
+{
+	log_debug ("%s\n\t", desc.c_str());
+	if (region.empty()) {
+		log_debug ("empty");
+	}
+	for (auto r : region) {
+		log_debug ("%ld-%ld ", r.first, r.second);
+	}
+	log_debug ("\n");
 }
 
 /**

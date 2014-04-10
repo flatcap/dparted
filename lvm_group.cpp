@@ -179,10 +179,6 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		//log_debug ("OUT: %s\n", line.c_str());
 		parse_tagged_line (line, "\t", tags);
 
-		std::string segtype = tags["LVM2_SEGTYPE"];
-		if (segtype == "free")		//XXX could process this and add it to the VGSeg's empty list
-			continue;
-
 		LvmPartitionPtr p = LvmPartition::create();
 		//log_debug ("new LvmPartition (%p)\n", (void*) p.get());
 
@@ -213,9 +209,15 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		g->add_segment(c);	// Connect the LvmGroup to its constituent LvmTables
 		//XXX deps.insert (std::make_pair (g->uuid,t->uuid));
 
+		std::uint64_t size   = tags["LVM2_PVSEG_SIZE"];
+		std::uint64_t offset = tags["LVM2_PVSEG_START"];
+		size   *= (std::uint64_t) tags["LVM2_VG_EXTENT_SIZE"];
+		offset *= (std::uint64_t) tags["LVM2_VG_EXTENT_SIZE"];
+
 		std::string lv_uuid = tags["LVM2_LV_UUID"];
 		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (find_first_uuid (pieces, lv_uuid));
 		if (!v) {
+			std::string segtype = tags["LVM2_SEGTYPE"];
 			std::string lv_attr = tags["LVM2_LV_ATTR"];
 			if ((lv_attr[0] == 'e') || (lv_attr[0] == 'l')) {
 				//log_info ("not a real volume %s\n", lv_uuid.c_str());
@@ -226,13 +228,21 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			} else if (segtype == "striped") {
 				v = LvmStripe::create();
 			} else if (segtype == "mirror") {
-				v = LvmMirror::create();
+				v = LvmStripe::create();
+			} else if (segtype == "free") {
+				PartitionPtr p = Partition::create();
+				p->sub_type ("Space");
+				p->sub_type ("Unallocated");
+				p->bytes_size = size;
+				p->bytes_used = size;
+				p->parent_offset = offset;
+				t->add_child(p);
+				continue;
 			} else {
 				log_error ("UNKNOWN type %s\n", segtype.c_str());
 				continue;
 			}
-			v->bytes_size =  tags["LVM2_VG_EXTENT_SIZE"];
-			v->bytes_size *= (std::uint64_t) tags["LVM2_PVSEG_SIZE"];
+			v->bytes_size = size;
 
 			//log_debug ("lv uuid = %s\n", lv_uuid.c_str());
 			v->uuid    = lv_uuid;
@@ -259,11 +269,9 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		//t->bytes_size	= tags["LVM2_PV_SIZE"];		//XXX this excludes the Reserved and Space
 
 		// LvmPartition
-		p->parent_offset  = tags["LVM2_PVSEG_START"];
-		p->parent_offset *= p->block_size;
-		p->bytes_size	  = tags["LVM2_PVSEG_SIZE"];
-		p->bytes_size	 *= p->block_size;
-		p->bytes_used     = p->bytes_size;	//XXX for now
+		p->parent_offset  = offset;
+		p->bytes_size	  = size;
+		p->bytes_used     = size;		//XXX for now
 
 		//log_info ("add piece: %s (%s)\n", p->uuid.c_str(), p->name.c_str());
 

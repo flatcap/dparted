@@ -80,7 +80,8 @@ get_swap (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	if (!strncmp ((char*) buffer+4086, "SWAPSPACE2", 10)) {
 		block = 4096;
-		size  = le64_to_cpup (buffer + 0x404) * block;
+		size  = le64_to_cpup (buffer + 0x404) * block;	// Number of pages of swap
+		size += 4096;					// Plus the header
 	}
 
 	FilesystemPtr f  = Filesystem::create();
@@ -117,7 +118,7 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	f->uuid = read_uuid3 (buffer+0x1C);
 
-	std::uint64_t sectors = le32_to_cpup (buffer + 0x13);
+	std::uint64_t sectors = le16_to_cpup (buffer + 0x13);
 	if (sectors == 0) {
 		sectors = le32_to_cpup (buffer + 0x20);
 	}
@@ -125,7 +126,6 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	f->bytes_size = sectors * 512;
 
 #if 1
-	// will likely exceed bufsize
 	std::uint32_t reserved   = le16_to_cpup (buffer + 0x0E);
 	std::uint32_t sect_fat   = le16_to_cpup (buffer + 0x16);
 	std::uint32_t sect_clust = buffer[0x0D];
