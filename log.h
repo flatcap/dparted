@@ -19,27 +19,10 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
-enum class LogLevel {
-/* Logging levels - Determine what gets logged */
-	Debug		= (1 <<  0),	/* x = 42 */
-	Trace		= (1 <<  1),	/* Entering function x() */
-	Quiet		= (1 <<  2),	/* Quietable output */
-	Info		= (1 <<  3),	/* Volume needs defragmenting */
-	Verbose		= (1 <<  4),	/* Forced to continue */
-	Progress	= (1 <<  5),	/* 54% complete */
-	Warning		= (1 <<  6),	/* You should backup before starting */
-	Error		= (1 <<  7),	/* Operation failed, no damage done */
-	Perror		= (1 <<  8),	/* Message : standard error description */
-	Critical	= (1 <<  9),	/* Operation failed,damage may have occurred */
-	Enter		= (1 << 10),	/* Enter a function */
-	Leave		= (1 << 11)	/* Leave a function */
-};
+#include "severity.h"
+#include "log_macro.h"
 
-int log_debug (const char* format, ...) __attribute__ ((format (printf, 1, 2)));
-#define log_info  log_debug
-#define log_error log_debug
-#define log_trace log_debug
-#define log_code  log_debug
+int log_redirect (Severity sev, const char *function, const char *file, int line, ...);
 
 void assertion_failure (const char* file, int line, const char* test, const char* function);
 
