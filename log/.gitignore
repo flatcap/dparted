@@ -1,9 +1,0 @@
-# build products
-/.dep
-/.obj
-/main
-
-# work dirs
-/misc
-/test
-

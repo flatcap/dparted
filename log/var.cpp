@@ -4,8 +4,6 @@
 #include <cstdio>
 #include <vector>
 
-#define LOG(...) log(__LINE__,__VA_ARGS__)
-
 int
 log (int line, ...)
 {
@@ -27,10 +25,18 @@ log (int line, ...)
 	return count;
 }
 
+
+#if 1
+#define LOG(...) log(__LINE__,__VA_ARGS__)
+#else
+__attribute__ ((format (printf, 1, 2))) inline int LOG (const char* format,...) { return 0; }
+#endif
+
+
 int
 main()
 {
-	LOG ("hello %d\n", 42);
+	LOG ("hello %d\n", "world");
 	LOG ("world\n");
 
 	return 0;
