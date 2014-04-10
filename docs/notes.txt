@@ -656,3 +656,27 @@ list of tasks for others
 
 derive own tree components & check lifetime, leakage
 
+gfx output - run, expand, pipe to display
+
+right-click on tree col head
+	hide/show cols
+	show -> list
+
+store tree expanded state in gfx_cont
+
+cols min_size, max_size
+
+auto column type right align nums even if prop type = string
+
+config I18N, title="hello", title_FR="bonjour"
+
+csv output from treeview
+
+ntfs short uuid
+
+treeview config (hide zero/-1 values)
+
+space slack -- unreachable space
+
+drop shield, or make it work
+
