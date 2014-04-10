@@ -9,6 +9,8 @@ Output locations:
 
 Output features:
 	ANSI reset terminal
+		echo -en "\ec" > /dev/pts/1
+		use it in log_init()
 	ANSI colour codes
 	Timestamps
 	Flush output
@@ -31,6 +33,8 @@ Code features
 		or add it if nec (dependent on output type)
 	LogInit();
 		automatic?
+		global
+		per stream
 	LogClose();
 
 Input features
