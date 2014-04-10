@@ -1,0 +1,11 @@
+gitversion.c: .git/HEAD .git/index
+	echo "const char *gitversion = \"$(shell git rev-parse HEAD)\";" > $@
+
+GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always)
+-DVERSION=\"$(GIT_VERSION)\"
+
+# count => always increasing
+count=$(printf %04d $(git rev-list HEAD --count))
+commit=$(git rev-parse --short=7 HEAD)
+echo "B$count.$commit"
+

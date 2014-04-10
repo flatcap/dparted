@@ -27,15 +27,15 @@
 //static unsigned int log_level = ~0;
 static FILE* file = nullptr;
 
-__attribute__ ((format (printf, 1, 2)))
 int
-log_debug (const char* format, ...)
+log_redirect (Severity UNUSED(sev), const char* UNUSED(function), const char* file, int line, ...)
 {
 	if (!file)
 		return 0;
 
 	va_list args;
-	va_start (args, format);
+	va_start (args, line);
+	const char *format = va_arg(args,const char*);
 	//fprintf (file, "\e[38;5;229m");
 
 	std::vector<char> buffer;
@@ -46,7 +46,7 @@ log_debug (const char* format, ...)
 	int count = vsnprintf (buffer.data(), buf_len-1, format, args);
 	if (count >= buf_len) {
 		va_end (args);
-		va_start (args, format);
+		va_start (args, line);
 		buffer.resize (count+2);	// Make enough room this time
 		buf_len = buffer.size();
 		count = vsnprintf (buffer.data(), buf_len-1, format, args);
