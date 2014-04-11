@@ -46,6 +46,7 @@ log_redirect (Severity UNUSED(sev), const char* UNUSED(function), const char* fi
 
 	int count = vsnprintf (buffer.data(), buf_len-1, format, args);
 	if (count >= buf_len) {
+		// log_debug ("overflow (%d > %d)\n", count, buf_len);
 		va_end (args);
 		va_start (args, line);
 		buffer.resize (count+2);	// Make enough room this time
@@ -88,9 +89,10 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 {
 	//XXX use log_redirect and bind to preserve file/line/function
 
+#if 0
 	auto fn = std::bind (&log_redirect, Severity::Code, function, file, line, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6);
-
 	fn ("hello %d\n", 42, 43, 44, 45, 46);
+#endif
 
 	std::vector<std::string> bt = get_backtrace();
 	log_code ("%s:%d: assertion failed: (%s) in %s\n", file, line, test, function);

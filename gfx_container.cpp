@@ -365,7 +365,7 @@ GfxContainer::get_tooltip (void)
 
 bool GfxContainer::mouse_event (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	return false;
 }
 

@@ -90,8 +90,6 @@ TextApp::run (int argc, char **argv)
 #endif
 	bool error = false;
 
-	return_val_if_fail (false, 0);
-
 	std::vector<std::string> disks;			// Mop up any remaining args
 	for (; argc > 1; --argc, ++argv) {
 		if (argv[1][0] == '-') {

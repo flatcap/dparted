@@ -64,7 +64,7 @@ Misc::accept (Visitor& v)
 std::vector<Action>
 Misc::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.misc", true },
 	};
@@ -128,7 +128,7 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	return_val_if_fail (parent,  false);
 	return_val_if_fail (buffer,  false);
 	return_val_if_fail (bufsize, false);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	// Let's not go crazy and examine the whole device:
 	bufsize = std::min (bufsize, (std::uint64_t) 102400);		// 100KiB

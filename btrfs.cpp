@@ -64,7 +64,7 @@ Btrfs::accept (Visitor& v)
 std::vector<Action>
 Btrfs::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.btrfs", true },
 	};
@@ -239,7 +239,7 @@ Btrfs::get_btrfs (ContainerPtr parent, std::uint8_t* buffer, int bufsize)
 {
 	return_val_if_fail (parent, nullptr);
 	return_val_if_fail (buffer, nullptr);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (bufsize < 1048576)		// Min btrfs size is 1MiB
 		return nullptr;

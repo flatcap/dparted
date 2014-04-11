@@ -186,7 +186,7 @@ Container::accept (Visitor& v)
 std::vector<Action>
 Container::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.container", true },
 	};
@@ -530,7 +530,7 @@ Container::sub_type (const char* n)
 std::set<ContainerPtr, Container::compare>&
 Container::get_children (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	if (children.empty() && whole)
 		return whole->get_children();	// Delegate
 

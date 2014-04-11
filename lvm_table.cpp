@@ -73,7 +73,7 @@ LvmTable::accept (Visitor& v)
 std::vector<Action>
 LvmTable::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_table", true },
 	};
@@ -237,7 +237,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 {
 	return_val_if_fail (parent, false);
 	return_val_if_fail (buffer, false);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (bufsize < 1048576)		// Min size for LVMPV is 1MiB
 		return false;

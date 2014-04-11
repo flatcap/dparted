@@ -74,7 +74,7 @@ Msdos::accept (Visitor& v)
 std::vector<Action>
 Msdos::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.msdos", true },
 	};
@@ -164,7 +164,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	return_val_if_fail (parent,  false);
 	return_val_if_fail (buffer,  false);
 	return_val_if_fail (bufsize, false);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	int count = 0;
 

@@ -69,7 +69,7 @@ Extended::accept (Visitor& v)
 std::vector<Action>
 Extended::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.extended", true },
 	};
@@ -98,7 +98,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 {
 	return_val_if_fail (parent, nullptr);
 	return_val_if_fail (buffer, nullptr);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (bufsize < 512)
 		return nullptr;

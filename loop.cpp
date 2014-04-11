@@ -132,7 +132,7 @@ Loop::accept (Visitor& v)
 std::vector<Action>
 Loop::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.loop", true },
 	};
@@ -227,7 +227,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 {
 	return_if_fail (top_level);
 	return_if_fail (name);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	off_t size;
 

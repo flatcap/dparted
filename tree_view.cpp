@@ -586,7 +586,7 @@ TreeView::set_focus (GfxContainerPtr& c)
 void
 TreeView::on_selection_changed()
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	Gtk::TreeModel::iterator it = treeselection->get_selected();
 	if (!it)
