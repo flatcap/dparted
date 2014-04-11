@@ -38,11 +38,11 @@ void output (int level, const char* message)
 	std::cout << level << ":" << message << std::endl;
 }
 
-template <typename T, typename ...P>
-void output(int level, T t, P ...p)
+template <typename ...A>
+void output(int level, const char* format, A ...args)
 {
 	printf ("%d:", level);
-	printf (t, p...);
+	printf (format, args...);
 	printf ("\n");
 }
 
