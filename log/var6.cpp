@@ -52,7 +52,7 @@ int output (int level, const char* function, const char* file, int line, std::sh
 }
 
 /**
- * object (format,...)
+ * output (format,...)
  */
 template <typename ...A>
 int output(int level, const char* function, const char* file, int line, const char* format, A ...args)

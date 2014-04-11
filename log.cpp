@@ -18,48 +18,35 @@
 
 #include <cstdarg>
 #include <cstring>
-#include <vector>
 #include <functional>
+#include <vector>
 
 #include "log.h"
 #include "log_trace.h"
+#include "severity.h"
 #include "utils.h"
 
 //static unsigned int log_level = ~0;
 static FILE* file = nullptr;
 
+/**
+ * log_redirect (message)
+ */
 int
-log_redirect (Severity UNUSED(sev), const char* UNUSED(function), const char* file, int line, ...)
+log_redirect (Severity level, const char* function, const char* file, int line, const char* message)
 {
-	if (!file)
-		return 0;
+	FILE *f = stdout;
+	int count = 0;
 
-	va_list args;
-	va_start (args, line);
-	const char *format = va_arg(args,const char*);
-	//fprintf (file, "\e[38;5;229m");
-
-	std::vector<char> buffer;
-	int buf_len = 1024;
-	buffer.resize (buf_len);		// Most log lines should be shorter than 1KiB
-	buf_len = buffer.size();
-
-	int count = vsnprintf (buffer.data(), buf_len-1, format, args);
-	if (count >= buf_len) {
-		// log_debug ("overflow (%d > %d)\n", count, buf_len);
-		va_end (args);
-		va_start (args, line);
-		buffer.resize (count+2);	// Make enough room this time
-		buf_len = buffer.size();
-		count = vsnprintf (buffer.data(), buf_len-1, format, args);
-	}
-
-	fprintf (stdout, "%s", buffer.data());
-	//fprintf (file, "\e[0m");
-	va_end (args);
+	count += fprintf (f, "Log:\n");
+	count += fprintf (f, "\t%d\n",    level);
+	count += fprintf (f, "\t%s\n",    function);
+	count += fprintf (f, "\t%s:%d\n", file, line);
+	count += fprintf (f, "\t%s\n",    message);
 
 	return count;
 }
+
 
 bool
 log_init (const char* name)
