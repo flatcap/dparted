@@ -58,7 +58,7 @@ MdPartition::accept (Visitor& v)
 std::vector<Action>
 MdPartition::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.md_partition", true },
 	};

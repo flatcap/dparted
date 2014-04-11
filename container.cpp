@@ -186,7 +186,7 @@ Container::accept (Visitor& v)
 std::vector<Action>
 Container::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.container", true },
 	};
@@ -396,7 +396,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 {
 	// range check
 	if ((size < 1) || ((offset + size) > bytes_size)) {
-		log_error ("%s: out of range\n", __FUNCTION__);
+		log_error ("out of range\n");
 		return nullptr;
 	}
 
@@ -415,7 +415,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
 			log_debug ("%s\n", this->dump());
-			log_error ("%s: no device and no parent\n", __FUNCTION__);
+			log_error ("no device and no parent\n");
 			return nullptr;
 		}
 	}
@@ -425,7 +425,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 	int	newfd = get_fd();
 
 	if (newfd < 0) {
-		log_error ("%s: can't get file descriptor\n", __FUNCTION__);
+		log_error ("can't get file descriptor\n");
 		return nullptr;
 	}
 
@@ -437,7 +437,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, 0);
 	if (buf == MAP_FAILED) {
-		log_error ("%s: alloc failed: %s\n", __FUNCTION__, strerror (errno));
+		log_error ("alloc failed: %s\n", strerror (errno));
 		//close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
@@ -530,7 +530,7 @@ Container::sub_type (const char* n)
 std::set<ContainerPtr, Container::compare>&
 Container::get_children (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	if (children.empty() && whole)
 		return whole->get_children();	// Delegate
 

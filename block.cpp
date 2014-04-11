@@ -74,7 +74,7 @@ Block::accept (Visitor& v)
 std::vector<Action>
 Block::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.block", true },
 	};

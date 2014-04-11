@@ -45,6 +45,7 @@ enum class Severity {
 	Info		= 6 + ( 0 << 3),	// Volume needs defragmenting
 	Progress	= 6 + ( 1 << 3),	// 54% complete
 	Quiet		= 6 + ( 2 << 3),	// Quietable output
+	Command		= 6 + ( 3 << 3),	// Running "command"
 
 	// DEBUG   7 debug-level messages
 	Debug		= 7 + ( 0 << 3),	// x = 42
@@ -55,8 +56,8 @@ enum class Severity {
 	IoOut		= 7 + ( 5 << 3),	// Wrote data to file
 	Dot		= 7 + ( 6 << 3),	// Create dot output
 	Hex		= 7 + ( 7 << 3),	// Memory dump
-	ConfigRead	= 7 + ( 8 << 3),	// Read config entry
-	ConfigWrite	= 7 + ( 9 << 3),	// Wrote confi entry
+	ConfigRead	= 7 + ( 8 << 3),	// Read  config entry
+	ConfigWrite	= 7 + ( 9 << 3),	// Wrote config entry
 	Enter		= 7 + (10 << 3),	// Enter a function
 	Leave		= 7 + (11 << 3),	// Leave a function
 	File		= 7 + (12 << 3),	// File opened/closed/mmaped

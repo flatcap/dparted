@@ -105,7 +105,7 @@ PropertiesDialog::PropertiesDialog (GfxContainerPtr c, Gtk::Window* w) :
 
 PropertiesDialog::~PropertiesDialog()
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 }
 
 
@@ -189,7 +189,7 @@ prop_sort (const PPtr& lhs, const PPtr& rhs)
 void
 PropertiesDialog::my_show (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	ContainerPtr c = container->get_container();
 	if (!c) {
 		log_debug ("no container\n");

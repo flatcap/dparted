@@ -42,12 +42,12 @@ public:
 		m_file_name (file_name),
 		m_line_num (line_num)
 	{
-		log_trace ("Entering: %s -- %s:%d\n", m_function.c_str(), m_file_name.c_str(), m_line_num);
+		//log_enter ("Entering: %s -- %s:%d\n", m_function.c_str(), m_file_name.c_str(), m_line_num);
 	}
 
 	virtual ~LogTrace()
 	{
-		//log_trace ("Leaving:  %s -- %s\n", m_function.c_str(), m_file_name.c_str());
+		//log_leave ("Leaving:  %s -- %s\n", m_function.c_str(), m_file_name.c_str());
 	}
 
 protected:

@@ -354,7 +354,7 @@ bool
 DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	return_val_if_fail (top_level, true);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	vRange.clear();
 
@@ -1053,7 +1053,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 bool
 DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
@@ -1076,7 +1076,7 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 bool
 DrawingArea::on_focus_out (GdkEventFocus* UNUSED(event))
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	return true;
 }
 
@@ -1274,7 +1274,7 @@ void
 DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 {
 	return_if_fail (gfx);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	ContainerPtr c = gfx->get_container();
 	if (!c)

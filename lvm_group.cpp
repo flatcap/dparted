@@ -106,7 +106,7 @@ make_device (std::string group, std::string volume)
 std::vector<Action>
 LvmGroup::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.lvm_group", true },
 	};
@@ -133,7 +133,7 @@ LvmGroup::perform_action (Action action)
 int
 LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	std::string command;
 	std::vector<std::string> output;
@@ -303,7 +303,7 @@ void
 LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& UNUSED(deps))
 {
 	return_if_fail (pieces);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	std::string command;
 	std::vector<std::string> output;
@@ -382,7 +382,7 @@ void
 LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
 {
 	return_if_fail (pieces);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	std::string command;
 	std::vector<std::string> output;
@@ -587,7 +587,7 @@ void
 LvmGroup::discover (ContainerPtr& top_level)
 {
 	return_if_fail (top_level);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	ContainerPtr pieces = Container::create();
 	std::multimap<std::string,std::string> deps;

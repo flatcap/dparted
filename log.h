@@ -19,10 +19,41 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
+#include <memory>
+#include <sstream>
+#include <vector>
+
 #include "severity.h"
 #include "log_macro.h"
 
-int log_redirect (Severity sev, const char *function, const char *file, int line, ...);
+int log_redirect (Severity level, const char* function, const char* file, int line, const char* message);
+
+template<class T>
+int
+log_redirect (Severity level, const char* function, const char* file, int line, std::shared_ptr<T>& j)
+{
+	std::stringstream ss;
+	ss << j;
+	return log_redirect (level, function, file, line, ss.str().c_str());
+}
+
+template <typename ...A>
+int
+log_redirect(Severity level, const char* function, const char* file, int line, const char* format, A ...args)
+{
+	std::vector<char> buffer;
+	int buf_len = 1024;
+	buffer.resize (buf_len);		// Most log lines should be shorter than 1KiB
+
+	int count = snprintf (buffer.data(), buf_len, format, args...);
+	if (count >= buf_len) {
+		buffer.resize (count+2);	// Make enough room this time
+		count = snprintf (buffer.data(), count+1, format, args...);
+	}
+
+	return log_redirect (level, function, file, line, buffer.data());
+}
+
 
 void assertion_failure (const char* file, int line, const char* test, const char* function);
 

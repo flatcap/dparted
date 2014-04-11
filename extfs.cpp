@@ -64,7 +64,7 @@ Extfs::accept (Visitor& v)
 std::vector<Action>
 Extfs::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.extfs", true },
 	};
@@ -259,7 +259,7 @@ Extfs::get_ext2 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	return_val_if_fail (parent, nullptr);
 	return_val_if_fail (buffer, nullptr);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (bufsize < 61440)		// Min size for ext2 is 60KiB
 		return nullptr;
@@ -282,7 +282,7 @@ Extfs::get_ext3 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	return_val_if_fail (parent, nullptr);
 	return_val_if_fail (buffer, nullptr);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (bufsize < 61440)		// Min size for ext3 is 60KiB
 		return nullptr;
@@ -307,7 +307,7 @@ Extfs::get_ext4 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	return_val_if_fail (parent, nullptr);
 	return_val_if_fail (buffer, nullptr);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (bufsize < 61440)		// Min size for ext4 is 60KiB
 		return nullptr;

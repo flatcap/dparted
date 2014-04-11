@@ -45,7 +45,7 @@ GuiAppPtr gui_app;
 GuiApp::GuiApp (void) :
 	Gtk::Application ("org.flatcap.test.area", Gio::ApplicationFlags (Gio::APPLICATION_HANDLES_COMMAND_LINE))
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	Glib::set_application_name ("dparted");
 }
 
@@ -57,7 +57,7 @@ GuiApp::~GuiApp()
 bool
 GuiApp::my_idle (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	//XXX check that dialog's object hasn't gone away
 	if (false && passwd) {
 		passwd->set_title ("Password for X");
@@ -103,7 +103,7 @@ GuiApp::my_idle (void)
 void
 GuiApp::on_startup (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	Gtk::Application::on_startup();
 
 	Glib::RefPtr<Gtk::IconTheme> theme = Gtk::IconTheme::get_default();
@@ -128,7 +128,7 @@ GuiApp::on_startup (void)
 void
 GuiApp::on_activate()
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	Gtk::Application::on_activate();
 
 #if 0
@@ -143,14 +143,14 @@ GuiApp::on_activate()
 void
 GuiApp::on_window_added (Gtk::Window* window)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	Gtk::Application::on_window_added (window);
 }
 
 void
 GuiApp::on_window_removed (Gtk::Window* window)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	Gtk::Application::on_window_removed (window);
 }
 
@@ -158,7 +158,7 @@ GuiApp::on_window_removed (Gtk::Window* window)
 void
 GuiApp::create_window (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (!window) {
 		window = new Window();
@@ -169,7 +169,7 @@ GuiApp::create_window (void)
 void
 GuiApp::show_window (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (window) {
 		window->show();
@@ -180,7 +180,7 @@ GuiApp::show_window (void)
 void
 GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	log_debug ("Open files:\n");
 	for (auto f : files) {
 		log_debug ("%s\n", f->get_uri().c_str());
@@ -193,7 +193,7 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 int
 GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	int argc = 0;
 	char** argv = command_line->get_arguments (argc);
 

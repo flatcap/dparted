@@ -68,7 +68,7 @@ File::accept (Visitor& v)
 std::vector<Action>
 File::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.file", true },
 	};
@@ -129,7 +129,7 @@ File::find_containers (const std::string& name, int fd, struct stat& st, Contain
 void
 File::discover (ContainerPtr& UNUSED(top_level), std::queue<ContainerPtr>& UNUSED(probe_queue))
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	// Config
 	//	[files]
@@ -145,7 +145,7 @@ File::discover (ContainerPtr& UNUSED(top_level), std::queue<ContainerPtr>& UNUSE
 void
 File::identify (ContainerPtr& UNUSED(top_level), const char* UNUSED(name), int UNUSED(fd), struct stat& UNUSED(st))
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	/* dir:
 	 *	Search for files: *.img

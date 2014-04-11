@@ -64,7 +64,7 @@ Ntfs::accept (Visitor& v)
 std::vector<Action>
 Ntfs::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.ntfs", true },
 	};
@@ -231,7 +231,7 @@ Ntfs::get_ntfs (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize
 {
 	return_val_if_fail (parent, nullptr);
 	return_val_if_fail (buffer, nullptr);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (bufsize < 1048576)		// Min ntfs size is 1MiB
 		return nullptr;

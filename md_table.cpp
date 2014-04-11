@@ -73,7 +73,7 @@ MdTable::accept (Visitor& v)
 std::vector<Action>
 MdTable::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.md_table", true },
 	};
@@ -129,7 +129,7 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 {
 	return_val_if_fail (parent, false);
 	return_val_if_fail (buffer, false);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (bufsize < 20480)		// Min size for MD is 20KiB
 		return false;

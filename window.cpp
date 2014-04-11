@@ -112,14 +112,14 @@ Window::~Window()
 void
 Window::my_realize (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	drawingarea.grab_focus();
 }
 
 void
 Window::my_show (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	//XXX Arbitrary minimum requirement - theme?
 	//set_size_request (800, 600);
 	resize (800, 250);
@@ -223,7 +223,7 @@ Window::load_disk (const std::string& UNUSED(filename))
 void
 Window::set_geometry (int x, int y, int w, int h)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	x = std::max (x, 0);
 	y = std::max (y, 0);
@@ -742,7 +742,7 @@ Window::on_keypress (int modifier, int key)
 void
 Window::on_action_general (std::string section, std::string name)
 {
-	log_debug ("%s: %s.%s\n", __FUNCTION__, section.c_str(), name.c_str());
+	log_debug ("%s.%s\n", section.c_str(), name.c_str());
 
 	if (!focus) {
 		log_debug ("no focus\n");

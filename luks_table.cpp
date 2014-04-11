@@ -84,7 +84,7 @@ LuksTable::accept (Visitor& v)
 std::vector<Action>
 LuksTable::get_actions (void)
 {
-	//LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.luks_table", true },
 	};
@@ -132,7 +132,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 {
 	return_val_if_fail (parent, false);
 	return_val_if_fail (buffer, false);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	if (bufsize < 1048576)		// Min size for Luks is 1MiB
 		return false;

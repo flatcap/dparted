@@ -110,7 +110,7 @@ Disk::accept (Visitor& v)
 std::vector<Action>
 Disk::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.disk", true },
 	};
@@ -309,7 +309,7 @@ void
 Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 {
 	return_if_fail (top_level);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	std::vector<std::string> output;
 
@@ -330,7 +330,7 @@ void
 Disk::identify (ContainerPtr& top_level, const char* name, int UNUSED(fd), struct stat& UNUSED(st))
 {
 	return_if_fail (top_level);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	std::vector<std::string> output;
 

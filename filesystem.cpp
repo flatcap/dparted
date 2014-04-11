@@ -80,7 +80,7 @@ Filesystem::accept (Visitor& v)
 std::vector<Action>
 Filesystem::get_actions (void)
 {
-	// LOG_TRACE;
+	LOG_TRACE;
 	std::vector<Action> actions = {
 		{ "dummy.filesystem", true },
 	};
@@ -110,7 +110,7 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 	return_val_if_fail (parent,  false);
 	return_val_if_fail (buffer,  false);
 	return_val_if_fail (bufsize, false);
-	//LOG_TRACE;
+	LOG_TRACE;
 
 	FilesystemPtr f;
 
