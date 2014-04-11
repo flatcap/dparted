@@ -1,7 +1,8 @@
 #include <iostream>
 #include <memory>
-#include <string>
 #include <sstream>
+#include <string>
+#include <vector>
 
 class Jim;
 
@@ -56,25 +57,17 @@ int output (int level, const char* function, const char* file, int line, std::sh
 template <typename ...A>
 int output(int level, const char* function, const char* file, int line, const char* format, A ...args)
 {
-	printf ("%d:", level);
-	//printf (format, args...);
-	int buflen = 1000;
-	char buffer[1000];
-	//int count =
-	snprintf (buffer, buflen, format, args...);
-	return output (level, function, file, line, buffer);
-	//fprintf (stderr, "count = %d\n", count);
-#if 0
-	if (count < 10) {
-		std::cout << buffer;
-	} else {
-		char buf2[100];
-		count = snprintf (buf2, sizeof(buf2), format, args...);
-		//fprintf (stderr, "count = %d\n", count);
-		std::cout << buf2;
+	std::vector<char> buffer;
+	int buf_len = 1024;
+	buffer.resize (buf_len);		// Most log lines should be shorter than 1KiB
+
+	int count = snprintf (buffer.data(), buf_len, format, args...);
+	if (count >= buf_len) {
+		buffer.resize (count+2);	// Make enough room this time
+		count = snprintf (buffer.data(), count+1, format, args...);
 	}
-#endif
-	printf ("\n");
+
+	return output (level, function, file, line, buffer.data());
 }
 
 
