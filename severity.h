@@ -45,6 +45,7 @@ enum class Severity {
 	Info		= 6 + ( 0 << 3),	// Volume needs defragmenting
 	Progress	= 6 + ( 1 << 3),	// 54% complete
 	Quiet		= 6 + ( 2 << 3),	// Quietable output
+	Command		= 6 + ( 3 << 3),	// Running "command"
 
 	// DEBUG   7 debug-level messages
 	Debug		= 7 + ( 0 << 3),	// x = 42
