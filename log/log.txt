@@ -36,6 +36,7 @@ Code features
 		global
 		per stream
 	LogClose();
+	log_handler log_handler_syslog  __attribute__((format(printf, 6, 0)));
 
 Input features
 	stream
