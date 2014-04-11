@@ -742,7 +742,7 @@ Window::on_keypress (int modifier, int key)
 void
 Window::on_action_general (std::string section, std::string name)
 {
-	log_debug ("%s: %s.%s\n", __FUNCTION__, section.c_str(), name.c_str());
+	log_debug ("%s.%s\n", section.c_str(), name.c_str());
 
 	if (!focus) {
 		log_debug ("no focus\n");

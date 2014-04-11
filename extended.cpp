@@ -193,7 +193,7 @@ Extended::get_buffer (std::uint64_t offset, std::uint64_t size)
 	// Our device is defective, so delegate to our parent
 	// range check
 	if ((size < 1) || ((offset + size) > bytes_size)) {
-		log_error ("%s: out of range\n", __FUNCTION__);
+		log_error ("out of range\n");
 		return nullptr;
 	}
 
@@ -202,7 +202,7 @@ Extended::get_buffer (std::uint64_t offset, std::uint64_t size)
 		return p->get_buffer (offset + parent_offset, size);
 	} else {
 		log_debug ("%s\n", this->dump());
-		log_error ("%s: no device and no parent\n", __FUNCTION__);
+		log_error ("no device and no parent\n");
 		return nullptr;
 	}
 }
