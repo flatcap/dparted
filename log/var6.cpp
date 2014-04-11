@@ -71,19 +71,17 @@ int output(int level, const char* function, const char* file, int line, const ch
 }
 
 
-#define log_object(level,object) output(level,__PRETTY_FUNCTION__,__FILE__,__LINE__,object)
 #define log_debug(...) output(42, __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #define log_trace(...) output(99, __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 
 int main()
 {
 	JimPtr j = std::make_shared<Jim>();
-	int level = 42;
 
-	log_object (level, j);
-	log_debug  ("hello");
-	log_trace  ("hello %d", 99);
-	log_debug  ("hello %d, %f", 99, 3.141);
-	log_trace  ("hello %d, %f, %s", 99, 3.141, "apple");
+	log_debug (j);
+	log_debug ("hello");
+	log_trace ("hello %d", 99);
+	log_debug ("hello %d, %f", 99, 3.141);
+	log_trace ("hello %d, %f, %s", 99, 3.141, "apple");
 }
 
