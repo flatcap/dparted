@@ -26,6 +26,9 @@
 #include "severity.h"
 #include "log_macro.h"
 
+#ifdef DP_LOG_CHECK
+int log_redirect (const char* format __attribute__((unused)), ...) __attribute__ ((format (printf, 1, 2)));
+#else
 int log_redirect (Severity level, const char* function, const char* file, int line, const char* message);
 
 template<class T>
@@ -54,6 +57,7 @@ log_redirect(Severity level, const char* function, const char* file, int line, c
 	return log_redirect (level, function, file, line, buffer.data());
 }
 
+#endif
 
 void assertion_failure (const char* file, int line, const char* test, const char* function);
 

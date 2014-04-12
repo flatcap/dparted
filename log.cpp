@@ -29,6 +29,14 @@
 //static unsigned int log_level = ~0;
 static FILE* file = nullptr;
 
+#ifdef DP_LOG_CHECK
+__attribute__ ((format (printf, 1, 2)))
+int
+log_redirect (const char* format __attribute__((unused)), ...)
+{
+	return 0;
+}
+#else
 /**
  * log_redirect (message)
  */
@@ -51,6 +59,7 @@ log_redirect (Severity UNUSED(level), const char* UNUSED(function), const char* 
 	return count;
 }
 
+#endif
 
 bool
 log_init (const char* name)
