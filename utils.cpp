@@ -138,7 +138,7 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 	std::uint8_t* mem = (std::uint8_t*) buf;
 
 #if 1
-	std::uint8_t last[16];
+	std::vector<char> last (0, 16);
 	bool same = false;
 #endif
 	s =  start                & ~15;	// round down
@@ -146,7 +146,7 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 
 	for (off = s; off < e; off += 16) {
 #if 1
-		if ((memcmp ((char*) buf+off, last, sizeof (last)) == 0) &&
+		if ((memcmp ((char*) buf+off, last.data(), last.size()) == 0) &&
 			((off + 16) < e) && (off > s)) {
 			if (!same) {
 				log_info ("	        ...\n");
@@ -155,7 +155,7 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 			continue;
 		} else {
 			same = false;
-			memcpy (last, (char*) buf+off, sizeof (last));
+			memcpy (last.data(), (char*) buf+off, last.size());
 		}
 #endif
 
