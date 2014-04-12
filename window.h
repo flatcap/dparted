@@ -21,6 +21,7 @@
 
 #include <string>
 #include <map>
+#include <memory>
 
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/box.h>
@@ -38,6 +39,9 @@
 #include "drawing_area.h"
 
 class Container;
+class Window;
+
+typedef std::shared_ptr<Window> WindowPtr;
 
 class Window : public Gtk::ApplicationWindow
 {

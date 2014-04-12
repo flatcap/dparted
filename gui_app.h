@@ -83,7 +83,7 @@ protected:
 	std::vector<QuestionPtr> vq;
 	PasswordDialogPtr passwd;
 	ThemePtr theme;
-	Window* window = nullptr;	// do not delete
+	WindowPtr window;
 };
 
 

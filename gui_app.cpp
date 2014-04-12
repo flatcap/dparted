@@ -161,7 +161,7 @@ GuiApp::create_window (void)
 	LOG_TRACE;
 
 	if (!window) {
-		window = new Window();
+		window = std::make_shared<Window>();
 		add_window (*window);	// App now owns Window
 	}
 }
@@ -222,7 +222,6 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	if (group.quit) {
 		if (running) {
 			//XXX need to ASK the window to close => WindowPtr
-			delete window;
 			window = nullptr;
 			running = false;
 		}
