@@ -124,7 +124,7 @@ void
 dump_hex (std::uint8_t* buffer, std::uint64_t bufsize)
 {
 	for (std::uint64_t i = 0; i < bufsize; i += 16) {
-		log_debug ("%06lx  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
+		log_hex ("%06lx  %02X %02X %02X %02X %02X %02X %02X %02X - %02X %02X %02X %02X %02X %02X %02X %02X\n",
 			i,
 			buffer[i +  0], buffer[i +  1], buffer[i +  2], buffer[i +  3], buffer[i +  4], buffer[i +  5], buffer[i +  6], buffer[i +  7],
 			buffer[i +  8], buffer[i +  9], buffer[i + 10], buffer[i + 11], buffer[i + 12], buffer[i + 13], buffer[i + 14], buffer[i + 15]);
@@ -149,7 +149,7 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 		if ((memcmp ((char*) buf+off, last.data(), last.size()) == 0) &&
 			((off + 16) < e) && (off > s)) {
 			if (!same) {
-				log_info ("	        ...\n");
+				log_hex ("	        ...\n");
 				same = true;
 			}
 			continue;
@@ -160,32 +160,32 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 #endif
 
 		if (off == s) {
-			log_info ("	%6.6lx ", start);
+			log_hex ("	%6.6lx ", start);
 		} else {
-			log_info ("	%6.6lx ", off);
+			log_hex ("	%6.6lx ", off);
 		}
 
 		for (i = 0; i < 16; ++i) {
 			if (i == 8) {
-				log_info (" -");
+				log_hex (" -");
 			}
 			if (((off+i) >= start) && ((off+i) < (start+length))) {
-				log_info (" %02X", mem[off+i]);
+				log_hex (" %02X", mem[off+i]);
 			} else {
-				log_info ("   ");
+				log_hex ("   ");
 			}
 		}
-		log_info ("  ");
+		log_hex ("  ");
 		for (i = 0; i < 16; ++i) {
 			if (((off+i) < start) || ((off+i) >= (start+length))) {
-				log_info (" ");
+				log_hex (" ");
 			} else if (isprint (mem[off + i])) {
-				log_info ("%c", mem[off + i]);
+				log_hex ("%c", mem[off + i]);
 			} else {
-				log_info (".");
+				log_hex (".");
 			}
 		}
-		log_info ("\n");
+		log_hex ("\n");
 	}
 }
 
@@ -217,7 +217,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 
 	//XXX log command and output
 
-	log_debug ("running command: %s\n", command.c_str());
+	log_command ("running command: %s\n", command.c_str());
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "r");
 	if (file == nullptr) {
@@ -225,7 +225,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 		return -1;
 	}
 
-	log_debug ("output:\n");
+	log_command_out ("output:\n");
 	do {
 		ptr = nullptr;
 		n = 0;
@@ -235,7 +235,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 				ptr[count-1] = 0;
 			}
 			output.push_back (ptr);
-			log_debug ("\t%s\n", ptr);
+			log_command_out ("\t%s\n", ptr);
 		}
 		free (ptr);
 	} while (count > 0);
@@ -244,10 +244,10 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 	// correct way to check return code
 	int ret = pclose (fd);
 	if (WIFEXITED(ret))
-		  log_info ("%d\n", WEXITSTATUS(ret));
+		  log_command_out ("%d\n", WEXITSTATUS(ret));
 #endif
 	int retcode = pclose (file);
-	log_info ("command %s returned %d\n", command.c_str(), retcode);
+	log_command_out ("command %s returned %d\n", command.c_str(), retcode);
 	if (retcode == -1) {
 		log_error ("pclose failed: %s\n", strerror (errno));
 		return -1;
@@ -266,7 +266,7 @@ execute_command2 (const std::string& command, std::string& input)
 
 	//XXX log command and output
 
-	log_debug ("running command: %s\n", command.c_str());
+	log_command ("running command: %s\n", command.c_str());
 	file = popen (command.c_str(), "we");
 	if (file == nullptr) {
 		log_error ("popen failed: %s\n", strerror (errno));
@@ -274,7 +274,7 @@ execute_command2 (const std::string& command, std::string& input)
 	}
 
 	int count = fprintf (file, "%s\n", input.c_str());
-	log_debug ("wrote %d bytes to command %s\n", count, command.c_str());
+	log_command_in ("wrote %d bytes to command %s\n", count, command.c_str());
 
 	int retcode = pclose (file);
 	if (retcode == -1) {
