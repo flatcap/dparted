@@ -138,8 +138,8 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 
 			row.set_value (0, x);		// Column zero is always the GfxContainer
 
-			//log_debug ("\n");
-			//log_debug ("Columns:\n");
+			log_debug ("\n");
+			log_debug ("Columns:\n");
 			for (auto i : col_list) {
 				int index = -1;
 				int type = ct_string;
@@ -157,11 +157,11 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 
 				PPtr prop = c->get_prop (i.first);
 				if (!prop) {
-					//log_debug ("\tMISSING\n");	// Not an error
+					log_debug ("\tMISSING\n");	// Not an error
 					continue;
 				}
 
-				//log_debug ("\tType: %s\n", prop->get_type_name().c_str());
+				log_debug ("\tType: %s\n", prop->get_type_name().c_str());
 
 				switch (type) {
 					case ct_colour:
@@ -411,7 +411,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 			title = multi[0];	// Replace abc_def with Abc Def?
 		}
 
-		//log_debug ("\t%s = ", i.c_str());
+		log_debug ("\t%s = ", i.c_str());
 		col = Gtk::manage (new Gtk::TreeView::Column (title));
 
 		Gtk::TreeModelColumn<int>* tmc = nullptr;
@@ -478,7 +478,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 					break;
 			}
 
-			//log_debug ("%u\n", col_rec.size()-1);
+			log_debug ("%u\n", col_rec.size()-1);
 			col_list[j] = std::make_tuple (index, type, align, precision, size);
 
 			col->set_alignment (align);
@@ -487,9 +487,9 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 			}
 		}
 		append_column (*col);
-		//log_debug ("\n");
+		log_debug ("\n");
 	}
-	//log_debug ("\n");
+	log_debug ("\n");
 
 #if 0
 	log_debug ("Cols\n");
@@ -527,7 +527,7 @@ bool
 TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
 #if 1
-	//log_debug ("qtt: %d\n", menu_active);
+	log_debug ("qtt: %d\n", menu_active);
 	if (keyboard_tooltip)
 		return false;
 
@@ -539,7 +539,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 
 	convert_widget_to_tree_coords (x, y, tx, ty);
 
-	//log_debug ("  tooltip at (x,y) %d,%d -- (tx,ty) %d, %d\n", x, y, tx, ty);
+	log_debug ("  tooltip at (x,y) %d,%d -- (tx,ty) %d, %d\n", x, y, tx, ty);
 
 	Gtk::TreeModel::Path path;
 
@@ -562,11 +562,11 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 void
 TreeView::set_focus (GfxContainerPtr& c)
 {
-	//log_debug ("focus: %s\n", c->treepath.c_str());
+	log_debug ("focus: %s\n", c->treepath.c_str());
 	return_if_fail (c);
 
 	if (c->treepath.empty()) {
-		//log_debug ("TreeView: not visible\n");
+		log_debug ("TreeView: not visible\n");
 		treeselection->unselect_all();
 		return;
 	}
@@ -595,7 +595,7 @@ TreeView::on_selection_changed()
 #if 0
 	const Gtk::TreeModel::Row& row = *it;
 	GfxContainerPtr c = row[col_gfx_container];
-	//log_debug ("sel: %s\n", c->dump());
+	log_debug ("sel: %s\n", c->dump());
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	dp->set_focus (c);
@@ -657,7 +657,7 @@ TreeView::get_coords (int& x, int& y)
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		//log_debug ("No focus\n");
+		log_debug ("No focus\n");
 		return false;
 	}
 

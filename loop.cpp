@@ -105,7 +105,7 @@ Loop::create (const std::string& losetup)
 	if ((len > 10) && (l->file_name.substr (len-10) == " (deleted)")) {
 		l->file_name.erase (len-10);
 		l->deleted = true;
-		//log_info ("%s is deleted\n", l->device.c_str());
+		log_info ("%s is deleted\n", l->device.c_str());
 	}
 
 	l->block_size   = 512;	//XXX kernel lower limit, but fs block size is likely to be bigger
@@ -235,7 +235,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 
 	losetup (output, name);		//XXX retval, exactly one reply
 
-	//log_debug ("%s\n", output[0].c_str());
+	log_debug ("%s\n", output[0].c_str());
 
 	LoopPtr l = create (output[0]);
 

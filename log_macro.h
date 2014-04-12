@@ -3,6 +3,33 @@
 
 #include "severity.h"
 
+#ifdef DP_LOG_CHECK
+#define log_system_emergency log_redirect
+#define log_system_alert     log_redirect
+#define log_critical         log_redirect
+#define log_error            log_redirect
+#define log_perror           log_redirect
+#define log_code             log_redirect
+#define log_warning          log_redirect
+#define log_verbose          log_redirect
+#define log_user             log_redirect
+#define log_info             log_redirect
+#define log_progress         log_redirect
+#define log_quiet            log_redirect
+#define log_debug            log_redirect
+#define log_trace            log_redirect
+#define log_command_in       log_redirect
+#define log_command_out      log_redirect
+#define log_io_in            log_redirect
+#define log_io_out           log_redirect
+#define log_dot              log_redirect
+#define log_hex              log_redirect
+#define log_config_read      log_redirect
+#define log_config_write     log_redirect
+#define log_enter            log_redirect
+#define log_leave            log_redirect
+#define log_file             log_redirect
+#else
 // Log level: EMERG
 #define log_system_emergency(...) log_redirect(Severity::SystemEmergency,__PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 // Log level: ALERT
@@ -36,6 +63,7 @@
 #define log_enter(...)            log_redirect(Severity::Enter,          __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #define log_leave(...)            log_redirect(Severity::Leave,          __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #define log_file(...)             log_redirect(Severity::File,           __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
+#endif
 
 #endif // _LOG_MACRO_H_
 

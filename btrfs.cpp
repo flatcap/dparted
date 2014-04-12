@@ -172,7 +172,7 @@ btrfs_show_super (const std::string& dev)
 	std::string key;
 	std::string value;
 
-	//log_debug ("keys:\n");
+	log_debug ("keys:\n");
 	for (auto line : output) {
 		//XXX move these two tests before loop and doctor vector
 		if (line.substr (0, 11) == "superblock:") {
@@ -195,10 +195,10 @@ btrfs_show_super (const std::string& dev)
 			continue;
 		}
 
-		//log_debug ("\t>>%s<<\n", key.c_str());
+		log_debug ("\t>>%s<<\n", key.c_str());
 		results[key] = value;
 	}
-	//log_debug ("\n");
+	log_debug ("\n");
 
 	return results;
 }
@@ -222,12 +222,12 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 	// declare everything else
 	const char* me = "Btrfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
-	//log_debug ("Props:\n");
+	log_debug ("Props:\n");
 	for (auto i : info) {
 		std::string key   = "btrfs." + i.first;
 		std::string desc  = make_desc (i.first);
 		std::string value = i.second;
-		//log_debug ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
+		log_debug ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
 
 		more_props.push_back (value);
 		declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str(), 0);

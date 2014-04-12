@@ -65,7 +65,7 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 			case 8:	os = "os_ubuntu";  break;
 			case 9:	os = "os_windows"; break;
 		}
-		//log_debug ("Filesystem: %s : %s\n", c->get_device_inherit().c_str(), os.c_str());
+		log_debug ("Filesystem: %s : %s\n", c->get_device_inherit().c_str(), os.c_str());
 		c->add_string_prop (std::string("gfx"), std::string("operating_system"), os);
 	}
 
@@ -182,7 +182,7 @@ find_subst (const std::string& text, std::string& tag, std::size_t& start, std::
 
 	open = text.find ('{');
 	if (open == std::string::npos) {
-		//log_debug ("nothing to substitute\n");
+		log_debug ("nothing to substitute\n");
 		return false;
 	}
 
@@ -215,7 +215,7 @@ GfxContainer::process_label (const std::string& label_template)
 {
 	std::string l = label_template;
 
-	//log_debug ("Label: %s\n", l.c_str());
+	log_debug ("Label: %s\n", l.c_str());
 	ContainerPtr c = get_container();
 	if (!c)
 		return l;
@@ -232,7 +232,7 @@ GfxContainer::process_label (const std::string& label_template)
 		l.replace (start, stop-start+1, value);
 	}
 
-	//log_debug ("label = %s\n", l.c_str());
+	log_debug ("label = %s\n", l.c_str());
 
 	return l;
 }
@@ -285,7 +285,7 @@ bool
 GfxContainer::set_focus (bool focus)
 {
 	ContainerPtr c = get_container();
-	//log_debug ("Focus: %s = %d\n", c->dump(), focus);
+	log_debug ("Focus: %s = %d\n", c->dump(), focus);
 	focussed = focus;
 	return true;
 }
@@ -333,7 +333,7 @@ GfxContainer::process_icon (const std::string& str)
 		return pb;
 
 	pb = theme->get_icon (str);
-	//log_debug ("icon: %s %p\n", str.c_str(), (void*) pb.operator->());
+	log_debug ("icon: %s %p\n", str.c_str(), (void*) pb.operator->());
 	//pb = Gdk::Pixbuf::create_from_file (str);
 
 	return pb;

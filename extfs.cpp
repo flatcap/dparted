@@ -152,7 +152,7 @@ tune2fs (const std::string& dev)
 	std::string key;
 	std::string value;
 
-	//log_debug ("keys:\n");
+	log_debug ("keys:\n");
 	for (auto line : output) {
 		if (line.substr (0, 7) == "tune2fs")
 			continue;
@@ -162,10 +162,10 @@ tune2fs (const std::string& dev)
 			continue;
 		}
 
-		//log_debug ("\t>>%s<<\n", key.c_str());
+		log_debug ("\t>>%s<<\n", key.c_str());
 		results[key] = value;
 	}
-	//log_debug ("\n");
+	log_debug ("\n");
 
 	return results;
 }
@@ -235,12 +235,12 @@ Extfs::get_ext_sb (ContainerPtr parent)
 	// declare everything else
 	const char* me = "Extfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
-	//log_debug ("Props:\n");
+	log_debug ("Props:\n");
 	for (auto i : info) {
 		std::string desc  = i.first;
 		std::string key   = make_key (desc);
 		std::string value = i.second;
-		//log_debug ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
+		log_debug ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
 
 		if (desc == "Filesystem features") {
 			explode (" ", value, features);

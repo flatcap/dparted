@@ -416,9 +416,9 @@ dump_range (const std::deque<Range>& vRange)
 
 #endif
 bool
-DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
+DrawingArea::on_mouse_motion (GdkEventMotion* event)
 {
-	//log_debug ("mouse motion: (%.0f,%.0f)\n", event->x, event->y);
+	log_debug ("mouse motion: (%.0f,%.0f)\n", event->x, event->y);
 
 #if 0
 	bool old = mouse_close;
@@ -448,11 +448,11 @@ DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
 bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
-	//log_debug ("mouse click: (%.0f,%.0f)\n", event->x, event->y);
+	log_debug ("mouse click: (%.0f,%.0f)\n", event->x, event->y);
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 
-	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
+	log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 
 	GfxContainerPtr selection;
@@ -615,7 +615,7 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 
 	GfxContainerPtr child;
 
-	//log_debug ("1: %s\n", c->dump());
+	log_debug ("1: %s\n", c->dump());
 
 	if (!c->is_a ("Table"))
 		return nullptr;
@@ -624,7 +624,7 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 		return nullptr;
 
 	child = c->children[0];
-	//log_debug ("2: %s\n", child->dump());
+	log_debug ("2: %s\n", child->dump());
 	if (!child)
 		return nullptr;
 
@@ -635,7 +635,7 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 		return nullptr;
 
 	child = child->children[0];
-	//log_debug ("3: %s\n", child->dump());
+	log_debug ("3: %s\n", child->dump());
 	if (!child)
 		return nullptr;
 
@@ -684,7 +684,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 {
 	return_if_fail (gfx);
 
-	//log_debug ("%s\n", gfx->dump());
+	log_debug ("%s\n", gfx->dump());
 
 	ContainerPtr c = gfx->get_container();
 	if (!c) {
@@ -707,7 +707,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 #endif
 
 	if (actions.empty()) {
-		//log_debug ("No actions\n");
+		log_debug ("No actions\n");
 		//return;
 	}
 
@@ -824,7 +824,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	//Rect tab;
 	Rect inside { 0,0,0,0 };
 
-	//log_debug ("object = %s -- %d,%d\n", cont->name.c_str(), shape.w, TAB_WIDTH);
+	log_debug ("object = %s -- %d,%d\n", cont->name.c_str(), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
 #if 0
 		log_debug ("draw_container: too narrow\n");
@@ -851,7 +851,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 
 		Rect below;
 		vRange.push_front ({shape, cont});
-		//log_debug ("Icon: %p\n", (void*) icon.operator->());
+		log_debug ("Icon: %p\n", (void*) icon.operator->());
 		draw_icon (cr, icon, box, below);
 		draw_text (cr, box2, name);
 
@@ -926,7 +926,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 		 *	background
 		 */
 	} else if (display == "empty") {	// Do nothing for now
-		//log_debug ("EMPTY\n");
+		log_debug ("EMPTY\n");
 		inside = shape;
 	} else {
 		log_debug ("unknown display type: %s\n", display.c_str());
@@ -934,7 +934,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	}
 
 	if (!inside.w) {
-		//log_error ("NO WIDTH\n");
+		log_error ("NO WIDTH\n");
 		return;
 	}
 
@@ -992,11 +992,11 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 	bool redraw  = false;
 	bool handled = false;
 
-	//log_debug ("Key: %d (0x%x)\n", ev->keyval, ev->keyval);
+	log_debug ("Key: %d (0x%x)\n", ev->keyval, ev->keyval);
 
 	//Extra keys: Delete, Insert, Space/Enter (select)?
 
-	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
+	log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		log_debug ("No Window\n");
@@ -1005,7 +1005,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		//log_debug ("No focus\n");
+		log_debug ("No focus\n");
 		return false;
 	}
 
@@ -1013,7 +1013,7 @@ DrawingArea::on_keypress (GdkEventKey* ev)
 	int y = 0;
 	switch (ev->keyval) {
 		case GDK_KEY_Return:	// 65293 (0xFF0D)
-			//log_debug ("state = %d\n", ev->state);
+			log_debug ("state = %d\n", ev->state);
 			if (ev->state & GDK_MOD1_MASK) {		// Alt-Enter
 				on_menu_select (c, Action {"Properties", true });	// properties
 				handled = true;
@@ -1055,7 +1055,7 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 {
 	LOG_TRACE;
 
-	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
+	log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		log_debug ("No Window\n");
@@ -1063,7 +1063,7 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 	}
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		//log_debug ("No focus\n");
+		log_debug ("No focus\n");
 		c = get_focus (0, 0);
 		if (c) {
 			dp->set_focus(c);
@@ -1216,7 +1216,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 #endif
 
 	for (auto a : actions) {
-		//log_debug ("%s\n", a.name.c_str());
+		log_debug ("%s\n", a.name.c_str());
 		std::size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
 			section.clear();
@@ -1302,7 +1302,7 @@ DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 bool
 DrawingArea::get_coords (int& x, int& y)
 {
-	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
+	log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		log_debug ("No Window\n");
@@ -1311,7 +1311,7 @@ DrawingArea::get_coords (int& x, int& y)
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		//log_debug ("No focus\n");
+		log_debug ("No focus\n");
 		return false;
 	}
 
@@ -1324,7 +1324,7 @@ DrawingArea::get_coords (int& x, int& y)
 	int oy = 0;
 	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
-	//log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
+	log_debug ("top_level: %s\n", get_toplevel()->get_name().c_str());
 	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
 	if (!window) {
 		return false;
@@ -1364,7 +1364,7 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 
 	std::vector<Action> actions = c->get_actions();
 	if (actions.empty()) {
-		//log_debug ("No actions\n");
+		log_debug ("No actions\n");
 		//return;
 	}
 

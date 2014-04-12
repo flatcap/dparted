@@ -228,7 +228,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		std::uint64_t start  = le64_to_cpup (buffer+32);
 		std::uint64_t finish = le64_to_cpup (buffer+40);
 
-		//log_debug ("%2d: %9ld -%9ld  %10ld  %ld\n", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
+		log_debug ("%2d: %9ld -%9ld  %10ld  %ld\n", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
 
 		delete_region (empty, start, finish-start+1);
 
@@ -273,7 +273,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		}
 		g->add_child(p);		// change to add_reserved?
 	}
-	//log_debug ("\n");
+	log_debug ("\n");
 
 	return true;
 }

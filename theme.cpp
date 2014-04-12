@@ -190,14 +190,14 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 
 		if (!name.empty()) {
 			search = work_path + dot + name + "." + attr;
-			//log_debug ("Search: %s\n", search.c_str());
+			log_debug ("Search: %s\n", search.c_str());
 			if (config_file->exists (search)) {
 				return config_file->get_string (search);
 			}
 		}
 
 		search = work_path + dot + attr;
-		//log_debug ("Search: %s\n", search.c_str());
+		log_debug ("Search: %s\n", search.c_str());
 		if (config_file->exists (search)) {
 			return config_file->get_string (search);
 		}

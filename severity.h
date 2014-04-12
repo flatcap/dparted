@@ -19,48 +19,65 @@
 #ifndef _SEVERITY_H_
 #define _SEVERITY_H_
 
+enum class Severity;
+
+inline Severity operator| (Severity a, Severity b) { return (Severity) ((std::uint32_t) a | (std::uint32_t) b); }
+inline Severity operator& (Severity a, Severity b) { return (Severity) ((std::uint32_t) a & (std::uint32_t) b); }
+inline Severity operator~ (Severity a) { return (Severity) (~(std::uint32_t) a); }
+
 enum class Severity {
 	// EMERG   0 system is unusable
-	SystemEmergency = 0 + ( 0 << 3),	// Kernel panic
+	SystemEmergency	= (1 <<  0),		// Kernel panic
 
 	// ALERT   1 action must be taken immediately
-	SystemAlert	= 1 + ( 0 << 3),	// Action must be taken immediately
+	SystemAlert	= (1 <<  1),            // Action must be taken immediately
 
 	// CRIT    2 critical conditions
-	Critical	= 2 + ( 0 << 3),	// Operation failed, damage may have occurred
+	Critical	= (1 <<  2),            // Operation failed, damage may have occurred
 
 	// ERR     3 error conditions
-	Error		= 3 + ( 0 << 3),	// Operation failed, no damage done
-	Perror		= 3 + ( 1 << 3),	// Message : standard error description
-	Code		= 3 + ( 2 << 3),	// There's a mistake in the code
+	Error		= (1 <<  3),            // Operation failed, no damage done
+	Perror		= (1 <<  4),            // Message : standard error description
+	Code		= (1 <<  5),            // There's a mistake in the code
 
 	// WARNING 4 warning conditions
-	Warning		= 4 + ( 0 << 3),	// You should backup before starting
+	Warning		= (1 <<  6),            // You should backup before starting
 
 	// NOTICE  5 normal but significant condition
-	Verbose		= 5 + ( 0 << 3),	// Forced to continue
-	User		= 5 + ( 1 << 3),	// Asked user "Are you sure?"
+	Verbose		= (1 <<  7),            // Forced to continue
+	User		= (1 <<  8),            // Asked user "Are you sure?"
 
 	// INFO    6 informational
-	Info		= 6 + ( 0 << 3),	// Volume needs defragmenting
-	Progress	= 6 + ( 1 << 3),	// 54% complete
-	Quiet		= 6 + ( 2 << 3),	// Quietable output
-	Command		= 6 + ( 3 << 3),	// Running "command"
+	Info		= (1 <<  9),            // Volume needs defragmenting
+	Progress	= (1 << 10),            // 54% complete
+	Quiet		= (1 << 11),            // Quietable output
+	Command		= (1 << 12),            // Running "command"
 
 	// DEBUG   7 debug-level messages
-	Debug		= 7 + ( 0 << 3),	// x = 42
-	Trace		= 7 + ( 1 << 3),	// Before calculate
-	CommandIn	= 7 + ( 2 << 3),	// Sending data to command: ...
-	CommandOut	= 7 + ( 3 << 3),	// Received data from command: ...
-	IoIn		= 7 + ( 4 << 3),	// Read data from file
-	IoOut		= 7 + ( 5 << 3),	// Wrote data to file
-	Dot		= 7 + ( 6 << 3),	// Create dot output
-	Hex		= 7 + ( 7 << 3),	// Memory dump
-	ConfigRead	= 7 + ( 8 << 3),	// Read  config entry
-	ConfigWrite	= 7 + ( 9 << 3),	// Wrote config entry
-	Enter		= 7 + (10 << 3),	// Enter a function
-	Leave		= 7 + (11 << 3),	// Leave a function
-	File		= 7 + (12 << 3),	// File opened/closed/mmaped
+	Debug		= (1 << 13),            // x = 42
+	Trace		= (1 << 14),            // Before calculate
+	CommandIn	= (1 << 15),            // Sending data to command: ...
+	CommandOut	= (1 << 16),            // Received data from command: ...
+	IoIn		= (1 << 17),            // Read data from file
+	IoOut		= (1 << 18),            // Wrote data to file
+	Dot		= (1 << 19),            // Create dot output
+	Hex		= (1 << 20),            // Memory dump
+	ConfigRead	= (1 << 21),            // Read  config entry
+	ConfigWrite	= (1 << 22),            // Wrote config entry
+	Enter		= (1 << 23),            // Enter a function
+	Leave		= (1 << 24),            // Leave a function
+	File		= (1 << 25),            // File opened/closed/mmaped
+
+	// Handy shortcuts
+	AllMessages	= ~0,
+	AllEmergency	= SystemEmergency,
+	AllAlert	= SystemAlert,
+	AllCritical	= Critical,
+	AllError	= Error | Perror | Code,
+	AllWarning	= Warning,
+	AllNotice	= Verbose | User,
+	AllInfo		= Info | Progress | Quiet | Command,
+	AllDebug	= Debug | Trace | CommandIn | CommandOut | IoIn | IoOut | Dot | Hex | ConfigRead | ConfigWrite | Enter | Leave | File
 };
 
 #endif // _SEVERITY_H_

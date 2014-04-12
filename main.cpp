@@ -30,7 +30,9 @@ int
 main (int argc, char *argv[])
 {
 	srandom (time (nullptr));
-	log_init ("/dev/stdout");
+
+	log_init (Severity::Debug,  log_stdout);
+	log_init (~Severity::Debug, log_stderr);
 
 	int status = 0;
 
@@ -43,6 +45,7 @@ main (int argc, char *argv[])
 	main_app = text_app;
 	status = text_app->run (argc, argv);
 #endif
+	main_app = nullptr;
 
 	log_close();
 	return status;

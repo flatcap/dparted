@@ -19,6 +19,7 @@
 # Configurables
 V	?= 0
 P	?= 0
+L	?= 0
 D	?= 1
 BTRFS	?= 1
 DOT	?= 1
@@ -134,6 +135,10 @@ CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 PACKAGES += libconfig++
 ifeq ($(GUI),1)
 	PACKAGES += gtkmm-3.0
+endif
+
+ifeq ($(L),1)
+	CFLAGS	+= -DDP_LOG_TEST
 endif
 
 ifeq ($(D),1)

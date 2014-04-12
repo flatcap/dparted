@@ -178,7 +178,7 @@ Table::fill_space (void)
 		}
 	}
 
-	//log_debug ("upto = %ld, size = %ld\n", upto, bytes_size);
+	log_debug ("upto = %ld, size = %ld\n", upto, bytes_size);
 	if (upto < bytes_size) {
 		PartitionPtr p = Partition::create();
 		p->sub_type ("Space");
