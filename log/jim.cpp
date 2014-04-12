@@ -42,13 +42,10 @@ void log_init (Severity s, log_callback_t cb)
 
 int log (Severity sev, const char* message)
 {
-	if (sev == Severity::Enter) {}
-	std::cout << message << std::endl;
-
 	for (auto i : log_mux) {
-		// if (i.first & sev) {
+		if ((bool) (i.first & sev)) {
 			i.second (sev, __PRETTY_FUNCTION__, __FILE__, __LINE__, message);
-		// }
+		}
 	}
 
 	return 0;
@@ -59,11 +56,11 @@ main()
 {
 	//log_callback_t mylog = log_open_file ("logfile.txt");
 
-	log_init (Severity::Enter,                log_stdout);
-	log_init (Severity::Debug|Severity::Info, log_stdout);
-	log_init (Severity::AllMessages,          log_stderr);
+	log_init (Severity::Debug,  log_stdout);
+	log_init (~Severity::Debug, log_stderr);
 
-	log (Severity::Enter, "entering");
+	log (Severity::Debug, "debug");
+	log (Severity::Info,  "info");
 
 	//log_close (my_log);
 }
