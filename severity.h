@@ -19,6 +19,12 @@
 #ifndef _SEVERITY_H_
 #define _SEVERITY_H_
 
+enum class Severity;
+
+inline Severity operator| (Severity a, Severity b) { return (Severity) ((std::uint32_t) a | (std::uint32_t) b); }
+inline Severity operator& (Severity a, Severity b) { return (Severity) ((std::uint32_t) a & (std::uint32_t) b); }
+inline Severity operator~ (Severity a) { return (Severity) (~(std::uint32_t) a); }
+
 enum class Severity {
 	// EMERG   0 system is unusable
 	SystemEmergency	= (1 <<  0),		// Kernel panic
