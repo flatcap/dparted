@@ -24,6 +24,7 @@ enum class Severity;
 inline Severity operator| (Severity a, Severity b) { return (Severity) ((std::uint32_t) a | (std::uint32_t) b); }
 inline Severity operator& (Severity a, Severity b) { return (Severity) ((std::uint32_t) a & (std::uint32_t) b); }
 inline Severity operator~ (Severity a) { return (Severity) (~(std::uint32_t) a); }
+//inline operator bool (Severity a) { return ((std::uint32_t) a != 0); }
 
 enum class Severity {
 	// EMERG   0 system is unusable

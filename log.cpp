@@ -29,6 +29,10 @@
 //static unsigned int log_level = ~0;
 static FILE* file = nullptr;
 
+typedef std::function<int(Severity level, const char* function, const char* file, int line, const char* message)> log_callback_t;
+
+std::vector<log_callback_t> log_mux;
+
 #ifdef DP_LOG_CHECK
 __attribute__ ((format (printf, 1, 2)))
 int
