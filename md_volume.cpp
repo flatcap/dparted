@@ -22,6 +22,7 @@
 
 MdVolume::MdVolume (void)
 {
+	log_ctor ("ctor MdVolume\n");
 	const char* me = "MdVolume";
 
 	sub_type (me);
@@ -29,6 +30,7 @@ MdVolume::MdVolume (void)
 
 MdVolume::~MdVolume()
 {
+	log_dtor ("dtor MdVolume\n");
 }
 
 MdVolumePtr

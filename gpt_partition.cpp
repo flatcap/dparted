@@ -22,6 +22,7 @@
 
 GptPartition::GptPartition (void)
 {
+	log_ctor ("ctor GptPartition\n");
 	const char* me = "GptPartition";
 
 	sub_type (me);
@@ -29,6 +30,7 @@ GptPartition::GptPartition (void)
 
 GptPartition::~GptPartition()
 {
+	log_dtor ("dtor GptPartition\n");
 }
 
 GptPartitionPtr

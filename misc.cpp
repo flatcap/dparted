@@ -31,6 +31,7 @@
 
 Misc::Misc (void)
 {
+	log_ctor ("ctor Misc\n");
 	const char* me = "Misc";
 
 	sub_type (me);
@@ -38,6 +39,7 @@ Misc::Misc (void)
 
 Misc::~Misc()
 {
+	log_dtor ("dtor Misc\n");
 }
 
 MiscPtr

@@ -65,6 +65,7 @@
 
 Gpt::Gpt (void)
 {
+	log_ctor ("ctor Gpt\n");
 	const char* me = "Gpt";
 
 	sub_type (me);
@@ -72,6 +73,7 @@ Gpt::Gpt (void)
 
 Gpt::~Gpt()
 {
+	log_dtor ("dtor Gpt\n");
 }
 
 GptPtr

@@ -36,6 +36,7 @@
 
 Extended::Extended (void)
 {
+	log_ctor ("ctor Extended\n");
 	const char* me = "Extended";
 
 	sub_type (me);
@@ -43,6 +44,7 @@ Extended::Extended (void)
 
 Extended::~Extended()
 {
+	log_dtor ("dtor Extended\n");
 }
 
 ExtendedPtr

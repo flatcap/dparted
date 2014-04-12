@@ -38,6 +38,7 @@
 DrawingArea::DrawingArea (void)
 	//Glib::ObjectBase ("MyDrawingArea")
 {
+	log_ctor ("ctor DrawingArea\n");
 	set_hexpand (true);
 	set_vexpand (false);
 	set_can_focus (true);
@@ -70,6 +71,7 @@ DrawingArea::DrawingArea (void)
 
 DrawingArea::~DrawingArea()
 {
+	log_dtor ("dtor DrawingArea\n");
 }
 
 

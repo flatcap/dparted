@@ -34,6 +34,7 @@
 
 LvmTable::LvmTable (void)
 {
+	log_ctor ("ctor LvmTable\n");
 	// Save a bit of space
 	const char* me = "LvmTable";
 	const int   s  = (int) BaseProperty::Flags::Size;
@@ -47,6 +48,7 @@ LvmTable::LvmTable (void)
 
 LvmTable::~LvmTable()
 {
+	log_dtor ("dtor LvmTable\n");
 }
 
 LvmTablePtr

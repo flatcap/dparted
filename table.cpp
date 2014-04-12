@@ -44,6 +44,7 @@
 
 Table::Table (void)
 {
+	log_ctor ("ctor Table\n");
 	const char* me = "Table";
 
 	sub_type (me);
@@ -51,6 +52,7 @@ Table::Table (void)
 
 Table::~Table()
 {
+	log_dtor ("dtor Table\n");
 }
 
 TablePtr

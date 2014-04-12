@@ -31,6 +31,7 @@
 
 Ntfs::Ntfs (void)
 {
+	log_ctor ("ctor Ntfs\n");
 	const char* me = "Ntfs";
 
 	sub_type (me);
@@ -38,6 +39,7 @@ Ntfs::Ntfs (void)
 
 Ntfs::~Ntfs()
 {
+	log_dtor ("dtor Ntfs\n");
 }
 
 NtfsPtr

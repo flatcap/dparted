@@ -25,6 +25,7 @@
 
 LuksPartition::LuksPartition (void)
 {
+	log_ctor ("ctor LuksPartition\n");
 	const char* me = "LuksPartition";
 
 	sub_type (me);
@@ -32,6 +33,7 @@ LuksPartition::LuksPartition (void)
 
 LuksPartition::~LuksPartition()
 {
+	log_dtor ("dtor LuksPartition\n");
 }
 
 LuksPartitionPtr

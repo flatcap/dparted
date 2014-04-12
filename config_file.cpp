@@ -28,10 +28,12 @@
 
 ConfigFile::ConfigFile (void)
 {
+	log_ctor ("ctor ConfigFile\n");
 }
 
 ConfigFile::~ConfigFile()
 {
+	log_dtor ("dtor ConfigFile\n");
 }
 
 ConfigFilePtr

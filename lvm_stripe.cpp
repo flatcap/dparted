@@ -25,6 +25,7 @@
 
 LvmStripe::LvmStripe (void)
 {
+	log_ctor ("ctor LvmStripe\n");
 	const char* me = "LvmStripe";
 
 	sub_type (me);
@@ -32,6 +33,7 @@ LvmStripe::LvmStripe (void)
 
 LvmStripe::~LvmStripe()
 {
+	log_dtor ("dtor LvmStripe\n");
 }
 
 LvmStripePtr

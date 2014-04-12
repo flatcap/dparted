@@ -38,10 +38,12 @@ TextAppPtr text_app;
 
 TextApp::TextApp (void)
 {
+	log_ctor ("ctor TextApp\n");
 }
 
 TextApp::~TextApp()
 {
+	log_dtor ("dtor TextApp\n");
 }
 
 

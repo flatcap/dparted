@@ -22,6 +22,7 @@
 
 MsdosPartition::MsdosPartition (void)
 {
+	log_ctor ("ctor MsdosPartition\n");
 	const char* me = "MsdosPartition";
 
 	sub_type (me);
@@ -29,6 +30,7 @@ MsdosPartition::MsdosPartition (void)
 
 MsdosPartition::~MsdosPartition()
 {
+	log_dtor ("dtor MsdosPartition\n");
 }
 
 MsdosPartitionPtr

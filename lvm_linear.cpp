@@ -25,6 +25,7 @@
 
 LvmLinear::LvmLinear (void)
 {
+	log_ctor ("ctor LvmLinear\n");
 	const char* me = "LvmLinear";
 
 	sub_type (me);
@@ -32,6 +33,7 @@ LvmLinear::LvmLinear (void)
 
 LvmLinear::~LvmLinear()
 {
+	log_dtor ("dtor LvmLinear\n");
 }
 
 LvmLinearPtr

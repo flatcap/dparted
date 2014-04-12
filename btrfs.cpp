@@ -31,6 +31,7 @@
 
 Btrfs::Btrfs (void)
 {
+	log_ctor ("ctor Btrfs\n");
 	const char* me = "Btrfs";
 
 	sub_type (me);
@@ -38,6 +39,7 @@ Btrfs::Btrfs (void)
 
 Btrfs::~Btrfs()
 {
+	log_dtor ("dtor Btrfs\n");
 }
 
 BtrfsPtr

@@ -22,6 +22,7 @@
 
 MdStripe::MdStripe (void)
 {
+	log_ctor ("ctor MdStripe\n");
 	const char* me = "MdStripe";
 
 	sub_type (me);
@@ -29,6 +30,7 @@ MdStripe::MdStripe (void)
 
 MdStripe::~MdStripe()
 {
+	log_dtor ("dtor MdStripe\n");
 }
 
 MdStripePtr

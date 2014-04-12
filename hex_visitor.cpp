@@ -25,10 +25,12 @@
 
 HexVisitor::HexVisitor (void)
 {
+	log_ctor ("ctor HexVisitor\n");
 }
 
 HexVisitor::~HexVisitor()
 {
+	log_dtor ("dtor HexVisitor\n");
 }
 
 

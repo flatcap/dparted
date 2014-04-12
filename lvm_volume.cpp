@@ -26,6 +26,7 @@
 
 LvmVolume::LvmVolume (void)
 {
+	log_ctor ("ctor LvmVolume\n");
 	const char* me = "LvmVolume";
 
 	sub_type (me);
@@ -39,6 +40,7 @@ LvmVolume::LvmVolume (void)
 
 LvmVolume::~LvmVolume()
 {
+	log_dtor ("dtor LvmVolume\n");
 }
 
 LvmVolumePtr

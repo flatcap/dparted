@@ -43,10 +43,12 @@ AppPtr main_app;
 
 App::App (void)
 {
+	log_ctor ("ctor ctor App\n");
 }
 
 App::~App()
 {
+	log_dtor ("dtor dtor App\n");
 }
 
 

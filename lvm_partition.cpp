@@ -25,6 +25,7 @@
 
 LvmPartition::LvmPartition (void)
 {
+	log_ctor ("ctor LvmPartition\n");
 	const char* me = "LvmPartition";
 
 	sub_type (me);
@@ -32,6 +33,7 @@ LvmPartition::LvmPartition (void)
 
 LvmPartition::~LvmPartition()
 {
+	log_dtor ("dtor LvmPartition\n");
 }
 
 LvmPartitionPtr

@@ -31,6 +31,7 @@
 
 Extfs::Extfs (void)
 {
+	log_ctor ("ctor Extfs\n");
 	const char* me = "Extfs";
 
 	sub_type (me);
@@ -38,6 +39,7 @@ Extfs::Extfs (void)
 
 Extfs::~Extfs()
 {
+	log_dtor ("dtor Extfs\n");
 }
 
 ExtfsPtr

@@ -28,6 +28,7 @@
 
 MdTable::MdTable (void)
 {
+	log_ctor ("ctor MdTable\n");
 	// Save a bit of space
 	const char* me = "MdTable";
 	const int   s  = (int) BaseProperty::Flags::Size;
@@ -47,6 +48,7 @@ MdTable::MdTable (void)
 
 MdTable::~MdTable()
 {
+	log_dtor ("dtor MdTable\n");
 }
 
 MdTablePtr

@@ -24,6 +24,7 @@ PropertiesDialog::PropertiesDialog (GfxContainerPtr c, Gtk::Window* w) :
 	close ("_Close", true),
 	container(c)
 {
+	log_ctor ("ctor PropertiesDialog\n");
 	set_default_size (400, 400);
 
 	if (w) {
@@ -106,6 +107,7 @@ PropertiesDialog::PropertiesDialog (GfxContainerPtr c, Gtk::Window* w) :
 PropertiesDialog::~PropertiesDialog()
 {
 	LOG_TRACE;
+	log_dtor ("dtor PropertiesDialog\n");
 }
 
 

@@ -33,6 +33,7 @@
 
 Loop::Loop (void)
 {
+	log_ctor ("ctor Loop\n");
 	// Save a bit of space
 	const char* me = "Loop";
 	const int   d  = (int) BaseProperty::Flags::Dot;
@@ -59,6 +60,7 @@ Loop::Loop (void)
 
 Loop::~Loop()
 {
+	log_dtor ("dtor Loop\n");
 }
 
 LoopPtr

@@ -26,6 +26,7 @@
 
 Volume::Volume (void)
 {
+	log_ctor ("ctor Volume\n");
 	const char* me = "Volume";
 
 	sub_type (me);
@@ -33,6 +34,7 @@ Volume::Volume (void)
 
 Volume::~Volume()
 {
+	log_dtor ("dtor Volume\n");
 }
 
 VolumePtr

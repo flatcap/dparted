@@ -43,10 +43,12 @@
 
 DotVisitor::DotVisitor (void)
 {
+	log_ctor ("ctor DotVisitor\n");
 }
 
 DotVisitor::~DotVisitor()
 {
+	log_dtor ("dtor DotVisitor\n");
 }
 
 

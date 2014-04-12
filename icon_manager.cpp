@@ -21,10 +21,12 @@
 
 IconManager::IconManager (void)
 {
+	log_ctor ("ctor IconManager\n");
 }
 
 IconManager::~IconManager()
 {
+	log_dtor ("dtor IconManager\n");
 }
 
 Glib::RefPtr<Gdk::Pixbuf>

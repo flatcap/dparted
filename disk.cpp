@@ -37,6 +37,7 @@
 
 Disk::Disk (void)
 {
+	log_ctor ("ctor Disk\n");
 	const char* me = "Disk";
 
 	sub_type (me);
@@ -55,6 +56,7 @@ Disk::Disk (void)
 
 Disk::~Disk()
 {
+	log_dtor ("dtor Disk\n");
 }
 
 DiskPtr

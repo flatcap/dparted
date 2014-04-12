@@ -41,6 +41,7 @@
 
 LuksTable::LuksTable (void)
 {
+	log_ctor ("ctor LuksTable\n");
 	const char* me = "LuksTable";
 
 	sub_type (me);
@@ -58,6 +59,7 @@ LuksTable::LuksTable (void)
 
 LuksTable::~LuksTable()
 {
+	log_dtor ("dtor LuksTable\n");
 }
 
 LuksTablePtr

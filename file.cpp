@@ -35,6 +35,7 @@
 
 File::File (void)
 {
+	log_ctor ("ctor File\n");
 	const char* me = "File";
 
 	sub_type (me);
@@ -42,6 +43,7 @@ File::File (void)
 
 File::~File()
 {
+	log_dtor ("dtor File\n");
 }
 
 FilePtr

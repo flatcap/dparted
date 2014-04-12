@@ -47,6 +47,7 @@
 
 Filesystem::Filesystem (void)
 {
+	log_ctor ("ctor Filesystem\n");
 	const char* me = "Filesystem";
 
 	sub_type (me);
@@ -54,6 +55,7 @@ Filesystem::Filesystem (void)
 
 Filesystem::~Filesystem()
 {
+	log_dtor ("dtor Filesystem\n");
 }
 
 FilesystemPtr

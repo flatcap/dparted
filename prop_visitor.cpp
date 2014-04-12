@@ -23,10 +23,12 @@
 
 PropVisitor::PropVisitor (void)
 {
+	log_ctor ("ctor PropVisitor\n");
 }
 
 PropVisitor::~PropVisitor()
 {
+	log_dtor ("dtor PropVisitor\n");
 }
 
 

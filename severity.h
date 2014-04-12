@@ -67,6 +67,8 @@ enum class Severity {
 	Enter		= (1 << 23),            // Enter a function
 	Leave		= (1 << 24),            // Leave a function
 	File		= (1 << 25),            // File opened/closed/mmaped
+	Ctor		= (1 << 26),		// Constructor
+	Dtor		= (1 << 27),		// Destructor
 
 	// Handy shortcuts
 	AllMessages	= ~0,

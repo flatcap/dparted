@@ -26,6 +26,7 @@
 
 LvmRaid::LvmRaid (void)
 {
+	log_ctor ("ctor LvmRaid\n");
 	const char* me = "LvmRaid";
 
 	sub_type (me);
@@ -33,6 +34,7 @@ LvmRaid::LvmRaid (void)
 
 LvmRaid::~LvmRaid()
 {
+	log_dtor ("dtor LvmRaid\n");
 }
 
 LvmRaidPtr

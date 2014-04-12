@@ -25,6 +25,7 @@
 
 MdPartition::MdPartition (void)
 {
+	log_ctor ("ctor MdPartition\n");
 	const char* me = "MdPartition";
 
 	sub_type (me);
@@ -32,6 +33,7 @@ MdPartition::MdPartition (void)
 
 MdPartition::~MdPartition()
 {
+	log_dtor ("dtor MdPartition\n");
 }
 
 MdPartitionPtr

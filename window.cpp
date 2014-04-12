@@ -32,6 +32,7 @@
 
 Window::Window (void)
 {
+	log_ctor ("ctor Window\n");
 	set_title ("DParted");
 
 	//XXX Arbitrary minimum requirement -- theme?
@@ -106,6 +107,7 @@ Window::Window (void)
 
 Window::~Window()
 {
+	log_dtor ("dtor Window\n");
 }
 
 

@@ -41,6 +41,7 @@
 
 Block::Block (void)
 {
+	log_ctor ("ctor Block\n");
 	const char* me = "Block";
 
 	sub_type (me);
@@ -48,6 +49,7 @@ Block::Block (void)
 
 Block::~Block()
 {
+	log_dtor ("dtor Block\n");
 }
 
 BlockPtr

@@ -43,6 +43,7 @@ enum ColType {
 
 TreeView::TreeView (void)
 {
+	log_ctor ("ctor TreeView\n");
 	setup_popup();
 
 	set_has_tooltip (true);
@@ -51,6 +52,7 @@ TreeView::TreeView (void)
 
 TreeView::~TreeView()
 {
+	log_dtor ("dtor TreeView\n");
 }
 
 

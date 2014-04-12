@@ -30,11 +30,13 @@
 
 Theme::Theme (void)
 {
+	log_ctor ("ctor Theme\n");
 	init_icons();
 }
 
 Theme::~Theme()
 {
+	log_dtor ("dtor Theme\n");
 }
 
 

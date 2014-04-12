@@ -41,6 +41,7 @@
 
 Msdos::Msdos (void)
 {
+	log_ctor ("ctor Msdos\n");
 	const char* me = "Msdos";
 
 	sub_type (me);
@@ -48,6 +49,7 @@ Msdos::Msdos (void)
 
 Msdos::~Msdos()
 {
+	log_dtor ("dtor Msdos\n");
 }
 
 MsdosPtr

@@ -22,6 +22,7 @@
 
 MdRaid::MdRaid (void)
 {
+	log_ctor ("ctor MdRaid\n");
 	const char* me = "MdRaid";
 
 	sub_type (me);
@@ -29,6 +30,7 @@ MdRaid::MdRaid (void)
 
 MdRaid::~MdRaid()
 {
+	log_dtor ("dtor MdRaid\n");
 }
 
 MdRaidPtr

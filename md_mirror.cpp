@@ -22,6 +22,7 @@
 
 MdMirror::MdMirror (void)
 {
+	log_ctor ("ctor MdMirror\n");
 	const char* me = "MdMirror";
 
 	sub_type (me);
@@ -29,6 +30,7 @@ MdMirror::MdMirror (void)
 
 MdMirror::~MdMirror()
 {
+	log_dtor ("dtor MdMirror\n");
 }
 
 MdMirrorPtr

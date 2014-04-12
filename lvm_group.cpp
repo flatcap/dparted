@@ -43,6 +43,7 @@
 
 LvmGroup::LvmGroup (void)
 {
+	log_ctor ("ctor LvmGroup\n");
 	const char* me = "LvmGroup";
 
 	sub_type (me);
@@ -55,6 +56,7 @@ LvmGroup::LvmGroup (void)
 
 LvmGroup::~LvmGroup()
 {
+	log_dtor ("dtor LvmGroup\n");
 }
 
 LvmGroupPtr

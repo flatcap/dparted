@@ -27,10 +27,12 @@
 
 GfxContainer::GfxContainer (void)
 {
+	log_ctor ("ctor GfxContainer\n");
 }
 
 GfxContainer::~GfxContainer()
 {
+	log_dtor ("dtor GfxContainer\n");
 }
 
 GfxContainerPtr

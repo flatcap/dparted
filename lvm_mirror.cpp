@@ -26,6 +26,7 @@
 
 LvmMirror::LvmMirror (void)
 {
+	log_ctor ("ctor LvmMirror\n");
 	const char* me = "LvmMirror";
 
 	sub_type (me);
@@ -33,6 +34,7 @@ LvmMirror::LvmMirror (void)
 
 LvmMirror::~LvmMirror()
 {
+	log_dtor ("dtor LvmMirror\n");
 }
 
 LvmMirrorPtr

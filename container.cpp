@@ -87,6 +87,7 @@ std::vector<Action> cont_actions = {
 
 Container::Container (void)
 {
+	log_ctor ("ctor Container\n");
 	// Save a bit of space
 	const char* me = "Container";
 	const int   d  = (int) BaseProperty::Flags::Dot;
@@ -141,6 +142,7 @@ Container::~Container()
 		close (fd);
 		fd = -1;
 	}
+	log_dtor ("dtor Container\n");
 }
 
 ContainerPtr

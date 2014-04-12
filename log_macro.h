@@ -29,6 +29,8 @@
 #define log_enter            log_redirect
 #define log_leave            log_redirect
 #define log_file             log_redirect
+#define log_ctor             log_redirect
+#define log_dtor             log_redirect
 #else
 // Log level: EMERG
 #define log_system_emergency(...) log_redirect(Severity::SystemEmergency,__PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
@@ -63,6 +65,8 @@
 #define log_enter(...)            log_redirect(Severity::Enter,          __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #define log_leave(...)            log_redirect(Severity::Leave,          __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #define log_file(...)             log_redirect(Severity::File,           __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
+#define log_ctor(...)             log_redirect(Severity::Ctor,           __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
+#define log_dtor(...)             log_redirect(Severity::Dtor,           __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #endif
 
 #endif // _LOG_MACRO_H_

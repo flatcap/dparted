@@ -23,10 +23,12 @@
 
 BaseDrawingArea::BaseDrawingArea (void)
 {
+	log_ctor ("ctor BaseDrawingArea\n");
 }
 
 BaseDrawingArea::~BaseDrawingArea()
 {
+	log_dtor ("dtor BaseDrawingArea\n");
 }
 
 

@@ -27,6 +27,7 @@
 
 Partition::Partition (void)
 {
+	log_ctor ("ctor Partition\n");
 	const char* me = "Partition";
 
 	sub_type (me);
@@ -36,6 +37,7 @@ Partition::Partition (void)
 
 Partition::~Partition()
 {
+	log_dtor ("dtor Partition\n");
 }
 
 PartitionPtr

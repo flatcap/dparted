@@ -45,12 +45,14 @@ GuiAppPtr gui_app;
 GuiApp::GuiApp (void) :
 	Gtk::Application ("org.flatcap.test.area", Gio::ApplicationFlags (Gio::APPLICATION_HANDLES_COMMAND_LINE))
 {
+	log_ctor ("ctor GuiApp\n");
 	LOG_TRACE;
 	Glib::set_application_name ("dparted");
 }
 
 GuiApp::~GuiApp()
 {
+	log_dtor ("dtor GuiApp\n");
 }
 
 
