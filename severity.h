@@ -79,7 +79,7 @@ enum class Severity {
 	AllWarning	= Warning,
 	AllNotice	= Verbose | User,
 	AllInfo		= Info | Progress | Quiet | Command,
-	AllDebug	= Debug | Trace | CommandIn | CommandOut | IoIn | IoOut | Dot | Hex | ConfigRead | ConfigWrite | Enter | Leave | File
+	AllDebug	= Debug | Trace | CommandIn | CommandOut | IoIn | IoOut | Dot | Hex | ConfigRead | ConfigWrite | Enter | Leave | File | Ctor | Dtor
 };
 
 #endif // _SEVERITY_H_
