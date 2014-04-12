@@ -19,6 +19,7 @@
 #include <cstdarg>
 #include <cstring>
 #include <functional>
+#include <map>
 #include <vector>
 
 #include "log.h"
@@ -26,66 +27,56 @@
 #include "severity.h"
 #include "utils.h"
 
-//static unsigned int log_level = ~0;
-static FILE* file = nullptr;
+static std::multimap<Severity,log_callback_t> log_mux;
 
-typedef std::function<int(Severity level, const char* function, const char* file, int line, const char* message)> log_callback_t;
+void
+log_stdout (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
+{
+	fprintf (stdout, "%s", message);
+}
 
-std::vector<log_callback_t> log_mux;
+void
+log_stderr (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
+{
+	fprintf (stderr, "%s", message);
+}
+
 
 #ifdef DP_LOG_CHECK
 __attribute__ ((format (printf, 1, 2)))
-int
+void
 log_redirect (const char* format __attribute__((unused)), ...)
 {
-	return 0;
 }
+
 #else
 /**
  * log_redirect (message)
  */
-int
-log_redirect (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
+void
+log_redirect (Severity level, const char* function, const char* file, int line, const char* message)
 {
-	FILE *f = stdout;
-	int count = 0;
-
-#if 0
-	count += fprintf (f, "Log:\n");
-	count += fprintf (f, "\t%d\n",    level);
-	count += fprintf (f, "\t%s\n",    function);
-	count += fprintf (f, "\t%s:%d\n", file, line);
-	count += fprintf (f, "\t%s\n",    message);
-#else
-	count += fprintf (f, "%s", message);
-#endif
-
-	return count;
-}
-
-#endif
-
-bool
-log_init (const char* name)
-{
-	file = fopen (name, "ae");	// append, close on exec
-	log_info ("log init: %s\n", name);
-
-	if (strncmp (name, "/dev/pts/", 9) == 0) {
-		//fprintf (file, "\033c");		// reset
+	if (log_mux.empty()) {
+		log_stdout (level, function, file, line, message);
+	} else {
+		for (auto i : log_mux) {
+			if ((bool) (i.first & level)) {
+				i.second (level, function, file, line, message);
+			}
+		}
 	}
-
-	return (file != nullptr);
 }
 
+#endif
+
+void
+log_init (Severity s, log_callback_t cb)
+{
+	log_mux.insert (std::make_pair(s,cb));
+}
 void
 log_close (void)
 {
-	if (!file)
-		return;
-
-	fclose (file);
-	file = nullptr;
 }
 
 void

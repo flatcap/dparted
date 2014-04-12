@@ -26,22 +26,30 @@
 #include "severity.h"
 #include "log_macro.h"
 
+typedef std::function<void(Severity level, const char* function, const char* file, int line, const char* message)> log_callback_t;
+
+// Default handlers
+void log_stdout (Severity level, const char* function, const char* file, int line, const char* message);
+void log_stderr (Severity level, const char* function, const char* file, int line, const char* message);
+// log_callback_t log_syslog;
+// log_callback_t log_journal;
+
 #ifdef DP_LOG_CHECK
-int log_redirect (const char* format __attribute__((unused)), ...) __attribute__ ((format (printf, 1, 2)));
+void log_redirect (const char* format __attribute__((unused)), ...) __attribute__ ((format (printf, 1, 2)));
 #else
-int log_redirect (Severity level, const char* function, const char* file, int line, const char* message);
+void log_redirect (Severity level, const char* function, const char* file, int line, const char* message);
 
 template<class T>
-int
+void
 log_redirect (Severity level, const char* function, const char* file, int line, std::shared_ptr<T>& j)
 {
 	std::stringstream ss;
 	ss << j;
-	return log_redirect (level, function, file, line, ss.str().c_str());
+	log_redirect (level, function, file, line, ss.str().c_str());
 }
 
 template <typename ...A>
-int
+void
 log_redirect(Severity level, const char* function, const char* file, int line, const char* format, A ...args)
 {
 	std::vector<char> buffer;
@@ -54,7 +62,7 @@ log_redirect(Severity level, const char* function, const char* file, int line, c
 		count = snprintf (buffer.data(), count+1, format, args...);
 	}
 
-	return log_redirect (level, function, file, line, buffer.data());
+	log_redirect (level, function, file, line, buffer.data());
 }
 
 #endif
@@ -83,7 +91,7 @@ void assertion_failure (const char* file, int line, const char* test, const char
 // warn_if_reached
 // warn_if_fail
 
-bool log_init (const char* name);
+void log_init (Severity s, log_callback_t cb);
 void log_close (void);
 
 #if 0
