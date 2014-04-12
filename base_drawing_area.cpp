@@ -151,8 +151,6 @@ BaseDrawingArea::draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape,
 
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - icon label colour
 
-	//int left = std::max (GAP, (shape.w - tw) / 2);
-	//log_debug ("left = %d\n", left);
 	//cr->move_to (shape.x + left, shape.y + shape.h - th);	// align to bottom
 	cr->move_to (shape.x + SIDES, shape.y + RADIUS);	// align to top
 
@@ -180,7 +178,7 @@ BaseDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, Glib::RefPt
 	Gdk::Cairo::set_source_pixbuf (cr, icon, work.x, work.y);
 	work.w = icon->get_width();
 	work.h = icon->get_height();
-	//log_info ("icon %d,%d\n", work.w, work.h);
+	log_info ("icon %d,%d\n", work.w, work.h);
 
 	cr->rectangle (work.x, work.y, work.w, work.h);
 	cr->fill();
@@ -282,7 +280,7 @@ BaseDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& 
 	}
 
 	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
-		//log_info ("draw_box: too narrow\n");
+		log_info ("draw_box: too narrow\n");
 		return;
 	}
 

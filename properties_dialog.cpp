@@ -114,7 +114,7 @@ PropertiesDialog::on_dialog_response (int response_id)
 {
 	switch (response_id) {
 		case Gtk::RESPONSE_DELETE_EVENT:
-			//log_debug ("Delete clicked.\n");
+			log_debug ("Delete clicked.\n");
 			break;
 		default:
 			log_debug ("Unexpected button clicked, response_id=%d\n", response_id);

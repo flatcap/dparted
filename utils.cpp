@@ -217,7 +217,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 
 	//XXX log command and output
 
-	//log_debug ("running command: %s\n", command.c_str());
+	log_debug ("running command: %s\n", command.c_str());
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "r");
 	if (file == nullptr) {
@@ -225,7 +225,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 		return -1;
 	}
 
-	//log_debug ("output:\n");
+	log_debug ("output:\n");
 	do {
 		ptr = nullptr;
 		n = 0;
@@ -235,7 +235,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 				ptr[count-1] = 0;
 			}
 			output.push_back (ptr);
-			//log_debug ("\t%s\n", ptr);
+			log_debug ("\t%s\n", ptr);
 		}
 		free (ptr);
 	} while (count > 0);
@@ -247,7 +247,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 		  log_info ("%d\n", WEXITSTATUS(ret));
 #endif
 	int retcode = pclose (file);
-	//log_info ("command %s returned %d\n", command.c_str(), retcode);
+	log_info ("command %s returned %d\n", command.c_str(), retcode);
 	if (retcode == -1) {
 		log_error ("pclose failed: %s\n", strerror (errno));
 		return -1;
@@ -266,16 +266,15 @@ execute_command2 (const std::string& command, std::string& input)
 
 	//XXX log command and output
 
-	//log_debug ("running command: %s\n", command.c_str());
+	log_debug ("running command: %s\n", command.c_str());
 	file = popen (command.c_str(), "we");
 	if (file == nullptr) {
 		log_error ("popen failed: %s\n", strerror (errno));
 		return -1;
 	}
 
-	//int count =
-	fprintf (file, "%s\n", input.c_str());
-	//log_debug ("wrote %d bytes to command %s\n", count, command.c_str());
+	int count = fprintf (file, "%s\n", input.c_str());
+	log_debug ("wrote %d bytes to command %s\n", count, command.c_str());
 
 	int retcode = pclose (file);
 	if (retcode == -1) {
@@ -348,19 +347,19 @@ explode_n (const char* separators, const std::string& input, std::vector<std::st
 
 	parts.clear();
 
-	//log_info ("input      = '%s'\n", input.c_str());
-	//log_info ("separators = '%s'\n", separators);
+	log_info ("input      = '%s'\n", input.c_str());
+	log_info ("separators = '%s'\n", separators);
 
 	start = input.find_first_not_of (separators, start);
 	end   = input.find_first_of     (separators, start);
-	//log_info ("start = %ld, end = %ld\n", start, end);
+	log_info ("start = %ld, end = %ld\n", start, end);
 
 	while (end != std::string::npos) {
 		parts.push_back (input.substr (start, end - start));
 
 		start = input.find_first_not_of (separators, end+1);
 		end   = input.find_first_of     (separators, start);
-		//log_info ("start = %ld, end = %ld\n", start, end);
+		log_info ("start = %ld, end = %ld\n", start, end);
 
 		max--;
 		if (max < 2)

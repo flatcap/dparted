@@ -230,7 +230,7 @@ Container::add_child (ContainerPtr& child)
 
 	children.insert (child);
 
-	//log_debug ("child: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
+	log_debug ("child: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
 	child->parent = get_smart();
 #if 0
@@ -248,7 +248,7 @@ Container::just_add_child (ContainerPtr& child)
 	return_if_fail (child);
 
 	children.insert (child);
-	//log_debug ("just: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
+	log_debug ("just: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 }
 
 void
@@ -289,7 +289,7 @@ Container::get_fd (void)
 		log_error ("failed to open device %s\n", device.c_str());
 		return -1;
 	}
-	//log_debug ("opened device %s (%d)\n", device.c_str(), newfd);
+	log_debug ("opened device %s (%d)\n", device.c_str(), newfd);
 
 	fd = newfd;
 
@@ -313,7 +313,7 @@ Container::get_block_size (void)
 std::string
 Container::get_device_name (void)
 {
-	//log_debug ("i am %s\n", typeid (*this).name());
+	log_debug ("i am %s\n", typeid (*this).name());
 	if (!device.empty())
 		return device;
 
@@ -385,7 +385,7 @@ void deleter (Mmap* m)
 
 	std::tie (size, ptr) = *m;
 
-	//log_debug ("mmap deleter: %p\n", ptr);
+	log_debug ("mmap deleter: %p\n", ptr);
 	munmap (ptr, size);
 
 	delete m;
@@ -400,11 +400,11 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		return nullptr;
 	}
 
-	//log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s\n", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
+	log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s\n", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
 
 	if (device_mmap) {
 		void* buf = (*device_mmap).second;
-		//log_debug ("mmap existing: %p\n", ((std::uint8_t*) buf) + offset);
+		log_debug ("mmap existing: %p\n", ((std::uint8_t*) buf) + offset);
 		return ((std::uint8_t*) buf) + offset;
 	}
 
@@ -441,11 +441,11 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		//close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
-	//log_debug ("mmap created: %p, device %s, size %s\n", buf, device.c_str(), get_size (size).c_str());
+	log_debug ("mmap created: %p, device %s, size %s\n", buf, device.c_str(), get_size (size).c_str());
 
 	device_mmap = (MmapPtr (new Mmap (size, buf), deleter));
 
-	//log_debug ("mmap new: %p\n", ((std::uint8_t*) buf) + offset);
+	log_debug ("mmap new: %p\n", ((std::uint8_t*) buf) + offset);
 	return ((std::uint8_t*) buf) + offset;
 }
 
@@ -507,7 +507,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 bool
 Container::is_a (const std::string& t)
 {
-	//log_debug ("my type = %s, compare to %s\n", type.back().c_str(), t.c_str());
+	log_debug ("my type = %s, compare to %s\n", type.back().c_str(), t.c_str());
 
 	// Start with the most derived type
 	for (auto it = type.rbegin(); it != type.rend(); ++it) {

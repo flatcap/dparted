@@ -108,8 +108,8 @@ App::queue_add_probe (ContainerPtr& item)
 
 	probe_queue.push (item);
 	std::string s = get_size (item->parent_offset);
-	//log_info ("QUEUE: %s %s : %ld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
-	//log_info ("QUEUE has %lu items\n", probe_queue.size());
+	log_info ("QUEUE: %s %s : %ld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
+	log_info ("QUEUE has %lu items\n", probe_queue.size());
 }
 
 
@@ -205,13 +205,13 @@ App::scan (const std::vector<std::string>& files)
 		item = probe_queue.front();
 		probe_queue.pop();
 
-		//log_debug ("Item: %s\n", item->dump());
+		log_debug ("Item: %s\n", item->dump());
 
 		std::uint64_t bufsize = item->bytes_size;
 		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
 
 		if (!buffer) {
-			//log_error ("can't get buffer\n");
+			log_error ("can't get buffer\n");
 			continue;
 		}
 
@@ -219,7 +219,7 @@ App::scan (const std::vector<std::string>& files)
 			//XXX LOG -- should be logged upstream
 			break;
 		}
-		//log_debug ("\n");
+		log_debug ("\n");
 	}
 
 #ifdef DP_LVM
@@ -232,13 +232,13 @@ App::scan (const std::vector<std::string>& files)
 		item = probe_queue.front();
 		probe_queue.pop();
 
-		//log_debug ("Item: %s\n", item->dump());
+		log_debug ("Item: %s\n", item->dump());
 
 		std::uint64_t bufsize = item->bytes_size;
 		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
 
 		if (!buffer) {
-			//log_error ("can't get buffer\n");
+			log_error ("can't get buffer\n");
 			continue;
 		}
 

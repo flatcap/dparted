@@ -33,16 +33,20 @@ static FILE* file = nullptr;
  * log_redirect (message)
  */
 int
-log_redirect (Severity level, const char* function, const char* file, int line, const char* message)
+log_redirect (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
 {
 	FILE *f = stdout;
 	int count = 0;
 
+#if 0
 	count += fprintf (f, "Log:\n");
 	count += fprintf (f, "\t%d\n",    level);
 	count += fprintf (f, "\t%s\n",    function);
 	count += fprintf (f, "\t%s:%d\n", file, line);
 	count += fprintf (f, "\t%s\n",    message);
+#else
+	count += fprintf (f, "%s", message);
+#endif
 
 	return count;
 }
@@ -52,7 +56,7 @@ bool
 log_init (const char* name)
 {
 	file = fopen (name, "ae");	// append, close on exec
-	//log_info ("log init: %s\n", name);
+	log_info ("log init: %s\n", name);
 
 	if (strncmp (name, "/dev/pts/", 9) == 0) {
 		//fprintf (file, "\033c");		// reset

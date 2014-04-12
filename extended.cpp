@@ -128,16 +128,16 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	for (int loop = 0; loop < 50; ++loop) {		//what's the upper limit? prob 255 in the kernel
 		if (le16_to_cpup (table_offset+buffer+510) != 0xAA55) {
 			log_error ("not an extended partition\n");
-			//log_debug ("%s (%s), %ld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
+			log_debug ("%s (%s), %ld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
 			return nullptr;
 		}
 
-		//log_debug ("extended partition\n");
+		log_debug ("extended partition\n");
 
 		int num = 0;
 		std::vector<struct partition> vp;
 		num = ext->read_table (table_offset+buffer, bufsize, 0, vp);
-		//log_debug ("num = %d\n", num);
+		log_debug ("num = %d\n", num);
 		//dump_hex (buffer, bufsize);
 
 		if ((num < 0) || (vp.size() > 2)) {

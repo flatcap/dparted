@@ -95,7 +95,7 @@ GuiApp::my_idle (void)
 		return false;	// detach
 	}
 
-	//log_debug ("GuiApp is idle\n");
+	log_debug ("GuiApp is idle\n");
 	return false;	// continue
 }
 

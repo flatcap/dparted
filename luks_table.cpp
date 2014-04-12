@@ -171,11 +171,11 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	encoded_key_size = align (encoded_key_size, 1048576);
 	l->header_size          = encoded_key_size;
 
-	//log_debug ("header size = %ld\n", l->header_size);
+	log_debug ("header size = %ld\n", l->header_size);
 
 	//l->device      = "/dev/mapper/luks-" + l->uuid;
 
-	//log_debug ("Parent: %s\n", parent->get_device_name().c_str());
+	log_debug ("Parent: %s\n", parent->get_device_name().c_str());
 	l->luks_open (parent->get_device_name(), false);
 
 	PartitionPtr p = Partition::create();
@@ -243,7 +243,7 @@ bool
 LuksTable::is_mounted (const std::string& device)
 {
 	std::string command = "sudo cryptsetup status " + device;
-	//log_debug ("Command: %s\n", command.c_str());
+	log_debug ("Command: %s\n", command.c_str());
 
 	std::string output;
 	int retcode = execute_command3 (command, output);
@@ -264,7 +264,7 @@ LuksTable::is_luks (const std::string& device)
 	// is already mounted?		cryptsetup status
 
 	std::string command = "sudo cryptsetup isLuks " + device;
-	//log_debug ("Command: %s\n", command.c_str());
+	log_debug ("Command: %s\n", command.c_str());
 
 	std::string output;
 	int retcode = execute_command3 (command, output);
@@ -304,7 +304,7 @@ LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 	//XXX check that the luks device matches the parent device
 	if (!is_mounted (mapper)) {
 		std::string command = "sudo cryptsetup open --type luks " + parent + " luks-" + uuid;
-		//log_debug ("Command: %s\n", command.c_str());
+		log_debug ("Command: %s\n", command.c_str());
 
 		std::string password = "password";
 		execute_command2 (command, password);
