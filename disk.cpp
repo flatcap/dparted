@@ -247,7 +247,6 @@ Disk::find_devices (ContainerPtr& list)
 		log_debug ("\tminor: %d", minor);
 		log_debug ("\tsize:  %ld", size);
 		log_debug ("\tmount: %s", mount.c_str());
-		log_debug ("\n");
 
 		DiskPtr d = Disk::create();
 		d->device = "/dev/" + device;

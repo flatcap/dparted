@@ -225,7 +225,6 @@ App::scan (const std::vector<std::string>& files)
 			//XXX LOG -- should be logged upstream
 			break;
 		}
-		log_debug ("\n");
 	}
 
 #ifdef DP_LVM

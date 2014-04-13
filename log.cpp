@@ -90,7 +90,6 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 			continue;
 		log_code ("\t%s", i.c_str());
 	}
-	log_code ("\n");
 }
 
 #if 0

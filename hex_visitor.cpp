@@ -148,7 +148,6 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 			log_hex ("~~~");
 			dump_hex2 (buf, size-abbr, abbr);
 		}
-		log_hex ("\n");
 	} else {
 		log_hex ("\033[01;31m%s\033[0m", c->dump());
 	}

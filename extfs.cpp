@@ -167,7 +167,6 @@ tune2fs (const std::string& dev)
 		log_debug ("\t>>%s<<", key.c_str());
 		results[key] = value;
 	}
-	log_debug ("\n");
 
 	return results;
 }

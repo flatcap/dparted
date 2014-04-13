@@ -331,7 +331,6 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 	for (auto value : parts) {
 		log_debug ("\t>>%s<<", value.c_str());
 	}
-	log_debug ("\n");
 
 	return parts.size();
 }
@@ -373,7 +372,6 @@ explode_n (const char* separators, const std::string& input, std::vector<std::st
 	for (auto value : parts) {
 		log_debug ("\t>>%s<<", value.c_str());
 	}
-	log_debug ("\n");
 
 	return parts.size();
 }
@@ -517,7 +515,6 @@ parse_tagged_line (const std::string& line, const char* separators, std::map<std
 
 		log_debug ("\t%s -> %s", name.c_str(), value.c_str());
 	}
-	log_debug ("\n");
 
 	return tags.size();
 }

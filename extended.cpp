@@ -156,7 +156,6 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 				log_debug ("\tpartition (0x%02x)", part.type);
 				log_debug ("\t\tstart = %ld (%s)", le64_to_cpu (part.start), s1.c_str());
 				log_debug ("\t\tsize  = %ld (%s)", le64_to_cpu (part.size),  s2.c_str());
-				log_debug ("\n");
 			}
 #endif
 			if ((part.type == 0x05) || (part.type == 0x0F)) {

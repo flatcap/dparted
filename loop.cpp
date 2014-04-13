@@ -75,7 +75,6 @@ Loop::create (const std::string& losetup)
 	for (auto i : parts) {
 		log_debug ("\t%s", i.c_str());
 	}
-	log_info ("\n");
 #endif
 
 	//XXX validate all input, else throw()

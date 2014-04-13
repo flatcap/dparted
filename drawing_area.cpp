@@ -702,7 +702,6 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 			log_debug ("\t%s", t.name.c_str());
 		}
 	}
-	log_debug ("\n");
 #endif
 
 	if (actions.empty()) {
@@ -730,7 +729,6 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 
 		log_debug ("\t\033[01;%dm%s\033[0m", colour, a.name.c_str());
 	}
-	log_debug ("\n");
 #endif
 
 	get_window()->invalidate (false);
