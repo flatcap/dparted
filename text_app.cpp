@@ -208,29 +208,6 @@ TextApp::run (int argc, char **argv)
 #ifdef DP_PROP
 	if (prop) run_prop (top_level);
 #endif
-
-#if 0
-	ContainerPtr c1 = *top_level->get_children().begin();		// loop
-	log_debug ("%s\n", c1->dump());
-	ContainerPtr c2 = *c1->get_children().begin();			// gpt
-	log_debug ("%s %ld\n", c2->dump(), c2->get_children().size());
-#if 0
-	for (auto i : c2->get_children()) {
-		log_debug ("\t%s\n", i->dump());
-	}
-#endif
-	auto it = c2->get_children().begin();
-	std::advance (it, 15);
-	ContainerPtr c3 = *it;
-	ContainerPtr c4 = *c3->get_children().begin();
-
-	log_debug ("%s\n", c4->dump());
-	for (auto p : c4->get_all_props (true)) {
-		std::string s { *p };
-		log_debug ("%s\t%s\n", p->name.c_str(), s.c_str());
-	}
-#endif
-
 	return 0;
 }
 

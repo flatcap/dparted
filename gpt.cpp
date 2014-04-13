@@ -249,13 +249,12 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		}
 #endif
 
-#if 0
 		std::string s = get_size (p->bytes_size);
 		log_debug ("\t\tlabel  = %s\n",   p->name.c_str());
 		log_debug ("\t\t\tstart  = %ld\n", le64_to_cpup (buffer+32) * 512);
 		log_debug ("\t\t\tfinish = %ld\n", le64_to_cpup (buffer+40) * 512);
 		log_debug ("\t\t\tsize   = %ld (%s)\n", p->bytes_size, s.c_str());
-#endif
+
 		g->add_child(p);
 		main_app->queue_add_probe(p);
 	}

@@ -200,7 +200,6 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	m->add_child (res1);		// change to add_reserved?
 
 	for (unsigned int i = 0; i < vp.size(); ++i) {
-#if 0
 		std::string s1 = get_size (le64_to_cpu (vp[i].start));
 		std::string s2 = get_size (le64_to_cpu (vp[i].size));
 
@@ -208,7 +207,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		log_debug ("\tstart = %ld (%s)\n", le64_to_cpu (vp[i].start), s1.c_str());
 		log_debug ("\tsize  = %ld (%s)\n", le64_to_cpu (vp[i].size),  s2.c_str());
 		log_debug ("\n");
-#endif
+
 		ContainerPtr c;
 
 		std::string part_name = make_part_dev (parent->device, i+1);
@@ -223,7 +222,6 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			std::uint64_t xsize  = le64_to_cpu (vp[i].size);
 			dump_hex2 (buffer, xstart-2000, 4096);
 #endif
-#if 1
 			ContainerPtr m2(m);
 			c = Extended::probe (m2, buffer+le64_to_cpu (vp[i].start), le64_to_cpu (vp[i].size));
 			if (!c)
@@ -231,7 +229,6 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 			c->parent_offset = le64_to_cpu (vp[i].start);
 			c->device = part_name;
-#endif
 		} else {
 			PartitionPtr p = Partition::create();
 			p->ptype = vp[i].type;

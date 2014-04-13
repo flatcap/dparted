@@ -125,7 +125,6 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	f->bytes_size = sectors * 512;
 
-#if 1
 	std::uint32_t reserved   = le16_to_cpup (buffer + 0x0E);
 	std::uint32_t sect_fat   = le16_to_cpup (buffer + 0x16);
 	std::uint32_t sect_clust = buffer[0x0D];
@@ -154,7 +153,6 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	log_info ("res = %d, sect/fat = %d\n", reserved, sect_fat);
-#endif
 
 	get_vfat_usage(f);
 	return f;

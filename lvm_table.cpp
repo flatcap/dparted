@@ -258,7 +258,6 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	log_info ("%s, %lu (%s)\n", pv_uuid.c_str(), le64_to_cpu (ph->device_size), get_size (le64_to_cpu (ph->device_size)).c_str());
 
-#if 0
 	log_info ("Disk locations:\n");
 	int i;
 	for (i = 0; i < 8; ++i) {
@@ -267,9 +266,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 		}
 		log_info ("\t%lu, %lu\n", le64_to_cpu (ph->disk_areas[i].offset), le64_to_cpu (ph->disk_areas[i].size));
 	}
-#endif
 
-#if 0
 	log_info ("Metadata locations:\n");
 	for (++i; i < 8; ++i) {
 		if (le64_to_cpu (ph->disk_areas[i].offset) == 0) {
@@ -277,7 +274,6 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 		}
 		log_info ("\t%lu, %lu (%lu)\n", le64_to_cpu (ph->disk_areas[i].offset), le64_to_cpu (ph->disk_areas[i].size), le64_to_cpu (ph->disk_areas[i].offset) + le64_to_cpu (ph->disk_areas[i].size));
 	}
-#endif
 
 	//XXX 4096 from metadata location
 	struct mda_header* mh = get_mda_header (buffer + 4096);
@@ -287,7 +283,6 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	log_info ("0x%08x, '%.16s', %u, %lu, %lu\n", le32_to_cpu (mh->checksum), mh->magic, le32_to_cpu (mh->version), le64_to_cpu (mh->start), le64_to_cpu (mh->size));
 
-#if 0
 	log_info ("Metadata:\n");
 	for (i = 0; i < 4; ++i) {
 		if (le64_to_cpu (mh->raw_locns[i].offset) == 0) {
@@ -295,7 +290,6 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 		}
 		log_info ("\t%lu (0x%lx), %lu, 0x%08x, %u\n", le64_to_cpu (mh->raw_locns[i].offset), le64_to_cpu (mh->raw_locns[i].offset), le64_to_cpu (mh->raw_locns[i].size), le32_to_cpu (mh->raw_locns[i].checksum), le32_to_cpu (mh->raw_locns[i].flags));
 	}
-#endif
 
 	std::uint64_t offset = le64_to_cpu (mh->raw_locns[0].offset);
 	std::uint64_t size   = le64_to_cpu (mh->raw_locns[0].size);
@@ -392,12 +386,10 @@ LvmTable::set_alignment (std::uint64_t bytes)
 	//XXX validate numbers
 	std::uint64_t remainder = (bytes_size - reserved->bytes_size) % block_size;
 
-#if 0
 	log_debug ("size of device   = %10ld\n", bytes_size);
 	log_debug ("size of reserved = %10ld\n", reserved->bytes_size);
 	log_debug ("block size       = %10ld\n", block_size);
 	log_debug ("remainder        = %10ld\n", remainder);
-#endif
 
 	PartitionPtr s = Partition::create();
 	s->sub_type ("Space");

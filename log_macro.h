@@ -16,6 +16,7 @@
 #define log_info             log_redirect
 #define log_progress         log_redirect
 #define log_quiet            log_redirect
+#define log_command          log_redirect
 #define log_debug            log_redirect
 #define log_trace            log_redirect
 #define log_command_in       log_redirect
@@ -51,6 +52,7 @@
 #define log_info(...)             log_redirect(Severity::Info,           __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #define log_progress(...)         log_redirect(Severity::Progress,       __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #define log_quiet(...)            log_redirect(Severity::Quiet,          __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
+#define log_command(...)          log_redirect(Severity::Command,        __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 // Log level: DEBUG
 #define log_debug(...)            log_redirect(Severity::Debug,          __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #define log_trace(...)            log_redirect(Severity::Trace,          __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)

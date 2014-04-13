@@ -493,16 +493,6 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 	}
 	log_debug ("\n");
 
-#if 0
-	log_debug ("Cols\n");
-	for (auto i : col_list) {
-		int index;
-		std::string type;
-		std::tie (index, type) = i.second;
-		log_debug ("\t%2d %8s %s\n", index, type.c_str(), i.first.c_str());
-	}
-#endif
-
 	// Dummy empty column to pad out treeview
 	col = Gtk::manage (new Gtk::TreeView::Column (""));
 	add_column<std::string> (col_rec, col, 0.0, 0);
@@ -528,7 +518,6 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 bool
 TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
-#if 1
 	log_debug ("qtt: %d\n", menu_active);
 	if (keyboard_tooltip)
 		return false;
@@ -557,7 +546,6 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 		// implies mouse over non-data part of textview, e.g. headers, or dead space below
 		tooltip->set_text ("wibble"); // "Click to sort"?
 	}
-#endif
 	return true;
 }
 

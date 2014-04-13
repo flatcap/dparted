@@ -471,10 +471,6 @@ std::ostream&
 operator<< (std::ostream& stream, const ContainerPtr& c)
 {
 	return_val_if_fail (c, stream);
-#if 0
-	if (c.type.back() == "filesystem")
-		return stream;
-#endif
 
 	//std::uint64_t bytes_free = c.bytes_size - c->bytes_used;
 

@@ -291,13 +291,6 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 	pieces->children.erase (end, pieces->children.end());
 #endif
 
-#if 0
-	log_info ("Pieces------------------------------------------------------------\n");
-	pieces->dump_objects();
-	log_info ("Deps------------------------------------------------------------\n");
-	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
-	log_info ("------------------------------------------------------------\n");
-#endif
 	return added;
 }
 
@@ -369,15 +362,6 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		g->lv_count		= tags["LVM2_LV_COUNT"];
 		g->vg_seqno		= tags["LVM2_VG_SEQNO"];
 	}
-
-#if 0
-	log_info ("Pieces------------------------------------------------------------\n");
-	pieces->dump_objects();
-	log_info ("Deps------------------------------------------------------------\n");
-	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
-	log_info ("------------------------------------------------------------\n");
-#endif
-
 }
 
 void
@@ -501,12 +485,10 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		std::vector<std::string> device_list;
 		explode (",", devices, device_list);
 
-#if 0
 		log_debug ("%s (%s)\n", v->name.c_str(), v->type.back().c_str());
 		for (auto d : device_list) {
 			log_info ("Device: %s\n", d.c_str());
 		}
-#endif
 
 		for (auto d : device_list) {
 			log_info ("DEP %s -> %s\n", v->uuid.c_str(), d.c_str());
@@ -539,14 +521,6 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		}
 	}
 
-#if 0
-	log_info ("Pieces------------------------------------------------------------\n");
-	pieces->dump_objects();
-	log_info ("Deps------------------------------------------------------------\n");
-	for (auto d : deps) log_info ("%s -> %s\n", d.first.c_str(), d.second.c_str());
-	log_info ("------------------------------------------------------------\n");
-#endif
-
 	//for (int j = 0; j < 5; ++j) {
 	for (auto d : deps) {
 		std::string parent_id = d.first;
@@ -576,12 +550,6 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		pieces->delete_child (child);
 	}
 	deps.clear();
-
-#if 0
-	log_info ("Pieces------------------------------------------------------------\n");
-	pieces->dump_objects();
-	log_info ("------------------------------------------------------------\n");
-#endif
 }
 
 
@@ -606,14 +574,11 @@ LvmGroup::discover (ContainerPtr& top_level)
 		lvm_lvs (pieces, deps);
 	}
 
-#if 0
 	log_info ("Pieces (%ld)\n", pieces->get_children().size());
 	for (auto i : pieces->get_children()) {
 		log_debug ("\t%s\t%s\n", i->uuid.c_str(), i->dump());
 	}
-#endif
 
-#if 1
 	//probe leaves
 	std::vector<ContainerPtr> v = find_all_type (pieces, "LvmVolume");
 	log_debug ("%ld volumes\n", v.size());
@@ -628,8 +593,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 		log_info ("Q: [%s] %s: %s\n", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
 		main_app->queue_add_probe(i);
 	}
-#endif
-#if 1
+
 	std::vector<ContainerPtr> g = find_all_type (pieces, "LvmGroup");
 	log_debug ("%ld groups\n", g.size());
 
@@ -637,7 +601,6 @@ LvmGroup::discover (ContainerPtr& top_level)
 		log_debug ("\t%s\t%s\n", i->uuid.c_str(), i->dump());
 		top_level->just_add_child(i);
 	}
-#endif
 }
 
 

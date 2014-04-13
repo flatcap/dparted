@@ -233,7 +233,6 @@ Extfs::get_ext_sb (ContainerPtr parent)
 		info.erase (it);
 	}
 
-#if 1
 	// declare everything else
 	const char* me = "Extfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
@@ -253,7 +252,6 @@ Extfs::get_ext_sb (ContainerPtr parent)
 			declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str(), 0);
 		}
 	}
-#endif
 }
 
 ExtfsPtr

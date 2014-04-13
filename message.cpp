@@ -18,7 +18,6 @@
 
 #include "message.h"
 
-#if 0
 Message::Message (void)
 {
 }
@@ -26,6 +25,4 @@ Message::Message (void)
 Message::~Message()
 {
 }
-
-#endif
 

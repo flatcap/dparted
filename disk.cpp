@@ -169,11 +169,9 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	d->bytes_size    = file_size_in_bytes;
 	d->bytes_used    = 0;
 
-#if 0
 	log_debug ("disk\n");
 	log_debug ("\tname = %s\n", name.c_str());
 	log_debug ("\tsize = %ld\n", file_size_in_bytes);
-#endif
 
 	list.add_child(d);
 	queue_add_probe(d);	// queue the container for action
@@ -245,13 +243,11 @@ Disk::find_devices (ContainerPtr& list)
 		size = tags["SIZE"];
 		mount = tags["MOUNTPOINT"];
 
-#if 0
 		log_debug ("\tmajor: %d\n", major);
 		log_debug ("\tminor: %d\n", minor);
 		log_debug ("\tsize:  %ld\n", size);
 		log_debug ("\tmount: %s\n", mount.c_str());
 		log_debug ("\n");
-#endif
 
 		DiskPtr d = Disk::create();
 		d->device = "/dev/" + device;

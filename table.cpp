@@ -191,11 +191,9 @@ Table::fill_space (void)
 		vm.push_back(p);
 	}
 
-#if 1
 	for (auto i : vm) {
 		add_child(i);			// add_free()
 	}
-#endif
 
 #if 0
 	log_debug ("\nrecap\n");

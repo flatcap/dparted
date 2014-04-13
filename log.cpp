@@ -82,13 +82,6 @@ log_close (void)
 void
 assertion_failure (const char* file, int line, const char* test, const char* function)
 {
-	//XXX use log_redirect and bind to preserve file/line/function
-
-#if 0
-	auto fn = std::bind (&log_redirect, Severity::Code, function, file, line, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6);
-	fn ("hello %d\n", 42, 43, 44, 45, 46);
-#endif
-
 	std::vector<std::string> bt = get_backtrace();
 	log_code ("%s:%d: assertion failed: (%s) in %s\n", file, line, test, function);
 	log_code ("Backtrace:\n");

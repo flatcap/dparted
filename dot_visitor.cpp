@@ -184,7 +184,6 @@ DotVisitor::parent_link (std::shared_ptr<T> t)
 
 	std::stringstream link;
 
-#if 1
 	if (parents.size() > 0) {
 		ContainerPtr c(t);
 		ContainerPtr parent = parents.top();
@@ -192,15 +191,6 @@ DotVisitor::parent_link (std::shared_ptr<T> t)
 
 		link << "obj_" << (void*) parent.get() << " -> obj_" << (void*) c.get() << ";\n";
 	}
-#else
-	ContainerPtr c(t);
-	if (c) {
-		ContainerPtr parent = c->parent.lock();
-		if (parent) {
-			link << "obj_" << (void*) parent.get() << " -> obj_" << (void*) c.get() << ";\n";
-		}
-	}
-#endif
 
 	return link.str();
 }

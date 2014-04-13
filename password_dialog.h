@@ -27,16 +27,14 @@ class PasswordDialog;
 
 typedef std::shared_ptr<PasswordDialog> PasswordDialogPtr;
 
-#if 0
-MessageDialog (
-	Gtk::Window& parent,
-	const Glib::ustring& message,
-	bool use_markup=false,
-	MessageType type=MESSAGE_INFO,
-	ButtonsType buttons=BUTTONS_OK,
-	bool modal=false
-)
-#endif
+// MessageDialog (
+//	Gtk::Window& parent,
+//	const Glib::ustring& message,
+//	bool use_markup=false,
+//	MessageType type=MESSAGE_INFO,
+//	ButtonsType buttons=BUTTONS_OK,
+//	bool modal=false
+// )
 
 class PasswordDialog : public Gtk::MessageDialog
 {

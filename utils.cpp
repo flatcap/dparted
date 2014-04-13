@@ -34,6 +34,7 @@
 #include "log.h"
 #include "stringnum.h"
 #include "utils.h"
+#include "log_macro.h"
 #include "log_trace.h"
 
 std::uint64_t
@@ -137,15 +138,13 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 	std::uint64_t off, i, s, e;
 	std::uint8_t* mem = (std::uint8_t*) buf;
 
-#if 1
 	std::vector<char> last (0, 16);
 	bool same = false;
-#endif
+
 	s =  start                & ~15;	// round down
 	e = (start + length + 15) & ~15;	// round up
 
 	for (off = s; off < e; off += 16) {
-#if 1
 		if ((memcmp ((char*) buf+off, last.data(), last.size()) == 0) &&
 			((off + 16) < e) && (off > s)) {
 			if (!same) {
@@ -157,7 +156,6 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 			same = false;
 			memcpy (last.data(), (char*) buf+off, last.size());
 		}
-#endif
 
 		if (off == s) {
 			log_hex ("	%6.6lx ", start);
@@ -326,13 +324,11 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 		parts.push_back (input.substr (start));
 	}
 
-#if 0
 	log_debug ("vector:\n");
 	for (auto value : parts) {
 		log_debug ("\t>>%s<<\n", value.c_str());
 	}
 	log_debug ("\n");
-#endif
 
 	return parts.size();
 }
@@ -370,13 +366,11 @@ explode_n (const char* separators, const std::string& input, std::vector<std::st
 		parts.push_back (input.substr (start));
 	}
 
-#if 0
 	log_debug ("vector:\n");
 	for (auto value : parts) {
 		log_debug ("\t>>%s<<\n", value.c_str());
 	}
 	log_debug ("\n");
-#endif
 
 	return parts.size();
 }
@@ -512,7 +506,6 @@ parse_tagged_line (const std::string& line, const char* separators, std::map<std
 		tags[name] = value;
 	}
 
-#if 0
 	log_debug ("map:\n");
 	for (auto it2 : tags) {
 
@@ -522,7 +515,6 @@ parse_tagged_line (const std::string& line, const char* separators, std::map<std
 		log_debug ("\t%s -> %s\n", name.c_str(), value.c_str());
 	}
 	log_debug ("\n");
-#endif
 
 	return tags.size();
 }

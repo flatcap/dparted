@@ -99,7 +99,7 @@ bool
 File::find_containers (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
 {
 	FilePtr f = File::create();
-#if 0
+
 	log_debug ("dev     = 0x%04lx\n", st.st_dev);
 	log_debug ("ino     = %ld\n",     st.st_ino);
 	log_debug ("nlink   = %ld\n",     st.st_nlink);
@@ -113,7 +113,6 @@ File::find_containers (const std::string& name, int fd, struct stat& st, Contain
 	log_debug ("atime   = %ld\n",     st.st_atim.tv_sec);
 	log_debug ("mtime   = %ld\n",     st.st_mtim.tv_sec);
 	log_debug ("ctime   = %ld\n",     st.st_ctim.tv_sec);
-#endif
 
 	f->container        = name;
 	f->parent_offset = 0;

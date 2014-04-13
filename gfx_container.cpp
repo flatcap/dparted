@@ -145,17 +145,6 @@ GfxContainer::init (ContainerPtr c)
 		background = process_colour (bg);
 		icon       = process_icon   (i);
 		usage      = process_bool   (u);
-
-#if 0
-		log_debug ("Config\n");
-		log_debug ("\tbackground: %s\n", background);
-		log_debug ("\tcolour:     %s\n", colour);
-		log_debug ("\tdisplay:    %s\n", display.c_str());
-		log_debug ("\ticon:       %s\n", icon);
-		log_debug ("\tlabel:      %s\n", label_template.c_str());
-		log_debug ("\tusage:      %d\n", usage);
-#endif
-
 	} catch (const std::string& e) {
 		log_debug ("Exception: %s\n", e.c_str());
 		exit(1);
@@ -261,19 +250,14 @@ GfxContainer::dump2 (void)
 		tabs.resize (indent, '\t');
 	}
 
-#if 0
-	log_debug ("%s----------------------", tabs.c_str);
-	log_debug ("%sdisplay        = ", tabs.c_str(), display);
-	log_debug ("%scolour         = ", tabs.c_str(), colour);
-	log_debug ("%sbackground     = ", tabs.c_str(), background);
-	log_debug ("%sicon           = ", tabs.c_str(), icon);
-	log_debug ("%slabel          = ", tabs.c_str(), label);
-	log_debug ("%slabel_template = ", tabs.c_str(), label_template);
-	log_debug ("%sbytes_size     = ", tabs.c_str(), bytes_size);
-	log_debug ("%sbytes_used     = ", tabs.c_str(), bytes_used);
-	log_debug ("%susage          = ", tabs.c_str(), usage);
-	log_debug ("%sseqnum         = ", tabs.c_str(), seqnum);
-#endif
+	log_debug ("%s----------------------", tabs.c_str());
+	log_debug ("%sdisplay        = %s\n", tabs.c_str(), display.c_str());
+	log_debug ("%slabel          = %s\n", tabs.c_str(), label.c_str());
+	log_debug ("%slabel_template = %s\n", tabs.c_str(), label_template.c_str());
+	log_debug ("%sbytes_size     = %ld\n", tabs.c_str(), bytes_size);
+	log_debug ("%sbytes_used     = %ld\n", tabs.c_str(), bytes_used);
+	log_debug ("%susage          = %d\n", tabs.c_str(), usage);
+	log_debug ("%sseqnum         = %d\n", tabs.c_str(), seqnum);
 
 	++indent;
 	for (auto c : children) {

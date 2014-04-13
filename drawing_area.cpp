@@ -105,7 +105,6 @@ draw_edge (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk
 
 #endif
 
-#if 0
 /**
  * draw_grid - fine mesh grid
  */
@@ -202,11 +201,9 @@ draw_grid_linear (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, std::uint
 }
 
 void
-draw_grid_log (const Cairo::RefPtr<Cairo::Context>& cr, Rect space, std::uint64_t max_size)
+draw_grid_log (const Cairo::RefPtr<Cairo::Context>& UNUSED(cr), Rect UNUSED(space), std::uint64_t UNUSED(max_size))
 {
 }
-
-#endif
 
 /**
  * fill_rect - fill rectangle
