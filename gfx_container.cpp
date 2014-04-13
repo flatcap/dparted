@@ -250,7 +250,7 @@ GfxContainer::dump2 (void)
 		tabs.resize (indent, '\t');
 	}
 
-	log_debug ("%s----------------------", tabs.c_str());
+	log_debug ("%s----------------------\n", tabs.c_str());
 	log_debug ("%sdisplay        = %s\n", tabs.c_str(), display.c_str());
 	log_debug ("%slabel          = %s\n", tabs.c_str(), label.c_str());
 	log_debug ("%slabel_template = %s\n", tabs.c_str(), label_template.c_str());

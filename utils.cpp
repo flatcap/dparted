@@ -138,17 +138,16 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 	std::uint64_t off, i, s, e;
 	std::uint8_t* mem = (std::uint8_t*) buf;
 
-	std::vector<char> last (0, 16);
+	std::vector<char> last (16, 0);
 	bool same = false;
 
 	s =  start                & ~15;	// round down
 	e = (start + length + 15) & ~15;	// round up
 
 	for (off = s; off < e; off += 16) {
-		if ((memcmp ((char*) buf+off, last.data(), last.size()) == 0) &&
-			((off + 16) < e) && (off > s)) {
+		if ((memcmp ((char*) buf+off, last.data(), last.size()) == 0) && ((off + 16) < e) && (off > s)) {
 			if (!same) {
-				log_hex ("	        ...\n");
+				log_hex ("          ...\n");
 				same = true;
 			}
 			continue;
@@ -157,47 +156,51 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 			memcpy (last.data(), (char*) buf+off, last.size());
 		}
 
+		std::stringstream ss;
 		if (off == s) {
-			log_hex ("	%6.6lx ", start);
+			ss << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << start << " ";
 		} else {
-			log_hex ("	%6.6lx ", off);
+			ss << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << off << " ";
 		}
 
 		for (i = 0; i < 16; ++i) {
 			if (i == 8) {
-				log_hex (" -");
+				ss << " -";
 			}
 			if (((off+i) >= start) && ((off+i) < (start+length))) {
-				log_hex (" %02X", mem[off+i]);
+				ss << " " << std::uppercase << std::setfill('0') << std::setw(2) << std::hex << (int) mem[off+i];
 			} else {
-				log_hex ("   ");
+				ss << "   ";
 			}
 		}
-		log_hex ("  ");
+		ss << "  ";
 		for (i = 0; i < 16; ++i) {
 			if (((off+i) < start) || ((off+i) >= (start+length))) {
-				log_hex (" ");
+				ss << " ";
 			} else if (isprint (mem[off + i])) {
-				log_hex ("%c", mem[off + i]);
+				ss << (char) (mem[off + i]);
 			} else {
-				log_hex (".");
+				ss << ".";
 			}
 		}
-		log_hex ("\n");
+		log_hex ("%s\n", ss.str().c_str());
 	}
 }
 
 void
 dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::uint64_t>>& region)
 {
-	log_debug ("%s\n\t", desc.c_str());
+	log_debug ("%s\n", desc.c_str());
+	std::stringstream ss;
+	ss << '\t';
 	if (region.empty()) {
-		log_debug ("empty");
+		ss << "empty";
 	}
 	for (auto r : region) {
-		log_debug ("%ld-%ld ", r.first, r.second);
+		ss << r.first << "-" << r.second;
 	}
-	log_debug ("\n");
+	ss << '\n';
+	log_debug ("%s\n", ss.str().c_str());
 }
 
 /**

@@ -17,6 +17,7 @@
  */
 
 #include <string>
+#include <sstream>
 
 #include <fcntl.h>
 #include <sys/types.h>
@@ -59,11 +60,13 @@ App::ask (QuestionPtr q)
 
 	log_debug ("%s\n", q->title.c_str());
 	log_debug ("%s\n", q->question.c_str());
-	log_debug ("\t");
+	std::stringstream ss;
+	ss << "\t";
 	for (auto a : q->answers) {
-		log_debug ("%s\n", a.c_str());
+		ss << a << '\n';
 	}
-	log_debug ("\n");
+	ss << '\n';
+	log_debug ("%s\n", ss.str().c_str());
 	return false;
 }
 

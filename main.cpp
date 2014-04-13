@@ -26,6 +26,7 @@
 #endif
 #include "log.h"
 #include "log_trace.h"
+#include "utils.h"
 
 void
 pink_log (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
@@ -38,7 +39,8 @@ main (int argc, char *argv[])
 {
 	srandom (time (nullptr));
 
-	//log_init (Severity::AllDebug,  log_stdout);
+	//log_init (Severity::Hex,  log_stdout);
+	log_init (Severity::AllDebug,  log_stdout);
 	log_init (~Severity::AllDebug, log_stdout);
 	//log_init (Severity::Ctor | Severity::Dtor, pink_log);
 

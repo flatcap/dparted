@@ -413,7 +413,6 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 			title = multi[0];	// Replace abc_def with Abc Def?
 		}
 
-		log_debug ("\t%s = ", i.c_str());
 		col = Gtk::manage (new Gtk::TreeView::Column (title));
 
 		Gtk::TreeModelColumn<int>* tmc = nullptr;
@@ -480,7 +479,6 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 					break;
 			}
 
-			log_debug ("%u\n", col_rec.size()-1);
 			col_list[j] = std::make_tuple (index, type, align, precision, size);
 
 			col->set_alignment (align);
@@ -489,9 +487,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 			}
 		}
 		append_column (*col);
-		log_debug ("\n");
 	}
-	log_debug ("\n");
 
 	// Dummy empty column to pad out treeview
 	col = Gtk::manage (new Gtk::TreeView::Column (""));

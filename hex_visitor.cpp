@@ -145,7 +145,7 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 			dump_hex2 (buf, 0, size);
 		} else {
 			dump_hex2 (buf, 0, abbr);
-			log_hex ("\t~~~\n");
+			log_hex ("~~~\n");
 			dump_hex2 (buf, size-abbr, abbr);
 		}
 		log_hex ("\n");
