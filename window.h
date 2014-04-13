@@ -62,7 +62,6 @@ public:
 
 protected:
 	Gtk::Box		outer_box;	//XXX dynamically create the ones we don't care about?
-	Gtk::MenuBar*		menubar = nullptr;	//do not delete
 	Gtk::Toolbar*		toolbar = nullptr;	//do not delete
 	Gtk::EventBox		eventbox;
 	Gtk::ScrolledWindow	scrolledwindow;
@@ -78,22 +77,6 @@ protected:
 	// MENU
 	void init_menubar (Gtk::Box& box);
 	Glib::RefPtr<Gtk::Builder> builder;
-	Glib::RefPtr<Gio::SimpleAction> choice;
-	Glib::RefPtr<Gio::SimpleAction> choice_other;
-	Glib::RefPtr<Gio::SimpleAction> toggle;
-
-	Glib::RefPtr<Gio::SimpleAction> view_gfx;
-	Glib::RefPtr<Gio::SimpleAction> view_tree;
-	Glib::RefPtr<Gio::SimpleAction> view_toolbar;
-	Glib::RefPtr<Gio::SimpleAction> view_status;
-
-	void on_menu_choices(const Glib::ustring& parameter);
-	void on_menu_choices_other(int parameter);
-	void on_menu_file_new_generic (void);
-	void on_menu_file_quit (void);
-	void on_menu_others (void);
-	void on_menu_toggle (void);
-	void on_menu_view (int option);
 
 	Gtk::Menu fake_menu;
 

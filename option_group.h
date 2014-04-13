@@ -29,7 +29,7 @@ class OptionGroup : public Glib::OptionGroup
 public:
 	OptionGroup();
 
-	bool quit       = false;
+	bool quit = false;
 	int x = -1;	// Window coordinates
 	int y = -1;
 	int w = -1;	// Window size
