@@ -112,6 +112,7 @@ log_init (Severity s, log_callback_t cb)
 void
 log_close (void)
 {
+	log_mux.clear();
 }
 
 void

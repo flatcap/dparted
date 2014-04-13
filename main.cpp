@@ -18,6 +18,7 @@
 
 #include <memory>
 #include <ctime>
+#include <functional>
 
 #ifdef DP_GUI
 #include "gui_app.h"
@@ -26,23 +27,25 @@
 #endif
 #include "log.h"
 #include "log_trace.h"
+#include "log_object.h"
 #include "utils.h"
-
-void
-pink_log (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
-{
-	fprintf (stdout, "\033[38;5;200m%s\033[0m\n", message);
-}
 
 int
 main (int argc, char *argv[])
 {
 	srandom (time (nullptr));
 
-	//log_init (Severity::Hex,  log_stdout);
+#if 0
+	LogObject my_log;
+	my_log.reset_tty = true;
+	my_log.open_file ("/dev/pts/1");
+
+	log_callback_t my_log_cb = (log_callback_t) std::bind(&LogObject::log_line, &my_log, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
+#endif
+
 	log_init (Severity::AllDebug,  log_stdout);
 	log_init (~Severity::AllDebug, log_stdout);
-	//log_init (Severity::Ctor | Severity::Dtor, pink_log);
+	// log_init (Severity::Ctor | Severity::Dtor, my_log_cb);
 
 	int status = 0;
 
@@ -50,10 +53,12 @@ main (int argc, char *argv[])
 	gui_app = std::make_shared<GuiApp>();
 	main_app = gui_app;
 	status = gui_app->run (argc, argv);
+	gui_app = nullptr;
 #else
 	text_app = std::make_shared<TextApp>();
 	main_app = text_app;
 	status = text_app->run (argc, argv);
+	text_app = nullptr;
 #endif
 	main_app = nullptr;
 
