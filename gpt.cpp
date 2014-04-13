@@ -274,7 +274,6 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		}
 		g->add_child(p);		// change to add_reserved?
 	}
-	log_debug ("\n");
 
 	return true;
 }

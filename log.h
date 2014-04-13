@@ -36,8 +36,12 @@ void log_stderr (Severity level, const char* function, const char* file, int lin
 
 #ifdef DP_LOG_CHECK
 void log_redirect (const char* format __attribute__((unused)), ...) __attribute__ ((format (printf, 1, 2)));
+void log_redirect (const std::string& message);
+void log_redirect (const std::stringstream& message);
 #else
 void log_redirect (Severity level, const char* function, const char* file, int line, const char* message);
+void log_redirect (Severity level, const char* function, const char* file, int line, const std::string& message);
+void log_redirect (Severity level, const char* function, const char* file, int line, const std::stringstream& message);
 
 template<class T>
 void

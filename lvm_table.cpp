@@ -360,7 +360,6 @@ LvmTable::add_child (ContainerPtr& child)
 #if 0
 	log_debug ("%p, name %s, type %s, uuid: %s", child->mmap_buffer, child->name.c_str(), child->type.back().c_str(), child->uuid.c_str());
 	dump_hex2 (child->mmap_buffer, 0, 4096);
-	log_debug ("\n");
 #endif
 }
 

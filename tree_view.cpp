@@ -140,7 +140,6 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 
 			row.set_value (0, x);		// Column zero is always the GfxContainer
 
-			log_debug ("\n");
 			log_debug ("Columns:");
 			for (auto i : col_list) {
 				int index = -1;

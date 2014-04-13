@@ -260,7 +260,7 @@ Window::on_menu_choices (const Glib::ustring& parameter)
 		message = "Choice b was selected";
 	}
 
-	log_debug ("%s", message.c_str());
+	log_debug (message);
 }
 
 void
@@ -276,7 +276,7 @@ Window::on_menu_choices_other (int parameter)
 		message = "Choice 2 was selected";
 	}
 
-	log_debug ("%s", message.c_str());
+	log_debug (message);
 }
 
 void
@@ -337,7 +337,7 @@ Window::on_menu_toggle (void)
 		message = "Toggle is not active";
 	}
 
-	log_debug ("%s", message.c_str());
+	log_debug (message);
 }
 
 void
@@ -487,7 +487,7 @@ Window::init_actions (void)
 		if (a.first[7] < 'n') {
 			a.second->set_enabled (false);
 		}
-		log_debug ("%s", a.first.c_str());
+		log_debug (a.first);
 	}
 #endif
 }

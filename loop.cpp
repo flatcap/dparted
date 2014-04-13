@@ -75,7 +75,6 @@ Loop::create (const std::string& losetup)
 	for (auto i : parts) {
 		log_debug ("\t%s", i.c_str());
 	}
-	log_info ("\n");
 #endif
 
 	//XXX validate all input, else throw()
@@ -237,7 +236,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 
 	losetup (output, name);		//XXX retval, exactly one reply
 
-	log_debug ("%s", output[0].c_str());
+	log_debug (output[0]);
 
 	LoopPtr l = create (output[0]);
 

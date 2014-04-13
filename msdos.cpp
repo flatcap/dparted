@@ -206,7 +206,6 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		log_debug ("partition %d (0x%02x)", i+1, vp[i].type);
 		log_debug ("\tstart = %ld (%s)", le64_to_cpu (vp[i].start), s1.c_str());
 		log_debug ("\tsize  = %ld (%s)", le64_to_cpu (vp[i].size),  s2.c_str());
-		log_debug ("\n");
 
 		ContainerPtr c;
 

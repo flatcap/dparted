@@ -135,7 +135,7 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 	}
 	type.pop_back();
 
-	log_hex ("%s", type.c_str());
+	log_hex (type);
 	if (buf) {
 		log_hex ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
 
@@ -148,7 +148,6 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 			log_hex ("~~~");
 			dump_hex2 (buf, size-abbr, abbr);
 		}
-		log_hex ("\n");
 	} else {
 		log_hex ("\033[01;31m%s\033[0m", c->dump());
 	}
