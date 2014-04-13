@@ -22,7 +22,7 @@
 
 MdMirror::MdMirror (void)
 {
-	log_ctor ("ctor MdMirror\n");
+	log_ctor ("ctor MdMirror");
 	const char* me = "MdMirror";
 
 	sub_type (me);
@@ -30,7 +30,7 @@ MdMirror::MdMirror (void)
 
 MdMirror::~MdMirror()
 {
-	log_dtor ("dtor MdMirror\n");
+	log_dtor ("dtor MdMirror");
 }
 
 MdMirrorPtr
@@ -73,7 +73,7 @@ bool
 MdMirror::perform_action (Action action)
 {
 	if (action.name == "dummy.md_mirror") {
-		log_debug ("MdMirror perform: %s\n", action.name.c_str());
+		log_debug ("MdMirror perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return MdVolume::perform_action (action);

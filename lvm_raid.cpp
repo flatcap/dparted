@@ -26,7 +26,7 @@
 
 LvmRaid::LvmRaid (void)
 {
-	log_ctor ("ctor LvmRaid\n");
+	log_ctor ("ctor LvmRaid");
 	const char* me = "LvmRaid";
 
 	sub_type (me);
@@ -34,7 +34,7 @@ LvmRaid::LvmRaid (void)
 
 LvmRaid::~LvmRaid()
 {
-	log_dtor ("dtor LvmRaid\n");
+	log_dtor ("dtor LvmRaid");
 }
 
 LvmRaidPtr
@@ -95,7 +95,7 @@ bool
 LvmRaid::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_raid") {
-		log_debug ("LvmRaid perform: %s\n", action.name.c_str());
+		log_debug ("LvmRaid perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

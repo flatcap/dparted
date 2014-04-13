@@ -31,7 +31,7 @@
 void
 pink_log (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
 {
-	fprintf (stdout, "\033[38;5;200m%s\033[0m", message);
+	fprintf (stdout, "\033[38;5;200m%s\033[0m\n", message);
 }
 
 int

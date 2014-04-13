@@ -25,7 +25,7 @@
 
 LvmLinear::LvmLinear (void)
 {
-	log_ctor ("ctor LvmLinear\n");
+	log_ctor ("ctor LvmLinear");
 	const char* me = "LvmLinear";
 
 	sub_type (me);
@@ -33,7 +33,7 @@ LvmLinear::LvmLinear (void)
 
 LvmLinear::~LvmLinear()
 {
-	log_dtor ("dtor LvmLinear\n");
+	log_dtor ("dtor LvmLinear");
 }
 
 LvmLinearPtr
@@ -76,7 +76,7 @@ bool
 LvmLinear::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_linear") {
-		log_debug ("LvmLinear perform: %s\n", action.name.c_str());
+		log_debug ("LvmLinear perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

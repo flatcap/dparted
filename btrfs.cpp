@@ -31,7 +31,7 @@
 
 Btrfs::Btrfs (void)
 {
-	log_ctor ("ctor Btrfs\n");
+	log_ctor ("ctor Btrfs");
 	const char* me = "Btrfs";
 
 	sub_type (me);
@@ -39,7 +39,7 @@ Btrfs::Btrfs (void)
 
 Btrfs::~Btrfs()
 {
-	log_dtor ("dtor Btrfs\n");
+	log_dtor ("dtor Btrfs");
 }
 
 BtrfsPtr
@@ -82,7 +82,7 @@ bool
 Btrfs::perform_action (Action action)
 {
 	if (action.name == "dummy.btrfs") {
-		log_debug ("Btrfs perform: %s\n", action.name.c_str());
+		log_debug ("Btrfs perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -174,17 +174,17 @@ btrfs_show_super (const std::string& dev)
 	std::string key;
 	std::string value;
 
-	log_debug ("keys:\n");
+	log_debug ("keys:");
 	for (auto line : output) {
 		//XXX move these two tests before loop and doctor vector
 		if (line.substr (0, 11) == "superblock:") {
 			std::string dev2;
 			if (!parse_header (line, dev2)) {
-				log_debug ("btrfs: bad header\n");
+				log_debug ("btrfs: bad header");
 				break;
 			}
 			if (dev != dev2) {
-				log_debug ("btrfs: devices don't match\n");
+				log_debug ("btrfs: devices don't match");
 				break;
 			}
 			continue;
@@ -193,11 +193,11 @@ btrfs_show_super (const std::string& dev)
 		} else if (line.empty()) {
 			continue;
 		} else if (!parse_line (line, key, value)) {
-			log_debug ("btrfs failed: %s\n", line.c_str());
+			log_debug ("btrfs failed: %s", line.c_str());
 			continue;
 		}
 
-		log_debug ("\t>>%s<<\n", key.c_str());
+		log_debug ("\t>>%s<<", key.c_str());
 		results[key] = value;
 	}
 	log_debug ("\n");
@@ -217,19 +217,19 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 
 	std::map<std::string,std::string> info = btrfs_show_super (dev);
 	if (info.empty()) {
-		log_debug ("btrfs_show_super failed\n");
+		log_debug ("btrfs_show_super failed");
 		return;
 	}
 
 	// declare everything else
 	const char* me = "Btrfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
-	log_debug ("Props:\n");
+	log_debug ("Props:");
 	for (auto i : info) {
 		std::string key   = "btrfs." + i.first;
 		std::string desc  = make_desc (i.first);
 		std::string value = i.second;
-		log_debug ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
+		log_debug ("\t%-32s %-24s %s", key.c_str(), desc.c_str(), value.c_str());
 
 		more_props.push_back (value);
 		declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str(), 0);

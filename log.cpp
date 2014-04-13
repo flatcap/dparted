@@ -32,13 +32,13 @@ static std::multimap<Severity,log_callback_t> log_mux;
 void
 log_stdout (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
 {
-	fprintf (stdout, "%s", message);
+	fprintf (stdout, "%s\n", message);
 }
 
 void
 log_stderr (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
 {
-	fprintf (stderr, "%s", message);
+	fprintf (stderr, "%s\n", message);
 }
 
 
@@ -83,12 +83,12 @@ void
 assertion_failure (const char* file, int line, const char* test, const char* function)
 {
 	std::vector<std::string> bt = get_backtrace();
-	log_code ("%s:%d: assertion failed: (%s) in %s\n", file, line, test, function);
-	log_code ("Backtrace:\n");
+	log_code ("%s:%d: assertion failed: (%s) in %s", file, line, test, function);
+	log_code ("Backtrace:");
 	for (auto i : bt) {
 		if (i.substr (0, 17) == "assertion_failure")	// Skip me
 			continue;
-		log_code ("\t%s\n", i.c_str());
+		log_code ("\t%s", i.c_str());
 	}
 	log_code ("\n");
 }

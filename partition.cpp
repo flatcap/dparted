@@ -27,7 +27,7 @@
 
 Partition::Partition (void)
 {
-	log_ctor ("ctor Partition\n");
+	log_ctor ("ctor Partition");
 	const char* me = "Partition";
 
 	sub_type (me);
@@ -37,7 +37,7 @@ Partition::Partition (void)
 
 Partition::~Partition()
 {
-	log_dtor ("dtor Partition\n");
+	log_dtor ("dtor Partition");
 }
 
 PartitionPtr
@@ -80,7 +80,7 @@ bool
 Partition::perform_action (Action action)
 {
 	if (action.name == "dummy.partition") {
-		log_debug ("Partition perform: %s\n", action.name.c_str());
+		log_debug ("Partition perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);

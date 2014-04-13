@@ -27,7 +27,7 @@
 
 Whole::Whole (void)
 {
-	log_ctor ("ctor Whole\n");
+	log_ctor ("ctor Whole");
 	const char* me = "Whole";
 
 	sub_type (me);
@@ -35,7 +35,7 @@ Whole::Whole (void)
 
 Whole::~Whole()
 {
-	log_dtor ("dtor Whole\n");
+	log_dtor ("dtor Whole");
 }
 
 WholePtr
@@ -78,7 +78,7 @@ bool
 Whole::perform_action (Action action)
 {
 	if (action.name == "dummy.whole") {
-		log_debug ("Whole perform: %s\n", action.name.c_str());
+		log_debug ("Whole perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);

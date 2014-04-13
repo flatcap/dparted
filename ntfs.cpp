@@ -31,7 +31,7 @@
 
 Ntfs::Ntfs (void)
 {
-	log_ctor ("ctor Ntfs\n");
+	log_ctor ("ctor Ntfs");
 	const char* me = "Ntfs";
 
 	sub_type (me);
@@ -39,7 +39,7 @@ Ntfs::Ntfs (void)
 
 Ntfs::~Ntfs()
 {
-	log_dtor ("dtor Ntfs\n");
+	log_dtor ("dtor Ntfs");
 }
 
 NtfsPtr
@@ -82,7 +82,7 @@ bool
 Ntfs::perform_action (Action action)
 {
 	if (action.name == "dummy.ntfs") {
-		log_debug ("Ntfs perform: %s\n", action.name.c_str());
+		log_debug ("Ntfs perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -189,7 +189,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	std::uint64_t csize = -1;	// total size in clusters
 	std::uint64_t cfree = -1;	// free space in clusters
 
-	log_debug ("keys:\n");
+	log_debug ("keys:");
 	for (auto line : output) {
 		if (line.empty())
 			continue;
@@ -201,7 +201,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 		}
 
 		if (!parse_line (line, desc, value)) {
-			log_debug ("ntfs failed: %s\n", line.c_str());
+			log_debug ("ntfs failed: %s", line.c_str());
 			continue;
 		}
 
@@ -218,7 +218,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 		declare_prop_array (section.c_str(), key.c_str(), more_props, more_props.size()-1, desc.c_str(), 0);
 	}
 
-	log_debug ("%ld, %ld, %ld\n", clust, csize, cfree);
+	log_debug ("%ld, %ld, %ld", clust, csize, cfree);
 	if ((clust > 0) && (csize > 0) && (cfree > 0)) {
 		block_size = clust;
 		bytes_size = (csize+1) * clust;		// 1 extra cluster at the end for a backup MFT Header

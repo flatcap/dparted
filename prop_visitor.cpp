@@ -23,12 +23,12 @@
 
 PropVisitor::PropVisitor (void)
 {
-	log_ctor ("ctor PropVisitor\n");
+	log_ctor ("ctor PropVisitor");
 }
 
 PropVisitor::~PropVisitor()
 {
-	log_dtor ("dtor PropVisitor\n");
+	log_dtor ("dtor PropVisitor");
 }
 
 
@@ -71,5 +71,5 @@ PropVisitor::visit (ContainerPtr c)
 void
 PropVisitor::list (void)
 {
-	log_debug ("%s\n", output.str().c_str());
+	log_debug ("%s", output.str().c_str());
 }

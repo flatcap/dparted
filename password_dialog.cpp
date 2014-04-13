@@ -25,12 +25,12 @@
 PasswordDialog::PasswordDialog (const Glib::ustring& message) :
 	Gtk::MessageDialog (message)
 {
-	log_ctor ("ctor PasswordDialog\n");
+	log_ctor ("ctor PasswordDialog");
 }
 
 PasswordDialog::~PasswordDialog()
 {
-	log_dtor ("dtor PasswordDialog\n");
+	log_dtor ("dtor PasswordDialog");
 }
 
 

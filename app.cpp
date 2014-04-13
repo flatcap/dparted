@@ -44,12 +44,12 @@ AppPtr main_app;
 
 App::App (void)
 {
-	log_ctor ("ctor ctor App\n");
+	log_ctor ("ctor ctor App");
 }
 
 App::~App()
 {
-	log_dtor ("dtor dtor App\n");
+	log_dtor ("dtor dtor App");
 }
 
 
@@ -58,15 +58,15 @@ App::ask (QuestionPtr q)
 {
 	return_val_if_fail (q, false);
 
-	log_debug ("%s\n", q->title.c_str());
-	log_debug ("%s\n", q->question.c_str());
+	log_debug ("%s", q->title.c_str());
+	log_debug ("%s", q->question.c_str());
 	std::stringstream ss;
 	ss << "\t";
 	for (auto a : q->answers) {
 		ss << a << '\n';
 	}
 	ss << '\n';
-	log_debug ("%s\n", ss.str().c_str());
+	log_debug ("%s", ss.str().c_str());
 	return false;
 }
 
@@ -113,8 +113,8 @@ App::queue_add_probe (ContainerPtr& item)
 
 	probe_queue.push (item);
 	std::string s = get_size (item->parent_offset);
-	log_info ("QUEUE: %s %s : %ld (%s)\n", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
-	log_info ("QUEUE has %lu items\n", probe_queue.size());
+	log_info ("QUEUE: %s %s : %ld (%s)", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
+	log_info ("QUEUE has %lu items", probe_queue.size());
 }
 
 
@@ -133,7 +133,8 @@ mounts_get_list (ContainerPtr& mounts)
 
 	for (unsigned int i = 0; i < output.size(); ++i) {
 		std::string line = output[i];
-		log_info ("line%d:\n%s\n\n", i, line.c_str());
+		log_info ("line%d:", i);
+		log_info ("%s", line.c_str());
 	}
 
 	return mounts.children.size();
@@ -175,13 +176,13 @@ App::scan (const std::vector<std::string>& files)
 
 			fd = open (f.c_str(), O_RDONLY | O_CLOEXEC);
 			if (fd < 0) {
-				log_debug ("can't open file %s\n", f.c_str());
+				log_debug ("can't open file %s", f.c_str());
 				continue;
 			}
 
 			res = fstat (fd, &st);
 			if (res < 0) {
-				log_debug ("stat on %s failed\n", f.c_str());
+				log_debug ("stat on %s failed", f.c_str());
 				close (fd);
 				continue;
 			}
@@ -195,7 +196,7 @@ App::scan (const std::vector<std::string>& files)
 					//Gpt::identify (top_level, f.c_str(), fd, st);
 				}
 			} else {
-				log_error ("can't probe something else\n");
+				log_error ("can't probe something else");
 			}
 			close (fd);
 		}
@@ -210,13 +211,13 @@ App::scan (const std::vector<std::string>& files)
 		item = probe_queue.front();
 		probe_queue.pop();
 
-		log_debug ("Item: %s\n", item->dump());
+		log_debug ("Item: %s", item->dump());
 
 		std::uint64_t bufsize = item->bytes_size;
 		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
 
 		if (!buffer) {
-			log_error ("can't get buffer\n");
+			log_error ("can't get buffer");
 			continue;
 		}
 
@@ -237,13 +238,13 @@ App::scan (const std::vector<std::string>& files)
 		item = probe_queue.front();
 		probe_queue.pop();
 
-		log_debug ("Item: %s\n", item->dump());
+		log_debug ("Item: %s", item->dump());
 
 		std::uint64_t bufsize = item->bytes_size;
 		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
 
 		if (!buffer) {
-			log_error ("can't get buffer\n");
+			log_error ("can't get buffer");
 			continue;
 		}
 

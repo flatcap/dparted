@@ -25,7 +25,7 @@
 
 LvmPartition::LvmPartition (void)
 {
-	log_ctor ("ctor LvmPartition\n");
+	log_ctor ("ctor LvmPartition");
 	const char* me = "LvmPartition";
 
 	sub_type (me);
@@ -33,7 +33,7 @@ LvmPartition::LvmPartition (void)
 
 LvmPartition::~LvmPartition()
 {
-	log_dtor ("dtor LvmPartition\n");
+	log_dtor ("dtor LvmPartition");
 }
 
 LvmPartitionPtr
@@ -76,7 +76,7 @@ bool
 LvmPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_partition") {
-		log_debug ("LvmPartition perform: %s\n", action.name.c_str());
+		log_debug ("LvmPartition perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

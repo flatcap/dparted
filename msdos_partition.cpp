@@ -22,7 +22,7 @@
 
 MsdosPartition::MsdosPartition (void)
 {
-	log_ctor ("ctor MsdosPartition\n");
+	log_ctor ("ctor MsdosPartition");
 	const char* me = "MsdosPartition";
 
 	sub_type (me);
@@ -30,7 +30,7 @@ MsdosPartition::MsdosPartition (void)
 
 MsdosPartition::~MsdosPartition()
 {
-	log_dtor ("dtor MsdosPartition\n");
+	log_dtor ("dtor MsdosPartition");
 }
 
 MsdosPartitionPtr
@@ -73,7 +73,7 @@ bool
 MsdosPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.msdos_partition") {
-		log_debug ("MsdosPartition perform: %s\n", action.name.c_str());
+		log_debug ("MsdosPartition perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

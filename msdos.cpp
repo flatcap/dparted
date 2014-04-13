@@ -41,7 +41,7 @@
 
 Msdos::Msdos (void)
 {
-	log_ctor ("ctor Msdos\n");
+	log_ctor ("ctor Msdos");
 	const char* me = "Msdos";
 
 	sub_type (me);
@@ -49,7 +49,7 @@ Msdos::Msdos (void)
 
 Msdos::~Msdos()
 {
-	log_dtor ("dtor Msdos\n");
+	log_dtor ("dtor Msdos");
 }
 
 MsdosPtr
@@ -92,7 +92,7 @@ bool
 Msdos::perform_action (Action action)
 {
 	if (action.name == "dummy.msdos") {
-		log_debug ("Msdos perform: %s\n", action.name.c_str());
+		log_debug ("Msdos perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Table::perform_action (action);
@@ -187,7 +187,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	count = m->read_table (buffer, bufsize, 0, vp);
 
 	if ((count < 0) || (vp.size() > 4)) {
-		log_debug ("partition table is corrupt\n");	// bugger
+		log_debug ("partition table is corrupt");	// bugger
 		return false;
 	}
 
@@ -203,9 +203,9 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		std::string s1 = get_size (le64_to_cpu (vp[i].start));
 		std::string s2 = get_size (le64_to_cpu (vp[i].size));
 
-		log_debug ("partition %d (0x%02x)\n", i+1, vp[i].type);
-		log_debug ("\tstart = %ld (%s)\n", le64_to_cpu (vp[i].start), s1.c_str());
-		log_debug ("\tsize  = %ld (%s)\n", le64_to_cpu (vp[i].size),  s2.c_str());
+		log_debug ("partition %d (0x%02x)", i+1, vp[i].type);
+		log_debug ("\tstart = %ld (%s)", le64_to_cpu (vp[i].start), s1.c_str());
+		log_debug ("\tsize  = %ld (%s)", le64_to_cpu (vp[i].size),  s2.c_str());
 		log_debug ("\n");
 
 		ContainerPtr c;
@@ -216,8 +216,8 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 			//XXX validate start&size against parent buffer
 #if 0
-			log_debug ("vp[i].start = %ld (%s)\n", le64_to_cpu (vp[i].start), get_size (le64_to_cpu (vp[i].start)).c_str());
-			log_debug ("vp[i].size  = %ld (%s)\n", le64_to_cpu (vp[i].size),  get_size (le64_to_cpu (vp[i].size)).c_str());
+			log_debug ("vp[i].start = %ld (%s)", le64_to_cpu (vp[i].start), get_size (le64_to_cpu (vp[i].start)).c_str());
+			log_debug ("vp[i].size  = %ld (%s)", le64_to_cpu (vp[i].size),  get_size (le64_to_cpu (vp[i].size)).c_str());
 			std::uint64_t xstart = le64_to_cpu (vp[i].start);
 			std::uint64_t xsize  = le64_to_cpu (vp[i].size);
 			dump_hex2 (buffer, xstart-2000, 4096);

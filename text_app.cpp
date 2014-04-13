@@ -38,35 +38,35 @@ TextAppPtr text_app;
 
 TextApp::TextApp (void)
 {
-	log_ctor ("ctor TextApp\n");
+	log_ctor ("ctor TextApp");
 }
 
 TextApp::~TextApp()
 {
-	log_dtor ("dtor TextApp\n");
+	log_dtor ("dtor TextApp");
 }
 
 
 void usage (void)
 {
-	log_info ("Usage: dparted [options] [device]\n");
-	log_info ("\t-?  help\n");
+	log_info ("Usage: dparted [options] [device]");
+	log_info ("\t-?  help");
 #ifdef DP_DOT
-	log_info ("\t-d  dotty\n");
-	log_info ("\t\t--dot-resize NUM      Percentage scale of display\n");
-	log_info ("\t\t--dot-separate        Separate graphviz diagrams\n");
-	log_info ("\t\t--dot-save-gv         Save graphviz diagrams\n");
-	log_info ("\t\t--dot-save-png        Save png images\n");
+	log_info ("\t-d  dotty");
+	log_info ("\t\t--dot-resize NUM      Percentage scale of display");
+	log_info ("\t\t--dot-separate        Separate graphviz diagrams");
+	log_info ("\t\t--dot-save-gv         Save graphviz diagrams");
+	log_info ("\t\t--dot-save-png        Save png images");
 #endif
 #ifdef DP_HEX
-	log_info ("\t-h  hex dump\n");
-	log_info ("\t\t--hex-abbreviate NUM  Show leading/trailing bytes\n");
+	log_info ("\t-h  hex dump");
+	log_info ("\t\t--hex-abbreviate NUM  Show leading/trailing bytes");
 #endif
 #ifdef DP_LIST
-	log_info ("\t-l  list\n");
+	log_info ("\t-l  list");
 #endif
 #ifdef DP_PROP
-	log_info ("\t-p  properties\n");
+	log_info ("\t-p  properties");
 #endif
 }
 
@@ -97,7 +97,7 @@ TextApp::run (int argc, char **argv)
 		if (argv[1][0] == '-') {
 			int len = strlen (argv[1]);
 			if (len == 1) {
-				log_error ("no option given\n");
+				log_error ("no option given");
 				error = true;
 				continue;
 			}
@@ -107,7 +107,7 @@ TextApp::run (int argc, char **argv)
 #ifdef DP_HEX
 					} else if (strcmp (argv[1], "--hex-abbreviate") == 0) {
 						if (argc < 3) {
-							log_error ("No argument for --hex-abbreviate\n");
+							log_error ("No argument for --hex-abbreviate");
 							error = true;
 							break;
 						}
@@ -119,7 +119,7 @@ TextApp::run (int argc, char **argv)
 #ifdef DP_DOT
 					} else if (strcmp (argv[1], "--dot-resize") == 0) {
 						if (argc < 3) {
-							log_error ("No argument for --dot-resize\n");
+							log_error ("No argument for --dot-resize");
 							error = true;
 							break;
 						}
@@ -135,7 +135,7 @@ TextApp::run (int argc, char **argv)
 						dot_save_png = true;
 #endif
 					} else {
-						log_error ("Unknown option %s\n", argv[1]);
+						log_error ("Unknown option %s", argv[1]);
 						error = true;
 					}
 					break;
@@ -156,7 +156,7 @@ TextApp::run (int argc, char **argv)
 					case 'p': prop  = true; break;
 #endif
 					default:
-						log_error ("Unknown option: -%c\n", argv[1][i]);
+						log_error ("Unknown option: -%c", argv[1][i]);
 						error = true;
 				}
 			}

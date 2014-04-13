@@ -25,7 +25,7 @@
 
 MdPartition::MdPartition (void)
 {
-	log_ctor ("ctor MdPartition\n");
+	log_ctor ("ctor MdPartition");
 	const char* me = "MdPartition";
 
 	sub_type (me);
@@ -33,7 +33,7 @@ MdPartition::MdPartition (void)
 
 MdPartition::~MdPartition()
 {
-	log_dtor ("dtor MdPartition\n");
+	log_dtor ("dtor MdPartition");
 }
 
 MdPartitionPtr
@@ -76,7 +76,7 @@ bool
 MdPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.md_partition") {
-		log_debug ("MdPartition perform: %s\n", action.name.c_str());
+		log_debug ("MdPartition perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

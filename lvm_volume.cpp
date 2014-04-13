@@ -26,7 +26,7 @@
 
 LvmVolume::LvmVolume (void)
 {
-	log_ctor ("ctor LvmVolume\n");
+	log_ctor ("ctor LvmVolume");
 	const char* me = "LvmVolume";
 
 	sub_type (me);
@@ -40,7 +40,7 @@ LvmVolume::LvmVolume (void)
 
 LvmVolume::~LvmVolume()
 {
-	log_dtor ("dtor LvmVolume\n");
+	log_dtor ("dtor LvmVolume");
 }
 
 LvmVolumePtr
@@ -61,14 +61,14 @@ LvmVolume::accept (Visitor& v)
 		return false;
 
 	if (!visit_children(v)) {
-		log_debug ("LvmVolume visit_children failed\n");
+		log_debug ("LvmVolume visit_children failed");
 		return false;
 	}
 
 	for (auto i : metadata) {
 		LvmLinearPtr meta = std::dynamic_pointer_cast<LvmLinear>(i);
 		if (!v.visit(meta)) {
-			log_debug ("LvmVolume metadata failed\n");
+			log_debug ("LvmVolume metadata failed");
 			return false;
 		}
 	}
@@ -77,7 +77,7 @@ LvmVolume::accept (Visitor& v)
 		//XXX need most-derived type, really
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(i);
 		if (!v.visit(vol)) {
-			log_debug ("LvmVolume metadata failed\n");
+			log_debug ("LvmVolume metadata failed");
 			return false;
 		}
 	}
@@ -105,7 +105,7 @@ bool
 LvmVolume::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_volume") {
-		log_debug ("LvmVolume perform: %s\n", action.name.c_str());
+		log_debug ("LvmVolume perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Volume::perform_action (action);
@@ -119,31 +119,31 @@ LvmVolume::add_child (ContainerPtr& child)
 	return_if_fail (child);
 
 	if ((is_a ("LvmMetadata") && (child->is_a ("LvmVolume")))) {	//XXX tmp
-		log_debug ("LvmMetadata: %s\n", child->type.back().c_str());
+		log_debug ("LvmMetadata: %s", child->type.back().c_str());
 		sibling = child;
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(child);
 		vol->sibling = get_smart();
 		return;
 	}
 
-	log_info ("volume: %s (%s), child: %s (%s)\n", name.c_str(), type.back().c_str(), child->name.c_str(), child->type.back().c_str());
+	log_info ("volume: %s (%s), child: %s (%s)", name.c_str(), type.back().c_str(), child->name.c_str(), child->type.back().c_str());
 	if (child->is_a ("LvmMetadata")) {
 		metadata.insert (child);
-		log_debug ("metadata: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
-		log_info ("METADATA %s\n", child->name.c_str());
+		log_debug ("metadata: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
+		log_info ("METADATA %s", child->name.c_str());
 		//XXX no this is self-contained child->whole = this;
 	} else if (child->is_a ("LvmVolume")) {
 		subvols.insert (child);
-		log_debug ("subvols: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
-		log_info ("SUBVOL %s\n", child->name.c_str());
+		log_debug ("subvols: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
+		log_info ("SUBVOL %s", child->name.c_str());
 		child->whole = get_smart();
 	} else if (child->is_a ("LvmPartition")) {
-		log_info ("PARTITION %s\n", child->name.c_str());
+		log_info ("PARTITION %s", child->name.c_str());
 		add_segment (child);
 		//Volume::add_child (child);
 		child->whole = get_smart();
 	} else if (child->is_a ("Space")) {
-		log_info ("SPACE %s\n", child->name.c_str());
+		log_info ("SPACE %s", child->name.c_str());
 		Volume::add_child (child);
 	} else {
 		// filesystem
@@ -152,7 +152,7 @@ LvmVolume::add_child (ContainerPtr& child)
 #if 0
 		for (auto i : subvols) {
 			LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume>(i);
-			log_info ("subvol %s, %ld segments\n", v->name.c_str(), v->segments.size());
+			log_info ("subvol %s, %ld segments", v->name.c_str(), v->segments.size());
 			for (auto j : v->segments) {
 				j->just_add_child (child);
 			}
@@ -164,7 +164,7 @@ LvmVolume::add_child (ContainerPtr& child)
 ContainerPtr
 LvmVolume::find (const std::string& search)
 {
-	log_debug ("find: %s -> %s (%s)\n", search.c_str(), name.c_str(), uuid.c_str());
+	log_debug ("find: %s -> %s (%s)", search.c_str(), name.c_str(), uuid.c_str());
 	std::string search2;
 
 	std::size_t pos = search.find ("(0)");
@@ -174,30 +174,30 @@ LvmVolume::find (const std::string& search)
 
 	for (auto i : metadata) {
 		if (i->uuid == search) {
-			log_info ("metadata uuid %s\n", i->uuid.c_str());
+			log_info ("metadata uuid %s", i->uuid.c_str());
 			return i;
 		}
 		if (i->name == search) {
-			log_info ("metadata name %s\n", i->uuid.c_str());
+			log_info ("metadata name %s", i->uuid.c_str());
 			return i;
 		}
 		if (i->name == search2) {
-			log_info ("metadata name2 %s\n", i->uuid.c_str());
+			log_info ("metadata name2 %s", i->uuid.c_str());
 			return i;
 		}
 	}
 
 	for (auto i : subvols) {
 		if (i->uuid == search) {
-			log_info ("subvols uuid %s\n", i->uuid.c_str());
+			log_info ("subvols uuid %s", i->uuid.c_str());
 			return i;
 		}
 		if (i->name == search) {
-			log_info ("subvols name %s\n", i->uuid.c_str());
+			log_info ("subvols name %s", i->uuid.c_str());
 			return i;
 		}
 		if (i->name == search2) {
-			log_info ("subvols name2 %s\n", i->uuid.c_str());
+			log_info ("subvols name2 %s", i->uuid.c_str());
 			return i;
 		}
 	}

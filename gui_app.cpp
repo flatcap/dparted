@@ -45,14 +45,14 @@ GuiAppPtr gui_app;
 GuiApp::GuiApp (void) :
 	Gtk::Application ("org.flatcap.test.area", Gio::ApplicationFlags (Gio::APPLICATION_HANDLES_COMMAND_LINE))
 {
-	log_ctor ("ctor GuiApp\n");
+	log_ctor ("ctor GuiApp");
 	LOG_TRACE;
 	Glib::set_application_name ("dparted");
 }
 
 GuiApp::~GuiApp()
 {
-	log_dtor ("dtor GuiApp\n");
+	log_dtor ("dtor GuiApp");
 }
 
 
@@ -97,7 +97,7 @@ GuiApp::my_idle (void)
 		return false;	// detach
 	}
 
-	log_debug ("GuiApp is idle\n");
+	log_debug ("GuiApp is idle");
 	return false;	// continue
 }
 
@@ -183,12 +183,12 @@ void
 GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
 	LOG_TRACE;
-	log_debug ("Open files:\n");
+	log_debug ("Open files:");
 	for (auto f : files) {
-		log_debug ("%s\n", f->get_uri().c_str());
+		log_debug ("%s", f->get_uri().c_str());
 	}
 
-	log_debug ("hint = %s\n", hint.c_str());
+	log_debug ("hint = %s", hint.c_str());
 	Gtk::Application::on_open (files, hint);
 }
 
@@ -208,8 +208,8 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	try {
 		context.parse (argc, argv);
 	} catch (const Glib::Error& ex) {
-		log_debug ("Exception parsing command-line: %s\n", ex.what().c_str());
-		log_debug ("%s\n", context.get_help().c_str());
+		log_debug ("Exception parsing command-line: %s", ex.what().c_str());
+		log_debug ("%s", context.get_help().c_str());
 		//XXX if running, don't kill the app
 		return EXIT_FAILURE;
 	}
@@ -233,9 +233,9 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	create_window();
 
 	if (group.config.size()) {
-		log_debug ("config:\n");
+		log_debug ("config:");
 		for (auto c : group.config) {
-			log_debug ("\t%s\n", c.c_str());
+			log_debug ("\t%s", c.c_str());
 			window->load_config (c);
 		}
 	}
@@ -244,9 +244,9 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	gui_app->set_theme  ("config/theme.conf");	//XXX temporaray defaults
 
 	if (group.theme.size()) {
-		log_debug ("theme:\n");
+		log_debug ("theme:");
 		for (auto t : group.theme) {
-			log_debug ("\t%s\n", t.c_str());
+			log_debug ("\t%s", t.c_str());
 			window->load_theme (t);
 		}
 	}
@@ -357,7 +357,7 @@ GuiApp::ask (QuestionPtr q)
 	}
 
 	q->result = dialog.run();
-	log_debug ("question = %d\n", q->result);
+	log_debug ("question = %d", q->result);
 	q->done();
 
 #if 0

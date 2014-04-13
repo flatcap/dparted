@@ -25,7 +25,7 @@
 
 LuksPartition::LuksPartition (void)
 {
-	log_ctor ("ctor LuksPartition\n");
+	log_ctor ("ctor LuksPartition");
 	const char* me = "LuksPartition";
 
 	sub_type (me);
@@ -33,7 +33,7 @@ LuksPartition::LuksPartition (void)
 
 LuksPartition::~LuksPartition()
 {
-	log_dtor ("dtor LuksPartition\n");
+	log_dtor ("dtor LuksPartition");
 }
 
 LuksPartitionPtr
@@ -76,7 +76,7 @@ bool
 LuksPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.luks_partition") {
-		log_debug ("LuksPartition perform: %s\n", action.name.c_str());
+		log_debug ("LuksPartition perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

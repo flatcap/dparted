@@ -30,13 +30,13 @@
 
 Theme::Theme (void)
 {
-	log_ctor ("ctor Theme\n");
+	log_ctor ("ctor Theme");
 	init_icons();
 }
 
 Theme::~Theme()
 {
-	log_dtor ("dtor Theme\n");
+	log_dtor ("dtor Theme");
 }
 
 
@@ -106,9 +106,9 @@ Theme::add_icon (const std::string& name, const std::string& filename)
 	try {
 		pb = Gdk::Pixbuf::create_from_file (filename);
 	} catch (const Glib::FileError& fe) {
-		log_debug ("file error: %s\n", fe.what().c_str());
+		log_debug ("file error: %s", fe.what().c_str());
 	} catch (const Gdk::PixbufError& pbe) {
-		log_debug ("pixbuf error: %s\n", pbe.what().c_str());
+		log_debug ("pixbuf error: %s", pbe.what().c_str());
 	}
 
 	return pb;
@@ -192,14 +192,14 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 
 		if (!name.empty()) {
 			search = work_path + dot + name + "." + attr;
-			log_debug ("Search: %s\n", search.c_str());
+			log_debug ("Search: %s", search.c_str());
 			if (config_file->exists (search)) {
 				return config_file->get_string (search);
 			}
 		}
 
 		search = work_path + dot + attr;
-		log_debug ("Search: %s\n", search.c_str());
+		log_debug ("Search: %s", search.c_str());
 		if (config_file->exists (search)) {
 			return config_file->get_string (search);
 		}

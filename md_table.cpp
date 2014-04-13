@@ -28,7 +28,7 @@
 
 MdTable::MdTable (void)
 {
-	log_ctor ("ctor MdTable\n");
+	log_ctor ("ctor MdTable");
 	// Save a bit of space
 	const char* me = "MdTable";
 	const int   s  = (int) BaseProperty::Flags::Size;
@@ -48,7 +48,7 @@ MdTable::MdTable (void)
 
 MdTable::~MdTable()
 {
-	log_dtor ("dtor MdTable\n");
+	log_dtor ("dtor MdTable");
 }
 
 MdTablePtr
@@ -91,7 +91,7 @@ bool
 MdTable::perform_action (Action action)
 {
 	if (action.name == "dummy.md_table") {
-		log_debug ("MdTable perform: %s\n", action.name.c_str());
+		log_debug ("MdTable perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Table::perform_action (action);
@@ -143,33 +143,33 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 		return false;
 
 	std::string vol_uuid = read_uuid_string (buffer+16);
-	log_info ("vol uuid = %s\n", vol_uuid.c_str());
+	log_info ("vol uuid = %s", vol_uuid.c_str());
 
 	std::string vol_name = get_fixed_str (buffer+32, 32);
-	log_info ("vol name = %s\n", vol_name.c_str());
+	log_info ("vol name = %s", vol_name.c_str());
 
 	std::int32_t raid_type   = sle32_to_cpup (buffer+72);
 	std::int32_t raid_layout = sle32_to_cpup (buffer+76);
-	log_info ("raid type = %d (%d)\n", raid_type, raid_layout);
+	log_info ("raid type = %d (%d)", raid_type, raid_layout);
 
 	std::int32_t raid_disks = sle32_to_cpup (buffer+92);
-	log_info ("%d raid disks\n", raid_disks);
+	log_info ("%d raid disks", raid_disks);
 
 	std::int32_t chunk_size = sle32_to_cpup (buffer+88);
-	log_info ("chunk size = %d\n", chunk_size);
+	log_info ("chunk size = %d", chunk_size);
 
 	std::uint64_t chunks_used = le64_to_cpup (buffer+80);
-	log_info ("chunks used = %ld (%s)\n", chunks_used, get_size (chunk_size * chunks_used).c_str());
+	log_info ("chunks used = %ld (%s)", chunks_used, get_size (chunk_size * chunks_used).c_str());
 
 	std::string dev_uuid = read_uuid_string (buffer+168);
-	log_info ("dev uuid = %s\n", dev_uuid.c_str());
+	log_info ("dev uuid = %s", dev_uuid.c_str());
 
 	std::uint64_t data_offset = le64_to_cpup (buffer+128) * 512;
 	std::uint64_t data_size   = le64_to_cpup (buffer+136) * 512;
 
-	log_info ("data offset/size = %ld (%s), %ld (%s)\n", data_offset, get_size (data_offset).c_str(), data_size, get_size (data_size).c_str());
+	log_info ("data offset/size = %ld (%s), %ld (%s)", data_offset, get_size (data_offset).c_str(), data_size, get_size (data_size).c_str());
 
-	log_info ("mdtable\n");
+	log_info ("mdtable");
 	MdTablePtr t = MdTable::create();
 
 	t->bytes_size		= data_offset + data_size;

@@ -22,7 +22,7 @@
 
 MdLinear::MdLinear (void)
 {
-	log_ctor ("ctor MdLinear\n");
+	log_ctor ("ctor MdLinear");
 	const char* me = "MdLinear";
 
 	sub_type (me);
@@ -30,7 +30,7 @@ MdLinear::MdLinear (void)
 
 MdLinear::~MdLinear()
 {
-	log_dtor ("dtor MdLinear\n");
+	log_dtor ("dtor MdLinear");
 }
 
 MdLinearPtr
@@ -73,7 +73,7 @@ bool
 MdLinear::perform_action (Action action)
 {
 	if (action.name == "dummy.md_linear") {
-		log_debug ("MdLinear perform: %s\n", action.name.c_str());
+		log_debug ("MdLinear perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return MdVolume::perform_action (action);

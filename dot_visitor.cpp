@@ -43,12 +43,12 @@
 
 DotVisitor::DotVisitor (void)
 {
-	log_ctor ("ctor DotVisitor\n");
+	log_ctor ("ctor DotVisitor");
 }
 
 DotVisitor::~DotVisitor()
 {
-	log_dtor ("dtor DotVisitor\n");
+	log_dtor ("dtor DotVisitor");
 }
 
 
@@ -210,7 +210,7 @@ dot_container (std::shared_ptr<T> t)
 
 	for (auto prop : p->get_all_props()) {
 		if (!(prop->flags & BaseProperty::Flags::Dot)) {
-			log_debug ("Dot ignore : %s\n", prop->name.c_str());
+			log_debug ("Dot ignore : %s", prop->name.c_str());
 			continue;
 		}
 

@@ -31,7 +31,7 @@
 
 Extfs::Extfs (void)
 {
-	log_ctor ("ctor Extfs\n");
+	log_ctor ("ctor Extfs");
 	const char* me = "Extfs";
 
 	sub_type (me);
@@ -39,7 +39,7 @@ Extfs::Extfs (void)
 
 Extfs::~Extfs()
 {
-	log_dtor ("dtor Extfs\n");
+	log_dtor ("dtor Extfs");
 }
 
 ExtfsPtr
@@ -82,7 +82,7 @@ bool
 Extfs::perform_action (Action action)
 {
 	if (action.name == "dummy.extfs") {
-		log_debug ("Extfs perform: %s\n", action.name.c_str());
+		log_debug ("Extfs perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -154,17 +154,17 @@ tune2fs (const std::string& dev)
 	std::string key;
 	std::string value;
 
-	log_debug ("keys:\n");
+	log_debug ("keys:");
 	for (auto line : output) {
 		if (line.substr (0, 7) == "tune2fs")
 			continue;
 
 		if (!parse_line (line, key, value)) {
-			log_debug ("Failed: %s\n", line.c_str());
+			log_debug ("Failed: %s", line.c_str());
 			continue;
 		}
 
-		log_debug ("\t>>%s<<\n", key.c_str());
+		log_debug ("\t>>%s<<", key.c_str());
 		results[key] = value;
 	}
 	log_debug ("\n");
@@ -188,7 +188,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 
 	std::map<std::string,std::string> info = tune2fs (dev);
 	if (info.empty()) {
-		log_debug ("tune2fs failed\n");
+		log_debug ("tune2fs failed");
 		return;
 	}
 
@@ -236,12 +236,12 @@ Extfs::get_ext_sb (ContainerPtr parent)
 	// declare everything else
 	const char* me = "Extfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
-	log_debug ("Props:\n");
+	log_debug ("Props:");
 	for (auto i : info) {
 		std::string desc  = i.first;
 		std::string key   = make_key (desc);
 		std::string value = i.second;
-		log_debug ("\t%-32s %-24s %s\n", key.c_str(), desc.c_str(), value.c_str());
+		log_debug ("\t%-32s %-24s %s", key.c_str(), desc.c_str(), value.c_str());
 
 		if (desc == "Filesystem features") {
 			explode (" ", value, features);
