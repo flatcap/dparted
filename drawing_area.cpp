@@ -301,7 +301,7 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 
 	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
 		log_info ("draw_block: too narrow");
-		log_debug ("%s", cont->dump());
+		log_debug (cont->dump());
 		return;
 	}
 
@@ -683,7 +683,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 {
 	return_if_fail (gfx);
 
-	log_debug ("%s", gfx->dump());
+	log_debug (gfx->dump());
 
 	ContainerPtr c = gfx->get_container();
 	if (!c) {
@@ -695,7 +695,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 
 #if 0
 	for (; c; c = c->parent.lock()) {
-		log_debug ("%s", c->type.back().c_str());
+		log_debug (c->type.back());
 		auto tmp = c->get_actions();
 		actions.insert (std::end (actions), std::begin (tmp), std::end (tmp));
 		for (auto t : tmp) {
@@ -825,7 +825,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContain
 	if (shape.w < TAB_WIDTH) {
 #if 0
 		log_debug ("draw_container: too narrow");
-		log_debug ("%s", cont->dump());
+		log_debug (cont->dump());
 #endif
 		return;
 	}
@@ -1213,7 +1213,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 #endif
 
 	for (auto a : actions) {
-		log_debug ("%s", a.name.c_str());
+		log_debug (a.name);
 		std::size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
 			section.clear();
@@ -1278,11 +1278,11 @@ DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 		return;
 
 	if (action.name == "Copy") {
-		log_debug ("%s", action.name.c_str());
+		log_debug (action.name);
 	} else if (action.name == "Paste") {
-		log_debug ("%s", action.name.c_str());
+		log_debug (action.name);
 	} else if (action.name == "Paste Special") {
-		log_debug ("%s", action.name.c_str());
+		log_debug (action.name);
 	} else if (action.name == "Properties") {
 		gui_app->properties (gfx);
 	} else {

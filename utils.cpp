@@ -183,14 +183,14 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 				ss << ".";
 			}
 		}
-		log_hex ("%s", ss.str().c_str());
+		log_hex (ss);
 	}
 }
 
 void
 dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::uint64_t>>& region)
 {
-	log_debug ("%s", desc.c_str());
+	log_debug (desc);
 	std::stringstream ss;
 	ss << '\t';
 	if (region.empty()) {
@@ -199,8 +199,7 @@ dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::
 	for (auto r : region) {
 		ss << r.first << "-" << r.second;
 	}
-	ss << '\n';
-	log_debug ("%s", ss.str().c_str());
+	log_debug (ss);
 }
 
 /**

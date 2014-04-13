@@ -96,7 +96,7 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 	if (shape.w < TAB_WIDTH) {
 #if 0
 		log_debug ("draw_container: too narrow");
-		log_debug ("%s", cont->dump());
+		log_debug (cont->dump());
 #endif
 		return;
 	}

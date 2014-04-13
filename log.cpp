@@ -49,6 +49,22 @@ log_redirect (const char* format __attribute__((unused)), ...)
 {
 }
 
+/**
+ * log_redirect (string)
+ */
+void
+log_redirect (const std::string& UNUSED(message))
+{
+}
+
+/**
+ * log_redirect (stringstream)
+ */
+void
+log_redirect (const std::stringstream& UNUSED(message))
+{
+}
+
 #else
 /**
  * log_redirect (message)
@@ -66,6 +82,25 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 		}
 	}
 }
+
+/**
+ * log_redirect (string)
+ */
+void
+log_redirect (Severity level, const char* function, const char* file, int line, const std::string& message)
+{
+	log_redirect (level, function, file, line, message.c_str());
+}
+
+/**
+ * log_redirect (stringstream)
+ */
+void
+log_redirect (Severity level, const char* function, const char* file, int line, const std::stringstream& message)
+{
+	log_redirect (level, function, file, line, message.str().c_str());
+}
+
 
 #endif
 

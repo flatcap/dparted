@@ -382,7 +382,7 @@ GfxContainer::get_smart (void)
 		log_debug ("SMART");
 		//XXX who created us? - code error
 		GfxContainerPtr c (this);
-		log_debug ("%s", c->dump());
+		log_debug (c->dump());
 		self = c;
 	}
 	return self.lock();

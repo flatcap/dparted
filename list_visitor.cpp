@@ -71,5 +71,5 @@ ListVisitor::visit (ContainerPtr c)
 void
 ListVisitor::list (void)
 {
-	log_debug ("%s", output.str().c_str());
+	log_debug (output);
 }

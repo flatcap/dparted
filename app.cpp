@@ -44,12 +44,12 @@ AppPtr main_app;
 
 App::App (void)
 {
-	log_ctor ("ctor ctor App");
+	log_ctor ("ctor App");
 }
 
 App::~App()
 {
-	log_dtor ("dtor dtor App");
+	log_dtor ("dtor App");
 }
 
 
@@ -58,15 +58,14 @@ App::ask (QuestionPtr q)
 {
 	return_val_if_fail (q, false);
 
-	log_debug ("%s", q->title.c_str());
-	log_debug ("%s", q->question.c_str());
+	log_debug (q->title);
+	log_debug (q->question);
 	std::stringstream ss;
 	ss << "\t";
 	for (auto a : q->answers) {
-		ss << a << '\n';
+		ss << a << ' ';
 	}
-	ss << '\n';
-	log_debug ("%s", ss.str().c_str());
+	log_debug (ss);
 	return false;
 }
 
@@ -134,7 +133,7 @@ mounts_get_list (ContainerPtr& mounts)
 	for (unsigned int i = 0; i < output.size(); ++i) {
 		std::string line = output[i];
 		log_info ("line%d:", i);
-		log_info ("%s", line.c_str());
+		log_info (line);
 	}
 
 	return mounts.children.size();

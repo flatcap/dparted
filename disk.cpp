@@ -83,7 +83,7 @@ Disk::create (const std::string& lsblk)
 
 	d->name = tags["NAME"];
 	d->device = "/dev/" + d->name;
-	log_debug ("%s", d->device.c_str());
+	log_debug (d->device);
 
 	std::string majmin = tags["MAJ:MIN"];
 	scan = sscanf (majmin.c_str(), "%lu:%lu", &d->device_major, &d->device_minor);
@@ -155,7 +155,7 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	std::string vendor   = read_file_line ("/sys/block/sda/device/model");
 #endif
 
-	log_debug ("%s", model.c_str());
+	log_debug (model);
 	DiskPtr d = Disk::create();
 
 	log_debug ("fd = %d", fd);
@@ -208,7 +208,7 @@ Disk::find_devices (ContainerPtr& list)
 	if (output.empty())
 		return 0;
 
-	log_debug ("%s", join (output,", ").c_str());
+	log_debug (join (output,", "));
 
 	std::string device;
 	std::string type;
@@ -231,7 +231,7 @@ Disk::find_devices (ContainerPtr& list)
 			continue;
 
 		device = tags["NAME"];
-		log_debug ("%s", device.c_str());
+		log_debug (device);
 
 		std::string majmin = tags["MAJ:MIN"];
 		scan = sscanf (majmin.c_str(), "%d:%d", &major, &minor);
