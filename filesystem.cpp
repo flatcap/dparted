@@ -47,6 +47,7 @@
 
 Filesystem::Filesystem (void)
 {
+	log_ctor ("ctor Filesystem");
 	const char* me = "Filesystem";
 
 	sub_type (me);
@@ -54,6 +55,7 @@ Filesystem::Filesystem (void)
 
 Filesystem::~Filesystem()
 {
+	log_dtor ("dtor Filesystem");
 }
 
 FilesystemPtr
@@ -96,7 +98,7 @@ bool
 Filesystem::perform_action (Action action)
 {
 	if (action.name == "dummy.filesystem") {
-		log_debug ("Filesystem perform: %s\n", action.name.c_str());
+		log_debug ("Filesystem perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -135,7 +137,7 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 #endif
 
 	if (f) {
-		log_info ("volume: %s (%s), child: %s\n", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
+		log_info ("volume: %s (%s), child: %s", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
 		parent->add_child(f);	//XXX move this into get_*?
 		return true;
 	}

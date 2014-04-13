@@ -23,10 +23,12 @@
 
 BaseDrawingArea::BaseDrawingArea (void)
 {
+	log_ctor ("ctor BaseDrawingArea");
 }
 
 BaseDrawingArea::~BaseDrawingArea()
 {
+	log_dtor ("dtor BaseDrawingArea");
 }
 
 
@@ -178,7 +180,7 @@ BaseDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, Glib::RefPt
 	Gdk::Cairo::set_source_pixbuf (cr, icon, work.x, work.y);
 	work.w = icon->get_width();
 	work.h = icon->get_height();
-	log_info ("icon %d,%d\n", work.w, work.h);
+	log_info ("icon %d,%d", work.w, work.h);
 
 	cr->rectangle (work.x, work.y, work.w, work.h);
 	cr->fill();
@@ -210,12 +212,12 @@ void
 BaseDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_iconbox: too short\n");
+		log_info ("draw_iconbox: too short");
 		return;
 	}
 
 	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
-		log_info ("draw_iconbox: too narrow\n");
+		log_info ("draw_iconbox: too narrow");
 		return;
 	}
 
@@ -275,12 +277,12 @@ void
 BaseDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_box: too short\n");
+		log_info ("draw_box: too short");
 		return;
 	}
 
 	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
-		log_info ("draw_box: too narrow\n");
+		log_info ("draw_box: too narrow");
 		return;
 	}
 
@@ -443,12 +445,12 @@ void
 BaseDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& inside)
 {
 	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_tabbox: too short\n");
+		log_info ("draw_tabbox: too short");
 		return;
 	}
 
 	if (shape.w < (TAB_WIDTH + (RADIUS*2))) {
-		log_info ("draw_tabbox: too narrow\n");
+		log_info ("draw_tabbox: too narrow");
 		return;
 	}
 

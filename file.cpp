@@ -35,6 +35,7 @@
 
 File::File (void)
 {
+	log_ctor ("ctor File");
 	const char* me = "File";
 
 	sub_type (me);
@@ -42,6 +43,7 @@ File::File (void)
 
 File::~File()
 {
+	log_dtor ("dtor File");
 }
 
 FilePtr
@@ -84,7 +86,7 @@ bool
 File::perform_action (Action action)
 {
 	if (action.name == "dummy.file") {
-		log_debug ("File perform: %s\n", action.name.c_str());
+		log_debug ("File perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -97,21 +99,20 @@ bool
 File::find_containers (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
 {
 	FilePtr f = File::create();
-#if 0
-	log_debug ("dev     = 0x%04lx\n", st.st_dev);
-	log_debug ("ino     = %ld\n",     st.st_ino);
-	log_debug ("nlink   = %ld\n",     st.st_nlink);
-	log_debug ("mode    = %06o\n",    st.st_mode);
-	log_debug ("uid     = %d\n",      st.st_uid);
-	log_debug ("gid     = %d\n",      st.st_gid);
-	log_debug ("rdev    = %ld\n",     st.st_rdev);
-	log_debug ("size    = %ld\n",     st.st_size);
-	log_debug ("blksize = %ld\n",     st.st_blksize);
-	log_debug ("blocks  = %ld\n",     st.st_blocks);
-	log_debug ("atime   = %ld\n",     st.st_atim.tv_sec);
-	log_debug ("mtime   = %ld\n",     st.st_mtim.tv_sec);
-	log_debug ("ctime   = %ld\n",     st.st_ctim.tv_sec);
-#endif
+
+	log_debug ("dev     = 0x%04lx", st.st_dev);
+	log_debug ("ino     = %ld",     st.st_ino);
+	log_debug ("nlink   = %ld",     st.st_nlink);
+	log_debug ("mode    = %06o",    st.st_mode);
+	log_debug ("uid     = %d",      st.st_uid);
+	log_debug ("gid     = %d",      st.st_gid);
+	log_debug ("rdev    = %ld",     st.st_rdev);
+	log_debug ("size    = %ld",     st.st_size);
+	log_debug ("blksize = %ld",     st.st_blksize);
+	log_debug ("blocks  = %ld",     st.st_blocks);
+	log_debug ("atime   = %ld",     st.st_atim.tv_sec);
+	log_debug ("mtime   = %ld",     st.st_mtim.tv_sec);
+	log_debug ("ctime   = %ld",     st.st_ctim.tv_sec);
 
 	f->container        = name;
 	f->parent_offset = 0;

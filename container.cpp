@@ -87,6 +87,7 @@ std::vector<Action> cont_actions = {
 
 Container::Container (void)
 {
+	log_ctor ("ctor Container");
 	// Save a bit of space
 	const char* me = "Container";
 	const int   d  = (int) BaseProperty::Flags::Dot;
@@ -141,6 +142,7 @@ Container::~Container()
 		close (fd);
 		fd = -1;
 	}
+	log_dtor ("dtor Container");
 }
 
 ContainerPtr
@@ -198,10 +200,10 @@ bool
 Container::perform_action (Action action)
 {
 	if (action.name == "dummy.container") {
-		log_debug ("Container perform: %s\n", action.name.c_str());
+		log_debug ("Container perform: %s", action.name.c_str());
 		return true;
 	} else {
-		log_debug ("Unknown action: %s\n", action.name.c_str());
+		log_debug ("Unknown action: %s", action.name.c_str());
 		return false;
 	}
 }
@@ -230,11 +232,11 @@ Container::add_child (ContainerPtr& child)
 
 	children.insert (child);
 
-	log_debug ("child: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
+	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
 	child->parent = get_smart();
 #if 0
-	log_debug ("%12lu %12lu %12lu %12lu\n",
+	log_debug ("%12lu %12lu %12lu %12lu",
 		child->parent_offset,
 		child->bytes_size,
 		child->bytes_used,
@@ -248,7 +250,7 @@ Container::just_add_child (ContainerPtr& child)
 	return_if_fail (child);
 
 	children.insert (child);
-	log_debug ("just: %s (%s) -- %s\n", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
+	log_debug ("just: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 }
 
 void
@@ -280,16 +282,16 @@ Container::get_fd (void)
 		if (p)
 			return p->get_fd();
 
-		log_error ("no device to open\n");
+		log_error ("no device to open");
 		return -1;
 	}
 
 	int newfd = open (device.c_str(), O_RDONLY | O_CLOEXEC); // read only, close on exec
 	if (newfd < 0) {
-		log_error ("failed to open device %s\n", device.c_str());
+		log_error ("failed to open device %s", device.c_str());
 		return -1;
 	}
-	log_debug ("opened device %s (%d)\n", device.c_str(), newfd);
+	log_debug ("opened device %s (%d)", device.c_str(), newfd);
 
 	fd = newfd;
 
@@ -313,7 +315,7 @@ Container::get_block_size (void)
 std::string
 Container::get_device_name (void)
 {
-	log_debug ("i am %s\n", typeid (*this).name());
+	log_debug ("i am %s", demangle (typeid (*this).name()).c_str());
 	if (!device.empty())
 		return device;
 
@@ -385,7 +387,7 @@ void deleter (Mmap* m)
 
 	std::tie (size, ptr) = *m;
 
-	log_debug ("mmap deleter: %p\n", ptr);
+	log_debug ("mmap deleter: %p", ptr);
 	munmap (ptr, size);
 
 	delete m;
@@ -396,15 +398,15 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 {
 	// range check
 	if ((size < 1) || ((offset + size) > bytes_size)) {
-		log_error ("out of range\n");
+		log_error ("out of range");
 		return nullptr;
 	}
 
-	log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s\n", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
+	log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
 
 	if (device_mmap) {
 		void* buf = (*device_mmap).second;
-		log_debug ("mmap existing: %p\n", ((std::uint8_t*) buf) + offset);
+		log_debug ("mmap existing: %p", ((std::uint8_t*) buf) + offset);
 		return ((std::uint8_t*) buf) + offset;
 	}
 
@@ -414,8 +416,8 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		if (p) {
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
-			log_debug ("%s\n", this->dump());
-			log_error ("no device and no parent\n");
+			log_debug ("%s", this->dump());
+			log_error ("no device and no parent");
 			return nullptr;
 		}
 	}
@@ -425,7 +427,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 	int	newfd = get_fd();
 
 	if (newfd < 0) {
-		log_error ("can't get file descriptor\n");
+		log_error ("can't get file descriptor");
 		return nullptr;
 	}
 
@@ -437,15 +439,15 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, 0);
 	if (buf == MAP_FAILED) {
-		log_error ("alloc failed: %s\n", strerror (errno));
+		log_error ("alloc failed: %s", strerror (errno));
 		//close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
-	log_debug ("mmap created: %p, device %s, size %s\n", buf, device.c_str(), get_size (size).c_str());
+	log_debug ("mmap created: %p, device %s, size %s", buf, device.c_str(), get_size (size).c_str());
 
 	device_mmap = (MmapPtr (new Mmap (size, buf), deleter));
 
-	log_debug ("mmap new: %p\n", ((std::uint8_t*) buf) + offset);
+	log_debug ("mmap new: %p", ((std::uint8_t*) buf) + offset);
 	return ((std::uint8_t*) buf) + offset;
 }
 
@@ -455,7 +457,7 @@ Container::close_buffer (std::uint8_t* buffer, std::uint64_t size)
 	return_if_fail (buffer);
 
 	if (munmap (buffer, size) != 0) {
-		log_error ("munmap failed: %s\n", strerror (errno));
+		log_error ("munmap failed: %s", strerror (errno));
 		// nothing else we can do
 	}
 
@@ -469,10 +471,6 @@ std::ostream&
 operator<< (std::ostream& stream, const ContainerPtr& c)
 {
 	return_val_if_fail (c, stream);
-#if 0
-	if (c.type.back() == "filesystem")
-		return stream;
-#endif
 
 	//std::uint64_t bytes_free = c.bytes_size - c->bytes_used;
 
@@ -507,7 +505,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 bool
 Container::is_a (const std::string& t)
 {
-	log_debug ("my type = %s, compare to %s\n", type.back().c_str(), t.c_str());
+	log_debug ("my type = %s, compare to %s", type.back().c_str(), t.c_str());
 
 	// Start with the most derived type
 	for (auto it = type.rbegin(); it != type.rend(); ++it) {
@@ -590,10 +588,10 @@ ContainerPtr
 Container::get_smart (void)
 {
 	if (self.expired()) {
-		log_debug ("SMART\n");
+		log_debug ("SMART");
 		//XXX who created us? code error
 		ContainerPtr c (this);
-		log_debug ("%s\n", c->dump());
+		log_debug ("%s", c->dump());
 		self = c;
 	}
 	return self.lock();

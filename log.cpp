@@ -32,13 +32,13 @@ static std::multimap<Severity,log_callback_t> log_mux;
 void
 log_stdout (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
 {
-	fprintf (stdout, "%s", message);
+	fprintf (stdout, "%s\n", message);
 }
 
 void
 log_stderr (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
 {
-	fprintf (stderr, "%s", message);
+	fprintf (stderr, "%s\n", message);
 }
 
 
@@ -82,20 +82,13 @@ log_close (void)
 void
 assertion_failure (const char* file, int line, const char* test, const char* function)
 {
-	//XXX use log_redirect and bind to preserve file/line/function
-
-#if 0
-	auto fn = std::bind (&log_redirect, Severity::Code, function, file, line, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6);
-	fn ("hello %d\n", 42, 43, 44, 45, 46);
-#endif
-
 	std::vector<std::string> bt = get_backtrace();
-	log_code ("%s:%d: assertion failed: (%s) in %s\n", file, line, test, function);
-	log_code ("Backtrace:\n");
+	log_code ("%s:%d: assertion failed: (%s) in %s", file, line, test, function);
+	log_code ("Backtrace:");
 	for (auto i : bt) {
 		if (i.substr (0, 17) == "assertion_failure")	// Skip me
 			continue;
-		log_code ("\t%s\n", i.c_str());
+		log_code ("\t%s", i.c_str());
 	}
 	log_code ("\n");
 }

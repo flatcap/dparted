@@ -20,9 +20,12 @@
 #include <string>
 
 #include "default_theme.h"
+#include "log.h"
+#include "log_macro.h"
 
 DefaultTheme::DefaultTheme (void)
 {
+	log_ctor ("ctor DefaultTheme");
 #if 0
 	config = {
 		{ "Container.Filesystem.display",      "box" },
@@ -39,6 +42,7 @@ DefaultTheme::DefaultTheme (void)
 
 DefaultTheme::~DefaultTheme()
 {
+	log_dtor ("dtor DefaultTheme");
 }
 
 

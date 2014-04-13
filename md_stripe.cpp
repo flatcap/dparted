@@ -22,6 +22,7 @@
 
 MdStripe::MdStripe (void)
 {
+	log_ctor ("ctor MdStripe");
 	const char* me = "MdStripe";
 
 	sub_type (me);
@@ -29,6 +30,7 @@ MdStripe::MdStripe (void)
 
 MdStripe::~MdStripe()
 {
+	log_dtor ("dtor MdStripe");
 }
 
 MdStripePtr
@@ -71,7 +73,7 @@ bool
 MdStripe::perform_action (Action action)
 {
 	if (action.name == "dummy.md_stripe") {
-		log_debug ("MdStripe perform: %s\n", action.name.c_str());
+		log_debug ("MdStripe perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return MdVolume::perform_action (action);

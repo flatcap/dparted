@@ -65,6 +65,7 @@
 
 Gpt::Gpt (void)
 {
+	log_ctor ("ctor Gpt");
 	const char* me = "Gpt";
 
 	sub_type (me);
@@ -72,6 +73,7 @@ Gpt::Gpt (void)
 
 Gpt::~Gpt()
 {
+	log_dtor ("dtor Gpt");
 }
 
 GptPtr
@@ -114,7 +116,7 @@ bool
 Gpt::perform_action (Action action)
 {
 	if (action.name == "dummy.gpt") {
-		log_debug ("Gpt perform: %s\n", action.name.c_str());
+		log_debug ("Gpt perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Table::perform_action (action);
@@ -228,7 +230,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		std::uint64_t start  = le64_to_cpup (buffer+32);
 		std::uint64_t finish = le64_to_cpup (buffer+40);
 
-		log_debug ("%2d: %9ld -%9ld  %10ld  %ld\n", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
+		log_debug ("%2d: %9ld -%9ld  %10ld  %ld", i, start, finish, (finish-start+1)*512, (finish-start+1)*512/1024/1024);
 
 		delete_region (empty, start, finish-start+1);
 
@@ -247,13 +249,12 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		}
 #endif
 
-#if 0
 		std::string s = get_size (p->bytes_size);
-		log_debug ("\t\tlabel  = %s\n",   p->name.c_str());
-		log_debug ("\t\t\tstart  = %ld\n", le64_to_cpup (buffer+32) * 512);
-		log_debug ("\t\t\tfinish = %ld\n", le64_to_cpup (buffer+40) * 512);
-		log_debug ("\t\t\tsize   = %ld (%s)\n", p->bytes_size, s.c_str());
-#endif
+		log_debug ("\t\tlabel  = %s",   p->name.c_str());
+		log_debug ("\t\t\tstart  = %ld", le64_to_cpup (buffer+32) * 512);
+		log_debug ("\t\t\tfinish = %ld", le64_to_cpup (buffer+40) * 512);
+		log_debug ("\t\t\tsize   = %ld (%s)", p->bytes_size, s.c_str());
+
 		g->add_child(p);
 		main_app->queue_add_probe(p);
 	}

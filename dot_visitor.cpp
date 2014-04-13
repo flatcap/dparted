@@ -43,10 +43,12 @@
 
 DotVisitor::DotVisitor (void)
 {
+	log_ctor ("ctor DotVisitor");
 }
 
 DotVisitor::~DotVisitor()
 {
+	log_dtor ("dtor DotVisitor");
 }
 
 
@@ -182,7 +184,6 @@ DotVisitor::parent_link (std::shared_ptr<T> t)
 
 	std::stringstream link;
 
-#if 1
 	if (parents.size() > 0) {
 		ContainerPtr c(t);
 		ContainerPtr parent = parents.top();
@@ -190,15 +191,6 @@ DotVisitor::parent_link (std::shared_ptr<T> t)
 
 		link << "obj_" << (void*) parent.get() << " -> obj_" << (void*) c.get() << ";\n";
 	}
-#else
-	ContainerPtr c(t);
-	if (c) {
-		ContainerPtr parent = c->parent.lock();
-		if (parent) {
-			link << "obj_" << (void*) parent.get() << " -> obj_" << (void*) c.get() << ";\n";
-		}
-	}
-#endif
 
 	return link.str();
 }
@@ -218,7 +210,7 @@ dot_container (std::shared_ptr<T> t)
 
 	for (auto prop : p->get_all_props()) {
 		if (!(prop->flags & BaseProperty::Flags::Dot)) {
-			log_debug ("Dot ignore : %s\n", prop->name.c_str());
+			log_debug ("Dot ignore : %s", prop->name.c_str());
 			continue;
 		}
 

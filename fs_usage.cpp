@@ -20,12 +20,10 @@
 #include "log_trace.h"
 #include "log.h"
 
-#if 0
-reiserfs	reiserfstune {device}
-swap		swapon -s (if mounted, else 0)
-vfat		dosfsck -n {device}
-xfs		xfs_db {device}, sb, p
-#endif
+// reiserfs	reiserfstune {device}
+// swap		swapon -s (if mounted, else 0)
+// vfat		dosfsck -n {device}
+// xfs		xfs_db {device}, sb, p
 
 bool
 get_mounted_usage (FilesystemPtr f)

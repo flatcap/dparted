@@ -19,14 +19,18 @@
 #include <glibmm.h>
 
 #include "password_dialog.h"
+#include "log.h"
+#include "log_macro.h"
 
 PasswordDialog::PasswordDialog (const Glib::ustring& message) :
 	Gtk::MessageDialog (message)
 {
+	log_ctor ("ctor PasswordDialog");
 }
 
 PasswordDialog::~PasswordDialog()
 {
+	log_dtor ("dtor PasswordDialog");
 }
 
 

@@ -22,6 +22,7 @@
 
 GptPartition::GptPartition (void)
 {
+	log_ctor ("ctor GptPartition");
 	const char* me = "GptPartition";
 
 	sub_type (me);
@@ -29,6 +30,7 @@ GptPartition::GptPartition (void)
 
 GptPartition::~GptPartition()
 {
+	log_dtor ("dtor GptPartition");
 }
 
 GptPartitionPtr
@@ -71,7 +73,7 @@ bool
 GptPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.gpt_partition") {
-		log_debug ("GptPartition perform: %s\n", action.name.c_str());
+		log_debug ("GptPartition perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Partition::perform_action (action);

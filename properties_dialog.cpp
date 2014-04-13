@@ -24,6 +24,7 @@ PropertiesDialog::PropertiesDialog (GfxContainerPtr c, Gtk::Window* w) :
 	close ("_Close", true),
 	container(c)
 {
+	log_ctor ("ctor PropertiesDialog");
 	set_default_size (400, 400);
 
 	if (w) {
@@ -106,6 +107,7 @@ PropertiesDialog::PropertiesDialog (GfxContainerPtr c, Gtk::Window* w) :
 PropertiesDialog::~PropertiesDialog()
 {
 	LOG_TRACE;
+	log_dtor ("dtor PropertiesDialog");
 }
 
 
@@ -114,10 +116,10 @@ PropertiesDialog::on_dialog_response (int response_id)
 {
 	switch (response_id) {
 		case Gtk::RESPONSE_DELETE_EVENT:
-			log_debug ("Delete clicked.\n");
+			log_debug ("Delete clicked.");
 			break;
 		default:
-			log_debug ("Unexpected button clicked, response_id=%d\n", response_id);
+			log_debug ("Unexpected button clicked, response_id=%d", response_id);
 			break;
 	}
 
@@ -127,7 +129,7 @@ PropertiesDialog::on_dialog_response (int response_id)
 bool
 PropertiesDialog::on_parent_delete (GdkEventAny* UNUSED(event))
 {
-	log_debug ("parent delete\n");
+	log_debug ("parent delete");
 	delete this;
 	return false;
 }
@@ -159,7 +161,7 @@ PropertiesDialog::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 bool
 PropertiesDialog::on_event (GdkEvent* event)
 {
-	log_debug ("type: %d\n", event->type);
+	log_debug ("type: %d", event->type);
 	return false;
 }
 
@@ -192,7 +194,7 @@ PropertiesDialog::my_show (void)
 	LOG_TRACE;
 	ContainerPtr c = container->get_container();
 	if (!c) {
-		log_debug ("no container\n");
+		log_debug ("no container");
 		return;
 	}
 

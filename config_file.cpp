@@ -28,10 +28,12 @@
 
 ConfigFile::ConfigFile (void)
 {
+	log_ctor ("ctor ConfigFile");
 }
 
 ConfigFile::~ConfigFile()
 {
+	log_dtor ("dtor ConfigFile");
 }
 
 ConfigFilePtr
@@ -109,10 +111,10 @@ ConfigFile::read_file (const std::string& filename)
 	try {
 		cfg.readFile (filename.c_str());
 	} catch (const libconfig::FileIOException& fioex) {
-		log_debug ("I/O error while reading file.\n");
+		log_debug ("I/O error while reading file.");
 		return false;
 	} catch (const libconfig::ParseException& pex) {
-		log_debug ("Parse error at %s:%d - %s\n", pex.getFile(), pex.getLine(), pex.getError());
+		log_debug ("Parse error at %s:%d - %s", pex.getFile(), pex.getLine(), pex.getError());
 		return false;
 	}
 
@@ -129,9 +131,9 @@ ConfigFile::read_file (const std::string& filename)
 void
 ConfigFile::dump_config (void)
 {
-	log_debug ("Config:\n");
+	log_debug ("Config:");
 	for (auto c : config) {
-		log_debug ("\t%s = %s\n", c.first.c_str(), c.second.c_str());
+		log_debug ("\t%s = %s", c.first.c_str(), c.second.c_str());
 	}
 }
 

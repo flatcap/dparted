@@ -43,6 +43,7 @@ enum ColType {
 
 TreeView::TreeView (void)
 {
+	log_ctor ("ctor TreeView");
 	setup_popup();
 
 	set_has_tooltip (true);
@@ -51,6 +52,7 @@ TreeView::TreeView (void)
 
 TreeView::~TreeView()
 {
+	log_dtor ("dtor TreeView");
 }
 
 
@@ -75,7 +77,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 		Gtk::TreeModel::iterator s2 = s1->get_selected();
 		const Gtk::TreeModel::Row& s3 = *s2;
 		GfxContainerPtr c = s3[col_container];
-		log_debug ("Selection: %s\n", c->dump());
+		log_debug ("Selection: %s", c->dump());
 	}
 #endif
 
@@ -139,7 +141,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 			row.set_value (0, x);		// Column zero is always the GfxContainer
 
 			log_debug ("\n");
-			log_debug ("Columns:\n");
+			log_debug ("Columns:");
 			for (auto i : col_list) {
 				int index = -1;
 				int type = ct_string;
@@ -151,17 +153,17 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 
 				ContainerPtr c = x->get_container();
 				if (!c) {
-					log_debug ("\tNO CONTAINER\n");
+					log_debug ("\tNO CONTAINER");
 					continue;
 				}
 
 				PPtr prop = c->get_prop (i.first);
 				if (!prop) {
-					log_debug ("\tMISSING\n");	// Not an error
+					log_debug ("\tMISSING");	// Not an error
 					continue;
 				}
 
-				log_debug ("\tType: %s\n", prop->get_type_name().c_str());
+				log_debug ("\tType: %s", prop->get_type_name().c_str());
 
 				switch (type) {
 					case ct_colour:
@@ -211,7 +213,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 								case BaseProperty::Tag::t_u64:
 									u = (std::uint64_t) *prop;
 									if (u & (1LL<<63)) {
-										log_error ("value too large: %lu\n", u);
+										log_error ("value too large: %lu", u);
 										break;
 									}
 									val = (std::int64_t) u;
@@ -225,7 +227,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 									break;
 
 								default:
-									log_error ("wrong type\n");
+									log_error ("wrong type");
 									break;
 							}
 							row.set_value (index, val);
@@ -235,7 +237,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 						row.set_value (index, (std::string) *prop);
 						break;
 					default:
-						log_error ("notimpl\n");
+						log_error ("notimpl");
 				}
 			}
 		} else {
@@ -277,7 +279,7 @@ parse_type (const std::string& type)
 	if (type == "string")
 		return ct_string;
 
-	log_error ("Unknown type %s, defaulting to string\n", type.c_str());
+	log_error ("Unknown type %s, defaulting to string", type.c_str());
 	return ct_string;
 }
 
@@ -296,7 +298,7 @@ parse_alignment (const std::string& align, float def)
 	if ((align == "right") || (align == "end"))
 		return 1.0;
 
-	log_error ("Unknown alignment: %s\n", align.c_str());
+	log_error ("Unknown alignment: %s", align.c_str());
 	return def;
 }
 
@@ -308,14 +310,14 @@ parse_precision (const std::string& prec, int def)
 
 	size_t pos = prec.find_first_not_of ("0123456789");
 	if (pos != std::string::npos) {
-		log_error ("Invalid precision: %s\n", prec.c_str());
+		log_error ("Invalid precision: %s", prec.c_str());
 		return def;
 	}
 
 	StringNum s (prec);
 	int val = (int) s;
 	if (val > 10) {
-		log_error ("Invalid precision: %s\n", prec.c_str());
+		log_error ("Invalid precision: %s", prec.c_str());
 		return def;
 	}
 
@@ -330,14 +332,14 @@ parse_size (const std::string& size, int def)
 
 	size_t pos = size.find_first_not_of ("0123456789");
 	if (pos != std::string::npos) {
-		log_error ("Invalid size: %s\n", size.c_str());
+		log_error ("Invalid size: %s", size.c_str());
 		return def;
 	}
 
 	StringNum s (size);
 	int val = (int) s;
 	if (val > 4096) {		// Arbitrary
-		log_error ("Invalid size: %s\n", size.c_str());
+		log_error ("Invalid size: %s", size.c_str());
 		return def;
 	}
 
@@ -411,7 +413,6 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 			title = multi[0];	// Replace abc_def with Abc Def?
 		}
 
-		log_debug ("\t%s = ", i.c_str());
 		col = Gtk::manage (new Gtk::TreeView::Column (title));
 
 		Gtk::TreeModelColumn<int>* tmc = nullptr;
@@ -469,7 +470,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 					break;
 
 				default:
-					log_error ("unknown type '%d'\n", type);
+					log_error ("unknown type '%d'", type);
 
 				case ct_string:
 					align     = parse_alignment (theme->get_config (key, "", "align", false), 0.0);
@@ -478,7 +479,6 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 					break;
 			}
 
-			log_debug ("%u\n", col_rec.size()-1);
 			col_list[j] = std::make_tuple (index, type, align, precision, size);
 
 			col->set_alignment (align);
@@ -487,19 +487,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 			}
 		}
 		append_column (*col);
-		log_debug ("\n");
 	}
-	log_debug ("\n");
-
-#if 0
-	log_debug ("Cols\n");
-	for (auto i : col_list) {
-		int index;
-		std::string type;
-		std::tie (index, type) = i.second;
-		log_debug ("\t%2d %8s %s\n", index, type.c_str(), i.first.c_str());
-	}
-#endif
 
 	// Dummy empty column to pad out treeview
 	col = Gtk::manage (new Gtk::TreeView::Column (""));
@@ -526,8 +514,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 bool
 TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip)
 {
-#if 1
-	log_debug ("qtt: %d\n", menu_active);
+	log_debug ("qtt: %d", menu_active);
 	if (keyboard_tooltip)
 		return false;
 
@@ -539,7 +526,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 
 	convert_widget_to_tree_coords (x, y, tx, ty);
 
-	log_debug ("  tooltip at (x,y) %d,%d -- (tx,ty) %d, %d\n", x, y, tx, ty);
+	log_debug ("  tooltip at (x,y) %d,%d -- (tx,ty) %d, %d", x, y, tx, ty);
 
 	Gtk::TreeModel::Path path;
 
@@ -555,18 +542,17 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 		// implies mouse over non-data part of textview, e.g. headers, or dead space below
 		tooltip->set_text ("wibble"); // "Click to sort"?
 	}
-#endif
 	return true;
 }
 
 void
 TreeView::set_focus (GfxContainerPtr& c)
 {
-	log_debug ("focus: %s\n", c->treepath.c_str());
+	log_debug ("focus: %s", c->treepath.c_str());
 	return_if_fail (c);
 
 	if (c->treepath.empty()) {
-		log_debug ("TreeView: not visible\n");
+		log_debug ("TreeView: not visible");
 		treeselection->unselect_all();
 		return;
 	}
@@ -595,7 +581,7 @@ TreeView::on_selection_changed()
 #if 0
 	const Gtk::TreeModel::Row& row = *it;
 	GfxContainerPtr c = row[col_gfx_container];
-	log_debug ("sel: %s\n", c->dump());
+	log_debug ("sel: %s", c->dump());
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	dp->set_focus (c);
@@ -630,13 +616,13 @@ TreeView::setup_popup (void)
 void
 TreeView::on_menu_select (int UNUSED(option))
 {
-	log_debug ("A popup menu item was selected.\n");
+	log_debug ("A popup menu item was selected.");
 
 	Glib::RefPtr<Gtk::TreeView::Selection> refSelection = get_selection();
 	if (refSelection) {
 		Gtk::TreeModel::iterator iter = refSelection->get_selected();
 		if (iter) {
-			log_debug ("selected something\n");
+			log_debug ("selected something");
 		}
 	}
 }
@@ -651,13 +637,13 @@ TreeView::get_coords (int& x, int& y)
 {
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
-		log_debug ("No Window\n");
+		log_debug ("No Window");
 		return false;
 	}
 
 	GfxContainerPtr c = dp->get_focus();
 	if (!c) {
-		log_debug ("No focus\n");
+		log_debug ("No focus");
 		return false;
 	}
 
@@ -677,7 +663,7 @@ TreeView::get_coords (int& x, int& y)
 
 #if 0
 	Gtk::Allocation allocation = get_allocation();
-	log_debug ("size: %d,%d\n", allocation.get_width(), allocation.get_height());
+	log_debug ("size: %d,%d", allocation.get_width(), allocation.get_height());
 #endif
 	int ccx = 0;
 	int ccy = 0;
@@ -690,7 +676,7 @@ TreeView::get_coords (int& x, int& y)
 		Gtk::TreeModel::Path path = m_refTreeModel->get_path (it);
 		Gdk::Rectangle rect;
 		get_cell_area (path, *get_column(0), rect);
-		log_debug ("rect: %d,%d,%d,%d\n", rect.get_x(), rect.get_y(), rect.get_width(), rect.get_height());
+		log_debug ("rect: %d,%d,%d,%d", rect.get_x(), rect.get_y(), rect.get_width(), rect.get_height());
 
 		tx += rect.get_x() + rect.get_width();
 		ty += rect.get_y() + rect.get_height();

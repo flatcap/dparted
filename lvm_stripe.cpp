@@ -25,6 +25,7 @@
 
 LvmStripe::LvmStripe (void)
 {
+	log_ctor ("ctor LvmStripe");
 	const char* me = "LvmStripe";
 
 	sub_type (me);
@@ -32,6 +33,7 @@ LvmStripe::LvmStripe (void)
 
 LvmStripe::~LvmStripe()
 {
+	log_dtor ("dtor LvmStripe");
 }
 
 LvmStripePtr
@@ -74,7 +76,7 @@ bool
 LvmStripe::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_stripe") {
-		log_debug ("LvmStripe perform: %s\n", action.name.c_str());
+		log_debug ("LvmStripe perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

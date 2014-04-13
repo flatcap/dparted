@@ -33,6 +33,7 @@
 
 Loop::Loop (void)
 {
+	log_ctor ("ctor Loop");
 	// Save a bit of space
 	const char* me = "Loop";
 	const int   d  = (int) BaseProperty::Flags::Dot;
@@ -59,6 +60,7 @@ Loop::Loop (void)
 
 Loop::~Loop()
 {
+	log_dtor ("dtor Loop");
 }
 
 LoopPtr
@@ -69,9 +71,9 @@ Loop::create (const std::string& losetup)
 	explode_n (" :", losetup, parts, 12);
 
 #if 0
-	log_info ("parts: (%ld)\n", parts.size());
+	log_info ("parts: (%ld)", parts.size());
 	for (auto i : parts) {
-		log_debug ("\t%s\n", i.c_str());
+		log_debug ("\t%s", i.c_str());
 	}
 	log_info ("\n");
 #endif
@@ -105,7 +107,7 @@ Loop::create (const std::string& losetup)
 	if ((len > 10) && (l->file_name.substr (len-10) == " (deleted)")) {
 		l->file_name.erase (len-10);
 		l->deleted = true;
-		log_info ("%s is deleted\n", l->device.c_str());
+		log_info ("%s is deleted", l->device.c_str());
 	}
 
 	l->block_size   = 512;	//XXX kernel lower limit, but fs block size is likely to be bigger
@@ -148,7 +150,7 @@ bool
 Loop::perform_action (Action action)
 {
 	if (action.name == "dummy.loop") {
-		log_debug ("Loop perform: %s\n", action.name.c_str());
+		log_debug ("Loop perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Block::perform_action (action);
@@ -235,7 +237,7 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 
 	losetup (output, name);		//XXX retval, exactly one reply
 
-	log_debug ("%s\n", output[0].c_str());
+	log_debug ("%s", output[0].c_str());
 
 	LoopPtr l = create (output[0]);
 

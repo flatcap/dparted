@@ -26,6 +26,7 @@
 
 LvmMirror::LvmMirror (void)
 {
+	log_ctor ("ctor LvmMirror");
 	const char* me = "LvmMirror";
 
 	sub_type (me);
@@ -33,6 +34,7 @@ LvmMirror::LvmMirror (void)
 
 LvmMirror::~LvmMirror()
 {
+	log_dtor ("dtor LvmMirror");
 }
 
 LvmMirrorPtr
@@ -75,7 +77,7 @@ bool
 LvmMirror::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_mirror") {
-		log_debug ("LvmMirror perform: %s\n", action.name.c_str());
+		log_debug ("LvmMirror perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);
@@ -130,7 +132,7 @@ LvmMirror::add_child (ContainerPtr& child)
 		children.push_back (child);
 	}
 
-	log_debug ("insert: %s (%s)\n", this->name.c_str(), child->name.c_str());
+	log_debug ("insert: %s (%s)", this->name.c_str(), child->name.c_str());
 
 	child->parent = this;
 #endif

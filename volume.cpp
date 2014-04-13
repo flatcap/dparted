@@ -26,6 +26,7 @@
 
 Volume::Volume (void)
 {
+	log_ctor ("ctor Volume");
 	const char* me = "Volume";
 
 	sub_type (me);
@@ -33,6 +34,7 @@ Volume::Volume (void)
 
 Volume::~Volume()
 {
+	log_dtor ("dtor Volume");
 }
 
 VolumePtr
@@ -75,7 +77,7 @@ bool
 Volume::perform_action (Action action)
 {
 	if (action.name == "dummy.volume") {
-		log_debug ("Volume perform: %s\n", action.name.c_str());
+		log_debug ("Volume perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Whole::perform_action (action);

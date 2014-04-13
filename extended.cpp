@@ -36,6 +36,7 @@
 
 Extended::Extended (void)
 {
+	log_ctor ("ctor Extended");
 	const char* me = "Extended";
 
 	sub_type (me);
@@ -43,6 +44,7 @@ Extended::Extended (void)
 
 Extended::~Extended()
 {
+	log_dtor ("dtor Extended");
 }
 
 ExtendedPtr
@@ -85,7 +87,7 @@ bool
 Extended::perform_action (Action action)
 {
 	if (action.name == "dummy.extended") {
-		log_debug ("Extended perform: %s\n", action.name.c_str());
+		log_debug ("Extended perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Msdos::perform_action (action);
@@ -127,21 +129,21 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	for (int loop = 0; loop < 50; ++loop) {		//what's the upper limit? prob 255 in the kernel
 		if (le16_to_cpup (table_offset+buffer+510) != 0xAA55) {
-			log_error ("not an extended partition\n");
-			log_debug ("%s (%s), %ld\n", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
+			log_error ("not an extended partition");
+			log_debug ("%s (%s), %ld", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
 			return nullptr;
 		}
 
-		log_debug ("extended partition\n");
+		log_debug ("extended partition");
 
 		int num = 0;
 		std::vector<struct partition> vp;
 		num = ext->read_table (table_offset+buffer, bufsize, 0, vp);
-		log_debug ("num = %d\n", num);
+		log_debug ("num = %d", num);
 		//dump_hex (buffer, bufsize);
 
 		if ((num < 0) || (vp.size() > 2)) {
-			log_error ("partition table is corrupt\n");	// bugger
+			log_error ("partition table is corrupt");	// bugger
 			return nullptr;
 		}
 
@@ -151,9 +153,9 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 				std::string s1 = get_size (le64_to_cpu (part.start));
 				std::string s2 = get_size (le64_to_cpu (part.size));
 
-				log_debug ("\tpartition (0x%02x)\n", part.type);
-				log_debug ("\t\tstart = %ld (%s)\n", le64_to_cpu (part.start), s1.c_str());
-				log_debug ("\t\tsize  = %ld (%s)\n", le64_to_cpu (part.size),  s2.c_str());
+				log_debug ("\tpartition (0x%02x)", part.type);
+				log_debug ("\t\tstart = %ld (%s)", le64_to_cpu (part.start), s1.c_str());
+				log_debug ("\t\tsize  = %ld (%s)", le64_to_cpu (part.size),  s2.c_str());
 				log_debug ("\n");
 			}
 #endif
@@ -193,7 +195,7 @@ Extended::get_buffer (std::uint64_t offset, std::uint64_t size)
 	// Our device is defective, so delegate to our parent
 	// range check
 	if ((size < 1) || ((offset + size) > bytes_size)) {
-		log_error ("out of range\n");
+		log_error ("out of range");
 		return nullptr;
 	}
 
@@ -201,8 +203,8 @@ Extended::get_buffer (std::uint64_t offset, std::uint64_t size)
 	if (p) {
 		return p->get_buffer (offset + parent_offset, size);
 	} else {
-		log_debug ("%s\n", this->dump());
-		log_error ("no device and no parent\n");
+		log_debug ("%s", this->dump());
+		log_error ("no device and no parent");
 		return nullptr;
 	}
 }

@@ -229,7 +229,7 @@ public:
 	virtual operator std::uint8_t (void)
 	{
 		if (denom == 0) {
-			log_error ("no denominator\n");
+			log_error ("no denominator");
 			return 0;
 		}
 

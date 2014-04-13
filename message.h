@@ -30,10 +30,8 @@ typedef std::shared_ptr<Message> MessagePtr;
 class Message
 {
 public:
-#if 0
 	Message (void);
 	virtual ~Message();
-#endif
 
 	std::string title;
 	std::string message;

@@ -31,6 +31,7 @@
 
 Misc::Misc (void)
 {
+	log_ctor ("ctor Misc");
 	const char* me = "Misc";
 
 	sub_type (me);
@@ -38,6 +39,7 @@ Misc::Misc (void)
 
 Misc::~Misc()
 {
+	log_dtor ("dtor Misc");
 }
 
 MiscPtr
@@ -80,7 +82,7 @@ bool
 Misc::perform_action (Action action)
 {
 	if (action.name == "dummy.misc") {
-		log_debug ("Misc perform: %s\n", action.name.c_str());
+		log_debug ("Misc perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -116,7 +118,7 @@ is_random (std::uint8_t* buffer, int bufsize)
 
 	mean /= bufsize;
 
-	log_debug ("data mean = %0.6f\n", mean);
+	log_debug ("data mean = %0.6f", mean);
 
 	return ((mean > 125) && (mean < 130));
 }
@@ -135,11 +137,11 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	MiscPtr m;
 	if (is_empty (buffer, bufsize)) {
-		log_error ("probe empty\n");
+		log_error ("probe empty");
 		m = Misc::create();
 		m->sub_type ("Zero");
 	} else { //if (is_random (buffer, bufsize)) {
-		log_error ("probe random\n");
+		log_error ("probe random");
 		m = Misc::create();
 		m->sub_type ("Random");
 	}

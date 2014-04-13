@@ -22,6 +22,7 @@
 
 MdVolume::MdVolume (void)
 {
+	log_ctor ("ctor MdVolume");
 	const char* me = "MdVolume";
 
 	sub_type (me);
@@ -29,6 +30,7 @@ MdVolume::MdVolume (void)
 
 MdVolume::~MdVolume()
 {
+	log_dtor ("dtor MdVolume");
 }
 
 MdVolumePtr
@@ -71,7 +73,7 @@ bool
 MdVolume::perform_action (Action action)
 {
 	if (action.name == "dummy.md_volume") {
-		log_debug ("MdVolume perform: %s\n", action.name.c_str());
+		log_debug ("MdVolume perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Volume::perform_action (action);

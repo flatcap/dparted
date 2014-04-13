@@ -25,10 +25,12 @@
 
 HexVisitor::HexVisitor (void)
 {
+	log_ctor ("ctor HexVisitor");
 }
 
 HexVisitor::~HexVisitor()
 {
+	log_dtor ("dtor HexVisitor");
 }
 
 
@@ -83,7 +85,7 @@ HexVisitor::visit (ExtendedPtr c)
 
 	parent = c->parent.lock();
 	if (!parent) {
-		log_debug ("\033[01;31m%s\033[0m\n", c->dump());
+		log_hex ("\033[01;31m%s\033[0m", c->dump());
 		return false;
 	}
 
@@ -133,9 +135,9 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 	}
 	type.pop_back();
 
-	log_debug ("%s\n", type.c_str());
+	log_hex ("%s", type.c_str());
 	if (buf) {
-		log_debug ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)\n", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
+		log_hex ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
 
 		std::uint64_t abbr = (abbreviate & ~15);	// Round down to multiple of 16
 
@@ -143,12 +145,12 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 			dump_hex2 (buf, 0, size);
 		} else {
 			dump_hex2 (buf, 0, abbr);
-			log_debug ("\t~~~\n");
+			log_hex ("~~~");
 			dump_hex2 (buf, size-abbr, abbr);
 		}
-		log_debug ("\n");
+		log_hex ("\n");
 	} else {
-		log_debug ("\033[01;31m%s\033[0m\n", c->dump());
+		log_hex ("\033[01;31m%s\033[0m", c->dump());
 	}
 
 }

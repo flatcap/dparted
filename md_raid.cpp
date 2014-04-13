@@ -22,6 +22,7 @@
 
 MdRaid::MdRaid (void)
 {
+	log_ctor ("ctor MdRaid");
 	const char* me = "MdRaid";
 
 	sub_type (me);
@@ -29,6 +30,7 @@ MdRaid::MdRaid (void)
 
 MdRaid::~MdRaid()
 {
+	log_dtor ("dtor MdRaid");
 }
 
 MdRaidPtr
@@ -71,7 +73,7 @@ bool
 MdRaid::perform_action (Action action)
 {
 	if (action.name == "dummy.md_raid") {
-		log_debug ("MdRaid perform: %s\n", action.name.c_str());
+		log_debug ("MdRaid perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return MdVolume::perform_action (action);

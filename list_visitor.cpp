@@ -24,10 +24,12 @@
 
 ListVisitor::ListVisitor (void)
 {
+	log_ctor ("ctor ListVisitor");
 }
 
 ListVisitor::~ListVisitor()
 {
+	log_dtor ("dtor ListVisitor");
 }
 
 
@@ -69,5 +71,5 @@ ListVisitor::visit (ContainerPtr c)
 void
 ListVisitor::list (void)
 {
-	log_debug ("%s\n", output.str().c_str());
+	log_debug ("%s", output.str().c_str());
 }

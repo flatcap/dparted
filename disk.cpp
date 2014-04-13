@@ -37,6 +37,7 @@
 
 Disk::Disk (void)
 {
+	log_ctor ("ctor Disk");
 	const char* me = "Disk";
 
 	sub_type (me);
@@ -55,6 +56,7 @@ Disk::Disk (void)
 
 Disk::~Disk()
 {
+	log_dtor ("dtor Disk");
 }
 
 DiskPtr
@@ -81,12 +83,12 @@ Disk::create (const std::string& lsblk)
 
 	d->name = tags["NAME"];
 	d->device = "/dev/" + d->name;
-	log_debug ("%s\n", d->device.c_str());
+	log_debug ("%s", d->device.c_str());
 
 	std::string majmin = tags["MAJ:MIN"];
 	scan = sscanf (majmin.c_str(), "%lu:%lu", &d->device_major, &d->device_minor);
 	if (scan != 2) {
-		log_debug ("scan failed1\n");
+		log_debug ("scan failed1");
 	}
 
 	d->bytes_size = tags["SIZE"];
@@ -126,7 +128,7 @@ bool
 Disk::perform_action (Action action)
 {
 	if (action.name == "dummy.disk") {
-		log_debug ("Disk perform: %s\n", action.name.c_str());
+		log_debug ("Disk perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Block::perform_action (action);
@@ -153,12 +155,12 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	std::string vendor   = read_file_line ("/sys/block/sda/device/model");
 #endif
 
-	log_debug ("%s\n", model.c_str());
+	log_debug ("%s", model.c_str());
 	DiskPtr d = Disk::create();
 
-	log_debug ("fd = %d\n", fd);
+	log_debug ("fd = %d", fd);
 	res = ioctl (fd, BLKGETSIZE64, &file_size_in_bytes); // replace with ftell (user, not root)
-	log_debug ("res = %d\n", res);
+	log_debug ("res = %d", res);
 	if (!res) {
 	}
 
@@ -167,11 +169,9 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	d->bytes_size    = file_size_in_bytes;
 	d->bytes_used    = 0;
 
-#if 0
-	log_debug ("disk\n");
-	log_debug ("\tname = %s\n", name.c_str());
-	log_debug ("\tsize = %ld\n", file_size_in_bytes);
-#endif
+	log_debug ("disk");
+	log_debug ("\tname = %s", name.c_str());
+	log_debug ("\tsize = %ld", file_size_in_bytes);
 
 	list.add_child(d);
 	queue_add_probe(d);	// queue the container for action
@@ -187,9 +187,9 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	struct hd_geometry geometry;
 
 	ioctl (fd, HDIO_GETGEO, &geometry);
-	log_debug ("heads     = %d\n", geometry.heads);
-	log_debug ("sectors   = %d\n", geometry.sectors);
-	log_debug ("cylinders = %d\n", geometry.cylinders);	// truncated at ~500GiB
+	log_debug ("heads     = %d", geometry.heads);
+	log_debug ("sectors   = %d", geometry.sectors);
+	log_debug ("cylinders = %d", geometry.cylinders);	// truncated at ~500GiB
 	//close (fd);	// or keep it for later?
 #endif
 
@@ -208,7 +208,7 @@ Disk::find_devices (ContainerPtr& list)
 	if (output.empty())
 		return 0;
 
-	log_debug ("%s\n", join (output,", ").c_str());
+	log_debug ("%s", join (output,", ").c_str());
 
 	std::string device;
 	std::string type;
@@ -221,7 +221,7 @@ Disk::find_devices (ContainerPtr& list)
 	std::map<std::string,StringNum> tags;
 	int added = 0;
 
-	log_debug ("%ld lines\n", output.size());
+	log_debug ("%ld lines", output.size());
 
 	for (auto line : output) {
 		parse_tagged_line (line, " ", tags);
@@ -231,25 +231,23 @@ Disk::find_devices (ContainerPtr& list)
 			continue;
 
 		device = tags["NAME"];
-		log_debug ("%s\n", device.c_str());
+		log_debug ("%s", device.c_str());
 
 		std::string majmin = tags["MAJ:MIN"];
 		scan = sscanf (majmin.c_str(), "%d:%d", &major, &minor);
 		if (scan != 2) {
-			log_debug ("scan failed1\n");
+			log_debug ("scan failed1");
 			continue;
 		}
 
 		size = tags["SIZE"];
 		mount = tags["MOUNTPOINT"];
 
-#if 0
-		log_debug ("\tmajor: %d\n", major);
-		log_debug ("\tminor: %d\n", minor);
-		log_debug ("\tsize:  %ld\n", size);
-		log_debug ("\tmount: %s\n", mount.c_str());
+		log_debug ("\tmajor: %d", major);
+		log_debug ("\tminor: %d", minor);
+		log_debug ("\tsize:  %ld", size);
+		log_debug ("\tmount: %s", mount.c_str());
 		log_debug ("\n");
-#endif
 
 		DiskPtr d = Disk::create();
 		d->device = "/dev/" + device;
@@ -316,7 +314,7 @@ Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 	if (!lsblk (output))
 		return;
 
-	log_debug ("%ld lines\n", output.size());
+	log_debug ("%ld lines", output.size());
 
 	for (auto line : output) {
 		DiskPtr d = Disk::create (line);

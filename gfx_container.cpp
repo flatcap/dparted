@@ -27,10 +27,12 @@
 
 GfxContainer::GfxContainer (void)
 {
+	log_ctor ("ctor GfxContainer");
 }
 
 GfxContainer::~GfxContainer()
 {
+	log_dtor ("dtor GfxContainer");
 }
 
 GfxContainerPtr
@@ -65,7 +67,7 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 			case 8:	os = "os_ubuntu";  break;
 			case 9:	os = "os_windows"; break;
 		}
-		log_debug ("Filesystem: %s : %s\n", c->get_device_inherit().c_str(), os.c_str());
+		log_debug ("Filesystem: %s : %s", c->get_device_inherit().c_str(), os.c_str());
 		c->add_string_prop (std::string("gfx"), std::string("operating_system"), os);
 	}
 
@@ -143,19 +145,8 @@ GfxContainer::init (ContainerPtr c)
 		background = process_colour (bg);
 		icon       = process_icon   (i);
 		usage      = process_bool   (u);
-
-#if 0
-		log_debug ("Config\n");
-		log_debug ("\tbackground: %s\n", background);
-		log_debug ("\tcolour:     %s\n", colour);
-		log_debug ("\tdisplay:    %s\n", display.c_str());
-		log_debug ("\ticon:       %s\n", icon);
-		log_debug ("\tlabel:      %s\n", label_template.c_str());
-		log_debug ("\tusage:      %d\n", usage);
-#endif
-
 	} catch (const std::string& e) {
-		log_debug ("Exception: %s\n", e.c_str());
+		log_debug ("Exception: %s", e.c_str());
 		exit(1);
 	}
 
@@ -182,23 +173,23 @@ find_subst (const std::string& text, std::string& tag, std::size_t& start, std::
 
 	open = text.find ('{');
 	if (open == std::string::npos) {
-		log_debug ("nothing to substitute\n");
+		log_debug ("nothing to substitute");
 		return false;
 	}
 
 	close = text.find_first_not_of (valid, open+1);
 	if (close == std::string::npos) {
-		log_error ("missing close brace\n");
+		log_error ("missing close brace");
 		return false;
 	}
 
 	if (text[close] != '}') {
-		log_error ("invalid tag name\n");
+		log_error ("invalid tag name");
 		return false;
 	}
 
 	if (close == (open+1)) {
-		log_error ("missing tag\n");
+		log_error ("missing tag");
 		return false;
 	}
 
@@ -215,7 +206,7 @@ GfxContainer::process_label (const std::string& label_template)
 {
 	std::string l = label_template;
 
-	log_debug ("Label: %s\n", l.c_str());
+	log_debug ("Label: %s", l.c_str());
 	ContainerPtr c = get_container();
 	if (!c)
 		return l;
@@ -232,7 +223,7 @@ GfxContainer::process_label (const std::string& label_template)
 		l.replace (start, stop-start+1, value);
 	}
 
-	log_debug ("label = %s\n", l.c_str());
+	log_debug ("label = %s", l.c_str());
 
 	return l;
 }
@@ -259,19 +250,14 @@ GfxContainer::dump2 (void)
 		tabs.resize (indent, '\t');
 	}
 
-#if 0
-	log_debug ("%s----------------------", tabs.c_str);
-	log_debug ("%sdisplay        = ", tabs.c_str(), display);
-	log_debug ("%scolour         = ", tabs.c_str(), colour);
-	log_debug ("%sbackground     = ", tabs.c_str(), background);
-	log_debug ("%sicon           = ", tabs.c_str(), icon);
-	log_debug ("%slabel          = ", tabs.c_str(), label);
-	log_debug ("%slabel_template = ", tabs.c_str(), label_template);
-	log_debug ("%sbytes_size     = ", tabs.c_str(), bytes_size);
-	log_debug ("%sbytes_used     = ", tabs.c_str(), bytes_used);
-	log_debug ("%susage          = ", tabs.c_str(), usage);
-	log_debug ("%sseqnum         = ", tabs.c_str(), seqnum);
-#endif
+	log_debug ("%s----------------------", tabs.c_str());
+	log_debug ("%sdisplay        = %s", tabs.c_str(), display.c_str());
+	log_debug ("%slabel          = %s", tabs.c_str(), label.c_str());
+	log_debug ("%slabel_template = %s", tabs.c_str(), label_template.c_str());
+	log_debug ("%sbytes_size     = %ld", tabs.c_str(), bytes_size);
+	log_debug ("%sbytes_used     = %ld", tabs.c_str(), bytes_used);
+	log_debug ("%susage          = %d", tabs.c_str(), usage);
+	log_debug ("%sseqnum         = %d", tabs.c_str(), seqnum);
 
 	++indent;
 	for (auto c : children) {
@@ -285,7 +271,7 @@ bool
 GfxContainer::set_focus (bool focus)
 {
 	ContainerPtr c = get_container();
-	log_debug ("Focus: %s = %d\n", c->dump(), focus);
+	log_debug ("Focus: %s = %d", c->dump(), focus);
 	focussed = focus;
 	return true;
 }
@@ -333,7 +319,7 @@ GfxContainer::process_icon (const std::string& str)
 		return pb;
 
 	pb = theme->get_icon (str);
-	log_debug ("icon: %s %p\n", str.c_str(), (void*) pb.operator->());
+	log_debug ("icon: %s %p", str.c_str(), (void*) pb.operator->());
 	//pb = Gdk::Pixbuf::create_from_file (str);
 
 	return pb;
@@ -393,10 +379,10 @@ GfxContainerPtr
 GfxContainer::get_smart (void)
 {
 	if (self.expired()) {
-		log_debug ("SMART\n");
+		log_debug ("SMART");
 		//XXX who created us? - code error
 		GfxContainerPtr c (this);
-		log_debug ("%s\n", c->dump());
+		log_debug ("%s", c->dump());
 		self = c;
 	}
 	return self.lock();

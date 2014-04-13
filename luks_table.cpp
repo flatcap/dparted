@@ -41,6 +41,7 @@
 
 LuksTable::LuksTable (void)
 {
+	log_ctor ("ctor LuksTable");
 	const char* me = "LuksTable";
 
 	sub_type (me);
@@ -58,6 +59,7 @@ LuksTable::LuksTable (void)
 
 LuksTable::~LuksTable()
 {
+	log_dtor ("dtor LuksTable");
 }
 
 LuksTablePtr
@@ -100,7 +102,7 @@ bool
 LuksTable::perform_action (Action action)
 {
 	if (action.name == "dummy.luks_table") {
-		log_debug ("LuksTable perform: %s\n", action.name.c_str());
+		log_debug ("LuksTable perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -171,11 +173,11 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	encoded_key_size = align (encoded_key_size, 1048576);
 	l->header_size          = encoded_key_size;
 
-	log_debug ("header size = %ld\n", l->header_size);
+	log_debug ("header size = %ld", l->header_size);
 
 	//l->device      = "/dev/mapper/luks-" + l->uuid;
 
-	log_debug ("Parent: %s\n", parent->get_device_name().c_str());
+	log_debug ("Parent: %s", parent->get_device_name().c_str());
 	l->luks_open (parent->get_device_name(), false);
 
 	PartitionPtr p = Partition::create();
@@ -187,25 +189,25 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	l->add_child(p);
 
 #if 0
-	log_info ("LUKS:\n");
-	log_info ("\tversion:       %u\n", l->version);
-	log_info ("\tcipher name:   %s\n", l->cipher_name.c_str());
-	log_info ("\tcipher mode:   %s\n", l->cipher_mode.c_str());
-	log_info ("\thash spec:     %s\n", l->hash_spec.c_str());
-	log_info ("\tuuid:          %s\n", l->uuid.c_str());
-	log_info ("\toffset:        %u\n", l->payload_offset);
-	log_info ("\tkey bits:      %u\n", l->key_bits);
-	log_info ("\tMK digest:     %s\n", l->mk_digest.c_str());
-	log_info ("\tMK salt:       %s\n", l->mk_digest_salt.c_str());
-	log_info ("\tMK iterations: %u\n", l->mk_digest_iterations);
+	log_info ("LUKS:");
+	log_info ("\tversion:       %u", l->version);
+	log_info ("\tcipher name:   %s", l->cipher_name.c_str());
+	log_info ("\tcipher mode:   %s", l->cipher_mode.c_str());
+	log_info ("\thash spec:     %s", l->hash_spec.c_str());
+	log_info ("\tuuid:          %s", l->uuid.c_str());
+	log_info ("\toffset:        %u", l->payload_offset);
+	log_info ("\tkey bits:      %u", l->key_bits);
+	log_info ("\tMK digest:     %s", l->mk_digest.c_str());
+	log_info ("\tMK salt:       %s", l->mk_digest_salt.c_str());
+	log_info ("\tMK iterations: %u", l->mk_digest_iterations);
 #endif
 #if 0
 
-	log_info ("\tactive:        %08X\n", l->pass1_active);
-	log_info ("\titerations:    %u\n",   l->pass1_iterations);
-	log_info ("\tsalt:          %s\n",   l->pass1_salt.c_str());
-	log_info ("\tkey offset:    %u\n",   l->pass1_key_offset);
-	log_info ("\tstripes:       %u\n",   l->pass1_stripes);
+	log_info ("\tactive:        %08X", l->pass1_active);
+	log_info ("\titerations:    %u",   l->pass1_iterations);
+	log_info ("\tsalt:          %s",   l->pass1_salt.c_str());
+	log_info ("\tkey offset:    %u",   l->pass1_key_offset);
+	log_info ("\tstripes:       %u",   l->pass1_stripes);
 
 #endif
 #if 0
@@ -235,7 +237,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 void
 LuksTable::on_reply (QuestionPtr UNUSED(q))
 {
-	log_debug ("user has answered question\n");
+	log_debug ("user has answered question");
 }
 
 
@@ -243,7 +245,7 @@ bool
 LuksTable::is_mounted (const std::string& device)
 {
 	std::string command = "sudo cryptsetup status " + device;
-	log_debug ("Command: %s\n", command.c_str());
+	log_debug ("Command: %s", command.c_str());
 
 	std::string output;
 	int retcode = execute_command3 (command, output);
@@ -264,7 +266,7 @@ LuksTable::is_luks (const std::string& device)
 	// is already mounted?		cryptsetup status
 
 	std::string command = "sudo cryptsetup isLuks " + device;
-	log_debug ("Command: %s\n", command.c_str());
+	log_debug ("Command: %s", command.c_str());
 
 	std::string output;
 	int retcode = execute_command3 (command, output);
@@ -304,7 +306,7 @@ LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 	//XXX check that the luks device matches the parent device
 	if (!is_mounted (mapper)) {
 		std::string command = "sudo cryptsetup open --type luks " + parent + " luks-" + uuid;
-		log_debug ("Command: %s\n", command.c_str());
+		log_debug ("Command: %s", command.c_str());
 
 		std::string password = "password";
 		execute_command2 (command, password);
@@ -339,7 +341,7 @@ LuksTable::luks_close (void)
 {
 	//XXX close all dependents first, e.g. umount X, vgchange -an, etc
 	std::string command = "cryptsetup close " + device;
-	log_debug ("Command: %s\n", command.c_str());
+	log_debug ("Command: %s", command.c_str());
 	return false;
 }
 

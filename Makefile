@@ -138,7 +138,7 @@ ifeq ($(GUI),1)
 endif
 
 ifeq ($(L),1)
-	CFLAGS	+= -DDP_LOG_TEST
+	CFLAGS	+= -DDP_LOG_CHECK
 endif
 
 ifeq ($(D),1)

@@ -41,6 +41,7 @@
 
 Block::Block (void)
 {
+	log_ctor ("ctor Block");
 	const char* me = "Block";
 
 	sub_type (me);
@@ -48,6 +49,7 @@ Block::Block (void)
 
 Block::~Block()
 {
+	log_dtor ("dtor Block");
 }
 
 BlockPtr
@@ -90,7 +92,7 @@ bool
 Block::perform_action (Action action)
 {
 	if (action.name == "dummy.block") {
-		log_debug ("Block perform: %s\n", action.name.c_str());
+		log_debug ("Block perform: %s", action.name.c_str());
 		return true;
 	} else {
 		return Container::perform_action (action);
