@@ -17,25 +17,27 @@
 # along with DParted.  If not, see <http://www.gnu.org/licenses/>.
 
 # Configurables
+# A=All, V=Verbose, P=Profiling, L=LogCheck, D=Debug
+A	?= 0
 V	?= 0
 P	?= 0
 L	?= 0
 D	?= 1
-BTRFS	?= 1
-DOT	?= 1
+BTRFS	?= $(A)
+DOT	?= $(A)
 EXTFS	?= 1
-FS_MISC	?= 1
-GPT	?= 1
+FS_MISC	?= $(A)
+GPT	?= $(A)
 GUI	?= 1
-HEX	?= 1
-LIST	?= 1
+HEX	?= $(A)
+LIST	?= $(A)
 LUKS	?= 1
-LVM	?= 1
-MD	?= 1
-MSDOS	?= 1
-NTFS	?= 1
-PROP	?= 1
-UNUSED	?= 0
+LVM	?= $(A)
+MD	?= $(A)
+MSDOS	?= $(A)
+NTFS	?= $(A)
+PROP	?= $(A)
+UNUSED	?= $(A)
 
 CXX	?= g++
 RM	= rm -fr
