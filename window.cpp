@@ -98,6 +98,7 @@ void Window::on_quit_button_clicked (void)
 	if (m_WorkerThread) {
 		m_Worker.stop_work();
 		m_WorkerThread->join();
+		delete m_WorkerThread;
 		m_WorkerThread = nullptr;
 	}
 	hide();
