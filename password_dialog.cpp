@@ -20,7 +20,6 @@
 
 #include "password_dialog.h"
 #include "log.h"
-#include "log_macro.h"
 
 PasswordDialog::PasswordDialog (const Glib::ustring& message) :
 	Gtk::MessageDialog (message)

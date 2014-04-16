@@ -24,7 +24,6 @@
 #include "action.h"
 #include "endian.h"
 #include "extfs.h"
-#include "log_trace.h"
 #include "utils.h"
 #include "visitor.h"
 #include "log.h"

@@ -55,7 +55,6 @@
 #include "endian.h"
 #include "filesystem.h"
 #include "log.h"
-#include "log_trace.h"
 #ifdef DP_MSDOS
 #include "msdos_partition.h"
 #endif

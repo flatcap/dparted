@@ -29,7 +29,6 @@
 #include "app.h"
 #include "disk.h"
 #include "log.h"
-#include "log_trace.h"
 #include "property.h"
 #include "utils.h"
 #include "visitor.h"

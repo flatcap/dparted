@@ -21,9 +21,7 @@
 
 #include <string>
 
-#include "log.h"
-
-#define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
+#include "log_macro.h"
 
 //XXX keep a global depth counter?
 //XXX indent results?

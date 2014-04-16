@@ -37,7 +37,6 @@
 #include "lvm_group.h"
 #include "lvm_volume.h"
 #endif
-#include "log_trace.h"
 #include "utils.h"
 #include "log.h"
 

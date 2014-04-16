@@ -73,7 +73,7 @@
 #include "table.h"
 #include "volume.h"
 #include "whole.h"
-#include "log_trace.h"
+#include "utils.h"
 
 class Visitor
 {

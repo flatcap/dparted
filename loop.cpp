@@ -24,7 +24,6 @@
 #include "loop.h"
 #include "action.h"
 #include "app.h"
-#include "log_trace.h"
 #include "stringnum.h"
 #include "utils.h"
 #include "visitor.h"

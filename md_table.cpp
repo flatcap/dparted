@@ -20,7 +20,6 @@
 
 #include "action.h"
 #include "endian.h"
-#include "log_trace.h"
 #include "md_table.h"
 #include "utils.h"
 #include "visitor.h"

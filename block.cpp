@@ -33,7 +33,6 @@
 #include "disk.h"
 #include "file.h"
 #include "log.h"
-#include "log_trace.h"
 #include "loop.h"
 #include "visitor.h"
 

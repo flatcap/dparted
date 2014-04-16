@@ -17,7 +17,8 @@
  */
 
 #include "question.h"
-#include "log_trace.h"
+#include "log.h"
+#include "utils.h"
 
 Question::Question (void)
 {

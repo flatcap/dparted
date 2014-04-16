@@ -32,7 +32,6 @@
 #include "endian.h"
 #include "extended.h"
 #include "log.h"
-#include "log_trace.h"
 #include "msdos.h"
 #include "partition.h"
 #include "utils.h"

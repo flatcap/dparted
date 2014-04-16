@@ -34,8 +34,6 @@
 #include "log.h"
 #include "stringnum.h"
 #include "utils.h"
-#include "log_macro.h"
-#include "log_trace.h"
 
 std::uint64_t
 align (std::uint64_t num, std::uint64_t round)

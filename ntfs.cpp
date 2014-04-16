@@ -23,7 +23,6 @@
 
 #include "action.h"
 #include "endian.h"
-#include "log_trace.h"
 #include "ntfs.h"
 #include "utils.h"
 #include "visitor.h"

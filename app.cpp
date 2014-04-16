@@ -38,7 +38,6 @@
 #ifdef DP_LVM
 #include "lvm_group.h"
 #endif
-#include "log_trace.h"
 
 AppPtr main_app;
 

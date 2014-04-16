@@ -23,8 +23,6 @@
 #include "gfx_container.h"
 #include "gui_app.h"
 #include "log.h"
-#include "log_macro.h"
-#include "log_trace.h"
 
 GfxContainer::GfxContainer (void)
 {

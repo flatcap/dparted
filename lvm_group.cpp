@@ -27,7 +27,6 @@
 #include "action.h"
 #include "app.h"
 #include "log.h"
-#include "log_trace.h"
 #include "lvm_linear.h"
 #include "lvm_mirror.h"
 #include "lvm_partition.h"

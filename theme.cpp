@@ -26,7 +26,6 @@
 
 #include "log.h"
 #include "theme.h"
-#include "log_trace.h"
 
 Theme::Theme (void)
 {

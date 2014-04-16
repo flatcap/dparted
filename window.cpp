@@ -28,7 +28,7 @@
 #include "drawing_area.h"
 #include "gui_app.h"
 #include "log.h"
-#include "log_trace.h"
+#include "utils.h"
 
 Window::Window (void)
 {

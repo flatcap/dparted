@@ -32,7 +32,6 @@
 #include "app.h"
 #include "endian.h"
 #include "log.h"
-#include "log_trace.h"
 #include "luks_partition.h"
 #include "luks_table.h"
 #include "partition.h"

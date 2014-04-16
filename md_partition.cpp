@@ -20,7 +20,7 @@
 
 #include "md_partition.h"
 #include "action.h"
-#include "log_trace.h"
+#include "log.h"
 #include "visitor.h"
 
 MdPartition::MdPartition (void)

@@ -22,7 +22,6 @@
 #include "partition.h"
 #include "action.h"
 #include "log.h"
-#include "log_trace.h"
 #include "visitor.h"
 
 Partition::Partition (void)

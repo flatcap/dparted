@@ -20,10 +20,10 @@
 #include <cstring>
 #include <functional>
 #include <map>
+#include <sstream>
 #include <vector>
 
 #include "log.h"
-#include "log_trace.h"
 #include "severity.h"
 #include "utils.h"
 

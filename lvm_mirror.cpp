@@ -21,7 +21,6 @@
 #include "lvm_mirror.h"
 #include "action.h"
 #include "log.h"
-#include "log_trace.h"
 #include "visitor.h"
 
 LvmMirror::LvmMirror (void)

@@ -34,7 +34,6 @@
 #include "fs_identify.h"
 #endif
 #include "log.h"
-#include "log_trace.h"
 #ifdef DP_NTFS
 #include "ntfs.h"
 #endif

@@ -21,7 +21,6 @@
 #include "volume.h"
 #include "action.h"
 #include "log.h"
-#include "log_trace.h"
 #include "visitor.h"
 
 Volume::Volume (void)
