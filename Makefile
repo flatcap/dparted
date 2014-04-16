@@ -138,6 +138,7 @@ endif
 
 ifeq ($(L),1)
 	CFLAGS	+= -DDP_LOG_CHECK
+	CFLAGS	+= -Wformat=2
 endif
 
 ifeq ($(D),1)

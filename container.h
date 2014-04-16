@@ -118,7 +118,7 @@ public:
 	}
 
 	void sub_type (const char* name);
-	const char* dump (void);
+	std::string dump (void);
 
 	PPtr add_string_prop (const std::string& owner, const std::string& name, const std::string& value);
 
@@ -280,8 +280,6 @@ protected:
 
 private:
 	void insert (std::uint64_t offset, std::uint64_t size, void* ptr);
-
-	std::string debug;		// Text representation of self
 };
 
 #endif // _CONTAINER_H_

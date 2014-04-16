@@ -23,6 +23,7 @@
 #include "gfx_container.h"
 #include "gui_app.h"
 #include "log.h"
+#include "log_macro.h"
 #include "log_trace.h"
 
 GfxContainer::GfxContainer (void)
@@ -271,7 +272,7 @@ bool
 GfxContainer::set_focus (bool focus)
 {
 	ContainerPtr c = get_container();
-	log_debug ("Focus: %s = %d", c->dump(), focus);
+	log_debug ("Focus: %s = %d", c->dump().c_str(), focus);
 	focussed = focus;
 	return true;
 }
@@ -476,13 +477,12 @@ GfxContainer::get_right (void)
 	return nullptr;
 }
 
-const char*
+std::string
 GfxContainer::dump (void)
 {
-	std::stringstream s;
-	s << this;
-	debug = s.str();
-	return debug.c_str();
+	std::stringstream ss;
+	ss << this;
+	return ss.str();
 }
 
 

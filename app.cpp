@@ -210,7 +210,7 @@ App::scan (const std::vector<std::string>& files)
 		item = probe_queue.front();
 		probe_queue.pop();
 
-		log_debug ("Item: %s", item->dump());
+		log_debug ("Item: %s", item->dump().c_str());
 
 		std::uint64_t bufsize = item->bytes_size;
 		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
@@ -236,7 +236,7 @@ App::scan (const std::vector<std::string>& files)
 		item = probe_queue.front();
 		probe_queue.pop();
 
-		log_debug ("Item: %s", item->dump());
+		log_debug ("Item: %s", item->dump().c_str());
 
 		std::uint64_t bufsize = item->bytes_size;
 		std::uint8_t* buffer  = item->get_buffer (0, bufsize);

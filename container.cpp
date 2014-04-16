@@ -888,13 +888,12 @@ Container::get_uuid_short (void)
 	return u;
 }
 
-const char*
+std::string
 Container::dump (void)
 {
 	std::stringstream s;
 	s << this;
-	debug = s.str();
-	return debug.c_str();
+	return s.str();
 }
 
 

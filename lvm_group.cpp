@@ -575,7 +575,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	log_info ("Pieces (%ld)", pieces->get_children().size());
 	for (auto i : pieces->get_children()) {
-		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump());
+		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
 	}
 
 	//probe leaves
@@ -597,7 +597,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	log_debug ("%ld groups", g.size());
 
 	for (auto i : g) {
-		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump());
+		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
 		top_level->just_add_child(i);
 	}
 }
