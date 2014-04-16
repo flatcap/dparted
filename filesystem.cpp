@@ -34,8 +34,6 @@
 #include "fs_identify.h"
 #endif
 #include "log.h"
-#include "log_trace.h"
-#include "main.h"
 #ifdef DP_NTFS
 #include "ntfs.h"
 #endif
@@ -137,7 +135,7 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 #endif
 
 	if (f) {
-		log_info ("volume: %s (%s), child: %s", parent->name.c_str(), parent->type.back().c_str(), f->name.c_str());
+		log_info ("volume: %s (%s), child: %s", parent->name.c_str(), parent->get_type().c_str(), f->name.c_str());
 		parent->add_child(f);	//XXX move this into get_*?
 		return true;
 	}

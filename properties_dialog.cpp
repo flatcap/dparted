@@ -17,7 +17,8 @@
  */
 
 #include "properties_dialog.h"
-#include "log_trace.h"
+#include "log.h"
+#include "utils.h"
 
 PropertiesDialog::PropertiesDialog (GfxContainerPtr c, Gtk::Window* w) :
 	Gtk::Dialog ("dummy", false),

@@ -24,7 +24,6 @@
 #include "action.h"
 #include "endian.h"
 #include "extfs.h"
-#include "log_trace.h"
 #include "utils.h"
 #include "visitor.h"
 #include "log.h"
@@ -149,7 +148,7 @@ tune2fs (const std::string& dev)
 	std::map<std::string,std::string> results;
 
 	command = "tune2fs -l " + dev;		// list contents of filesystem superblock
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 
 	std::string key;
 	std::string value;
@@ -182,8 +181,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 	return_if_fail (parent);
 
 	std::string dev = parent->get_device_name();
-	if (dev.empty())	//XXX shouldn't happen
-		return;
+	return_if_fail (!dev.empty());
 
 	std::map<std::string,std::string> info = tune2fs (dev);
 	if (info.empty()) {

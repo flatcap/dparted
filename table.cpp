@@ -25,7 +25,6 @@
 #include "gpt.h"
 #endif
 #include "log.h"
-#include "log_trace.h"
 #ifdef DP_LUKS
 #include "luks_table.h"
 #endif

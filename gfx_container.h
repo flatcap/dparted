@@ -85,7 +85,7 @@ public:
 	int get_depth (void);
 
 	ContainerPtr get_container (void);
-	const char* dump (void);
+	std::string dump (void);
 
 protected:
 	GfxContainer (void);
@@ -110,8 +110,6 @@ protected:
 
 private:
 	std::weak_ptr<GfxContainer> self;
-
-	std::string debug;		// Text representation of self
 };
 
 

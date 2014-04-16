@@ -20,7 +20,8 @@
 #include <cstring>
 
 #include "log_object.h"
-#include "log_trace.h"
+#include "log.h"
+#include "utils.h"
 
 LogObject::LogObject()
 {

@@ -34,8 +34,6 @@
 #include "log.h"
 #include "stringnum.h"
 #include "utils.h"
-#include "log_macro.h"
-#include "log_trace.h"
 
 std::uint64_t
 align (std::uint64_t num, std::uint64_t round)
@@ -203,21 +201,20 @@ dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::
 }
 
 /**
- * execute_command1 - output (vector<string>)
+ * execute_command_out - output (vector<string>)
  */
 unsigned int
-execute_command1 (const std::string& command, std::vector<std::string>& output)
+execute_command_out (const std::string& command, std::vector<std::string>& output, bool log_output /*=true*/, bool log_command /*=true*/)
 {
 	FILE* file = nullptr;
 	char* ptr = nullptr;
 	std::size_t n = 0;
 	int count = 0;
 
-	output.clear();
+	if (log_command) {
+		log_command ("running command: '%s'", command.c_str());
+	}
 
-	//XXX log command and output
-
-	log_command ("running command: %s", command.c_str());
 	// Execute command and save its output to stdout
 	file = popen (command.c_str(), "r");
 	if (file == nullptr) {
@@ -225,7 +222,11 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 		return -1;
 	}
 
-	log_command_out ("output:");
+	output.clear();
+
+	if (log_output) {
+		log_command_out ("output:");
+	}
 	do {
 		ptr = nullptr;
 		n = 0;
@@ -235,38 +236,39 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 				ptr[count-1] = 0;
 			}
 			output.push_back (ptr);
-			log_command_out ("\t%s", ptr);
+			if (log_output) {
+				log_command_out ("\t%s", ptr);
+			}
 		}
 		free (ptr);
 	} while (count > 0);
 
-#if 0
-	// correct way to check return code
-	int ret = pclose (fd);
-	if (WIFEXITED(ret))
-		  log_command_out ("%d", WEXITSTATUS(ret));
-#endif
 	int retcode = pclose (file);
-	log_command_out ("command %s returned %d", command.c_str(), retcode);
-	if (retcode == -1) {
-		log_error ("pclose failed: %s", strerror (errno));
+	if (!WIFEXITED (retcode)) {
+		log_error ("Command exited unexpectedly");
 		return -1;
 	}
 
-	return retcode;
+	if (log_command) {
+		log_command ("command returned %d", retcode);
+	}
+
+	return WEXITSTATUS (retcode);
 }
 
 /**
- * execute_command2 - input (string)
+ * execute_command_in - input (string)
  */
 unsigned int
-execute_command2 (const std::string& command, std::string& input)
+execute_command_in  (const std::string& command, std::string& input, bool log_input /*=true*/, bool log_command /*=true*/)
 {
 	FILE* file = nullptr;
 
-	//XXX log command and output
+	if (log_command) {
+		log_command ("running command: '%s'", command.c_str());
+	}
 
-	log_command ("running command: %s", command.c_str());
+	// Execute command and write our stdout to its input
 	file = popen (command.c_str(), "we");
 	if (file == nullptr) {
 		log_error ("popen failed: %s", strerror (errno));
@@ -274,34 +276,22 @@ execute_command2 (const std::string& command, std::string& input)
 	}
 
 	int count = fprintf (file, "%s\n", input.c_str());
-	log_command_in ("wrote %d bytes to command %s", count, command.c_str());
+	if (log_input) {
+		log_command_in ("wrote %d bytes to command", count);
+		log_command_in ("%s", input.c_str());
+	}
 
 	int retcode = pclose (file);
-	if (retcode == -1) {
-		log_error ("pclose failed: %s", strerror (errno));
+	if (!WIFEXITED (retcode)) {
+		log_error ("Command exited unexpectedly");
 		return -1;
 	}
 
-	return retcode;
-}
-
-/**
- * execute_command3 - output (string)
- */
-unsigned int
-execute_command3 (const std::string& command, std::string& output)
-{
-	std::vector<std::string> v;
-	unsigned int retcode;
-
-	retcode = execute_command1 (command, v);
-
-	output.clear();
-	for (auto it : v) {
-		output += it + "\n";
+	if (log_command) {
+		log_command ("command returned %d", retcode);
 	}
 
-	return retcode;
+	return WEXITSTATUS (retcode);
 }
 
 unsigned int
@@ -411,33 +401,20 @@ std::string
 get_size (std::uint64_t size)
 {
 	//XXX do this without log2?  use __builtin_clz
-	//XXX stringstream
-	char buffer[64];
+	std::stringstream ss;
 	double power = log2 ((double) llabs (size)) + 0.5;
 	const char* suffix = "";
 	double divide = 1;
 
-	if (power < 10) {
-		suffix = "   B";
-		divide = 1;
-	} else if (power < 20) {
-		suffix = " KiB";
-		divide = 1024;
-	} else if (power < 30) {
-		suffix = " MiB";
-		divide = 1048576;
-	} else if (power < 40) {
-		suffix = " GiB";
-		divide = 1073741824;
-	} else if (power < 50) {
-		suffix = " TiB";
-		divide = 1099511627776;
-	} else if (power < 60) {
-		suffix = " PiB";
-		divide = 1125899906842624;
-	}
-	sprintf (buffer, "%0.3g%s", (double) size/divide, suffix);
-	return buffer;
+	     if (power < 10) { suffix =   " B"; divide =                1; }
+	else if (power < 20) { suffix = " KiB"; divide =             1024; }
+	else if (power < 30) { suffix = " MiB"; divide =          1048576; }
+	else if (power < 40) { suffix = " GiB"; divide =       1073741824; }
+	else if (power < 50) { suffix = " TiB"; divide =    1099511627776; }
+	else if (power < 60) { suffix = " PiB"; divide = 1125899906842624; }
+
+	ss << std::setprecision(3) << (double) size/divide << suffix;
+	return ss.str();
 }
 
 std::string

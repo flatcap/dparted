@@ -26,11 +26,10 @@
 #include <cstdlib>
 #include <sstream>
 
-#include "drawing_area.h"
 #include "action.h"
+#include "drawing_area.h"
 #include "gui_app.h"
 #include "log.h"
-#include "log_trace.h"
 #include "table.h"
 #include "utils.h"
 #include "window.h"

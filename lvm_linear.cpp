@@ -20,7 +20,7 @@
 
 #include "lvm_linear.h"
 #include "action.h"
-#include "log_trace.h"
+#include "log.h"
 #include "visitor.h"
 
 LvmLinear::LvmLinear (void)

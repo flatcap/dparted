@@ -27,7 +27,6 @@
 #include "action.h"
 #include "app.h"
 #include "log.h"
-#include "log_trace.h"
 #include "lvm_linear.h"
 #include "lvm_mirror.h"
 #include "lvm_partition.h"
@@ -35,7 +34,6 @@
 #include "lvm_stripe.h"
 #include "lvm_table.h"
 #include "lvm_volume.h"
-#include "main.h"
 #include "type_visitor.h"
 #include "utils.h"
 #include "uuid_visitor.h"
@@ -175,7 +173,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		}
 	}
 
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 
 	for (auto line : output) {
 		log_debug ("OUT: %s", line.c_str());
@@ -326,7 +324,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			command += " " + i->name;
 	}
 
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 
 	for (auto line : output) {
 		log_debug ("OUT: %s", line.c_str());
@@ -401,7 +399,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			command += " " + i->name;
 	}
 
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 
 	for (auto line : output) {
 		log_debug ("OUT: %s", line.c_str());
@@ -485,7 +483,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		std::vector<std::string> device_list;
 		explode (",", devices, device_list);
 
-		log_debug ("%s (%s)", v->name.c_str(), v->type.back().c_str());
+		log_debug ("%s (%s)", v->name.c_str(), v->get_type().c_str());
 		for (auto d : device_list) {
 			log_info ("Device: %s", d.c_str());
 		}
@@ -576,7 +574,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	log_info ("Pieces (%ld)", pieces->get_children().size());
 	for (auto i : pieces->get_children()) {
-		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump());
+		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
 	}
 
 	//probe leaves
@@ -590,7 +588,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 		if (i->whole)				// we're part of something bigger
 			continue;
 
-		log_info ("Q: [%s] %s: %s", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
+		log_info ("Q: [%s] %s: %s", i->get_type().c_str(), i->name.c_str(), i->uuid.c_str());
 		main_app->queue_add_probe(i);
 	}
 
@@ -598,7 +596,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	log_debug ("%ld groups", g.size());
 
 	for (auto i : g) {
-		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump());
+		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
 		top_level->just_add_child(i);
 	}
 }

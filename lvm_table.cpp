@@ -22,13 +22,10 @@
 #include "action.h"
 #include "endian.h"
 #include "log.h"
-#include "log_trace.h"
 #include "lvm2.h"
 #include "lvm_group.h"
 #include "lvm_partition.h"
 #include "lvm_table.h"
-#include "main.h"
-#include "utils.h"
 #include "utils.h"
 #include "visitor.h"
 

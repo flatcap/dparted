@@ -28,10 +28,8 @@
 #include "file.h"
 #include "action.h"
 #include "log.h"
-#include "log_trace.h"
-#include "main.h"
 #include "visitor.h"
-#include "log.h"
+#include "utils.h"
 
 File::File (void)
 {

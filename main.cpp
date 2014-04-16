@@ -26,8 +26,6 @@
 #include "text_app.h"
 #endif
 #include "log.h"
-#include "log_trace.h"
-#include "log_object.h"
 #include "utils.h"
 
 int

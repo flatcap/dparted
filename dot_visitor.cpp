@@ -37,7 +37,6 @@
 #include "lvm_group.h"
 #include "lvm_volume.h"
 #endif
-#include "log_trace.h"
 #include "utils.h"
 #include "log.h"
 
@@ -139,7 +138,7 @@ dot_row (const char* name, ContainerPtr value)
 	std::string dest;
 
 	if (value) {
-		dest = " (" + value->type.back() + ")";
+		dest = " (" + value->get_type() + ")";
 	}
 
 	row << "\t\t<tr>";
@@ -249,7 +248,7 @@ dot_container (std::shared_ptr<T> t)
 	}
 
 	ContainerPtr cwhole = p->whole;
-	output << dot_row ("whole",         cwhole);		//XXX what's this doing here? which class should it be in?
+	output << dot_row ("whole",         cwhole);
 	output << dot_row ("parent",        p->parent);
 	output << dot_row ("missing", p->missing);
 #endif
@@ -615,21 +614,21 @@ DotVisitor::run_dotty (void)
 			size = " -resize " + std::to_string (resize) + "%";
 		}
 		std::string command = "dot -Tpng | display -title \"" + title + "\"" + size + " - &";
-		execute_command2 (command, input);
+		execute_command_in (command, input);
 	}
 
 	if (save_gv) {
 		dir = "gv_" + now;
-		execute_command2 ("mkdir --parents " + dir, nothing);
+		execute_command_in ("mkdir --parents " + dir, nothing);
 		std::string command = "cat > " + dir + "/$RANDOM.gv";
-		execute_command2 (command, input);
+		execute_command_in (command, input);
 	}
 
 	if (save_png) {
 		dir = "png_" + now;
-		execute_command2 ("mkdir --parents " + dir, nothing);
+		execute_command_in ("mkdir --parents " + dir, nothing);
 		std::string command = "dot -Tpng > " + dir + "/$RANDOM.png";
-		execute_command2 (command, input);
+		execute_command_in (command, input);
 	}
 }
 

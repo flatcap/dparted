@@ -20,7 +20,6 @@
 
 #include "endian.h"
 #include "log.h"
-#include "log_trace.h"
 
 bool
 identify_reiserfs (std::uint8_t* buffer, std::uint64_t bufsize)

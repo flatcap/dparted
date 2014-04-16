@@ -23,7 +23,6 @@
 #include <gtkmm/cellrendererprogress.h>
 
 #include "gui_app.h"
-#include "log_trace.h"
 #include "theme.h"
 #include "tree_view.h"
 #include "utils.h"

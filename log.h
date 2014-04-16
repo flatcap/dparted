@@ -103,5 +103,7 @@ unsigned int log_set_level (unsigned int level);
 unsigned int log_get_level (void);
 #endif
 
+#include "log_trace.h"
+
 #endif // _LOG_H_
 

@@ -23,7 +23,6 @@
 #include "filesystem.h"
 #include "fs_identify.h"
 #include "fs_usage.h"
-#include "log_trace.h"
 #include "utils.h"
 #include "log.h"
 

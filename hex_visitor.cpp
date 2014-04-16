@@ -83,9 +83,9 @@ HexVisitor::visit (ExtendedPtr c)
 	std::uint64_t bufsize = 0;
 	ContainerPtr parent;
 
-	parent = c->parent.lock();
+	parent = c->get_parent();
 	if (!parent) {
-		log_hex ("\033[01;31m%s\033[0m", c->dump());
+		log_hex ("\033[01;31m%s\033[0m", c->dump().c_str());
 		return false;
 	}
 
@@ -129,13 +129,7 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 	return_if_fail (c);
 	return_if_fail (buf);
 
-	std::string type;
-	for (auto i : c->type) {
-		type += i + ".";
-	}
-	type.pop_back();
-
-	log_hex (type);
+	log_hex (c->get_type_long());
 	if (buf) {
 		log_hex ("%s: Offset: %ld (%ld MiB), Size: %ld (%ld MiB)", c->name.c_str(), c->parent_offset, c->parent_offset >> 20, c->bytes_size, c->bytes_size >> 20);
 
@@ -149,7 +143,7 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 			dump_hex2 (buf, size-abbr, abbr);
 		}
 	} else {
-		log_hex ("\033[01;31m%s\033[0m", c->dump());
+		log_hex ("\033[01;31m%s\033[0m", c->dump().c_str());
 	}
 
 }

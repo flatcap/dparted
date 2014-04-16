@@ -17,7 +17,6 @@
  */
 
 #include <gtkmm/object.h>
-#include <gtkmm/main.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/settings.h>
 #include <gtkmm/aboutdialog.h>
@@ -36,7 +35,6 @@
 #include "window.h"
 #include "properties_dialog.h"
 #include "log.h"
-#include "log_trace.h"
 #include "option_group.h"
 #include "utils.h"
 

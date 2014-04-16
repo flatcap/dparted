@@ -21,7 +21,6 @@
 
 #include "default_theme.h"
 #include "log.h"
-#include "log_macro.h"
 
 DefaultTheme::DefaultTheme (void)
 {

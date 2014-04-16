@@ -32,7 +32,6 @@
 #include "app.h"
 #include "endian.h"
 #include "log.h"
-#include "log_trace.h"
 #include "luks_partition.h"
 #include "luks_table.h"
 #include "partition.h"
@@ -247,8 +246,8 @@ LuksTable::is_mounted (const std::string& device)
 	std::string command = "sudo cryptsetup status " + device;
 	log_debug ("Command: %s", command.c_str());
 
-	std::string output;
-	int retcode = execute_command3 (command, output);
+	std::vector<std::string> output;
+	int retcode = execute_command_out (command, output);
 	//XXX log the output if it exists
 
 	// Return codes:
@@ -268,8 +267,8 @@ LuksTable::is_luks (const std::string& device)
 	std::string command = "sudo cryptsetup isLuks " + device;
 	log_debug ("Command: %s", command.c_str());
 
-	std::string output;
-	int retcode = execute_command3 (command, output);
+	std::vector<std::string> output;
+	int retcode = execute_command_out (command, output);
 	//XXX log the output if it exists
 
 	// Return codes:
@@ -309,7 +308,7 @@ LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 		log_debug ("Command: %s", command.c_str());
 
 		std::string password = "password";
-		execute_command2 (command, password);
+		execute_command_in (command, password);
 		we_opened_this_device = true;
 	}
 

@@ -31,7 +31,7 @@
 #ifdef DP_HEX
 #include "hex_visitor.h"
 #endif
-#include "log_trace.h"
+#include "log.h"
 #include "stringnum.h"
 
 TextAppPtr text_app;

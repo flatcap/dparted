@@ -23,7 +23,6 @@
 
 #include "action.h"
 #include "endian.h"
-#include "log_trace.h"
 #include "ntfs.h"
 #include "utils.h"
 #include "visitor.h"
@@ -169,14 +168,13 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	return_if_fail (parent);
 
 	std::string dev = parent->get_device_name();
-	if (dev.empty())	//XXX shouldn't happen
-		return;
+	return_if_fail (!dev.empty());
 
 	std::string command;
 	std::vector<std::string> output;
 
 	command = "ntfsinfo --mft " + dev;
-	execute_command1 (command, output);	//XXX return value?
+	execute_command_out (command, output);	//XXX return value?
 
 	more_props.reserve (output.size());	// if this vector is reallocated the app will die
 

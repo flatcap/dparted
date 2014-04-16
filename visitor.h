@@ -73,7 +73,7 @@
 #include "table.h"
 #include "volume.h"
 #include "whole.h"
-#include "log_trace.h"
+#include "utils.h"
 
 class Visitor
 {
@@ -83,7 +83,6 @@ public:
 
 	virtual bool visit (ContainerPtr c) = 0;
 
-	//XXX move the dirty inheritance stuff elsewhere? (hideous dependency problem)
 	virtual bool visit (BlockPtr          p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
 #ifdef DP_BTRFS
 	virtual bool visit (BtrfsPtr          p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }

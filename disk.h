@@ -69,7 +69,7 @@ public:
 	//std::uint64_t	phys_sector_size;
 	//std::uint64_t	length;
 
-	std::string mounts;	//XXX vector
+	std::string mounts;	//XXX vector, move to partition, or filesystem
 
 protected:
 	Disk (void);

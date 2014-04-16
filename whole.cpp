@@ -22,7 +22,6 @@
 #include "whole.h"
 #include "action.h"
 #include "log.h"
-#include "log_trace.h"
 #include "visitor.h"
 
 Whole::Whole (void)

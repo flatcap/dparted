@@ -17,7 +17,6 @@
  */
 
 #include "filesystem.h"
-#include "log_trace.h"
 #include "log.h"
 
 // reiserfs	reiserfstune {device}

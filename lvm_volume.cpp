@@ -20,7 +20,6 @@
 
 #include "lvm_volume.h"
 #include "action.h"
-#include "log_trace.h"
 #include "visitor.h"
 #include "log.h"
 
@@ -119,14 +118,14 @@ LvmVolume::add_child (ContainerPtr& child)
 	return_if_fail (child);
 
 	if ((is_a ("LvmMetadata") && (child->is_a ("LvmVolume")))) {	//XXX tmp
-		log_debug ("LvmMetadata: %s", child->type.back().c_str());
+		log_debug ("LvmMetadata: %s", child->get_type().c_str());
 		sibling = child;
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(child);
 		vol->sibling = get_smart();
 		return;
 	}
 
-	log_info ("volume: %s (%s), child: %s (%s)", name.c_str(), type.back().c_str(), child->name.c_str(), child->type.back().c_str());
+	log_info ("volume: %s (%s), child: %s (%s)", name.c_str(), get_type().c_str(), child->name.c_str(), child->get_type().c_str());
 	if (child->is_a ("LvmMetadata")) {
 		metadata.insert (child);
 		log_debug ("metadata: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());

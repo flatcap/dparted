@@ -28,7 +28,7 @@
 #include "drawing_area.h"
 #include "gui_app.h"
 #include "log.h"
-#include "log_trace.h"
+#include "utils.h"
 
 Window::Window (void)
 {
@@ -180,7 +180,7 @@ Window::set_focus (GfxContainerPtr cont)
 	treeview.set_focus (focus);
 	drawingarea.set_focus (focus);
 
-	log_debug ("Focus: %s", cont->dump());
+	log_debug ("Focus: %s", cont->dump().c_str());
 	return true;
 }
 
