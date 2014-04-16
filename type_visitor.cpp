@@ -18,6 +18,7 @@
 
 #include "type_visitor.h"
 #include "log.h"
+#include "utils.h"
 
 TypeVisitor::TypeVisitor (const std::string& search) :
 	type (search)

@@ -18,6 +18,7 @@
 
 #include "uuid_visitor.h"
 #include "log.h"
+#include "utils.h"
 
 UuidVisitor::UuidVisitor (const std::string& search) :
 	uuid (search)

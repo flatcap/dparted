@@ -20,6 +20,7 @@
 #include "prop_visitor.h"
 
 #include "container.h"
+#include "utils.h"
 
 PropVisitor::PropVisitor (void)
 {

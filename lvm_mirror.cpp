@@ -22,6 +22,7 @@
 #include "action.h"
 #include "log.h"
 #include "visitor.h"
+#include "utils.h"
 
 LvmMirror::LvmMirror (void)
 {
