@@ -174,7 +174,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	std::vector<std::string> output;
 
 	command = "ntfsinfo --mft " + dev;
-	execute_command1 (command, output);	//XXX return value?
+	execute_command_out (command, output);	//XXX return value?
 
 	more_props.reserve (output.size());	// if this vector is reallocated the app will die
 

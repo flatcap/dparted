@@ -202,7 +202,7 @@ Disk::find_devices (ContainerPtr& list)
 	std::vector<std::string> output;
 	std::string error;
 
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 	if (output.empty())
 		return 0;
 
@@ -293,7 +293,7 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 
 	output.clear();
 	//XXX distinguish between zero devices and an error
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 	if (output.empty())
 		return false;
 

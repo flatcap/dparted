@@ -614,21 +614,21 @@ DotVisitor::run_dotty (void)
 			size = " -resize " + std::to_string (resize) + "%";
 		}
 		std::string command = "dot -Tpng | display -title \"" + title + "\"" + size + " - &";
-		execute_command2 (command, input);
+		execute_command_in (command, input);
 	}
 
 	if (save_gv) {
 		dir = "gv_" + now;
-		execute_command2 ("mkdir --parents " + dir, nothing);
+		execute_command_in ("mkdir --parents " + dir, nothing);
 		std::string command = "cat > " + dir + "/$RANDOM.gv";
-		execute_command2 (command, input);
+		execute_command_in (command, input);
 	}
 
 	if (save_png) {
 		dir = "png_" + now;
-		execute_command2 ("mkdir --parents " + dir, nothing);
+		execute_command_in ("mkdir --parents " + dir, nothing);
 		std::string command = "dot -Tpng > " + dir + "/$RANDOM.png";
-		execute_command2 (command, input);
+		execute_command_in (command, input);
 	}
 }
 

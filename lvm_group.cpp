@@ -173,7 +173,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		}
 	}
 
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 
 	for (auto line : output) {
 		log_debug ("OUT: %s", line.c_str());
@@ -324,7 +324,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			command += " " + i->name;
 	}
 
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 
 	for (auto line : output) {
 		log_debug ("OUT: %s", line.c_str());
@@ -399,7 +399,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			command += " " + i->name;
 	}
 
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 
 	for (auto line : output) {
 		log_debug ("OUT: %s", line.c_str());

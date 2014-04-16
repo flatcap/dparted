@@ -168,7 +168,7 @@ btrfs_show_super (const std::string& dev)
 	std::map<std::string,std::string> results;
 
 	command = "btrfs-show-super " + dev;
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 
 	std::string key;
 	std::string value;

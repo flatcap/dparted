@@ -127,7 +127,7 @@ mounts_get_list (ContainerPtr& mounts)
 	std::string error;
 
 	command = "grep '^/dev' /proc/mounts";
-	execute_command1 (command, output);
+	execute_command_out (command, output);
 
 	for (unsigned int i = 0; i < output.size(); ++i) {
 		std::string line = output[i];
