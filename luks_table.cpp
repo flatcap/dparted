@@ -308,7 +308,7 @@ LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 		log_debug ("Command: %s", command.c_str());
 
 		std::string password = "password";
-		execute_command_in (command, password);
+		execute_command_in (command, password, false);
 		we_opened_this_device = true;
 	}
 
