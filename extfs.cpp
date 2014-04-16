@@ -181,8 +181,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 	return_if_fail (parent);
 
 	std::string dev = parent->get_device_name();
-	if (dev.empty())	//XXX shouldn't happen
-		return;
+	return_if_fail (!dev.empty());
 
 	std::map<std::string,std::string> info = tune2fs (dev);
 	if (info.empty()) {

@@ -18,6 +18,7 @@
 
 #include <fcntl.h>
 #include <linux/fs.h>
+#include <linux/major.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -197,8 +198,7 @@ Disk::find_devices (ContainerPtr& list)
 	return_val_if_fail (list, 0);
 
 	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
-	//XXX use LOOP_MAJOR <linux/major.h>
-	std::string command = "lsblk --bytes --pairs --exclude 7";
+	std::string command = "lsblk --bytes --pairs --exclude " + std::to_string (LOOP_MAJOR);
 	std::vector<std::string> output;
 	std::string error;
 
@@ -284,7 +284,7 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 	std::string command = "sudo lsblk --bytes --pairs ";
 
 	if (device.empty()) {
-		command += "--exclude 7";	//XXX LOOP_MAJOR <linux/major.h>
+		command += "--exclude " + std::to_string (LOOP_MAJOR);
 	} else {
 		command += device;
 	}

@@ -97,7 +97,8 @@ public:
 
 	virtual std::set<ContainerPtr, compare>& get_children (void);
 
-	ContainerPtr get_smart (void);
+	ContainerPtr get_smart  (void);
+	ContainerPtr get_parent (void);
 
 	std::vector<std::string> get_prop_names (void);
 	PPtr get_prop (const std::string& name);
@@ -162,11 +163,7 @@ public:
 	std::uint64_t	bytes_size = 0;
 	std::uint64_t	bytes_used = 0;
 
-	ContainerPtr	whole;	//XXX move to protected
-
-	std::weak_ptr<Container> parent;	//XXX move to protected
-
-	std::vector<std::string> type;	//XXX move to protected
+	ContainerPtr	whole;	//XXX move to protected?
 
 	bool missing = false;
 
@@ -176,6 +173,9 @@ protected:
 	Container (void);
 
 	std::weak_ptr<Container> self;
+	std::weak_ptr<Container> parent;
+
+	std::vector<std::string> type;
 
 	bool visit_children (Visitor& v);
 

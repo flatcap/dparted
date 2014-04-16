@@ -126,7 +126,7 @@ GfxContainer::init (ContainerPtr c)
 
 	std::string path = c->get_type_long();
 	name = c->name;
-	type = c->type.back();
+	type = c->get_type();
 	device = c->get_device_name();
 
 	try {
@@ -343,7 +343,7 @@ GfxContainer::get_tooltip (void)
 
 	std::string tt;
 
-	tt = c->name + " : " + c->type.back();
+	tt = c->name + " : " + c->get_type();
 
 	return tt;
 }
@@ -377,13 +377,8 @@ operator<< (std::ostream& stream, const GfxContainerPtr& g)
 GfxContainerPtr
 GfxContainer::get_smart (void)
 {
-	if (self.expired()) {
-		log_debug ("SMART");
-		//XXX who created us? - code error
-		GfxContainerPtr c (this);
-		log_debug (c->dump());
-		self = c;
-	}
+	return_val_if_fail (self.expired(),nullptr);
+
 	return self.lock();
 }
 

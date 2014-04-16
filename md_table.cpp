@@ -16,6 +16,7 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iomanip>
 #include <string>
 
 #include "action.h"
@@ -103,13 +104,15 @@ read_uuid_string (std::uint8_t* buffer)
 {
 	return_val_if_fail (buffer, "");
 
-	char uuid[40];
+	std::stringstream ss;
 
-	//XXX stringstream?
-	snprintf (uuid, sizeof (uuid), "%02x%02x%02x%02x:%02x%02x%02x%02x:%02x%02x%02x%02x:%02x%02x%02x%02x",
-		buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7], buffer[8], buffer[9], buffer[10], buffer[11], buffer[12], buffer[13], buffer[14], buffer[15]);
+	ss << std::setfill('0') << std::hex;
 
-	return uuid;
+	for (int i = 0; i < 16; i++) {
+		ss << (int) (buffer[i]);
+	}
+
+	return ss.str();
 }
 
 

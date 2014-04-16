@@ -168,8 +168,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	return_if_fail (parent);
 
 	std::string dev = parent->get_device_name();
-	if (dev.empty())	//XXX shouldn't happen
-		return;
+	return_if_fail (!dev.empty());
 
 	std::string command;
 	std::vector<std::string> output;

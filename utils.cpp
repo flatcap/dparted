@@ -213,7 +213,7 @@ execute_command1 (const std::string& command, std::vector<std::string>& output)
 
 	output.clear();
 
-	//XXX log command and output
+	//XXX log output
 
 	log_command ("running command: %s", command.c_str());
 	// Execute command and save its output to stdout
@@ -262,7 +262,7 @@ execute_command2 (const std::string& command, std::string& input)
 {
 	FILE* file = nullptr;
 
-	//XXX log command and output
+	//XXX log output
 
 	log_command ("running command: %s", command.c_str());
 	file = popen (command.c_str(), "we");
@@ -409,33 +409,20 @@ std::string
 get_size (std::uint64_t size)
 {
 	//XXX do this without log2?  use __builtin_clz
-	//XXX stringstream
-	char buffer[64];
+	std::stringstream ss;
 	double power = log2 ((double) llabs (size)) + 0.5;
 	const char* suffix = "";
 	double divide = 1;
 
-	if (power < 10) {
-		suffix = "   B";
-		divide = 1;
-	} else if (power < 20) {
-		suffix = " KiB";
-		divide = 1024;
-	} else if (power < 30) {
-		suffix = " MiB";
-		divide = 1048576;
-	} else if (power < 40) {
-		suffix = " GiB";
-		divide = 1073741824;
-	} else if (power < 50) {
-		suffix = " TiB";
-		divide = 1099511627776;
-	} else if (power < 60) {
-		suffix = " PiB";
-		divide = 1125899906842624;
-	}
-	sprintf (buffer, "%0.3g%s", (double) size/divide, suffix);
-	return buffer;
+	     if (power < 10) { suffix =   " B"; divide =                1; }
+	else if (power < 20) { suffix = " KiB"; divide =             1024; }
+	else if (power < 30) { suffix = " MiB"; divide =          1048576; }
+	else if (power < 40) { suffix = " GiB"; divide =       1073741824; }
+	else if (power < 50) { suffix = " TiB"; divide =    1099511627776; }
+	else if (power < 60) { suffix = " PiB"; divide = 1125899906842624; }
+
+	ss << std::setprecision(3) << (double) size/divide << suffix;
+	return ss.str();
 }
 
 std::string

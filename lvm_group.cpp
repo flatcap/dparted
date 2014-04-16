@@ -483,7 +483,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		std::vector<std::string> device_list;
 		explode (",", devices, device_list);
 
-		log_debug ("%s (%s)", v->name.c_str(), v->type.back().c_str());
+		log_debug ("%s (%s)", v->name.c_str(), v->get_type().c_str());
 		for (auto d : device_list) {
 			log_info ("Device: %s", d.c_str());
 		}
@@ -588,7 +588,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 		if (i->whole)				// we're part of something bigger
 			continue;
 
-		log_info ("Q: [%s] %s: %s", i->type.back().c_str(), i->name.c_str(), i->uuid.c_str());
+		log_info ("Q: [%s] %s: %s", i->get_type().c_str(), i->name.c_str(), i->uuid.c_str());
 		main_app->queue_add_probe(i);
 	}
 

@@ -138,7 +138,7 @@ dot_row (const char* name, ContainerPtr value)
 	std::string dest;
 
 	if (value) {
-		dest = " (" + value->type.back() + ")";
+		dest = " (" + value->get_type() + ")";
 	}
 
 	row << "\t\t<tr>";
@@ -248,7 +248,7 @@ dot_container (std::shared_ptr<T> t)
 	}
 
 	ContainerPtr cwhole = p->whole;
-	output << dot_row ("whole",         cwhole);		//XXX what's this doing here? which class should it be in?
+	output << dot_row ("whole",         cwhole);
 	output << dot_row ("parent",        p->parent);
 	output << dot_row ("missing", p->missing);
 #endif

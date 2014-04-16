@@ -538,7 +538,6 @@ Container::get_children (void)
 std::vector<std::string>
 Container::get_prop_names (void)
 {
-	//XXX c++ magic?
 	std::vector<std::string> names;
 	for (auto p : props) {
 		names.push_back (p.second->name);
@@ -562,7 +561,6 @@ Container::get_all_props (bool inc_hidden /*=false*/)
 {
 	std::vector<PPtr> vv;
 
-	//XXX what's the magic C++11 way of doing this?
 	for (auto p : props) {
 		if ((p.second->flags & BaseProperty::Flags::Hide) && !inc_hidden)
 			continue;
@@ -586,14 +584,15 @@ Container::add_string_prop (const std::string& owner, const std::string& name, c
 ContainerPtr
 Container::get_smart (void)
 {
-	if (self.expired()) {
-		log_debug ("SMART");
-		//XXX who created us? code error
-		ContainerPtr c (this);
-		log_debug (c->dump());
-		self = c;
-	}
+	return_val_if_fail (!self.expired(),nullptr);
+
 	return self.lock();
+}
+
+ContainerPtr
+Container::get_parent (void)
+{
+	return parent.lock();
 }
 
 
