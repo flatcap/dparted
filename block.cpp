@@ -35,9 +35,7 @@
 #include "log.h"
 #include "log_trace.h"
 #include "loop.h"
-#include "main.h"
 #include "visitor.h"
-#include "log.h"
 
 Block::Block (void)
 {

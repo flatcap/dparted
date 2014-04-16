@@ -17,7 +17,6 @@
  */
 
 #include <gtkmm/object.h>
-#include <gtkmm/main.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/settings.h>
 #include <gtkmm/aboutdialog.h>

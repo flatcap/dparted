@@ -35,7 +35,6 @@
 #include "lvm_stripe.h"
 #include "lvm_table.h"
 #include "lvm_volume.h"
-#include "main.h"
 #include "type_visitor.h"
 #include "utils.h"
 #include "uuid_visitor.h"

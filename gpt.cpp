@@ -56,7 +56,6 @@
 #include "filesystem.h"
 #include "log.h"
 #include "log_trace.h"
-#include "main.h"
 #ifdef DP_MSDOS
 #include "msdos_partition.h"
 #endif

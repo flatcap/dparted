@@ -53,8 +53,7 @@ LINKS	= misc test
 SRC	+= block.cpp container.cpp disk.cpp file.cpp filesystem.cpp loop.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
-SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_object.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp
-SRC	+= text_app.cpp
+SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_object.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp
 
 # GUI - Graphical objects
 SRC	+= main.cpp

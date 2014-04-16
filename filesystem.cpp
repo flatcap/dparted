@@ -35,7 +35,6 @@
 #endif
 #include "log.h"
 #include "log_trace.h"
-#include "main.h"
 #ifdef DP_NTFS
 #include "ntfs.h"
 #endif

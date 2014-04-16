@@ -33,7 +33,6 @@
 #include "extended.h"
 #include "log.h"
 #include "log_trace.h"
-#include "main.h"
 #include "msdos.h"
 #include "partition.h"
 #include "utils.h"

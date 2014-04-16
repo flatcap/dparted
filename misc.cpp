@@ -24,7 +24,6 @@
 #include "action.h"
 #include "log.h"
 #include "log_trace.h"
-#include "main.h"
 #include "partition.h"
 #include "utils.h"
 #include "visitor.h"
