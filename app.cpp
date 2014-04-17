@@ -18,6 +18,9 @@
 
 #include <string>
 #include <sstream>
+#include <ratio>
+#include <chrono>
+#include <thread>
 
 #include <fcntl.h>
 #include <sys/types.h>
@@ -253,3 +256,32 @@ App::scan (const std::vector<std::string>& files)
 	return top_level;
 }
 
+
+void
+App::scan_async_do (const std::vector<std::string>& files, scan_async_cb_t callback)
+{
+	return_if_fail (callback);
+
+	auto t1 = std::chrono::steady_clock::now();
+	std::thread::id tid = std::this_thread::get_id();
+	log_thread ("thread id: %ld started", tid);
+
+	ContainerPtr c = scan (files);
+
+	auto t2 = std::chrono::steady_clock::now();
+	auto span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+	log_thread ("thread id: %ld stopped (%s seconds)", tid, span.count());
+
+	callback (c);
+}
+
+bool
+App::scan_async (const std::vector<std::string>& files, scan_async_cb_t callback)
+{
+	return_val_if_fail (callback, false);
+
+	std::thread thread (std::bind (&App::scan_async_do, this, std::placeholders::_1, std::placeholders::_2), files, callback);
+
+	thread.detach();	// I don't want to wait
+	return true;
+}

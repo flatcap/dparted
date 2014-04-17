@@ -29,6 +29,8 @@
 
 class App;
 
+typedef std::function<void(ContainerPtr)> scan_async_cb_t;
+
 typedef std::shared_ptr<App> AppPtr;
 
 extern AppPtr main_app;
@@ -46,6 +48,8 @@ public:
 	bool set_config (const std::string& filename);
 
 	ContainerPtr scan (const std::vector<std::string>& files);
+	bool scan_async (const std::vector<std::string>& files, scan_async_cb_t callback);
+	void scan_async_do (const std::vector<std::string>& files, scan_async_cb_t callback);
 	bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 	ContainerPtr get_top_level (void) { return top_level; } //XXX tmp
