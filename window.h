@@ -105,6 +105,7 @@ protected:
 	void my_realize (void);
 	void my_show (void);
 	bool my_idle (void);
+	void sync_done (ContainerPtr p);
 
 	ContainerPtr m_c;
 	GfxContainerPtr m_g;

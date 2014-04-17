@@ -127,15 +127,24 @@ Window::my_show (void)
 	resize (800, 250);
 }
 
-bool
-Window::my_idle (void)
+
+void
+Window::sync_done (ContainerPtr p)
 {
-	std::vector<std::string> files;
-	ContainerPtr c = gui_app->scan (files);
+	log_debug ("sync_done: %p", p.get());
+	return;
+#if 0
 	log_debug ("%ld", c->get_children().size());
 	GfxContainerPtr dummy;
 	m_g = GfxContainer::create (dummy, c);
 	set_data (m_g);
+#endif
+}
+
+bool
+Window::my_idle (void)
+{
+	gui_app->scan_async ({}, std::bind (&Window::sync_done, this, std::placeholders::_1));
 
 	return false;
 }

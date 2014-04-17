@@ -263,14 +263,15 @@ App::scan_async_do (const std::vector<std::string>& files, scan_async_cb_t callb
 	return_if_fail (callback);
 
 	auto t1 = std::chrono::steady_clock::now();
-	std::thread::id tid = std::this_thread::get_id();
-	log_thread ("thread id: %ld started", tid);
+	//std::size_t tid = std::this_thread::get_id().hash();
+	std::size_t tid = std::hash<std::thread::id>()(std::this_thread::get_id());
+	log_thread ("thread id: %lx started", tid);
 
 	ContainerPtr c = scan (files);
 
 	auto t2 = std::chrono::steady_clock::now();
 	auto span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-	log_thread ("thread id: %ld stopped (%s seconds)", tid, span.count());
+	log_thread ("thread id: %lx stopped (%0.4g seconds)", tid, span.count());
 
 	callback (c);
 }
