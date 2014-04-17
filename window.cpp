@@ -131,14 +131,10 @@ Window::my_show (void)
 void
 Window::sync_done (ContainerPtr p)
 {
-	log_debug ("sync_done: %p", p.get());
-	return;
-#if 0
-	log_debug ("%ld", c->get_children().size());
-	GfxContainerPtr dummy;
-	m_g = GfxContainer::create (dummy, c);
+	log_debug ("sync_done: %ld", p->get_children().size());
+
+	m_g = GfxContainer::create (nullptr, p);
 	set_data (m_g);
-#endif
 }
 
 bool

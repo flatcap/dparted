@@ -119,7 +119,7 @@ void
 assertion_failure (const char* file, int line, const char* test, const char* function)
 {
 	std::vector<std::string> bt = get_backtrace();
-	log_code ("%s:%d: assertion failed: (%s) in %s", file, line, test, function);
+	log_code ("\033[01;31m%s:%d: assertion failed: (%s) in %s\033[0m", file, line, test, function);
 	log_code ("Backtrace:");
 	for (auto i : bt) {
 		if (i.substr (0, 17) == "assertion_failure")	// Skip me
