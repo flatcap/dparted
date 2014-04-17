@@ -20,6 +20,7 @@
 #include <cstring>
 #include <functional>
 #include <map>
+#include <mutex>
 #include <sstream>
 #include <vector>
 
@@ -28,6 +29,8 @@
 #include "utils.h"
 
 static std::multimap<Severity,log_callback_t> log_mux;
+
+std::mutex log_active;
 
 void
 log_stdout (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
@@ -72,6 +75,8 @@ log_redirect (const std::stringstream& UNUSED(message))
 void
 log_redirect (Severity level, const char* function, const char* file, int line, const char* message)
 {
+	std::lock_guard<std::mutex> lock (log_active);
+
 	if (log_mux.empty()) {
 		log_stdout (level, function, file, line, message);
 	} else {
