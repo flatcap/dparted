@@ -130,35 +130,21 @@ Window::my_show (void)
 }
 
 
-void
-Window::sync_done (ContainerPtr p)
-{
-	log_debug ("sync_done: %ld", p->get_children().size());
-
-	m_g = GfxContainer::create (nullptr, p);
-	set_data (m_g);
-}
-
 bool
 Window::my_idle (void)
 {
-	//gui_app->scan_async ({}, std::bind (&Window::sync_done, this, std::placeholders::_1));
-
 	std::vector<std::string> devices;
-	gui_app->scan(devices);
+	ContainerPtr c = gui_app->scan(devices);
 
-	std::this_thread::sleep_for (std::chrono::seconds(3));
-	gui_app->process_queue();
+	GfxContainerPtr g = GfxContainer::create (nullptr, c);
+	try {
+		treeview.init_treeview(g);
+	} catch (...) {
+		log_error ("exception");
+	}
+	drawingarea.set_data(g);
+
 	return false;
-
-#if 0
-	//Where does my top level come from?
-	ContainerPtr c = gui_app->scan (files);
-	log_debug ("%ld", c->get_children().size());
-	GfxContainerPtr dummy;
-	m_g = GfxContainer::create (dummy, c);
-	set_data (m_g);
-#endif
 }
 
 
@@ -210,18 +196,6 @@ Window::get_focus (void)
 {
 	return focus;
 }
-
-void
-Window::set_data (GfxContainerPtr c)
-{
-	try {
-		treeview.init_treeview(c);
-	} catch (...) {
-		log_error ("exception");
-	}
-	drawingarea.set_data(c);
-}
-
 
 void
 Window::load_config (const std::string& UNUSED(filename))

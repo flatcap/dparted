@@ -108,18 +108,6 @@ App::get_config (void)
 }
 
 
-void
-App::queue_add_probe (ContainerPtr& item)
-{
-	return_if_fail (item);
-
-	probe_queue.push (item);
-	std::string s = get_size (item->parent_offset);
-	log_info ("QUEUE: %s %s : %ld (%s)", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
-	log_info ("QUEUE has %lu items", probe_queue.size());
-}
-
-
 #if 0
 unsigned int
 mounts_get_list (ContainerPtr& mounts)
@@ -140,151 +128,6 @@ mounts_get_list (ContainerPtr& mounts)
 	}
 
 	return mounts.children.size();
-}
-
-#endif
-
-#if 0
-bool
-App::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
-{
-	return_val_if_fail (parent,  false);
-	return_val_if_fail (buffer,  false);
-	return_val_if_fail (bufsize, false);
-	LOG_TRACE;
-
-	if (Filesystem::probe (parent, buffer, bufsize))
-		return true;
-
-	if (Table::probe (parent, buffer, bufsize))
-		return true;
-
-	if (Misc::probe (parent, buffer, bufsize))
-		return true;
-
-	return false;
-}
-
-ContainerPtr
-App::scan (const std::vector<std::string>& files)
-{
-	top_level = Container::create();	// Trash the old value
-	top_level->name = "dummy";
-
-	if (files.size() > 0) {
-		for (auto f : files) {
-			struct stat st;
-			int res = -1;
-			int fd = -1;
-
-			fd = open (f.c_str(), O_RDONLY | O_CLOEXEC);
-			if (fd < 0) {
-				log_debug ("can't open file %s", f.c_str());
-				continue;
-			}
-
-			res = fstat (fd, &st);
-			if (res < 0) {
-				log_debug ("stat on %s failed", f.c_str());
-				close (fd);
-				continue;
-			}
-
-			if (S_ISREG (st.st_mode) || S_ISDIR (st.st_mode)) {
-				File::identify (top_level, f.c_str(), fd, st);
-			} else if (S_ISBLK (st.st_mode)) {
-				if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
-					Loop::identify (top_level, f.c_str(), fd, st);
-				} else {
-					//Gpt::identify (top_level, f.c_str(), fd, st);
-				}
-			} else {
-				log_error ("can't probe something else");
-			}
-			close (fd);
-		}
-	} else {
-		Loop::discover (top_level, probe_queue);
-		//Gpt::discover (top_level, probe_queue);
-	}
-
-	// Process the probe_queue
-	ContainerPtr item;
-	while (!probe_queue.empty()) {
-		item = probe_queue.front();
-		probe_queue.pop();
-
-		log_debug ("Item: %s", item->dump().c_str());
-
-		std::uint64_t bufsize = item->bytes_size;
-		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
-
-		if (!buffer) {
-			log_error ("can't get buffer");
-			continue;
-		}
-
-		if (!probe (item, buffer, bufsize)) {
-			//XXX LOG -- should be logged upstream
-			break;
-		}
-	}
-
-#ifdef DP_LVM
-	LvmGroup::discover (top_level);
-#endif
-	//MdGroup::discover (top_level);
-
-	// Process the probe_queue
-	while (!probe_queue.empty()) {
-		item = probe_queue.front();
-		probe_queue.pop();
-
-		log_debug ("Item: %s", item->dump().c_str());
-
-		std::uint64_t bufsize = item->bytes_size;
-		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
-
-		if (!buffer) {
-			log_error ("can't get buffer");
-			continue;
-		}
-
-		if (!probe (item, buffer, bufsize)) {
-			//XXX LOG -- should be logged upstream
-			break;
-		}
-	}
-	return top_level;
-}
-
-void
-App::scan_async_do (const std::vector<std::string>& files, scan_async_cb_t callback)
-{
-	return_if_fail (callback);
-
-	auto t1 = std::chrono::steady_clock::now();
-	std::thread::id thread_id = std::this_thread::get_id();
-	std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));	// Just get me a number
-	log_thread ("thread id: %ld started", tid);
-
-	ContainerPtr c = scan (files);
-
-	auto t2 = std::chrono::steady_clock::now();
-	auto span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-	log_thread ("thread id: %ld stopped (%0.3g seconds)", tid, span.count());
-
-	callback (c);
-}
-
-bool
-App::scan_async (const std::vector<std::string>& files, scan_async_cb_t callback)
-{
-	return_val_if_fail (callback, false);
-
-	std::thread thread (std::bind (&App::scan_async_do, this, files, callback)).detach();
-
-	return true;
 }
 
 #endif
@@ -364,7 +207,9 @@ App::discover (ContainerPtr parent)
 	std::thread (std::bind (&Disk::discover,     parent)).detach();
 	std::thread (std::bind (&File::discover,     parent)).detach();
 	std::thread (std::bind (&Loop::discover,     parent)).detach();
+#ifdef DP_LVM
 	std::thread (std::bind (&LvmGroup::discover, parent)).detach();
+#endif
 }
 
 bool
@@ -393,20 +238,11 @@ App::process_queue_item (ContainerPtr item)
 	return false;
 }
 
-bool
-App::process_queue (void)
+void
+App::queue_add_probe (ContainerPtr& item)
 {
-	LOG_TRACE;
+	return_if_fail (item);
 
-	while (!probe_queue.empty()) {
-		ContainerPtr item = probe_queue.front();
-		probe_queue.pop();
-
-		// Examine all the items in parallel
-		std::thread (std::bind (&App::process_queue_item, this, item)).detach();
-	}
-
-	return (probe_queue.empty());
+	std::thread (std::bind (&App::process_queue_item, this, item)).detach();
 }
-
 

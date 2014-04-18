@@ -49,7 +49,6 @@ public:
 	Window();
 	virtual ~Window();
 
-	void set_data (GfxContainerPtr c);
 	bool set_focus (GfxContainerPtr cont);
 	GfxContainerPtr get_focus (void);
 
@@ -105,10 +104,6 @@ protected:
 	void my_realize (void);
 	void my_show (void);
 	bool my_idle (void);
-	void sync_done (ContainerPtr p);
-
-	ContainerPtr m_c;
-	GfxContainerPtr m_g;
 
 	GfxContainerPtr focus;
 	std::vector<GfxContainerPtr> selection;
