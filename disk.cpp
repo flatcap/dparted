@@ -304,7 +304,7 @@ void
 Disk::discover (ContainerPtr& parent)
 {
 	return_if_fail (parent);
-	LOG_TRACE;
+	LOG_THREAD;
 
 	std::vector<std::string> output;
 

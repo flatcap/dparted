@@ -49,17 +49,15 @@ public:
 
 	ContainerPtr scan (std::vector<std::string>& devices);
 	bool identify_device (ContainerPtr parent, std::string& device);
-	void identify (ContainerPtr parent, std::vector<std::string>& devices);
-	void discover (ContainerPtr parent);
 	bool process_queue_item (ContainerPtr item);
 
 	template<class T>
 	void queue_add_probe (std::shared_ptr<T>& item)
 	{
+		return_if_fail (item);
 		ContainerPtr c (item);
-		queue_add_probe(c);
+		std::thread (std::bind (&App::process_queue_item, this, c)).detach();
 	}
-	void queue_add_probe (ContainerPtr& item);
 
 protected:
 	ConfigFilePtr config_file;

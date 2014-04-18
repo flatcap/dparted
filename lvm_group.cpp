@@ -555,7 +555,7 @@ void
 LvmGroup::discover (ContainerPtr& top_level)
 {
 	return_if_fail (top_level);
-	LOG_TRACE;
+	LOG_THREAD;
 
 	ContainerPtr pieces = Container::create();
 	std::multimap<std::string,std::string> deps;

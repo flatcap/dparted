@@ -128,7 +128,7 @@ File::find_containers (const std::string& name, int fd, struct stat& st, Contain
 void
 File::discover (ContainerPtr& UNUSED(parent))
 {
-	LOG_TRACE;
+	LOG_THREAD;
 
 	// Config
 	//	[files]

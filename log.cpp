@@ -22,6 +22,7 @@
 #include <map>
 #include <mutex>
 #include <sstream>
+#include <thread>
 #include <vector>
 
 #include "log.h"
@@ -76,6 +77,11 @@ void
 log_redirect (Severity level, const char* function, const char* file, int line, const char* message)
 {
 	std::lock_guard<std::mutex> lock (log_active);
+
+#if 0
+	std::thread::id thread_id = std::this_thread::get_id();
+	std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
+#endif
 
 	if (log_mux.empty()) {
 		log_stdout (level, function, file, line, message);

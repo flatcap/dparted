@@ -132,28 +132,12 @@ mounts_get_list (ContainerPtr& mounts)
 
 #endif
 
-ContainerPtr
-App::scan (std::vector<std::string>& devices)
-{
-	LOG_TRACE;
-
-	ContainerPtr top_level = Container::create();
-
-	if (devices.size() > 0) {
-		identify (top_level, devices);
-	} else {
-		discover (top_level);
-	}
-
-	return top_level;
-}
-
 bool
 App::identify_device (ContainerPtr parent, std::string& device)
 {
 	return_val_if_fail (parent, false);
 	return_val_if_fail (!device.empty(), false);
-	LOG_TRACE;
+	LOG_THREAD;
 
 	int fd = -1;		//XXX write a RAII wrapper around this
 
@@ -184,32 +168,30 @@ App::identify_device (ContainerPtr parent, std::string& device)
 	return true;
 }
 
-void
-App::identify (ContainerPtr parent, std::vector<std::string>& devices)
+ContainerPtr
+App::scan (std::vector<std::string>& devices)
 {
-	return_if_fail(parent);
 	LOG_TRACE;
 
-	//XXX need to spot Lvm Groups
-	for (auto i : devices) {
-		// Examine all the devices in parallel
-		std::thread (std::bind (&App::identify_device, this, parent, i)).detach();
-	}
-}
+	ContainerPtr top_level = Container::create();
 
-void
-App::discover (ContainerPtr parent)
-{
-	return_if_fail (parent);
-	LOG_TRACE;
-
-	// Check all device types at once
-	std::thread (std::bind (&Disk::discover,     parent)).detach();
-	std::thread (std::bind (&File::discover,     parent)).detach();
-	std::thread (std::bind (&Loop::discover,     parent)).detach();
+	if (devices.empty()) {
+		// Check all device types at once
+		std::thread (std::bind (&Disk::discover,     top_level)).detach();
+		std::thread (std::bind (&File::discover,     top_level)).detach();
+		std::thread (std::bind (&Loop::discover,     top_level)).detach();
 #ifdef DP_LVM
-	std::thread (std::bind (&LvmGroup::discover, parent)).detach();
+		std::thread (std::bind (&LvmGroup::discover, top_level)).detach();
 #endif
+	} else {
+		//XXX need to spot Lvm Groups
+		for (auto i : devices) {
+			// Examine all the devices in parallel
+			std::thread (std::bind (&App::identify_device, this, top_level, i)).detach();
+		}
+	}
+
+	return top_level;
 }
 
 bool
@@ -236,13 +218,5 @@ App::process_queue_item (ContainerPtr item)
 		return true;
 
 	return false;
-}
-
-void
-App::queue_add_probe (ContainerPtr& item)
-{
-	return_if_fail (item);
-
-	std::thread (std::bind (&App::process_queue_item, this, item)).detach();
 }
 
