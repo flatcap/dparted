@@ -16,12 +16,14 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
+#include <thread>
+#include <chrono>
+
 #include <gtkmm/stock.h>
 #include <giomm/simpleactiongroup.h>
 #include <glibmm.h>
 #include <giomm/menu.h>
-
-#include <algorithm>
 
 #include "window.h"
 #include "action.h"
@@ -145,8 +147,18 @@ Window::my_idle (void)
 	std::vector<std::string> devices;
 	gui_app->scan(devices);
 
+	std::this_thread::sleep_for (std::chrono::seconds(3));
 	gui_app->process_queue();
 	return false;
+
+#if 0
+	//Where does my top level come from?
+	ContainerPtr c = gui_app->scan (files);
+	log_debug ("%ld", c->get_children().size());
+	GfxContainerPtr dummy;
+	m_g = GfxContainer::create (dummy, c);
+	set_data (m_g);
+#endif
 }
 
 

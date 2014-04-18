@@ -282,9 +282,8 @@ App::scan_async (const std::vector<std::string>& files, scan_async_cb_t callback
 {
 	return_val_if_fail (callback, false);
 
-	std::thread thread (std::bind (&App::scan_async_do, this, std::placeholders::_1, std::placeholders::_2), files, callback);
+	std::thread thread (std::bind (&App::scan_async_do, this, files, callback)).detach();
 
-	thread.detach();	// I don't want to wait
 	return true;
 }
 
@@ -404,7 +403,7 @@ App::process_queue (void)
 		probe_queue.pop();
 
 		// Examine all the items in parallel
-		//std::thread (process_queue_item, item).detach();
+		std::thread (std::bind (&App::process_queue_item, this, item)).detach();
 	}
 
 	return (probe_queue.empty());
