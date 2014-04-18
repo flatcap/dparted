@@ -197,9 +197,9 @@ Loop::losetup (std::vector <std::string>& output, std::string device)
 }
 
 void
-Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
+Loop::discover (ContainerPtr& parent)
 {
-	return_if_fail (top_level);
+	return_if_fail (parent);
 
 	std::vector <std::string> output;
 
@@ -216,16 +216,17 @@ Loop::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 		size = lseek (l->fd, 0, SEEK_END);
 		l->bytes_size = size;
 
-		top_level->just_add_child(l);
-		probe_queue.push(l);	// We need to probe
+		parent->just_add_child(l);
+		main_app->queue_add_probe(l);	// We need to probe
 	}
 }
 
-void
-Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& UNUSED(st))
+bool
+Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& UNUSED(st))
 {
-	return_if_fail (top_level);
-	return_if_fail (name);
+	return_val_if_fail (parent, false);
+	return_val_if_fail (!name.empty(), false);
+	return_val_if_fail (fd>=0, false);
 	LOG_TRACE;
 
 	off_t size;
@@ -258,8 +259,9 @@ Loop::identify (ContainerPtr& top_level, const char* name, int fd, struct stat& 
 	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
-	top_level->just_add_child(l);
+	parent->just_add_child(l);
 	main_app->queue_add_probe(l);	// queue the container for action
+	return true;
 }
 
 

@@ -48,8 +48,8 @@ public:
 	static unsigned int find_devices (ContainerPtr& list);
 
 	static bool lsblk    (std::vector <std::string>& output, std::string device = std::string());
-	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
-	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
+	static void discover (ContainerPtr& parent);
+	static bool identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& st);
 
 public:
 	//properties

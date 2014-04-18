@@ -126,7 +126,7 @@ File::find_containers (const std::string& name, int fd, struct stat& st, Contain
 #endif
 
 void
-File::discover (ContainerPtr& UNUSED(top_level), std::queue<ContainerPtr>& UNUSED(probe_queue))
+File::discover (ContainerPtr& UNUSED(parent))
 {
 	LOG_TRACE;
 
@@ -141,9 +141,12 @@ File::discover (ContainerPtr& UNUSED(top_level), std::queue<ContainerPtr>& UNUSE
 	//	dir  => add dir/*.img
 }
 
-void
-File::identify (ContainerPtr& UNUSED(top_level), const char* UNUSED(name), int UNUSED(fd), struct stat& UNUSED(st))
+bool
+File::identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& UNUSED(st))
 {
+	return_val_if_fail (parent, false);
+	return_val_if_fail (!name.empty(), false);
+	return_val_if_fail (fd>=0, false);
 	LOG_TRACE;
 
 	/* dir:
@@ -151,5 +154,7 @@ File::identify (ContainerPtr& UNUSED(top_level), const char* UNUSED(name), int U
 	 * file:
 	 *	We create, and manage, a loop container for this file
 	 */
+
+	return false;
 }
 

@@ -301,9 +301,9 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 }
 
 void
-Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
+Disk::discover (ContainerPtr& parent)
 {
-	return_if_fail (top_level);
+	return_if_fail (parent);
 	LOG_TRACE;
 
 	std::vector<std::string> output;
@@ -316,26 +316,29 @@ Disk::discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue)
 	for (auto line : output) {
 		DiskPtr d = Disk::create (line);
 
-		top_level->just_add_child(d);
-		probe_queue.push(d);	// We need to probe
+		parent->just_add_child(d);
+		main_app->queue_add_probe(d);
 	}
 }
 
-void
-Disk::identify (ContainerPtr& top_level, const char* name, int UNUSED(fd), struct stat& UNUSED(st))
+bool
+Disk::identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& UNUSED(st))
 {
-	return_if_fail (top_level);
+	return_val_if_fail (parent, false);
+	return_val_if_fail (!name.empty(), false);
+	return_val_if_fail (fd>=0, false);
 	LOG_TRACE;
 
 	std::vector<std::string> output;
 
 	if (!lsblk (output, name))
-		return;
+		return false;
 
 	DiskPtr d = Disk::create (output[0]);
 
-	top_level->just_add_child(d);
+	parent->just_add_child(d);
 	main_app->queue_add_probe(d);	// queue the container for action
+	return true;
 }
 
 

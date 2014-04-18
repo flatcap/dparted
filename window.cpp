@@ -140,8 +140,12 @@ Window::sync_done (ContainerPtr p)
 bool
 Window::my_idle (void)
 {
-	gui_app->scan_async ({}, std::bind (&Window::sync_done, this, std::placeholders::_1));
+	//gui_app->scan_async ({}, std::bind (&Window::sync_done, this, std::placeholders::_1));
 
+	std::vector<std::string> devices;
+	gui_app->scan(devices);
+
+	gui_app->process_queue();
 	return false;
 }
 

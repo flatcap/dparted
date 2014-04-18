@@ -31,13 +31,14 @@
 #include <linux/kdev_t.h>
 
 #include "app.h"
-#include "utils.h"
-#include "filesystem.h"
-#include "table.h"
-#include "misc.h"
+#include "disk.h"
 #include "file.h"
-#include "loop.h"
+#include "filesystem.h"
 #include "log.h"
+#include "loop.h"
+#include "misc.h"
+#include "table.h"
+#include "utils.h"
 #ifdef DP_LVM
 #include "lvm_group.h"
 #endif
@@ -142,6 +143,8 @@ mounts_get_list (ContainerPtr& mounts)
 }
 
 #endif
+
+#if 0
 bool
 App::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 {
@@ -161,7 +164,6 @@ App::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	return false;
 }
-
 
 ContainerPtr
 App::scan (const std::vector<std::string>& files)
@@ -256,7 +258,6 @@ App::scan (const std::vector<std::string>& files)
 	return top_level;
 }
 
-
 void
 App::scan_async_do (const std::vector<std::string>& files, scan_async_cb_t callback)
 {
@@ -286,3 +287,127 @@ App::scan_async (const std::vector<std::string>& files, scan_async_cb_t callback
 	thread.detach();	// I don't want to wait
 	return true;
 }
+
+#endif
+
+ContainerPtr
+App::scan (std::vector<std::string>& devices)
+{
+	LOG_TRACE;
+
+	ContainerPtr top_level = Container::create();
+
+	if (devices.size() > 0) {
+		identify (top_level, devices);
+	} else {
+		discover (top_level);
+	}
+
+	return top_level;
+}
+
+bool
+App::identify_device (ContainerPtr parent, std::string& device)
+{
+	return_val_if_fail (parent, false);
+	return_val_if_fail (!device.empty(), false);
+	LOG_TRACE;
+
+	int fd = -1;		//XXX write a RAII wrapper around this
+
+	fd = open (device.c_str(), O_RDONLY | O_CLOEXEC);
+	if (fd < 0) {
+		log_error ("can't open file %s", device.c_str());	//XXX perror
+		return false;
+	}
+
+	struct stat st;
+	int res = fstat (fd, &st);
+	if (res < 0) {
+		log_error ("stat on %s failed", device.c_str());	//XXX perror
+		close (fd);
+		return false;
+	}
+
+	     if (File::identify (parent, device, fd, st)) {}
+	else if (Loop::identify (parent, device, fd, st)) {}
+	else if (Disk::identify (parent, device, fd, st)) {}
+	else {
+		log_error ("can't identify device: %s", device.c_str());
+		close (fd);
+		return false;
+	}
+
+	close (fd);
+	return true;
+}
+
+void
+App::identify (ContainerPtr parent, std::vector<std::string>& devices)
+{
+	return_if_fail(parent);
+	LOG_TRACE;
+
+	//XXX need to spot Lvm Groups
+	for (auto i : devices) {
+		// Examine all the devices in parallel
+		std::thread (std::bind (&App::identify_device, this, parent, i)).detach();
+	}
+}
+
+void
+App::discover (ContainerPtr parent)
+{
+	return_if_fail (parent);
+	LOG_TRACE;
+
+	// Check all device types at once
+	std::thread (std::bind (&Disk::discover,     parent)).detach();
+	std::thread (std::bind (&File::discover,     parent)).detach();
+	std::thread (std::bind (&Loop::discover,     parent)).detach();
+	std::thread (std::bind (&LvmGroup::discover, parent)).detach();
+}
+
+bool
+App::process_queue_item (ContainerPtr item)
+{
+	return_val_if_fail(item,false);
+	LOG_TRACE;
+
+	std::uint64_t bufsize = item->bytes_size;
+	std::uint8_t* buffer  = item->get_buffer (0, bufsize);
+
+	if (!buffer) {
+		log_error ("can't get buffer");
+		return false;
+	}
+
+	if (Filesystem::probe (item, buffer, bufsize))
+		return true;
+
+	if (Table::probe (item, buffer, bufsize))
+		return true;
+
+	if (Misc::probe (item, buffer, bufsize))
+		return true;
+
+	return false;
+}
+
+bool
+App::process_queue (void)
+{
+	LOG_TRACE;
+
+	while (!probe_queue.empty()) {
+		ContainerPtr item = probe_queue.front();
+		probe_queue.pop();
+
+		// Examine all the items in parallel
+		//std::thread (process_queue_item, item).detach();
+	}
+
+	return (probe_queue.empty());
+}
+
+
