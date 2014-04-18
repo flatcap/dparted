@@ -198,7 +198,7 @@ bool
 App::process_queue_item (ContainerPtr item)
 {
 	return_val_if_fail(item,false);
-	LOG_TRACE;
+	LOG_THREAD;
 
 	std::uint64_t bufsize = item->bytes_size;
 	std::uint8_t* buffer  = item->get_buffer (0, bufsize);

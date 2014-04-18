@@ -157,13 +157,12 @@ Container::create (void)
 bool
 Container::visit_children (Visitor& v)
 {
-	ContainerPtr c = get_smart();
-	if (!v.visit_enter(c))
+	ContainerPtr cont = get_smart();
+	if (!v.visit_enter(cont))
 		return false;
 
-	for (auto c : children) {
-		ContainerPtr p = parent.lock();
-		if (!c->accept(v))
+	for (auto child : children) {
+		if (!child->accept(v))
 			return false;
 	}
 
@@ -212,6 +211,7 @@ void
 Container::add_child (ContainerPtr& child)
 {
 	return_if_fail (child);
+	LOG_TRACE;
 
 	/* Check:
 	 *	available space
