@@ -96,7 +96,7 @@ SRC-$(UNUSED)		+= icon_manager.cpp
 SRC	+= $(SRC-1)
 HDR	+= $(SRC:%.cpp=%.h)
 
-HDR	+= lvm2.h config_manager.h
+HDR	+= lvm2.h config_manager.h thread.h
 
 OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
@@ -107,6 +107,7 @@ CFLAGS	+= -Wall
 CFLAGS	+= -Wextra
 CFLAGS	+= -Wpedantic
 #CFLAGS	+= -fcolor-diagnostics
+LDFLAGS	+= -pthread
 LDFLAGS	+= -rdynamic
 
 CFLAGS	+= -fno-omit-frame-pointer
@@ -134,6 +135,8 @@ CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 PACKAGES += libconfig++
 ifeq ($(GUI),1)
 	PACKAGES += gtkmm-3.0
+else
+	CFLAGS	+= -DDP_NO_THREAD
 endif
 
 ifeq ($(L),1)

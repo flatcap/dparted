@@ -26,6 +26,7 @@
 #include "message.h"
 #include "config_file.h"
 #include "container.h"
+#include "thread.h"
 
 class App;
 
@@ -56,7 +57,7 @@ public:
 	{
 		return_if_fail (item);
 		ContainerPtr c (item);
-		std::thread (std::bind (&App::process_queue_item, this, c)).detach();
+		THREAD (std::bind (&App::process_queue_item, this, c)).detach();
 	}
 
 protected:

@@ -38,6 +38,7 @@
 #include "loop.h"
 #include "misc.h"
 #include "table.h"
+#include "thread.h"
 #include "utils.h"
 #ifdef DP_LVM
 #include "lvm_group.h"
@@ -177,17 +178,17 @@ App::scan (std::vector<std::string>& devices)
 
 	if (devices.empty()) {
 		// Check all device types at once
-		std::thread (std::bind (&Disk::discover,     top_level)).detach();
-		std::thread (std::bind (&File::discover,     top_level)).detach();
-		std::thread (std::bind (&Loop::discover,     top_level)).detach();
+		THREAD (std::bind (&Disk::discover,     top_level)).detach();
+		THREAD (std::bind (&File::discover,     top_level)).detach();
+		THREAD (std::bind (&Loop::discover,     top_level)).detach();
 #ifdef DP_LVM
-		std::thread (std::bind (&LvmGroup::discover, top_level)).detach();
+		THREAD (std::bind (&LvmGroup::discover, top_level)).detach();
 #endif
 	} else {
 		//XXX need to spot Lvm Groups
 		for (auto i : devices) {
 			// Examine all the devices in parallel
-			std::thread (std::bind (&App::identify_device, this, top_level, i)).detach();
+			THREAD (std::bind (&App::identify_device, this, top_level, i)).detach();
 		}
 	}
 
