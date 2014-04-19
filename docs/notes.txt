@@ -680,3 +680,27 @@ space slack -- unreachable space
 
 drop shield, or make it work
 
+only throw std::exceptions
+
+-V --version / copyright info
+
+--debug enable all logging (-DDEBUG)
+--trace enable all tracing (-DTRACE)
+
+log overloads for sstream, string, ()->\n?
+
+astyle/indent options
+
+fake thread class -- all sync THREAD macro
+
+thread id in log trace
+
+thread trace macro
+
+X::create could fail -- check retval
+	compiler pragma? no
+
+"shouldn't happen" comments => explain what would have to have gone wrong
+
+add_space/reserved how diff from add_child?
+
