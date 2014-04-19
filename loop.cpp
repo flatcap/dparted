@@ -217,8 +217,7 @@ Loop::discover (ContainerPtr& parent)
 		size = lseek (l->fd, 0, SEEK_END);
 		l->bytes_size = size;
 
-		parent->just_add_child(l);
-		main_app->queue_add_probe(l);	// We need to probe
+		parent->add_child(l, true);
 	}
 }
 
@@ -260,8 +259,7 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
-	parent->just_add_child(l);
-	main_app->queue_add_probe(l);	// queue the container for action
+	parent->add_child(l, true);
 	return true;
 }
 

@@ -185,7 +185,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	p->bytes_size = l->header_size;
 	p->bytes_used = l->header_size;
-	l->add_child(p);
+	l->add_child (p, false);
 
 #if 0
 	log_info ("LUKS:");
@@ -224,11 +224,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	//main_app->ask (q);
 
-#if 0
-	main_app->queue_add_probe(c);	//XXX do this when we've asked for a password
-#endif
-
-	parent->add_child(l);
+	parent->add_child (l, false);
 
 	return true;
 }
@@ -329,8 +325,7 @@ LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 	size = lseek (p->fd, 0, SEEK_END);
 	p->bytes_size = size;
 
-	add_child(p);
-	main_app->queue_add_probe(p);	//XXX do this when we've asked for a password
+	add_child (p, true);		//XXX false, probe when we've asked for a password
 
 	return true;
 }

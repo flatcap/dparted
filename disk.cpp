@@ -172,8 +172,7 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	log_debug ("\tname = %s", name.c_str());
 	log_debug ("\tsize = %ld", file_size_in_bytes);
 
-	list.add_child(d);
-	queue_add_probe(d);	// queue the container for action
+	list.add_child (d, true);
 
 	return true;
 }
@@ -191,78 +190,6 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	log_debug ("cylinders = %d", geometry.cylinders);	// truncated at ~500GiB
 	//close (fd);	// or keep it for later?
 #endif
-
-unsigned int
-Disk::find_devices (ContainerPtr& list)
-{
-	return_val_if_fail (list, 0);
-
-	// NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="500107862016" RO="0" TYPE="disk" MOUNTPOINT=""
-	std::string command = "lsblk --bytes --pairs --exclude " + std::to_string (LOOP_MAJOR);
-	std::vector<std::string> output;
-	std::string error;
-
-	execute_command_out (command, output);
-	if (output.empty())
-		return 0;
-
-	log_debug (join (output,", "));
-
-	std::string device;
-	std::string type;
-	std::string mount;
-	int major = -1;
-	int minor = -1;
-	std::uint64_t size = 0;
-	std::string part;
-	int scan;
-	std::map<std::string,StringNum> tags;
-	int added = 0;
-
-	log_debug ("%ld lines", output.size());
-
-	for (auto line : output) {
-		parse_tagged_line (line, " ", tags);
-
-		type = tags["TYPE"];
-		if (type != "disk")
-			continue;
-
-		device = tags["NAME"];
-		log_debug (device);
-
-		std::string majmin = tags["MAJ:MIN"];
-		scan = sscanf (majmin.c_str(), "%d:%d", &major, &minor);
-		if (scan != 2) {
-			log_debug ("scan failed1");
-			continue;
-		}
-
-		size = tags["SIZE"];
-		mount = tags["MOUNTPOINT"];
-
-		log_debug ("\tmajor: %d", major);
-		log_debug ("\tminor: %d", minor);
-		log_debug ("\tsize:  %ld", size);
-		log_debug ("\tmount: %s", mount.c_str());
-
-		DiskPtr d = Disk::create();
-		d->device = "/dev/" + device;
-		d->parent_offset = 0;
-		d->device_major = major;
-		d->device_minor = minor;
-		d->mounts = mount;
-		d->bytes_size = size;
-
-		//d->open_device();
-
-		list->add_child(d);
-		++added;
-	}
-
-	return added;
-}
-
 
 std::uint64_t
 Disk::get_block_size (void)
@@ -304,20 +231,17 @@ void
 Disk::discover (ContainerPtr& parent)
 {
 	return_if_fail (parent);
-	LOG_THREAD;
+	LOG_TRACE;
 
 	std::vector<std::string> output;
 
 	if (!lsblk (output))
 		return;
 
-	log_debug ("%ld lines", output.size());
-
 	for (auto line : output) {
 		DiskPtr d = Disk::create (line);
 
-		parent->just_add_child(d);
-		main_app->queue_add_probe(d);
+		parent->add_child(d, true);
 	}
 }
 
@@ -331,13 +255,12 @@ Disk::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 
 	std::vector<std::string> output;
 
-	if (!lsblk (output, name))
+	if (!lsblk (output, name))	//XXX arg order? v = lsblk(n)
 		return false;
 
 	DiskPtr d = Disk::create (output[0]);
 
-	parent->just_add_child(d);
-	main_app->queue_add_probe(d);	// queue the container for action
+	parent->add_child(d, true);
 	return true;
 }
 

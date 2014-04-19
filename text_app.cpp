@@ -175,6 +175,7 @@ TextApp::run (int argc, char **argv)
 	}
 
 	ContainerPtr top_level = main_app->scan (disks);
+	std::this_thread::sleep_for (std::chrono::seconds(2));
 
 #ifdef DP_DOT
 	if (dot) {

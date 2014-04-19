@@ -145,7 +145,7 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	if (m) {
-		parent->add_child(m);
+		parent->add_child (m, false);
 
 		m->bytes_size = parent->bytes_size;
 		m->bytes_used = 0;

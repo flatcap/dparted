@@ -351,10 +351,14 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 bool
 DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
-	if (!top_level)		// Might not exist, until the scan has completed
-		return true;
-
+	return_val_if_fail(top_level,false);
 	LOG_TRACE;
+
+	ContainerPtr tlc = top_level->get_container();
+
+	log_info ("\nDRAW:");
+	log_info ("top_level = %p, tlc = %p", (void*) top_level.get(), (void*) tlc.get());
+	log_info ("children = %ld\n", top_level->children.size());
 
 	vRange.clear();
 

@@ -45,8 +45,6 @@ public:
 	virtual std::uint64_t get_block_size (void);
 	virtual std::uint64_t get_device_space (std::map<std::uint64_t,std::uint64_t>& spaces);
 
-	static unsigned int find_devices (ContainerPtr& list);
-
 	static bool lsblk    (std::vector <std::string>& output, std::string device = std::string());
 	static void discover (ContainerPtr& parent);
 	static bool identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& st);

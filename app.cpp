@@ -133,6 +133,13 @@ mounts_get_list (ContainerPtr& mounts)
 
 #endif
 
+void
+App::queue_add_probe (ContainerPtr& item)
+{
+	return_if_fail (item);
+	THREAD (std::bind (&App::process_queue_item, this, item)).detach();
+}
+
 bool
 App::identify_device (ContainerPtr parent, std::string& device)
 {
