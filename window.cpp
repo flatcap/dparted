@@ -57,7 +57,6 @@ Window::Window (void)
 
 	signal_realize().connect (sigc::mem_fun (*this, &Window::my_realize));
 	signal_show().connect (sigc::mem_fun (*this, &Window::my_show));
-	Glib::signal_idle().connect (sigc::mem_fun (*this, &Window::my_idle));
 
 	set_default_icon_name ("dparted");
 
@@ -130,10 +129,9 @@ Window::my_show (void)
 }
 
 
-bool
-Window::my_idle (void)
+void
+Window::scan (std::vector<std::string>& devices)
 {
-	std::vector<std::string> devices;
 	ContainerPtr c = gui_app->scan(devices);
 
 	GfxContainerPtr g = GfxContainer::create (nullptr, c);
@@ -143,8 +141,6 @@ Window::my_idle (void)
 		log_error ("exception");
 	}
 	drawingarea.set_data(g);
-
-	return false;
 }
 
 
