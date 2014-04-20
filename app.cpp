@@ -182,6 +182,7 @@ App::scan (std::vector<std::string>& devices)
 	LOG_TRACE;
 
 	ContainerPtr top_level = Container::create();
+	top_level->name = "dummy";
 
 	if (devices.empty()) {
 		// Check all device types at once

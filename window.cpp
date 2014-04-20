@@ -132,9 +132,9 @@ Window::my_show (void)
 void
 Window::scan (std::vector<std::string>& devices)
 {
-	ContainerPtr c = gui_app->scan(devices);
+	top_level = gui_app->scan(devices);
 
-	GfxContainerPtr g = GfxContainer::create (nullptr, c);
+	GfxContainerPtr g = GfxContainer::create (nullptr, top_level);
 	try {
 		treeview.init_treeview(g);
 	} catch (...) {

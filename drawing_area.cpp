@@ -652,16 +652,16 @@ DrawingArea::get_protective (GfxContainerPtr& c)
 #endif
 
 void
-DrawingArea::set_data (GfxContainerPtr& c)
+DrawingArea::set_data (GfxContainerPtr& g)
 {
-	return_if_fail (c);
+	return_if_fail (g);
 
-	BaseDrawingArea::set_data (c);
+	BaseDrawingArea::set_data (g);
 
 	// check we've been given a top level object?
 
 	// invalidate window
-	unsigned int children = c->children.size();
+	unsigned int children = g->children.size();
 	//children = 14;
 	set_size_request (500, cont_height * children);
 
