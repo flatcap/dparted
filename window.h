@@ -77,15 +77,15 @@ protected:
 
 	// MENU
 	void init_menubar (Gtk::Box& box);
-	Glib::RefPtr<Gtk::Builder> m_refBuilder;
-	Glib::RefPtr<Gio::SimpleAction> m_refChoice;
-	Glib::RefPtr<Gio::SimpleAction> m_refChoiceOther;
-	Glib::RefPtr<Gio::SimpleAction> m_refToggle;
+	Glib::RefPtr<Gtk::Builder> builder;
+	Glib::RefPtr<Gio::SimpleAction> choice;
+	Glib::RefPtr<Gio::SimpleAction> choice_other;
+	Glib::RefPtr<Gio::SimpleAction> toggle;
 
-	Glib::RefPtr<Gio::SimpleAction> m_refViewGfx;
-	Glib::RefPtr<Gio::SimpleAction> m_refViewTree;
-	Glib::RefPtr<Gio::SimpleAction> m_refViewToolbar;
-	Glib::RefPtr<Gio::SimpleAction> m_refViewStatus;
+	Glib::RefPtr<Gio::SimpleAction> view_gfx;
+	Glib::RefPtr<Gio::SimpleAction> view_tree;
+	Glib::RefPtr<Gio::SimpleAction> view_toolbar;
+	Glib::RefPtr<Gio::SimpleAction> view_status;
 
 	void on_menu_choices(const Glib::ustring& parameter);
 	void on_menu_choices_other(int parameter);
@@ -95,7 +95,7 @@ protected:
 	void on_menu_toggle (void);
 	void on_menu_view (int option);
 
-	Gtk::Menu m_fake_menu;
+	Gtk::Menu fake_menu;
 
 	bool on_mouse_click (GdkEventButton* event);
 

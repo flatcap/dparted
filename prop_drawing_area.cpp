@@ -52,7 +52,7 @@ PropDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	checker_rect (cr, shape, 5);
 #else
 	draw_grid (cr, shape);
-	draw_grid_linear (cr, shape, m_c->bytes_size);
+	draw_grid_linear (cr, shape, c->bytes_size);
 	fill_rect (cr, shape, "white");
 #endif
 	draw_container (cr, top_level, shape);

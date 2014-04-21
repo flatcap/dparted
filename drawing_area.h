@@ -88,15 +88,13 @@ private:
 
 	//bool mouse_close = false;
 
-	Gtk::Menu m_fake_menu;
-
 	// POPUP
 	void setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions);
 	void on_menu_select (GfxContainerPtr gfx, Action action);
 	bool get_coords (int& x, int& y);
 	void popup_menu (GfxContainerPtr gfx, int x, int y);
 	bool popup_on_keypress (GdkEventKey* ev);
-	Gtk::Menu m_Menu_Popup;
+	Gtk::Menu menu_popup;
 	bool menu_active = false;
 };
 

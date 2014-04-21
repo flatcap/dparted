@@ -41,7 +41,7 @@ protected:
 	typedef std::shared_ptr<Gtk::TreeModelColumnBase> ModColPtr;
 	std::vector<ModColPtr> mod_cols;
 
-	Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
+	Glib::RefPtr<Gtk::TreeStore> tree_model;
 
 	bool on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 
@@ -83,7 +83,7 @@ private:
 	void popup_menu (int x, int y);
 	bool popup_on_keypress (GdkEventKey* ev);
 	bool on_keypress (GdkEventKey* event);
-	Gtk::Menu m_Menu_Popup;
+	Gtk::Menu menu_popup;
 	bool menu_active = false;
 };
 

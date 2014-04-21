@@ -38,31 +38,31 @@
 class LogTrace
 {
 public:
-	LogTrace (const std::string& function, const std::string& file_name, int line_num, const char *extra = nullptr) :
-		m_function (function),
-		m_file_name (file_name),
-		m_line_num (line_num)
+	LogTrace (const std::string& fn, const std::string& file, int line, const char *suf = nullptr) :
+		function (fn),
+		file_name (file),
+		line_num (line)
 	{
-		if (extra)
-			m_extra = std::string(" ") + extra;
+		if (suf)
+			suffix = std::string(" ") + suf;
 
 		std::thread::id thread_id = std::this_thread::get_id();
 		std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
-		log_enter ("Entering%s %s (%ld) -- %s:%d", m_extra.c_str(), m_function.c_str(), tid, m_file_name.c_str(), m_line_num);
+		log_enter ("Entering%s %s (%ld) -- %s:%d", suffix.c_str(), function.c_str(), tid, file_name.c_str(), line_num);
 	}
 
 	virtual ~LogTrace()
 	{
 		std::thread::id thread_id = std::this_thread::get_id();
 		std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
-		log_leave ("Leaving%s  %s (%ld) -- %s", m_extra.c_str(), m_function.c_str(), tid, m_file_name.c_str());
+		log_leave ("Leaving%s  %s (%ld) -- %s", suffix.c_str(), function.c_str(), tid, file_name.c_str());
 	}
 
 protected:
-	std::string	m_function;
-	std::string	m_file_name;
-	std::string	m_extra;
-	int		m_line_num;
+	std::string	function;
+	std::string	file_name;
+	std::string	suffix;
+	int		line_num;
 
 private:
 	// Stop users dynamically creating this object
