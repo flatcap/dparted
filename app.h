@@ -53,7 +53,7 @@ public:
 	ConfigFilePtr get_config (void);
 	bool set_config (const std::string& filename);
 
-	ContainerPtr scan (std::vector<std::string>& devices);
+	ContainerPtr scan (std::vector<std::string>& devices, scan_async_cb_t fn);
 	bool identify_device (ContainerPtr parent, std::string& device);
 	bool process_queue_item (ContainerPtr item);
 	void queue_add_probe (ContainerPtr& item);

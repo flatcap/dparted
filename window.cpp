@@ -17,8 +17,9 @@
  */
 
 #include <algorithm>
-#include <thread>
 #include <chrono>
+#include <sstream>
+#include <thread>
 
 #include <gtkmm/stock.h>
 #include <giomm/simpleactiongroup.h>
@@ -129,10 +130,17 @@ Window::my_show (void)
 }
 
 
+void scan_callback (ContainerPtr c)
+{
+	std::stringstream ss;
+	ss << "\033[01;33mScan callback: " << (void*) c.get() << "\033[0m";
+	log_debug (ss);
+}
+
 void
 Window::scan (std::vector<std::string>& devices)
 {
-	top_level = gui_app->scan(devices);
+	top_level = gui_app->scan(devices, scan_callback);
 
 	GfxContainerPtr g = GfxContainer::create (nullptr, top_level);
 	try {

@@ -186,9 +186,14 @@ App::identify_device (ContainerPtr parent, std::string& device)
 }
 
 ContainerPtr
-App::scan (std::vector<std::string>& devices)
+App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 {
 	LOG_TRACE;
+
+	if (!thread_queue.empty()) {
+		log_code ("only one scan at a time");
+		return nullptr;
+	}
 
 	ContainerPtr top_level = Container::create();
 	top_level->name = "dummy";
@@ -209,10 +214,24 @@ App::scan (std::vector<std::string>& devices)
 		}
 	}
 
-	while (!thread_queue.empty()) {
-		thread_queue.front().join();
-		std::lock_guard<std::mutex> lock (thread_mutex);
-		thread_queue.pop_front();	//mutex
+	if (fn) {
+		// Start a thread to watch the existing threads.
+		// When the existing thread have finished notify the user with fn().
+		std::thread ([=](){
+			while (!thread_queue.empty()) {
+				thread_queue.front().join();
+				std::lock_guard<std::mutex> lock (thread_mutex);
+				thread_queue.pop_front();
+			}
+			fn (top_level);
+		}).detach();
+	} else {
+		// Wait for all the threads to finish before returning
+		while (!thread_queue.empty()) {
+			thread_queue.front().join();
+			std::lock_guard<std::mutex> lock (thread_mutex);
+			thread_queue.pop_front();
+		}
 	}
 
 	return top_level;

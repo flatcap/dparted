@@ -179,6 +179,7 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 	Gtk::Application::on_open (files, hint);
 }
 
+
 int
 GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
 {
