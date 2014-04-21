@@ -53,8 +53,14 @@ public:
 	bool process_queue_item (ContainerPtr item);
 	void queue_add_probe (ContainerPtr& item);
 
+	void start_thread (std::function<void(void)> fn);
+
 protected:
 	ConfigFilePtr config_file;
+
+private:
+	std::mutex thread_mutex;
+	std::vector<std::thread> vt;
 };
 
 

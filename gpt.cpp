@@ -160,14 +160,15 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	//XXX replace with strict identify function (static) and all other probes
 		return false;
 
-	// LBA		Description
-	// ---------------------------------
-	// 0		protective mbr
-	// 1		primary gpt header
-	// 2-33		128 gpt entries
-	// ...
-	// -33		128 gpt entries
-	// -1		secondary gpt header
+	/* LBA		Description
+	 * ---------------------------------
+	 * 0		protective mbr
+	 * 1		primary gpt header
+	 * 2-33		128 gpt entries
+	 * ...
+	 * -33		128 gpt entries
+	 * -1		secondary gpt header
+	 */
 
 	GptPtr g = create();
 

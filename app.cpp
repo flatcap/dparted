@@ -53,6 +53,15 @@ App::App (void)
 
 App::~App()
 {
+	{	// Scope
+		std::lock_guard<std::mutex> lock (thread_mutex);
+		for (auto& i : vt) {
+			i.join();	// Wait for things to finish
+			//i.detach();	// Don't wait any longer
+		}
+		vt.clear();
+	}
+
 	log_dtor ("dtor App");
 }
 
@@ -200,6 +209,12 @@ App::scan (std::vector<std::string>& devices)
 		}
 	}
 
+	std::lock_guard<std::mutex> lock (thread_mutex);
+	for (auto& i : vt) {
+		i.join();
+	}
+	vt.clear();
+
 	return top_level;
 }
 
@@ -227,5 +242,13 @@ App::process_queue_item (ContainerPtr item)
 		return true;
 
 	return false;
+}
+
+
+void
+App::start_thread (std::function<void(void)> fn)
+{
+	std::lock_guard<std::mutex> lock (thread_mutex);
+	vt.push_back (std::thread (fn));
 }
 
