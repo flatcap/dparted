@@ -20,7 +20,9 @@
 #include <cstring>
 #include <functional>
 #include <map>
+#include <mutex>
 #include <sstream>
+#include <thread>
 #include <vector>
 
 #include "log.h"
@@ -28,10 +30,14 @@
 #include "utils.h"
 
 static std::multimap<Severity,log_callback_t> log_mux;
+static int depth = 0;
+
+std::mutex log_active;
 
 void
 log_stdout (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
 {
+	//fprintf (stdout, "%*s", (depth*4), "");	// indent
 	fprintf (stdout, "%s\n", message);
 }
 
@@ -72,6 +78,15 @@ log_redirect (const std::stringstream& UNUSED(message))
 void
 log_redirect (Severity level, const char* function, const char* file, int line, const char* message)
 {
+	std::lock_guard<std::mutex> lock (log_active);
+
+#if 0
+	std::thread::id thread_id = std::this_thread::get_id();
+	std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
+#endif
+
+	if ((level & Severity::Leave) == Severity::Leave) --depth;
+
 	if (log_mux.empty()) {
 		log_stdout (level, function, file, line, message);
 	} else {
@@ -81,6 +96,8 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 			}
 		}
 	}
+
+	if ((level & Severity::Enter) == Severity::Enter) ++depth;
 }
 
 /**
@@ -119,7 +136,7 @@ void
 assertion_failure (const char* file, int line, const char* test, const char* function)
 {
 	std::vector<std::string> bt = get_backtrace();
-	log_code ("%s:%d: assertion failed: (%s) in %s", file, line, test, function);
+	log_code ("\033[01;31m%s:%d: assertion failed: (%s) in %s\033[0m", file, line, test, function);
 	log_code ("Backtrace:");
 	for (auto i : bt) {
 		if (i.substr (0, 17) == "assertion_failure")	// Skip me

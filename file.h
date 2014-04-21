@@ -40,8 +40,8 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	static void discover (ContainerPtr& top_level, std::queue<ContainerPtr>& probe_queue);
-	static void identify (ContainerPtr& top_level, const char* name, int fd, struct stat& st);
+	static void discover (ContainerPtr& parent);
+	static bool identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& st);
 
 public:
 	//properties

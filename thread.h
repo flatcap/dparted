@@ -16,60 +16,22 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _THREAD_H_
+#define _THREAD_H_
 
-#include "list_visitor.h"
-#include "container.h"
-#include "log.h"
-#include "utils.h"
+#include <thread>
 
-ListVisitor::ListVisitor (void)
+#ifdef DP_NO_THREAD
+#define THREAD FakeThread
+struct FakeThread
 {
-	log_ctor ("ctor ListVisitor");
-}
+	FakeThread (std::function<void(void)> fn) { fn(); }
+	void detach (void) {}
+	void join   (void) {}
+};
+#else
+#define THREAD std::thread
+#endif
 
-ListVisitor::~ListVisitor()
-{
-	log_dtor ("dtor ListVisitor");
-}
+#endif // _THREAD_H_
 
-
-bool
-ListVisitor::visit_enter (ContainerPtr& UNUSED(c))
-{
-	++indent;
-	return true;
-}
-
-bool
-ListVisitor::visit_leave (void)
-{
-	--indent;
-	return true;
-}
-
-
-/**
- * visit (ContainerPtr)
- */
-bool
-ListVisitor::visit (ContainerPtr c)
-{
-	return_val_if_fail (c, false);
-
-	if (c->name != "dummy") {
-		std::string tabs;
-		if (indent > 0) {
-			tabs.resize (indent, '\t');
-		}
-		output << tabs << c << "\n";
-	}
-
-	return true;
-}
-
-
-void
-ListVisitor::list (void)
-{
-	log_info (output);
-}

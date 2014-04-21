@@ -18,6 +18,9 @@
 
 #include <string>
 #include <sstream>
+#include <ratio>
+#include <chrono>
+#include <thread>
 
 #include <fcntl.h>
 #include <sys/types.h>
@@ -28,13 +31,15 @@
 #include <linux/kdev_t.h>
 
 #include "app.h"
-#include "utils.h"
-#include "filesystem.h"
-#include "table.h"
-#include "misc.h"
+#include "disk.h"
 #include "file.h"
-#include "loop.h"
+#include "filesystem.h"
 #include "log.h"
+#include "loop.h"
+#include "misc.h"
+#include "table.h"
+#include "thread.h"
+#include "utils.h"
 #ifdef DP_LVM
 #include "lvm_group.h"
 #endif
@@ -48,6 +53,15 @@ App::App (void)
 
 App::~App()
 {
+	{	// Scope
+		for (auto& i : thread_queue) {
+			i.join();	// Wait for things to finish
+			//i.detach();	// Don't wait any longer
+		}
+		std::lock_guard<std::mutex> lock (thread_mutex);
+		thread_queue.clear();
+	}
+
 	log_dtor ("dtor App");
 }
 
@@ -104,18 +118,6 @@ App::get_config (void)
 }
 
 
-void
-App::queue_add_probe (ContainerPtr& item)
-{
-	return_if_fail (item);
-
-	probe_queue.push (item);
-	std::string s = get_size (item->parent_offset);
-	log_info ("QUEUE: %s %s : %ld (%s)", item->name.c_str(), item->device.c_str(), item->parent_offset, s.c_str());
-	log_info ("QUEUE has %lu items", probe_queue.size());
-}
-
-
 #if 0
 unsigned int
 mounts_get_list (ContainerPtr& mounts)
@@ -139,117 +141,133 @@ mounts_get_list (ContainerPtr& mounts)
 }
 
 #endif
-bool
-App::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
+
+void
+App::queue_add_probe (ContainerPtr& item)
 {
-	return_val_if_fail (parent,  false);
-	return_val_if_fail (buffer,  false);
-	return_val_if_fail (bufsize, false);
+	return_if_fail (item);
+	start_thread (std::bind (&App::process_queue_item, this, item));
+}
+
+bool
+App::identify_device (ContainerPtr parent, std::string& device)
+{
+	return_val_if_fail (parent, false);
+	return_val_if_fail (!device.empty(), false);
+	LOG_THREAD;
+
+	int fd = -1;		//XXX write a RAII wrapper around this
+
+	fd = open (device.c_str(), O_RDONLY | O_CLOEXEC);
+	if (fd < 0) {
+		log_error ("can't open file %s", device.c_str());	//XXX perror
+		return false;
+	}
+
+	struct stat st;
+	int res = fstat (fd, &st);
+	if (res < 0) {
+		log_error ("stat on %s failed", device.c_str());	//XXX perror
+		close (fd);
+		return false;
+	}
+
+	     if (File::identify (parent, device, fd, st)) {}
+	else if (Loop::identify (parent, device, fd, st)) {}
+	else if (Disk::identify (parent, device, fd, st)) {}
+	else {
+		log_error ("can't identify device: %s", device.c_str());
+		close (fd);
+		return false;
+	}
+
+	close (fd);
+	return true;
+}
+
+ContainerPtr
+App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
+{
 	LOG_TRACE;
 
-	if (Filesystem::probe (parent, buffer, bufsize))
+	if (!thread_queue.empty()) {
+		log_code ("only one scan at a time");
+		return nullptr;
+	}
+
+	ContainerPtr top_level = Container::create();
+	top_level->name = "dummy";
+
+	if (devices.empty()) {
+		// Check all device types at once
+		start_thread (std::bind (&Disk::discover,     top_level));
+		start_thread (std::bind (&File::discover,     top_level));
+		start_thread (std::bind (&Loop::discover,     top_level));
+#ifdef DP_LVM
+		start_thread (std::bind (&LvmGroup::discover, top_level));
+#endif
+	} else {
+		//XXX need to spot Lvm Groups
+		for (auto i : devices) {
+			// Examine all the devices in parallel
+			start_thread (std::bind (&App::identify_device, this, top_level, i));
+		}
+	}
+
+	if (fn) {
+		// Start a thread to watch the existing threads.
+		// When the existing thread have finished notify the user with fn().
+		std::thread ([=](){
+			while (!thread_queue.empty()) {
+				thread_queue.front().join();
+				std::lock_guard<std::mutex> lock (thread_mutex);
+				thread_queue.pop_front();
+			}
+			fn (top_level);
+		}).detach();
+	} else {
+		// Wait for all the threads to finish before returning
+		while (!thread_queue.empty()) {
+			thread_queue.front().join();
+			std::lock_guard<std::mutex> lock (thread_mutex);
+			thread_queue.pop_front();
+		}
+	}
+
+	return top_level;
+}
+
+bool
+App::process_queue_item (ContainerPtr item)
+{
+	return_val_if_fail(item,false);
+	LOG_THREAD;
+
+	std::uint64_t bufsize = item->bytes_size;
+	std::uint8_t* buffer  = item->get_buffer (0, bufsize);
+
+	if (!buffer) {
+		log_error ("can't get buffer");
+		return false;
+	}
+
+	if (Filesystem::probe (item, buffer, bufsize))
 		return true;
 
-	if (Table::probe (parent, buffer, bufsize))
+	if (Table::probe (item, buffer, bufsize))
 		return true;
 
-	if (Misc::probe (parent, buffer, bufsize))
+	if (Misc::probe (item, buffer, bufsize))
 		return true;
 
 	return false;
 }
 
 
-ContainerPtr
-App::scan (const std::vector<std::string>& files)
+void
+App::start_thread (std::function<void(void)> fn)
 {
-	top_level = Container::create();	// Trash the old value
-	top_level->name = "dummy";
-
-	if (files.size() > 0) {
-		for (auto f : files) {
-			struct stat st;
-			int res = -1;
-			int fd = -1;
-
-			fd = open (f.c_str(), O_RDONLY | O_CLOEXEC);
-			if (fd < 0) {
-				log_debug ("can't open file %s", f.c_str());
-				continue;
-			}
-
-			res = fstat (fd, &st);
-			if (res < 0) {
-				log_debug ("stat on %s failed", f.c_str());
-				close (fd);
-				continue;
-			}
-
-			if (S_ISREG (st.st_mode) || S_ISDIR (st.st_mode)) {
-				File::identify (top_level, f.c_str(), fd, st);
-			} else if (S_ISBLK (st.st_mode)) {
-				if (MAJOR (st.st_rdev) == LOOP_MAJOR) {
-					Loop::identify (top_level, f.c_str(), fd, st);
-				} else {
-					//Gpt::identify (top_level, f.c_str(), fd, st);
-				}
-			} else {
-				log_error ("can't probe something else");
-			}
-			close (fd);
-		}
-	} else {
-		Loop::discover (top_level, probe_queue);
-		//Gpt::discover (top_level, probe_queue);
-	}
-
-	// Process the probe_queue
-	ContainerPtr item;
-	while (!probe_queue.empty()) {
-		item = probe_queue.front();
-		probe_queue.pop();
-
-		log_debug ("Item: %s", item->dump().c_str());
-
-		std::uint64_t bufsize = item->bytes_size;
-		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
-
-		if (!buffer) {
-			log_error ("can't get buffer");
-			continue;
-		}
-
-		if (!probe (item, buffer, bufsize)) {
-			//XXX LOG -- should be logged upstream
-			break;
-		}
-	}
-
-#ifdef DP_LVM
-	LvmGroup::discover (top_level);
-#endif
-	//MdGroup::discover (top_level);
-
-	// Process the probe_queue
-	while (!probe_queue.empty()) {
-		item = probe_queue.front();
-		probe_queue.pop();
-
-		log_debug ("Item: %s", item->dump().c_str());
-
-		std::uint64_t bufsize = item->bytes_size;
-		std::uint8_t* buffer  = item->get_buffer (0, bufsize);
-
-		if (!buffer) {
-			log_error ("can't get buffer");
-			continue;
-		}
-
-		if (!probe (item, buffer, bufsize)) {
-			//XXX LOG -- should be logged upstream
-			break;
-		}
-	}
-	return top_level;
+	std::lock_guard<std::mutex> lock (thread_mutex);
+	thread_queue.push_back (std::thread (fn));
 }
 

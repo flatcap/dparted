@@ -69,7 +69,6 @@ protected:
 	virtual void on_open         (const type_vec_files& files, const Glib::ustring& hint);
 	virtual int  on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line);
 
-	void create_window (void);
 	void show_window   (void);
 
 	void menu_preferences (void);

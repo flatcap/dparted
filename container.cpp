@@ -26,11 +26,13 @@
 #include <cerrno>
 #include <cstring>
 #include <iterator>
+#include <mutex>
 #include <set>
 #include <sstream>
 #include <string>
 #include <typeinfo>
 
+#include "app.h"
 #include "container.h"
 #include "action.h"
 #include "log.h"
@@ -157,13 +159,12 @@ Container::create (void)
 bool
 Container::visit_children (Visitor& v)
 {
-	ContainerPtr c = get_smart();
-	if (!v.visit_enter(c))
+	ContainerPtr cont = get_smart();
+	if (!v.visit_enter(cont))
 		return false;
 
-	for (auto c : children) {
-		ContainerPtr p = parent.lock();
-		if (!c->accept(v))
+	for (auto child : children) {
+		if (!child->accept(v))
 			return false;
 	}
 
@@ -209,9 +210,21 @@ Container::perform_action (Action action)
 
 
 void
-Container::add_child (ContainerPtr& child)
+Container::add_child (ContainerPtr& child, bool probe)
 {
 	return_if_fail (child);
+	LOG_TRACE;
+
+	static void* TL = nullptr;
+
+	children.insert (child);
+	child->parent = get_smart();
+
+	if (probe)
+		main_app->queue_add_probe (child);
+
+	if (bytes_size == 0)	// We are a dummy device
+		return;
 
 	/* Check:
 	 *	available space
@@ -229,11 +242,29 @@ Container::add_child (ContainerPtr& child)
 #endif
 	bytes_used += child->bytes_size;
 
-	children.insert (child);
-
 	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
-	child->parent = get_smart();
+	ContainerPtr parent;
+	ContainerPtr p = get_parent();
+	while (p) {
+		parent = p;
+		p = p->get_parent();
+	}
+
+	const char* name = "";
+	if (parent) {
+		name = parent->name.c_str();
+	}
+	log_info ("TOPLEVEL = %p (%s)", (void*) parent.get(), name);
+
+	if (!TL) {
+		TL = parent.get();
+	}
+
+	if (TL != parent.get()) {
+		log_critical ("TOP LEVEL DOESN'T MATCH");
+	}
+
 #if 0
 	log_debug ("%12lu %12lu %12lu %12lu",
 		child->parent_offset,
@@ -241,15 +272,6 @@ Container::add_child (ContainerPtr& child)
 		child->bytes_used,
 		child->get_bytes_free());
 #endif
-}
-
-void
-Container::just_add_child (ContainerPtr& child)
-{
-	return_if_fail (child);
-
-	children.insert (child);
-	log_debug ("just: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 }
 
 void

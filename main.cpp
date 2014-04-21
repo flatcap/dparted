@@ -41,9 +41,10 @@ main (int argc, char *argv[])
 	log_callback_t my_log_cb = (log_callback_t) std::bind(&LogObject::log_line, &my_log, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
 #endif
 
-	log_init (Severity::AllDebug,  log_stdout);
-	log_init (~Severity::AllDebug, log_stdout);
-	// log_init (Severity::Ctor | Severity::Dtor, my_log_cb);
+	//Severity level = Severity::Thread | Severity::Enter | Severity::Leave; //Severity::Info | Severity::Enter | Severity::Leave | Severity::Ctor | Severity::Dtor;// ~Severity::AllDebug Severity::AllMessages
+	Severity level = Severity::AllMessages;
+
+	log_init (level, log_stdout);
 
 	int status = 0;
 

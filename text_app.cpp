@@ -16,7 +16,11 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <chrono>
 #include <cstring>
+#include <string>
+#include <thread>
+#include <vector>
 
 #include "text_app.h"
 #ifdef DP_LIST
@@ -170,7 +174,8 @@ TextApp::run (int argc, char **argv)
 		exit(1);
 	}
 
-	top_level = main_app->scan (disks);
+	ContainerPtr top_level = main_app->scan (disks, nullptr);
+	std::this_thread::sleep_for (std::chrono::seconds(2));
 
 #ifdef DP_DOT
 	if (dot) {
@@ -208,6 +213,7 @@ TextApp::run (int argc, char **argv)
 #ifdef DP_PROP
 	if (prop) run_prop (top_level);
 #endif
+
 	return 0;
 }
 

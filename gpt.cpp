@@ -160,14 +160,15 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	if (strncmp ((char*) buffer+512, "EFI PART", 8))	//XXX replace with strict identify function (static) and all other probes
 		return false;
 
-	// LBA		Description
-	// ---------------------------------
-	// 0		protective mbr
-	// 1		primary gpt header
-	// 2-33		128 gpt entries
-	// ...
-	// -33		128 gpt entries
-	// -1		secondary gpt header
+	/* LBA		Description
+	 * ---------------------------------
+	 * 0		protective mbr
+	 * 1		primary gpt header
+	 * 2-33		128 gpt entries
+	 * ...
+	 * -33		128 gpt entries
+	 * -1		secondary gpt header
+	 */
 
 	GptPtr g = create();
 
@@ -179,7 +180,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	g->block_size = 0;
 	g->uuid = read_guid (buffer+568);
 
-	parent->add_child(g);
+	parent->add_child (g, false);
 
 	// Assumption: 1MiB alignment (for now)
 	// Should reserved bits be allocated after actual partitions?
@@ -193,7 +194,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res1->bytes_size    = 512 * 34;		//align (512 * 34, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	g->add_child (res1);		// change to add_reserved?
+	g->add_child (res1, false);		// change to add_reserved?
 
 	PartitionPtr res2 = Partition::create();
 	res2->sub_type ("Space");
@@ -201,7 +202,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res2->bytes_size    = 512 * 33;		//align (512 * 33, 1024*1024);
 	res2->bytes_used    = res2->bytes_size;
 	res2->parent_offset = g->bytes_size - res2->bytes_size;		// End of the partition
-	g->add_child (res2);
+	g->add_child (res2, false);
 
 	delete_region (empty, 0, 34);
 
@@ -253,8 +254,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		log_debug ("\t\t\tfinish = %ld", le64_to_cpup (buffer+40) * 512);
 		log_debug ("\t\t\tsize   = %ld (%s)", p->bytes_size, s.c_str());
 
-		g->add_child(p);
-		main_app->queue_add_probe(p);
+		g->add_child (p, true);
 	}
 
 	for (auto r : empty) {
@@ -270,7 +270,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			p->sub_type ("Unallocated");
 			p->bytes_used = p->bytes_size;
 		}
-		g->add_child(p);		// change to add_reserved?
+		g->add_child (p, false);
 	}
 
 	return true;

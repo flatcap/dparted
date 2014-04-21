@@ -156,17 +156,6 @@ GuiApp::on_window_removed (Gtk::Window* window)
 
 
 void
-GuiApp::create_window (void)
-{
-	LOG_TRACE;
-
-	if (!window) {
-		window = std::make_shared<Window>();
-		add_window (*window);	// App now owns Window
-	}
-}
-
-void
 GuiApp::show_window (void)
 {
 	LOG_TRACE;
@@ -190,6 +179,7 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 	Gtk::Application::on_open (files, hint);
 }
 
+
 int
 GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
 {
@@ -212,11 +202,6 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		return EXIT_FAILURE;
 	}
 
-	std::vector<std::string> disks;			// Mop up any remaining args
-	for (; argc > 1; --argc, ++argv) {
-		disks.push_back (argv[1]);
-	}
-
 	bool running = !!window;
 
 	if (group.quit) {
@@ -228,7 +213,15 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		return EXIT_SUCCESS;
 	}
 
-	create_window();
+	if (!window) {
+		window = std::make_shared<Window>();
+		add_window (*window);		// App now owns Window
+	}
+
+	std::vector<std::string> disks;		// Mop up any remaining args
+	for (; argc > 1; --argc, ++argv) {
+		disks.push_back (argv[1]);
+	}
 
 	if (group.config.size()) {
 		log_debug ("config:");
@@ -253,6 +246,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		window->set_geometry (group.x, group.y, group.w, group.h);
 	}
 
+	window->scan (disks);
 	show_window();
 
 	return EXIT_SUCCESS;

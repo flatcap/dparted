@@ -38,7 +38,6 @@
 #include "tree_view.h"
 #include "drawing_area.h"
 
-class Container;
 class Window;
 
 typedef std::shared_ptr<Window> WindowPtr;
@@ -49,7 +48,6 @@ public:
 	Window();
 	virtual ~Window();
 
-	void set_data (GfxContainerPtr c);
 	bool set_focus (GfxContainerPtr cont);
 	GfxContainerPtr get_focus (void);
 
@@ -60,6 +58,7 @@ public:
 	void set_geometry (int x, int y, int w, int h);
 
 	void set_actions (std::vector<Action>& list);
+	void scan (std::vector<std::string>& devices);
 
 protected:
 	Gtk::Box		outer_box;	//XXX dynamically create the ones we don't care about?
@@ -71,6 +70,8 @@ protected:
 	DrawingArea		drawingarea;
 	TreeView		treeview;
 	Gtk::Statusbar		statusbar;
+
+	ContainerPtr		top_level;
 
 	virtual bool on_delete_event (GdkEventAny* event);
 
@@ -104,10 +105,6 @@ protected:
 
 	void my_realize (void);
 	void my_show (void);
-	bool my_idle (void);
-
-	ContainerPtr m_c;
-	GfxContainerPtr m_g;
 
 	GfxContainerPtr focus;
 	std::vector<GfxContainerPtr> selection;

@@ -19,15 +19,23 @@
 #ifndef _APP_H_
 #define _APP_H_
 
+#include <deque>
+#include <functional>
 #include <memory>
-#include <queue>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <vector>
 
 #include "question.h"
 #include "message.h"
 #include "config_file.h"
 #include "container.h"
+#include "thread.h"
 
 class App;
+
+typedef std::function<void(ContainerPtr)> scan_async_cb_t;
 
 typedef std::shared_ptr<App> AppPtr;
 
@@ -45,25 +53,19 @@ public:
 	ConfigFilePtr get_config (void);
 	bool set_config (const std::string& filename);
 
-	ContainerPtr scan (const std::vector<std::string>& files);
-	bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
-
-	ContainerPtr get_top_level (void) { return top_level; } //XXX tmp
-
-	template<class T>
-	void queue_add_probe (std::shared_ptr<T>& item)
-	{
-		ContainerPtr c (item);
-		queue_add_probe(c);
-	}
+	ContainerPtr scan (std::vector<std::string>& devices, scan_async_cb_t fn);
+	bool identify_device (ContainerPtr parent, std::string& device);
+	bool process_queue_item (ContainerPtr item);
 	void queue_add_probe (ContainerPtr& item);
 
 protected:
-	ContainerPtr top_level;
-
 	ConfigFilePtr config_file;
 
-	std::queue<ContainerPtr> probe_queue;
+	void start_thread (std::function<void(void)> fn);
+
+private:
+	std::mutex thread_mutex;
+	std::deque<std::thread> thread_queue;
 };
 
 

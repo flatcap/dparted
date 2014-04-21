@@ -190,7 +190,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			g->name    = tags["VG_NAME"];
 			g->uuid    = vg_uuid;
 			//g->missing = true;
-			pieces->just_add_child(g);
+			pieces->add_child(g, false);
 			++added;
 		}
 
@@ -201,7 +201,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			t = LvmTable::create();
 			t->uuid    = pv_uuid;
 			//t->missing = true;
-			pieces->just_add_child(t);
+			pieces->add_child(t, false);
 			++added;
 		}
 
@@ -236,7 +236,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 				p->bytes_size = size;
 				p->bytes_used = size;
 				p->parent_offset = offset;
-				t->add_child(p);
+				t->add_child (p, false);
 				continue;
 			} else {
 				log_error ("UNKNOWN type %s", segtype.c_str());
@@ -247,7 +247,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			log_debug ("lv uuid = %s", lv_uuid.c_str());
 			v->uuid    = lv_uuid;
 			//v->missing = true;
-			pieces->just_add_child(v);
+			pieces->add_child(v, false);
 			++added;
 
 			if (lv_attr[0] == '-') {
@@ -275,7 +275,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 		log_info ("add piece: %s (%s)", p->uuid.c_str(), p->name.c_str());
 
-		t->add_child (p);
+		t->add_child (p, false);
 	}
 
 	//XXX tag all the lvm_tables as missing
@@ -412,7 +412,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			g = LvmGroup::create();
 			g->uuid    = vg_uuid;
 			//g->missing = true;
-			pieces->just_add_child(g);
+			pieces->add_child(g, false);
 		}
 
 		std::string lv_uuid = tags["LVM2_LV_UUID"];
@@ -442,7 +442,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			}
 			v->uuid    = lv_uuid;
 			//v->missing = true;
-			pieces->just_add_child(v);
+			pieces->add_child(v, false);
 
 			// A volume discovered here doesn't have any physical parts.
 			// Therefore, it's a top-level entity.
@@ -539,7 +539,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		}
 
 		log_info ("add_child %s -> %s", parent->uuid.c_str(), child->uuid.c_str());
-		parent->add_child (child);
+		parent->add_child (child, false);
 
 		log_info ("\t%p -> %p", (void*) parent.get(), (void*) child.get());
 		log_info ("\t%s -> %s", parent->name.c_str(), child->name.c_str());
@@ -555,7 +555,7 @@ void
 LvmGroup::discover (ContainerPtr& top_level)
 {
 	return_if_fail (top_level);
-	LOG_TRACE;
+	LOG_THREAD;
 
 	ContainerPtr pieces = Container::create();
 	std::multimap<std::string,std::string> deps;
@@ -564,7 +564,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	log_info ("top_level: %ld tables", t.size());
 	for (auto i : t) {
-		pieces->just_add_child(i);
+		pieces->add_child(i, false);
 	}
 
 	if (lvm_pvs (pieces, deps) > 0) {
@@ -597,7 +597,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	for (auto i : g) {
 		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
-		top_level->just_add_child(i);
+		top_level->add_child(i, false);
 	}
 }
 

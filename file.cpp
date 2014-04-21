@@ -92,43 +92,10 @@ File::perform_action (Action action)
 }
 
 
-#if 0
-bool
-File::find_containers (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
-{
-	FilePtr f = File::create();
-
-	log_debug ("dev     = 0x%04lx", st.st_dev);
-	log_debug ("ino     = %ld",     st.st_ino);
-	log_debug ("nlink   = %ld",     st.st_nlink);
-	log_debug ("mode    = %06o",    st.st_mode);
-	log_debug ("uid     = %d",      st.st_uid);
-	log_debug ("gid     = %d",      st.st_gid);
-	log_debug ("rdev    = %ld",     st.st_rdev);
-	log_debug ("size    = %ld",     st.st_size);
-	log_debug ("blksize = %ld",     st.st_blksize);
-	log_debug ("blocks  = %ld",     st.st_blocks);
-	log_debug ("atime   = %ld",     st.st_atim.tv_sec);
-	log_debug ("mtime   = %ld",     st.st_mtim.tv_sec);
-	log_debug ("ctime   = %ld",     st.st_ctim.tv_sec);
-
-	f->container        = name;
-	f->parent_offset = 0;
-	f->bytes_size    = st.st_size;
-	f->bytes_used    = 0;
-
-	list.add_child(f);
-	queue_add_probe(f);	// queue the container for action
-
-	return true;
-}
-
-#endif
-
 void
-File::discover (ContainerPtr& UNUSED(top_level), std::queue<ContainerPtr>& UNUSED(probe_queue))
+File::discover (ContainerPtr& UNUSED(parent))
 {
-	LOG_TRACE;
+	LOG_THREAD;
 
 	// Config
 	//	[files]
@@ -141,9 +108,12 @@ File::discover (ContainerPtr& UNUSED(top_level), std::queue<ContainerPtr>& UNUSE
 	//	dir  => add dir/*.img
 }
 
-void
-File::identify (ContainerPtr& UNUSED(top_level), const char* UNUSED(name), int UNUSED(fd), struct stat& UNUSED(st))
+bool
+File::identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& UNUSED(st))
 {
+	return_val_if_fail (parent, false);
+	return_val_if_fail (!name.empty(), false);
+	return_val_if_fail (fd>=0, false);
 	LOG_TRACE;
 
 	/* dir:
@@ -151,5 +121,7 @@ File::identify (ContainerPtr& UNUSED(top_level), const char* UNUSED(name), int U
 	 * file:
 	 *	We create, and manage, a loop container for this file
 	 */
+
+	return false;
 }
 

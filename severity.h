@@ -69,6 +69,7 @@ enum class Severity {
 	File		= (1 << 25),            // File opened/closed/mmaped
 	Ctor		= (1 << 26),		// Constructor
 	Dtor		= (1 << 27),		// Destructor
+	Thread		= (1 << 28),		// Thread started
 
 	// Handy shortcuts
 	AllMessages	= ~0,
@@ -79,7 +80,7 @@ enum class Severity {
 	AllWarning	= Warning,
 	AllNotice	= Verbose | User,
 	AllInfo		= Info | Progress | Quiet | Command,
-	AllDebug	= Debug | Trace | CommandIn | CommandOut | IoIn | IoOut | Dot | Hex | ConfigRead | ConfigWrite | Enter | Leave | File | Ctor | Dtor
+	AllDebug	= Debug | Trace | CommandIn | CommandOut | IoIn | IoOut | Dot | Hex | ConfigRead | ConfigWrite | Enter | Leave | File | Ctor | Dtor | Thread
 };
 
 #endif // _SEVERITY_H_

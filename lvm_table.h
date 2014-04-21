@@ -43,13 +43,13 @@ public:
 	static bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 	template<class T>
-	void add_child (std::shared_ptr<T>& child)
+	void add_child (std::shared_ptr<T>& child, bool probe)
 	{
 		ContainerPtr c (child);
-		add_child(c);
+		add_child (c, probe);
 	}
 
-	virtual void add_child (ContainerPtr& child);
+	virtual void add_child (ContainerPtr& child, bool probe);
 	virtual bool set_alignment (std::uint64_t bytes);
 
 public:

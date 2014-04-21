@@ -16,12 +16,15 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
+#include <chrono>
+#include <sstream>
+#include <thread>
+
 #include <gtkmm/stock.h>
 #include <giomm/simpleactiongroup.h>
 #include <glibmm.h>
 #include <giomm/menu.h>
-
-#include <algorithm>
 
 #include "window.h"
 #include "action.h"
@@ -55,7 +58,6 @@ Window::Window (void)
 
 	signal_realize().connect (sigc::mem_fun (*this, &Window::my_realize));
 	signal_show().connect (sigc::mem_fun (*this, &Window::my_show));
-	Glib::signal_idle().connect (sigc::mem_fun (*this, &Window::my_idle));
 
 	set_default_icon_name ("dparted");
 
@@ -127,17 +129,26 @@ Window::my_show (void)
 	resize (800, 250);
 }
 
-bool
-Window::my_idle (void)
-{
-	std::vector<std::string> files;
-	ContainerPtr c = gui_app->scan (files);
-	log_debug ("%ld", c->get_children().size());
-	GfxContainerPtr dummy;
-	m_g = GfxContainer::create (dummy, c);
-	set_data (m_g);
 
-	return false;
+void scan_callback (ContainerPtr c)
+{
+	std::stringstream ss;
+	ss << "\033[01;33mScan callback: " << (void*) c.get() << "\033[0m";
+	log_debug (ss);
+}
+
+void
+Window::scan (std::vector<std::string>& devices)
+{
+	top_level = gui_app->scan(devices, nullptr);
+
+	GfxContainerPtr g = GfxContainer::create (nullptr, top_level);
+	try {
+		treeview.init_treeview(g);
+	} catch (...) {
+		log_error ("exception");
+	}
+	drawingarea.set_data(g);
 }
 
 
@@ -189,18 +200,6 @@ Window::get_focus (void)
 {
 	return focus;
 }
-
-void
-Window::set_data (GfxContainerPtr c)
-{
-	try {
-		treeview.init_treeview(c);
-	} catch (...) {
-		log_error ("exception");
-	}
-	drawingarea.set_data(c);
-}
-
 
 void
 Window::load_config (const std::string& UNUSED(filename))

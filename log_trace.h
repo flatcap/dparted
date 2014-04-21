@@ -20,6 +20,7 @@
 #define _LOG_TRACE_H_
 
 #include <string>
+#include <thread>
 
 #include "log_macro.h"
 
@@ -28,29 +29,39 @@
 
 #ifdef DEBUG
 #define LOG_TRACE		LogTrace __le(__PRETTY_FUNCTION__, __FILE__, __LINE__)
+#define LOG_THREAD		LogTrace __lt(__PRETTY_FUNCTION__, __FILE__, __LINE__, "thread")
 #else
 #define LOG_TRACE		do {} while (0)
+#define LOG_THREAD		do {} while (0)
 #endif
 
 class LogTrace
 {
 public:
-	LogTrace (const std::string& function, const std::string& file_name, int line_num) :
+	LogTrace (const std::string& function, const std::string& file_name, int line_num, const char *extra = nullptr) :
 		m_function (function),
 		m_file_name (file_name),
 		m_line_num (line_num)
 	{
-		log_enter ("Entering: %s -- %s:%d", m_function.c_str(), m_file_name.c_str(), m_line_num);
+		if (extra)
+			m_extra = std::string(" ") + extra;
+
+		std::thread::id thread_id = std::this_thread::get_id();
+		std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
+		log_enter ("Entering%s %s (%ld) -- %s:%d", m_extra.c_str(), m_function.c_str(), tid, m_file_name.c_str(), m_line_num);
 	}
 
 	virtual ~LogTrace()
 	{
-		log_leave ("Leaving:  %s -- %s", m_function.c_str(), m_file_name.c_str());
+		std::thread::id thread_id = std::this_thread::get_id();
+		std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
+		log_leave ("Leaving%s  %s (%ld) -- %s", m_extra.c_str(), m_function.c_str(), tid, m_file_name.c_str());
 	}
 
 protected:
 	std::string	m_function;
 	std::string	m_file_name;
+	std::string	m_extra;
 	int		m_line_num;
 
 private:
