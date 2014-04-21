@@ -130,6 +130,11 @@ mounts_get_list (ContainerPtr& mounts)
 
 	command = "grep '^/dev' /proc/mounts";
 	execute_command_out (command, output);
+	/* retval:
+	 *	0 matches
+	 *	1 no matches
+	 *	2 file doesn't exist
+	 */
 
 	for (unsigned int i = 0; i < output.size(); ++i) {
 		std::string line = output[i];

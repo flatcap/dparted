@@ -244,12 +244,20 @@ LuksTable::is_mounted (const std::string& device)
 
 	std::vector<std::string> output;
 	int retcode = execute_command_out (command, output);
-	//XXX log the output if it exists
+	/* retval:
+	 *	0 success, a luks device
+	 *	1 invalid command
+	 *	1 not a luks device
+	 *	4 device doesn't exist
+	 */
 
 	// Return codes:
 	//	0	YES a luks device
 	//	256	NO not a luks device
 	//	1024	INVALID device (doesn't exist or access denied)
+
+	//XXX log the output if it exists
+
 	return (retcode == 0);
 }
 
@@ -265,6 +273,13 @@ LuksTable::is_luks (const std::string& device)
 
 	std::vector<std::string> output;
 	int retcode = execute_command_out (command, output);
+	/* retval:
+	 *	0 success, a luks device
+	 *	1 invalid command
+	 *	1 failed, no a luks device
+	 *	4 device doesn't exist
+	 */
+
 	//XXX log the output if it exists
 
 	// Return codes:
@@ -305,6 +320,12 @@ LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 
 		std::string password = "password";
 		execute_command_in (command, password, false);
+		/* retval:
+		 *	0 success, device unlocked
+		 *	1 invalid command
+		 *	1 device doesn't exist
+		 *	2 invalid password
+		 */
 		we_opened_this_device = true;
 	}
 

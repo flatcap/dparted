@@ -169,6 +169,11 @@ btrfs_show_super (const std::string& dev)
 
 	command = "btrfs-show-super " + dev;
 	execute_command_out (command, output);
+	/* retval:
+	 *	0 match,    magic _BHRfS_M [match]
+	 *	0 no match, magic ........ [DON'T MATCH]
+	 *	1 file doesn't exist
+	 */
 
 	std::string key;
 	std::string value;

@@ -615,20 +615,39 @@ DotVisitor::run_dotty (void)
 		}
 		std::string command = "dot -Tpng | display -title \"" + title + "\"" + size + " - &";
 		execute_command_in (command, input);
+		/* retval:
+		 *	0 always.  dot retval is lost, display doesn't notify on error
+		 */
 	}
 
 	if (save_gv) {
 		dir = "gv_" + now;
-		execute_command_in ("mkdir --parents " + dir, nothing);
+		execute_command_in ("mkdir --parents " + dir, nothing);	//XXX call mkdir(2) directly
+		/* retval:
+		 *	0 success
+		 *	1 failure
+		 */
 		std::string command = "cat > " + dir + "/$RANDOM.gv";
 		execute_command_in (command, input);
+		/* retval:
+		 *	0 success
+		 *	1 failure
+		 */
 	}
 
 	if (save_png) {
 		dir = "png_" + now;
-		execute_command_in ("mkdir --parents " + dir, nothing);
+		execute_command_in ("mkdir --parents " + dir, nothing);	//XXX call mkdir(2) directly
+		/* retval:
+		 *	0 success
+		 *	1 failure
+		 */
 		std::string command = "dot -Tpng > " + dir + "/$RANDOM.png";
 		execute_command_in (command, input);
+		/* retval:
+		 *	0 success
+		 *	1 failed to create file
+		 */
 	}
 }
 
