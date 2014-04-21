@@ -141,6 +141,7 @@ Container::~Container()
 {
 	if (fd >= 0) {
 		close (fd);
+		log_file ("file close: %d", fd);
 		fd = -1;
 	}
 	log_dtor ("dtor Container");
@@ -312,7 +313,7 @@ Container::get_fd (void)
 		log_error ("failed to open device %s", device.c_str());
 		return -1;
 	}
-	log_debug ("opened device %s (%d)", device.c_str(), newfd);
+	log_file ("file open: %d, '%s'", newfd, device.c_str());
 
 	fd = newfd;
 

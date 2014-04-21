@@ -239,7 +239,7 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 
 	LoopPtr l = create (output[0]);
 
-	size = lseek (fd, 0, SEEK_END);
+	size = lseek (fd, 0, SEEK_END);	//XXX isn't the stat buf enough?
 
 	l->device        = name;
 	l->parent_offset = 0;
