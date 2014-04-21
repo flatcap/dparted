@@ -54,12 +54,12 @@ App::App (void)
 App::~App()
 {
 	{	// Scope
-		std::lock_guard<std::mutex> lock (thread_mutex);
-		for (auto& i : vt) {
+		for (auto& i : thread_queue) {
 			i.join();	// Wait for things to finish
 			//i.detach();	// Don't wait any longer
 		}
-		vt.clear();
+		std::lock_guard<std::mutex> lock (thread_mutex);
+		thread_queue.clear();
 	}
 
 	log_dtor ("dtor App");
@@ -146,7 +146,7 @@ void
 App::queue_add_probe (ContainerPtr& item)
 {
 	return_if_fail (item);
-	THREAD (std::bind (&App::process_queue_item, this, item)).detach();
+	start_thread (std::bind (&App::process_queue_item, this, item));
 }
 
 bool
@@ -195,25 +195,25 @@ App::scan (std::vector<std::string>& devices)
 
 	if (devices.empty()) {
 		// Check all device types at once
-		THREAD (std::bind (&Disk::discover,     top_level)).detach();
-		THREAD (std::bind (&File::discover,     top_level)).detach();
-		THREAD (std::bind (&Loop::discover,     top_level)).detach();
+		start_thread (std::bind (&Disk::discover,     top_level));
+		start_thread (std::bind (&File::discover,     top_level));
+		start_thread (std::bind (&Loop::discover,     top_level));
 #ifdef DP_LVM
-		THREAD (std::bind (&LvmGroup::discover, top_level)).detach();
+		start_thread (std::bind (&LvmGroup::discover, top_level));
 #endif
 	} else {
 		//XXX need to spot Lvm Groups
 		for (auto i : devices) {
 			// Examine all the devices in parallel
-			THREAD (std::bind (&App::identify_device, this, top_level, i)).detach();
+			start_thread (std::bind (&App::identify_device, this, top_level, i));
 		}
 	}
 
-	std::lock_guard<std::mutex> lock (thread_mutex);
-	for (auto& i : vt) {
-		i.join();
+	while (!thread_queue.empty()) {
+		thread_queue.front().join();
+		std::lock_guard<std::mutex> lock (thread_mutex);
+		thread_queue.pop_front();	//mutex
 	}
-	vt.clear();
 
 	return top_level;
 }
@@ -249,6 +249,6 @@ void
 App::start_thread (std::function<void(void)> fn)
 {
 	std::lock_guard<std::mutex> lock (thread_mutex);
-	vt.push_back (std::thread (fn));
+	thread_queue.push_back (std::thread (fn));
 }
 

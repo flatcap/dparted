@@ -19,8 +19,13 @@
 #ifndef _APP_H_
 #define _APP_H_
 
+#include <deque>
+#include <functional>
 #include <memory>
-#include <queue>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <vector>
 
 #include "question.h"
 #include "message.h"
@@ -53,14 +58,14 @@ public:
 	bool process_queue_item (ContainerPtr item);
 	void queue_add_probe (ContainerPtr& item);
 
-	void start_thread (std::function<void(void)> fn);
-
 protected:
 	ConfigFilePtr config_file;
 
+	void start_thread (std::function<void(void)> fn);
+
 private:
 	std::mutex thread_mutex;
-	std::vector<std::thread> vt;
+	std::deque<std::thread> thread_queue;
 };
 
 
