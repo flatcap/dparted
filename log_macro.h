@@ -1,7 +1,7 @@
 #ifndef _LOG_MACRO_H_
 #define _LOG_MACRO_H_
 
-#include "severity.h"
+#include "log_severity.h"
 
 #ifdef DP_LOG_CHECK
 #define log_system_emergency log_redirect

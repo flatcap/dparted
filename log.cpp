@@ -26,7 +26,7 @@
 #include <vector>
 
 #include "log.h"
-#include "severity.h"
+#include "log_severity.h"
 #include "utils.h"
 
 static std::multimap<Severity,log_callback_t> log_mux;

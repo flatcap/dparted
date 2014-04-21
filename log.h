@@ -23,7 +23,7 @@
 #include <sstream>
 #include <vector>
 
-#include "severity.h"
+#include "log_severity.h"
 #include "log_macro.h"
 
 typedef std::function<void(Severity level, const char* function, const char* file, int line, const char* message)> log_callback_t;

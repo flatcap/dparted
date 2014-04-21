@@ -58,7 +58,7 @@ SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_object.cpp message.cpp pro
 SRC	+= main.cpp
 
 # Misc header files
-HDR	+= log_trace.h mmap.h stringnum.h visitor.h
+HDR	+= log_trace.h mmap.h stringnum.h visitor.h log_severity.h
 
 CFLAGS-$(BTRFS)		+= -DDP_BTRFS
 CFLAGS-$(DOT)		+= -DDP_DOT
