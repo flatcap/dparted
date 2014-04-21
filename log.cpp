@@ -30,6 +30,7 @@
 #include "utils.h"
 
 static std::multimap<Severity,log_callback_t> log_mux;
+static int depth = 0;
 
 std::mutex log_active;
 
@@ -83,6 +84,8 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 	std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
 #endif
 
+	if ((level & Severity::Leave) == Severity::Leave) --depth;
+
 	if (log_mux.empty()) {
 		log_stdout (level, function, file, line, message);
 	} else {
@@ -92,6 +95,8 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 			}
 		}
 	}
+
+	if ((level & Severity::Enter) == Severity::Enter) ++depth;
 }
 
 /**
