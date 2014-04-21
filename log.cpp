@@ -37,6 +37,7 @@ std::mutex log_active;
 void
 log_stdout (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
 {
+	//fprintf (stdout, "%*s", (depth*4), "");	// indent
 	fprintf (stdout, "%s\n", message);
 }
 

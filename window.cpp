@@ -140,7 +140,7 @@ void scan_callback (ContainerPtr c)
 void
 Window::scan (std::vector<std::string>& devices)
 {
-	top_level = gui_app->scan(devices, scan_callback);
+	top_level = gui_app->scan(devices, nullptr);
 
 	GfxContainerPtr g = GfxContainer::create (nullptr, top_level);
 	try {

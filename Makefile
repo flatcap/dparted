@@ -35,10 +35,9 @@ MD	?= 1
 MSDOS	?= 1
 NTFS	?= 1
 PROP	?= 1
-UNUSED	?= 1
+UNUSED	?= 0
 
 CC	= g++	#clang++
-SCAN	= scan-build
 RM	= rm -fr
 MKDIR	= mkdir -p
 
