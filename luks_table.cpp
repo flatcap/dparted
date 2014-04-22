@@ -240,17 +240,19 @@ bool
 LuksTable::is_mounted (const std::string& device)
 {
 	std::string command = "sudo cryptsetup status " + device;
-	log_debug ("Command: %s", command.c_str());
-
 	std::vector<std::string> output;
-	int retcode = execute_command_out (command, output);
+
+	int retval = execute_command_out (command, output);
+	/* retval:
+	 *	0 success, a luks device
+	 *	1 invalid command
+	 *	1 not a luks device
+	 *	4 device doesn't exist
+	 */
+
 	//XXX log the output if it exists
 
-	// Return codes:
-	//	0	YES a luks device
-	//	256	NO not a luks device
-	//	1024	INVALID device (doesn't exist or access denied)
-	return (retcode == 0);
+	return (retval == 0);
 }
 
 bool
@@ -261,17 +263,19 @@ LuksTable::is_luks (const std::string& device)
 	// is already mounted?		cryptsetup status
 
 	std::string command = "sudo cryptsetup isLuks " + device;
-	log_debug ("Command: %s", command.c_str());
-
 	std::vector<std::string> output;
-	int retcode = execute_command_out (command, output);
+
+	int retval = execute_command_out (command, output);
+	/* retval:
+	 *	0 success, a luks device
+	 *	1 invalid arguments
+	 *	1 failed, not a luks device
+	 *	4 device doesn't exist
+	 */
+
 	//XXX log the output if it exists
 
-	// Return codes:
-	//	0	YES a luks device
-	//	256	NO not a luks device
-	//	1024	INVALID device (doesn't exist or access denied)
-	return (retcode == 0);
+	return (retval == 0);
 }
 
 
@@ -301,10 +305,21 @@ LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
 	//XXX check that the luks device matches the parent device
 	if (!is_mounted (mapper)) {
 		std::string command = "sudo cryptsetup open --type luks " + parent + " luks-" + uuid;
-		log_debug ("Command: %s", command.c_str());
-
 		std::string password = "password";
-		execute_command_in (command, password, false);
+
+		int retval = execute_command_in (command, password, false);
+		/* retval:
+		 *	0 success, device unlocked
+		 *	1 invalid arguments
+		 *	2 invalid password
+		 *	4 luks device doesn't exist
+		 */
+		if (retval == 2) {
+			log_info ("invalid password for luks device %s", uuid.c_str());
+			return false;
+		} else if (retval != 0) {
+			return false;
+		}
 		we_opened_this_device = true;
 	}
 
@@ -334,9 +349,17 @@ bool
 LuksTable::luks_close (void)
 {
 	//XXX close all dependents first, e.g. umount X, vgchange -an, etc
-	std::string command = "cryptsetup close " + device;
-	log_debug ("Command: %s", command.c_str());
-	return false;
+	std::string command = "sudo cryptsetup close " + device;
+	std::vector<std::string> output;
+
+	int retval = execute_command_out (command, output);
+	/* retval:
+	 *	0 success, luks device closed
+	 *	1 invalid arguments
+	 *	4 luks device doesn't exist
+	 */
+
+	return (retval == 0);
 }
 
 

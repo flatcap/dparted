@@ -37,7 +37,7 @@ NTFS	?= 1
 PROP	?= 1
 UNUSED	?= 0
 
-CC	= g++	#clang++
+CXX	?= g++
 RM	= rm -fr
 MKDIR	= mkdir -p
 
@@ -58,7 +58,7 @@ SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_object.cpp message.cpp pro
 SRC	+= main.cpp
 
 # Misc header files
-HDR	+= log_trace.h mmap.h stringnum.h visitor.h
+HDR	+= log_trace.h mmap.h stringnum.h visitor.h log_severity.h
 
 CFLAGS-$(BTRFS)		+= -DDP_BTRFS
 CFLAGS-$(DOT)		+= -DDP_DOT
@@ -183,8 +183,8 @@ endif
 # ----------------------------------------------------------------------------
 
 $(OBJDIR)/%.o: %.cpp
-	$(QUIET_CC)$(CC) $(CFLAGS) -c $< -o $@ && (										\
-	$(CC) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;						\
+	$(QUIET_CC)$(CXX) $(CFLAGS) -c $< -o $@ && (										\
+	$(CXX) -MM $(CFLAGS) -c $< | sed 's/.*:/'$(OBJDIR)'\/\0/' > $(DEPDIR)/$*.d;						\
 	cp -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp;										\
 	sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d;		\
 	rm -f $(DEPDIR)/$*.d.tmp)
@@ -192,7 +192,7 @@ $(OBJDIR)/%.o: %.cpp
 # ----------------------------------------------------------------------------
 
 $(OUT):	$(OBJ)
-	$(QUIET_LINK)$(CC) -o $@ $(OBJ) $(LDFLAGS)
+	$(QUIET_LINK)$(CXX) -o $@ $(OBJ) $(LDFLAGS)
 
 $(DEPDIR) $(OBJDIR):
 	$(Q)$(MKDIR) $@

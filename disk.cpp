@@ -220,11 +220,17 @@ Disk::lsblk (std::vector <std::string>& output, std::string device)
 
 	output.clear();
 	//XXX distinguish between zero devices and an error
-	execute_command_out (command, output);
+	int retval = execute_command_out (command, output);
+	/* retval:
+	 *	0 matches
+	 *	0 no matches
+	 *	1 invalid device
+	 *	1 invalid arguments
+	 */
 	if (output.empty())
 		return false;
 
-	return true;
+	return (retval == 0);
 }
 
 void

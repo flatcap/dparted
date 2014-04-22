@@ -168,7 +168,17 @@ btrfs_show_super (const std::string& dev)
 	std::map<std::string,std::string> results;
 
 	command = "btrfs-show-super " + dev;
-	execute_command_out (command, output);
+	int retval = execute_command_out (command, output);
+	/* retval:
+	 *	0 match,    magic _BHRfS_M [match]
+	 *	0 no match, magic ........ [DON'T MATCH]
+	 *	1 device doesn't exist
+	 *	1 invalid arguments
+	 */
+
+	if (retval != 0) {
+		return {};
+	}
 
 	std::string key;
 	std::string value;

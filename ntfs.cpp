@@ -175,6 +175,12 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 
 	command = "ntfsinfo --mft " + dev;
 	execute_command_out (command, output);	//XXX return value?
+	/* retval:
+	 *	0 success, ntfs volume
+	 *	1 failed, not an ntfs volume
+	 *	1 device doesn't exist
+	 *	1 invalid options
+	 */
 
 	more_props.reserve (output.size());	// if this vector is reallocated the app will die
 

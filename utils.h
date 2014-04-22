@@ -33,11 +33,8 @@ std::string              demangle (const char* symbol);
 void                     dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length);
 void                     dump_hex (std::uint8_t* buffer, std::uint64_t bufsize);
 void                     dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::uint64_t>>& region);
-
-unsigned int             execute_command_out (const std::string& command, std::vector<std::string>& output, bool log_output = true, bool log_command = true);
-unsigned int             execute_command_in  (const std::string& command, std::string& input, bool log_input = true, bool log_command = true);
-
-unsigned int             execute_command3 (const std::string& command, std::string& output);
+int                      execute_command_in  (const std::string& command, std::string& input, bool log_input = true, bool log_command = true);
+int                      execute_command_out (const std::string& command, std::vector<std::string>& output, bool log_output = true, bool log_command = true);
 unsigned int             explode (const char* separators, const std::string& input, std::vector<std::string>& parts);
 unsigned int             explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max);
 std::vector<std::string> get_backtrace (bool reverse = false);
@@ -53,5 +50,4 @@ std::string              read_uuid3 (std::uint8_t* buffer);
 std::string              shorten_device (const std::string& device);
 
 #endif // _UTILS_H_
-
 

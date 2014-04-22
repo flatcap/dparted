@@ -22,7 +22,7 @@
 #include <string>
 #include <cstdio>
 
-#include "severity.h"
+#include "log_severity.h"
 
 class LogObject
 {

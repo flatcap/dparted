@@ -124,12 +124,16 @@ mounts_get_list (ContainerPtr& mounts)
 {
 	return_val_if_fail (mounts, 0);
 
-	std::string command;
+	std::string command = "grep '^/dev' /proc/mounts";
 	std::vector<std::string> output;
-	std::string error;
 
-	command = "grep '^/dev' /proc/mounts";
-	execute_command_out (command, output);
+	int retval = execute_command_out (command, output);
+	/* retval:
+	 *	0 matches
+	 *	1 no matches
+	 *	1 invalid arguments
+	 *	2 file doesn't exist
+	 */
 
 	for (unsigned int i = 0; i < output.size(); ++i) {
 		std::string line = output[i];
@@ -163,12 +167,14 @@ App::identify_device (ContainerPtr parent, std::string& device)
 		log_error ("can't open file %s", device.c_str());	//XXX perror
 		return false;
 	}
+	log_file ("file open: %d, '%s'", fd, device.c_str());
 
 	struct stat st;
 	int res = fstat (fd, &st);
 	if (res < 0) {
 		log_error ("stat on %s failed", device.c_str());	//XXX perror
 		close (fd);
+		log_file ("file close: %d", fd);
 		return false;
 	}
 
@@ -178,10 +184,12 @@ App::identify_device (ContainerPtr parent, std::string& device)
 	else {
 		log_error ("can't identify device: %s", device.c_str());
 		close (fd);
+		log_file ("file close: %d", fd);
 		return false;
 	}
 
 	close (fd);
+	log_file ("file close: %d", fd);
 	return true;
 }
 

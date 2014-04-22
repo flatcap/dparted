@@ -61,11 +61,11 @@ DrawingArea::DrawingArea (void)
 	set_has_tooltip();	// We'll be handling the tooltips ourself
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &DrawingArea::on_textview_query_tooltip));
 
-	m_Menu_Popup.signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
+	menu_popup.signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
 
 	// Lambdas to let us know when the popup menu is in use.
-	m_Menu_Popup.signal_show().connect ([this] { menu_active = true;  });
-	m_Menu_Popup.signal_hide().connect ([this] { menu_active = false; });
+	menu_popup.signal_show().connect ([this] { menu_active = true;  });
+	menu_popup.signal_hide().connect ([this] { menu_active = false; });
 }
 
 DrawingArea::~DrawingArea()
@@ -370,7 +370,7 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	checker_rect (cr, shape, 5);
 #else
 	draw_grid (cr, shape);
-	draw_grid_linear (cr, shape, m_c->bytes_size);
+	draw_grid_linear (cr, shape, c->bytes_size);
 	fill_rect (cr, shape, "white");
 #endif
 	shape.h = cont_height;
@@ -395,7 +395,7 @@ DrawingArea::on_timeout (int timer_number)
 {
 	log_debug ("timer");
 	get_window()->invalidate (false); // everything for now
-	//return (m_c->device == "/dev/sdc");
+	//return (c->device == "/dev/sdc");
 	return true;
 }
 
@@ -1196,14 +1196,14 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 {
 	return_if_fail (gfx);
 
-	std::vector<Widget*> items = m_Menu_Popup.get_children();
+	std::vector<Widget*> items = menu_popup.get_children();
 	for (auto i : items) {
-		m_Menu_Popup.remove(*i);
+		menu_popup.remove(*i);
 	}
 
 	std::string section;
 	std::string key;
-	Gtk::Menu*     index_menu = &m_Menu_Popup;
+	Gtk::Menu*     index_menu = &menu_popup;
 	Gtk::MenuItem* index_item = nullptr;
 
 	actions.insert (actions.begin(), { "---",        true });
@@ -1223,7 +1223,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 		if (pos == std::string::npos) {
 			section.clear();
 			key = a.name;
-			index_menu = &m_Menu_Popup;
+			index_menu = &menu_popup;
 			index_item = nullptr;
 		} else {
 			std::string s = a.name.substr (0, pos);
@@ -1235,7 +1235,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 				Gtk::Menu*     sub_menu = Gtk::manage (new Gtk::Menu());
 				Gtk::MenuItem* sub_item = Gtk::manage (new Gtk::MenuItem (section, true));
 
-				m_Menu_Popup.append (*sub_item);
+				menu_popup.append (*sub_item);
 				sub_item->set_submenu (*sub_menu);
 				sub_item->set_sensitive(false);		// default to off
 
@@ -1266,9 +1266,9 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 		}
 	}
 
-	m_Menu_Popup.accelerate (*this);
+	menu_popup.accelerate (*this);
 #if 1
-	m_Menu_Popup.show_all();
+	menu_popup.show_all();
 #endif
 }
 
@@ -1380,7 +1380,7 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 	setup_popup (gfx, actions);
 
 	// Lamba to position popup menu
-	m_Menu_Popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
+	menu_popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
 }
 
 bool
@@ -1389,7 +1389,7 @@ DrawingArea::popup_on_keypress (GdkEventKey* ev)
 	return_val_if_fail (ev, false);
 
 	if (ev->keyval == GDK_KEY_Menu) {
-		m_Menu_Popup.popdown();
+		menu_popup.popdown();
 		return true;
 	}
 

@@ -250,7 +250,7 @@ void
 Window::on_menu_choices (const Glib::ustring& parameter)
 {
 	//The radio action's state does not change automatically:
-	m_refChoice->change_state (parameter);
+	choice->change_state (parameter);
 
 	Glib::ustring message;
 	if (parameter == "a") {
@@ -266,7 +266,7 @@ void
 Window::on_menu_choices_other (int parameter)
 {
 	//The radio action's state does not change automatically:
-	m_refChoiceOther->change_state (parameter);
+	choice_other->change_state (parameter);
 
 	Glib::ustring message;
 	if (parameter == 1) {
@@ -323,10 +323,10 @@ void
 Window::on_menu_toggle (void)
 {
 	bool active = false;
-	m_refToggle->get_state (active);
+	toggle->get_state (active);
 
 	//The toggle action's state does not change automatically:
-	m_refToggle->change_state (!active);
+	toggle->change_state (!active);
 	active = !active;
 
 	Glib::ustring message;
@@ -347,9 +347,9 @@ Window::on_menu_view (int option)
 	bool val = false;
 	switch (option) {
 		case 1:
-			m_refViewGfx ->get_state (val);
+			view_gfx ->get_state (val);
 			val = !val;
-			m_refViewGfx->change_state (val);
+			view_gfx->change_state (val);
 			if (val) {
 				drawingarea.show_all();
 			} else {
@@ -357,9 +357,9 @@ Window::on_menu_view (int option)
 			}
 			break;
 		case 2:
-			m_refViewTree->get_state (val);
+			view_tree->get_state (val);
 			val = !val;
-			m_refViewTree->change_state (val);
+			view_tree->change_state (val);
 			if (val) {
 				treeview.show_all();
 			} else {
@@ -367,9 +367,9 @@ Window::on_menu_view (int option)
 			}
 			break;
 		case 3:
-			m_refViewToolbar->get_state (val);
+			view_toolbar->get_state (val);
 			val = !val;
-			m_refViewToolbar->change_state (val);
+			view_toolbar->change_state (val);
 			if (val) {
 				toolbar->show_all();
 			} else {
@@ -377,9 +377,9 @@ Window::on_menu_view (int option)
 			}
 			break;
 		case 4:
-			m_refViewStatus->get_state (val);
+			view_status->get_state (val);
 			val = !val;
-			m_refViewStatus->change_state (val);
+			view_status->change_state (val);
 			if (val) {
 				statusbar.show_all();
 			} else {
@@ -420,7 +420,7 @@ Window::init_shortcuts (void)
 		i->signal_activate().connect (sigc::bind<int,int> (sigc::mem_fun (*this, &Window::on_keypress), k.first, k.second));
 		i->add_accelerator ("activate", accel, k.second, (Gdk::ModifierType) k.first, Gtk::ACCEL_VISIBLE);
 		i->show();
-		m_fake_menu.append (*i);
+		fake_menu.append (*i);
 	}
 
 	add_accel_group (accel);
@@ -494,7 +494,7 @@ Window::init_actions (void)
 void
 Window::init_menubar (Gtk::Box& box)
 {
-	m_refBuilder = Gtk::Builder::create();
+	builder = Gtk::Builder::create();
 
 	//Layout the actions in a menubar and toolbar:
 	Glib::ustring ui_info =
@@ -681,12 +681,12 @@ Window::init_menubar (Gtk::Box& box)
 		"</menu></interface>";
 
 	try {
-		m_refBuilder->add_from_string (ui_info);
+		builder->add_from_string (ui_info);
 	} catch (const Glib::Error& ex) {
 		log_debug ("building menus failed: %s", ex.what().c_str());
 	}
 
-	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object ("dparted-menu");
+	Glib::RefPtr<Glib::Object> object = builder->get_object ("dparted-menu");
 	Glib::RefPtr<Gio::MenuModel> gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic (object);
 	if (!gmenu)
 		g_warning ("GMenu not found");

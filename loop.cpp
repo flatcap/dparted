@@ -189,11 +189,17 @@ Loop::losetup (std::vector <std::string>& output, std::string device)
 
 	output.clear();
 	//XXX distinguish between zero loop devices and an error
-	execute_command_out (command, output);
+	int retval = execute_command_out (command, output);
+	/* retval:
+	 *	0 matches
+	 *	0 no matches
+	 *	1 device doesn't exist
+	 *	1 invalid arguments
+	 */
 	if (output.empty())
 		return false;
 
-	return true;
+	return (retval == 0);
 }
 
 void
@@ -239,7 +245,7 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 
 	LoopPtr l = create (output[0]);
 
-	size = lseek (fd, 0, SEEK_END);
+	size = lseek (fd, 0, SEEK_END);	//XXX isn't the stat buf enough?
 
 	l->device        = name;
 	l->parent_offset = 0;

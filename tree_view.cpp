@@ -124,12 +124,12 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 
 		if (display) {
 			if (parent) {
-				row = *(m_refTreeModel->append (parent->children()));
+				row = *(tree_model->append (parent->children()));
 			} else {
-				row = *(m_refTreeModel->append());
+				row = *(tree_model->append());
 			}
 
-			x->treepath = m_refTreeModel->get_string (row);
+			x->treepath = tree_model->get_string (row);
 
 			std::string dev = x->device;
 			std::size_t pos = dev.find_last_of ('/');
@@ -492,8 +492,8 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 	add_column<std::string> (col_rec, col, 0.0, 0);
 	append_column (*col);
 
-	m_refTreeModel = Gtk::TreeStore::create (col_rec);
-	set_model (m_refTreeModel);
+	tree_model = Gtk::TreeStore::create (col_rec);
+	set_model (tree_model);
 
 	set_level_indentation (10);
 
@@ -532,7 +532,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 #if 1
 		tooltip->set_text (path.to_string());
 #else
-		Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter (path);
+		Gtk::TreeModel::iterator iter = tree_model->get_iter (path);
 		Gtk::TreeModel::Row row = *iter;
 		tooltip->set_text (row[col_name] + ":" + row[col_type]);
 #endif
@@ -557,7 +557,7 @@ TreeView::set_focus (GfxContainerPtr& c)
 
 	Gtk::TreeModel::iterator it = treeselection->get_selected();
 	if (it) {
-		std::string current_path = m_refTreeModel->get_string (*it);
+		std::string current_path = tree_model->get_string (*it);
 		if (c->treepath == current_path)
 			return;
 	}
@@ -596,17 +596,17 @@ TreeView::setup_popup (void)
 	for (unsigned int i = 0; i < list.size(); ++i) {
 		item = Gtk::manage (new Gtk::MenuItem (list[i], true));
 		item->signal_activate().connect (sigc::bind<int> (sigc::mem_fun (*this, &TreeView::on_menu_select), i));
-		m_Menu_Popup.append (*item);
+		menu_popup.append (*item);
 	}
 
-	m_Menu_Popup.accelerate (*this);
-	m_Menu_Popup.show_all();
+	menu_popup.accelerate (*this);
+	menu_popup.show_all();
 
-	m_Menu_Popup.signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::popup_on_keypress));
+	menu_popup.signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::popup_on_keypress));
 
 	// Lambdas to let us know when the popup menu is in use.
-	m_Menu_Popup.signal_show().connect ([this] { menu_active = true;  });
-	m_Menu_Popup.signal_hide().connect ([this] { menu_active = false; });
+	menu_popup.signal_show().connect ([this] { menu_active = true;  });
+	menu_popup.signal_hide().connect ([this] { menu_active = false; });
 
 	signal_key_press_event().connect (sigc::mem_fun (*this, &TreeView::on_keypress));
 }
@@ -671,7 +671,7 @@ TreeView::get_coords (int& x, int& y)
 	int ty = 0;
 	Gtk::TreeModel::iterator it = treeselection->get_selected();
 	if (it) {
-		Gtk::TreeModel::Path path = m_refTreeModel->get_path (it);
+		Gtk::TreeModel::Path path = tree_model->get_path (it);
 		Gdk::Rectangle rect;
 		get_cell_area (path, *get_column(0), rect);
 		log_debug ("rect: %d,%d,%d,%d", rect.get_x(), rect.get_y(), rect.get_width(), rect.get_height());
@@ -689,14 +689,14 @@ void
 TreeView::popup_menu (int x, int y)
 {
 	// Lamba to position popup menu
-	m_Menu_Popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
+	menu_popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
 }
 
 bool
 TreeView::popup_on_keypress (GdkEventKey* ev)
 {
 	if (ev->keyval == GDK_KEY_Menu) {
-		m_Menu_Popup.popdown();
+		menu_popup.popdown();
 		return true;
 	}
 
