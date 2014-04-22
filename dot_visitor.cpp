@@ -614,7 +614,7 @@ DotVisitor::run_dotty (void)
 			size = " -resize " + std::to_string (resize) + "%";
 		}
 		std::string command = "dot -Tpng | display -title \"" + title + "\"" + size + " - &";
-		execute_command_in (command, input);
+		/*int retval =*/ execute_command_in (command, input);
 		/* retval:
 		 *	0 always.  dot retval is lost, display doesn't notify on error
 		 */
@@ -622,32 +622,47 @@ DotVisitor::run_dotty (void)
 
 	if (save_gv) {
 		dir = "gv_" + now;
-		execute_command_in ("mkdir --parents " + dir, nothing);	//XXX call mkdir(2) directly
+		int retval = execute_command_in ("mkdir --parents " + dir, nothing);	//XXX call mkdir(2) directly
 		/* retval:
 		 *	0 success
 		 *	1 failure
+		 *	1 invalid arguments
 		 */
+		if (retval != 0) {
+			return;
+		}
 		std::string command = "cat > " + dir + "/$RANDOM.gv";
-		execute_command_in (command, input);
+		retval = execute_command_in (command, input);
 		/* retval:
 		 *	0 success
 		 *	1 failure
+		 *	1 invalid arguments
 		 */
+		if (retval != 0) {
+			return;
+		}
 	}
 
 	if (save_png) {
 		dir = "png_" + now;
-		execute_command_in ("mkdir --parents " + dir, nothing);	//XXX call mkdir(2) directly
+		int retval = execute_command_in ("mkdir --parents " + dir, nothing);	//XXX call mkdir(2) directly
 		/* retval:
 		 *	0 success
 		 *	1 failure
+		 *	1 invalid arguments
 		 */
+		if (retval != 0) {
+			return;
+		}
 		std::string command = "dot -Tpng > " + dir + "/$RANDOM.png";
-		execute_command_in (command, input);
+		retval = execute_command_in (command, input);
 		/* retval:
 		 *	0 success
 		 *	1 failed to create file
 		 */
+		if (retval != 0) {
+			return;
+		}
 	}
 }
 

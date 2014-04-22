@@ -148,13 +148,16 @@ tune2fs (const std::string& dev)
 	std::map<std::string,std::string> results;
 
 	command = "tune2fs -l " + dev;		// list contents of filesystem superblock
-	execute_command_out (command, output);
+	int retval = execute_command_out (command, output);
 	/* retval:
 	 *	0 success
 	 *	1 not extfs
 	 *	1 device doesn't exist
-	 *	1 invalid options
+	 *	1 invalid arguments
 	 */
+	if (retval != 0) {
+		return {};
+	}
 
 	std::string key;
 	std::string value;

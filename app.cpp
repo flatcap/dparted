@@ -124,15 +124,14 @@ mounts_get_list (ContainerPtr& mounts)
 {
 	return_val_if_fail (mounts, 0);
 
-	std::string command;
+	std::string command = "grep '^/dev' /proc/mounts";
 	std::vector<std::string> output;
-	std::string error;
 
-	command = "grep '^/dev' /proc/mounts";
-	execute_command_out (command, output);
+	int retval = execute_command_out (command, output);
 	/* retval:
 	 *	0 matches
 	 *	1 no matches
+	 *	1 invalid arguments
 	 *	2 file doesn't exist
 	 */
 

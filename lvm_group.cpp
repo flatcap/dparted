@@ -173,7 +173,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 		}
 	}
 
-	execute_command_out (command, output);
+	int retval = execute_command_out (command, output);
 	/* retval:
 	 *	0 matches
 	 *	0 no matches
@@ -181,6 +181,9 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 	 *	5 device isn't a lvm table
 	 *	5 device doesn't exist
 	 */
+	if (retval != 0) {
+		return 0;
+	}
 
 	for (auto line : output) {
 		log_debug ("OUT: %s", line.c_str());
@@ -331,13 +334,16 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			command += " " + i->name;
 	}
 
-	execute_command_out (command, output);
+	int retval = execute_command_out (command, output);
 	/* retval:
 	 *	0 matches
 	 *	0 no matches
 	 *	3 unknown option
 	 *	5 lvm group doesn't exist
 	 */
+	if (retval != 0) {
+		return;
+	}
 
 	for (auto line : output) {
 		log_debug ("OUT: %s", line.c_str());
@@ -412,13 +418,16 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			command += " " + i->name;
 	}
 
-	execute_command_out (command, output);
+	int retval = execute_command_out (command, output);
 	/* retval:
 	 *	0 matches
 	 *	0 no matches
 	 *	3 unknown option
 	 *	5 lvm group doesn't exist
 	 */
+	if (retval != 0) {
+		return;
+	}
 
 	for (auto line : output) {
 		log_debug ("OUT: %s", line.c_str());

@@ -203,7 +203,7 @@ dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::
 /**
  * execute_command_out - output (vector<string>)
  */
-unsigned int
+int
 execute_command_out (const std::string& command, std::vector<std::string>& output, bool log_output /*=true*/, bool log_command /*=true*/)
 {
 	FILE* file = nullptr;
@@ -249,18 +249,20 @@ execute_command_out (const std::string& command, std::vector<std::string>& outpu
 		return -1;
 	}
 
+	retcode = WEXITSTATUS (retcode);
+
 	if (log_command) {
 		log_command ("command returned %d", retcode);
 	}
 
-	return WEXITSTATUS (retcode);
+	return retcode;
 }
 
 /**
  * execute_command_in - input (string)
  */
-unsigned int
-execute_command_in  (const std::string& command, std::string& input, bool log_input /*=true*/, bool log_command /*=true*/)
+int
+execute_command_in (const std::string& command, std::string& input, bool log_input /*=true*/, bool log_command /*=true*/)
 {
 	FILE* file = nullptr;
 
@@ -287,11 +289,13 @@ execute_command_in  (const std::string& command, std::string& input, bool log_in
 		return -1;
 	}
 
+	retcode = WEXITSTATUS (retcode);
+
 	if (log_command) {
 		log_command ("command returned %d", retcode);
 	}
 
-	return WEXITSTATUS (retcode);
+	return retcode;
 }
 
 unsigned int
