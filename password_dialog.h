@@ -48,7 +48,6 @@ public:
 
 private:
 	std::weak_ptr<PasswordDialog> self;
-
 };
 
 #endif // _PASSWORD_DIALOG_H_

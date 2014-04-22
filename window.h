@@ -56,9 +56,8 @@ public:
 	void load_disk   (const std::string& filename);
 
 	void set_geometry (int x, int y, int w, int h);
-
 	void set_actions (std::vector<Action>& list);
-	void scan (std::vector<std::string>& devices);
+	void set_data (ContainerPtr c);
 
 protected:
 	Gtk::Box		outer_box;	//XXX dynamically create the ones we don't care about?
@@ -96,8 +95,6 @@ protected:
 	void on_action_general (std::string section, std::string name);
 
 	std::map<std::string,Glib::RefPtr<Gio::SimpleAction>> action_map;
-
-private:
 };
 
 

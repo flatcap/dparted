@@ -130,28 +130,6 @@ Window::my_show (void)
 }
 
 
-void scan_callback (ContainerPtr c)
-{
-	std::stringstream ss;
-	ss << "\033[01;33mScan callback: " << (void*) c.get() << "\033[0m";
-	log_debug (ss);
-}
-
-void
-Window::scan (std::vector<std::string>& devices)
-{
-	top_level = gui_app->scan(devices, nullptr);
-
-	GfxContainerPtr g = GfxContainer::create (nullptr, top_level);
-	try {
-		treeview.init_treeview(g);
-	} catch (...) {
-		log_error ("exception");
-	}
-	drawingarea.set_data(g);
-}
-
-
 bool
 Window::on_delete_event (GdkEventAny* UNUSED(event))
 {
@@ -614,4 +592,19 @@ Window::on_action_general (std::string section, std::string name)
 	c->perform_action (a);
 }
 
+void
+Window::set_data (ContainerPtr c)
+{
+	return_if_fail(c);
+	LOG_TRACE;
+
+	top_level = c;
+	GfxContainerPtr g = GfxContainer::create (nullptr, top_level);
+	try {
+		treeview.init_treeview(g);
+	} catch (...) {
+		log_error ("exception");
+	}
+	drawingarea.set_data(g);
+}
 

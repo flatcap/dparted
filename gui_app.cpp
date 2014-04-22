@@ -16,6 +16,13 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+#include <chrono>
+#include <functional>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include <gtkmm/object.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/settings.h>
@@ -182,6 +189,16 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 }
 
 
+void
+GuiApp::scan_callback (ContainerPtr c)
+{
+	return_if_fail(c);
+	return_if_fail(window);
+	LOG_TRACE;
+
+	window->set_data(c);
+}
+
 int
 GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
 {
@@ -248,8 +265,9 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		window->set_geometry (group.x, group.y, group.w, group.h);
 	}
 
-	window->scan (disks);
 	show_window();
+
+	ContainerPtr top_level = scan (disks, std::bind(&GuiApp::scan_callback, this, std::placeholders::_1));
 
 	return EXIT_SUCCESS;
 }
@@ -450,7 +468,9 @@ GuiApp::set_theme (const std::string& filename)
 void
 GuiApp::on_dispatch (void)
 {
+#if 0
 	Gtk::MessageDialog dialog ("What's up doc?", false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
 	dialog.run();
+#endif
 }
 

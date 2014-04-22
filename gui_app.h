@@ -86,6 +86,7 @@ protected:
 	WindowPtr window;
 	Glib::Dispatcher dispatcher;
 	void on_dispatch (void);
+	void scan_callback (ContainerPtr c);
 };
 
 
