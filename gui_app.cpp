@@ -46,6 +46,8 @@ GuiApp::GuiApp (void) :
 	log_ctor ("ctor GuiApp");
 	LOG_TRACE;
 	Glib::set_application_name ("dparted");
+
+	dispatcher.connect (sigc::mem_fun (*this, &GuiApp::on_dispatch));
 }
 
 GuiApp::~GuiApp()
@@ -59,7 +61,7 @@ GuiApp::my_idle (void)
 {
 	LOG_TRACE;
 	//XXX check that dialog's object hasn't gone away
-	if (false && passwd) {
+	if (passwd) {
 		passwd->set_title ("Password for X");
 		passwd->set_message ("text message");
 		passwd->set_secondary_text ("secondary text");
@@ -338,6 +340,13 @@ GuiApp::ask (QuestionPtr q)
 {
 	return_val_if_fail (q, false);
 
+	dispatcher.emit();
+	return false;
+
+	PasswordDialogPtr p = PasswordDialog::create();
+	p->title = "LuksTable";
+	ask_pass(p);
+	return true;
 	//vq.push_back (q);
 	Gtk::MessageDialog dialog (q->question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
 
@@ -435,5 +444,13 @@ GuiApp::set_theme (const std::string& filename)
 	//tp->dump_config();
 
 	return true;
+}
+
+
+void
+GuiApp::on_dispatch (void)
+{
+	Gtk::MessageDialog dialog ("What's up doc?", false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
+	dialog.run();
 }
 

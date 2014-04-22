@@ -20,6 +20,7 @@
 #define _GUI_APP_H_
 
 #include <gtkmm/application.h>
+#include <glibmm/dispatcher.h>
 #include <memory>
 
 #include "app.h"
@@ -83,6 +84,8 @@ protected:
 	PasswordDialogPtr passwd;
 	ThemePtr theme;
 	WindowPtr window;
+	Glib::Dispatcher dispatcher;
+	void on_dispatch (void);
 };
 
 

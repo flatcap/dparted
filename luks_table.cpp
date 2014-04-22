@@ -209,20 +209,20 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	log_info ("\tstripes:       %u",   l->pass1_stripes);
 
 #endif
-#if 0
+#if 1
 	question_cb_t fn = std::bind(&LuksTable::on_reply, l, std::placeholders::_1);
 	QuestionPtr q = Question::create (l, fn);
 	q->title = "Enter Password";
 	q->question = "for luks device " + l->device;
 	q->answers = { "Cancel", "Done" };
+
+	main_app->ask (q);
 #endif
 #if 0
 	PasswordDialogPtr p = PasswordDialog::create();
 	p->title = "LuksTable";
 	gui_app->ask_pass (p);
 #endif
-
-	//main_app->ask (q);
 
 	parent->add_child (l, false);
 

@@ -42,7 +42,7 @@ main (int argc, char *argv[])
 #endif
 
 	//Severity level = Severity::Thread | Severity::Enter | Severity::Leave; //Severity::Info | Severity::Enter | Severity::Leave | Severity::Ctor | Severity::Dtor;// ~Severity::AllDebug Severity::AllMessages
-	Severity level = Severity::File;
+	Severity level = Severity::AllMessages;
 
 	log_init (level, log_stdout);
 
