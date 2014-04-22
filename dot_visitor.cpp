@@ -22,7 +22,9 @@
 
 #include "dot_visitor.h"
 #include "container.h"
+#ifdef DP_LOOP
 #include "loop.h"
+#endif
 #ifdef DP_GPT
 #include "gpt.h"
 #endif

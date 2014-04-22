@@ -25,11 +25,11 @@
 #include <sstream>
 #include <string>
 
-#include "file.h"
 #include "action.h"
 #include "log.h"
 #include "visitor.h"
 #include "utils.h"
+#include "file.h"
 
 File::File (void)
 {

@@ -28,11 +28,11 @@
 
 #include "action.h"
 #include "app.h"
-#include "disk.h"
 #include "log.h"
 #include "property.h"
 #include "utils.h"
 #include "visitor.h"
+#include "disk.h"
 
 Disk::Disk (void)
 {

@@ -26,17 +26,23 @@
 #include "btrfs.h"
 #endif
 #include "container.h"
+#ifdef DP_DISK
 #include "disk.h"
+#endif
 #ifdef DP_EXTFS
 #include "extfs.h"
 #endif
+#ifdef DP_FILE
 #include "file.h"
+#endif
 #include "filesystem.h"
 #ifdef DP_GPT
 #include "gpt.h"
 #include "gpt_partition.h"
 #endif
+#ifdef DP_LOOP
 #include "loop.h"
+#endif
 #ifdef DP_LUKS
 #include "luks_partition.h"
 #include "luks_table.h"
@@ -87,20 +93,26 @@ public:
 #ifdef DP_BTRFS
 	virtual bool visit (BtrfsPtr          p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
 #endif
+#ifdef DP_DISK
 	virtual bool visit (DiskPtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
+#endif
 #ifdef DP_MSDOS
 	virtual bool visit (ExtendedPtr       p) { return visit (std::dynamic_pointer_cast<Msdos>     (p)); }
 #endif
 #ifdef DP_EXTFS
 	virtual bool visit (ExtfsPtr          p) { return visit (std::dynamic_pointer_cast<Filesystem>(p)); }
 #endif
+#ifdef DP_FILE
 	virtual bool visit (FilePtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
+#endif
 	virtual bool visit (FilesystemPtr     p) { return visit (std::dynamic_pointer_cast<Container> (p)); }
 #ifdef DP_GPT
 	virtual bool visit (GptPartitionPtr   p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
 	virtual bool visit (GptPtr            p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }
 #endif
+#ifdef DP_LOOP
 	virtual bool visit (LoopPtr           p) { return visit (std::dynamic_pointer_cast<Block>     (p)); }
+#endif
 #ifdef DP_LUKS
 	virtual bool visit (LuksPartitionPtr  p) { return visit (std::dynamic_pointer_cast<Partition> (p)); }
 	virtual bool visit (LuksTablePtr      p) { return visit (std::dynamic_pointer_cast<Table>     (p)); }

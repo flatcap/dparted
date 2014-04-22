@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with DParted.  If not, see <http://www.gnu.org/licenses/>.
 
+# ----------------------------------------------------------------------------
+
 # Configurables
 # A=All, V=Verbose, P=Profiling, L=LogCheck, D=Debug
 A	?= 0
@@ -23,21 +25,32 @@ V	?= 0
 P	?= 0
 L	?= 0
 D	?= 1
+
+GUI	?= 1
+
+DISK	?= $(A)
+FILE	?= $(A)
+LOOP	?= 1
+LVM	?= $(A)
+
+GPT	?= $(A)
+MSDOS	?= $(A)
+MD	?= $(A)
+LUKS	?= 1
+
 BTRFS	?= $(A)
-DOT	?= $(A)
 EXTFS	?= 1
 FS_MISC	?= $(A)
-GPT	?= $(A)
-GUI	?= 1
-HEX	?= $(A)
-LIST	?= $(A)
-LUKS	?= 1
-LVM	?= $(A)
-MD	?= $(A)
-MSDOS	?= $(A)
 NTFS	?= $(A)
+
+LIST	?= $(A)
 PROP	?= $(A)
+DOT	?= $(A)
+HEX	?= $(A)
+
 UNUSED	?= $(A)
+
+# ----------------------------------------------------------------------------
 
 CXX	?= g++
 RM	= rm -fr
@@ -51,7 +64,7 @@ OUT	= dparted
 LINKS	= misc test
 
 # Core Objects
-SRC	+= block.cpp container.cpp disk.cpp file.cpp filesystem.cpp loop.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
+SRC	+= block.cpp container.cpp filesystem.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
 SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_object.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp
@@ -63,13 +76,16 @@ SRC	+= main.cpp
 HDR	+= log_trace.h mmap.h stringnum.h visitor.h log_severity.h
 
 CFLAGS-$(BTRFS)		+= -DDP_BTRFS
+CFLAGS-$(DISK)		+= -DDP_DISK
 CFLAGS-$(DOT)		+= -DDP_DOT
 CFLAGS-$(EXTFS)		+= -DDP_EXTFS
+CFLAGS-$(FILE)		+= -DDP_FILE
 CFLAGS-$(FS_MISC)	+= -DDP_FS_MISC
 CFLAGS-$(GPT)		+= -DDP_GPT
 CFLAGS-$(GUI)		+= -DDP_GUI
 CFLAGS-$(HEX)		+= -DDP_HEX
 CFLAGS-$(LIST)		+= -DDP_LIST
+CFLAGS-$(LOOP)		+= -DDP_LOOP
 CFLAGS-$(LUKS)		+= -DDP_LUKS
 CFLAGS-$(LVM)		+= -DDP_LVM
 CFLAGS-$(MD)		+= -DDP_MD
@@ -79,13 +95,16 @@ CFLAGS-$(PROP)		+= -DDP_PROP
 CFLAGS-$(UNUSED)	+= -DDP_UNUSED
 
 SRC-$(BTRFS)		+= btrfs.cpp
+SRC-$(DISK)		+= disk.cpp
 SRC-$(DOT)		+= dot_visitor.cpp
 SRC-$(EXTFS)		+= extfs.cpp
+SRC-$(FILE)		+= file.cpp
 SRC-$(FS_MISC)		+= fs_get.cpp fs_identify.cpp fs_usage.cpp
 SRC-$(GPT)		+= gpt.cpp gpt_partition.cpp
 SRC-$(GUI)		+= base_drawing_area.cpp default_theme.cpp drawing_area.cpp gfx_container.cpp gui_app.cpp option_group.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp theme.cpp tree_view.cpp window.cpp
 SRC-$(HEX)		+= hex_visitor.cpp
 SRC-$(LIST)		+= list_visitor.cpp
+SRC-$(LOOP)		+= loop.cpp
 SRC-$(LUKS)		+= luks_partition.cpp luks_table.cpp
 SRC-$(LVM)		+= lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp
 SRC-$(MD)		+= md_linear.cpp md_mirror.cpp md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp
@@ -127,11 +146,11 @@ CFLAGS	+= -DHB_DISABLE_DEPRECATED
 CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
 CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 
-# bug in ccache
-#CFLAGS	+= -Qunused-arguments
-
 #CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
 #CFLAGS	+= -DG_DISABLE_DEPRECATED
+
+# bug in ccache
+#CFLAGS	+= -Qunused-arguments
 
 PACKAGES += libconfig++
 ifeq ($(GUI),1)

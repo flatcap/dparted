@@ -31,15 +31,21 @@
 #include <linux/kdev_t.h>
 
 #include "app.h"
-#include "disk.h"
-#include "file.h"
 #include "filesystem.h"
 #include "log.h"
-#include "loop.h"
 #include "misc.h"
 #include "table.h"
 #include "thread.h"
 #include "utils.h"
+#ifdef DP_DISK
+#include "disk.h"
+#endif
+#ifdef DP_FILE
+#include "file.h"
+#endif
+#ifdef DP_LOOP
+#include "loop.h"
+#endif
 #ifdef DP_LVM
 #include "lvm_group.h"
 #endif
@@ -178,9 +184,16 @@ App::identify_device (ContainerPtr parent, std::string& device)
 		return false;
 	}
 
-	     if (File::identify (parent, device, fd, st)) {}
+	if (false) {}
+#ifdef DP_FILE
+	else if (File::identify (parent, device, fd, st)) {}
+#endif
+#ifdef DP_LOOP
 	else if (Loop::identify (parent, device, fd, st)) {}
+#endif
+#ifdef DP_DISK
 	else if (Disk::identify (parent, device, fd, st)) {}
+#endif
 	else {
 		log_error ("can't identify device: %s", device.c_str());
 		close (fd);
@@ -208,9 +221,15 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 
 	if (devices.empty()) {
 		// Check all device types at once
+#ifdef DP_DISK
 		start_thread (std::bind (&Disk::discover,     top_level));
+#endif
+#ifdef DP_FILE
 		start_thread (std::bind (&File::discover,     top_level));
+#endif
+#ifdef DP_LOOP
 		start_thread (std::bind (&Loop::discover,     top_level));
+#endif
 #ifdef DP_LVM
 		start_thread (std::bind (&LvmGroup::discover, top_level));
 #endif
