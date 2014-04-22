@@ -39,7 +39,9 @@ public:
 #ifdef DP_GPT
 	virtual bool visit (GptPtr        p);
 #endif
+#ifdef DP_LOOP
 	virtual bool visit (LoopPtr       p);
+#endif
 	virtual bool visit (MiscPtr       p);
 #ifdef DP_MSDOS
 	virtual bool visit (MsdosPtr      p);

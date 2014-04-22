@@ -360,6 +360,7 @@ DotVisitor::visit (ContainerPtr c)
 	return true;
 }
 
+#ifdef DP_LOOP
 /**
  * visit (LoopPtr)
  */
@@ -375,6 +376,7 @@ DotVisitor::visit (LoopPtr l)
 	return true;
 }
 
+#endif
 #ifdef DP_GPT
 /**
  * visit (GptPtr)
