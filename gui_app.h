@@ -63,6 +63,8 @@ public:
 	void on_action_plugin     (void);
 	void on_action_help       (void);
 
+	virtual bool open_uri (const std::string& uri);
+
 protected:
 	virtual void on_activate (void);
 	virtual void on_startup  (void);

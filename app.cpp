@@ -300,3 +300,11 @@ App::start_thread (std::function<void(void)> fn)
 	thread_queue.push_back (std::thread (fn));
 }
 
+
+bool
+App::open_uri (const std::string& uri)
+{
+	log_error ("Can't open uri: %s\n", uri.c_str());
+	return false;
+}
+

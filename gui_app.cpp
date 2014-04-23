@@ -470,3 +470,18 @@ GuiApp::on_dispatch (void)
 
 }
 
+
+bool
+GuiApp::open_uri (const std::string& uri)
+{
+	GError *error = NULL;
+	gtk_show_uri (nullptr, uri.c_str(), 0, &error);
+	if (error) {
+		log_error ("Can't open uri: %s\n", error->message);
+		g_error_free (error);
+		return false;
+	}
+
+	return true;
+}
+
