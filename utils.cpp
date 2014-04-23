@@ -204,14 +204,14 @@ dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::
  * execute_command_out - output (vector<string>)
  */
 int
-execute_command_out (const std::string& command, std::vector<std::string>& output, bool log_output /*=true*/, bool log_command /*=true*/)
+execute_command_out (const std::string& command, std::vector<std::string>& output, bool log_output /*=true*/, bool log_cmd /*=true*/)
 {
 	FILE* file = nullptr;
 	char* ptr = nullptr;
 	std::size_t n = 0;
 	int count = 0;
 
-	if (log_command) {
+	if (log_cmd) {
 		log_command ("running command: '%s'", command.c_str());
 	}
 
@@ -251,7 +251,7 @@ execute_command_out (const std::string& command, std::vector<std::string>& outpu
 
 	retcode = WEXITSTATUS (retcode);
 
-	if (log_command) {
+	if (log_cmd) {
 		log_command ("command returned %d", retcode);
 	}
 
@@ -262,11 +262,11 @@ execute_command_out (const std::string& command, std::vector<std::string>& outpu
  * execute_command_in - input (string)
  */
 int
-execute_command_in (const std::string& command, std::string& input, bool log_input /*=true*/, bool log_command /*=true*/)
+execute_command_in (const std::string& command, const std::string& input, bool log_input /*=true*/, bool log_cmd /*=true*/)
 {
 	FILE* file = nullptr;
 
-	if (log_command) {
+	if (log_cmd) {
 		log_command ("running command: '%s'", command.c_str());
 	}
 
@@ -291,7 +291,7 @@ execute_command_in (const std::string& command, std::string& input, bool log_inp
 
 	retcode = WEXITSTATUS (retcode);
 
-	if (log_command) {
+	if (log_cmd) {
 		log_command ("command returned %d", retcode);
 	}
 

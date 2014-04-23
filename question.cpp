@@ -32,7 +32,7 @@ Question::~Question()
 
 
 QuestionPtr
-Question::create (ContainerPtr UNUSED(c), question_cb_t fn)
+Question::create (question_cb_t fn)
 {
 	QuestionPtr q (new Question());
 	q->self = q;

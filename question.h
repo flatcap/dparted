@@ -35,7 +35,7 @@ class Question
 {
 public:
 	virtual ~Question();
-	static QuestionPtr create (ContainerPtr c, question_cb_t fn);
+	static QuestionPtr create (question_cb_t fn);
 
 	std::string title;
 	std::string question;
@@ -53,6 +53,8 @@ public:
 		Error,
 		Password
 	} type = Type::Information;
+
+	std::string reply;
 
 protected:
 	Question (void);

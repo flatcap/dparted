@@ -130,28 +130,6 @@ Window::my_show (void)
 }
 
 
-void scan_callback (ContainerPtr c)
-{
-	std::stringstream ss;
-	ss << "\033[01;33mScan callback: " << (void*) c.get() << "\033[0m";
-	log_debug (ss);
-}
-
-void
-Window::scan (std::vector<std::string>& devices)
-{
-	top_level = gui_app->scan(devices, nullptr);
-
-	GfxContainerPtr g = GfxContainer::create (nullptr, top_level);
-	try {
-		treeview.init_treeview(g);
-	} catch (...) {
-		log_error ("exception");
-	}
-	drawingarea.set_data(g);
-}
-
-
 bool
 Window::on_delete_event (GdkEventAny* UNUSED(event))
 {
@@ -243,150 +221,6 @@ Window::set_geometry (int x, int y, int w, int h)
 	get_size (width, height);
 	move (1920+1366-width, 768-height);
 #endif
-}
-
-
-void
-Window::on_menu_choices (const Glib::ustring& parameter)
-{
-	//The radio action's state does not change automatically:
-	choice->change_state (parameter);
-
-	Glib::ustring message;
-	if (parameter == "a") {
-		message = "Choice a was selected.";
-	} else {
-		message = "Choice b was selected";
-	}
-
-	log_debug (message);
-}
-
-void
-Window::on_menu_choices_other (int parameter)
-{
-	//The radio action's state does not change automatically:
-	choice_other->change_state (parameter);
-
-	Glib::ustring message;
-	if (parameter == 1) {
-		message = "Choice 1 was selected.";
-	} else {
-		message = "Choice 2 was selected";
-	}
-
-	log_debug (message);
-}
-
-void
-Window::on_menu_file_new_generic (void)
-{
-	log_debug ("A File|New menu item was selected.");
-}
-
-void
-Window::on_menu_file_quit (void)
-{
-	bool ask_user = true;
-	bool quit_app = false;
-
-	ConfigFilePtr cfg = gui_app->get_config();
-	if (cfg) {
-		ask_user = cfg->get_bool ("confirmation.quit_application");
-	}
-
-	if (ask_user) {
-		ContainerPtr c;
-		QuestionPtr q = Question::create (c, [] (QuestionPtr UNUSED(q)) { log_debug ("reply"); } );
-		q->title = "Quit Application?";
-		q->question = "Are you sure?";
-		q->answers = { "No", "Yes" };
-		gui_app->ask (q);
-
-		quit_app = (q->result == 1);
-	} else {
-		quit_app = true;
-	}
-
-	if (quit_app) {
-		hide();
-	}
-}
-
-void
-Window::on_menu_others (void)
-{
-	log_debug ("A menu item was selected.");
-}
-
-void
-Window::on_menu_toggle (void)
-{
-	bool active = false;
-	toggle->get_state (active);
-
-	//The toggle action's state does not change automatically:
-	toggle->change_state (!active);
-	active = !active;
-
-	Glib::ustring message;
-	if (active) {
-		message = "Toggle is active.";
-	} else {
-		message = "Toggle is not active";
-	}
-
-	log_debug (message);
-}
-
-void
-Window::on_menu_view (int option)
-{
-	log_debug ("on_menu_view: %d", option);
-
-	bool val = false;
-	switch (option) {
-		case 1:
-			view_gfx ->get_state (val);
-			val = !val;
-			view_gfx->change_state (val);
-			if (val) {
-				drawingarea.show_all();
-			} else {
-				drawingarea.hide();
-			}
-			break;
-		case 2:
-			view_tree->get_state (val);
-			val = !val;
-			view_tree->change_state (val);
-			if (val) {
-				treeview.show_all();
-			} else {
-				treeview.hide();
-			}
-			break;
-		case 3:
-			view_toolbar->get_state (val);
-			val = !val;
-			view_toolbar->change_state (val);
-			if (val) {
-				toolbar->show_all();
-			} else {
-				toolbar->hide();
-			}
-			break;
-		case 4:
-			view_status->get_state (val);
-			val = !val;
-			view_status->change_state (val);
-			if (val) {
-				statusbar.show_all();
-			} else {
-				statusbar.hide();
-			}
-			break;
-	}
 }
 
 
@@ -758,4 +592,19 @@ Window::on_action_general (std::string section, std::string name)
 	c->perform_action (a);
 }
 
+void
+Window::set_data (ContainerPtr c)
+{
+	return_if_fail(c);
+	LOG_TRACE;
+
+	top_level = c;
+	GfxContainerPtr g = GfxContainer::create (nullptr, top_level);
+	try {
+		treeview.init_treeview(g);
+	} catch (...) {
+		log_error ("exception");
+	}
+	drawingarea.set_data(g);
+}
 

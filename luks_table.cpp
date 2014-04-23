@@ -177,17 +177,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	//l->device      = "/dev/mapper/luks-" + l->uuid;
 
 	log_debug ("Parent: %s", parent->get_device_name().c_str());
-	l->luks_open (parent->get_device_name(), false);
 
-	PartitionPtr p = Partition::create();
-	p->sub_type ("Space");
-	p->sub_type ("Reserved");
-
-	p->bytes_size = l->header_size;
-	p->bytes_used = l->header_size;
-	l->add_child (p, false);
-
-#if 0
 	log_info ("LUKS:");
 	log_info ("\tversion:       %u", l->version);
 	log_info ("\tcipher name:   %s", l->cipher_name.c_str());
@@ -199,8 +189,6 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	log_info ("\tMK digest:     %s", l->mk_digest.c_str());
 	log_info ("\tMK salt:       %s", l->mk_digest_salt.c_str());
 	log_info ("\tMK iterations: %u", l->mk_digest_iterations);
-#endif
-#if 0
 
 	log_info ("\tactive:        %08X", l->pass1_active);
 	log_info ("\titerations:    %u",   l->pass1_iterations);
@@ -208,31 +196,27 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	log_info ("\tkey offset:    %u",   l->pass1_key_offset);
 	log_info ("\tstripes:       %u",   l->pass1_stripes);
 
-#endif
-#if 0
-	question_cb_t fn = std::bind(&LuksTable::on_reply, l, std::placeholders::_1);
-	QuestionPtr q = Question::create (l, fn);
-	q->title = "Enter Password";
-	q->question = "for luks device " + l->device;
-	q->answers = { "Cancel", "Done" };
-#endif
-#if 0
-	PasswordDialogPtr p = PasswordDialog::create();
-	p->title = "LuksTable";
-	gui_app->ask_pass (p);
-#endif
+	PartitionPtr p = Partition::create();
+	p->sub_type ("Space");
+	p->sub_type ("Reserved");
 
-	//main_app->ask (q);
+	p->bytes_size = l->header_size;
+	p->bytes_used = l->header_size;
+	l->add_child (p, false);
 
 	parent->add_child (l, false);
+	l->luks_open();
 
 	return true;
 }
 
 void
-LuksTable::on_reply (QuestionPtr UNUSED(q))
+LuksTable::on_reply (QuestionPtr q)
 {
 	log_debug ("user has answered question");
+	std::string password = q->reply;
+	std::string device = get_device_inherit();
+	luks_open_actual (device, password, true);
 }
 
 
@@ -278,71 +262,67 @@ LuksTable::is_luks (const std::string& device)
 	return (retval == 0);
 }
 
+bool
+LuksTable::luks_open_actual (const std::string& device, const std::string& password, bool probe)
+{
+	std::string command = "sudo cryptsetup open --type luks " + device + " luks-" + uuid;
+
+	int retval = execute_command_in (command, password, false);
+	/* retval:
+	 *	0 success, device unlocked
+	 *	1 invalid arguments
+	 *	2 invalid password
+	 *	4 luks device doesn't exist
+	 */
+	if (retval == 2) {
+		log_info ("invalid password for luks device %s", uuid.c_str());
+		return false;
+	} else if (retval != 0) {
+		return false;
+	}
+	we_opened_this_device = true;
+
+	LuksPartitionPtr p = LuksPartition::create();
+
+	p->bytes_size =  bytes_size - header_size;
+	p->parent_offset = header_size;
+	p->device = "/dev/mapper/luks-" + uuid;
+
+	add_child (p, probe);
+
+	return true;
+}
 
 bool
-LuksTable::luks_open (const std::string& parent, bool UNUSED(probe))
+LuksTable::luks_open (void)
 {
-//	cryptsetup open --type luks /dev/loop4p5 luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
-//		/dev/mapper/luks-0e6518ff-e7b5-4c84-adac-6a94d10a9116
-//
-//	cryptsetup luksUUID /dev/loop4p5
-//		0e6518ff-e7b5-4c84-adac-6a94d10a9116
-//
-//	cryptsetup isLuks /dev/loop4p4; echo $?
-//		0 (is luks)
-//
-//	cryptsetup isLuks /dev/loop4p1; echo $?
-//		1 (not luks)
-//
-//	cryptsetup isLuks /dev/loop4p6; echo $?
-//		4 (Device /dev/loop4p6 doesn't exist or access denied.)
-
-	if (!is_luks (parent))
+	std::string device = get_device_inherit();
+	if (!is_luks (device))
 		return false;
 
 	std::string mapper = "/dev/mapper/luks-" + uuid;
 
 	//XXX check that the luks device matches the parent device
-	if (!is_mounted (mapper)) {
-		std::string command = "sudo cryptsetup open --type luks " + parent + " luks-" + uuid;
-		std::string password = "password";
+	if (is_mounted (mapper)) {
+		LuksPartitionPtr p = LuksPartition::create();
 
-		int retval = execute_command_in (command, password, false);
-		/* retval:
-		 *	0 success, device unlocked
-		 *	1 invalid arguments
-		 *	2 invalid password
-		 *	4 luks device doesn't exist
-		 */
-		if (retval == 2) {
-			log_info ("invalid password for luks device %s", uuid.c_str());
-			return false;
-		} else if (retval != 0) {
-			return false;
-		}
-		we_opened_this_device = true;
+		p->bytes_size =  bytes_size - header_size;
+		p->parent_offset = header_size;
+		p->device = mapper;
+
+		add_child (p, true);
+	} else {
+		QuestionPtr q = Question::create (std::bind(&LuksTable::on_reply, this, std::placeholders::_1));
+		q->title = "Enter Password";
+		q->question = "for luks device " + device;
+		q->answers = { "Cancel", "Done" };
+
+		main_app->ask (q);
 	}
 
 	//XXX check mount really succeeded
-	if (!is_mounted (mapper))
-		return false;
 
-	LuksPartitionPtr p = LuksPartition::create();
-
-	p->bytes_size =  bytes_size - 2097152;	// 2MiB
-	p->parent_offset = 2097152;
-	p->device = mapper;
-
-	p->get_fd();
-
-	// move to container::find_size or utils (or block::)
-	off_t size;
-	size = lseek (p->fd, 0, SEEK_END);
-	p->bytes_size = size;
-
-	add_child (p, true);		//XXX false, probe when we've asked for a password
-
-	return true;
+	return true;	// Not really true, we're waiting for the user
 }
 
 bool

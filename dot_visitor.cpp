@@ -22,7 +22,9 @@
 
 #include "dot_visitor.h"
 #include "container.h"
+#ifdef DP_LOOP
 #include "loop.h"
+#endif
 #ifdef DP_GPT
 #include "gpt.h"
 #endif
@@ -358,6 +360,7 @@ DotVisitor::visit (ContainerPtr c)
 	return true;
 }
 
+#ifdef DP_LOOP
 /**
  * visit (LoopPtr)
  */
@@ -373,6 +376,7 @@ DotVisitor::visit (LoopPtr l)
 	return true;
 }
 
+#endif
 #ifdef DP_GPT
 /**
  * visit (GptPtr)

@@ -30,11 +30,17 @@
 
 #include "block.h"
 #include "action.h"
-#include "disk.h"
-#include "file.h"
 #include "log.h"
-#include "loop.h"
 #include "visitor.h"
+#ifdef DP_DISK
+#include "disk.h"
+#endif
+#ifdef DP_FILE
+#include "file.h"
+#endif
+#ifdef DP_LOOP
+#include "loop.h"
+#endif
 
 Block::Block (void)
 {

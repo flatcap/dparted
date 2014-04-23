@@ -16,6 +16,13 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+#include <chrono>
+#include <functional>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include <gtkmm/object.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/settings.h>
@@ -46,6 +53,8 @@ GuiApp::GuiApp (void) :
 	log_ctor ("ctor GuiApp");
 	LOG_TRACE;
 	Glib::set_application_name ("dparted");
+
+	dispatcher.connect (sigc::mem_fun (*this, &GuiApp::on_dispatch));
 }
 
 GuiApp::~GuiApp()
@@ -54,12 +63,13 @@ GuiApp::~GuiApp()
 }
 
 
+#if 0
 bool
 GuiApp::my_idle (void)
 {
 	LOG_TRACE;
 	//XXX check that dialog's object hasn't gone away
-	if (false && passwd) {
+	if (passwd) {
 		passwd->set_title ("Password for X");
 		passwd->set_message ("text message");
 		passwd->set_secondary_text ("secondary text");
@@ -99,6 +109,7 @@ GuiApp::my_idle (void)
 	return false;	// continue
 }
 
+#endif
 
 void
 GuiApp::on_startup (void)
@@ -180,6 +191,16 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 }
 
 
+void
+GuiApp::scan_callback (ContainerPtr c)
+{
+	return_if_fail(c);
+	return_if_fail(window);
+	LOG_TRACE;
+
+	window->set_data(c);
+}
+
 int
 GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
 {
@@ -246,8 +267,9 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		window->set_geometry (group.x, group.y, group.w, group.h);
 	}
 
-	window->scan (disks);
 	show_window();
+
+	ContainerPtr top_level = scan (disks, std::bind(&GuiApp::scan_callback, this, std::placeholders::_1));
 
 	return EXIT_SUCCESS;
 }
@@ -338,38 +360,8 @@ GuiApp::ask (QuestionPtr q)
 {
 	return_val_if_fail (q, false);
 
-	//vq.push_back (q);
-	Gtk::MessageDialog dialog (q->question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
-
-	dialog.set_title (q->title);
-
-	int id = 0;
-	for (auto a : q->answers) {
-		dialog.add_button (a, ++id);
-	}
-
-	q->result = dialog.run();
-	log_debug ("question = %d", q->result);
-	q->done();
-
-#if 0
-	enum Gtk::ResponseType
-	{
-		RESPONSE_NONE = -1,
-		RESPONSE_REJECT = -2,
-		RESPONSE_ACCEPT = -3,
-		RESPONSE_DELETE_EVENT = -4,
-		RESPONSE_OK = -5,
-		RESPONSE_CANCEL = -6,
-		RESPONSE_CLOSE = -7,
-		RESPONSE_YES = -8,
-		RESPONSE_NO = -9,
-		RESPONSE_APPLY = -10,
-		RESPONSE_HELP = -11
-	};
-#endif
-
-
+	vq.push_back (q);
+	dispatcher.emit();
 	return true;
 }
 
@@ -435,5 +427,49 @@ GuiApp::set_theme (const std::string& filename)
 	//tp->dump_config();
 
 	return true;
+}
+
+
+void
+GuiApp::on_dispatch (void)
+{
+	if (vq.empty()) {
+		return;
+	}
+
+	QuestionPtr q = vq.front();
+	vq.pop_front();
+
+	Gtk::MessageDialog dialog (q->question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
+
+	dialog.set_title (q->title);
+
+	int id = 0;
+	for (auto a : q->answers) {
+		dialog.add_button (a, ++id);
+	}
+
+	q->result = dialog.run();
+	log_debug ("question = %d", q->result);
+	q->reply = "password";
+	q->done();	//XXX another thread?  it might take a while.  meanwhile the dialog is still visible
+
+#if 0
+	enum Gtk::ResponseType
+	{
+		RESPONSE_NONE = -1,
+		RESPONSE_REJECT = -2,
+		RESPONSE_ACCEPT = -3,
+		RESPONSE_DELETE_EVENT = -4,
+		RESPONSE_OK = -5,
+		RESPONSE_CANCEL = -6,
+		RESPONSE_CLOSE = -7,
+		RESPONSE_YES = -8,
+		RESPONSE_NO = -9,
+		RESPONSE_APPLY = -10,
+		RESPONSE_HELP = -11
+	};
+#endif
+
 }
 

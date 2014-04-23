@@ -30,7 +30,9 @@
 #include "utils.h"
 
 static std::multimap<Severity,log_callback_t> log_mux;
+#ifndef DP_LOG_CHECK
 static int depth = 0;
+#endif
 
 std::mutex log_active;
 
