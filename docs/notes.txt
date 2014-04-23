@@ -188,8 +188,6 @@ shrink fs in partition
 	[X] fs
 	[X] partition
 
-Question object: question, buttons, help, config
-
 create fs on disk -> auto create partition
 
 test resize partition around mounted fs
@@ -200,8 +198,6 @@ try to default new partition table to that of existing tables
 
 move friends to public, protected, private?
 	doesn't *matter* which
-
-question dialog -- [X] remember settings button
 
 gpart --id partition contents
 
@@ -410,8 +406,6 @@ what signals are sent to all when machine is shutdown / user logs out?
 
 /run/sudo/flatcap
 
-Question behaviour on <esc> or <return>?
-
 config -- close what I've opened?
 	e.g. luks, loops, mounts
 	default: no
@@ -454,10 +448,6 @@ config -- ignore_gaps < 50MiB options (per container setting?)
 use btrfs-debug-tree to find subvols of fs without mounting
 
 don't store passwords, store tokes (store in pw manager)
-
-theme Question dialog to match owner (colour)?
-
-Question dialog need type, name, width -- passphrase
 
 menu: show last dialog
 	how?
