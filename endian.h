@@ -19,6 +19,8 @@
 #ifndef _ENDIAN_H_
 #define _ENDIAN_H_
 
+#include <cstdint>
+
 #include <endian.h>
 
 // Unsigned: From LE to CPU
