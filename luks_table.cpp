@@ -205,7 +205,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	l->add_child (p, false);
 
 	parent->add_child (l, false);
-	l->luks_open (false);
+	l->luks_open();
 
 	return true;
 }
@@ -294,7 +294,7 @@ LuksTable::luks_open_actual (const std::string& device, const std::string& passw
 }
 
 bool
-LuksTable::luks_open (bool UNUSED(probe))
+LuksTable::luks_open (void)
 {
 	std::string device = get_device_inherit();
 	if (!is_luks (device))
@@ -303,7 +303,15 @@ LuksTable::luks_open (bool UNUSED(probe))
 	std::string mapper = "/dev/mapper/luks-" + uuid;
 
 	//XXX check that the luks device matches the parent device
-	if (!is_mounted (mapper)) {
+	if (is_mounted (mapper)) {
+		LuksPartitionPtr p = LuksPartition::create();
+
+		p->bytes_size =  bytes_size - header_size;
+		p->parent_offset = header_size;
+		p->device = mapper;
+
+		add_child (p, true);
+	} else {
 		QuestionPtr q = Question::create (std::bind(&LuksTable::on_reply, this, std::placeholders::_1));
 		q->title = "Enter Password";
 		q->question = "for luks device " + device;

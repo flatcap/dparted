@@ -41,7 +41,7 @@ public:
 
 	static bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
-	bool luks_open (bool probe);
+	bool luks_open  (void);
 	bool luks_close (void);
 
 public:
