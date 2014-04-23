@@ -19,9 +19,12 @@
 #ifndef _GUI_APP_H_
 #define _GUI_APP_H_
 
+#include <deque>
+#include <memory>
+#include <string>
+
 #include <gtkmm/application.h>
 #include <glibmm/dispatcher.h>
-#include <memory>
 
 #include "app.h"
 #include "message.h"
@@ -79,7 +82,7 @@ protected:
 
 	bool on_mouse_click (GdkEventButton* event);
 
-	std::vector<QuestionPtr> vq;
+	std::deque<QuestionPtr> vq;
 	PasswordDialogPtr passwd;
 	ThemePtr theme;
 	WindowPtr window;

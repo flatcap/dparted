@@ -360,45 +360,8 @@ GuiApp::ask (QuestionPtr q)
 {
 	return_val_if_fail (q, false);
 
+	vq.push_back (q);
 	dispatcher.emit();
-	return false;
-
-	PasswordDialogPtr p = PasswordDialog::create();
-	p->title = "LuksTable";
-	ask_pass(p);
-	return true;
-	//vq.push_back (q);
-	Gtk::MessageDialog dialog (q->question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
-
-	dialog.set_title (q->title);
-
-	int id = 0;
-	for (auto a : q->answers) {
-		dialog.add_button (a, ++id);
-	}
-
-	q->result = dialog.run();
-	log_debug ("question = %d", q->result);
-	q->done();
-
-#if 0
-	enum Gtk::ResponseType
-	{
-		RESPONSE_NONE = -1,
-		RESPONSE_REJECT = -2,
-		RESPONSE_ACCEPT = -3,
-		RESPONSE_DELETE_EVENT = -4,
-		RESPONSE_OK = -5,
-		RESPONSE_CANCEL = -6,
-		RESPONSE_CLOSE = -7,
-		RESPONSE_YES = -8,
-		RESPONSE_NO = -9,
-		RESPONSE_APPLY = -10,
-		RESPONSE_HELP = -11
-	};
-#endif
-
-
 	return true;
 }
 
@@ -470,9 +433,43 @@ GuiApp::set_theme (const std::string& filename)
 void
 GuiApp::on_dispatch (void)
 {
+	if (vq.empty()) {
+		return;
+	}
+
+	QuestionPtr q = vq.front();
+	vq.pop_front();
+
+	Gtk::MessageDialog dialog (q->question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
+
+	dialog.set_title (q->title);
+
+	int id = 0;
+	for (auto a : q->answers) {
+		dialog.add_button (a, ++id);
+	}
+
+	q->result = dialog.run();
+	log_debug ("question = %d", q->result);
+	q->reply = "password";
+	q->done();	//XXX another thread?  it might take a while.  meanwhile the dialog is still visible
+
 #if 0
-	Gtk::MessageDialog dialog ("What's up doc?", false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
-	dialog.run();
+	enum Gtk::ResponseType
+	{
+		RESPONSE_NONE = -1,
+		RESPONSE_REJECT = -2,
+		RESPONSE_ACCEPT = -3,
+		RESPONSE_DELETE_EVENT = -4,
+		RESPONSE_OK = -5,
+		RESPONSE_CANCEL = -6,
+		RESPONSE_CLOSE = -7,
+		RESPONSE_YES = -8,
+		RESPONSE_NO = -9,
+		RESPONSE_APPLY = -10,
+		RESPONSE_HELP = -11
+	};
 #endif
+
 }
 
