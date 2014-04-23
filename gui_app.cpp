@@ -63,6 +63,7 @@ GuiApp::~GuiApp()
 }
 
 
+#if 0
 bool
 GuiApp::my_idle (void)
 {
@@ -108,6 +109,7 @@ GuiApp::my_idle (void)
 	return false;	// continue
 }
 
+#endif
 
 void
 GuiApp::on_startup (void)

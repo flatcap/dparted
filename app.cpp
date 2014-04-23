@@ -85,6 +85,8 @@ App::ask (QuestionPtr q)
 		ss << a << ' ';
 	}
 	log_debug (ss);
+	q->reply = "password";
+	q->done();
 	return false;
 }
 

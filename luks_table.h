@@ -41,7 +41,7 @@ public:
 
 	static bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
-	bool luks_open (const std::string& parent, bool probe);
+	bool luks_open (bool probe);
 	bool luks_close (void);
 
 public:
@@ -70,6 +70,7 @@ protected:
 	void on_reply (QuestionPtr q);
 	bool is_luks (const std::string& device);
 	bool is_mounted (const std::string& device);
+	bool luks_open_actual (const std::string& device, const std::string& password, bool probe);
 
 	bool we_opened_this_device = false;
 

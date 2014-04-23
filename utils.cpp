@@ -262,7 +262,7 @@ execute_command_out (const std::string& command, std::vector<std::string>& outpu
  * execute_command_in - input (string)
  */
 int
-execute_command_in (const std::string& command, std::string& input, bool log_input /*=true*/, bool log_cmd /*=true*/)
+execute_command_in (const std::string& command, const std::string& input, bool log_input /*=true*/, bool log_cmd /*=true*/)
 {
 	FILE* file = nullptr;
 

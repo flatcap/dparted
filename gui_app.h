@@ -77,7 +77,6 @@ protected:
 	void menu_about       (void);
 	void menu_quit        (void);
 
-	bool my_idle (void);
 	bool on_mouse_click (GdkEventButton* event);
 
 	std::vector<QuestionPtr> vq;
