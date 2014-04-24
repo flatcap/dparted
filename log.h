@@ -25,6 +25,7 @@
 
 #include "log_severity.h"
 #include "log_macro.h"
+#include "log_handler.h"
 
 typedef std::function<void(Severity level, const char* function, const char* file, int line, const char* message)> log_callback_t;
 
@@ -95,8 +96,11 @@ void assertion_failure (const char* file, int line, const char* test, const char
 // warn_if_reached
 // warn_if_fail
 
-void log_init (Severity s, log_callback_t cb);
-void log_close (void);
+void log_add_handler (Severity s, log_callback_t cb);
+void log_add_handler (Severity s, LogHandlerPtr lh);
+void log_remove_handler (log_callback_t cb);
+void log_remove_handler (LogHandlerPtr lh);
+std::string log_get_level (Severity level);
 
 #if 0
 unsigned int log_set_level (unsigned int level);

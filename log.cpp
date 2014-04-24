@@ -36,20 +36,6 @@ static int depth = 0;
 
 std::mutex log_active;
 
-void
-log_stdout (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
-{
-	//fprintf (stdout, "%*s", (depth*4), "");	// indent
-	fprintf (stdout, "%s\n", message);
-}
-
-void
-log_stderr (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
-{
-	fprintf (stderr, "%s\n", message);
-}
-
-
 #ifdef DP_LOG_CHECK
 __attribute__ ((format (printf, 1, 2)))
 void
@@ -90,7 +76,7 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 	if ((level & Severity::Leave) == Severity::Leave) --depth;
 
 	if (log_mux.empty()) {
-		log_stdout (level, function, file, line, message);
+		fprintf (stdout, "%s", message);
 	} else {
 		for (auto i : log_mux) {
 			if ((bool) (i.first & level)) {
@@ -124,14 +110,26 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 #endif
 
 void
-log_init (Severity s, log_callback_t cb)
+log_add_handler (Severity s, log_callback_t cb)
 {
 	log_mux.insert (std::make_pair(s,cb));
 }
+
 void
-log_close (void)
+log_add_handler (Severity s, LogHandlerPtr lh)
 {
-	log_mux.clear();
+	auto cb = std::bind (&LogHandler::log_line, *lh, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
+	log_mux.insert (std::make_pair(s,cb));
+}
+
+void
+log_remove_handler (log_callback_t UNUSED(cb))
+{
+}
+
+void
+log_remove_handler (LogHandlerPtr UNUSED(lh))
+{
 }
 
 void
@@ -139,27 +137,53 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 {
 	std::vector<std::string> bt = get_backtrace();
 	log_code ("\033[01;31m%s:%d: assertion failed: (%s) in %s\033[0m", file, line, test, function);
-	log_code ("Backtrace:");
+
+	std::stringstream ss;
+	ss << "Backtrace:\n";
 	for (auto i : bt) {
 		if (i.substr (0, 17) == "assertion_failure")	// Skip me
 			continue;
-		log_code ("\t%s", i.c_str());
+		ss << "\t" << i;
 	}
+
+	log_code ("%s", ss.str().c_str());
 }
 
-#if 0
-unsigned int
-log_set_level (unsigned int level)
+
+std::string
+log_get_level (Severity level)
 {
-	unsigned int old = log_level;
-	log_level = level;
-	return old;
+	if (level == Severity::SystemEmergency) return "SystemEmergency";
+	if (level == Severity::SystemAlert)     return "SystemAlert";
+	if (level == Severity::Critical)        return "Critical";
+	if (level == Severity::Error)           return "Error";
+	if (level == Severity::Perror)          return "Perror";
+	if (level == Severity::Code)            return "Code";
+	if (level == Severity::Warning)         return "Warning";
+	if (level == Severity::Verbose)         return "Verbose";
+	if (level == Severity::User)            return "User";
+	if (level == Severity::Info)            return "Info";
+	if (level == Severity::Progress)        return "Progress";
+	if (level == Severity::Quiet)           return "Quiet";
+	if (level == Severity::Command)         return "Command";
+	if (level == Severity::Debug)           return "Debug";
+	if (level == Severity::Trace)           return "Trace";
+	if (level == Severity::CommandIn)       return "CommandIn";
+	if (level == Severity::CommandOut)      return "CommandOut";
+	if (level == Severity::IoIn)            return "IoIn";
+	if (level == Severity::IoOut)           return "IoOut";
+	if (level == Severity::Dot)             return "Dot";
+	if (level == Severity::Hex)             return "Hex";
+	if (level == Severity::ConfigRead)      return "ConfigRead";
+	if (level == Severity::ConfigWrite)     return "ConfigWrite";
+	if (level == Severity::Enter)           return "Enter";
+	if (level == Severity::Leave)           return "Leave";
+	if (level == Severity::File)            return "File";
+	if (level == Severity::Ctor)            return "Ctor";
+	if (level == Severity::Dtor)            return "Dtor";
+	if (level == Severity::Thread)          return "Thread";
+
+	return "UNKNOWN";
 }
 
-unsigned int
-log_get_level (void)
-{
-	return log_level;
-}
 
-#endif
