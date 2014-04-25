@@ -210,8 +210,8 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	delete_region (empty, sect_offset, 33);
 
 	buffer += 1024;
-	bufsize -= 1024;	// for range checking
-
+	//bufsize -= 1024;	//XXX not used
+				// for range checking
 	std::string device = g->get_device_name();
 
 	for (int i = 0; i < 128; ++i, buffer += 128) {

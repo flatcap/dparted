@@ -72,6 +72,7 @@ enum class Severity {
 	Thread		= (1 << 28),		// Thread started
 
 	// Handy shortcuts
+	NoMessages      = 0,
 	AllMessages	= ~0,
 	AllEmergency	= SystemEmergency,
 	AllAlert	= SystemAlert,

@@ -112,10 +112,10 @@ ConfigFile::read_file (const std::string& filename)
 		cfg.readFile (filename.c_str());
 	} catch (const libconfig::FileIOException& fioex) {
 		log_debug ("I/O error while reading file.");
-		return false;
+		return nullptr;
 	} catch (const libconfig::ParseException& pex) {
 		log_debug ("Parse error at %s:%d - %s", pex.getFile(), pex.getLine(), pex.getError());
-		return false;
+		return nullptr;
 	}
 
 	const libconfig::Setting& root = cfg.getRoot();

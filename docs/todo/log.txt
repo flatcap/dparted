@@ -1,27 +1,8 @@
 Output locations:
-	stdout/cout
-	stderr/cerr
-	file/tty
 	syslog
 	journal
-	function
-	/dev/null
-
-Output features:
-	ANSI reset terminal
-		echo -en "\ec" > /dev/pts/1
-		use it in log_init()
-	ANSI colour codes
-	Timestamps
-	Flush output
-
-Locations and features independent
-	Different levels to different files/ttys
 
 Code features
-	single exit point for all logging
-		i.e. different handles, but one command
-		or at least one common point somewhere
 	config file / command line
 		levels -> outputs
 	uniq log line numbers
@@ -29,20 +10,15 @@ Code features
 		translate strings?
 		systemd messageid?
 	namespace Log?
-	trim \n from single line for syslog/journal
-		or add it if nec (dependent on output type)
 	LogInit();
 		automatic?
 		global
 		per stream
 	LogClose();
-	log_handler log_handler_syslog  __attribute__((format(printf, 6, 0)));
 
 Input features
 	stream
 		Log << "xyz\n";
-	printf
-		Log.printf ("%s\n", str);
 	object?
 		Log (object);
 			template function
@@ -50,21 +26,9 @@ Input features
 
 -------------------------------------------
 
-    245 cout
-    120 log_info
-    110 LOG_TRACE
-     94 log_debug
-     51 printf
-     22 log_error
-      4 log_perror
-
 log::dot
 	cache output
 	spawn dot on flush
-
-log::code
-	can't be caused by user operation
-	effectively an assert
 
 logging: config file -- script to manipulate log destinations
 	log_me [log_level]
@@ -74,14 +38,9 @@ log level push object cf LOG_TRACE
 
 template<type X> X log return (X) calls logtrace leaving(X) (retval, line no)
 
-log -> cout? (still use varargs, printf format)
-
 main -v => log_info, main -vv => log_debug
 
 move iprintf (indented) to log.cpp
-
-LOG_ENTER macro that references __FUNCTION__
-enables per function logging!
 
 change the log functions into a log object?
 dtor would close the log
@@ -91,15 +50,6 @@ add a log_debug (DPContainer *) and ref to dump the object
 LogQuell object
 	when instantiated it prevents [some/all] logging
 	when it is destroyed, logging is returned to normal
-how do you conditionally create an object without hassle or leakage?
-
-int log_XXX (const char *format, ...) __attribute__ ((format (printf, 1, 2)));
-
-bool log_init (const char *name);
-void log_close (void);
-
-unsigned int log_set_level (unsigned int level);
-unsigned int log_get_level (void);
 
 log_info (spec)
 log::info << streamystuff << ...
@@ -107,14 +57,10 @@ log::info.format (spec)
 
 automatic creation, cf std::cout
 
-stream
-printf
-
 enable (bitfield)	} function or object (scoped)?
 disable (bitfield)	}
 push/pop (bitfield)
 quell to end of function
-log_enter/exit function
 
 trace ctor def params __FILE__ etc defined in .h _which_ file?
 
@@ -123,4 +69,23 @@ class Debug : public log -> public iostream {};
 Log::Debug << xyz << std::endl;
 Log::Debug.printf ("format %s\n", X);
 Log::printf (Log::Debug, "format %s\n", X);
+
+log_set_level (fn, level)
+log_set_level (ptr, level)
+
+early/late logging -> stdout? *stderr*
+
+extern log ptrs in main.h?
+key log_mux <map> on config key name
+	"my_debug" -> "AllDebug", "/dev/stdout"
+
+close logs in reverse order
+
+timestamp log filenames:
+	log_2014-04-25_14:29:30.txt
+options
+	timestamp
+	datestamp
+	prefix/suffix
+
 

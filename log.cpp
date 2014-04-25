@@ -19,7 +19,6 @@
 #include <cstdarg>
 #include <cstring>
 #include <functional>
-#include <map>
 #include <mutex>
 #include <sstream>
 #include <thread>
@@ -29,26 +28,13 @@
 #include "log_severity.h"
 #include "utils.h"
 
-static std::multimap<Severity,log_callback_t> log_mux;
+static std::vector<std::tuple<int,Severity,log_callback_t>> log_mux;
+static int log_handle = 0;
 #ifndef DP_LOG_CHECK
 static int depth = 0;
 #endif
 
 std::mutex log_active;
-
-void
-log_stdout (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
-{
-	//fprintf (stdout, "%*s", (depth*4), "");	// indent
-	fprintf (stdout, "%s\n", message);
-}
-
-void
-log_stderr (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
-{
-	fprintf (stderr, "%s\n", message);
-}
-
 
 #ifdef DP_LOG_CHECK
 __attribute__ ((format (printf, 1, 2)))
@@ -87,14 +73,14 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 	std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
 #endif
 
-	if ((level & Severity::Leave) == Severity::Leave) --depth;
+	if ((level & Severity::Leave) == Severity::Leave) --depth;	//XXX add to log callback
 
 	if (log_mux.empty()) {
-		log_stdout (level, function, file, line, message);
+		fprintf (stdout, "%s", message);
 	} else {
 		for (auto i : log_mux) {
-			if ((bool) (i.first & level)) {
-				i.second (level, function, file, line, message);
+			if ((bool) (std::get<1>(i) & level)) {
+				std::get<2>(i) (level, function, file, line, message);
 			}
 		}
 	}
@@ -123,15 +109,26 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 
 #endif
 
-void
-log_init (Severity s, log_callback_t cb)
+int
+log_add_handler (log_callback_t cb, Severity s)
 {
-	log_mux.insert (std::make_pair(s,cb));
+	++log_handle;
+	log_mux.push_back (std::make_tuple (log_handle,s,cb));
+	return log_handle;
 }
+
 void
-log_close (void)
+log_remove_handler (int handle)
 {
-	log_mux.clear();
+	auto end = std::end (log_mux);
+	for (auto i = std::begin (log_mux); i != end; ++i) {
+		if (std::get<0>(*i) == handle) {
+			log_mux.erase (i);
+			return;
+		}
+	}
+
+	log_error ("Can't find log handle: %d\n", handle);
 }
 
 void
@@ -139,27 +136,71 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 {
 	std::vector<std::string> bt = get_backtrace();
 	log_code ("\033[01;31m%s:%d: assertion failed: (%s) in %s\033[0m", file, line, test, function);
-	log_code ("Backtrace:");
+
+	std::stringstream ss;
+	ss << "Backtrace:\n";
 	for (auto i : bt) {
 		if (i.substr (0, 17) == "assertion_failure")	// Skip me
 			continue;
-		log_code ("\t%s", i.c_str());
+		ss << "\t" << i << "\n";
 	}
+
+	log_code ("%s", ss.str().c_str());
 }
 
-#if 0
-unsigned int
-log_set_level (unsigned int level)
+static std::vector<std::pair<Severity,std::string>> LogLevelNames = {
+	{ Severity::SystemEmergency, "SystemEmergency" },
+	{ Severity::SystemAlert,     "SystemAlert"     },
+	{ Severity::Critical,        "Critical"        },
+	{ Severity::Error,           "Error"           },
+	{ Severity::Perror,          "Perror"          },
+	{ Severity::Code,            "Code"            },
+	{ Severity::Warning,         "Warning"         },
+	{ Severity::Verbose,         "Verbose"         },
+	{ Severity::User,            "User"            },
+	{ Severity::Info,            "Info"            },
+	{ Severity::Progress,        "Progress"        },
+	{ Severity::Quiet,           "Quiet"           },
+	{ Severity::Command,         "Command"         },
+	{ Severity::Debug,           "Debug"           },
+	{ Severity::Trace,           "Trace"           },
+	{ Severity::CommandIn,       "CommandIn"       },
+	{ Severity::CommandOut,      "CommandOut"      },
+	{ Severity::IoIn,            "IoIn"            },
+	{ Severity::IoOut,           "IoOut"           },
+	{ Severity::Dot,             "Dot"             },
+	{ Severity::Hex,             "Hex"             },
+	{ Severity::ConfigRead,      "ConfigRead"      },
+	{ Severity::ConfigWrite,     "ConfigWrite"     },
+	{ Severity::Enter,           "Enter"           },
+	{ Severity::Leave,           "Leave"           },
+	{ Severity::File,            "File"            },
+	{ Severity::Ctor,            "Ctor"            },
+	{ Severity::Dtor,            "Dtor"            },
+	{ Severity::Thread,          "Thread"          }
+};
+
+std::string
+log_get_level_name (Severity level)
 {
-	unsigned int old = log_level;
-	log_level = level;
-	return old;
+	for (auto i : LogLevelNames) {
+		if (i.first == level) {
+			return i.second;
+		}
+	}
+
+	return "UNKNOWN";
 }
 
-unsigned int
-log_get_level (void)
+Severity
+log_get_level_value (const std::string& name)
 {
-	return log_level;
+	for (auto i : LogLevelNames) {
+		if (i.second == name) {
+			return i.first;
+		}
+	}
+
+	return Severity::NoMessages;
 }
 
-#endif

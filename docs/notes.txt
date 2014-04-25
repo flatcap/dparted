@@ -704,3 +704,35 @@ X::create could fail -- check retval
 
 add_space/reserved how diff from add_child?
 
+Unallocated -- account for every byte
+
+hierarchy for btrfs, lvm snapshots, etc
+
+props -- not yet implemented
+	flags, mounts, warnings, volgroup, parent, whole, siblings
+
+UUIDs check they're correct
+
+probe vs create -- parent offset
+
+filesystem::add_child move into each fs handler
+
+dot -- sibling links to force order
+
+config {} ignored
+
+obj app -> q_add ask => App interface just for this stuff?
+
+config/theme get_no_recursion, default value?
+
+cryptsetup with no key => stderr! need to trap it
+	add "2>&1" to all commands
+	use more pipes
+
+get_tid (use sstream <<)
+
+combine DP_FILE with _FILE_H_ etc
+	simplifying #includes
+
+SEEK_END -> block:: ?
+

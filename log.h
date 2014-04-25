@@ -25,14 +25,13 @@
 
 #include "log_severity.h"
 #include "log_macro.h"
+#include "log_handler.h"
 
 typedef std::function<void(Severity level, const char* function, const char* file, int line, const char* message)> log_callback_t;
 
 // Default handlers
 void log_stdout (Severity level, const char* function, const char* file, int line, const char* message);
 void log_stderr (Severity level, const char* function, const char* file, int line, const char* message);
-// log_callback_t log_syslog;
-// log_callback_t log_journal;
 
 #ifdef DP_LOG_CHECK
 void log_redirect (const char* format __attribute__((unused)), ...) __attribute__((format (printf, 1, 2)));
@@ -91,17 +90,11 @@ void assertion_failure (const char* file, int line, const char* test, const char
 		}										\
 	} while(0)
 
-// return_if_reached
-// warn_if_reached
-// warn_if_fail
+int log_add_handler (log_callback_t cb, Severity s);
+void log_remove_handler (int handle);
 
-void log_init (Severity s, log_callback_t cb);
-void log_close (void);
-
-#if 0
-unsigned int log_set_level (unsigned int level);
-unsigned int log_get_level (void);
-#endif
+std::string log_get_level_name  (Severity level);
+Severity    log_get_level_value (const std::string& name);
 
 #include "log_trace.h"
 

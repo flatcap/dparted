@@ -27,24 +27,17 @@
 #endif
 #include "log.h"
 #include "utils.h"
+#include "log_handler.h"
 
 int
 main (int argc, char *argv[])
 {
+	LogHandlerPtr log_out = LogHandler::create (stdout);
+	if (log_out) {
+		log_out->start (Severity::AllMessages);
+	}
+
 	srandom (time (nullptr));
-
-#if 0
-	LogObject my_log;
-	my_log.reset_tty = true;
-	my_log.open_file ("/dev/pts/1");
-
-	log_callback_t my_log_cb = (log_callback_t) std::bind(&LogObject::log_line, &my_log, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
-#endif
-
-	//Severity level = Severity::Thread | Severity::Enter | Severity::Leave; //Severity::Info | Severity::Enter | Severity::Leave | Severity::Ctor | Severity::Dtor;// ~Severity::AllDebug Severity::AllMessages
-	Severity level = Severity::AllMessages;
-
-	log_init (level, log_stdout);
 
 	int status = 0;
 
@@ -61,7 +54,10 @@ main (int argc, char *argv[])
 #endif
 	main_app = nullptr;
 
-	log_close();
+	if (log_out) {
+		log_out->stop();
+	}
+
 	return status;
 }
 
