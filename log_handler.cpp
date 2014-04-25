@@ -33,9 +33,7 @@ LogHandler::LogHandler (void)
 
 LogHandler::~LogHandler()
 {
-	if (log_handle >= 0) {
-		log_remove_handler (log_handle);
-	}
+	stop();
 }
 
 LogHandlerPtr
@@ -88,7 +86,9 @@ LogHandler::start (Severity level)
 void
 LogHandler::stop (void)
 {
-	log_remove_handler (log_handle);
+	if (log_handle >= 0) {
+		log_remove_handler (log_handle);
+	}
 	log_handle = -1;
 }
 
