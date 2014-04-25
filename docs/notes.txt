@@ -734,3 +734,5 @@ get_tid (use sstream <<)
 combine DP_FILE with _FILE_H_ etc
 	simplifying #includes
 
+SEEK_END -> block:: ?
+
