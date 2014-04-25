@@ -72,3 +72,20 @@ Log::printf (Log::Debug, "format %s\n", X);
 
 log_set_level (fn, level)
 log_set_level (ptr, level)
+
+early/late logging -> stdout? *stderr*
+
+extern log ptrs in main.h?
+key log_mux <map> on config key name
+	"my_debug" -> "AllDebug", "/dev/stdout"
+
+close logs in reverse order
+
+timestamp log filenames:
+	log_2014-04-25_14:29:30.txt
+options
+	timestamp
+	datestamp
+	prefix/suffix
+
+
