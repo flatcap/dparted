@@ -42,6 +42,7 @@ main (int argc, char *argv[])
 	if (log_out) {
 		log_out->foreground = 226;
 		log_out->timestamp  = true;
+		log_out->show_level = true;
 		log_out->start (Severity::AllMessages);
 	}
 
@@ -76,9 +77,9 @@ main (int argc, char *argv[])
 	main_app = nullptr;
 
 	log_remove_handler (handle);
-	log_out->stop();
-	log_file->stop();
-	log_tty->stop();
+	if (log_out)  log_out->stop();
+	if (log_file) log_file->stop();
+	if (log_tty)  log_tty->stop();
 
 	return status;
 }

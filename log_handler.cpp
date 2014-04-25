@@ -127,7 +127,9 @@ LogHandler::log_line (Severity level, const char* function, const char* filename
 	}
 
 	if (show_level) {
-		str += log_get_level (level);
+		str += "[";
+		str += log_get_level_name (level);
+		str += "] ";
 	}
 
 	if (show_file_line) {
@@ -149,7 +151,7 @@ LogHandler::log_line (Severity level, const char* function, const char* filename
 	fprintf (file, "%s%s%s\n", str.c_str(), message, end.c_str());
 
 	if (flush_line) {
-		fflush (file);
+		flush();
 	}
 }
 

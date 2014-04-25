@@ -148,41 +148,59 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 	log_code ("%s", ss.str().c_str());
 }
 
+static std::vector<std::pair<Severity,std::string>> LogLevelNames = {
+	{ Severity::SystemEmergency, "SystemEmergency" },
+	{ Severity::SystemAlert,     "SystemAlert"     },
+	{ Severity::Critical,        "Critical"        },
+	{ Severity::Error,           "Error"           },
+	{ Severity::Perror,          "Perror"          },
+	{ Severity::Code,            "Code"            },
+	{ Severity::Warning,         "Warning"         },
+	{ Severity::Verbose,         "Verbose"         },
+	{ Severity::User,            "User"            },
+	{ Severity::Info,            "Info"            },
+	{ Severity::Progress,        "Progress"        },
+	{ Severity::Quiet,           "Quiet"           },
+	{ Severity::Command,         "Command"         },
+	{ Severity::Debug,           "Debug"           },
+	{ Severity::Trace,           "Trace"           },
+	{ Severity::CommandIn,       "CommandIn"       },
+	{ Severity::CommandOut,      "CommandOut"      },
+	{ Severity::IoIn,            "IoIn"            },
+	{ Severity::IoOut,           "IoOut"           },
+	{ Severity::Dot,             "Dot"             },
+	{ Severity::Hex,             "Hex"             },
+	{ Severity::ConfigRead,      "ConfigRead"      },
+	{ Severity::ConfigWrite,     "ConfigWrite"     },
+	{ Severity::Enter,           "Enter"           },
+	{ Severity::Leave,           "Leave"           },
+	{ Severity::File,            "File"            },
+	{ Severity::Ctor,            "Ctor"            },
+	{ Severity::Dtor,            "Dtor"            },
+	{ Severity::Thread,          "Thread"          }
+};
 
 std::string
-log_get_level (Severity level)
+log_get_level_name (Severity level)
 {
-	if (level == Severity::SystemEmergency) return "SystemEmergency";
-	if (level == Severity::SystemAlert)     return "SystemAlert";
-	if (level == Severity::Critical)        return "Critical";
-	if (level == Severity::Error)           return "Error";
-	if (level == Severity::Perror)          return "Perror";
-	if (level == Severity::Code)            return "Code";
-	if (level == Severity::Warning)         return "Warning";
-	if (level == Severity::Verbose)         return "Verbose";
-	if (level == Severity::User)            return "User";
-	if (level == Severity::Info)            return "Info";
-	if (level == Severity::Progress)        return "Progress";
-	if (level == Severity::Quiet)           return "Quiet";
-	if (level == Severity::Command)         return "Command";
-	if (level == Severity::Debug)           return "Debug";
-	if (level == Severity::Trace)           return "Trace";
-	if (level == Severity::CommandIn)       return "CommandIn";
-	if (level == Severity::CommandOut)      return "CommandOut";
-	if (level == Severity::IoIn)            return "IoIn";
-	if (level == Severity::IoOut)           return "IoOut";
-	if (level == Severity::Dot)             return "Dot";
-	if (level == Severity::Hex)             return "Hex";
-	if (level == Severity::ConfigRead)      return "ConfigRead";
-	if (level == Severity::ConfigWrite)     return "ConfigWrite";
-	if (level == Severity::Enter)           return "Enter";
-	if (level == Severity::Leave)           return "Leave";
-	if (level == Severity::File)            return "File";
-	if (level == Severity::Ctor)            return "Ctor";
-	if (level == Severity::Dtor)            return "Dtor";
-	if (level == Severity::Thread)          return "Thread";
+	for (auto i : LogLevelNames) {
+		if (i.first == level) {
+			return i.second;
+		}
+	}
 
 	return "UNKNOWN";
 }
 
+Severity
+log_get_level_value (const std::string& name)
+{
+	for (auto i : LogLevelNames) {
+		if (i.second == name) {
+			return i.first;
+		}
+	}
+
+	return Severity::NoMessages;
+}
 

@@ -92,7 +92,9 @@ void assertion_failure (const char* file, int line, const char* test, const char
 
 int log_add_handler (log_callback_t cb, Severity s);
 void log_remove_handler (int handle);
-std::string log_get_level (Severity level);
+
+std::string log_get_level_name  (Severity level);
+Severity    log_get_level_value (const std::string& name);
 
 #include "log_trace.h"
 
