@@ -52,11 +52,12 @@ LogHandler::create (const std::string& filename, bool truncate /*=false*/)
 		return nullptr;
 	}
 
-	//log_file ("file open: %d, '%s'", fd, name.c_str());	//XXX reinstate when we can handle early/late logging
+	//log_file ("file open: '%s'", name.c_str());	//XXX reinstate when we can handle early/late logging
 
 	LogHandlerPtr lh (new LogHandler());
-	lh->file     = f;
-	lh->filename = filename;
+	lh->file       = f;
+	lh->close_file = true;		// We opened it
+	lh->filename   = filename;
 
 	lh->is_tty = (strncmp (filename.c_str(), "/dev/pts/", 9) == 0);
 	if (truncate) {
@@ -88,8 +89,15 @@ LogHandler::stop (void)
 {
 	if (log_handle >= 0) {
 		log_remove_handler (log_handle);
+		log_handle = -1;
 	}
-	log_handle = -1;
+
+	if (close_file) {
+		fclose (file);
+		log_file ("file close: '%s'", filename.c_str());
+		file = nullptr;
+		close_file = false;
+	}
 }
 
 void
