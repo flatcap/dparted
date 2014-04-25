@@ -223,13 +223,10 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		return EXIT_FAILURE;
 	}
 
-	bool running = !!window;
-
 	if (group.quit) {
-		if (running) {
+		if (window) {
 			//XXX need to ASK the window to close => WindowPtr
 			window = nullptr;
-			running = false;
 		}
 		return EXIT_SUCCESS;
 	}
