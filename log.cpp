@@ -19,7 +19,6 @@
 #include <cstdarg>
 #include <cstring>
 #include <functional>
-#include <map>
 #include <mutex>
 #include <sstream>
 #include <thread>
@@ -29,7 +28,8 @@
 #include "log_severity.h"
 #include "utils.h"
 
-static std::multimap<Severity,log_callback_t> log_mux;
+static std::vector<std::tuple<int,Severity,log_callback_t>> log_mux;
+static int log_handle = 0;
 #ifndef DP_LOG_CHECK
 static int depth = 0;
 #endif
@@ -73,14 +73,14 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 	std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
 #endif
 
-	if ((level & Severity::Leave) == Severity::Leave) --depth;
+	if ((level & Severity::Leave) == Severity::Leave) --depth;	//XXX add to log callback
 
 	if (log_mux.empty()) {
 		fprintf (stdout, "%s", message);
 	} else {
 		for (auto i : log_mux) {
-			if ((bool) (i.first & level)) {
-				i.second (level, function, file, line, message);
+			if ((bool) (std::get<1>(i) & level)) {
+				std::get<2>(i) (level, function, file, line, message);
 			}
 		}
 	}
@@ -109,27 +109,26 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 
 #endif
 
-void
-log_add_handler (Severity s, log_callback_t cb)
+int
+log_add_handler (log_callback_t cb, Severity s)
 {
-	log_mux.insert (std::make_pair(s,cb));
+	++log_handle;
+	log_mux.push_back (std::make_tuple (log_handle,s,cb));
+	return log_handle;
 }
 
 void
-log_add_handler (Severity s, LogHandlerPtr lh)
+log_remove_handler (int handle)
 {
-	auto cb = std::bind (&LogHandler::log_line, *lh, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
-	log_mux.insert (std::make_pair(s,cb));
-}
+	auto end = std::end (log_mux);
+	for (auto i = std::begin (log_mux); i != end; ++i) {
+		if (std::get<0>(*i) == handle) {
+			log_mux.erase (i);
+			return;
+		}
+	}
 
-void
-log_remove_handler (log_callback_t UNUSED(cb))
-{
-}
-
-void
-log_remove_handler (LogHandlerPtr UNUSED(lh))
-{
+	log_error ("Can't find log handle: %d\n", handle);
 }
 
 void
@@ -143,7 +142,7 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 	for (auto i : bt) {
 		if (i.substr (0, 17) == "assertion_failure")	// Skip me
 			continue;
-		ss << "\t" << i;
+		ss << "\t" << i << "\n";
 	}
 
 	log_code ("%s", ss.str().c_str());

@@ -29,20 +29,34 @@
 #include "utils.h"
 #include "log_handler.h"
 
+void
+log_pink (Severity UNUSED(level), const char* UNUSED(function), const char* UNUSED(file), int UNUSED(line), const char* message)
+{
+	fprintf (stdout, "\033[38;5;207m%s\033[0m\n", message);
+}
+
 int
 main (int argc, char *argv[])
 {
-	LogHandlerPtr log_out  = LogHandler::create (stdout);
+	LogHandlerPtr log_out = LogHandler::create (stdout);
+	if (log_out) {
+		log_out->foreground = 226;
+		log_out->timestamp  = true;
+		log_out->start (Severity::AllMessages);
+	}
+
 	LogHandlerPtr log_file = LogHandler::create ("logfile.txt", false);
-	LogHandlerPtr log_tty  = LogHandler::create ("/dev/pts/0",  true);
+	if (log_file) {
+		log_file->start (Severity::AllDebug);
+	}
 
-	log_out->foreground = 226;
-	log_out->timestamp  = true;
-	log_tty->background = 208;
+	LogHandlerPtr log_tty = LogHandler::create ("/dev/pts/0", true);
+	if (log_tty) {
+		log_tty->background = 208;
+		log_tty->start (Severity::AllDebug);
+	}
 
-	log_add_handler (Severity::AllMessages, log_out);
-	log_add_handler (Severity::AllDebug,    log_file);
-	log_add_handler (Severity::AllDebug,    log_tty);
+	int handle = log_add_handler (log_pink, Severity::Code);
 
 	srandom (time (nullptr));
 
@@ -60,6 +74,11 @@ main (int argc, char *argv[])
 	text_app = nullptr;
 #endif
 	main_app = nullptr;
+
+	log_remove_handler (handle);
+	log_out->stop();
+	log_file->stop();
+	log_tty->stop();
 
 	return status;
 }

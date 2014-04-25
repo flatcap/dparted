@@ -42,6 +42,8 @@ public:
 
 	void log_line (Severity level, const char* function, const char* filename, int line, const char* message);
 
+	void start (Severity level);
+	void stop  (void);
 	void flush (void);
 	void reset (void);
 
@@ -63,6 +65,7 @@ protected:
 	bool close_file = false;
 	bool is_tty     = false;
 	std::string filename;
+	int log_handle  = -1;
 };
 
 #endif // _LOG_HANDLER_H_

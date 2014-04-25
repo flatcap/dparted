@@ -33,6 +33,9 @@ LogHandler::LogHandler (void)
 
 LogHandler::~LogHandler()
 {
+	if (log_handle >= 0) {
+		log_remove_handler (log_handle);
+	}
 }
 
 LogHandlerPtr
@@ -74,6 +77,20 @@ LogHandler::create (FILE* handle)
 	return lh;
 }
 
+
+void
+LogHandler::start (Severity level)
+{
+	auto cb = std::bind (&LogHandler::log_line, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
+	log_handle = log_add_handler (cb, level);
+}
+
+void
+LogHandler::stop (void)
+{
+	log_remove_handler (log_handle);
+	log_handle = -1;
+}
 
 void
 LogHandler::log_line (Severity level, const char* function, const char* filename, int line, const char* message)
