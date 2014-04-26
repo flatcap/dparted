@@ -16,62 +16,64 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "info_dialog.h"
 
 InfoDialog::InfoDialog (void) :
-	MessageDialog ("", true, Gtk::MessageType::MESSAGE_OTHER, Gtk::ButtonsType::BUTTONS_NONE, false)
+	MessageDialog ("", true, Gtk::MessageType::MESSAGE_INFO, Gtk::ButtonsType::BUTTONS_NONE, false)
 {
-#if 0
-	MESSAGE_INFO
-	MESSAGE_WARNING
-	MESSAGE_QUESTION
-	MESSAGE_ERROR
-	MESSAGE_OTHER
-#endif
-	// set_size_request (400, 400);
+	// Gtk::Box* ma = get_message_area();
 
-	Gtk::Box* ma = get_message_area();
-	ma->pack_start (text1);
+	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
+	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
 
-	Gtk::Box* ca = get_content_area();
-	ca->pack_start (text2);
-
-	// Gtk::ButtonBox* bb = get_action_area();
-
-	add_button ("b_1", 101);
-	add_button ("b_2", 102);
-	add_button ("b_3", 103);
-
-	signal_response().connect (std::bind (&InfoDialog::on_dialog_response, this, std::placeholders::_1));
-
-#if 1
-	const char* icon =
-		"Information"		// key
-		//"dialog-password"		// key
-		//"dialog-information"		// light bulb
-		//"dialog-warning"		// yellow triangle
-		//"dialog-error"		// red cross
-		//"dialog-apply"		// green tick
-	;
-	i.set_from_icon_name (icon, Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
-	set_image(i);
-#endif
-
-	// set_title ("title");
-	set_message ("message message message message message");
-	set_secondary_text ("secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text, secondary text");
-
-	show_all();
-}
-
-void
-InfoDialog::on_dialog_response (int response_id)
-{
-	log_debug ("Button: %d\n", response_id);
+	signal_response().connect(sigc::mem_fun(this,&InfoDialog::on_dialog_response));
 }
 
 InfoDialog::~InfoDialog()
 {
+}
+
+InfoDialogPtr
+InfoDialog::create (void)
+{
+	return InfoDialogPtr (new InfoDialog());
+}
+
+void
+InfoDialog::on_dialog_response (int button_id)
+{
+	log_debug ("Button: %d\n", button_id);
+}
+
+int
+InfoDialog::run (void)
+{
+	Gtk::Button help ("_Help", true);
+	if (!help_url.empty()) {
+		Gtk::ButtonBox* bb = get_action_area();
+		bb->pack_end (help);
+		bb->set_child_secondary (help);
+		help.signal_clicked().connect (sigc::mem_fun (this, &InfoDialog::on_help));
+	}
+
+	set_title (title);
+	set_message (primary);
+	set_secondary_text (secondary);
+
+	show_all();
+
+	return Gtk::MessageDialog::run();
+}
+
+void
+InfoDialog::on_help (void)
+{
+	GError *error = nullptr;
+	gtk_show_uri (nullptr, help_url.c_str(), 0, &error);
+	if (error) {
+		log_debug ("Can't open uri: %s\n", error->message);
+		g_error_free (error);
+	}
+	log_debug ("HELP: %s\n", help_url.c_str());
 }
 
