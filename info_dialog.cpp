@@ -21,8 +21,6 @@
 InfoDialog::InfoDialog (void) :
 	MessageDialog ("", true, Gtk::MessageType::MESSAGE_INFO, Gtk::ButtonsType::BUTTONS_NONE, false)
 {
-	// Gtk::Box* ma = get_message_area();
-
 	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
 	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
 
