@@ -16,42 +16,26 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _PASSWORD_DIALOG_H_
-#define _PASSWORD_DIALOG_H_
-
-#include <memory>
-
-#include <gtkmm/image.h>
-#include <gtkmm/entry.h>
+#ifndef _INFO_DIALOG_H_
+#define _INFO_DIALOG_H_
 
 #include <gtkmm/messagedialog.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/image.h>
 
-class PasswordDialog;
-
-typedef std::shared_ptr<PasswordDialog> PasswordDialogPtr;
-
-class PasswordDialog : public Gtk::MessageDialog
+class InfoDialog : public Gtk::MessageDialog
 {
 public:
-	virtual ~PasswordDialog();
-
-	static PasswordDialogPtr create (void);
-
-	std::string title;
-
-	int run (void);		// Hide Dialog::run
+	InfoDialog (void);
+	virtual ~InfoDialog();
 
 protected:
-	PasswordDialog();
-	void on_dialog_response (int response_id);
-
 	Gtk::Entry text1;
 	Gtk::Entry text2;
-	Gtk::Entry text3;
-	Gtk::Image image;
+	Gtk::Image i;
 
-	std::weak_ptr<PasswordDialog> self;
+	void on_dialog_response (int response_id);
 };
 
-#endif // _PASSWORD_DIALOG_H_
+#endif // _INFO_DIALOG_H_
 

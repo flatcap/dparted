@@ -17,31 +17,46 @@
  */
 
 
-#include <glibmm.h>
+#include "info_dialog.h"
 
-#include "password_dialog.h"
-// #include "log.h"
-
-PasswordDialog::PasswordDialog (void) :
+InfoDialog::InfoDialog (void) :
 	MessageDialog ("", true, Gtk::MessageType::MESSAGE_OTHER, Gtk::ButtonsType::BUTTONS_NONE, false)
 {
-	// log_ctor ("ctor PasswordDialog");
-
-	image.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
-	set_image (image);
+#if 0
+	MESSAGE_INFO
+	MESSAGE_WARNING
+	MESSAGE_QUESTION
+	MESSAGE_ERROR
+	MESSAGE_OTHER
+#endif
+	// set_size_request (400, 400);
 
 	Gtk::Box* ma = get_message_area();
 	ma->pack_start (text1);
 
 	Gtk::Box* ca = get_content_area();
 	ca->pack_start (text2);
-	ca->pack_start (text3);
+
+	// Gtk::ButtonBox* bb = get_action_area();
 
 	add_button ("b_1", 101);
 	add_button ("b_2", 102);
 	add_button ("b_3", 103);
 
-	signal_response().connect (std::bind (&PasswordDialog::on_dialog_response, this, std::placeholders::_1));
+	signal_response().connect (std::bind (&InfoDialog::on_dialog_response, this, std::placeholders::_1));
+
+#if 1
+	const char* icon =
+		"Information"		// key
+		//"dialog-password"		// key
+		//"dialog-information"		// light bulb
+		//"dialog-warning"		// yellow triangle
+		//"dialog-error"		// red cross
+		//"dialog-apply"		// green tick
+	;
+	i.set_from_icon_name (icon, Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image(i);
+#endif
 
 	// set_title ("title");
 	set_message ("message message message message message");
@@ -50,30 +65,13 @@ PasswordDialog::PasswordDialog (void) :
 	show_all();
 }
 
-PasswordDialog::~PasswordDialog()
-{
-	// log_dtor ("dtor PasswordDialog");
-}
-
-
-PasswordDialogPtr
-PasswordDialog::create (void)
-{
-	PasswordDialogPtr p (new PasswordDialog());
-	p->self = p;
-
-	return p;
-}
-
-int
-PasswordDialog::run (void)
-{
-	return Gtk::MessageDialog::run();
-}
-
 void
-PasswordDialog::on_dialog_response (int response_id)
+InfoDialog::on_dialog_response (int response_id)
 {
 	log_debug ("Button: %d\n", response_id);
+}
+
+InfoDialog::~InfoDialog()
+{
 }
 

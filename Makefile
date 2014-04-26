@@ -71,6 +71,7 @@ SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp
 
 # GUI - Graphical objects
 SRC	+= main.cpp
+SRC	+= info_dialog.cpp
 
 # Misc header files
 HDR	+= log_trace.h mmap.h stringnum.h visitor.h log_severity.h
