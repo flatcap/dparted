@@ -17,7 +17,8 @@
  */
 
 #include "password_dialog.h"
-#define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
+#include "log.h"
+#include "utils.h"
 
 PasswordDialog::PasswordDialog (void) :
 	MessageDialog ("", true, Gtk::MessageType::MESSAGE_OTHER, Gtk::ButtonsType::BUTTONS_NONE, false),

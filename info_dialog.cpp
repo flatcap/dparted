@@ -17,6 +17,7 @@
  */
 
 #include "info_dialog.h"
+#include "log.h"
 
 InfoDialog::InfoDialog (void) :
 	MessageDialog ("", true, Gtk::MessageType::MESSAGE_INFO, Gtk::ButtonsType::BUTTONS_NONE, false)
