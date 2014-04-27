@@ -19,42 +19,28 @@
 #ifndef _QUESTION_DIALOG_H_
 #define _QUESTION_DIALOG_H_
 
-#include <memory>
-
-#include <gtkmm/messagedialog.h>
-#include <gtkmm/dialog.h>
-#include <gtkmm/window.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/image.h>
 #include <gtkmm/button.h>
+
+#include "dialog.h"
 
 class QuestionDialog;
 
 typedef std::shared_ptr<QuestionDialog> QuestionDialogPtr;
 
-class QuestionDialog : public Gtk::MessageDialog
+class QuestionDialog : public Dialog
 {
 public:
 	virtual ~QuestionDialog();
 
 	static QuestionDialogPtr create (void);
 
-	std::string title;
-	std::string primary;
-	std::string secondary;
-	std::string help_url;
-
-	std::vector<std::pair<std::string,int>> buttons;
-
 	int run (void);		// Hide Dialog::run
 
 protected:
 	QuestionDialog (void);
-	void on_dialog_response (int button_id);
-	virtual bool on_key_press_event (GdkEventKey* event);
-	virtual bool on_event (GdkEvent * event);
-
-	void on_help (void);
+	virtual void response (int button_id);
 };
 
 #endif // _QUESTION_DIALOG_H_

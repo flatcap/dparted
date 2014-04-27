@@ -17,12 +17,10 @@
  */
 
 #include "question_dialog.h"
-#define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
 
 QuestionDialog::QuestionDialog (void) :
-	MessageDialog ("", true, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, false)
+	Dialog (Gtk::MessageType::MESSAGE_QUESTION)
 {
-	signal_response().connect(sigc::mem_fun(this,&QuestionDialog::on_dialog_response));
 }
 
 QuestionDialog::~QuestionDialog()
@@ -36,64 +34,20 @@ QuestionDialog::create (void)
 }
 
 void
-QuestionDialog::on_dialog_response (int button_id)
+QuestionDialog::response (int button_id)
 {
-	log_debug ("Button: %d\n", button_id);
+	log_debug ("QuestionDialog::response = %d\n", button_id);
 }
 
 int
 QuestionDialog::run (void)
 {
-	Gtk::Button help ("_Help", true);
-	if (!help_url.empty()) {
-		Gtk::ButtonBox* bb = get_action_area();
-		bb->pack_end (help);
-		bb->set_child_secondary (help);
-		help.signal_clicked().connect (sigc::mem_fun (this, &QuestionDialog::on_help));
-	}
-
-	for (auto& i : buttons) {
-		add_button (i.first, i.second);
-	}
+	add_buttons();
 
 	set_title (title);
 	set_message (primary);
 	set_secondary_text (secondary);
 
-	show_all();
-	show_all_children();
-
-	return Gtk::MessageDialog::run();
-}
-
-void
-QuestionDialog::on_help (void)
-{
-	GError *error = nullptr;
-	gtk_show_uri (nullptr, help_url.c_str(), 0, &error);
-	if (error) {
-		log_debug ("Can't open uri: %s\n", error->message);
-		g_error_free (error);
-	}
-	log_debug ("HELP: %s\n", help_url.c_str());
-}
-
-bool
-QuestionDialog::on_key_press_event (GdkEventKey* event)
-{
-	if (event->keyval == GDK_KEY_Escape) {
-		// Ignore the escape key
-		return true;
-	} else {
-		// Leave everything else alone
-		return MessageDialog::on_key_press_event (event);
-	}
-}
-
-bool
-QuestionDialog::on_event (GdkEvent* event)
-{
-	// Prevent Alt-F4 (delete event)
-	return (event->type == GdkEventType::GDK_DELETE);
+	return Dialog::run();
 }
 

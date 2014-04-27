@@ -19,36 +19,28 @@
 #ifndef _ERROR_DIALOG_H_
 #define _ERROR_DIALOG_H_
 
-#include <memory>
-
-#include <gtkmm/messagedialog.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/image.h>
 #include <gtkmm/button.h>
+
+#include "dialog.h"
 
 class ErrorDialog;
 
 typedef std::shared_ptr<ErrorDialog> ErrorDialogPtr;
 
-class ErrorDialog : public Gtk::MessageDialog
+class ErrorDialog : public Dialog
 {
 public:
 	virtual ~ErrorDialog();
 
 	static ErrorDialogPtr create (void);
 
-	std::string title;
-	std::string primary;
-	std::string secondary;
-	std::string help_url;
-
 	int run (void);		// Hide Dialog::run
 
 protected:
 	ErrorDialog (void);
-	void on_dialog_response (int button_id);
-
-	void on_help (void);
+	void response (int button_id);
 };
 
 #endif // _ERROR_DIALOG_H_

@@ -1,46 +1,54 @@
+/* Copyright (c) 2014 Richard Russon (FlatCap)
+ *
+ * This file is part of DParted.
+ *
+ * DParted is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DParted is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef _CHANGE_PASSWORD_DIALOG_H_
 #define _CHANGE_PASSWORD_DIALOG_H_
-
-#include <memory>
 
 #include <gtkmm/image.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/label.h>
 
-#include <gtkmm/messagedialog.h>
+#include "dialog.h"
 
 class ChangePasswordDialog;
 
 typedef std::shared_ptr<ChangePasswordDialog> ChangePasswordDialogPtr;
 
-class ChangePasswordDialog : public Gtk::MessageDialog
+class ChangePasswordDialog : public Dialog
 {
 public:
 	virtual ~ChangePasswordDialog();
 
 	static ChangePasswordDialogPtr create (void);
 
-	std::string title;
-	std::string primary;
-	std::string secondary;
-	std::string help_url;
-
-	std::vector<std::pair<std::string,int>> buttons;
-
 	int run (void);		// Hide Dialog::run
 
 protected:
 	ChangePasswordDialog();
-	void on_dialog_response (int response_id);
-	void on_sp_toggle (void);
-	void on_help (void);
+	void response (int button_id);
 
+	void on_sp_toggle (void);
+
+	Gtk::Image image;
 	Gtk::Entry text1;
 	Gtk::Entry text2;
 	Gtk::Entry text3;
-	Gtk::Image image;
-
 	Gtk::CheckButton sp_toggle;
 	Gtk::Box sp_box;
 	Gtk::Label sp_label;

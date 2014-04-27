@@ -19,36 +19,28 @@
 #ifndef _WARNING_DIALOG_H_
 #define _WARNING_DIALOG_H_
 
-#include <memory>
-
-#include <gtkmm/messagedialog.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/image.h>
 #include <gtkmm/button.h>
+
+#include "dialog.h"
 
 class WarningDialog;
 
 typedef std::shared_ptr<WarningDialog> WarningDialogPtr;
 
-class WarningDialog : public Gtk::MessageDialog
+class WarningDialog : public Dialog
 {
 public:
 	virtual ~WarningDialog();
 
 	static WarningDialogPtr create (void);
 
-	std::string title;
-	std::string primary;
-	std::string secondary;
-	std::string help_url;
-
 	int run (void);		// Hide Dialog::run
 
 protected:
 	WarningDialog (void);
-	void on_dialog_response (int button_id);
-
-	void on_help (void);
+	void response (int button_id);
 };
 
 #endif // _WARNING_DIALOG_H_

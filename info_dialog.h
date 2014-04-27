@@ -19,36 +19,28 @@
 #ifndef _INFO_DIALOG_H_
 #define _INFO_DIALOG_H_
 
-#include <memory>
-
-#include <gtkmm/messagedialog.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/image.h>
 #include <gtkmm/button.h>
+
+#include "dialog.h"
 
 class InfoDialog;
 
 typedef std::shared_ptr<InfoDialog> InfoDialogPtr;
 
-class InfoDialog : public Gtk::MessageDialog
+class InfoDialog : public Dialog
 {
 public:
 	virtual ~InfoDialog();
 
 	static InfoDialogPtr create (void);
 
-	std::string title;
-	std::string primary;
-	std::string secondary;
-	std::string help_url;
-
 	int run (void);		// Hide Dialog::run
 
 protected:
 	InfoDialog (void);
-	void on_dialog_response (int button_id);
-
-	void on_help (void);
+	void response (int button_id);
 };
 
 #endif // _INFO_DIALOG_H_

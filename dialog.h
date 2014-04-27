@@ -16,40 +16,42 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "error_dialog.h"
+#ifndef _DIALOG_H_
+#define _DIALOG_H_
 
-ErrorDialog::ErrorDialog (void) :
-	Dialog (Gtk::MessageType::MESSAGE_ERROR)
+#include <memory>
+
+#include <gtkmm/messagedialog.h>
+
+#include "log.h"
+
+class Dialog;
+
+typedef std::shared_ptr<Dialog> DialogPtr;
+
+class Dialog : public Gtk::MessageDialog
 {
-	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
-	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
-}
+public:
+	Dialog (Gtk::MessageType type);
+	virtual ~Dialog();
 
-ErrorDialog::~ErrorDialog()
-{
-}
+	std::string title;
+	std::string primary;
+	std::string secondary;
 
-ErrorDialogPtr
-ErrorDialog::create (void)
-{
-	return ErrorDialogPtr (new ErrorDialog());
-}
+	std::string help_url;
 
-void
-ErrorDialog::response (int button_id)
-{
-	log_debug ("ErrorDialog::response = %d\n", button_id);
-}
+	std::vector<std::pair<std::string,int>> buttons;
 
-int
-ErrorDialog::run (void)
-{
-	add_buttons();
+	bool ignore_escape = false;
 
-	set_title (title);
-	set_message (primary);
-	set_secondary_text (secondary);
+protected:
+	void on_help (void);
+	void add_buttons (void);
 
-	return Dialog::run();
-}
+	virtual void response (int button) = 0;
+	virtual bool on_event (GdkEvent* event);
+};
+
+#endif // _DIALOG_H_
 

@@ -19,12 +19,10 @@
 #include "warning_dialog.h"
 
 WarningDialog::WarningDialog (void) :
-	MessageDialog ("", true, Gtk::MessageType::MESSAGE_WARNING, Gtk::ButtonsType::BUTTONS_NONE, false)
+	Dialog (Gtk::MessageType::MESSAGE_WARNING)
 {
 	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
 	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
-
-	signal_response().connect(sigc::mem_fun(this,&WarningDialog::on_dialog_response));
 }
 
 WarningDialog::~WarningDialog()
@@ -38,40 +36,20 @@ WarningDialog::create (void)
 }
 
 void
-WarningDialog::on_dialog_response (int button_id)
+WarningDialog::response (int button_id)
 {
-	log_debug ("Button: %d\n", button_id);
+	log_debug ("WarningDialog::response = %d\n", button_id);
 }
 
 int
 WarningDialog::run (void)
 {
-	Gtk::Button help ("_Help", true);
-	if (!help_url.empty()) {
-		Gtk::ButtonBox* bb = get_action_area();
-		bb->pack_end (help);
-		bb->set_child_secondary (help);
-		help.signal_clicked().connect (sigc::mem_fun (this, &WarningDialog::on_help));
-	}
+	add_buttons();
 
 	set_title (title);
 	set_message (primary);
 	set_secondary_text (secondary);
 
-	show_all();
-
-	return Gtk::MessageDialog::run();
-}
-
-void
-WarningDialog::on_help (void)
-{
-	GError *error = nullptr;
-	gtk_show_uri (nullptr, help_url.c_str(), 0, &error);
-	if (error) {
-		log_debug ("Can't open uri: %s\n", error->message);
-		g_error_free (error);
-	}
-	log_debug ("HELP: %s\n", help_url.c_str());
+	return Dialog::run();
 }
 
