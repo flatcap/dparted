@@ -19,7 +19,8 @@
 #include "dialog.h"
 
 Dialog::Dialog (Gtk::MessageType type) :
-	MessageDialog ("", true, type, Gtk::ButtonsType::BUTTONS_NONE, false)
+	MessageDialog ("", true, type, Gtk::ButtonsType::BUTTONS_NONE, false),
+	help ("_Help", true)
 {
 	signal_response().connect ([&] (int id) { response (id); });
 }
@@ -44,12 +45,13 @@ Dialog::on_help (void)
 void
 Dialog::add_buttons (void)
 {
-	Gtk::Button help ("_Help", true);
 	if (!help_url.empty()) {
 		Gtk::ButtonBox* bb = get_action_area();
 		bb->pack_end (help);
 		bb->set_child_secondary (help);
 		help.signal_clicked().connect (std::bind (&Dialog::on_help, this));
+
+		help.show();
 	}
 
 	for (auto& i : buttons) {
@@ -65,5 +67,11 @@ Dialog::on_event (GdkEvent* event)
 	}
 
 	return Gtk::MessageDialog::on_event (event);
+}
+
+int
+Dialog::run (void)
+{
+	return Gtk::MessageDialog::run();
 }
 

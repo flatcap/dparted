@@ -19,23 +19,58 @@
 #include "change_password_dialog.h"
 
 ChangePasswordDialog::ChangePasswordDialog (void) :
-	Dialog (Gtk::MessageType::MESSAGE_OTHER)
+	Dialog (Gtk::MessageType::MESSAGE_OTHER),
+	old  ("", 0.0, 0.5),
+	new1 ("", 0.0, 0.5),
+	new2 ("", 0.0, 0.5)
 {
 	image.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
 	set_image (image);
 
-	Gtk::Box* ma = get_message_area();
-	ma->pack_start (text1);
-
 	Gtk::Box* ca = get_content_area();
+	// ca->set_spacing(0);
+
+	ca->pack_start (grid);
+
+#if 0
+	ca->pack_start (old);
+	ca->pack_start (text1);
+	ca->pack_start (new1);
 	ca->pack_start (text2);
+	ca->pack_start (new2);
 	ca->pack_start (text3);
+#else
+	grid.set_row_spacing(6);
+	grid.set_column_spacing(12);
+	grid.attach (old,   0, 0, 1, 1);
+	grid.attach (text1, 1, 0, 1, 1);
+	grid.attach (new1,  0, 1, 1, 1);
+	grid.attach (text2, 1, 1, 1, 1);
+	grid.attach (new2,  0, 2, 1, 1);
+	grid.attach (text3, 1, 2, 1, 1);
+#endif
+
+	text1.set_width_chars (40);
+	text2.set_width_chars (40);
+	text3.set_width_chars (40);
 
 	sp_box.pack_start (sp_toggle, Gtk::PackOptions::PACK_SHRINK);
 	sp_box.pack_start (sp_label, Gtk::PackOptions::PACK_SHRINK);
 	ca->pack_start (sp_box);
 	sp_toggle.set_active (false);
 	sp_toggle.signal_toggled().connect (sigc::mem_fun (this,&ChangePasswordDialog::on_sp_toggle));
+
+	old.set_use_underline (true);
+	old.set_text_with_mnemonic ("_Old Password");
+	old.set_mnemonic_widget (text1);
+
+	new1.set_use_underline (true);
+	new1.set_text_with_mnemonic ("_New Password");
+	new1.set_mnemonic_widget (text2);
+
+	new2.set_use_underline (true);
+	new2.set_text_with_mnemonic ("_Repeat New Password");
+	new2.set_mnemonic_widget (text3);
 
 	sp_label.set_use_underline (true);
 	sp_label.set_text_with_mnemonic ("Show _Password");
@@ -45,9 +80,7 @@ ChangePasswordDialog::ChangePasswordDialog (void) :
 	text2.set_visibility (false);
 	text3.set_visibility (false);
 
-	add_button ("b_1", 101);
-	add_button ("b_2", 102);
-	add_button ("b_3", 103);
+	show_all();
 }
 
 ChangePasswordDialog::~ChangePasswordDialog()

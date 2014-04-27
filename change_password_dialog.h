@@ -19,6 +19,7 @@
 #ifndef _CHANGE_PASSWORD_DIALOG_H_
 #define _CHANGE_PASSWORD_DIALOG_H_
 
+#include <gtkmm/grid.h>
 #include <gtkmm/image.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/checkbutton.h>
@@ -37,7 +38,7 @@ public:
 
 	static ChangePasswordDialogPtr create (void);
 
-	int run (void);		// Hide Dialog::run
+	virtual int run (void);		// Hide Dialog::run
 
 protected:
 	ChangePasswordDialog();
@@ -46,12 +47,16 @@ protected:
 	void on_sp_toggle (void);
 
 	Gtk::Image image;
+	Gtk::Label old;
 	Gtk::Entry text1;
+	Gtk::Label new1;
 	Gtk::Entry text2;
+	Gtk::Label new2;
 	Gtk::Entry text3;
 	Gtk::CheckButton sp_toggle;
 	Gtk::Box sp_box;
 	Gtk::Label sp_label;
+	Gtk::Grid grid;
 };
 
 #endif // _CHANGE_PASSWORD_DIALOG_H_

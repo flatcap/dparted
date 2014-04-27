@@ -20,31 +20,31 @@
 
 PasswordDialog::PasswordDialog (void) :
 	Dialog (Gtk::MessageType::MESSAGE_OTHER),
-	sp_box (Gtk::ORIENTATION_HORIZONTAL)
+	sp_box (Gtk::ORIENTATION_HORIZONTAL),
+	pass_label ("Passphrase:", 0.0, 0.5)
 {
 	image.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
 	set_image (image);
 
-	Gtk::Box* ma = get_message_area();
-	ma->pack_start (text1);
+	sp_label.set_use_underline (true);
+	sp_label.set_label ("Show _Password");
+	sp_label.set_mnemonic_widget (sp_toggle);
 
-	sp_box.pack_start (sp_toggle, Gtk::PackOptions::PACK_SHRINK);
-	sp_box.pack_start (sp_label, Gtk::PackOptions::PACK_SHRINK);
-	ma->pack_start (sp_box);
+	text.set_visibility (false);
+
 	sp_toggle.set_active (false);
 	sp_toggle.signal_toggled().connect (sigc::mem_fun (this,&PasswordDialog::on_sp_toggle));
 
-	sp_label.set_text ("Show password");
-
-	text1.set_visibility (false);
-
 	Gtk::Box* ca = get_content_area();
-	ca->pack_start (text2);
-	ca->pack_start (text3);
 
-	add_button ("b_1", 101);
-	add_button ("b_2", 102);
-	add_button ("b_3", 103);
+	ca->pack_start (pass_label);
+	ca->pack_start (text);
+
+	sp_box.pack_start (sp_toggle, Gtk::PackOptions::PACK_SHRINK);
+	sp_box.pack_start (sp_label, Gtk::PackOptions::PACK_SHRINK);
+	ca->pack_start (sp_box);
+
+	show_all();
 }
 
 PasswordDialog::~PasswordDialog()
@@ -78,6 +78,6 @@ PasswordDialog::run (void)
 void
 PasswordDialog::on_sp_toggle (void)
 {
-	text1.set_visibility (sp_toggle.get_active());
+	text.set_visibility (sp_toggle.get_active());
 }
 

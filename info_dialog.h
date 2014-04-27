@@ -36,7 +36,7 @@ public:
 
 	static InfoDialogPtr create (void);
 
-	int run (void);		// Hide Dialog::run
+	virtual int run (void);		// Hide Dialog::run
 
 protected:
 	InfoDialog (void);

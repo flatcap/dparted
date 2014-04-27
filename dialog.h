@@ -45,7 +45,10 @@ public:
 
 	bool ignore_escape = false;
 
+	virtual int run (void);
+
 protected:
+	Gtk::Button help;
 	void on_help (void);
 	void add_buttons (void);
 

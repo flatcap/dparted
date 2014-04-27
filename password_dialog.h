@@ -37,7 +37,7 @@ public:
 
 	static PasswordDialogPtr create (void);
 
-	int run (void);		// Hide Dialog::run
+	virtual int run (void);		// Hide Dialog::run
 
 protected:
 	PasswordDialog (void);
@@ -46,11 +46,10 @@ protected:
 	void on_sp_toggle (void);
 
 	Gtk::Image image;
-	Gtk::Entry text1;
-	Gtk::Entry text2;
-	Gtk::Entry text3;
+	Gtk::Entry text;
 	Gtk::CheckButton sp_toggle;
 	Gtk::Box sp_box;
+	Gtk::Label pass_label;
 	Gtk::Label sp_label;
 };
 
