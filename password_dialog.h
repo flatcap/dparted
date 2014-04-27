@@ -21,10 +21,13 @@
 
 #include <memory>
 
-#include <gtkmm/image.h>
-#include <gtkmm/entry.h>
-
 #include <gtkmm/messagedialog.h>
+#include <gtkmm/dialog.h>
+#include <gtkmm/window.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/image.h>
+#include <gtkmm/button.h>
+#include <gtkmm/checkbutton.h>
 
 class PasswordDialog;
 
@@ -38,19 +41,29 @@ public:
 	static PasswordDialogPtr create (void);
 
 	std::string title;
+	std::string primary;
+	std::string secondary;
+	std::string help_url;
+
+	std::vector<std::pair<std::string,int>> buttons;
 
 	int run (void);		// Hide Dialog::run
 
 protected:
-	PasswordDialog();
-	void on_dialog_response (int response_id);
-
+	PasswordDialog (void);
+	void on_dialog_response (int button_id);
+	virtual bool on_key_press_event (GdkEventKey* event);
+	virtual bool on_event (GdkEvent * event);
+	void on_sp_toggle (void);
+	Gtk::Image image;
 	Gtk::Entry text1;
 	Gtk::Entry text2;
 	Gtk::Entry text3;
-	Gtk::Image image;
+	Gtk::CheckButton sp_toggle;
+	Gtk::Box sp_box;
+	Gtk::Label sp_label;
 
-	std::weak_ptr<PasswordDialog> self;
+	void on_help (void);
 };
 
 #endif // _PASSWORD_DIALOG_H_
