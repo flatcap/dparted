@@ -16,29 +16,68 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <glibmm.h>
-
 #include "password_dialog.h"
-#include "log.h"
 
-PasswordDialog::PasswordDialog (const Glib::ustring& message) :
-	Gtk::MessageDialog (message)
+PasswordDialog::PasswordDialog (void) :
+	Dialog (Gtk::MessageType::MESSAGE_OTHER),
+	sp_box (Gtk::ORIENTATION_HORIZONTAL),
+	pass_label ("Passphrase:", 0.0, 0.5)
 {
-	log_ctor ("ctor PasswordDialog");
+	image.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image (image);
+
+	sp_label.set_use_underline (true);
+	sp_label.set_label ("Show _Password");
+	sp_label.set_mnemonic_widget (sp_toggle);
+
+	text.set_visibility (false);
+
+	sp_toggle.set_active (false);
+	sp_toggle.signal_toggled().connect (sigc::mem_fun (this,&PasswordDialog::on_sp_toggle));
+
+	Gtk::Box* ca = get_content_area();
+
+	ca->pack_start (pass_label);
+	ca->pack_start (text);
+
+	sp_box.pack_start (sp_toggle, Gtk::PackOptions::PACK_SHRINK);
+	sp_box.pack_start (sp_label, Gtk::PackOptions::PACK_SHRINK);
+	ca->pack_start (sp_box);
+
+	show_all();
 }
 
 PasswordDialog::~PasswordDialog()
 {
-	log_dtor ("dtor PasswordDialog");
 }
-
 
 PasswordDialogPtr
 PasswordDialog::create (void)
 {
-	PasswordDialogPtr p (new PasswordDialog("hello"));
-	p->self = p;
+	return PasswordDialogPtr (new PasswordDialog());
+}
 
-	return p;
+void
+PasswordDialog::response (int button_id)
+{
+	log_debug ("PasswordDialog::response = %d\n", button_id);
+}
+
+int
+PasswordDialog::run (void)
+{
+	add_buttons();
+
+	set_title (title);
+	set_message (primary);
+	set_secondary_text (secondary);
+
+	return Dialog::run();
+}
+
+void
+PasswordDialog::on_sp_toggle (void)
+{
+	text.set_visibility (sp_toggle.get_active());
 }
 

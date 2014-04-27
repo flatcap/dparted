@@ -58,6 +58,8 @@ public:
 	bool process_queue_item (ContainerPtr item);
 	void queue_add_probe (ContainerPtr& item);
 
+	virtual bool open_uri (const std::string& uri);
+
 protected:
 	ConfigFilePtr config_file;
 

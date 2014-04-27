@@ -16,42 +16,40 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _PASSWORD_DIALOG_H_
-#define _PASSWORD_DIALOG_H_
+#include "warning_dialog.h"
 
-#include <gtkmm/entry.h>
-#include <gtkmm/image.h>
-#include <gtkmm/button.h>
-#include <gtkmm/checkbutton.h>
-
-#include "dialog.h"
-
-class PasswordDialog;
-
-typedef std::shared_ptr<PasswordDialog> PasswordDialogPtr;
-
-class PasswordDialog : public Dialog
+WarningDialog::WarningDialog (void) :
+	Dialog (Gtk::MessageType::MESSAGE_WARNING)
 {
-public:
-	virtual ~PasswordDialog();
+	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
+	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
+}
 
-	static PasswordDialogPtr create (void);
+WarningDialog::~WarningDialog()
+{
+}
 
-	virtual int run (void);		// Hide Dialog::run
+WarningDialogPtr
+WarningDialog::create (void)
+{
+	return WarningDialogPtr (new WarningDialog());
+}
 
-protected:
-	PasswordDialog (void);
-	void response (int button_id);
+void
+WarningDialog::response (int button_id)
+{
+	log_debug ("WarningDialog::response = %d\n", button_id);
+}
 
-	void on_sp_toggle (void);
+int
+WarningDialog::run (void)
+{
+	add_buttons();
 
-	Gtk::Image image;
-	Gtk::Entry text;
-	Gtk::CheckButton sp_toggle;
-	Gtk::Box sp_box;
-	Gtk::Label pass_label;
-	Gtk::Label sp_label;
-};
+	set_title (title);
+	set_message (primary);
+	set_secondary_text (secondary);
 
-#endif // _PASSWORD_DIALOG_H_
+	return Dialog::run();
+}
 

@@ -73,8 +73,8 @@ GuiApp::my_idle (void)
 		passwd->set_title ("Password for X");
 		passwd->set_message ("text message");
 		passwd->set_secondary_text ("secondary text");
-		Gtk::Image i;
 		Gtk::Button cancel ("Cancel");
+		Gtk::Image i;
 		i.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
 		passwd->set_image(i);
 
@@ -268,6 +268,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 
 	ContainerPtr top_level = scan (disks, std::bind(&GuiApp::scan_callback, this, std::placeholders::_1));
 
+	activate();
 	return EXIT_SUCCESS;
 }
 
@@ -468,5 +469,20 @@ GuiApp::on_dispatch (void)
 	};
 #endif
 
+}
+
+
+bool
+GuiApp::open_uri (const std::string& uri)
+{
+	GError *error = NULL;
+	gtk_show_uri (nullptr, uri.c_str(), 0, &error);
+	if (error) {
+		log_error ("Can't open uri: %s\n", error->message);
+		g_error_free (error);
+		return false;
+	}
+
+	return true;
 }
 

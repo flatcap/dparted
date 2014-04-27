@@ -16,42 +16,45 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _PASSWORD_DIALOG_H_
-#define _PASSWORD_DIALOG_H_
+#ifndef _DIALOG_H_
+#define _DIALOG_H_
 
-#include <gtkmm/entry.h>
-#include <gtkmm/image.h>
-#include <gtkmm/button.h>
-#include <gtkmm/checkbutton.h>
+#include <memory>
 
-#include "dialog.h"
+#include <gtkmm/messagedialog.h>
 
-class PasswordDialog;
+#include "log.h"
 
-typedef std::shared_ptr<PasswordDialog> PasswordDialogPtr;
+class Dialog;
 
-class PasswordDialog : public Dialog
+typedef std::shared_ptr<Dialog> DialogPtr;
+
+class Dialog : public Gtk::MessageDialog
 {
 public:
-	virtual ~PasswordDialog();
+	Dialog (Gtk::MessageType type);
+	virtual ~Dialog();
 
-	static PasswordDialogPtr create (void);
+	std::string title;
+	std::string primary;
+	std::string secondary;
 
-	virtual int run (void);		// Hide Dialog::run
+	std::string help_url;
+
+	std::vector<std::pair<std::string,int>> buttons;
+
+	bool ignore_escape = false;
+
+	virtual int run (void);
 
 protected:
-	PasswordDialog (void);
-	void response (int button_id);
+	Gtk::Button help;
+	void on_help (void);
+	void add_buttons (void);
 
-	void on_sp_toggle (void);
-
-	Gtk::Image image;
-	Gtk::Entry text;
-	Gtk::CheckButton sp_toggle;
-	Gtk::Box sp_box;
-	Gtk::Label pass_label;
-	Gtk::Label sp_label;
+	virtual void response (int button) = 0;
+	virtual bool on_event (GdkEvent* event);
 };
 
-#endif // _PASSWORD_DIALOG_H_
+#endif // _DIALOG_H_
 

@@ -68,4 +68,13 @@ Control: Type, label, default value, size(display), size(max), default button
 IQWE: Title, secondary, help, "Don't ask/tell me again"
 P: Title, secondary, help, size(min)
 
+Question object: question, buttons, help, config
+
+question dialog -- [X] remember settings button
+
+Question behaviour on <esc> or <return>?
+
+theme Question dialog to match owner (colour)?
+
+Question dialog need type, name, width -- passphrase
 

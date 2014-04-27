@@ -16,42 +16,32 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _PASSWORD_DIALOG_H_
-#define _PASSWORD_DIALOG_H_
+#ifndef _QUESTION_DIALOG_H_
+#define _QUESTION_DIALOG_H_
 
 #include <gtkmm/entry.h>
 #include <gtkmm/image.h>
 #include <gtkmm/button.h>
-#include <gtkmm/checkbutton.h>
 
 #include "dialog.h"
 
-class PasswordDialog;
+class QuestionDialog;
 
-typedef std::shared_ptr<PasswordDialog> PasswordDialogPtr;
+typedef std::shared_ptr<QuestionDialog> QuestionDialogPtr;
 
-class PasswordDialog : public Dialog
+class QuestionDialog : public Dialog
 {
 public:
-	virtual ~PasswordDialog();
+	virtual ~QuestionDialog();
 
-	static PasswordDialogPtr create (void);
+	static QuestionDialogPtr create (void);
 
 	virtual int run (void);		// Hide Dialog::run
 
 protected:
-	PasswordDialog (void);
-	void response (int button_id);
-
-	void on_sp_toggle (void);
-
-	Gtk::Image image;
-	Gtk::Entry text;
-	Gtk::CheckButton sp_toggle;
-	Gtk::Box sp_box;
-	Gtk::Label pass_label;
-	Gtk::Label sp_label;
+	QuestionDialog (void);
+	virtual void response (int button_id);
 };
 
-#endif // _PASSWORD_DIALOG_H_
+#endif // _QUESTION_DIALOG_H_
 
