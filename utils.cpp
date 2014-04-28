@@ -299,37 +299,7 @@ execute_command_in (const std::string& command, const std::string& input, bool l
 }
 
 unsigned int
-explode (const char* separators, const std::string& input, std::vector<std::string>& parts)
-{
-	return_val_if_fail (separators, 0);
-
-	std::size_t start = 0;
-	std::size_t end   = 0;
-
-	parts.clear();
-
-	end = input.find (separators, start);
-	while (end != std::string::npos) {
-		start = input.find_first_not_of (" \t", start);		// trim leading whitespace
-		parts.push_back (input.substr (start, end - start));
-		start = end + 1;
-		end = input.find (separators, start);
-	}
-
-	if (start != input.size()) {
-		parts.push_back (input.substr (start));
-	}
-
-	log_debug ("vector:");
-	for (auto value : parts) {
-		log_debug ("\t>>%s<<", value.c_str());
-	}
-
-	return parts.size();
-}
-
-unsigned int
-explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max)
+explode (const char* separators, const std::string& input, std::vector<std::string>& parts, int max)
 {
 	return_val_if_fail (separators, 0);
 

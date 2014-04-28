@@ -66,7 +66,7 @@ Loop::create (const std::string& losetup)
 {
 	std::vector<std::string> parts;
 
-	explode_n (" :", losetup, parts, 12);
+	explode (" :", losetup, parts, 12);
 
 #if 0
 	log_info ("parts: (%ld)", parts.size());
