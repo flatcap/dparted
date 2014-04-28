@@ -1,38 +1,38 @@
-	default theme has: colours, labels, icons -> DefaultTheme object?
-		table = "/usr/share/icons/table.png"
-	who populates the default theme?  -- GuiApp?
-		deriving => fine-grained custom colours, etc
-	need to be able to _revert_ to default theme
+default theme has: colours, labels, icons -> DefaultTheme object?
+	table = "/usr/share/icons/table.png"
+who populates the default theme?  -- GuiApp?
+	deriving => fine-grained custom colours, etc
+need to be able to _revert_ to default theme
 
-	Menu - Theme
-		Default -> object
-		Zany -> load_file & icons, etc
-		B&w  -> load_file & icons, etc
+Menu - Theme
+	Default -> object
+	Zany -> load_file & icons, etc
+	B&w  -> load_file & icons, etc
 
-	Missing icons, invalid colours, invalid options
-		App.QueueMessages()
-		App.Message() * n
-		App.FlushQueue()
-			Coalesce if titles are the same, e.g.
-				Error reading theme files
+Missing icons, invalid colours, invalid options
+	App.QueueMessages()
+	App.Message() * n
+	App.FlushQueue()
+		Coalesce if titles are the same, e.g.
+			Error reading theme files
 
-	config_file	table = "/usr/share/..."
-			colour = "cyan"
-			block.icon = "table"
-	theme		table -> pixbuf
-			colour = RGBA
-	gfx_container	icon -> pixbuf
-			colour = RGBA
+config_file	table = "/usr/share/..."
+		colour = "cyan"
+		block.icon = "table"
+theme		table -> pixbuf
+		colour = RGBA
+gfx_container	icon -> pixbuf
+		colour = RGBA
 
-	if theme seqnum incremented => gfx_container.retheme()
-	if new theme, build new gfx_container tree then subst?
+if theme seqnum incremented => gfx_container.retheme()
+if new theme, build new gfx_container tree then subst?
 
-	Objects - backup
-		alter contents
-		create
-		delete
-		move
-		resize
+Objects - backup
+	alter contents
+	create
+	delete
+	move
+	resize
 
 Timestamp the timeline
 	lose the changes from the last n minutes?
@@ -169,7 +169,7 @@ prefer make_shared over shared_ptr x (new Y)
 
 uniq id for all throws cf log
 
-order build and deps to maximum disk cache
+order build and deps to maximumise disk cache
 
 visitor: get_all -> flatten container tree -> vector
 
@@ -437,6 +437,8 @@ to work on a partition -- clear it first:
 	kill loop
 	look for cmd's cwd
 	lvm mounts
+	md mounts
+	luks mounts
 	what else?
 
 sudo command line option => prefix child commands
