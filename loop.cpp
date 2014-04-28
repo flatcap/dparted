@@ -241,8 +241,6 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 
 	losetup (output, name);		//XXX retval, exactly one reply
 
-	log_debug (output[0]);
-
 	LoopPtr l = create (output[0]);
 
 	size = lseek (fd, 0, SEEK_END);	//XXX isn't the stat buf enough?

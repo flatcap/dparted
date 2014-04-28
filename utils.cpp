@@ -338,19 +338,19 @@ explode_n (const char* separators, const std::string& input, std::vector<std::st
 
 	parts.clear();
 
-	log_info ("input      = '%s'", input.c_str());
-	log_info ("separators = '%s'", separators);
+	log_debug ("input      = '%s'", input.c_str());
+	log_debug ("separators = '%s'", separators);
 
 	start = input.find_first_not_of (separators, start);
 	end   = input.find_first_of     (separators, start);
-	log_info ("start = %ld, end = %ld", start, end);
+	log_debug ("start = %ld, end = %ld", start, end);
 
 	while (end != std::string::npos) {
 		parts.push_back (input.substr (start, end - start));
 
 		start = input.find_first_not_of (separators, end+1);
 		end   = input.find_first_of     (separators, start);
-		log_info ("start = %ld, end = %ld", start, end);
+		log_debug ("start = %ld, end = %ld", start, end);
 
 		max--;
 		if (max < 2)
