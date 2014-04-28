@@ -186,7 +186,6 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 	}
 
 	for (auto line : output) {
-		log_debug ("OUT: %s", line.c_str());
 		parse_tagged_line (line, "\t", tags);
 
 		LvmPartitionPtr p = LvmPartition::create();
@@ -346,7 +345,6 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 	}
 
 	for (auto line : output) {
-		log_debug ("OUT: %s", line.c_str());
 		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
@@ -430,7 +428,6 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 	}
 
 	for (auto line : output) {
-		log_debug ("OUT: %s", line.c_str());
 		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];

@@ -409,7 +409,7 @@ void deleter (Mmap* m)
 
 	std::tie (size, ptr) = *m;
 
-	log_debug ("mmap deleter: %p", ptr);
+	log_file ("mmap deleter: %p", ptr);
 	munmap (ptr, size);
 
 	delete m;
@@ -465,7 +465,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		//close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
-	log_debug ("mmap created: %p, device %s, size %s", buf, device.c_str(), get_size (size).c_str());
+	log_file ("mmap created: %p, device %s, size %s", buf, device.c_str(), get_size (size).c_str());
 
 	device_mmap = (MmapPtr (new Mmap (size, buf), deleter));
 
