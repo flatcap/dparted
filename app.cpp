@@ -59,6 +59,7 @@ App::App (void)
 
 App::~App()
 {
+#ifndef DP_NO_THREAD
 	{	// Scope
 		for (auto& i : thread_queue) {
 			i.join();	// Wait for things to finish
@@ -67,6 +68,7 @@ App::~App()
 		std::lock_guard<std::mutex> lock (thread_mutex);
 		thread_queue.clear();
 	}
+#endif
 
 	log_dtor ("dtor App");
 }
@@ -213,10 +215,12 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 {
 	LOG_TRACE;
 
+#ifndef DP_NO_THREAD
 	if (!thread_queue.empty()) {
 		log_code ("only one scan at a time");
 		return nullptr;
 	}
+#endif
 
 	ContainerPtr top_level = Container::create();
 	top_level->name = "dummy";
@@ -243,6 +247,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 		}
 	}
 
+#ifndef DP_NO_THREAD
 	if (fn) {
 		// Start a thread to watch the existing threads.
 		// When the existing thread have finished notify the user with fn().
@@ -262,6 +267,11 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 			thread_queue.pop_front();
 		}
 	}
+#else
+	if (fn) {
+		fn (top_level);
+	}
+#endif
 
 	return top_level;
 }
@@ -296,8 +306,12 @@ App::process_queue_item (ContainerPtr item)
 void
 App::start_thread (std::function<void(void)> fn)
 {
+#ifdef DP_NO_THREAD
+	fn();
+#else
 	std::lock_guard<std::mutex> lock (thread_mutex);
 	thread_queue.push_back (std::thread (fn));
+#endif
 }
 
 
