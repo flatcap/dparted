@@ -19,12 +19,13 @@
 # ----------------------------------------------------------------------------
 
 # Configurables
-# A=All, V=Verbose, P=Profiling, L=LogCheck, D=Debug
+# A=All, V=Verbose, P=Profiling, L=LogCheck, D=Debug, T=Thread
 A	?= 0
 V	?= 0
 P	?= 0
 L	?= 0
 D	?= 1
+T	?= 1
 
 GUI	?= 1
 
@@ -155,8 +156,6 @@ CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
 PACKAGES += libconfig++
 ifeq ($(GUI),1)
 	PACKAGES += gtkmm-3.0
-else
-	CFLAGS	+= -DDP_NO_THREAD
 endif
 
 ifeq ($(L),1)
@@ -169,6 +168,10 @@ ifeq ($(D),1)
 	CFLAGS	+= -include iostream
 else
 	CFLAGS	+= -D_GLIBCXX_IOSTREAM
+endif
+
+ifeq ($(T),0)
+	CFLAGS	+= -DDP_NO_THREAD
 endif
 
 CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))
