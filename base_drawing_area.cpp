@@ -32,12 +32,6 @@ BaseDrawingArea::~BaseDrawingArea()
 }
 
 
-bool
-BaseDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
-{
-	return Gtk::DrawingArea::on_draw (cr);
-}
-
 void
 BaseDrawingArea::set_data (GfxContainerPtr& c)
 {
@@ -56,6 +50,28 @@ BaseDrawingArea::get_cont_height (void)
 {
 	return cont_height;
 }
+
+void
+BaseDrawingArea::escape_text (std::string &text)
+{
+	std::size_t pos = text.find_first_of ("<>");
+	while (pos != std::string::npos) {
+		if (text[pos] == '<') {
+			text.replace (pos, 1, "&#60;");
+		} else {
+			text.replace (pos, 1, "&#62;");
+		}
+		pos = text.find_first_of ("<>", pos+2);
+	}
+}
+
+
+bool
+BaseDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
+{
+	return Gtk::DrawingArea::on_draw (cr);
+}
+
 
 /**
  * checker_rect - checker rect
@@ -83,26 +99,44 @@ BaseDrawingArea::checker_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Re
 }
 
 /**
- * fill_area - fill rounded rectangle
+ * draw_arc - draw a corner line (90 degrees) se/sw
  */
 void
-BaseDrawingArea::fill_area (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour)
+BaseDrawingArea::draw_arc (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool east)
 {
+	const int& r = RADIUS;
+	const int& x = shape.x;
+	const int& y = shape.y;
+	const int& w = shape.w;
+	const int& h = shape.h;
+
 	cr->save();
-	set_colour (cr, colour);
+	cr->set_line_width (SIDES+1);
 
-	draw_border (cr, shape);
+	if (east) {
+		// South-East
+		cr->move_to (x+w-r, y+h);
+		cr->rel_line_to (0, -r);
+		cr->rel_line_to (r, 0);
+		cr->rel_line_to (0, r);
+		cr->close_path();
+		cr->clip();
 
-	cr->fill();
+		cr->arc (x+w-r-(SIDES), y+h-r-SIDES, r+(SIDES/2)+1, ARC_E, ARC_S);
+	} else {
+		// South-West
+		cr->move_to (x, y+h);
+		cr->rel_line_to (0, -r);
+		cr->rel_line_to (r, 0);
+		cr->rel_line_to (0, r);
+		cr->close_path();
+		cr->clip();
+
+		cr->arc (x+r+SIDES, y+h-r-SIDES, r+(SIDES/2)+1, ARC_S, ARC_W);
+	}
+
+	cr->stroke();
 	cr->restore();
-}
-
-void
-BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk::RGBA& rgba)
-{
-	return_if_fail (cr);
-
-	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
 }
 
 /**
@@ -123,151 +157,6 @@ BaseDrawingArea::draw_border (const Cairo::RefPtr<Cairo::Context>& cr, const Rec
 	cr->arc (x+w-r, y+h-r, r, ARC_E, ARC_S);
 	cr->arc (x+  r, y+h-r, r, ARC_S, ARC_W);
 	cr->close_path();
-}
-
-/**
- * draw_text - write some text into an area
- */
-void
-BaseDrawingArea::draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, std::string text)
-{
-	cr->save();
-	draw_border (cr, shape);				// Set clipping area
-	cr->clip();
-
-	Pango::FontDescription font;
-	font.set_family ("Liberation Sans Bold");	//THEME - icon label font
-
-	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
-	layout->set_font_description (font);
-
-	font.set_size (11 * Pango::SCALE);		//THEME - icon label size
-	layout->set_font_description (font);
-
-	escape_text (text);
-	layout->set_markup (text);
-
-	int tw = 0;
-	int th = 0;
-	layout->get_pixel_size (tw, th);
-
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - icon label colour
-
-	//cr->move_to (shape.x + left, shape.y + shape.h - th);	// align to bottom
-	cr->move_to (shape.x + SIDES, shape.y + RADIUS);	// align to top
-
-#if 0
-	layout->set_width (Pango::SCALE * (shape.w - 4));
-	layout->set_ellipsize (Pango::ELLIPSIZE_END);
-#endif
-	layout->update_from_cairo_context (cr);
-	layout->show_in_cairo_context (cr);
-
-	cr->restore();
-}
-
-void
-BaseDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, Glib::RefPtr<Gdk::Pixbuf> icon, const Rect& shape, Rect& below)
-{
-	return_if_fail (icon);
-
-	Rect work = shape;
-
-	cr->save();
-
-	work.x += ((work.w - icon->get_width()) / 2);	// Centre the icon
-
-	Gdk::Cairo::set_source_pixbuf (cr, icon, work.x, work.y);
-	work.w = icon->get_width();
-	work.h = icon->get_height();
-	log_info ("icon %d,%d", work.w, work.h);
-
-	cr->rectangle (work.x, work.y, work.w, work.h);
-	cr->fill();
-	cr->restore();
-	//draw_edge (cr, work, "red");
-
-	below = { shape.x, shape.y + (work.h + GAP), shape.w, shape.h - (work.h + GAP) };
-}
-
-
-void
-BaseDrawingArea::escape_text (std::string &text)
-{
-	std::size_t pos = text.find_first_of ("<>");
-	while (pos != std::string::npos) {
-		if (text[pos] == '<') {
-			text.replace (pos, 1, "&#60;");
-		} else {
-			text.replace (pos, 1, "&#62;");
-		}
-		pos = text.find_first_of ("<>", pos+2);
-	}
-}
-
-/**
- * draw_iconbox - draw a rounded rectangle with a handy tab
- */
-void
-BaseDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& inside)
-{
-	if (shape.h < (RADIUS*2)) {
-		log_info ("draw_iconbox: too short");
-		return;
-	}
-
-	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
-		log_info ("draw_iconbox: too narrow");
-		return;
-	}
-
-	const int& x = shape.x;
-	const int& y = shape.y;
-	const int& w = shape.w;
-	const int& h = shape.h;
-
-	draw_corner (cr, shape, true,  false, true);		// Top left corner(1)
-	draw_corner (cr, shape, true,  true,  true);		// Top right corner(3)
-	draw_corner (cr, shape, false, false, true);		// Bottom left corner(9)
-
-	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
-
-	cr->set_line_width (RADIUS);				// Thick top bar(2)
-	cr->move_to (x+RADIUS, y+(RADIUS/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin left bar(4)
-	cr->move_to (x+(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin right bar(8)
-	cr->move_to (x+w-(SIDES/2), y+RADIUS);
-	cr->rel_line_to (0, h-(2*RADIUS));
-	cr->stroke();
-
-	cr->set_line_width (SIDES);				// Thin bottom bar (10)
-	cr->move_to (x+RADIUS, y+h-(SIDES/2));
-	cr->rel_line_to (w-(2*RADIUS), 0);
-	cr->stroke();
-
-	cr->move_to (x+SIDES, y+RADIUS);			// Tab block(5)
-	cr->rel_line_to (BLOCK_WIDTH+SIDES, 0);
-	cr->rel_line_to (0, h-RADIUS-SIDES);
-	cr->rel_line_to (-BLOCK_WIDTH+RADIUS-(SIDES*2), 0);
-	cr->rel_line_to (0, -RADIUS+SIDES);
-	cr->rel_line_to (-RADIUS+SIDES, 0);
-	cr->close_path();
-	cr->fill();
-
-	inside = { x+BLOCK_WIDTH+(SIDES*2), y+RADIUS, w-BLOCK_WIDTH-(SIDES*3), h-RADIUS-SIDES };
-
-	draw_corner (cr, inside, false, false, false);		// Bottom left inner corner (11)
-	draw_corner (cr, inside, true,  false, false);		// Top left inner corner(6)
-	draw_corner (cr, inside, true,  true,  false);		// Top right inner corner(7)
-
-	tab = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
 }
 
 /**
@@ -327,7 +216,7 @@ BaseDrawingArea::draw_box (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& 
  * draw_corner - solid ne/nw/se/sw convex/concave corner
  */
 void
-BaseDrawingArea::draw_corner (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, bool north, bool east, bool convex)
+BaseDrawingArea::draw_corner (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool north, bool east, bool convex)
 {
 	const int& r = RADIUS;
 	const int& x = shape.x;
@@ -397,45 +286,93 @@ BaseDrawingArea::draw_corner (const Cairo::RefPtr<Cairo::Context>& cr, Rect shap
 	cr->restore();
 }
 
+void
+BaseDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Glib::RefPtr<Gdk::Pixbuf> icon, Rect& below)
+{
+	return_if_fail (icon);
+
+	Rect work = shape;
+
+	cr->save();
+
+	work.x += ((work.w - icon->get_width()) / 2);	// Centre the icon
+
+	Gdk::Cairo::set_source_pixbuf (cr, icon, work.x, work.y);
+	work.w = icon->get_width();
+	work.h = icon->get_height();
+	log_info ("icon %d,%d", work.w, work.h);
+
+	cr->rectangle (work.x, work.y, work.w, work.h);
+	cr->fill();
+	cr->restore();
+	//draw_edge (cr, work, "red");
+
+	below = { shape.x, shape.y + (work.h + GAP), shape.w, shape.h - (work.h + GAP) };
+}
+
 /**
- * draw_arc - draw a corner line (90 degrees) se/sw
+ * draw_iconbox - draw a rounded rectangle with a handy tab
  */
 void
-BaseDrawingArea::draw_arc (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, bool east)
+BaseDrawingArea::draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& inside)
 {
-	const int& r = RADIUS;
+	if (shape.h < (RADIUS*2)) {
+		log_info ("draw_iconbox: too short");
+		return;
+	}
+
+	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
+		log_info ("draw_iconbox: too narrow");
+		return;
+	}
+
 	const int& x = shape.x;
 	const int& y = shape.y;
 	const int& w = shape.w;
 	const int& h = shape.h;
 
-	cr->save();
-	cr->set_line_width (SIDES+1);
+	draw_corner (cr, shape, true,  false, true);		// Top left corner(1)
+	draw_corner (cr, shape, true,  true,  true);		// Top right corner(3)
+	draw_corner (cr, shape, false, false, true);		// Bottom left corner(9)
 
-	if (east) {
-		// South-East
-		cr->move_to (x+w-r, y+h);
-		cr->rel_line_to (0, -r);
-		cr->rel_line_to (r, 0);
-		cr->rel_line_to (0, r);
-		cr->close_path();
-		cr->clip();
+	draw_arc (cr, shape, true);				// Thin bottom right corner (12)
 
-		cr->arc (x+w-r-(SIDES), y+h-r-SIDES, r+(SIDES/2)+1, ARC_E, ARC_S);
-	} else {
-		// South-West
-		cr->move_to (x, y+h);
-		cr->rel_line_to (0, -r);
-		cr->rel_line_to (r, 0);
-		cr->rel_line_to (0, r);
-		cr->close_path();
-		cr->clip();
-
-		cr->arc (x+r+SIDES, y+h-r-SIDES, r+(SIDES/2)+1, ARC_S, ARC_W);
-	}
-
+	cr->set_line_width (RADIUS);				// Thick top bar(2)
+	cr->move_to (x+RADIUS, y+(RADIUS/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
 	cr->stroke();
-	cr->restore();
+
+	cr->set_line_width (SIDES);				// Thin left bar(4)
+	cr->move_to (x+(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin right bar(8)
+	cr->move_to (x+w-(SIDES/2), y+RADIUS);
+	cr->rel_line_to (0, h-(2*RADIUS));
+	cr->stroke();
+
+	cr->set_line_width (SIDES);				// Thin bottom bar (10)
+	cr->move_to (x+RADIUS, y+h-(SIDES/2));
+	cr->rel_line_to (w-(2*RADIUS), 0);
+	cr->stroke();
+
+	cr->move_to (x+SIDES, y+RADIUS);			// Tab block(5)
+	cr->rel_line_to (BLOCK_WIDTH+SIDES, 0);
+	cr->rel_line_to (0, h-RADIUS-SIDES);
+	cr->rel_line_to (-BLOCK_WIDTH+RADIUS-(SIDES*2), 0);
+	cr->rel_line_to (0, -RADIUS+SIDES);
+	cr->rel_line_to (-RADIUS+SIDES, 0);
+	cr->close_path();
+	cr->fill();
+
+	inside = { x+BLOCK_WIDTH+(SIDES*2), y+RADIUS, w-BLOCK_WIDTH-(SIDES*3), h-RADIUS-SIDES };
+
+	draw_corner (cr, inside, false, false, false);		// Bottom left inner corner (11)
+	draw_corner (cr, inside, true,  false, false);		// Top left inner corner(6)
+	draw_corner (cr, inside, true,  true,  false);		// Top right inner corner(7)
+
+	tab = { x+SIDES, y+RADIUS, BLOCK_WIDTH, h-RADIUS-(SIDES*1) };
 }
 
 /**
@@ -502,4 +439,69 @@ BaseDrawingArea::draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, const Rec
 
 	tab = { x+SIDES, y+RADIUS, TAB_WIDTH, h-RADIUS-(SIDES*1) };
 }
+
+/**
+ * draw_text - write some text into an area
+ */
+void
+BaseDrawingArea::draw_text (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, std::string text)
+{
+	cr->save();
+	draw_border (cr, shape);				// Set clipping area
+	cr->clip();
+
+	Pango::FontDescription font;
+	font.set_family ("Liberation Sans Bold");	//THEME - icon label font
+
+	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
+	layout->set_font_description (font);
+
+	font.set_size (11 * Pango::SCALE);		//THEME - icon label size
+	layout->set_font_description (font);
+
+	escape_text (text);
+	layout->set_markup (text);
+
+	int tw = 0;
+	int th = 0;
+	layout->get_pixel_size (tw, th);
+
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - icon label colour
+
+	//cr->move_to (shape.x + left, shape.y + shape.h - th);	// align to bottom
+	cr->move_to (shape.x + SIDES, shape.y + RADIUS);	// align to top
+
+#if 0
+	layout->set_width (Pango::SCALE * (shape.w - 4));
+	layout->set_ellipsize (Pango::ELLIPSIZE_END);
+#endif
+	layout->update_from_cairo_context (cr);
+	layout->show_in_cairo_context (cr);
+
+	cr->restore();
+}
+
+/**
+ * fill_area - fill rounded rectangle
+ */
+void
+BaseDrawingArea::fill_area (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour)
+{
+	cr->save();
+	set_colour (cr, colour);
+
+	draw_border (cr, shape);
+
+	cr->fill();
+	cr->restore();
+}
+
+void
+BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk::RGBA& rgba)
+{
+	return_if_fail (cr);
+
+	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
+}
+
 

@@ -52,21 +52,21 @@ protected:
 
 	GfxContainerPtr top_level;
 
-	void checker_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, int check_size);
-	void fill_area (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour);
-	void set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk::RGBA& rgba);
-	void draw_border (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape);
 	void escape_text (std::string &text);
 
-	void draw_text (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, std::string text);
-	void draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, Glib::RefPtr<Gdk::Pixbuf> icon, const Rect& shape, Rect& below);
-	void draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& inside);
-	void draw_box (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& inside);
-	void draw_corner (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, bool north, bool east, bool convex);
-	void draw_arc (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape, bool east);
-	void draw_tabbox (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& inside);
 	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
 
+	void checker_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, int check_size);
+	void draw_arc     (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool east);
+	void draw_border  (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape);
+	void draw_box     (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& inside);
+	void draw_corner  (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool north, bool east, bool convex);
+	void draw_icon    (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Glib::RefPtr<Gdk::Pixbuf> icon, Rect& below);
+	void draw_iconbox (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& inside);
+	void draw_tabbox  (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, Rect& tab, Rect& inside);
+	void draw_text    (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, std::string text);
+	void fill_area    (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour);
+	void set_colour   (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk::RGBA& rgba);
 };
 
 #endif // _BASE_DRAWING_AREA_H_
