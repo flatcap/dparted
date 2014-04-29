@@ -316,7 +316,10 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	t = LvmTable::create();
 	log_debug ("new LvmTable %s (%p)", pv_uuid.c_str(), (void*) t.get());
 
-	t->bytes_size = le64_to_cpu (ph->device_size);
+	//XXX If the lvmpv is resized ph->device_size might not be updated
+	// We should use this value, then "fix" it when we read the lvm vg
+	//t->bytes_size = le64_to_cpu (ph->device_size);
+	t->bytes_size = bufsize;	// For now
 	t->parent_offset = 0;
 	t->bytes_used = 0;
 	t->config = config;
