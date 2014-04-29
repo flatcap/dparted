@@ -178,23 +178,23 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	log_debug ("Parent: %s", parent->get_device_name().c_str());
 
-	log_info ("LUKS:");
-	log_info ("\tversion:       %u", l->version);
-	log_info ("\tcipher name:   %s", l->cipher_name.c_str());
-	log_info ("\tcipher mode:   %s", l->cipher_mode.c_str());
-	log_info ("\thash spec:     %s", l->hash_spec.c_str());
-	log_info ("\tuuid:          %s", l->uuid.c_str());
-	log_info ("\toffset:        %u", l->payload_offset);
-	log_info ("\tkey bits:      %u", l->key_bits);
-	log_info ("\tMK digest:     %s", l->mk_digest.c_str());
-	log_info ("\tMK salt:       %s", l->mk_digest_salt.c_str());
-	log_info ("\tMK iterations: %u", l->mk_digest_iterations);
+	log_debug ("LUKS:");
+	log_debug ("\tversion:       %u", l->version);
+	log_debug ("\tcipher name:   %s", l->cipher_name.c_str());
+	log_debug ("\tcipher mode:   %s", l->cipher_mode.c_str());
+	log_debug ("\thash spec:     %s", l->hash_spec.c_str());
+	log_debug ("\tuuid:          %s", l->uuid.c_str());
+	log_debug ("\toffset:        %u", l->payload_offset);
+	log_debug ("\tkey bits:      %u", l->key_bits);
+	log_debug ("\tMK digest:     %s", l->mk_digest.c_str());
+	log_debug ("\tMK salt:       %s", l->mk_digest_salt.c_str());
+	log_debug ("\tMK iterations: %u", l->mk_digest_iterations);
 
-	log_info ("\tactive:        %08X", l->pass1_active);
-	log_info ("\titerations:    %u",   l->pass1_iterations);
-	log_info ("\tsalt:          %s",   l->pass1_salt.c_str());
-	log_info ("\tkey offset:    %u",   l->pass1_key_offset);
-	log_info ("\tstripes:       %u",   l->pass1_stripes);
+	log_debug ("\tactive:        %08X", l->pass1_active);
+	log_debug ("\titerations:    %u",   l->pass1_iterations);
+	log_debug ("\tsalt:          %s",   l->pass1_salt.c_str());
+	log_debug ("\tkey offset:    %u",   l->pass1_key_offset);
+	log_debug ("\tstripes:       %u",   l->pass1_stripes);
 
 	PartitionPtr p = Partition::create();
 	p->sub_type ("Space");

@@ -420,9 +420,9 @@ dump_range (const std::deque<Range>& vRange)
 
 #endif
 bool
-DrawingArea::on_mouse_motion (GdkEventMotion* event)
+DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
 {
-	log_debug ("mouse motion: (%.0f,%.0f)", event->x, event->y);
+	// log_debug ("mouse motion: (%.0f,%.0f)", event->x, event->y);
 
 #if 0
 	bool old = mouse_close;
