@@ -49,7 +49,6 @@ public:
 
 	virtual bool ask      (QuestionPtr q);
 	virtual bool notify (Message& m);
-	virtual bool ask_pass (PasswordDialogPtr pw);
 	virtual void properties (GfxContainerPtr c);
 	ThemePtr get_theme (void);
 	void set_theme (ThemePtr theme);

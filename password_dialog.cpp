@@ -18,8 +18,8 @@
 
 #include "password_dialog.h"
 
-PasswordDialog::PasswordDialog (void) :
-	Dialog (Gtk::MessageType::MESSAGE_OTHER),
+PasswordDialog::PasswordDialog (QuestionPtr q) :
+	Dialog(q),
 	sp_box (Gtk::ORIENTATION_HORIZONTAL),
 	pass_label ("Passphrase:", 0.0, 0.5)
 {
@@ -31,6 +31,7 @@ PasswordDialog::PasswordDialog (void) :
 	sp_label.set_mnemonic_widget (sp_toggle);
 
 	text.set_visibility (false);
+	text.set_activates_default (true);
 
 	sp_toggle.set_active (false);
 	sp_toggle.signal_toggled().connect (sigc::mem_fun (this,&PasswordDialog::on_sp_toggle));
@@ -44,7 +45,6 @@ PasswordDialog::PasswordDialog (void) :
 	sp_box.pack_start (sp_label, Gtk::PackOptions::PACK_SHRINK);
 	ca->pack_start (sp_box);
 
-	show_all();
 }
 
 PasswordDialog::~PasswordDialog()
@@ -52,26 +52,50 @@ PasswordDialog::~PasswordDialog()
 }
 
 PasswordDialogPtr
-PasswordDialog::create (void)
+PasswordDialog::create (QuestionPtr q)
 {
-	return PasswordDialogPtr (new PasswordDialog());
+	return_val_if_fail(q,nullptr);
+	return PasswordDialogPtr (new PasswordDialog(q));
 }
 
 void
 PasswordDialog::response (int button_id)
 {
+	return_if_fail (question);
+	question->output["password"] = text.get_text();
+	question->done();
 	log_debug ("PasswordDialog::response = %d\n", button_id);
 }
 
 int
 PasswordDialog::run (void)
 {
-	add_buttons();
+	std::string str;
+	std::string device = question->get_input ("device");
 
-	set_title (title);
-	set_message (primary);
-	set_secondary_text (secondary);
+	str = question->get_input ("title");
+	if (!str.empty()) {
+		set_title (str);
+	}
 
+	str = question->get_input ("primary");
+	if (str.empty()) {
+		str = "Enter password";
+	}
+	set_message (str);
+
+	str = question->get_input ("secondary");
+	if (str.empty()) {
+		str = "for device: " + device;
+	}
+	set_secondary_text (str);
+
+	if (!add_buttons()) {
+		add_button ("OK", Gtk::ResponseType::RESPONSE_OK);
+		set_default_response (Gtk::ResponseType::RESPONSE_OK);
+	}
+
+	show_all();
 	return Dialog::run();
 }
 

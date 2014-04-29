@@ -214,7 +214,7 @@ void
 LuksTable::on_reply (QuestionPtr q)
 {
 	log_debug ("user has answered question");
-	std::string password = q->reply;
+	std::string password = q->output["password"];
 	std::string device = get_device_inherit();
 	luks_open_actual (device, password, true);
 }
@@ -290,6 +290,8 @@ LuksTable::luks_open_actual (const std::string& device, const std::string& passw
 
 	add_child (p, probe);
 
+	//XXX check mount really succeeded
+
 	return true;
 }
 
@@ -313,14 +315,11 @@ LuksTable::luks_open (void)
 		add_child (p, true);
 	} else {
 		QuestionPtr q = Question::create (std::bind(&LuksTable::on_reply, this, std::placeholders::_1));
-		q->title = "Enter Password";
-		q->question = "for luks device " + device;
-		q->answers = { "Cancel", "Done" };
+		q->type = Question::Type::Password;
+		q->input = { { "device", device } };
 
 		main_app->ask (q);
 	}
-
-	//XXX check mount really succeeded
 
 	return true;	// Not really true, we're waiting for the user
 }

@@ -34,12 +34,12 @@ class InfoDialog : public Dialog
 public:
 	virtual ~InfoDialog();
 
-	static InfoDialogPtr create (void);
+	static InfoDialogPtr create (QuestionPtr q);
 
 	virtual int run (void);		// Hide Dialog::run
 
 protected:
-	InfoDialog (void);
+	InfoDialog (QuestionPtr q);
 	void response (int button_id);
 };
 

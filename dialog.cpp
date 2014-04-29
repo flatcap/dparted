@@ -18,9 +18,10 @@
 
 #include "dialog.h"
 
-Dialog::Dialog (Gtk::MessageType type) :
-	MessageDialog ("", true, type, Gtk::ButtonsType::BUTTONS_NONE, false),
-	help ("_Help", true)
+Dialog::Dialog (QuestionPtr q) :
+	MessageDialog ("", true, Gtk::MessageType::MESSAGE_OTHER, Gtk::ButtonsType::BUTTONS_NONE, false),
+	help ("_Help", true),
+	question(q)
 {
 	signal_response().connect ([&] (int id) { response (id); });
 }
@@ -32,6 +33,9 @@ Dialog::~Dialog()
 void
 Dialog::on_help (void)
 {
+	return_if_fail(question);
+
+	std::string help_url = question->input["help_url"];
 	GError *error = nullptr;
 	gtk_show_uri (nullptr, help_url.c_str(), 0, &error);
 	if (error) {
@@ -42,9 +46,12 @@ Dialog::on_help (void)
 	}
 }
 
-void
+bool
 Dialog::add_buttons (void)
 {
+	return_val_if_fail(question,false);
+
+	std::string help_url = question->input["help_url"];
 	if (!help_url.empty()) {
 		Gtk::ButtonBox* bb = get_action_area();
 		bb->pack_end (help);
@@ -54,9 +61,11 @@ Dialog::add_buttons (void)
 		help.show();
 	}
 
-	for (auto& i : buttons) {
+	for (auto& i : question->buttons) {
 		add_button (i.first, i.second);
 	}
+
+	return (!question->buttons.empty());
 }
 
 bool

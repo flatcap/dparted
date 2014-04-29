@@ -49,3 +49,13 @@ Question::done (void)
 	}
 }
 
+std::string
+Question::get_input (const std::string& name)
+{
+	if (input.count (name) != 0) {
+		return input[name];
+	}
+
+	return {};
+}
+

@@ -77,18 +77,9 @@ App::~App()
 bool
 App::ask (QuestionPtr q)
 {
-	return_val_if_fail (q, false);
+	return_val_if_fail (q,false);
 
-	log_debug (q->title);
-	log_debug (q->question);
-	std::stringstream ss;
-	ss << "\t";
-	for (auto a : q->answers) {
-		ss << a << ' ';
-	}
-	log_debug (ss);
-	q->reply = "password";
-	q->done();
+	log_code ("%s not implemented", __PRETTY_FUNCTION__);
 	return false;
 }
 

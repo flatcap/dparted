@@ -18,8 +18,8 @@
 
 #include "question_dialog.h"
 
-QuestionDialog::QuestionDialog (void) :
-	Dialog (Gtk::MessageType::MESSAGE_QUESTION)
+QuestionDialog::QuestionDialog (QuestionPtr q) :
+	Dialog(q)
 {
 }
 
@@ -28,9 +28,9 @@ QuestionDialog::~QuestionDialog()
 }
 
 QuestionDialogPtr
-QuestionDialog::create (void)
+QuestionDialog::create (QuestionPtr q)
 {
-	return QuestionDialogPtr (new QuestionDialog());
+	return QuestionDialogPtr (new QuestionDialog(q));
 }
 
 void
@@ -44,9 +44,12 @@ QuestionDialog::run (void)
 {
 	add_buttons();
 
-	set_title (title);
-	set_message (primary);
-	set_secondary_text (secondary);
+	image.set_from_icon_name ("dialog-question", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image (image);
+
+	set_title          (question->input["title"]);	//XXX might create empty map entry
+	set_message        (question->input["primary"]);
+	set_secondary_text (question->input["secondary"]);
 
 	return Dialog::run();
 }

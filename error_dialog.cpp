@@ -18,11 +18,9 @@
 
 #include "error_dialog.h"
 
-ErrorDialog::ErrorDialog (void) :
-	Dialog (Gtk::MessageType::MESSAGE_ERROR)
+ErrorDialog::ErrorDialog (QuestionPtr q) :
+	Dialog(q)
 {
-	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
-	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
 }
 
 ErrorDialog::~ErrorDialog()
@@ -30,9 +28,9 @@ ErrorDialog::~ErrorDialog()
 }
 
 ErrorDialogPtr
-ErrorDialog::create (void)
+ErrorDialog::create (QuestionPtr q)
 {
-	return ErrorDialogPtr (new ErrorDialog());
+	return ErrorDialogPtr (new ErrorDialog(q));
 }
 
 void
@@ -46,9 +44,15 @@ ErrorDialog::run (void)
 {
 	add_buttons();
 
-	set_title (title);
-	set_message (primary);
-	set_secondary_text (secondary);
+	image.set_from_icon_name ("dialog-error", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image (image);
+
+	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
+	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
+
+	set_title          (question->input["title"]);	//XXX might create empty map entry
+	set_message        (question->input["primary"]);
+	set_secondary_text (question->input["secondary"]);
 
 	return Dialog::run();
 }

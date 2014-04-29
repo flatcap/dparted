@@ -364,15 +364,6 @@ GuiApp::ask (QuestionPtr q)
 }
 
 bool
-GuiApp::ask_pass (PasswordDialogPtr pw)
-{
-	//Queue it for later
-	passwd = pw;
-	return true;
-}
-
-
-bool
 GuiApp::notify (Message& UNUSED(m))
 {
 	// Might need to queue these until we're ready to confront the user
@@ -438,6 +429,21 @@ GuiApp::on_dispatch (void)
 	QuestionPtr q = vq.front();
 	vq.pop_front();
 
+	DialogPtr dlg;
+	switch (q->type) {
+		case Question::Type::Password:
+			dlg = PasswordDialog::create(q);
+			break;
+		default:
+			log_error ("Unknown question type %d\n", (int) q->type);
+			break;
+	}
+
+	if (dlg) {
+		dlg->run();
+	}
+
+#if 0
 	Gtk::MessageDialog dialog (q->question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
 
 	dialog.set_title (q->title);
@@ -451,6 +457,7 @@ GuiApp::on_dispatch (void)
 	log_debug ("question = %d", q->result);
 	q->reply = "password";
 	q->done();	//XXX another thread?  it might take a while.  meanwhile the dialog is still visible
+#endif
 
 #if 0
 	enum Gtk::ResponseType
