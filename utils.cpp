@@ -311,6 +311,7 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 	log_debug ("input      = '%s'", input.c_str());
 	log_debug ("separators = '%s'", separators);
 
+	start = input.find_first_not_of (" \t", start);		// trim leading whitespace
 	start = input.find_first_not_of (separators, start);
 	end   = input.find_first_of     (separators, start);
 	log_debug ("start = %ld, end = %ld", start, end);

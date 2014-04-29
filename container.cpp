@@ -216,10 +216,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 	return_if_fail (child);
 	LOG_TRACE;
 
-	static void* TL = nullptr;
-
 	children.insert (child);
-	child->parent = get_smart();
 
 	if (probe)
 		main_app->queue_add_probe (child);
@@ -227,20 +224,15 @@ Container::add_child (ContainerPtr& child, bool probe)
 	if (bytes_size == 0)	// We are a dummy device
 		return;
 
+	child->parent = get_smart();
+
 	/* Check:
 	 *	available space
 	 *	alignment type
 	 *	size (restrictions)
 	 *	valid type within this parent
 	 */
-#if 0
-	if (children.size() > 0) {
-		ContainerPtr last = children.back();
 
-		last->next = child;
-		child->prev = last;
-	}
-#endif
 	bytes_used += child->bytes_size;
 
 	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
@@ -256,15 +248,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 	if (parent) {
 		name = parent->name.c_str();
 	}
-	log_info ("TOPLEVEL = %p (%s)", (void*) parent.get(), name);
-
-	if (!TL) {
-		TL = parent.get();
-	}
-
-	if (TL != parent.get()) {
-		log_critical ("TOP LEVEL DOESN'T MATCH");
-	}
+	log_debug ("TOPLEVEL = %p (%s)", (void*) parent.get(), name);
 
 #if 0
 	log_debug ("%12lu %12lu %12lu %12lu",
