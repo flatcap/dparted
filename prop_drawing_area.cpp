@@ -119,7 +119,7 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 
 		Rect below;
 		log_debug ("Icon: %p", (void*) icon.operator->());
-		draw_icon (cr, icon, box, below);
+		draw_icon (cr, box, icon, below);
 		draw_text (cr, box2, name);
 
 		inside = right;
@@ -141,9 +141,9 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 		Glib::RefPtr<Gdk::Pixbuf> icon;
 
 		icon = gui_app->get_theme()->get_icon ("table");
-		draw_icon (cr, icon,  tab, tab);
+		draw_icon (cr, tab, icon,  tab);
 		icon = gui_app->get_theme()->get_icon ("shield");
-		draw_icon (cr, icon, tab, tab);
+		draw_icon (cr, tab, icon, tab);
 
 		/* theme
 		 *	icon

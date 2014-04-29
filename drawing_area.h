@@ -38,7 +38,7 @@ public:
 	DrawingArea();
 	virtual ~DrawingArea();
 
-	virtual void set_data (GfxContainerPtr& c);
+	virtual void set_data (GfxContainerPtr& g);
 
 	virtual void set_cont_height (int height);
 	virtual int  get_cont_height (void);
@@ -46,7 +46,7 @@ public:
 	void set_cont_recurse (int recurse);
 	bool get_cont_recurse (void);
 
-	bool on_keypress (GdkEventKey* ev);
+	bool on_keypress (GdkEventKey* event);
 	void set_focus (GfxContainerPtr& gfx);
 
 protected:
@@ -54,12 +54,11 @@ protected:
 
 	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
 
-	bool on_mouse_motion (GdkEventMotion* event);
-	bool on_mouse_click  (GdkEventButton* event);
+	bool on_focus_in     (GdkEventFocus*    event);
+	bool on_focus_out    (GdkEventFocus*    event);
+	bool on_mouse_click  (GdkEventButton*   event);
 	bool on_mouse_leave  (GdkEventCrossing* event);
-
-	bool on_focus_in (GdkEventFocus* event);
-	bool on_focus_out (GdkEventFocus* event);
+	bool on_mouse_motion (GdkEventMotion*   event);
 
 #if 0
 	bool on_timeout (int timer_number);
@@ -68,21 +67,19 @@ protected:
 	bool on_textview_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
 
 private:
-	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape);
+	void draw_block     (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, GfxContainerPtr& gfx, Rect& tab, Rect& right);
+	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, GfxContainerPtr& gfx);
+	void draw_focus     (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool primary);
+	void draw_gradient  (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape);
+	void fill_rect      (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour);
 
-	void draw_block   (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right);
+	Rect get_rect   (const GfxContainerPtr& g);
+	bool is_visible (const GfxContainerPtr& g);
 
-	void fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour);
-	void draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool primary);
-	void draw_gradient (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape);
-
-	Rect get_rect (GfxContainerPtr g);
-	bool is_visible (const GfxContainerPtr& c);
-
-	GfxContainerPtr left  (GfxContainerPtr c);
-	GfxContainerPtr right (GfxContainerPtr c);
-	GfxContainerPtr up    (GfxContainerPtr c);
-	GfxContainerPtr down  (GfxContainerPtr c);
+	GfxContainerPtr left  (      GfxContainerPtr  g);
+	GfxContainerPtr right (      GfxContainerPtr  g);
+	GfxContainerPtr up    (const GfxContainerPtr& g);
+	GfxContainerPtr down  (const GfxContainerPtr& g);
 
 	std::deque<Range> vRange;
 

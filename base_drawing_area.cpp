@@ -33,9 +33,9 @@ BaseDrawingArea::~BaseDrawingArea()
 
 
 void
-BaseDrawingArea::set_data (GfxContainerPtr& c)
+BaseDrawingArea::set_data (GfxContainerPtr& gfx)
 {
-	top_level = c;
+	top_level = gfx;
 	//top_level->dump();
 }
 

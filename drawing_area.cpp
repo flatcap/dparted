@@ -204,94 +204,31 @@ draw_grid_log (const Cairo::RefPtr<Cairo::Context>& UNUSED(cr), Rect UNUSED(spac
 {
 }
 
-/**
- * fill_rect - fill rectangle
- */
-void
-DrawingArea::fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour)
+
+bool
+is_empty (const GfxContainerPtr& gfx)
 {
-	cr->save();
-	set_colour (cr, colour);
+	return_val_if_fail (gfx,true);
 
-	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
+	int children = gfx->children.size();
+	if (children == 0)
+		return true;
 
-	cr->fill();
-	cr->restore();
+	if (children > 1)
+		return false;
+
+	GfxContainerPtr child = gfx->children[0];
+	if (child->get_container()->is_a ("Misc"))
+		return true;
+
+	return false;
 }
-
-
-/**
- * draw_focus - 2px dashed black/white line
- */
-void
-DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool primary)
-{
-	static int start = 0;
-	std::vector<double> dashes = {5,5};
-
-	cr->save();
-	draw_border (cr, shape);				// Set clipping area
-	//cr->clip();
-
-	if (primary) {
-		cr->set_line_width(2);
-	} else {
-		cr->set_line_width(1);
-	}
-
-	cr->set_dash (dashes, start);
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);		//XXX focus colours from theme
-	draw_border (cr, shape);
-	cr->close_path();
-	cr->stroke();
-
-	if (primary) {
-		cr->set_dash (dashes, start+5);
-		cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
-		draw_border (cr, shape);
-		cr->close_path();
-		cr->stroke();
-	}
-
-	cr->restore();						// End clipping
-	++start;
-}
-
-/**
- * draw_gradient - apply light shading to an area
- */
-void
-DrawingArea::draw_gradient (const Cairo::RefPtr<Cairo::Context>& cr, Rect shape)
-{
-	const int& x = shape.x;
-	const int& y = shape.y;
-	const int& w = shape.w;
-	const int& h = shape.h;
-
-	//XXX needs clipping to rounded rectangle
-
-	cr->save();
-	draw_border (cr, shape);				// Set clipping area
-	cr->clip();
-
-	Cairo::RefPtr<Cairo::LinearGradient> grad;			// Gradient shading
-	grad = Cairo::LinearGradient::create (0.0, 0.0, 0.0, h);
-	grad->add_color_stop_rgba (0.00, 0.0, 0.0, 0.0, 0.2);
-	grad->add_color_stop_rgba (0.50, 0.0, 0.0, 0.0, 0.0);
-	grad->add_color_stop_rgba (1.00, 0.0, 0.0, 0.0, 0.1);
-	cr->set_source (grad);
-	cr->rectangle (x, y, w, h);
-	cr->fill();
-	cr->restore();
-}
-
-
 
 /**
  * draw_block - draw an icon-width, hollow, rounded rectangle
  */
 void
-DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, const Rect& shape, Rect& tab, Rect& right)
+DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, GfxContainerPtr& gfx, Rect& tab, Rect& right)
 {
 	if (shape.h < (RADIUS*2)) {
 		log_info ("draw_block: too short");
@@ -300,7 +237,7 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 
 	if (shape.w < (BLOCK_WIDTH + (RADIUS*2))) {
 		log_info ("draw_block: too narrow");
-		log_debug (cont->dump());
+		log_debug (gfx->dump());
 		return;
 	}
 
@@ -344,7 +281,277 @@ DrawingArea::draw_block (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 
 	right = { shape.x + work.w + GAP, shape.y, shape.w - work.w - GAP, shape.h};
 
-	vRange.push_front ({shape, cont});
+	vRange.push_front ({shape, gfx});
+}
+
+/**
+ * draw_container - recursively draw a set of containers
+ */
+void
+DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, GfxContainerPtr& gfx)
+{
+	return_if_fail (cr);
+	return_if_fail (gfx);
+
+#if 0
+	if (!top_level->update_info())
+		return;
+#endif
+
+	std::string display = gfx->display;
+	Gdk::RGBA background = gfx->background;
+	Gdk::RGBA colour = gfx->colour;
+	Glib::RefPtr<Gdk::Pixbuf> icon = gfx->icon;
+	std::string name = gfx->name;
+	std::string label = gfx->label;
+	bool usage = gfx->usage;
+
+	if (display.empty()) {
+		display = "box";
+	}
+
+	//XXX need to define these somewhere .h?
+	//XXX hard-code into theme.cpp?	A bit limiting
+	if (display == "never") {		// Don't display at all
+		return;
+	}
+
+	std::vector<GfxContainerPtr> children = gfx->children;
+
+	if ((display != "box") && (display != "empty") && (display != "icon") && (display != "iconbox") && (display != "tabbox")) {
+		display = "box";
+	}
+
+	if (display == "empty") {		// Only display if there's no children
+		if (is_empty (gfx)) {
+			display = "box";
+		}
+	}
+
+	//Rect tab;
+	Rect inside { 0,0,0,0 };
+
+	log_debug ("object = %s -- %d,%d", gfx->name.c_str(), shape.w, TAB_WIDTH);
+	if (shape.w < TAB_WIDTH) {
+#if 0
+		log_debug ("draw_container: too narrow");
+		log_debug (gfx->dump());
+#endif
+		return;
+	}
+
+	if (display == "icon") {		// Large icon
+		Rect box = shape;
+		Rect right = shape;
+		int width = 48 + SIDES*2;	//XXX fixed at 48px square (for now)
+		box.w = width;
+		right.x += (width + GAP);
+		right.w -= (width + GAP);
+
+		fill_area (cr, box, background);
+
+		Rect box2 = box;
+		box.x += GAP;
+		box.y += GAP;
+		box.w -= (GAP*2);
+		box.h -= (GAP*2);
+
+		Rect below;
+		vRange.push_front ({shape, gfx});
+		log_debug ("Icon: %p", (void*) icon.operator->());
+		draw_icon (cr, box, icon, below);
+		draw_text (cr, box2, name);
+
+		inside = right;
+		/* theme
+		 *	icon
+		 *	background
+		 * get icon
+		 * rect space = icon size
+		 * rect right = remaining space
+		 * draw_icon (clipped to 64x64)
+		 * rect right
+		 * rect inside (for label)
+		 */
+	} else if (display == "iconbox") {	// A box containing a small icon
+		Rect tab;
+		set_colour (cr, colour);
+		draw_iconbox (cr, shape, tab, inside);
+		vRange.push_front ({shape, gfx});
+
+		Glib::RefPtr<Gdk::Pixbuf> icon;
+
+		icon = gui_app->get_theme()->get_icon ("table");
+		draw_icon (cr, tab, icon,  tab);
+		icon = gui_app->get_theme()->get_icon ("shield");
+		draw_icon (cr, tab, icon, tab);
+
+		/* theme
+		 *	icon
+		 *	colour
+		 *	background
+		 * get_icon
+		 * rect space = icon size
+		 * rect inside = remaining space
+		 * draw_box
+		 * rect tab (icon space)
+		 * draw icon(s)
+		 */
+	} else if (display == "box") {		// A simple coloured box
+		set_colour (cr, colour);
+		draw_box (cr, shape, inside);
+		vRange.push_front ({shape, gfx});
+
+		fill_area (cr, inside, background);
+
+		if (usage) {
+			Rect r_usage = inside;
+			double d = (double) gfx->bytes_used / (double) gfx->bytes_size;
+			r_usage.w = r_usage.w * d;
+			if (r_usage.w > 1) {
+				cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
+				draw_border (cr, r_usage);
+				cr->fill();
+			}
+		}
+		if (!label.empty()) {
+			draw_text (cr, shape, label);
+		}
+		/* theme
+		 *	colour
+		 *	background
+		 * draw_box
+		 * rect inside
+		 */
+	} else if (display == "tabbox") {	// A coloured box with a handy tab
+		set_colour (cr, colour);
+		Rect tab;
+		draw_tabbox (cr, shape, tab, inside);
+		vRange.push_front ({shape, gfx});
+		/* theme
+		 *	colour
+		 *	background
+		 */
+	} else if (display == "empty") {	// Do nothing for now
+		log_debug ("EMPTY");
+		inside = shape;
+	} else {
+		log_debug ("unknown display type: %s", display.c_str());
+		return;
+	}
+
+	if (!inside.w) {
+		log_error ("NO WIDTH");
+		return;
+	}
+
+	uint64_t total = gfx->bytes_size;
+	uint64_t bpp   = total / inside.w;	// bytes per pixel
+
+	for (auto c : gfx->children) {
+		if (c->bytes_size > total) {
+			total = c->bytes_size;		//XXX tmp -- need to get intermediate object
+			bpp   = total / inside.w;
+		}
+		if (bpp == 0) {
+			log_error ("no bpp");
+			continue;
+		}
+		std::uint64_t offset = c->parent_offset / bpp;
+		std::uint64_t size   = c->bytes_size    / bpp;
+
+		Rect next = inside;
+		next.x += offset;
+		next.w = size;
+
+		draw_container (cr, next, c);
+	}
+	//XXX vRange.push_front ({work, gfx});			// Associate a region with a container
+
+	//if (gfx->get_focus() && (has_focus() || menu_active)) {
+	if (gfx->get_focus()) {
+		draw_focus (cr, shape, (has_focus() || menu_active));
+	}
+}
+
+/**
+ * draw_focus - 2px dashed black/white line
+ */
+void
+DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool primary)
+{
+	static int start = 0;
+	std::vector<double> dashes = {5,5};
+
+	cr->save();
+	draw_border (cr, shape);				// Set clipping area
+	//cr->clip();
+
+	if (primary) {
+		cr->set_line_width(2);
+	} else {
+		cr->set_line_width(1);
+	}
+
+	cr->set_dash (dashes, start);
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);		//XXX focus colours from theme
+	draw_border (cr, shape);
+	cr->close_path();
+	cr->stroke();
+
+	if (primary) {
+		cr->set_dash (dashes, start+5);
+		cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
+		draw_border (cr, shape);
+		cr->close_path();
+		cr->stroke();
+	}
+
+	cr->restore();						// End clipping
+	++start;
+}
+
+/**
+ * draw_gradient - apply light shading to an area
+ */
+void
+DrawingArea::draw_gradient (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape)
+{
+	const int& x = shape.x;
+	const int& y = shape.y;
+	const int& w = shape.w;
+	const int& h = shape.h;
+
+	//XXX needs clipping to rounded rectangle
+
+	cr->save();
+	draw_border (cr, shape);				// Set clipping area
+	cr->clip();
+
+	Cairo::RefPtr<Cairo::LinearGradient> grad;			// Gradient shading
+	grad = Cairo::LinearGradient::create (0.0, 0.0, 0.0, h);
+	grad->add_color_stop_rgba (0.00, 0.0, 0.0, 0.0, 0.2);
+	grad->add_color_stop_rgba (0.50, 0.0, 0.0, 0.0, 0.0);
+	grad->add_color_stop_rgba (1.00, 0.0, 0.0, 0.0, 0.1);
+	cr->set_source (grad);
+	cr->rectangle (x, y, w, h);
+	cr->fill();
+	cr->restore();
+}
+
+/**
+ * fill_rect - fill rectangle
+ */
+void
+DrawingArea::fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, const Gdk::RGBA& colour)
+{
+	cr->save();
+	set_colour (cr, colour);
+
+	cr->rectangle (shape.x, shape.y, shape.w, shape.h);
+
+	cr->fill();
+	cr->restore();
 }
 
 
@@ -377,12 +584,12 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	if (top_level->name == "dummy") {
 		for (auto c : top_level->children) {
 			//if (c->type == "Loop") {
-				draw_container (cr, c, shape);
+				draw_container (cr, shape, c);
 				shape.y += cont_height;
 			//}
 		}
 	} else {
-		draw_container (cr, top_level, shape);
+		draw_container (cr, shape, top_level);
 	}
 
 	return true;
@@ -419,34 +626,100 @@ dump_range (const std::deque<Range>& vRange)
 }
 
 #endif
+
 bool
-DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
+DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 {
-	// log_debug ("mouse motion: (%.0f,%.0f)", event->x, event->y);
+	LOG_TRACE;
 
-#if 0
-	bool old = mouse_close;
-
-	mouse_close = ((event->y > 25) and (event->x < 90));
-
-	if (mouse_close != old) {
-		get_window()->invalidate (false); // everything for now
+	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
+	Window *dp = reinterpret_cast<Window*> (get_toplevel());
+	if (!dp) {
+		log_debug ("No Window");
+		return false;
 	}
-#endif
+	GfxContainerPtr gfx = dp->get_focus();
+	if (!gfx) {
+		log_debug ("No focus");
+		gfx = get_focus (0, 0);
+		if (gfx) {
+			dp->set_focus(gfx);
+		}
+	}
 
 	return true;
 }
 
 bool
-DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
+DrawingArea::on_focus_out (GdkEventFocus* UNUSED(event))
 {
-#if 0
-	if (mouse_close) {
-		mouse_close = false;
-		get_window()->invalidate (false); // everything for now
-	}
-#endif
+	LOG_TRACE;
 	return true;
+}
+
+bool
+DrawingArea::on_keypress (GdkEventKey* event)
+{
+	return_val_if_fail (event,false);
+
+	bool redraw  = false;
+	bool handled = false;
+
+	log_debug ("Key: %d (0x%x)", event->keyval, event->keyval);
+
+	//Extra keys: Delete, Insert, Space/Enter (select)?
+
+	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
+	Window *dp = reinterpret_cast<Window*> (get_toplevel());
+	if (!dp) {
+		log_debug ("No Window");
+		return false;
+	}
+
+	GfxContainerPtr gfx = dp->get_focus();
+	if (!gfx) {
+		log_debug ("No focus");
+		return false;
+	}
+
+	int x = 0;
+	int y = 0;
+	switch (event->keyval) {
+		case GDK_KEY_Return:	// 65293 (0xFF0D)
+			log_debug ("state = %d", event->state);
+			if (event->state & GDK_MOD1_MASK) {		// Alt-Enter
+				on_menu_select (gfx, Action {"Properties", true });	// properties
+				handled = true;
+			}
+			break;
+		case GDK_KEY_Menu:	// 65383 (0xFF67)
+			get_coords (x, y);
+			popup_menu (gfx, x, y);
+			handled = true;
+			break;
+		case GDK_KEY_Left:	// 65361 (0xFF51)
+			redraw = dp->set_focus (left(gfx));
+			handled = true;
+			break;
+		case GDK_KEY_Right:	// 65363 (0xFF53)
+			redraw = dp->set_focus (right(gfx));
+			handled = true;
+			break;
+		case GDK_KEY_Up:	// 65362 (0xFF52)
+			redraw = dp->set_focus (up(gfx));
+			handled = true;
+			break;
+		case GDK_KEY_Down:	// 65364 (0xFF54)
+			redraw = dp->set_focus (down(gfx));
+			handled = true;
+			break;
+	}
+
+	if (redraw) {
+		get_window()->invalidate (false);
+	}
+
+	return handled;
 }
 
 bool
@@ -489,12 +762,42 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	return true;		// We've handled the event
 }
 
+bool
+DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
+{
+#if 0
+	if (mouse_close) {
+		mouse_close = false;
+		get_window()->invalidate (false); // everything for now
+	}
+#endif
+	return true;
+}
+
+bool
+DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
+{
+	// log_debug ("mouse motion: (%.0f,%.0f)", event->x, event->y);
+
+#if 0
+	bool old = mouse_close;
+
+	mouse_close = ((event->y > 25) and (event->x < 90));
+
+	if (mouse_close != old) {
+		get_window()->invalidate (false); // everything for now
+	}
+#endif
+
+	return true;
+}
+
 
 #if 0
 void
-draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr cont, Rect shape, Rect* right)
+draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr gfx, Rect shape, Rect* right)
 {
-	return_if_fail (cont);
+	return_if_fail (gfx);
 
 #if 0 // icon + label above
 	Rect inside;
@@ -509,7 +812,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
 	layout->set_font_description (font);
 
-	std::string title = "<b>" + cont->get_device_name() + "</b> &#8211; " + get_size (cont->bytes_size) + " <small>(" + std::to_string (100*cont->bytes_used/cont->bytes_size) + "% used)</small>";
+	std::string title = "<b>" + gfx->get_device_name() + "</b> &#8211; " + get_size (gfx->bytes_size) + " <small>(" + std::to_string (100*gfx->bytes_used/gfx->bytes_size) + "% used)</small>";
 
 	// https://developer.gnome.org/pango/stable/PangoMarkupFormat.html
 	layout->set_markup (title);
@@ -556,8 +859,8 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 
 	draw_icon (cr, "disk", inside, below);
 
-	std::string labeld = cont->device;
-	std::string labels = get_size (cont->bytes_size);
+	std::string labeld = gfx->device;
+	std::string labels = get_size (gfx->bytes_size);
 
 	Pango::FontDescription font;
 	Glib::RefPtr<Pango::Layout> layoutd = Pango::Layout::create (cr);
@@ -613,21 +916,21 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 }
 
 TablePtr
-DrawingArea::get_protective (GfxContainerPtr& c)
+DrawingArea::get_protective (GfxContainerPtr& gfx)
 {
-	return_val_if_fail (c, nullptr);
+	return_val_if_fail (gfx,nullptr);
 
 	GfxContainerPtr child;
 
-	log_debug ("1: %s", c->dump());
+	log_debug ("1: %s", gfx->dump());
 
-	if (!c->is_a ("Table"))
+	if (!gfx->is_a ("Table"))
 		return nullptr;
 
-	if (c->children.size() != 1)
+	if (gfx->children.size() != 1)
 		return nullptr;
 
-	child = c->children[0];
+	child = gfx->children[0];
 	log_debug ("2: %s", child->dump());
 	if (!child)
 		return nullptr;
@@ -745,9 +1048,9 @@ DrawingArea::on_textview_query_tooltip (int x, int y, bool UNUSED(keyboard_toolt
 	if (menu_active)
 		return false;
 
-	GfxContainerPtr c = get_focus (x, y);
-	if (c) {
-		std::string text = c->get_tooltip();
+	GfxContainerPtr gfx = get_focus (x, y);
+	if (gfx) {
+		std::string text = gfx->get_tooltip();
 		escape_text (text);
 		text = "<b>" + text + "</b>";
 		tooltip->set_markup (text);
@@ -760,222 +1063,12 @@ DrawingArea::on_textview_query_tooltip (int x, int y, bool UNUSED(keyboard_toolt
 }
 
 
-bool
-is_empty (const GfxContainerPtr& c)
-{
-	return_val_if_fail (c, true);
-
-	int children = c->children.size();
-	if (children == 0)
-		return true;
-
-	if (children > 1)
-		return false;
-
-	GfxContainerPtr child = c->children[0];
-	if (child->get_container()->is_a ("Misc"))
-		return true;
-
-	return false;
-}
-
-/**
- * draw_container - recursively draw a set of containers
- */
-void
-DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape)
-{
-	return_if_fail (cr);
-	return_if_fail (cont);
-
-#if 0
-	if (!top_level->update_info())
-		return;
-#endif
-
-	std::string display = cont->display;
-	Gdk::RGBA background = cont->background;
-	Gdk::RGBA colour = cont->colour;
-	Glib::RefPtr<Gdk::Pixbuf> icon = cont->icon;
-	std::string name = cont->name;
-	std::string label = cont->label;
-	bool usage = cont->usage;
-
-	if (display.empty()) {
-		display = "box";
-	}
-
-	//XXX need to define these somewhere .h?
-	//XXX hard-code into theme.cpp?	A bit limiting
-	if (display == "never") {		// Don't display at all
-		return;
-	}
-
-	std::vector<GfxContainerPtr> children = cont->children;
-
-	if ((display != "box") && (display != "empty") && (display != "icon") && (display != "iconbox") && (display != "tabbox")) {
-		display = "box";
-	}
-
-	if (display == "empty") {		// Only display if there's no children
-		if (is_empty (cont)) {
-			display = "box";
-		}
-	}
-
-	//Rect tab;
-	Rect inside { 0,0,0,0 };
-
-	log_debug ("object = %s -- %d,%d", cont->name.c_str(), shape.w, TAB_WIDTH);
-	if (shape.w < TAB_WIDTH) {
-#if 0
-		log_debug ("draw_container: too narrow");
-		log_debug (cont->dump());
-#endif
-		return;
-	}
-
-	if (display == "icon") {		// Large icon
-		Rect box = shape;
-		Rect right = shape;
-		int width = 48 + SIDES*2;	//XXX fixed at 48px square (for now)
-		box.w = width;
-		right.x += (width + GAP);
-		right.w -= (width + GAP);
-
-		fill_area (cr, box, background);
-
-		Rect box2 = box;
-		box.x += GAP;
-		box.y += GAP;
-		box.w -= (GAP*2);
-		box.h -= (GAP*2);
-
-		Rect below;
-		vRange.push_front ({shape, cont});
-		log_debug ("Icon: %p", (void*) icon.operator->());
-		draw_icon (cr, box, icon, below);
-		draw_text (cr, box2, name);
-
-		inside = right;
-		/* theme
-		 *	icon
-		 *	background
-		 * get icon
-		 * rect space = icon size
-		 * rect right = remaining space
-		 * draw_icon (clipped to 64x64)
-		 * rect right
-		 * rect inside (for label)
-		 */
-	} else if (display == "iconbox") {	// A box containing a small icon
-		Rect tab;
-		set_colour (cr, colour);
-		draw_iconbox (cr, shape, tab, inside);
-		vRange.push_front ({shape, cont});
-
-		Glib::RefPtr<Gdk::Pixbuf> icon;
-
-		icon = gui_app->get_theme()->get_icon ("table");
-		draw_icon (cr, tab, icon,  tab);
-		icon = gui_app->get_theme()->get_icon ("shield");
-		draw_icon (cr, tab, icon, tab);
-
-		/* theme
-		 *	icon
-		 *	colour
-		 *	background
-		 * get_icon
-		 * rect space = icon size
-		 * rect inside = remaining space
-		 * draw_box
-		 * rect tab (icon space)
-		 * draw icon(s)
-		 */
-	} else if (display == "box") {		// A simple coloured box
-		set_colour (cr, colour);
-		draw_box (cr, shape, inside);
-		vRange.push_front ({shape, cont});
-
-		fill_area (cr, inside, background);
-
-		if (usage) {
-			Rect r_usage = inside;
-			double d = (double) cont->bytes_used / (double) cont->bytes_size;
-			r_usage.w = r_usage.w * d;
-			if (r_usage.w > 1) {
-				cr->set_source_rgba (0.97, 0.97, 0.42, 1.0);
-				draw_border (cr, r_usage);
-				cr->fill();
-			}
-		}
-		if (!label.empty()) {
-			draw_text (cr, shape, label);
-		}
-		/* theme
-		 *	colour
-		 *	background
-		 * draw_box
-		 * rect inside
-		 */
-	} else if (display == "tabbox") {	// A coloured box with a handy tab
-		set_colour (cr, colour);
-		Rect tab;
-		draw_tabbox (cr, shape, tab, inside);
-		vRange.push_front ({shape, cont});
-		/* theme
-		 *	colour
-		 *	background
-		 */
-	} else if (display == "empty") {	// Do nothing for now
-		log_debug ("EMPTY");
-		inside = shape;
-	} else {
-		log_debug ("unknown display type: %s", display.c_str());
-		return;
-	}
-
-	if (!inside.w) {
-		log_error ("NO WIDTH");
-		return;
-	}
-
-	uint64_t total = cont->bytes_size;
-	uint64_t bpp   = total / inside.w;	// bytes per pixel
-
-	for (auto c : cont->children) {
-		if (c->bytes_size > total) {
-			total = c->bytes_size;		//XXX tmp -- need to get intermediate object
-			bpp   = total / inside.w;
-		}
-		if (bpp == 0) {
-			log_error ("no bpp");
-			continue;
-		}
-		std::uint64_t offset = c->parent_offset / bpp;
-		std::uint64_t size   = c->bytes_size    / bpp;
-
-		Rect next = inside;
-		next.x += offset;
-		next.w = size;
-
-		draw_container (cr, c, next);
-	}
-	//XXX vRange.push_front ({work, cont});			// Associate a region with a container
-
-	//if (cont->get_focus() && (has_focus() || menu_active)) {
-	if (cont->get_focus()) {
-		draw_focus (cr, shape, (has_focus() || menu_active));
-	}
-}
-
-
 Rect
-DrawingArea::get_rect (GfxContainerPtr g)
+DrawingArea::get_rect (const GfxContainerPtr& g)
 {
 	Rect r = { -1, -1, -1, -1 };
 
-	return_val_if_fail (g, r);
+	return_val_if_fail (g,r);
 
 	for (const auto& rg : vRange) {
 		if (rg.p == g) {
@@ -984,102 +1077,6 @@ DrawingArea::get_rect (GfxContainerPtr g)
 	}
 
 	return r;
-}
-
-bool
-DrawingArea::on_keypress (GdkEventKey* ev)
-{
-	return_val_if_fail (ev, false);
-
-	bool redraw  = false;
-	bool handled = false;
-
-	log_debug ("Key: %d (0x%x)", ev->keyval, ev->keyval);
-
-	//Extra keys: Delete, Insert, Space/Enter (select)?
-
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *dp = reinterpret_cast<Window*> (get_toplevel());
-	if (!dp) {
-		log_debug ("No Window");
-		return false;
-	}
-
-	GfxContainerPtr c = dp->get_focus();
-	if (!c) {
-		log_debug ("No focus");
-		return false;
-	}
-
-	int x = 0;
-	int y = 0;
-	switch (ev->keyval) {
-		case GDK_KEY_Return:	// 65293 (0xFF0D)
-			log_debug ("state = %d", ev->state);
-			if (ev->state & GDK_MOD1_MASK) {		// Alt-Enter
-				on_menu_select (c, Action {"Properties", true });	// properties
-				handled = true;
-			}
-			break;
-		case GDK_KEY_Menu:	// 65383 (0xFF67)
-			get_coords (x, y);
-			popup_menu (c, x, y);
-			handled = true;
-			break;
-		case GDK_KEY_Left:	// 65361 (0xFF51)
-			redraw = dp->set_focus (left(c));
-			handled = true;
-			break;
-		case GDK_KEY_Right:	// 65363 (0xFF53)
-			redraw = dp->set_focus (right(c));
-			handled = true;
-			break;
-		case GDK_KEY_Up:	// 65362 (0xFF52)
-			redraw = dp->set_focus (up(c));
-			handled = true;
-			break;
-		case GDK_KEY_Down:	// 65364 (0xFF54)
-			redraw = dp->set_focus (down(c));
-			handled = true;
-			break;
-	}
-
-	if (redraw) {
-		get_window()->invalidate (false);
-	}
-
-	return handled;
-}
-
-
-bool
-DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
-{
-	LOG_TRACE;
-
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *dp = reinterpret_cast<Window*> (get_toplevel());
-	if (!dp) {
-		log_debug ("No Window");
-		return false;
-	}
-	GfxContainerPtr c = dp->get_focus();
-	if (!c) {
-		log_debug ("No focus");
-		c = get_focus (0, 0);
-		if (c) {
-			dp->set_focus(c);
-		}
-	}
-
-	return true;
-}
-
-bool
-DrawingArea::on_focus_out (GdkEventFocus* UNUSED(event))
-{
-	LOG_TRACE;
-	return true;
 }
 
 
@@ -1111,11 +1108,11 @@ DrawingArea::get_cont_recurse (void)
 
 
 bool
-DrawingArea::is_visible (const GfxContainerPtr& c)
+DrawingArea::is_visible (const GfxContainerPtr& gfx)
 {
-	return_val_if_fail (c, false);
+	return_val_if_fail (gfx,false);
 
-	std::string& display = c->display;
+	std::string& display = gfx->display;
 
 	if (display == "never")
 		return false;
@@ -1123,69 +1120,69 @@ DrawingArea::is_visible (const GfxContainerPtr& c)
 	if ((display == "box") || (display == "icon") || (display == "iconbox") || (display == "tabbox"))
 		return true;
 
-	if ((display == "empty") && is_empty(c))
+	if ((display == "empty") && is_empty(gfx))
 		return true;
 
 	return false;
 }
 
 GfxContainerPtr
-DrawingArea::left (GfxContainerPtr c)
+DrawingArea::left (GfxContainerPtr g)
 {
-	return_val_if_fail (c, nullptr);
+	return_val_if_fail (g,nullptr);
 
 	do {
-		if (c->get_depth() == 1)	// Already at a top-level object
+		if (g->get_depth() == 1)	// Already at a top-level object
 			return nullptr;
 
-		c = c->get_left();
+		g = g->get_left();
 
-		if (is_visible(c))
-			return c;
+		if (is_visible(g))
+			return g;
 
-	} while (c);
+	} while (g);
 
-	return c;
+	return g;
 }
 
 GfxContainerPtr
-DrawingArea::right (GfxContainerPtr c)
+DrawingArea::right (GfxContainerPtr g)
 {
-	return_val_if_fail (c, nullptr);
+	return_val_if_fail (g,nullptr);
 
 	//XXX ugly, clumsy
 
-	int y = get_rect(c).y + 30;	// plus half a row
+	int y = get_rect(g).y + 30;	// plus half a row
 
 	do {
-		c = c->get_right();
-		if (get_rect(c).y > y)	// We've changed rows
+		g = g->get_right();
+		if (get_rect(g).y > y)	// We've changed rows
 			return nullptr;
 
-		if (is_visible(c))
-			return c;
+		if (is_visible(g))
+			return g;
 
-	} while (c);
+	} while (g);
 
 	return nullptr;
 }
 
 GfxContainerPtr
-DrawingArea::up (GfxContainerPtr c)
+DrawingArea::up (const GfxContainerPtr& g)
 {
-	return_val_if_fail (c, nullptr);
+	return_val_if_fail (g,nullptr);
 
-	Rect r = get_rect(c);
+	Rect r = get_rect(g);
 	r.y = ((r.y/cont_height) * cont_height) - (cont_height/2);
 	return get_focus (r.x, r.y);
 }
 
 GfxContainerPtr
-DrawingArea::down (GfxContainerPtr c)
+DrawingArea::down (const GfxContainerPtr& g)
 {
-	return_val_if_fail (c, nullptr);
+	return_val_if_fail (g,nullptr);
 
-	Rect r = get_rect(c);
+	Rect r = get_rect(g);
 	r.y = ((r.y/cont_height) * cont_height) + cont_height + (cont_height/2);
 	return get_focus (r.x, r.y);
 }
@@ -1311,8 +1308,8 @@ DrawingArea::get_coords (int& x, int& y)
 		return false;
 	}
 
-	GfxContainerPtr c = dp->get_focus();
-	if (!c) {
+	GfxContainerPtr gfx = dp->get_focus();
+	if (!gfx) {
 		log_debug ("No focus");
 		return false;
 	}
@@ -1338,7 +1335,7 @@ DrawingArea::get_coords (int& x, int& y)
 		return false;		// Coords of DrawingArea within Window's window
 	}
 
-	Rect r = get_rect(c);		// Size and shape of selected container
+	Rect r = get_rect (gfx);		// Size and shape of selected container
 	if (r.x < 0) {
 		return false;
 	}
@@ -1384,11 +1381,11 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 }
 
 bool
-DrawingArea::popup_on_keypress (GdkEventKey* ev)
+DrawingArea::popup_on_keypress (GdkEventKey* event)
 {
-	return_val_if_fail (ev, false);
+	return_val_if_fail (event,false);
 
-	if (ev->keyval == GDK_KEY_Menu) {
+	if (event->keyval == GDK_KEY_Menu) {
 		menu_popup.popdown();
 		return true;
 	}

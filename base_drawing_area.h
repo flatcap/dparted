@@ -42,7 +42,7 @@ public:
 	BaseDrawingArea (void);
 	~BaseDrawingArea();
 
-	virtual void set_data (GfxContainerPtr& c);
+	virtual void set_data (GfxContainerPtr& gfx);
 
 	virtual void set_cont_height (int height);
 	virtual int  get_cont_height (void);
