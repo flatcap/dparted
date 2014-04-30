@@ -258,7 +258,6 @@ Window::init_shortcuts (void)
 	}
 
 	add_accel_group (accel);
-
 }
 
 void

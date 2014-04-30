@@ -43,9 +43,6 @@ public:
 
 protected:
 	MdPartition (void);
-
-private:
-
 };
 
 #endif // _MD_PARTITION_H_

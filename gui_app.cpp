@@ -475,7 +475,6 @@ GuiApp::on_dispatch (void)
 		RESPONSE_HELP = -11
 	};
 #endif
-
 }
 
 

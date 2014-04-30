@@ -38,7 +38,6 @@ public:
 
 	std::string uuid;
 	ContainerPtr match;
-
 };
 
 #endif // _UUID_VISITOR_H_

@@ -964,7 +964,6 @@ DrawingArea::set_data (GfxContainerPtr& g)
 	unsigned int children = g->children.size();
 	//children = 14;
 	set_size_request (500, cont_height * children);
-
 }
 
 GfxContainerPtr

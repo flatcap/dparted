@@ -53,7 +53,6 @@ protected:
 
 private:
 	std::uint64_t ext2_get_usage (void);
-
 };
 
 #endif // _FILESYSTEM_H_

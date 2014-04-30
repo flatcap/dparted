@@ -39,7 +39,6 @@ public:
 
 	std::string type;
 	std::vector<ContainerPtr> matches;
-
 };
 
 #endif // _TYPE_VISITOR_H_

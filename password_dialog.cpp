@@ -44,7 +44,6 @@ PasswordDialog::PasswordDialog (QuestionPtr q) :
 	sp_box.pack_start (sp_toggle, Gtk::PackOptions::PACK_SHRINK);
 	sp_box.pack_start (sp_label, Gtk::PackOptions::PACK_SHRINK);
 	ca->pack_start (sp_box);
-
 }
 
 PasswordDialog::~PasswordDialog()

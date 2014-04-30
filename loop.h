@@ -63,9 +63,6 @@ protected:
 	std::string get_file_major_minor (void);
 	std::string get_file_name_short (void);
 	std::string get_flags (void);
-
-private:
-
 };
 
 #endif // _LOOP_H_

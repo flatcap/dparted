@@ -29,7 +29,6 @@ class DefaultTheme : public Theme
 public:
 	DefaultTheme (void);
 	virtual ~DefaultTheme();
-
 };
 
 

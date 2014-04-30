@@ -68,9 +68,6 @@ public:
 
 protected:
 	LvmVolume (void);
-
-private:
-
 };
 
 #endif // _LVM_VOLUME_H_

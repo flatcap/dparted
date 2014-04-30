@@ -56,9 +56,6 @@ protected:
 	virtual bool read_partition (std::uint8_t* buffer, int index, struct partition* part);
 	virtual unsigned int read_table (std::uint8_t* buffer, std::uint64_t bufsize, std::uint64_t offset, std::vector<struct partition>& vp);
 	// void read_chs (std::uint8_t* buffer, std::uint16_t& cylinder, std::uint8_t& head, std::uint8_t& sector);
-
-private:
-
 };
 
 #endif // _MSDOS_H_

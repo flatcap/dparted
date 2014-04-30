@@ -40,7 +40,6 @@ public:
 
 protected:
 	std::map<std::string,ConfigFilePtr> config_file;
-
 };
 
 

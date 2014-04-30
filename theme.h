@@ -65,7 +65,6 @@ protected:
 
 private:
 	//int seqnum = 0;
-
 };
 
 

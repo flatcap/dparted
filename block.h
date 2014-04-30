@@ -47,9 +47,6 @@ public:
 
 protected:
 	Block (void);
-
-private:
-
 };
 
 #endif // _BLOCK_H_

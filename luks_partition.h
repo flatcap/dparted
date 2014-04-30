@@ -43,9 +43,6 @@ public:
 
 protected:
 	LuksPartition (void);
-
-private:
-
 };
 
 #endif // _LUKS_PARTITION_H_

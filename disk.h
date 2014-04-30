@@ -71,9 +71,6 @@ public:
 
 protected:
 	Disk (void);
-
-private:
-
 };
 
 #endif // _DISK_H_

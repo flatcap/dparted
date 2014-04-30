@@ -467,7 +467,6 @@ Container::close_buffer (std::uint8_t* buffer, std::uint64_t size)
 		log_error ("munmap failed: %s", strerror (errno));
 		// nothing else we can do
 	}
-
 }
 
 

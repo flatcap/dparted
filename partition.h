@@ -56,9 +56,6 @@ public:
 
 protected:
 	Partition (void);
-
-private:
-
 };
 
 #endif // _PARTITION_H_

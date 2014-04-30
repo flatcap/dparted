@@ -43,9 +43,6 @@ public:
 
 protected:
 	LvmStripe (void);
-
-private:
-
 };
 
 #endif // _LVM_STRIPE_H_

@@ -38,7 +38,6 @@ public:
 	int run (int argc, char **argv);
 
 protected:
-
 };
 
 #endif // _TEXT_APP_H_
