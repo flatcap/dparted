@@ -27,11 +27,11 @@
 #include "log_macro.h"
 #include "log_handler.h"
 
-typedef std::function<void(Severity level, const char* function, const char* file, int line, const char* message)> log_callback_t;
+typedef std::function<void(std::uint64_t index, Severity level, const char* function, const char* file, int line, const char* message)> log_callback_t;
 
 // Default handlers
-void log_stdout (Severity level, const char* function, const char* file, int line, const char* message);
-void log_stderr (Severity level, const char* function, const char* file, int line, const char* message);
+void log_stdout (long index, Severity level, const char* function, const char* file, int line, const char* message);
+void log_stderr (long index, Severity level, const char* function, const char* file, int line, const char* message);
 
 #ifdef DP_LOG_CHECK
 void log_redirect (const char* format __attribute__((unused)), ...) __attribute__((format (printf, 1, 2)));
