@@ -80,7 +80,6 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 	std::thread::id tid = std::this_thread::get_id();
 	if ((level & Severity::ThreadStart) == Severity::ThreadStart) {
 		++thread_index;
-		fflush (stdout);
 		thread_list[tid] = thread_index;
 		thread_num = thread_index;
 	} else {
