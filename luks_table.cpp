@@ -213,10 +213,12 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 void
 LuksTable::on_reply (QuestionPtr q)
 {
-	log_debug ("user has answered question");
-	std::string password = q->output["password"];
-	std::string device = get_device_inherit();
-	luks_open_actual (device, password, true);
+	log_debug ("user has answered question: %d", q->result);
+	if (q->result == -5) {	// OK
+		std::string password = q->output["password"];
+		std::string device = get_device_inherit();
+		luks_open_actual (device, password, true);
+	}
 }
 
 

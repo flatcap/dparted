@@ -160,7 +160,7 @@ public:
 
 	bool missing = false;
 
-	int seqnum = 123;
+	int seqnum = 0;
 
 protected:
 	Container (void);

@@ -293,11 +293,6 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, const Rect
 	return_if_fail (cr);
 	return_if_fail (gfx);
 
-#if 0
-	if (!top_level->update_info())
-		return;
-#endif
-
 	std::string display = gfx->display;
 	Gdk::RGBA background = gfx->background;
 	Gdk::RGBA colour = gfx->colour;
@@ -560,6 +555,8 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	return_val_if_fail(top_level,false);
 	LOG_TRACE;
+
+	top_level->update_info();
 
 	ContainerPtr tlc = top_level->get_container();
 

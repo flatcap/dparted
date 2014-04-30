@@ -216,6 +216,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 	return_if_fail (child);
 	LOG_TRACE;
 
+	++seqnum;
 	children.insert (child);
 
 	if (probe)
@@ -502,6 +503,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 						<< "(" << get_size (c->parent_offset) << "), "
 #endif
 		<< " rc: " << c.use_count()
+		<< " seq: " << c->seqnum
 		;
 
 	return stream;

@@ -62,6 +62,7 @@ void
 PasswordDialog::response (int button_id)
 {
 	return_if_fail (question);
+	question->result = button_id;
 	question->output["password"] = text.get_text();
 	question->done();
 	log_debug ("PasswordDialog::response = %d\n", button_id);
@@ -91,7 +92,8 @@ PasswordDialog::run (void)
 	set_secondary_text (str);
 
 	if (!add_buttons()) {
-		add_button ("OK", Gtk::ResponseType::RESPONSE_OK);
+		add_button ("Cancel", Gtk::ResponseType::RESPONSE_CANCEL);
+		add_button ("OK",     Gtk::ResponseType::RESPONSE_OK);
 		set_default_response (Gtk::ResponseType::RESPONSE_OK);
 	}
 
