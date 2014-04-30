@@ -72,7 +72,7 @@ get_value (const libconfig::Setting& s)
 }
 
 void
-parse_config (const libconfig::Setting& setting, std::map<std::string,std::string>& config)
+parse_config (const libconfig::Setting& setting, std::map<std::string, std::string>& config)
 {
 	if (setting.getLength() == 0) {
 		config[setting.getPath()] = "{empty}";

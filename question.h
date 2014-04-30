@@ -37,9 +37,9 @@ public:
 	virtual ~Question();
 	static QuestionPtr create (question_cb_t fn = nullptr);
 
-	std::map<std::string,std::string> input;
-	std::map<std::string,std::string> output;
-	std::vector<std::pair<std::string,int>> buttons;
+	std::map<std::string, std::string> input;
+	std::map<std::string, std::string> output;
+	std::vector<std::pair<std::string, int>> buttons;
 
 	int result = -1;
 

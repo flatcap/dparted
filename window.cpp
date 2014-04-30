@@ -227,7 +227,7 @@ Window::set_geometry (int x, int y, int w, int h)
 void
 Window::init_shortcuts (void)
 {
-	std::vector<std::pair<int,int>> keys = {
+	std::vector<std::pair<int, int>> keys = {
 		{ 0,                 GDK_KEY_Left   },
 		{ 0,                 GDK_KEY_Up     },
 		{ 0,                 GDK_KEY_Right  },
@@ -251,7 +251,7 @@ Window::init_shortcuts (void)
 	for (auto k : keys) {
 		log_debug ("Keypress: %d : %d", k.first, k.second);
 		Gtk::MenuItem* i = manage (new Gtk::MenuItem());
-		i->signal_activate().connect (sigc::bind<int,int> (sigc::mem_fun (*this, &Window::on_keypress), k.first, k.second));
+		i->signal_activate().connect (sigc::bind<int, int> (sigc::mem_fun (*this, &Window::on_keypress), k.first, k.second));
 		i->add_accelerator ("activate", accel, k.second, (Gdk::ModifierType) k.first, Gtk::ACCEL_VISIBLE);
 		i->show();
 		fake_menu.append (*i);
@@ -265,7 +265,7 @@ Window::insert_general_actions (std::string section, const std::vector<const cha
 {
 	for (auto c : commands) {
 		std::string name = section + "." + c;
-		Glib::RefPtr<Gio::Action> a = add_action(name, sigc::bind<std::string,std::string> (sigc::mem_fun (*this, &Window::on_action_general), section, c));
+		Glib::RefPtr<Gio::Action> a = add_action(name, sigc::bind<std::string, std::string> (sigc::mem_fun (*this, &Window::on_action_general), section, c));
 		Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic (a);
 		action_map[name] = s;
 	}

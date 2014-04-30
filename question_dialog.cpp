@@ -32,7 +32,7 @@ QuestionDialog::~QuestionDialog()
 QuestionDialogPtr
 QuestionDialog::create (QuestionPtr q)
 {
-	return_val_if_fail (q,nullptr);
+	return_val_if_fail (q, nullptr);
 	return QuestionDialogPtr (new QuestionDialog(q));
 }
 
@@ -48,7 +48,7 @@ QuestionDialog::response (int button_id)
 int
 QuestionDialog::run (void)
 {
-	return_val_if_fail (question,Gtk::ResponseType::RESPONSE_NONE);
+	return_val_if_fail (question, Gtk::ResponseType::RESPONSE_NONE);
 	LOG_TRACE;
 
 	std::string str;

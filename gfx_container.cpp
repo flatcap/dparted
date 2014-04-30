@@ -389,7 +389,7 @@ operator<< (std::ostream& stream, const GfxContainerPtr& g)
 GfxContainerPtr
 GfxContainer::get_smart (void)
 {
-	return_val_if_fail (self.expired(),nullptr);
+	return_val_if_fail (self.expired(), nullptr);
 
 	return self.lock();
 }

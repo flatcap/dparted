@@ -39,7 +39,7 @@ public:
 	bool save_files (void);
 
 protected:
-	std::map<std::string,ConfigFilePtr> config_file;
+	std::map<std::string, ConfigFilePtr> config_file;
 };
 
 

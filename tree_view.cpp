@@ -689,7 +689,7 @@ void
 TreeView::popup_menu (int x, int y)
 {
 	// Lamba to position popup menu
-	menu_popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
+	menu_popup.popup ([x, y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
 }
 
 bool

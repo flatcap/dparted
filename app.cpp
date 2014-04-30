@@ -76,7 +76,7 @@ App::~App()
 bool
 App::ask (QuestionPtr q)
 {
-	return_val_if_fail (q,false);
+	return_val_if_fail (q, false);
 
 	log_code ("%s not implemented", __PRETTY_FUNCTION__);
 	return false;
@@ -271,7 +271,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 bool
 App::process_queue_item (ContainerPtr item)
 {
-	return_val_if_fail (item,false);
+	return_val_if_fail (item, false);
 	LOG_TRACE;
 
 	std::uint64_t bufsize = item->bytes_size;
@@ -302,7 +302,7 @@ App::start_thread (std::function<void(void)> fn, const char* desc)
 #ifdef DP_THREADED
 	std::lock_guard<std::mutex> lock (thread_mutex);
 	thread_queue.push_back (
-		std::thread ([fn,desc]() {
+		std::thread ([fn, desc]() {
 			log_thread_start ("thread started: %s", desc);
 			fn();
 			log_thread_end   ("thread ended:   %s", desc);

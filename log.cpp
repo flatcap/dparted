@@ -28,8 +28,8 @@
 #include "log_severity.h"
 #include "utils.h"
 
-static std::vector<std::tuple<int,Severity,log_callback_t>> log_mux;
-static std::map<std::thread::id,std::uint64_t> thread_list;
+static std::vector<std::tuple<int, Severity, log_callback_t>> log_mux;
+static std::map<std::thread::id, std::uint64_t> thread_list;
 static int log_handle = 0;
 #ifndef DP_LOG_CHECK
 static std::uint64_t fn_depth     = 0;
@@ -125,7 +125,7 @@ int
 log_add_handler (log_callback_t cb, Severity s)
 {
 	++log_handle;
-	log_mux.push_back (std::make_tuple (log_handle,s,cb));
+	log_mux.push_back (std::make_tuple (log_handle, s, cb));
 	return log_handle;
 }
 
@@ -160,7 +160,7 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 	log_code ("%s", ss.str().c_str());
 }
 
-static std::vector<std::pair<Severity,std::string>> LogLevelNames = {
+static std::vector<std::pair<Severity, std::string>> LogLevelNames = {
 	{ Severity::SystemEmergency, "SystemEmergency" },
 	{ Severity::SystemAlert,     "SystemAlert"     },
 	{ Severity::Critical,        "Critical"        },

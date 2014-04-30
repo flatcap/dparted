@@ -59,7 +59,7 @@ ChangePasswordDialog::ChangePasswordDialog (QuestionPtr q) :
 	sp_box.pack_start (sp_label, Gtk::PackOptions::PACK_SHRINK);
 	ca->pack_start (sp_box);
 	sp_toggle.set_active (false);
-	sp_toggle.signal_toggled().connect (sigc::mem_fun (this,&ChangePasswordDialog::on_sp_toggle));
+	sp_toggle.signal_toggled().connect (sigc::mem_fun (this, &ChangePasswordDialog::on_sp_toggle));
 
 	old.set_use_underline (true);
 	old.set_text_with_mnemonic ("_Old Password");
@@ -90,7 +90,7 @@ ChangePasswordDialog::~ChangePasswordDialog()
 ChangePasswordDialogPtr
 ChangePasswordDialog::create (QuestionPtr q)
 {
-	return_val_if_fail (q,nullptr);
+	return_val_if_fail (q, nullptr);
 	return ChangePasswordDialogPtr (new ChangePasswordDialog(q));
 }
 

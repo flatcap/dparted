@@ -100,10 +100,10 @@ protected:
 	friend bool operator== (const Config& lhs, const Config& rhs);
 	friend bool operator<  (const Config& lhs, const Config& rhs);
 
-	inline friend bool operator!= (const Config& lhs, const Config& rhs) { return !operator== (lhs,rhs); }
-	inline friend bool operator>  (const Config& lhs, const Config& rhs) { return  operator<  (rhs,lhs); }
-	inline friend bool operator<= (const Config& lhs, const Config& rhs) { return !operator>  (lhs,rhs); }
-	inline friend bool operator>= (const Config& lhs, const Config& rhs) { return !operator<  (lhs,rhs); }
+	inline friend bool operator!= (const Config& lhs, const Config& rhs) { return !operator== (lhs, rhs); }
+	inline friend bool operator>  (const Config& lhs, const Config& rhs) { return  operator<  (rhs, lhs); }
+	inline friend bool operator<= (const Config& lhs, const Config& rhs) { return !operator>  (lhs, rhs); }
+	inline friend bool operator>= (const Config& lhs, const Config& rhs) { return !operator<  (lhs, rhs); }
 
 	union {
 		double   d_value;

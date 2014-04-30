@@ -28,11 +28,11 @@
 #define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
 
 std::uint64_t            align (std::uint64_t num, std::uint64_t round);
-void                     delete_region (std::vector<std::pair<std::uint64_t,std::uint64_t>>& region, std::uint64_t start, std::uint64_t size);
+void                     delete_region (std::vector<std::pair<std::uint64_t, std::uint64_t>>& region, std::uint64_t start, std::uint64_t size);
 std::string              demangle (const char* symbol);
 void                     dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length);
 void                     dump_hex (std::uint8_t* buffer, std::uint64_t bufsize);
-std::string              dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::uint64_t>>& region);
+std::string              dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t, std::uint64_t>>& region);
 int                      execute_command_in  (const std::string& command, const std::string& input,         bool log_input  = true, bool log_cmd = true);
 int                      execute_command_out (const std::string& command, std::vector<std::string>& output, bool log_output = true, bool log_cmd = true);
 unsigned int             explode (const char* separators, const std::string& input, std::vector<std::string>& parts, int max = 999);
@@ -41,7 +41,7 @@ std::string              get_fixed_str (const void *buffer, std::uint32_t maxlen
 std::string              get_size (std::uint64_t size);
 std::string              join (std::vector<std::string> v, const std::string& sep);
 std::string              make_part_dev (std::string device, int number);
-unsigned int             parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map = true);
+unsigned int             parse_tagged_line (const std::string& line, const char* separators, std::map<std::string, StringNum>& tags, bool clear_map = true);
 std::string              read_file_line (const std::string& filename);
 std::string              read_uuid1 (std::uint8_t* buffer);
 std::string              read_uuid2 (std::uint8_t* buffer);

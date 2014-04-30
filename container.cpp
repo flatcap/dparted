@@ -592,7 +592,7 @@ Container::add_string_prop (const std::string& owner, const std::string& name, c
 ContainerPtr
 Container::get_smart (void)
 {
-	return_val_if_fail (!self.expired(),nullptr);
+	return_val_if_fail (!self.expired(), nullptr);
 
 	return self.lock();
 }

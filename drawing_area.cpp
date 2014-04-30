@@ -208,7 +208,7 @@ draw_grid_log (const Cairo::RefPtr<Cairo::Context>& UNUSED(cr), Rect UNUSED(spac
 bool
 is_empty (const GfxContainerPtr& gfx)
 {
-	return_val_if_fail (gfx,true);
+	return_val_if_fail (gfx, true);
 
 	int children = gfx->children.size();
 	if (children == 0)
@@ -324,7 +324,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, const Rect
 	}
 
 	//Rect tab;
-	Rect inside { 0,0,0,0 };
+	Rect inside { 0, 0, 0, 0 };
 
 	log_debug ("object = %s -- %d,%d", gfx->name.c_str(), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
@@ -476,7 +476,7 @@ void
 DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, bool primary)
 {
 	static int start = 0;
-	std::vector<double> dashes = {5,5};
+	std::vector<double> dashes = { 5, 5 };
 
 	cr->save();
 	draw_border (cr, shape);				// Set clipping area
@@ -553,7 +553,7 @@ DrawingArea::fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& sha
 bool
 DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
-	return_val_if_fail (top_level,false);
+	return_val_if_fail (top_level, false);
 	LOG_TRACE;
 
 	top_level->update_info();
@@ -657,7 +657,7 @@ DrawingArea::on_focus_out (GdkEventFocus* UNUSED(event))
 bool
 DrawingArea::on_keypress (GdkEventKey* event)
 {
-	return_val_if_fail (event,false);
+	return_val_if_fail (event, false);
 
 	bool redraw  = false;
 	bool handled = false;
@@ -915,7 +915,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 TablePtr
 DrawingArea::get_protective (GfxContainerPtr& gfx)
 {
-	return_val_if_fail (gfx,nullptr);
+	return_val_if_fail (gfx, nullptr);
 
 	GfxContainerPtr child;
 
@@ -1064,7 +1064,7 @@ DrawingArea::get_rect (const GfxContainerPtr& g)
 {
 	Rect r = { -1, -1, -1, -1 };
 
-	return_val_if_fail (g,r);
+	return_val_if_fail (g, r);
 
 	for (const auto& rg : vRange) {
 		if (rg.p == g) {
@@ -1106,7 +1106,7 @@ DrawingArea::get_cont_recurse (void)
 bool
 DrawingArea::is_visible (const GfxContainerPtr& gfx)
 {
-	return_val_if_fail (gfx,false);
+	return_val_if_fail (gfx, false);
 
 	std::string& display = gfx->display;
 
@@ -1125,7 +1125,7 @@ DrawingArea::is_visible (const GfxContainerPtr& gfx)
 GfxContainerPtr
 DrawingArea::left (GfxContainerPtr g)
 {
-	return_val_if_fail (g,nullptr);
+	return_val_if_fail (g, nullptr);
 
 	do {
 		if (g->get_depth() == 1)	// Already at a top-level object
@@ -1144,7 +1144,7 @@ DrawingArea::left (GfxContainerPtr g)
 GfxContainerPtr
 DrawingArea::right (GfxContainerPtr g)
 {
-	return_val_if_fail (g,nullptr);
+	return_val_if_fail (g, nullptr);
 
 	//XXX ugly, clumsy
 
@@ -1166,7 +1166,7 @@ DrawingArea::right (GfxContainerPtr g)
 GfxContainerPtr
 DrawingArea::up (const GfxContainerPtr& g)
 {
-	return_val_if_fail (g,nullptr);
+	return_val_if_fail (g, nullptr);
 
 	Rect r = get_rect(g);
 	r.y = ((r.y/cont_height) * cont_height) - (cont_height/2);
@@ -1176,7 +1176,7 @@ DrawingArea::up (const GfxContainerPtr& g)
 GfxContainerPtr
 DrawingArea::down (const GfxContainerPtr& g)
 {
-	return_val_if_fail (g,nullptr);
+	return_val_if_fail (g, nullptr);
 
 	Rect r = get_rect(g);
 	r.y = ((r.y/cont_height) * cont_height) + cont_height + (cont_height/2);
@@ -1243,7 +1243,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 			item = Gtk::manage (new Gtk::SeparatorMenuItem());
 		} else {
 			item = Gtk::manage (new Gtk::MenuItem (key, true));
-			item->signal_activate().connect (sigc::bind<GfxContainerPtr,Action> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), gfx, a));
+			item->signal_activate().connect (sigc::bind<GfxContainerPtr, Action> (sigc::mem_fun (*this, &DrawingArea::on_menu_select), gfx, a));
 			item->set_sensitive (a.enabled);
 		}
 
@@ -1373,13 +1373,13 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 	setup_popup (gfx, actions);
 
 	// Lamba to position popup menu
-	menu_popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
+	menu_popup.popup ([x, y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
 }
 
 bool
 DrawingArea::popup_on_keypress (GdkEventKey* event)
 {
-	return_val_if_fail (event,false);
+	return_val_if_fail (event, false);
 
 	if (event->keyval == GDK_KEY_Menu) {
 		menu_popup.popdown();

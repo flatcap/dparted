@@ -172,7 +172,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	GptPtr g = create();
 
-	std::vector<std::pair<std::uint64_t,std::uint64_t>> empty = { { 0, (parent->bytes_size/512)-1 } };
+	std::vector<std::pair<std::uint64_t, std::uint64_t>> empty = { { 0, (parent->bytes_size/512)-1 } };
 
 	g->bytes_size = parent->bytes_size;
 	g->bytes_used = 0;

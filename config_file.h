@@ -63,7 +63,7 @@ protected:
 	bool read_only = true;
 	bool valid = false;
 
-	std::map<std::string,std::string> config;
+	std::map<std::string, std::string> config;
 
 private:
 	std::weak_ptr<ConfigFile> self;

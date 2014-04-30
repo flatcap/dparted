@@ -140,12 +140,12 @@ make_key (std::string desc)
 	return "extfs." + desc;
 }
 
-std::map<std::string,std::string>
+std::map<std::string, std::string>
 tune2fs (const std::string& dev)
 {
 	std::string command;
 	std::vector<std::string> output;
-	std::map<std::string,std::string> results;
+	std::map<std::string, std::string> results;
 
 	command = "tune2fs -l " + dev;		// list contents of filesystem superblock
 	int retval = execute_command_out (command, output);
@@ -192,13 +192,13 @@ Extfs::get_ext_sb (ContainerPtr parent)
 	std::string dev = parent->get_device_name();
 	return_if_fail (!dev.empty());
 
-	std::map<std::string,std::string> info = tune2fs (dev);
+	std::map<std::string, std::string> info = tune2fs (dev);
 	if (info.empty()) {
 		log_debug ("tune2fs failed");
 		return;
 	}
 
-	std::map<std::string,std::string>::iterator it;
+	std::map<std::string, std::string>::iterator it;
 
 	it = info.find ("Filesystem volume name");
 	if (it != std::end (info)) {

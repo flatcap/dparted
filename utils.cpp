@@ -44,7 +44,7 @@ align (std::uint64_t num, std::uint64_t round)
 }
 
 void
-delete_region (std::vector<std::pair<std::uint64_t,std::uint64_t>>& region, std::uint64_t start, std::uint64_t size)
+delete_region (std::vector<std::pair<std::uint64_t, std::uint64_t>>& region, std::uint64_t start, std::uint64_t size)
 {
 	std::uint64_t finish = start+size-1;
 
@@ -186,7 +186,7 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 }
 
 std::string
-dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::uint64_t>>& region)
+dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t, std::uint64_t>>& region)
 {
 	std::stringstream ss;
 	ss << desc << ": ";
@@ -430,7 +430,7 @@ make_part_dev (std::string device, int number)
 }
 
 unsigned int
-parse_tagged_line (const std::string& line, const char* separators, std::map<std::string,StringNum>& tags, bool clear_map /* = true */)
+parse_tagged_line (const std::string& line, const char* separators, std::map<std::string, StringNum>& tags, bool clear_map /* = true */)
 {
 	int middle;
 	std::vector<std::string> list;

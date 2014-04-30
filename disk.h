@@ -43,7 +43,7 @@ public:
 	virtual bool perform_action (Action action);
 
 	virtual std::uint64_t get_block_size (void);
-	virtual std::uint64_t get_device_space (std::map<std::uint64_t,std::uint64_t>& spaces);
+	virtual std::uint64_t get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces);
 
 	static bool lsblk    (std::vector <std::string>& output, std::string device = std::string());
 	static void discover (ContainerPtr& parent);

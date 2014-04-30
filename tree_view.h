@@ -73,7 +73,7 @@ protected:
 	Glib::RefPtr<Gdk::Pixbuf> get_colour_as_pixbuf (int size, const std::string& colstr);
 
 	// Map prop_name -> col_index, col type, align, precision, size
-	std::map<std::string,std::tuple<int,int,float,int,int>> col_list;
+	std::map<std::string, std::tuple<int, int, float, int, int>> col_list;
 
 private:
 	// POPUP

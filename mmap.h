@@ -23,7 +23,7 @@
 #include <memory>
 #include <cstdint>
 
-typedef std::pair<std::uint64_t,void*> Mmap;		// size, ptr
+typedef std::pair<std::uint64_t, void*> Mmap;		// size, ptr
 typedef std::shared_ptr<Mmap> MmapPtr;			// Mmap smart pointer
 
 #endif // _MMAP_H_

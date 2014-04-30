@@ -55,7 +55,7 @@ Theme::get_colour (const std::string& name)
 {
 	Gdk::RGBA c ("rgba(255,0,255,0.3)");	//XXX change default to white
 
-	std::map<std::string,Gdk::RGBA>::iterator it;
+	std::map<std::string, Gdk::RGBA>::iterator it;
 
 	it = colours.find (name);
 	if (it == colours.end()) {

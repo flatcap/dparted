@@ -55,8 +55,8 @@ public:
 protected:
 	ConfigFilePtr config_file;
 
-	std::map<std::string,Gdk::RGBA> colours;
-	std::map<std::string,Glib::RefPtr<Gdk::Pixbuf>> icons;
+	std::map<std::string, Gdk::RGBA> colours;
+	std::map<std::string, Glib::RefPtr<Gdk::Pixbuf>> icons;
 
 	Glib::RefPtr<Gdk::Pixbuf> missing_icon;
 	Glib::RefPtr<Gdk::Pixbuf> create_missing_pixbuf (int size);
