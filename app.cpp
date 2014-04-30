@@ -59,7 +59,7 @@ App::App (void)
 
 App::~App()
 {
-#ifndef DP_NO_THREAD
+#ifdef DP_THREADED
 	{	// Scope
 		for (auto& i : thread_queue) {
 			i.join();	// Wait for things to finish
@@ -159,7 +159,7 @@ App::identify_device (ContainerPtr parent, std::string& device)
 {
 	return_val_if_fail (parent, false);
 	return_val_if_fail (!device.empty(), false);
-	LOG_THREAD;
+	LOG_TRACE;
 
 	int fd = -1;		//XXX write a RAII wrapper around this
 
@@ -206,7 +206,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 {
 	LOG_TRACE;
 
-#ifndef DP_NO_THREAD
+#ifdef DP_THREADED
 	if (!thread_queue.empty()) {
 		log_code ("only one scan at a time");
 		return nullptr;
@@ -238,7 +238,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 		}
 	}
 
-#ifndef DP_NO_THREAD
+#ifdef DP_THREADED
 	if (fn) {
 		// Start a thread to watch the existing threads.
 		// When the existing thread have finished notify the user with fn().
@@ -271,7 +271,7 @@ bool
 App::process_queue_item (ContainerPtr item)
 {
 	return_val_if_fail (item,false);
-	LOG_THREAD;
+	LOG_TRACE;
 
 	std::uint64_t bufsize = item->bytes_size;
 	std::uint8_t* buffer  = item->get_buffer (0, bufsize);
@@ -297,11 +297,11 @@ App::process_queue_item (ContainerPtr item)
 void
 App::start_thread (std::function<void(void)> fn)
 {
-#ifdef DP_NO_THREAD
-	fn();
-#else
+#ifdef DP_THREADED
 	std::lock_guard<std::mutex> lock (thread_mutex);
-	thread_queue.push_back (std::thread (fn));
+	thread_queue.push_back (std::thread ([fn]() { LOG_THREAD; fn(); }));
+#else
+	fn();
 #endif
 }
 

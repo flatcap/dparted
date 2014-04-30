@@ -28,11 +28,11 @@
 //XXX indent results?
 
 #ifdef DEBUG
-#define LOG_TRACE		LogTrace __le(__PRETTY_FUNCTION__, __FILE__, __LINE__)
 #define LOG_THREAD		LogTrace __lt(__PRETTY_FUNCTION__, __FILE__, __LINE__, "thread")
+#define LOG_TRACE		LogTrace __le(__PRETTY_FUNCTION__, __FILE__, __LINE__)
 #else
-#define LOG_TRACE		do {} while (0)
 #define LOG_THREAD		do {} while (0)
+#define LOG_TRACE		do {} while (0)
 #endif
 
 class LogTrace

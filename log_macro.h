@@ -32,7 +32,9 @@
 #define log_file             log_redirect
 #define log_ctor             log_redirect
 #define log_dtor             log_redirect
-#define log_thread           log_redirect
+#define log_thread_start     log_redirect
+#define log_thread_end       log_redirect
+#define log_utils            log_redirect
 #else
 // Log level: EMERG
 #define log_system_emergency(...) log_redirect (Severity::SystemEmergency,__PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
@@ -70,7 +72,9 @@
 #define log_file(...)             log_redirect (Severity::File,           __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #define log_ctor(...)             log_redirect (Severity::Ctor,           __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #define log_dtor(...)             log_redirect (Severity::Dtor,           __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
-#define log_thread(...)           log_redirect (Severity::Thread,         __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
+#define log_thread_start(...)     log_redirect (Severity::ThreadStart,    __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
+#define log_thread_end(...)       log_redirect (Severity::ThreadEnd,      __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
+#define log_utils(...)            log_redirect (Severity::Utils,          __PRETTY_FUNCTION__,__FILE__,__LINE__,__VA_ARGS__)
 #endif
 
 #endif // _LOG_MACRO_H_

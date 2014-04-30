@@ -21,7 +21,9 @@
 
 #include <thread>
 
-#ifdef DP_NO_THREAD
+#ifdef DP_THREADED
+#define THREAD std::thread
+#else
 #define THREAD FakeThread
 struct FakeThread
 {
@@ -29,8 +31,6 @@ struct FakeThread
 	void detach (void) {}
 	void join   (void) {}
 };
-#else
-#define THREAD std::thread
 #endif
 
 #endif // _THREAD_H_

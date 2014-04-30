@@ -170,8 +170,8 @@ else
 	CFLAGS	+= -D_GLIBCXX_IOSTREAM
 endif
 
-ifeq ($(T),0)
-	CFLAGS	+= -DDP_NO_THREAD
+ifeq ($(T),1)
+	CFLAGS	+= -DDP_THREADED
 endif
 
 CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))

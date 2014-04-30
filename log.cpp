@@ -177,7 +177,9 @@ static std::vector<std::pair<Severity,std::string>> LogLevelNames = {
 	{ Severity::File,            "File"            },
 	{ Severity::Ctor,            "Ctor"            },
 	{ Severity::Dtor,            "Dtor"            },
-	{ Severity::Thread,          "Thread"          }
+	{ Severity::ThreadStart,     "ThreadStart"     },
+	{ Severity::ThreadEnd,       "ThreadEnd"       },
+	{ Severity::Utils,           "Utils"           }
 };
 
 std::string
