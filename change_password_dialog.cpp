@@ -24,6 +24,7 @@ ChangePasswordDialog::ChangePasswordDialog (QuestionPtr q) :
 	new1 ("", 0.0, 0.5),
 	new2 ("", 0.0, 0.5)
 {
+	log_ctor ("ctor ChangePasswordDialog");
 	image.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
 	set_image (image);
 
@@ -83,6 +84,7 @@ ChangePasswordDialog::ChangePasswordDialog (QuestionPtr q) :
 
 ChangePasswordDialog::~ChangePasswordDialog()
 {
+	log_dtor ("dtor ChangePasswordDialog");
 }
 
 ChangePasswordDialogPtr

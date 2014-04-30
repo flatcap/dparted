@@ -23,8 +23,7 @@ PasswordDialog::PasswordDialog (QuestionPtr q) :
 	sp_box (Gtk::ORIENTATION_HORIZONTAL),
 	pass_label ("Passphrase:", 0.0, 0.5)
 {
-	image.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
-	set_image (image);
+	log_ctor ("ctor PasswordDialog");
 
 	sp_label.set_use_underline (true);
 	sp_label.set_label ("Show _Password");
@@ -42,12 +41,13 @@ PasswordDialog::PasswordDialog (QuestionPtr q) :
 	ca->pack_start (text);
 
 	sp_box.pack_start (sp_toggle, Gtk::PackOptions::PACK_SHRINK);
-	sp_box.pack_start (sp_label, Gtk::PackOptions::PACK_SHRINK);
+	sp_box.pack_start (sp_label,  Gtk::PackOptions::PACK_SHRINK);
 	ca->pack_start (sp_box);
 }
 
 PasswordDialog::~PasswordDialog()
 {
+	log_dtor ("dtor PasswordDialog");
 }
 
 PasswordDialogPtr
@@ -70,8 +70,19 @@ PasswordDialog::response (int button_id)
 int
 PasswordDialog::run (void)
 {
+	return_val_if_fail (question,Gtk::ResponseType::RESPONSE_NONE);
+	LOG_TRACE;
+
 	std::string str;
 	std::string device = question->get_input ("device");
+
+	str = question->get_input ("image");
+	if (str.empty()) {
+		str = "dialog-password";
+	}
+
+	image.set_from_icon_name (str, Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image (image);
 
 	str = question->get_input ("title");
 	if (!str.empty()) {
@@ -91,8 +102,8 @@ PasswordDialog::run (void)
 	set_secondary_text (str);
 
 	if (!add_buttons()) {
-		add_button ("Cancel", Gtk::ResponseType::RESPONSE_CANCEL);
-		add_button ("OK",     Gtk::ResponseType::RESPONSE_OK);
+		add_button ("Cancel",  Gtk::ResponseType::RESPONSE_CANCEL);
+		add_button ("_Unlock", Gtk::ResponseType::RESPONSE_OK);
 		set_default_response (Gtk::ResponseType::RESPONSE_OK);
 	}
 

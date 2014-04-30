@@ -21,12 +21,12 @@
 WarningDialog::WarningDialog (QuestionPtr q) :
 	Dialog(q)
 {
-	image.set_from_icon_name ("dialog-warning", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
-	set_image (image);
+	log_ctor ("ctor WarningDialog");
 }
 
 WarningDialog::~WarningDialog()
 {
+	log_dtor ("dtor WarningDialog");
 }
 
 WarningDialogPtr
@@ -39,23 +39,46 @@ WarningDialog::create (QuestionPtr q)
 void
 WarningDialog::response (int button_id)
 {
+	return_if_fail (question);
+	question->result = button_id;
+	question->done();
 	log_debug ("WarningDialog::response = %d\n", button_id);
 }
 
 int
 WarningDialog::run (void)
 {
-	add_buttons();
+	return_val_if_fail (question,Gtk::ResponseType::RESPONSE_NONE);
+	LOG_TRACE;
 
-	image.set_from_icon_name ("dialog-warning", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	std::string str;
+
+	str = question->get_input ("image");
+	if (str.empty()) {
+		str = "dialog-warning";
+	}
+
+	image.set_from_icon_name (str, Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
 	set_image (image);
 
-	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
-	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
+	str = question->get_input ("title");
+	if (!str.empty()) {
+		set_title (str);
+	}
 
-	set_title          (question->input["title"]);	//XXX might create empty map entry
-	set_message        (question->input["primary"]);
-	set_secondary_text (question->input["secondary"]);
+	str = question->get_input ("primary");
+	if (str.empty()) {
+		str = "Warning";
+	}
+	set_message (str);
+
+	str = question->get_input ("secondary");
+	set_secondary_text (str);
+
+	if (!add_buttons()) {
+		add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
+		set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
+	}
 
 	show_all();
 	return Dialog::run();

@@ -23,11 +23,13 @@ Dialog::Dialog (QuestionPtr q) :
 	help ("_Help", true),
 	question(q)
 {
+	log_ctor ("ctor Dialog");
 	signal_response().connect ([&] (int id) { response (id); });
 }
 
 Dialog::~Dialog()
 {
+	log_dtor ("dtor Dialog");
 }
 
 void

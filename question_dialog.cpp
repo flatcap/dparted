@@ -21,12 +21,14 @@
 QuestionDialog::QuestionDialog (QuestionPtr q) :
 	Dialog(q)
 {
+	log_ctor ("ctor QuestionDialog");
 	image.set_from_icon_name ("dialog-question", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
 	set_image (image);
 }
 
 QuestionDialog::~QuestionDialog()
 {
+	log_dtor ("dtor QuestionDialog");
 }
 
 QuestionDialogPtr

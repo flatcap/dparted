@@ -317,15 +317,8 @@ LuksTable::luks_open (void)
 		add_child (p, true);
 	} else {
 		QuestionPtr q = Question::create (std::bind(&LuksTable::on_reply, this, std::placeholders::_1));
-		q->type = Question::Type::Error;
-		q->input = {
-			{ "device",    device },
-			{ "title",     "this is the title" },
-			{ "primary",   "main message" },
-			{ "secondary", "sub-text that goes on and on and on..." },
-		};
-		q->buttons = { { "_Apple", 101 }, { "_Banana", 666 }, { "_Cherry", 999 } };
-
+		q->type = Question::Type::Password;
+		q->input = { { "device", device } };
 		main_app->ask (q);
 	}
 

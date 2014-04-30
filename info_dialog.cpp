@@ -21,12 +21,12 @@
 InfoDialog::InfoDialog (QuestionPtr q) :
 	Dialog(q)
 {
-	image.set_from_icon_name ("dialog-information", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
-	set_image (image);
+	log_ctor ("ctor InfoDialog");
 }
 
 InfoDialog::~InfoDialog()
 {
+	log_dtor ("dtor InfoDialog");
 }
 
 InfoDialogPtr
@@ -39,23 +39,46 @@ InfoDialog::create (QuestionPtr q)
 void
 InfoDialog::response (int button_id)
 {
+	return_if_fail (question);
+	question->result = button_id;
+	question->done();
 	log_debug ("InfoDialog::response = %d\n", button_id);
 }
 
 int
 InfoDialog::run (void)
 {
-	add_buttons();
+	return_val_if_fail (question,Gtk::ResponseType::RESPONSE_NONE);
+	LOG_TRACE;
 
-	image.set_from_icon_name ("dialog-information", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	std::string str;
+
+	str = question->get_input ("image");
+	if (str.empty()) {
+		str = "dialog-information";
+	}
+
+	image.set_from_icon_name (str, Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
 	set_image (image);
 
-	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
-	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
+	str = question->get_input ("title");
+	if (!str.empty()) {
+		set_title (str);
+	}
 
-	set_title          (question->input["title"]);	//XXX might create empty map entry
-	set_message        (question->input["primary"]);
-	set_secondary_text (question->input["secondary"]);
+	str = question->get_input ("primary");
+	if (str.empty()) {
+		str = "Information";
+	}
+	set_message (str);
+
+	str = question->get_input ("secondary");
+	set_secondary_text (str);
+
+	if (!add_buttons()) {
+		add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
+		set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
+	}
 
 	show_all();
 	return Dialog::run();

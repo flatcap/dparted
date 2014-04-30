@@ -180,7 +180,6 @@ Loop::losetup (std::vector <std::string>& output, std::string device)
 	 *	/dev/loop18 0 48 8:3 7:288 0 1 0 0 /mnt/space/test/test_30.img (deleted)
 	 */
 
-
 	std::string command = "losetup --noheadings --output name,autoclear,back-ino,back-maj:min,maj:min,offset,partscan,ro,sizelimit,back-file";
 
 	if (!device.empty()) {
