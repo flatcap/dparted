@@ -79,8 +79,6 @@ ChangePasswordDialog::ChangePasswordDialog (QuestionPtr q) :
 	text1.set_visibility (false);
 	text2.set_visibility (false);
 	text3.set_visibility (false);
-
-	show_all();
 }
 
 ChangePasswordDialog::~ChangePasswordDialog()
@@ -90,6 +88,7 @@ ChangePasswordDialog::~ChangePasswordDialog()
 ChangePasswordDialogPtr
 ChangePasswordDialog::create (QuestionPtr q)
 {
+	return_val_if_fail (q,nullptr);
 	return ChangePasswordDialogPtr (new ChangePasswordDialog(q));
 }
 
@@ -108,6 +107,7 @@ ChangePasswordDialog::run (void)
 	set_message        (question->input["primary"]);
 	set_secondary_text (question->input["secondary"]);
 
+	show_all();
 	return Dialog::run();
 }
 

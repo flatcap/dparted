@@ -21,6 +21,8 @@
 InfoDialog::InfoDialog (QuestionPtr q) :
 	Dialog(q)
 {
+	image.set_from_icon_name ("dialog-information", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image (image);
 }
 
 InfoDialog::~InfoDialog()
@@ -30,6 +32,7 @@ InfoDialog::~InfoDialog()
 InfoDialogPtr
 InfoDialog::create (QuestionPtr q)
 {
+	return_val_if_fail (q,nullptr);
 	return InfoDialogPtr (new InfoDialog(q));
 }
 
@@ -54,6 +57,7 @@ InfoDialog::run (void)
 	set_message        (question->input["primary"]);
 	set_secondary_text (question->input["secondary"]);
 
+	show_all();
 	return Dialog::run();
 }
 

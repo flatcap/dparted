@@ -21,6 +21,8 @@
 QuestionDialog::QuestionDialog (QuestionPtr q) :
 	Dialog(q)
 {
+	image.set_from_icon_name ("dialog-question", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image (image);
 }
 
 QuestionDialog::~QuestionDialog()
@@ -30,6 +32,7 @@ QuestionDialog::~QuestionDialog()
 QuestionDialogPtr
 QuestionDialog::create (QuestionPtr q)
 {
+	return_val_if_fail (q,nullptr);
 	return QuestionDialogPtr (new QuestionDialog(q));
 }
 
@@ -51,6 +54,7 @@ QuestionDialog::run (void)
 	set_message        (question->input["primary"]);
 	set_secondary_text (question->input["secondary"]);
 
+	show_all();
 	return Dialog::run();
 }
 

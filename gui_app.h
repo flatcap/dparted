@@ -30,7 +30,6 @@
 #include "message.h"
 #include "gfx_container.h"
 #include "theme.h"
-#include "password_dialog.h"
 #include "window.h"
 
 class GuiApp;
@@ -84,7 +83,6 @@ protected:
 	bool on_mouse_click (GdkEventButton* event);
 
 	std::deque<QuestionPtr> vq;
-	PasswordDialogPtr passwd;
 	ThemePtr theme;
 	WindowPtr window;
 	Glib::Dispatcher dispatcher;

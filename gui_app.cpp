@@ -45,6 +45,14 @@
 #include "option_group.h"
 #include "utils.h"
 
+#include "change_password_dialog.h"
+#include "error_dialog.h"
+#include "info_dialog.h"
+#include "password_dialog.h"
+#include "properties_dialog.h"
+#include "question_dialog.h"
+#include "warning_dialog.h"
+
 GuiAppPtr gui_app;
 
 GuiApp::GuiApp (void) :
@@ -431,8 +439,23 @@ GuiApp::on_dispatch (void)
 
 	DialogPtr dlg;
 	switch (q->type) {
+		case Question::Type::ChangePassword:
+			dlg = ChangePasswordDialog::create(q);
+			break;
+		case Question::Type::Error:
+			dlg = ErrorDialog::create(q);
+			break;
+		case Question::Type::Information:
+			dlg = InfoDialog::create(q);
+			break;
 		case Question::Type::Password:
 			dlg = PasswordDialog::create(q);
+			break;
+		case Question::Type::Question:
+			dlg = QuestionDialog::create(q);
+			break;
+		case Question::Type::Warning:
+			dlg = WarningDialog::create(q);
 			break;
 		default:
 			log_error ("Unknown question type %d\n", (int) q->type);

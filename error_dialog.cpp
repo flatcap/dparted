@@ -21,6 +21,8 @@
 ErrorDialog::ErrorDialog (QuestionPtr q) :
 	Dialog(q)
 {
+	image.set_from_icon_name ("dialog-error", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image (image);
 }
 
 ErrorDialog::~ErrorDialog()
@@ -30,6 +32,7 @@ ErrorDialog::~ErrorDialog()
 ErrorDialogPtr
 ErrorDialog::create (QuestionPtr q)
 {
+	return_val_if_fail (q,nullptr);
 	return ErrorDialogPtr (new ErrorDialog(q));
 }
 
@@ -44,9 +47,6 @@ ErrorDialog::run (void)
 {
 	add_buttons();
 
-	image.set_from_icon_name ("dialog-error", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
-	set_image (image);
-
 	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
 	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
 
@@ -54,6 +54,7 @@ ErrorDialog::run (void)
 	set_message        (question->input["primary"]);
 	set_secondary_text (question->input["secondary"]);
 
+	show_all();
 	return Dialog::run();
 }
 
