@@ -325,7 +325,7 @@ Plugin 'X' would like to know the password to device 'Y'
 Multi-tab actions: Overview, Commands, Description
 	Save option
 
-How do I spawn firefox/yelp?
+How do I spawn yelp?
 
 Selection/Working theme signals "theme-changed" on every new state
 
@@ -621,8 +621,6 @@ of the user naming them?
 pathbar below menu (and on view menu)
 	tie in to focus
 
-treeview percentage -- option to display as bargraph
-
 if object is hidden children should inherit warnings?
 	children might not be visible
 	some parent is always visible
@@ -636,8 +634,6 @@ where should the catchs go
 	high-level -- near the action that started it
 
 props flags - advanced?
-
-study <algorithm>
 
 identify spelling in all config: colou?r, etc
 
@@ -679,15 +675,7 @@ only throw std::exceptions
 --debug enable all logging (-DDEBUG)
 --trace enable all tracing (-DTRACE)
 
-log overloads for sstream, string, ()->\n?
-
 astyle/indent options
-
-fake thread class -- all sync THREAD macro
-
-thread id in log trace
-
-thread trace macro
 
 X::create could fail -- check retval
 	compiler pragma? no
@@ -721,8 +709,6 @@ cryptsetup with no key => stderr! need to trap it
 	add "2>&1" to all commands
 	use more pipes
 
-get_tid (use sstream <<)
-
 combine DP_FILE with _FILE_H_ etc
 	simplifying #includes
 
@@ -743,12 +729,6 @@ rename XYZ_dialog to dlg_XYZ?
 siblings
 	lvmgroup members
 	btrfs subvols
-
-log_utils (debug) for stable functions
-
-invert DP_NO_THREAD
-
-lambda to wrap thread logging
 
 model invalidate => gui refresh -- HOW?
 
