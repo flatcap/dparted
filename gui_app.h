@@ -27,7 +27,6 @@
 #include <glibmm/dispatcher.h>
 
 #include "app.h"
-#include "message.h"
 #include "gfx_container.h"
 #include "theme.h"
 #include "window.h"
@@ -46,8 +45,7 @@ public:
 	GuiApp (void);
 	virtual ~GuiApp();
 
-	virtual bool ask      (QuestionPtr q);
-	virtual bool notify (Message& m);
+	virtual bool ask (QuestionPtr q);
 	virtual void properties (GfxContainerPtr c);
 	ThemePtr get_theme (void);
 	void set_theme (ThemePtr theme);

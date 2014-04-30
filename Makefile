@@ -68,7 +68,7 @@ LINKS	= misc test
 SRC	+= block.cpp container.cpp filesystem.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
-SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp
+SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp
 
 # GUI - Graphical objects
 SRC	+= main.cpp
@@ -232,6 +232,7 @@ docs:
 stats:
 	$(RM) stats
 	gitstats . stats
+	firefox stats/index.html
 
 xxx:
 	@grep --exclude xxx.txt -rHno "//[X]XX.*" . \

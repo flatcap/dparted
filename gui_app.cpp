@@ -373,13 +373,6 @@ GuiApp::ask (QuestionPtr q)
 	return true;
 }
 
-bool
-GuiApp::notify (Message& UNUSED(m))
-{
-	// Might need to queue these until we're ready to confront the user
-	return false;
-}
-
 
 void
 GuiApp::properties (GfxContainerPtr c)

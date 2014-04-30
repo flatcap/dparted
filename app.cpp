@@ -82,13 +82,6 @@ App::ask (QuestionPtr q)
 	return false;
 }
 
-bool
-App::notify (Message& UNUSED(m))
-{
-	// Might need to queue these until we're ready to confront the user
-	return false;
-}
-
 
 bool
 App::set_config (const std::string& filename)
