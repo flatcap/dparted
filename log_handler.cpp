@@ -20,8 +20,12 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
+#include <iomanip>
 #include <sstream>
 #include <string>
+
+#include <sys/time.h>
+#include <unistd.h>
 
 #include "log_handler.h"
 #include "log.h"
@@ -130,7 +134,16 @@ LogHandler::log_line (Severity level, const char* function, const char* filename
 		std::vector<char> tstr (20, 0);
 		std::time_t now = std::time (nullptr);
 		if (std::strftime(tstr.data(), tstr.size(), "%F %T", std::localtime (&now)) != 0) {
-			str += tstr.data() + std::string (" ");
+			str += tstr.data();
+
+			if (microseconds) {
+				struct timeval tv;
+				gettimeofday(&tv, nullptr);
+				std::stringstream ss;
+				ss << std::setfill('0') << std::setw(6) << tv.tv_usec;
+				str += "." + ss.str();
+			}
+			str += " ";
 		}
 	}
 

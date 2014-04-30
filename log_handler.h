@@ -48,6 +48,7 @@ public:
 	void reset (void);
 
 	bool timestamp      = false;
+	bool microseconds   = false;
 	bool show_level     = false;
 	bool show_file_line = false;
 	bool show_function  = false;
