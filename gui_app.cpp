@@ -85,17 +85,17 @@ GuiApp::my_idle (void)
 		Gtk::CheckButton c1 ("Remember this setting");
 
 		Gtk::RadioButton::Group group = r1.get_group();
-		r2.set_group(group);
-		r3.set_group(group);
+		r2.set_groupn (group);
+		r3.set_group (group);
 		r2.set_active (true);
 		c1.set_active (true);
 		Gtk::Box box (Gtk::Orientation::ORIENTATION_VERTICAL, 0);
 		frame.add (box);
-		box.pack_start(r1, Gtk::PackOptions::PACK_SHRINK, 0);
-		box.pack_start(r2, Gtk::PackOptions::PACK_SHRINK, 0);
-		box.pack_start(r3, Gtk::PackOptions::PACK_SHRINK, 0);
-		box.pack_start(c1, Gtk::PackOptions::PACK_SHRINK, 0);
-		passwd->get_content_area()->pack_start(frame);
+		box.pack_start (r1, Gtk::PackOptions::PACK_SHRINK, 0);
+		box.pack_start (r2, Gtk::PackOptions::PACK_SHRINK, 0);
+		box.pack_start (r3, Gtk::PackOptions::PACK_SHRINK, 0);
+		box.pack_start (c1, Gtk::PackOptions::PACK_SHRINK, 0);
+		passwd->get_content_area()->pack_start (frame);
 
 		passwd->get_action_area()->pack_start (cancel);
 		passwd->set_transient_for (*get_active_window());
@@ -194,8 +194,8 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 void
 GuiApp::scan_callback (ContainerPtr c)
 {
-	return_if_fail(c);
-	return_if_fail(window);
+	return_if_fail (c);
+	return_if_fail (window);
 	LOG_TRACE;
 
 	window->set_data(c);
@@ -374,7 +374,7 @@ GuiApp::notify (Message& UNUSED(m))
 void
 GuiApp::properties (GfxContainerPtr c)
 {
-	PropertiesDialog* p = new PropertiesDialog(c, get_active_window());
+	PropertiesDialog* p = new PropertiesDialog (c, get_active_window());
 	p->show();
 	//XXX keep weak pointers to PropertiesDialog dialogs
 }

@@ -133,7 +133,7 @@ Window::my_show (void)
 bool
 Window::on_delete_event (GdkEventAny* UNUSED(event))
 {
-	set_show_menubar(false);
+	set_show_menubar (false);
 	return false;
 }
 
@@ -276,25 +276,25 @@ void
 Window::init_actions (void)
 {
 	auto group = Gio::SimpleActionGroup::create();
-	group->add_action("open",  sigc::mem_fun(*gui_app, &GuiApp::on_action_file_open));
-	group->add_action("close", sigc::mem_fun(*gui_app, &GuiApp::on_action_file_close));
-	group->add_action("quit",  sigc::mem_fun(*gui_app, &GuiApp::on_action_file_quit));
+	group->add_action("open",  sigc::mem_fun (*gui_app, &GuiApp::on_action_file_open));
+	group->add_action("close", sigc::mem_fun (*gui_app, &GuiApp::on_action_file_close));
+	group->add_action("quit",  sigc::mem_fun (*gui_app, &GuiApp::on_action_file_quit));
 	insert_action_group ("file", group);
 
 	group = Gio::SimpleActionGroup::create();
-	group->add_action("x",          sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
-	group->add_action("y",          sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
-	group->add_action("configure",  sigc::mem_fun(*gui_app, &GuiApp::on_action_plugin));
+	group->add_action("x",          sigc::mem_fun (*gui_app, &GuiApp::on_action_plugin));
+	group->add_action("y",          sigc::mem_fun (*gui_app, &GuiApp::on_action_plugin));
+	group->add_action("configure",  sigc::mem_fun (*gui_app, &GuiApp::on_action_plugin));
 	insert_action_group ("plugin", group);
 
 	group = Gio::SimpleActionGroup::create();
-	group->add_action("contents",     sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	group->add_action("whats_this",   sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	group->add_action("report_issue", sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	group->add_action("faq",          sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	group->add_action("community",    sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	group->add_action("homepage",     sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
-	group->add_action("about",        sigc::mem_fun(*gui_app, &GuiApp::on_action_help));
+	group->add_action("contents",     sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action("whats_this",   sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action("report_issue", sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action("faq",          sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action("community",    sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action("homepage",     sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action("about",        sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
 	insert_action_group ("help", group);
 
 	insert_general_actions ("edit",       { "cut", "copy", "paste", "paste_special", "undo", "redo", "clear_all_ops", "apply_all_ops", "find", "find_next", "find_previous", "preferences" });
@@ -566,7 +566,7 @@ Window::on_keypress (int modifier, int key)
 	log_debug ("Keypress: %d : %c", modifier, key);
 
 	if ((modifier == Gdk::CONTROL_MASK) && (key == 'Q')) {
-		set_show_menubar(false);
+		set_show_menubar (false);
 		hide();
 	}
 }
@@ -595,7 +595,7 @@ Window::on_action_general (std::string section, std::string name)
 void
 Window::set_data (ContainerPtr c)
 {
-	return_if_fail(c);
+	return_if_fail (c);
 	LOG_TRACE;
 
 	top_level = c;

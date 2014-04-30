@@ -41,7 +41,7 @@ ChangePasswordDialog::ChangePasswordDialog (QuestionPtr q) :
 	ca->pack_start (text3);
 #else
 	grid.set_row_spacing(6);
-	grid.set_column_spacing(12);
+	grid.set_column_spacing (12);
 	grid.attach (old,   0, 0, 1, 1);
 	grid.attach (text1, 1, 0, 1, 1);
 	grid.attach (new1,  0, 1, 1, 1);

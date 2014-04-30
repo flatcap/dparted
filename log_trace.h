@@ -44,7 +44,7 @@ public:
 		line_num (line)
 	{
 		if (suf)
-			suffix = std::string(" ") + suf;
+			suffix = std::string (" ") + suf;
 
 		std::thread::id thread_id = std::this_thread::get_id();
 		std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));

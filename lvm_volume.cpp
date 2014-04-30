@@ -120,7 +120,7 @@ LvmVolume::add_child (ContainerPtr& child, bool probe)
 	if ((is_a ("LvmMetadata") && (child->is_a ("LvmVolume")))) {	//XXX tmp
 		log_debug ("LvmMetadata: %s", child->get_type().c_str());
 		sibling = child;
-		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(child);
+		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume> (child);
 		vol->sibling = get_smart();
 		return;
 	}

@@ -553,7 +553,7 @@ DrawingArea::fill_rect (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& sha
 bool
 DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
-	return_val_if_fail(top_level,false);
+	return_val_if_fail (top_level,false);
 	LOG_TRACE;
 
 	top_level->update_info();
@@ -640,7 +640,7 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 		log_debug ("No focus");
 		gfx = get_focus (0, 0);
 		if (gfx) {
-			dp->set_focus(gfx);
+			dp->set_focus (gfx);
 		}
 	}
 
@@ -1192,7 +1192,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 
 	std::vector<Widget*> items = menu_popup.get_children();
 	for (auto i : items) {
-		menu_popup.remove(*i);
+		menu_popup.remove (*i);
 	}
 
 	std::string section;
@@ -1231,7 +1231,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 
 				menu_popup.append (*sub_item);
 				sub_item->set_submenu (*sub_menu);
-				sub_item->set_sensitive(false);		// default to off
+				sub_item->set_sensitive (false);		// default to off
 
 				index_menu = sub_menu;
 				index_item = sub_item;

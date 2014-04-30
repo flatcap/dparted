@@ -270,7 +270,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 bool
 App::process_queue_item (ContainerPtr item)
 {
-	return_val_if_fail(item,false);
+	return_val_if_fail (item,false);
 	LOG_THREAD;
 
 	std::uint64_t bufsize = item->bytes_size;

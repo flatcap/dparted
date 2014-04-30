@@ -33,7 +33,7 @@ Dialog::~Dialog()
 void
 Dialog::on_help (void)
 {
-	return_if_fail(question);
+	return_if_fail (question);
 
 	std::string help_url = question->input["help_url"];
 	GError *error = nullptr;
@@ -49,7 +49,7 @@ Dialog::on_help (void)
 bool
 Dialog::add_buttons (void)
 {
-	return_val_if_fail(question,false);
+	return_val_if_fail (question,false);
 
 	std::string help_url = question->input["help_url"];
 	if (!help_url.empty()) {

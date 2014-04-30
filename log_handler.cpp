@@ -103,7 +103,7 @@ LogHandler::stop (void)
 void
 LogHandler::log_line (Severity level, const char* function, const char* filename, int line, const char* message)
 {
-	return_if_fail(file);
+	return_if_fail (file);
 
 	std::string str;
 	std::string end;
@@ -130,7 +130,7 @@ LogHandler::log_line (Severity level, const char* function, const char* filename
 		std::vector<char> tstr (20, 0);
 		std::time_t now = std::time (nullptr);
 		if (std::strftime(tstr.data(), tstr.size(), "%F %T", std::localtime (&now)) != 0) {
-			str += tstr.data() + std::string(" ");
+			str += tstr.data() + std::string (" ");
 		}
 	}
 
@@ -166,14 +166,14 @@ LogHandler::log_line (Severity level, const char* function, const char* filename
 void
 LogHandler::flush (void)
 {
-	return_if_fail(file);
+	return_if_fail (file);
 	fflush (file);
 }
 
 void
 LogHandler::reset (void)
 {
-	return_if_fail(file);
+	return_if_fail (file);
 	if (is_tty) {
 		fprintf (file, "\033c");		// Reset the terminal
 	}

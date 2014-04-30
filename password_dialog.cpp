@@ -54,7 +54,7 @@ PasswordDialog::~PasswordDialog()
 PasswordDialogPtr
 PasswordDialog::create (QuestionPtr q)
 {
-	return_val_if_fail(q,nullptr);
+	return_val_if_fail (q,nullptr);
 	return PasswordDialogPtr (new PasswordDialog(q));
 }
 

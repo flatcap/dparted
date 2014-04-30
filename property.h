@@ -168,14 +168,14 @@ class PropFn : public BaseProperty
 public:
 	PropFn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags) :
 		BaseProperty (owner, name, desc, flags),
-		fn(fn)
+		fn (fn)
 	{
 		return_if_fail (owner);
 		return_if_fail (name);
 		return_if_fail (desc);
 
 		T dummy = {};
-		set_type(dummy);
+		set_type (dummy);
 	}
 
 	virtual ~PropFn()
@@ -204,8 +204,8 @@ class PropPercent : public BaseProperty
 public:
 	PropPercent (const char* owner, const char* name, PPtr& numerator, PPtr& denominator, const char* desc, int flags) :
 		BaseProperty (owner, name, desc, flags),
-		num(numerator),
-		denom(denominator)
+		num (numerator),
+		denom (denominator)
 	{
 		return_if_fail (owner);
 		return_if_fail (name);
@@ -249,8 +249,8 @@ class PropArray : public BaseProperty
 public:
 	PropArray (const char* owner, const char* name, std::vector<std::string>& vec, unsigned int index, const char* desc, int flags) :
 		BaseProperty (owner, name, desc, flags),
-		v(vec),
-		index(index)
+		v (vec),
+		index (index)
 	{
 		return_if_fail (owner);
 		return_if_fail (name);

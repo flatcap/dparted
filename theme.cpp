@@ -128,7 +128,7 @@ Theme::create_missing_pixbuf (int size)
 
 	//XXX note the order: ImageSurface (RGBA) and Pixbuf (BGRA)
 	cr->set_source_rgba (0, 0, 1, 1);
-	cr->set_line_width(size/4);
+	cr->set_line_width (size/4);
 
 	cr->move_to (0, 0);
 	cr->rel_line_to (size, size);

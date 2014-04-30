@@ -223,7 +223,7 @@ Loop::discover (ContainerPtr& parent)
 		size = lseek (l->fd, 0, SEEK_END);
 		l->bytes_size = size;
 
-		parent->add_child(l, true);
+		parent->add_child (l, true);
 	}
 }
 
@@ -263,7 +263,7 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
-	parent->add_child(l, true);
+	parent->add_child (l, true);
 	return true;
 }
 
