@@ -248,8 +248,8 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 				std::lock_guard<std::mutex> lock (thread_mutex);
 				thread_queue.pop_front();
 			}
-			log_thread_end ("Threads have finished");
 			fn (top_level);
+			log_thread_end ("Threads have finished");
 		}).detach();
 	} else {
 		// Wait for all the threads to finish before returning

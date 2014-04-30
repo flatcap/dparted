@@ -84,7 +84,7 @@ LogHandler::create (FILE* handle)
 void
 LogHandler::start (Severity level)
 {
-	auto cb = std::bind (&LogHandler::log_line, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6);
+	auto cb = std::bind (&LogHandler::log_line, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7, std::placeholders::_8);
 	log_handle = log_add_handler (cb, level);
 }
 
@@ -105,7 +105,7 @@ LogHandler::stop (void)
 }
 
 void
-LogHandler::log_line (std::uint64_t index, Severity level, const char* function, const char* filename, int line, const char* message)
+LogHandler::log_line (std::uint64_t index, std::uint64_t tid, std::uint64_t UNUSED(fn_depth), Severity level, const char* function, const char* filename, int line, const char* message)
 {
 	return_if_fail (file);
 
@@ -128,6 +128,12 @@ LogHandler::log_line (std::uint64_t index, Severity level, const char* function,
 			str += "48;5;" + std::to_string (background) + ";";
 		}
 		str.back() = 'm';	// replace trailing semi-colon with 'm'
+	}
+
+	if (thread_id) {
+		std::stringstream ss;
+		ss << 'T' << std::setfill('0') << std::setw(4) << tid;
+		str += ss.str() + " ";
 	}
 
 	if (uniq_index) {

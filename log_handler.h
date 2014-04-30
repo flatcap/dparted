@@ -40,13 +40,15 @@ public:
 
 	virtual ~LogHandler();
 
-	void log_line (std::uint64_t index, Severity level, const char* function, const char* filename, int line, const char* message);
+	void log_line (std::uint64_t index, std::uint64_t thread_id, std::uint64_t fn_depth, Severity level, const char* function, const char* filename, int line, const char* message);
 
 	void start (Severity level);
 	void stop  (void);
 	void flush (void);
 	void reset (void);
 
+	bool fn_depth       = false;
+	bool thread_id      = false;
 	bool uniq_index     = false;
 	bool timestamp      = false;
 	bool microseconds   = false;

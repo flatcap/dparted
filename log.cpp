@@ -29,10 +29,12 @@
 #include "utils.h"
 
 static std::vector<std::tuple<int,Severity,log_callback_t>> log_mux;
+static std::map<std::thread::id,std::uint64_t> thread_list;
 static int log_handle = 0;
 #ifndef DP_LOG_CHECK
-int log_fn_depth = 0;
-std::uint64_t log_seq_index = 0;
+static std::uint64_t fn_depth     = 0;
+static std::uint64_t seq_index    = 0;
+static std::uint64_t thread_index = 0;
 #endif
 
 std::mutex log_active;
@@ -68,26 +70,34 @@ void
 log_redirect (Severity level, const char* function, const char* file, int line, const char* message)
 {
 	std::lock_guard<std::mutex> lock (log_active);
-	++log_seq_index;
+	++seq_index;
 
-#if 0
-	std::thread::id thread_id = std::this_thread::get_id();
-	std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
-#endif
+	std::uint64_t thread_num = 0;
 
-	if ((level & Severity::Leave) == Severity::Leave) --log_fn_depth;	//XXX add to log callback
+	if ((level & Severity::Leave) == Severity::Leave)
+		--fn_depth;
+
+	std::thread::id tid = std::this_thread::get_id();
+	if ((level & Severity::ThreadStart) == Severity::ThreadStart) {
+		++thread_index;
+		fflush (stdout);
+		thread_list[tid] = thread_index;
+		thread_num = thread_index;
+	} else {
+		thread_num = thread_list[tid];
+	}
 
 	if (log_mux.empty()) {
 		fprintf (stdout, "%s", message);
 	} else {
 		for (auto i : log_mux) {
 			if ((bool) (std::get<1>(i) & level)) {
-				std::get<2>(i) (log_seq_index, level, function, file, line, message);	// Every log goes through this line
+				std::get<2>(i) (seq_index, thread_num, fn_depth, level, function, file, line, message);	// Every log goes through this line
 			}
 		}
 	}
 
-	if ((level & Severity::Enter) == Severity::Enter) ++log_fn_depth;
+	if ((level & Severity::Enter) == Severity::Enter) ++fn_depth;
 }
 
 /**
