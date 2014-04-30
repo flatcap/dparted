@@ -35,7 +35,6 @@
 #include "log.h"
 #include "misc.h"
 #include "table.h"
-#include "thread.h"
 #include "utils.h"
 #ifdef DP_DISK
 #include "disk.h"
@@ -151,7 +150,7 @@ void
 App::queue_add_probe (ContainerPtr& item)
 {
 	return_if_fail (item);
-	start_thread (std::bind (&App::process_queue_item, this, item));
+	start_thread (std::bind (&App::process_queue_item, this, item), "App::process_queue_item");
 }
 
 bool
@@ -219,22 +218,22 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 	if (devices.empty()) {
 		// Check all device types at once
 #ifdef DP_DISK
-		start_thread (std::bind (&Disk::discover,     top_level));
+		start_thread (std::bind (&Disk::discover,     top_level), "Disk::discover");
 #endif
 #ifdef DP_FILE
-		start_thread (std::bind (&File::discover,     top_level));
+		start_thread (std::bind (&File::discover,     top_level), "File::discover");
 #endif
 #ifdef DP_LOOP
-		start_thread (std::bind (&Loop::discover,     top_level));
+		start_thread (std::bind (&Loop::discover,     top_level), "Loop::discover");
 #endif
 #ifdef DP_LVM
-		start_thread (std::bind (&LvmGroup::discover, top_level));
+		start_thread (std::bind (&LvmGroup::discover, top_level), "LvmGroup::discover");
 #endif
 	} else {
 		//XXX need to spot Lvm Groups
 		for (auto i : devices) {
 			// Examine all the devices in parallel
-			start_thread (std::bind (&App::identify_device, this, top_level, i));
+			start_thread (std::bind (&App::identify_device, this, top_level, i), "App::identify_device");
 		}
 	}
 
@@ -243,11 +242,13 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 		// Start a thread to watch the existing threads.
 		// When the existing thread have finished notify the user with fn().
 		std::thread ([=](){
+			log_thread_start ("Waiting for threads to finish");
 			while (!thread_queue.empty()) {
 				thread_queue.front().join();
 				std::lock_guard<std::mutex> lock (thread_mutex);
 				thread_queue.pop_front();
 			}
+			log_thread_end ("Threads have finished");
 			fn (top_level);
 		}).detach();
 	} else {
@@ -295,11 +296,18 @@ App::process_queue_item (ContainerPtr item)
 
 
 void
-App::start_thread (std::function<void(void)> fn)
+App::start_thread (std::function<void(void)> fn, const char* desc)
 {
+	//XXX use of desc is clumsy, but will do for now
 #ifdef DP_THREADED
 	std::lock_guard<std::mutex> lock (thread_mutex);
-	thread_queue.push_back (std::thread ([fn]() { LOG_THREAD; fn(); }));
+	thread_queue.push_back (
+		std::thread ([fn,desc]() {
+			log_thread_start ("thread started: %s", desc);
+			fn();
+			log_thread_end ("thread ended: %s", desc);
+		})
+	);
 #else
 	fn();
 #endif

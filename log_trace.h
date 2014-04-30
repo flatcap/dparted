@@ -28,40 +28,34 @@
 //XXX indent results?
 
 #ifdef DEBUG
-#define LOG_THREAD		LogTrace __lt(__PRETTY_FUNCTION__, __FILE__, __LINE__, "thread")
 #define LOG_TRACE		LogTrace __le(__PRETTY_FUNCTION__, __FILE__, __LINE__)
 #else
-#define LOG_THREAD		do {} while (0)
 #define LOG_TRACE		do {} while (0)
 #endif
 
 class LogTrace
 {
 public:
-	LogTrace (const std::string& fn, const std::string& file, int line, const char *suf = nullptr) :
+	LogTrace (const std::string& fn, const std::string& file, int line) :
 		function (fn),
 		file_name (file),
 		line_num (line)
 	{
-		if (suf)
-			suffix = std::string (" ") + suf;
-
 		std::thread::id thread_id = std::this_thread::get_id();
 		std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
-		log_enter ("Entering%s %s (%ld) -- %s:%d", suffix.c_str(), function.c_str(), tid, file_name.c_str(), line_num);
+		log_enter ("Entering %s (%ld) -- %s:%d", function.c_str(), tid, file_name.c_str(), line_num);
 	}
 
 	virtual ~LogTrace()
 	{
 		std::thread::id thread_id = std::this_thread::get_id();
 		std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
-		log_leave ("Leaving%s  %s (%ld) -- %s", suffix.c_str(), function.c_str(), tid, file_name.c_str());
+		log_leave ("Leaving  %s (%ld) -- %s", function.c_str(), tid, file_name.c_str());
 	}
 
 protected:
 	std::string	function;
 	std::string	file_name;
-	std::string	suffix;
 	int		line_num;
 
 private:

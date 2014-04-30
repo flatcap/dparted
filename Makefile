@@ -117,7 +117,7 @@ SRC-$(UNUSED)		+= icon_manager.cpp
 SRC	+= $(SRC-1)
 HDR	+= $(SRC:%.cpp=%.h)
 
-HDR	+= lvm2.h config_manager.h thread.h
+HDR	+= lvm2.h config_manager.h
 
 OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
