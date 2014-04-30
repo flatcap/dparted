@@ -95,7 +95,7 @@ File::perform_action (Action action)
 void
 File::discover (ContainerPtr& UNUSED(parent))
 {
-	LOG_THREAD;
+	LOG_TRACE;
 
 	// Config
 	//	[files]

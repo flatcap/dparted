@@ -20,8 +20,12 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
+#include <iomanip>
 #include <sstream>
 #include <string>
+
+#include <sys/time.h>
+#include <unistd.h>
 
 #include "log_handler.h"
 #include "log.h"
@@ -80,7 +84,7 @@ LogHandler::create (FILE* handle)
 void
 LogHandler::start (Severity level)
 {
-	auto cb = std::bind (&LogHandler::log_line, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
+	auto cb = std::bind (&LogHandler::log_line, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6);
 	log_handle = log_add_handler (cb, level);
 }
 
@@ -101,7 +105,7 @@ LogHandler::stop (void)
 }
 
 void
-LogHandler::log_line (Severity level, const char* function, const char* filename, int line, const char* message)
+LogHandler::log_line (std::uint64_t index, Severity level, const char* function, const char* filename, int line, const char* message)
 {
 	return_if_fail (file);
 
@@ -126,11 +130,26 @@ LogHandler::log_line (Severity level, const char* function, const char* filename
 		str.back() = 'm';	// replace trailing semi-colon with 'm'
 	}
 
+	if (uniq_index) {
+		std::stringstream ss;
+		ss << std::setfill('0') << std::setw(6) << index;
+		str += ss.str() + " ";
+	}
+
 	if (timestamp) {
 		std::vector<char> tstr (20, 0);
 		std::time_t now = std::time (nullptr);
 		if (std::strftime(tstr.data(), tstr.size(), "%F %T", std::localtime (&now)) != 0) {
-			str += tstr.data() + std::string (" ");
+			str += tstr.data();
+
+			if (microseconds) {
+				struct timeval tv;
+				gettimeofday(&tv, nullptr);
+				std::stringstream ss;
+				ss << std::setfill('0') << std::setw(6) << tv.tv_usec;
+				str += "." + ss.str();
+			}
+			str += " ";
 		}
 	}
 

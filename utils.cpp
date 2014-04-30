@@ -185,19 +185,18 @@ dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length)
 	}
 }
 
-void
+std::string
 dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::uint64_t>>& region)
 {
-	log_debug (desc);
 	std::stringstream ss;
-	ss << '\t';
+	ss << desc << ": ";
 	if (region.empty()) {
 		ss << "empty";
 	}
 	for (auto r : region) {
 		ss << r.first << "-" << r.second;
 	}
-	log_debug (ss);
+	return ss.str();
 }
 
 /**
@@ -308,20 +307,20 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 
 	parts.clear();
 
-	log_debug ("input      = '%s'", input.c_str());
-	log_debug ("separators = '%s'", separators);
+	log_utils ("input      = '%s'", input.c_str());
+	log_utils ("separators = '%s'", separators);
 
 	start = input.find_first_not_of (" \t", start);		// trim leading whitespace
 	start = input.find_first_not_of (separators, start);
 	end   = input.find_first_of     (separators, start);
-	log_debug ("start = %ld, end = %ld", start, end);
+	log_utils ("start = %ld, end = %ld", start, end);
 
 	while (end != std::string::npos) {
 		parts.push_back (input.substr (start, end - start));
 
 		start = input.find_first_not_of (separators, end+1);
 		end   = input.find_first_of     (separators, start);
-		log_debug ("start = %ld, end = %ld", start, end);
+		log_utils ("start = %ld, end = %ld", start, end);
 
 		max--;
 		if (max < 2)
@@ -332,9 +331,9 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 		parts.push_back (input.substr (start));
 	}
 
-	log_debug ("vector:");
+	log_utils ("vector:");
 	for (auto value : parts) {
-		log_debug ("\t>>%s<<", value.c_str());
+		log_utils ("\t>>%s<<", value.c_str());
 	}
 
 	return parts.size();
@@ -377,7 +376,7 @@ get_size (std::uint64_t size)
 {
 	//XXX do this without log2?  use __builtin_clz
 	std::stringstream ss;
-	double power = log2 ((double) llabs (size)) + 0.5;
+	double power = std::log2 ((double) std::llabs (size)) + 0.5;
 	const char* suffix = "";
 	double divide = 1;
 
@@ -458,13 +457,13 @@ parse_tagged_line (const std::string& line, const char* separators, std::map<std
 		tags[name] = value;
 	}
 
-	log_debug ("map:");
+	log_utils ("map:");
 	for (auto it2 : tags) {
 
 		std::string name  = it2.first;
 		std::string value = it2.second;
 
-		log_debug ("\t%s -> %s", name.c_str(), value.c_str());
+		log_utils ("\t%s -> %s", name.c_str(), value.c_str());
 	}
 
 	return tags.size();

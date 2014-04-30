@@ -35,7 +35,6 @@
 #include "log.h"
 #include "misc.h"
 #include "table.h"
-#include "thread.h"
 #include "utils.h"
 #ifdef DP_DISK
 #include "disk.h"
@@ -59,7 +58,7 @@ App::App (void)
 
 App::~App()
 {
-#ifndef DP_NO_THREAD
+#ifdef DP_THREADED
 	{	// Scope
 		for (auto& i : thread_queue) {
 			i.join();	// Wait for things to finish
@@ -151,7 +150,7 @@ void
 App::queue_add_probe (ContainerPtr& item)
 {
 	return_if_fail (item);
-	start_thread (std::bind (&App::process_queue_item, this, item));
+	start_thread (std::bind (&App::process_queue_item, this, item), "App::process_queue_item");
 }
 
 bool
@@ -159,7 +158,7 @@ App::identify_device (ContainerPtr parent, std::string& device)
 {
 	return_val_if_fail (parent, false);
 	return_val_if_fail (!device.empty(), false);
-	LOG_THREAD;
+	LOG_TRACE;
 
 	int fd = -1;		//XXX write a RAII wrapper around this
 
@@ -206,7 +205,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 {
 	LOG_TRACE;
 
-#ifndef DP_NO_THREAD
+#ifdef DP_THREADED
 	if (!thread_queue.empty()) {
 		log_code ("only one scan at a time");
 		return nullptr;
@@ -219,35 +218,37 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 	if (devices.empty()) {
 		// Check all device types at once
 #ifdef DP_DISK
-		start_thread (std::bind (&Disk::discover,     top_level));
+		start_thread (std::bind (&Disk::discover,     top_level), "Disk::discover");
 #endif
 #ifdef DP_FILE
-		start_thread (std::bind (&File::discover,     top_level));
+		start_thread (std::bind (&File::discover,     top_level), "File::discover");
 #endif
 #ifdef DP_LOOP
-		start_thread (std::bind (&Loop::discover,     top_level));
+		start_thread (std::bind (&Loop::discover,     top_level), "Loop::discover");
 #endif
 #ifdef DP_LVM
-		start_thread (std::bind (&LvmGroup::discover, top_level));
+		start_thread (std::bind (&LvmGroup::discover, top_level), "LvmGroup::discover");
 #endif
 	} else {
 		//XXX need to spot Lvm Groups
 		for (auto i : devices) {
 			// Examine all the devices in parallel
-			start_thread (std::bind (&App::identify_device, this, top_level, i));
+			start_thread (std::bind (&App::identify_device, this, top_level, i), "App::identify_device");
 		}
 	}
 
-#ifndef DP_NO_THREAD
+#ifdef DP_THREADED
 	if (fn) {
 		// Start a thread to watch the existing threads.
 		// When the existing thread have finished notify the user with fn().
 		std::thread ([=](){
+			log_thread_start ("Waiting for threads to finish");
 			while (!thread_queue.empty()) {
 				thread_queue.front().join();
 				std::lock_guard<std::mutex> lock (thread_mutex);
 				thread_queue.pop_front();
 			}
+			log_thread_end ("Threads have finished");
 			fn (top_level);
 		}).detach();
 	} else {
@@ -271,7 +272,7 @@ bool
 App::process_queue_item (ContainerPtr item)
 {
 	return_val_if_fail (item,false);
-	LOG_THREAD;
+	LOG_TRACE;
 
 	std::uint64_t bufsize = item->bytes_size;
 	std::uint8_t* buffer  = item->get_buffer (0, bufsize);
@@ -295,13 +296,20 @@ App::process_queue_item (ContainerPtr item)
 
 
 void
-App::start_thread (std::function<void(void)> fn)
+App::start_thread (std::function<void(void)> fn, const char* desc)
 {
-#ifdef DP_NO_THREAD
-	fn();
-#else
+	//XXX use of desc is clumsy, but will do for now
+#ifdef DP_THREADED
 	std::lock_guard<std::mutex> lock (thread_mutex);
-	thread_queue.push_back (std::thread (fn));
+	thread_queue.push_back (
+		std::thread ([fn,desc]() {
+			log_thread_start ("thread started: %s", desc);
+			fn();
+			log_thread_end ("thread ended: %s", desc);
+		})
+	);
+#else
+	fn();
 #endif
 }
 

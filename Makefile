@@ -117,7 +117,7 @@ SRC-$(UNUSED)		+= icon_manager.cpp
 SRC	+= $(SRC-1)
 HDR	+= $(SRC:%.cpp=%.h)
 
-HDR	+= lvm2.h config_manager.h thread.h
+HDR	+= lvm2.h config_manager.h
 
 OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
@@ -170,8 +170,8 @@ else
 	CFLAGS	+= -D_GLIBCXX_IOSTREAM
 endif
 
-ifeq ($(T),0)
-	CFLAGS	+= -DDP_NO_THREAD
+ifeq ($(T),1)
+	CFLAGS	+= -DDP_THREADED
 endif
 
 CFLAGS	+= $(shell pkg-config --cflags $(PACKAGES))

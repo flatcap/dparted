@@ -205,7 +205,7 @@ void
 Loop::discover (ContainerPtr& parent)
 {
 	return_if_fail (parent);
-	LOG_THREAD;
+	LOG_TRACE;
 
 	std::vector <std::string> output;
 

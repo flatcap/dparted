@@ -31,7 +31,8 @@
 static std::vector<std::tuple<int,Severity,log_callback_t>> log_mux;
 static int log_handle = 0;
 #ifndef DP_LOG_CHECK
-static int depth = 0;
+int log_fn_depth = 0;
+std::uint64_t log_seq_index = 0;
 #endif
 
 std::mutex log_active;
@@ -67,25 +68,26 @@ void
 log_redirect (Severity level, const char* function, const char* file, int line, const char* message)
 {
 	std::lock_guard<std::mutex> lock (log_active);
+	++log_seq_index;
 
 #if 0
 	std::thread::id thread_id = std::this_thread::get_id();
 	std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
 #endif
 
-	if ((level & Severity::Leave) == Severity::Leave) --depth;	//XXX add to log callback
+	if ((level & Severity::Leave) == Severity::Leave) --log_fn_depth;	//XXX add to log callback
 
 	if (log_mux.empty()) {
 		fprintf (stdout, "%s", message);
 	} else {
 		for (auto i : log_mux) {
 			if ((bool) (std::get<1>(i) & level)) {
-				std::get<2>(i) (level, function, file, line, message);
+				std::get<2>(i) (log_seq_index, level, function, file, line, message);	// Every log goes through this line
 			}
 		}
 	}
 
-	if ((level & Severity::Enter) == Severity::Enter) ++depth;
+	if ((level & Severity::Enter) == Severity::Enter) ++log_fn_depth;
 }
 
 /**
@@ -177,7 +179,9 @@ static std::vector<std::pair<Severity,std::string>> LogLevelNames = {
 	{ Severity::File,            "File"            },
 	{ Severity::Ctor,            "Ctor"            },
 	{ Severity::Dtor,            "Dtor"            },
-	{ Severity::Thread,          "Thread"          }
+	{ Severity::ThreadStart,     "ThreadStart"     },
+	{ Severity::ThreadEnd,       "ThreadEnd"       },
+	{ Severity::Utils,           "Utils"           }
 };
 
 std::string

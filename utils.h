@@ -32,7 +32,7 @@ void                     delete_region (std::vector<std::pair<std::uint64_t,std:
 std::string              demangle (const char* symbol);
 void                     dump_hex2 (void* buf, std::uint64_t start, std::uint64_t length);
 void                     dump_hex (std::uint8_t* buffer, std::uint64_t bufsize);
-void                     dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::uint64_t>>& region);
+std::string              dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::uint64_t>>& region);
 int                      execute_command_in  (const std::string& command, const std::string& input,         bool log_input  = true, bool log_cmd = true);
 int                      execute_command_out (const std::string& command, std::vector<std::string>& output, bool log_output = true, bool log_cmd = true);
 unsigned int             explode (const char* separators, const std::string& input, std::vector<std::string>& parts, int max = 999);

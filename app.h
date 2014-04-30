@@ -31,7 +31,6 @@
 #include "message.h"
 #include "config_file.h"
 #include "container.h"
-#include "thread.h"
 
 class App;
 
@@ -63,10 +62,10 @@ public:
 protected:
 	ConfigFilePtr config_file;
 
-	void start_thread (std::function<void(void)> fn);
+	void start_thread (std::function<void(void)> fn, const char* desc);
 
 private:
-#ifndef DP_NO_THREAD
+#ifdef DP_THREADED
 	std::mutex thread_mutex;
 	std::deque<std::thread> thread_queue;
 #endif
