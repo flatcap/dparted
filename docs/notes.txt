@@ -738,3 +738,17 @@ expand assertions
 	return_val_if_fail
 	return_val_if_reached
 
+rename XYZ_dialog to dlg_XYZ?
+
+siblings
+	lvmgroup members
+	btrfs subvols
+
+log_utils (debug) for stable functions
+
+invert DP_NO_THREAD
+
+lambda to wrap thread logging
+
+model invalidate => gui refresh -- HOW?
+
