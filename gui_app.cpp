@@ -62,7 +62,8 @@ GuiApp::GuiApp (void) :
 	LOG_TRACE;
 	Glib::set_application_name ("dparted");
 
-	dispatcher.connect (sigc::mem_fun (*this, &GuiApp::on_dispatch));
+	dispatcher_ask.connect  (sigc::mem_fun (*this, &GuiApp::on_dispatch_ask));
+	dispatcher_scan.connect (sigc::mem_fun (*this, &GuiApp::on_dispatch_scan));
 }
 
 GuiApp::~GuiApp()
@@ -206,7 +207,8 @@ GuiApp::scan_callback (ContainerPtr c)
 	return_if_fail (window);
 	LOG_TRACE;
 
-	window->set_data(c);
+	scan_result = c;
+	dispatcher_scan.emit();
 }
 
 int
@@ -367,7 +369,7 @@ GuiApp::ask (QuestionPtr q)
 	return_val_if_fail (q, false);
 
 	vq.push_back (q);
-	dispatcher.emit();
+	dispatcher_ask.emit();
 	return true;
 }
 
@@ -428,7 +430,7 @@ GuiApp::set_theme (const std::string& filename)
 
 
 void
-GuiApp::on_dispatch (void)
+GuiApp::on_dispatch_ask (void)
 {
 	if (vq.empty()) {
 		return;
@@ -498,6 +500,12 @@ GuiApp::on_dispatch (void)
 		RESPONSE_HELP = -11
 	};
 #endif
+}
+
+void
+GuiApp::on_dispatch_scan (void)
+{
+	window->set_data (scan_result);
 }
 
 

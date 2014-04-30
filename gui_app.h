@@ -85,8 +85,11 @@ protected:
 	std::deque<QuestionPtr> vq;
 	ThemePtr theme;
 	WindowPtr window;
-	Glib::Dispatcher dispatcher;
-	void on_dispatch (void);
+	Glib::Dispatcher dispatcher_ask;
+	Glib::Dispatcher dispatcher_scan;
+	ContainerPtr scan_result;
+	void on_dispatch_ask  (void);
+	void on_dispatch_scan (void);
 	void scan_callback (ContainerPtr c);
 };
 
