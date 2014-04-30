@@ -43,9 +43,6 @@ public:
 
 protected:
 	LvmLinear (void);
-
-private:
-
 };
 
 #endif // _LVM_LINEAR_H_

@@ -55,9 +55,6 @@ public:
 
 protected:
 	MdTable (void);
-
-private:
-
 };
 
 #endif // _MD_TABLE_H_

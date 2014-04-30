@@ -53,9 +53,6 @@ protected:
 	Table (void);
 
 	std::uint64_t fill_space (void);
-
-private:
-
 };
 
 #endif // _TABLE_H_

@@ -350,11 +350,11 @@ int
 TreeView::add_column<Glib::RefPtr<Gdk::Pixbuf>> (Gtk::TreeModel::ColumnRecord& col_rec, Gtk::TreeView::Column* col, float align, int size)
 {
 	auto* tmc = new Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>>;
-	auto* cell = Gtk::manage(new Gtk::CellRendererPixbuf);
+	auto* cell = Gtk::manage (new Gtk::CellRendererPixbuf);
 	mod_cols.push_back (ModColPtr (tmc));
 	col_rec.add (*tmc);
 	col->pack_start (*cell, false);
-	col->add_attribute(cell->property_pixbuf(), *tmc);
+	col->add_attribute (cell->property_pixbuf(), *tmc);
 
 	cell->set_alignment (align, 0.5);
 	if (size > 0) {
@@ -439,11 +439,11 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 
 				case ct_graph:
 					tmc = new Gtk::TreeModelColumn<int>;
-					cell = Gtk::manage(new Gtk::CellRendererProgress);
+					cell = Gtk::manage (new Gtk::CellRendererProgress);
 					mod_cols.push_back (ModColPtr (tmc));
 					col_rec.add (*tmc);
 					col->pack_start (*cell, false);
-					col->add_attribute(cell->property_value(), *tmc);
+					col->add_attribute (cell->property_value(), *tmc);
 
 					index     = (col_rec.size()-1);
 					size      = parse_size (theme->get_config (key, "", "size", false), 0);

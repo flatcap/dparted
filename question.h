@@ -35,35 +35,30 @@ class Question
 {
 public:
 	virtual ~Question();
-	static QuestionPtr create (question_cb_t fn);
+	static QuestionPtr create (question_cb_t fn = nullptr);
 
-	std::string title;
-	std::string question;
-	std::string help_url;
+	std::map<std::string,std::string> input;
+	std::map<std::string,std::string> output;
+	std::vector<std::pair<std::string,int>> buttons;
 
 	int result = -1;
 
-	std::vector<std::string> answers;
-
 	virtual void done (void);
+	std::string get_input (const std::string& name);
 
 	enum class Type {
-		Question,
-		Information,
+		ChangePassword,
 		Error,
-		Password
+		Information,
+		Password,
+		Question,
+		Warning
 	} type = Type::Information;
-
-	std::string reply;
 
 protected:
 	Question (void);
 
-	ContainerPtr object;
-
 	question_cb_t done_fn = nullptr;
-
-private:
 	std::weak_ptr<Question> self;
 };
 

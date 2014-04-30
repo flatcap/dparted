@@ -46,9 +46,6 @@ public:
 
 protected:
 	Misc (void);
-
-private:
-
 };
 
 #endif // _MISC_H_

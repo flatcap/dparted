@@ -46,9 +46,6 @@ public:
 
 protected:
 	Gpt (void);
-
-private:
-
 };
 
 #endif // _GPT_H_

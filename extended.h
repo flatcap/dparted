@@ -47,9 +47,6 @@ public:
 
 protected:
 	Extended (void);
-
-private:
-
 };
 
 #endif // _EXTENDED_H_

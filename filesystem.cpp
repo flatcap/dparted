@@ -136,7 +136,7 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 
 	if (f) {
 		log_info ("volume: %s (%s), child: %s", parent->name.c_str(), parent->get_type().c_str(), f->name.c_str());
-		parent->add_child(f, false);	//XXX assumption fs is a leaf
+		parent->add_child (f, false);	//XXX assumption fs is a leaf
 						//XXX move this into get_*?
 		return true;
 	}

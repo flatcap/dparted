@@ -66,7 +66,7 @@ Loop::create (const std::string& losetup)
 {
 	std::vector<std::string> parts;
 
-	explode_n (" :", losetup, parts, 12);
+	explode (" :", losetup, parts, 12);
 
 #if 0
 	log_info ("parts: (%ld)", parts.size());
@@ -180,7 +180,6 @@ Loop::losetup (std::vector <std::string>& output, std::string device)
 	 *	/dev/loop18 0 48 8:3 7:288 0 1 0 0 /mnt/space/test/test_30.img (deleted)
 	 */
 
-
 	std::string command = "losetup --noheadings --output name,autoclear,back-ino,back-maj:min,maj:min,offset,partscan,ro,sizelimit,back-file";
 
 	if (!device.empty()) {
@@ -223,7 +222,7 @@ Loop::discover (ContainerPtr& parent)
 		size = lseek (l->fd, 0, SEEK_END);
 		l->bytes_size = size;
 
-		parent->add_child(l, true);
+		parent->add_child (l, true);
 	}
 }
 
@@ -240,8 +239,6 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 	std::vector <std::string> output;
 
 	losetup (output, name);		//XXX retval, exactly one reply
-
-	log_debug (output[0]);
 
 	LoopPtr l = create (output[0]);
 
@@ -265,7 +262,7 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
-	parent->add_child(l, true);
+	parent->add_child (l, true);
 	return true;
 }
 

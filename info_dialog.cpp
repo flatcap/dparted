@@ -18,38 +18,69 @@
 
 #include "info_dialog.h"
 
-InfoDialog::InfoDialog (void) :
-	Dialog (Gtk::MessageType::MESSAGE_INFO)
+InfoDialog::InfoDialog (QuestionPtr q) :
+	Dialog(q)
 {
-	add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
-	set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
+	log_ctor ("ctor InfoDialog");
 }
 
 InfoDialog::~InfoDialog()
 {
+	log_dtor ("dtor InfoDialog");
 }
 
 InfoDialogPtr
-InfoDialog::create (void)
+InfoDialog::create (QuestionPtr q)
 {
-	return InfoDialogPtr (new InfoDialog());
+	return_val_if_fail (q,nullptr);
+	return InfoDialogPtr (new InfoDialog(q));
 }
 
 void
 InfoDialog::response (int button_id)
 {
+	return_if_fail (question);
+	question->result = button_id;
+	question->done();
 	log_debug ("InfoDialog::response = %d\n", button_id);
 }
 
 int
 InfoDialog::run (void)
 {
-	add_buttons();
+	return_val_if_fail (question,Gtk::ResponseType::RESPONSE_NONE);
+	LOG_TRACE;
 
-	set_title (title);
-	set_message (primary);
-	set_secondary_text (secondary);
+	std::string str;
 
+	str = question->get_input ("image");
+	if (str.empty()) {
+		str = "dialog-information";
+	}
+
+	image.set_from_icon_name (str, Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image (image);
+
+	str = question->get_input ("title");
+	if (!str.empty()) {
+		set_title (str);
+	}
+
+	str = question->get_input ("primary");
+	if (str.empty()) {
+		str = "Information";
+	}
+	set_message (str);
+
+	str = question->get_input ("secondary");
+	set_secondary_text (str);
+
+	if (!add_buttons()) {
+		add_button ("_Close", Gtk::ResponseType::RESPONSE_CLOSE);
+		set_default_response (Gtk::ResponseType::RESPONSE_CLOSE);
+	}
+
+	show_all();
 	return Dialog::run();
 }
 

@@ -60,9 +60,6 @@ protected:
 	static int  lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);
 	static void lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);
 	static void lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps);
-
-private:
-
 };
 
 #endif // _LVM_GROUP_H_

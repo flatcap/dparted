@@ -56,11 +56,11 @@ protected:
 	int add_column (Gtk::TreeModel::ColumnRecord& col_rec, Gtk::TreeView::Column* col, float align, int size)
 	{
 		auto* tmc = new Gtk::TreeModelColumn<T>;
-		auto* cell = Gtk::manage(new Gtk::CellRendererText);
+		auto* cell = Gtk::manage (new Gtk::CellRendererText);
 		mod_cols.push_back (ModColPtr (tmc));
 		col_rec.add (*tmc);
 		col->pack_start (*cell, false);
-		col->add_attribute(cell->property_text(), *tmc);
+		col->add_attribute (cell->property_text(), *tmc);
 
 		cell->set_alignment (align, 0.5);
 		if (size > 0) {

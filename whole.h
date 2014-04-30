@@ -49,9 +49,6 @@ public:
 
 protected:
 	Whole (void);
-
-private:
-
 };
 
 #endif // _WHOLE_H_

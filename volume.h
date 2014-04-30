@@ -46,9 +46,6 @@ public:
 
 protected:
 	Volume (void);
-
-private:
-
 };
 
 #endif // _VOLUME_H_

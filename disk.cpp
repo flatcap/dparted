@@ -247,7 +247,7 @@ Disk::discover (ContainerPtr& parent)
 	for (auto line : output) {
 		DiskPtr d = Disk::create (line);
 
-		parent->add_child(d, true);
+		parent->add_child (d, true);
 	}
 }
 
@@ -266,7 +266,7 @@ Disk::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 
 	DiskPtr d = Disk::create (output[0]);
 
-	parent->add_child(d, true);
+	parent->add_child (d, true);
 	return true;
 }
 

@@ -204,7 +204,7 @@ dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t,std::
  * execute_command_out - output (vector<string>)
  */
 int
-execute_command_out (const std::string& command, std::vector<std::string>& output, bool log_output /*=true*/, bool log_cmd /*=true*/)
+execute_command_out (const std::string& command, std::vector<std::string>& output, bool log_output, bool log_cmd)
 {
 	FILE* file = nullptr;
 	char* ptr = nullptr;
@@ -262,7 +262,7 @@ execute_command_out (const std::string& command, std::vector<std::string>& outpu
  * execute_command_in - input (string)
  */
 int
-execute_command_in (const std::string& command, const std::string& input, bool log_input /*=true*/, bool log_cmd /*=true*/)
+execute_command_in (const std::string& command, const std::string& input, bool log_input, bool log_cmd)
 {
 	FILE* file = nullptr;
 
@@ -299,7 +299,7 @@ execute_command_in (const std::string& command, const std::string& input, bool l
 }
 
 unsigned int
-explode (const char* separators, const std::string& input, std::vector<std::string>& parts)
+explode (const char* separators, const std::string& input, std::vector<std::string>& parts, int max)
 {
 	return_val_if_fail (separators, 0);
 
@@ -308,49 +308,20 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 
 	parts.clear();
 
-	end = input.find (separators, start);
-	while (end != std::string::npos) {
-		start = input.find_first_not_of (" \t", start);		// trim leading whitespace
-		parts.push_back (input.substr (start, end - start));
-		start = end + 1;
-		end = input.find (separators, start);
-	}
+	log_debug ("input      = '%s'", input.c_str());
+	log_debug ("separators = '%s'", separators);
 
-	if (start != input.size()) {
-		parts.push_back (input.substr (start));
-	}
-
-	log_debug ("vector:");
-	for (auto value : parts) {
-		log_debug ("\t>>%s<<", value.c_str());
-	}
-
-	return parts.size();
-}
-
-unsigned int
-explode_n (const char* separators, const std::string& input, std::vector<std::string>& parts, int max)
-{
-	return_val_if_fail (separators, 0);
-
-	std::size_t start = 0;
-	std::size_t end   = 0;
-
-	parts.clear();
-
-	log_info ("input      = '%s'", input.c_str());
-	log_info ("separators = '%s'", separators);
-
+	start = input.find_first_not_of (" \t", start);		// trim leading whitespace
 	start = input.find_first_not_of (separators, start);
 	end   = input.find_first_of     (separators, start);
-	log_info ("start = %ld, end = %ld", start, end);
+	log_debug ("start = %ld, end = %ld", start, end);
 
 	while (end != std::string::npos) {
 		parts.push_back (input.substr (start, end - start));
 
 		start = input.find_first_not_of (separators, end+1);
 		end   = input.find_first_of     (separators, start);
-		log_info ("start = %ld, end = %ld", start, end);
+		log_debug ("start = %ld, end = %ld", start, end);
 
 		max--;
 		if (max < 2)

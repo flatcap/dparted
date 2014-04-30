@@ -34,12 +34,12 @@ class WarningDialog : public Dialog
 public:
 	virtual ~WarningDialog();
 
-	static WarningDialogPtr create (void);
+	static WarningDialogPtr create (QuestionPtr q);
 
 	virtual int run (void);		// Hide Dialog::run
 
 protected:
-	WarningDialog (void);
+	WarningDialog (QuestionPtr q);
 	void response (int button_id);
 };
 

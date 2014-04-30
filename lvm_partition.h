@@ -70,9 +70,6 @@ public:
 
 protected:
 	LvmPartition (void);
-
-private:
-
 };
 
 #endif // _LVM_PARTITION_H_

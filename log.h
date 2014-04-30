@@ -53,7 +53,7 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 
 template <typename ...A>
 void
-log_redirect(Severity level, const char* function, const char* file, int line, const char* format, A ...args)
+log_redirect (Severity level, const char* function, const char* file, int line, const char* format, A ...args)
 {
 	std::vector<char> buffer;
 	int buf_len = 1024;
@@ -79,7 +79,7 @@ void assertion_failure (const char* file, int line, const char* test, const char
 			assertion_failure (__FILE__, __LINE__, #TEST, __PRETTY_FUNCTION__);	\
 			return;									\
 		}										\
-	} while(0)
+	} while (0)
 
 #define return_val_if_fail(TEST,VALUE)								\
 	do {											\
@@ -88,7 +88,7 @@ void assertion_failure (const char* file, int line, const char* test, const char
 			assertion_failure (__FILE__, __LINE__, #TEST, __PRETTY_FUNCTION__);	\
 			return VALUE;								\
 		}										\
-	} while(0)
+	} while (0)
 
 int log_add_handler (log_callback_t cb, Severity s);
 void log_remove_handler (int handle);

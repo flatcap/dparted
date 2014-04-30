@@ -43,9 +43,6 @@ public:
 
 protected:
 	LvmRaid (void);
-
-private:
-
 };
 
 #endif // _LVM_RAID_H_

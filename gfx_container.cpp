@@ -154,6 +154,7 @@ GfxContainer::init (ContainerPtr c)
 	bytes_size = c->bytes_size;
 	bytes_used = c->bytes_used;
 	parent_offset = c->parent_offset;
+	seqnum = c->seqnum;
 
 	return true;
 }
@@ -227,11 +228,21 @@ GfxContainer::process_label (const std::string& label_template)
 	return l;
 }
 
-bool GfxContainer::update_info (void)
+bool
+GfxContainer::update_info (void)
 {
 	ContainerPtr c = get_container();
 	if (!c)
 		return false;
+
+	if (seqnum != c->seqnum) {
+		sync();
+		return true;
+	}
+
+	for (auto i : children) {
+		i->update_info();
+	}
 
 	// compare wrapper seqnums
 	// compare theme seqnums
@@ -348,7 +359,8 @@ GfxContainer::get_tooltip (void)
 	return tt;
 }
 
-bool GfxContainer::mouse_event (void)
+bool
+GfxContainer::mouse_event (void)
 {
 	LOG_TRACE;
 	return false;

@@ -35,7 +35,6 @@ public:
 
 protected:
 	std::map <std::string, Glib::RefPtr<Gdk::Pixbuf>> icons;
-
 };
 
 #endif // _ICON_MANAGER_H_

@@ -20,11 +20,11 @@
 #define _PASSWORD_DIALOG_H_
 
 #include <gtkmm/entry.h>
-#include <gtkmm/image.h>
 #include <gtkmm/button.h>
 #include <gtkmm/checkbutton.h>
 
 #include "dialog.h"
+#include "question.h"
 
 class PasswordDialog;
 
@@ -35,17 +35,16 @@ class PasswordDialog : public Dialog
 public:
 	virtual ~PasswordDialog();
 
-	static PasswordDialogPtr create (void);
+	static PasswordDialogPtr create (QuestionPtr q);
 
 	virtual int run (void);		// Hide Dialog::run
 
 protected:
-	PasswordDialog (void);
+	PasswordDialog (QuestionPtr q);
 	void response (int button_id);
 
 	void on_sp_toggle (void);
 
-	Gtk::Image image;
 	Gtk::Entry text;
 	Gtk::CheckButton sp_toggle;
 	Gtk::Box sp_box;

@@ -45,6 +45,14 @@
 #include "option_group.h"
 #include "utils.h"
 
+#include "change_password_dialog.h"
+#include "error_dialog.h"
+#include "info_dialog.h"
+#include "password_dialog.h"
+#include "properties_dialog.h"
+#include "question_dialog.h"
+#include "warning_dialog.h"
+
 GuiAppPtr gui_app;
 
 GuiApp::GuiApp (void) :
@@ -85,17 +93,17 @@ GuiApp::my_idle (void)
 		Gtk::CheckButton c1 ("Remember this setting");
 
 		Gtk::RadioButton::Group group = r1.get_group();
-		r2.set_group(group);
-		r3.set_group(group);
+		r2.set_groupn (group);
+		r3.set_group (group);
 		r2.set_active (true);
 		c1.set_active (true);
 		Gtk::Box box (Gtk::Orientation::ORIENTATION_VERTICAL, 0);
 		frame.add (box);
-		box.pack_start(r1, Gtk::PackOptions::PACK_SHRINK, 0);
-		box.pack_start(r2, Gtk::PackOptions::PACK_SHRINK, 0);
-		box.pack_start(r3, Gtk::PackOptions::PACK_SHRINK, 0);
-		box.pack_start(c1, Gtk::PackOptions::PACK_SHRINK, 0);
-		passwd->get_content_area()->pack_start(frame);
+		box.pack_start (r1, Gtk::PackOptions::PACK_SHRINK, 0);
+		box.pack_start (r2, Gtk::PackOptions::PACK_SHRINK, 0);
+		box.pack_start (r3, Gtk::PackOptions::PACK_SHRINK, 0);
+		box.pack_start (c1, Gtk::PackOptions::PACK_SHRINK, 0);
+		passwd->get_content_area()->pack_start (frame);
 
 		passwd->get_action_area()->pack_start (cancel);
 		passwd->set_transient_for (*get_active_window());
@@ -194,8 +202,8 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 void
 GuiApp::scan_callback (ContainerPtr c)
 {
-	return_if_fail(c);
-	return_if_fail(window);
+	return_if_fail (c);
+	return_if_fail (window);
 	LOG_TRACE;
 
 	window->set_data(c);
@@ -364,15 +372,6 @@ GuiApp::ask (QuestionPtr q)
 }
 
 bool
-GuiApp::ask_pass (PasswordDialogPtr pw)
-{
-	//Queue it for later
-	passwd = pw;
-	return true;
-}
-
-
-bool
 GuiApp::notify (Message& UNUSED(m))
 {
 	// Might need to queue these until we're ready to confront the user
@@ -383,7 +382,7 @@ GuiApp::notify (Message& UNUSED(m))
 void
 GuiApp::properties (GfxContainerPtr c)
 {
-	PropertiesDialog* p = new PropertiesDialog(c, get_active_window());
+	PropertiesDialog* p = new PropertiesDialog (c, get_active_window());
 	p->show();
 	//XXX keep weak pointers to PropertiesDialog dialogs
 }
@@ -438,6 +437,36 @@ GuiApp::on_dispatch (void)
 	QuestionPtr q = vq.front();
 	vq.pop_front();
 
+	DialogPtr dlg;
+	switch (q->type) {
+		case Question::Type::ChangePassword:
+			dlg = ChangePasswordDialog::create(q);
+			break;
+		case Question::Type::Error:
+			dlg = ErrorDialog::create(q);
+			break;
+		case Question::Type::Information:
+			dlg = InfoDialog::create(q);
+			break;
+		case Question::Type::Password:
+			dlg = PasswordDialog::create(q);
+			break;
+		case Question::Type::Question:
+			dlg = QuestionDialog::create(q);
+			break;
+		case Question::Type::Warning:
+			dlg = WarningDialog::create(q);
+			break;
+		default:
+			log_error ("Unknown question type %d\n", (int) q->type);
+			break;
+	}
+
+	if (dlg) {
+		dlg->run();
+	}
+
+#if 0
 	Gtk::MessageDialog dialog (q->question, false, Gtk::MessageType::MESSAGE_QUESTION, Gtk::ButtonsType::BUTTONS_NONE, true);
 
 	dialog.set_title (q->title);
@@ -451,6 +480,7 @@ GuiApp::on_dispatch (void)
 	log_debug ("question = %d", q->result);
 	q->reply = "password";
 	q->done();	//XXX another thread?  it might take a while.  meanwhile the dialog is still visible
+#endif
 
 #if 0
 	enum Gtk::ResponseType
@@ -468,7 +498,6 @@ GuiApp::on_dispatch (void)
 		RESPONSE_HELP = -11
 	};
 #endif
-
 }
 
 

@@ -22,8 +22,10 @@
 #include <memory>
 
 #include <gtkmm/messagedialog.h>
+#include <gtkmm/image.h>
 
 #include "log.h"
+#include "question.h"
 
 class Dialog;
 
@@ -32,25 +34,21 @@ typedef std::shared_ptr<Dialog> DialogPtr;
 class Dialog : public Gtk::MessageDialog
 {
 public:
-	Dialog (Gtk::MessageType type);
+	Dialog (QuestionPtr q);
 	virtual ~Dialog();
-
-	std::string title;
-	std::string primary;
-	std::string secondary;
-
-	std::string help_url;
-
-	std::vector<std::pair<std::string,int>> buttons;
 
 	bool ignore_escape = false;
 
 	virtual int run (void);
 
 protected:
+	Gtk::Image image;
 	Gtk::Button help;
+
+	QuestionPtr question;
+
 	void on_help (void);
-	void add_buttons (void);
+	bool add_buttons (void);
 
 	virtual void response (int button) = 0;
 	virtual bool on_event (GdkEvent* event);

@@ -18,19 +18,19 @@
 
 #include "password_dialog.h"
 
-PasswordDialog::PasswordDialog (void) :
-	Dialog (Gtk::MessageType::MESSAGE_OTHER),
+PasswordDialog::PasswordDialog (QuestionPtr q) :
+	Dialog(q),
 	sp_box (Gtk::ORIENTATION_HORIZONTAL),
 	pass_label ("Passphrase:", 0.0, 0.5)
 {
-	image.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
-	set_image (image);
+	log_ctor ("ctor PasswordDialog");
 
 	sp_label.set_use_underline (true);
 	sp_label.set_label ("Show _Password");
 	sp_label.set_mnemonic_widget (sp_toggle);
 
 	text.set_visibility (false);
+	text.set_activates_default (true);
 
 	sp_toggle.set_active (false);
 	sp_toggle.signal_toggled().connect (sigc::mem_fun (this,&PasswordDialog::on_sp_toggle));
@@ -41,37 +41,73 @@ PasswordDialog::PasswordDialog (void) :
 	ca->pack_start (text);
 
 	sp_box.pack_start (sp_toggle, Gtk::PackOptions::PACK_SHRINK);
-	sp_box.pack_start (sp_label, Gtk::PackOptions::PACK_SHRINK);
+	sp_box.pack_start (sp_label,  Gtk::PackOptions::PACK_SHRINK);
 	ca->pack_start (sp_box);
-
-	show_all();
 }
 
 PasswordDialog::~PasswordDialog()
 {
+	log_dtor ("dtor PasswordDialog");
 }
 
 PasswordDialogPtr
-PasswordDialog::create (void)
+PasswordDialog::create (QuestionPtr q)
 {
-	return PasswordDialogPtr (new PasswordDialog());
+	return_val_if_fail (q,nullptr);
+	return PasswordDialogPtr (new PasswordDialog(q));
 }
 
 void
 PasswordDialog::response (int button_id)
 {
+	return_if_fail (question);
+	question->result = button_id;
+	question->output["password"] = text.get_text();
+	question->done();
 	log_debug ("PasswordDialog::response = %d\n", button_id);
 }
 
 int
 PasswordDialog::run (void)
 {
-	add_buttons();
+	return_val_if_fail (question,Gtk::ResponseType::RESPONSE_NONE);
+	LOG_TRACE;
 
-	set_title (title);
-	set_message (primary);
-	set_secondary_text (secondary);
+	std::string str;
+	std::string device = question->get_input ("device");
 
+	str = question->get_input ("image");
+	if (str.empty()) {
+		str = "dialog-password";
+	}
+
+	image.set_from_icon_name (str, Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image (image);
+
+	str = question->get_input ("title");
+	if (!str.empty()) {
+		set_title (str);
+	}
+
+	str = question->get_input ("primary");
+	if (str.empty()) {
+		str = "Enter password";
+	}
+	set_message (str);
+
+	str = question->get_input ("secondary");
+	if (str.empty()) {
+		str = "for device: " + device;
+	}
+	set_secondary_text (str);
+
+	if (!add_buttons()) {
+		add_button ("Cancel",  Gtk::ResponseType::RESPONSE_CANCEL);
+		add_button ("_Unlock", Gtk::ResponseType::RESPONSE_OK);
+		set_default_response (Gtk::ResponseType::RESPONSE_OK);
+	}
+
+	show_all();
 	return Dialog::run();
 }
 

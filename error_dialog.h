@@ -34,12 +34,12 @@ class ErrorDialog : public Dialog
 public:
 	virtual ~ErrorDialog();
 
-	static ErrorDialogPtr create (void);
+	static ErrorDialogPtr create (QuestionPtr q);
 
 	virtual int run (void);		// Hide Dialog::run
 
 protected:
-	ErrorDialog (void);
+	ErrorDialog (QuestionPtr q);
 	void response (int button_id);
 };
 

@@ -216,10 +216,8 @@ Container::add_child (ContainerPtr& child, bool probe)
 	return_if_fail (child);
 	LOG_TRACE;
 
-	static void* TL = nullptr;
-
+	++seqnum;
 	children.insert (child);
-	child->parent = get_smart();
 
 	if (probe)
 		main_app->queue_add_probe (child);
@@ -227,20 +225,15 @@ Container::add_child (ContainerPtr& child, bool probe)
 	if (bytes_size == 0)	// We are a dummy device
 		return;
 
+	child->parent = get_smart();
+
 	/* Check:
 	 *	available space
 	 *	alignment type
 	 *	size (restrictions)
 	 *	valid type within this parent
 	 */
-#if 0
-	if (children.size() > 0) {
-		ContainerPtr last = children.back();
 
-		last->next = child;
-		child->prev = last;
-	}
-#endif
 	bytes_used += child->bytes_size;
 
 	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
@@ -256,15 +249,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 	if (parent) {
 		name = parent->name.c_str();
 	}
-	log_info ("TOPLEVEL = %p (%s)", (void*) parent.get(), name);
-
-	if (!TL) {
-		TL = parent.get();
-	}
-
-	if (TL != parent.get()) {
-		log_critical ("TOP LEVEL DOESN'T MATCH");
-	}
+	log_debug ("TOPLEVEL = %p (%s)", (void*) parent.get(), name);
 
 #if 0
 	log_debug ("%12lu %12lu %12lu %12lu",
@@ -409,7 +394,7 @@ void deleter (Mmap* m)
 
 	std::tie (size, ptr) = *m;
 
-	log_debug ("mmap deleter: %p", ptr);
+	log_file ("mmap deleter: %p", ptr);
 	munmap (ptr, size);
 
 	delete m;
@@ -465,7 +450,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		//close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
-	log_debug ("mmap created: %p, device %s, size %s", buf, device.c_str(), get_size (size).c_str());
+	log_file ("mmap created: %p, device %s, size %s", buf, device.c_str(), get_size (size).c_str());
 
 	device_mmap = (MmapPtr (new Mmap (size, buf), deleter));
 
@@ -482,7 +467,6 @@ Container::close_buffer (std::uint8_t* buffer, std::uint64_t size)
 		log_error ("munmap failed: %s", strerror (errno));
 		// nothing else we can do
 	}
-
 }
 
 
@@ -518,6 +502,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 						<< "(" << get_size (c->parent_offset) << "), "
 #endif
 		<< " rc: " << c.use_count()
+		<< " seq: " << c->seqnum
 		;
 
 	return stream;

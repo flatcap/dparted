@@ -53,14 +53,10 @@ public:
 
 protected:
 	LvmMirror (void);
-
 #if 0
 	std::vector<ContainerPtr> mirrors;
 	ContainerPtr log;
 #endif
-
-private:
-
 };
 
 #endif // _LVM_MIRROR_H_

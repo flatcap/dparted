@@ -66,8 +66,10 @@ protected:
 	void start_thread (std::function<void(void)> fn);
 
 private:
+#ifndef DP_NO_THREAD
 	std::mutex thread_mutex;
 	std::deque<std::thread> thread_queue;
+#endif
 };
 
 

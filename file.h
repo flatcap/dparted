@@ -48,9 +48,6 @@ public:
 
 protected:
 	File (void);
-
-private:
-
 };
 
 #endif // _FILE_H_

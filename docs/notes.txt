@@ -728,3 +728,13 @@ combine DP_FILE with _FILE_H_ etc
 
 SEEK_END -> block:: ?
 
+check for use of, and find c++ ways
+	min, max, abs, clamp, roundup, rounddown
+
+expand assertions
+	warn_if_reached
+	warn_if_fail
+	return_if_fail
+	return_val_if_fail
+	return_val_if_reached
+

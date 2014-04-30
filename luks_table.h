@@ -73,9 +73,6 @@ protected:
 	bool luks_open_actual (const std::string& device, const std::string& password, bool probe);
 
 	bool we_opened_this_device = false;
-
-private:
-
 };
 
 #endif // _LUKS_TABLE_H_

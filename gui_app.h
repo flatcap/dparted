@@ -30,7 +30,6 @@
 #include "message.h"
 #include "gfx_container.h"
 #include "theme.h"
-#include "password_dialog.h"
 #include "window.h"
 
 class GuiApp;
@@ -49,7 +48,6 @@ public:
 
 	virtual bool ask      (QuestionPtr q);
 	virtual bool notify (Message& m);
-	virtual bool ask_pass (PasswordDialogPtr pw);
 	virtual void properties (GfxContainerPtr c);
 	ThemePtr get_theme (void);
 	void set_theme (ThemePtr theme);
@@ -85,7 +83,6 @@ protected:
 	bool on_mouse_click (GdkEventButton* event);
 
 	std::deque<QuestionPtr> vq;
-	PasswordDialogPtr passwd;
 	ThemePtr theme;
 	WindowPtr window;
 	Glib::Dispatcher dispatcher;

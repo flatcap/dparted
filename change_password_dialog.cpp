@@ -18,12 +18,13 @@
 
 #include "change_password_dialog.h"
 
-ChangePasswordDialog::ChangePasswordDialog (void) :
-	Dialog (Gtk::MessageType::MESSAGE_OTHER),
+ChangePasswordDialog::ChangePasswordDialog (QuestionPtr q) :
+	Dialog(q),
 	old  ("", 0.0, 0.5),
 	new1 ("", 0.0, 0.5),
 	new2 ("", 0.0, 0.5)
 {
+	log_ctor ("ctor ChangePasswordDialog");
 	image.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
 	set_image (image);
 
@@ -41,7 +42,7 @@ ChangePasswordDialog::ChangePasswordDialog (void) :
 	ca->pack_start (text3);
 #else
 	grid.set_row_spacing(6);
-	grid.set_column_spacing(12);
+	grid.set_column_spacing (12);
 	grid.attach (old,   0, 0, 1, 1);
 	grid.attach (text1, 1, 0, 1, 1);
 	grid.attach (new1,  0, 1, 1, 1);
@@ -79,18 +80,18 @@ ChangePasswordDialog::ChangePasswordDialog (void) :
 	text1.set_visibility (false);
 	text2.set_visibility (false);
 	text3.set_visibility (false);
-
-	show_all();
 }
 
 ChangePasswordDialog::~ChangePasswordDialog()
 {
+	log_dtor ("dtor ChangePasswordDialog");
 }
 
 ChangePasswordDialogPtr
-ChangePasswordDialog::create (void)
+ChangePasswordDialog::create (QuestionPtr q)
 {
-	return ChangePasswordDialogPtr (new ChangePasswordDialog());
+	return_val_if_fail (q,nullptr);
+	return ChangePasswordDialogPtr (new ChangePasswordDialog(q));
 }
 
 void
@@ -104,10 +105,11 @@ ChangePasswordDialog::run (void)
 {
 	add_buttons();
 
-	set_title (title);
-	set_message (primary);
-	set_secondary_text (secondary);
+	set_title          (question->input["title"]);	//XXX might create empty map entry
+	set_message        (question->input["primary"]);
+	set_secondary_text (question->input["secondary"]);
 
+	show_all();
 	return Dialog::run();
 }
 

@@ -62,9 +62,6 @@ public:
 
 protected:
 	LvmTable (void);
-
-private:
-
 };
 
 #endif // _LVM_TABLE_H_

@@ -88,4 +88,16 @@ options
 	datestamp
 	prefix/suffix
 
+thread loggings
+	separate files for each thread
+	create a sequential thread number
+		thread numbers get recycled
+	need milli/nano-second timestamps
+		to compare separate files
+	log_thread_start => inc thread seq num
+	log_thread_end   => NOP
+	0000 = main thread
+	thread starts @time in fn X
+	thread ends   @time
+	thread joined @time
 

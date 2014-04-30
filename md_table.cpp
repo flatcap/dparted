@@ -106,7 +106,7 @@ read_uuid_string (std::uint8_t* buffer)
 
 	std::stringstream ss;
 
-	ss << std::setfill('0') << std::hex;
+	ss << std::setfill ('0') << std::hex;
 
 	for (int i = 0; i < 16; i++) {
 		ss << (int) (buffer[i]);
