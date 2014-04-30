@@ -105,7 +105,7 @@ LogHandler::stop (void)
 }
 
 void
-LogHandler::log_line (std::uint64_t index, std::uint64_t tid, std::uint64_t UNUSED(fn_depth), Severity level, const char* function, const char* filename, int line, const char* message)
+LogHandler::log_line (std::uint64_t index, std::uint64_t thread_id, std::uint64_t UNUSED(depth), Severity level, const char* function, const char* filename, int line, const char* message)
 {
 	return_if_fail (file);
 
@@ -130,25 +130,25 @@ LogHandler::log_line (std::uint64_t index, std::uint64_t tid, std::uint64_t UNUS
 		str.back() = 'm';	// replace trailing semi-colon with 'm'
 	}
 
-	if (thread_id) {
+	if (show_thread_id) {
 		std::stringstream ss;
-		ss << 'T' << std::setfill('0') << std::setw(4) << tid;
+		ss << 'T' << std::setfill('0') << std::setw(4) << thread_id;
 		str += ss.str() + " ";
 	}
 
-	if (uniq_index) {
+	if (show_uniq_index) {
 		std::stringstream ss;
 		ss << std::setfill('0') << std::setw(6) << index;
 		str += ss.str() + " ";
 	}
 
-	if (timestamp) {
+	if (show_timestamp) {
 		std::vector<char> tstr (20, 0);
 		std::time_t now = std::time (nullptr);
 		if (std::strftime(tstr.data(), tstr.size(), "%F %T", std::localtime (&now)) != 0) {
 			str += tstr.data();
 
-			if (microseconds) {
+			if (show_microseconds) {
 				struct timeval tv;
 				gettimeofday(&tv, nullptr);
 				std::stringstream ss;
@@ -168,7 +168,7 @@ LogHandler::log_line (std::uint64_t index, std::uint64_t tid, std::uint64_t UNUS
 	if (show_file_line) {
 		str += filename;
 		str += ":";
-		str += line;
+		str += std::to_string (line);
 		str += " ";
 	}
 

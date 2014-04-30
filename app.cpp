@@ -305,7 +305,7 @@ App::start_thread (std::function<void(void)> fn, const char* desc)
 		std::thread ([fn,desc]() {
 			log_thread_start ("thread started: %s", desc);
 			fn();
-			log_thread_end ("thread ended: %s", desc);
+			log_thread_end   ("thread ended:   %s", desc);
 		})
 	);
 #else

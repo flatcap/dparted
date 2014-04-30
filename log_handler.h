@@ -47,14 +47,14 @@ public:
 	void flush (void);
 	void reset (void);
 
-	bool fn_depth       = false;
-	bool thread_id      = false;
-	bool uniq_index     = false;
-	bool timestamp      = false;
-	bool microseconds   = false;
-	bool show_level     = false;
-	bool show_file_line = false;
-	bool show_function  = false;
+	bool show_depth        = false;
+	bool show_thread_id    = false;
+	bool show_uniq_index   = false;
+	bool show_timestamp    = false;
+	bool show_microseconds = false;
+	bool show_level        = false;
+	bool show_file_line    = false;
+	bool show_function     = false;
 
 	int  foreground = -1;
 	int  background = -1;
