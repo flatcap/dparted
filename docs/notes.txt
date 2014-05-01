@@ -732,3 +732,13 @@ siblings
 
 model invalidate => gui refresh -- HOW?
 
+move all throw-y stuff from ctor to create?
+
+Menu: View/Show all -- override theme's hiding rules
+
+dupe theme config -> crash
+
+question.h default dialog responses
+
+log_error and above => backtrace in dlg box (advanced tab)
+
