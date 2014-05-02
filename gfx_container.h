@@ -71,8 +71,8 @@ public:
 	std::string               label_template;
 	std::string               treepath;
 
-	uint64_t bytes_size = 0;
-	uint64_t bytes_used = 0;
+	uint64_t bytes_size    = 0;
+	uint64_t bytes_used    = 0;
 	uint64_t parent_offset = 0;
 
 	bool usage = false;
@@ -92,15 +92,16 @@ protected:
 	std::string process_label (const std::string& label_template);
 	GfxContainerPtr get_smart (void);
 
-	std::weak_ptr<Container> container;
+	std::weak_ptr<Container>    container;
 	std::weak_ptr<GfxContainer> parent;
 
 	Gdk::RGBA                 process_colour (const std::string& str);
-	Glib::RefPtr<Gdk::Pixbuf> process_icon (const std::string& str);
-	bool                      process_bool (const std::string& str);
+	Glib::RefPtr<Gdk::Pixbuf> process_icon   (const std::string& str);
+	bool                      process_bool   (const std::string& str);
 
 	bool focussed = false;
 	bool selected = false;
+	bool expanded = false;
 
 	int seqnum = -1;
 

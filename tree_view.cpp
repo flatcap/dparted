@@ -495,7 +495,9 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 	tree_model = Gtk::TreeStore::create (col_rec);
 	set_model (tree_model);
 
-	set_level_indentation (10);
+	set_level_indentation(0);
+	set_enable_tree_lines (true);
+	set_show_expanders (true);
 
 	//Connect signal:
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &TreeView::on_query_tooltip));

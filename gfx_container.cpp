@@ -127,8 +127,7 @@ GfxContainer::init (ContainerPtr c)
 		icon       = process_icon   (i);
 		usage      = process_bool   (u);
 	} catch (const std::string& e) {
-		log_debug ("Exception: %s", e.c_str());
-		exit(1);
+		log_error ("Exception: %s", e.c_str());
 	}
 
 	label = process_label (label_template);
