@@ -34,15 +34,15 @@ FILE	?= $(A)
 LOOP	?= 1
 LVM	?= $(A)
 
-GPT	?= $(A)
+GPT	?= 1
 MSDOS	?= $(A)
 MD	?= $(A)
-LUKS	?= 1
+LUKS	?= $(A)
 
-BTRFS	?= $(A)
+BTRFS	?= 1
 EXTFS	?= 1
-FS_MISC	?= $(A)
-NTFS	?= $(A)
+FS_MISC	?= 1
+NTFS	?= 1
 
 LIST	?= $(A)
 PROP	?= $(A)

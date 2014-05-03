@@ -34,7 +34,12 @@ main (int argc, char *argv[])
 {
 	LogHandlerPtr log_out = LogHandler::create (stdout);
 	if (log_out) {
-		log_out->start (Severity::AllMessages);
+		log_out->start (Severity::AllMessages & ~(Severity::Ctor|Severity::Dtor|Severity::File|Severity::Utils|Severity::ConfigRead|Severity::Thread));
+	}
+
+	LogHandlerPtr log_red = LogHandler::create (stdout);
+	if (log_red) {
+		log_red->start (Severity::Code);
 	}
 
 	srandom (time (nullptr));
@@ -53,6 +58,10 @@ main (int argc, char *argv[])
 	text_app = nullptr;
 #endif
 	main_app = nullptr;
+
+	if (log_red) {
+		log_red->stop();
+	}
 
 	if (log_out) {
 		log_out->stop();
