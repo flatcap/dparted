@@ -33,6 +33,7 @@
 
 #include "property.h"
 #include "mmap.h"
+#include "model.h"
 #include "log.h"
 
 class Container;
@@ -97,8 +98,11 @@ public:
 
 	virtual std::set<ContainerPtr, compare>& get_children (void);
 
-	ContainerPtr get_smart  (void);
-	ContainerPtr get_parent (void);
+	ContainerPtr get_smart    (void);
+	ContainerPtr get_parent   (void);
+	ContainerPtr get_toplevel (void);
+
+	void add_listener (const ModelPtr& m);
 
 	std::vector<std::string> get_prop_names (void);
 	PPtr get_prop (const std::string& name);
@@ -273,6 +277,8 @@ protected:
 
 private:
 	void insert (std::uint64_t offset, std::uint64_t size, void* ptr);
+
+	std::vector<std::weak_ptr<IModel>> model_listeners;
 };
 
 #endif // _CONTAINER_H_

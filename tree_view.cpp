@@ -367,6 +367,10 @@ TreeView::add_column<Glib::RefPtr<Gdk::Pixbuf>> (Gtk::TreeModel::ColumnRecord& c
 void
 TreeView::init_treeview (GfxContainerPtr& gfx)
 {
+	top_level = gfx;
+
+	gfx->add_listener (this);	//XXX when do listeners get removed?
+
 	theme = gui_app->get_theme();
 
 	/*	DEVICE	COLOUR	TYPE	NAME	DISPLAY
@@ -720,4 +724,36 @@ TreeView::on_keypress (GdkEventKey* event)
 
 	return false;
 }
+
+
+void
+TreeView::model_added (const GfxContainerPtr& UNUSED(cont), const GfxContainerPtr& UNUSED(parent))
+{
+	LOG_TRACE;
+}
+
+void
+TreeView::model_busy (const GfxContainerPtr& UNUSED(cont), int UNUSED(busy))
+{
+	LOG_TRACE;
+}
+
+void
+TreeView::model_changed (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
+}
+
+void
+TreeView::model_deleted (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
+}
+
+void
+TreeView::model_resync (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
+}
+
 

@@ -23,8 +23,11 @@
 #include <gtkmm/treestore.h>
 
 #include "gfx_container.h"
+#include "gfx_model.h"
 
-class TreeView : public Gtk::TreeView
+class TreeView :
+	public Gtk::TreeView,
+	public IGfxModel
 {
 public:
 	TreeView();
@@ -33,7 +36,15 @@ public:
 	void init_treeview (GfxContainerPtr& c);
 	void set_focus (GfxContainerPtr& c);
 
+	virtual void model_added   (const GfxContainerPtr& cont, const GfxContainerPtr& parent);
+	virtual void model_busy    (const GfxContainerPtr& cont, int busy);
+	virtual void model_changed (const GfxContainerPtr& cont);
+	virtual void model_deleted (const GfxContainerPtr& cont);
+	virtual void model_resync  (const GfxContainerPtr& cont);
+
 protected:
+	GfxContainerPtr top_level;
+
 	// Override Signal handler:
 	// Alternatively, use signal_button_press_event().connect_notify()
 	virtual bool on_button_press_event (GdkEventButton* ev);

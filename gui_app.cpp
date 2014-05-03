@@ -275,10 +275,11 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	}
 
 	show_window();
-
-	ContainerPtr top_level = scan (disks, std::bind(&GuiApp::scan_callback, this, std::placeholders::_1));
-
 	activate();
+
+	top_level = scan (disks, std::bind(&GuiApp::scan_callback, this, std::placeholders::_1));
+	window->set_data (top_level);
+
 	return EXIT_SUCCESS;
 }
 
@@ -498,7 +499,8 @@ GuiApp::on_dispatch_ask (void)
 void
 GuiApp::on_dispatch_scan (void)
 {
-	window->set_data (scan_result);
+	log_info ("scan has finished: ignoring callback");
+	//window->set_data (scan_result);
 }
 
 

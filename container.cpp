@@ -219,13 +219,27 @@ Container::add_child (ContainerPtr& child, bool probe)
 	++seqnum;
 	children.insert (child);
 
-	if (probe)
-		main_app->queue_add_probe (child);
+	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
-	if (bytes_size == 0)	// We are a dummy device
-		return;
+	if (probe) {
+		main_app->queue_add_probe (child);
+	}
 
 	child->parent = get_smart();
+
+	ContainerPtr toplevel = get_toplevel();
+	if (toplevel) {
+		for (auto i : toplevel->model_listeners) {
+			ModelPtr m = i.lock();
+			if (m) {
+				m->model_added (child, get_smart());	//XXX get this pointer once
+			}
+		}
+	}
+
+	if (bytes_size == 0) {	// We are a dummy device
+		return;
+	}
 
 	/* Check:
 	 *	available space
@@ -235,29 +249,6 @@ Container::add_child (ContainerPtr& child, bool probe)
 	 */
 
 	bytes_used += child->bytes_size;
-
-	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
-
-	ContainerPtr parent;
-	ContainerPtr p = get_parent();
-	while (p) {
-		parent = p;
-		p = p->get_parent();
-	}
-
-	const char* name = "";
-	if (parent) {
-		name = parent->name.c_str();
-	}
-	log_debug ("TOPLEVEL = %p (%s)", (void*) parent.get(), name);
-
-#if 0
-	log_debug ("%12lu %12lu %12lu %12lu",
-		child->parent_offset,
-		child->bytes_size,
-		child->bytes_used,
-		child->get_bytes_free());
-#endif
 }
 
 void
@@ -603,6 +594,19 @@ Container::get_parent (void)
 	return parent.lock();
 }
 
+ContainerPtr
+Container::get_toplevel (void)
+{
+	ContainerPtr parent = get_smart();
+	ContainerPtr p = get_parent();
+	while (p) {
+		parent = p;
+		p = p->get_parent();
+	}
+
+	return parent;
+}
+
 
 std::uint64_t
 Container::get_absolute_offset (void)
@@ -900,6 +904,13 @@ Container::dump (void)
 	std::stringstream s;
 	s << this;
 	return s.str();
+}
+
+
+void
+Container::add_listener (const ModelPtr& m)
+{
+	model_listeners.push_back(m);
 }
 
 

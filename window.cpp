@@ -597,8 +597,11 @@ Window::set_data (ContainerPtr c)
 	return_if_fail (c);
 	LOG_TRACE;
 
-	top_level = c;
-	GfxContainerPtr g = GfxContainer::create (nullptr, top_level);
+	GfxContainerPtr g = GfxContainer::create (nullptr, c);
+
+	ModelPtr m = g->get_model();	// Only link the tops of the two trees
+	c->add_listener(m);
+
 	try {
 		treeview.init_treeview(g);
 	} catch (...) {

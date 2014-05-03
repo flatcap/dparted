@@ -23,6 +23,7 @@
 #include "gfx_container.h"
 #include "gui_app.h"
 #include "log.h"
+#include "utils.h"
 
 GfxContainer::GfxContainer (void)
 {
@@ -37,6 +38,8 @@ GfxContainer::~GfxContainer()
 GfxContainerPtr
 GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 {
+	return_val_if_fail (c, nullptr);
+
 	GfxContainerPtr g (new GfxContainer());
 	g->self = g;
 
@@ -370,9 +373,36 @@ operator<< (std::ostream& stream, const GfxContainerPtr& g)
 GfxContainerPtr
 GfxContainer::get_smart (void)
 {
-	return_val_if_fail (self.expired(), nullptr);
+	return_val_if_fail (!self.expired(), nullptr);
 
 	return self.lock();
+}
+
+ModelPtr
+GfxContainer::get_model (void)
+{
+	return_val_if_fail (!self.expired(), nullptr);
+
+	return std::dynamic_pointer_cast<IModel> (self.lock());
+}
+
+GfxContainerPtr
+GfxContainer::get_parent (void)
+{
+	return parent.lock();
+}
+
+GfxContainerPtr
+GfxContainer::get_toplevel (void)
+{
+	GfxContainerPtr parent = get_smart();
+	GfxContainerPtr p = get_parent();
+	while (p) {
+		parent = p;
+		p = p->get_parent();
+	}
+
+	return parent;
 }
 
 
@@ -471,4 +501,50 @@ GfxContainer::dump (void)
 	return ss.str();
 }
 
+
+void
+GfxContainer::add_listener (IGfxModel* m)
+{
+	model_listeners.push_back(m);
+}
+
+void
+GfxContainer::model_added (const ContainerPtr& cont, const ContainerPtr& parent)
+{
+	// LOG_TRACE;
+	log_debug ("model_added: %s to %s", cont->name.c_str(), parent->name.c_str());
+
+	GfxContainerPtr toplevel = get_toplevel();
+	for (auto i : toplevel->model_listeners) {
+		i->model_added (nullptr, get_smart());	//XXX get this pointer once
+	}
+}
+
+void
+GfxContainer::model_busy (const ContainerPtr& cont, int busy)
+{
+	// LOG_TRACE;
+	log_debug ("model_busy: %s %d", cont->name.c_str(), busy);
+}
+
+void
+GfxContainer::model_changed (const ContainerPtr& cont)
+{
+	// LOG_TRACE;
+	log_debug ("model_deleted: %s", cont->name.c_str());
+}
+
+void
+GfxContainer::model_deleted (const ContainerPtr& cont)
+{
+	// LOG_TRACE;
+	log_debug ("model_deleted: %s", cont->name.c_str());
+}
+
+void
+GfxContainer::model_resync (const ContainerPtr& cont)
+{
+	// LOG_TRACE;
+	log_debug ("model_resync: %s", cont->name.c_str());
+}
 

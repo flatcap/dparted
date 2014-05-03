@@ -59,6 +59,7 @@ public:
 
 protected:
 	ConfigFilePtr config_file;
+	ContainerPtr top_level;
 
 	void start_thread (std::function<void(void)> fn, const char* desc);
 

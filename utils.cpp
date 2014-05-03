@@ -459,7 +459,6 @@ parse_tagged_line (const std::string& line, const char* separators, std::map<std
 
 	log_utils ("map:");
 	for (auto it2 : tags) {
-
 		std::string name  = it2.first;
 		std::string value = it2.second;
 

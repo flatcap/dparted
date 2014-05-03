@@ -69,8 +69,6 @@ protected:
 	TreeView		treeview;
 	Gtk::Statusbar		statusbar;
 
-	ContainerPtr		top_level;
-
 	virtual bool on_delete_event (GdkEventAny* event);
 
 	// MENU

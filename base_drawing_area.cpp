@@ -20,6 +20,7 @@
 
 #include "base_drawing_area.h"
 #include "log.h"
+#include "utils.h"
 
 BaseDrawingArea::BaseDrawingArea (void)
 {
@@ -37,6 +38,8 @@ BaseDrawingArea::set_data (GfxContainerPtr& gfx)
 {
 	top_level = gfx;
 	//top_level->dump();
+
+	gfx->add_listener (this);	//XXX when do listeners get removed?
 }
 
 void
@@ -502,6 +505,37 @@ BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk:
 	return_if_fail (cr);
 
 	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
+}
+
+
+void
+BaseDrawingArea::model_added (const GfxContainerPtr& UNUSED(cont), const GfxContainerPtr& UNUSED(parent))
+{
+	LOG_TRACE;
+}
+
+void
+BaseDrawingArea::model_busy (const GfxContainerPtr& UNUSED(cont), int UNUSED(busy))
+{
+	LOG_TRACE;
+}
+
+void
+BaseDrawingArea::model_changed (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
+}
+
+void
+BaseDrawingArea::model_deleted (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
+}
+
+void
+BaseDrawingArea::model_resync (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
 }
 
 
