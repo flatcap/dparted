@@ -727,9 +727,16 @@ TreeView::on_keypress (GdkEventKey* event)
 
 
 void
-TreeView::model_added (const GfxContainerPtr& UNUSED(cont), const GfxContainerPtr& UNUSED(parent))
+TreeView::model_added (const GfxContainerPtr& cont, const GfxContainerPtr& parent)
 {
-	LOG_TRACE;
+	// LOG_TRACE;
+	std::string c = "NULL";
+	std::string p = "NULL";
+
+	if (cont)   c = cont->name;
+	if (parent) p = parent->name;
+
+	log_debug ("TREEVIEW model_added: %s to %s", c.c_str(), p.c_str());
 }
 
 void

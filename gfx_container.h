@@ -98,6 +98,7 @@ protected:
 	GfxContainer (void);
 	std::string process_label (const std::string& label_template);
 	GfxContainerPtr get_smart (void);
+	GfxContainerPtr find (const ContainerPtr& cont);
 
 	std::weak_ptr<Container>    container;
 	std::weak_ptr<GfxContainer> parent;

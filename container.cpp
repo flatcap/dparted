@@ -16,13 +16,8 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-
 #include <algorithm>
+#include <atomic>
 #include <cerrno>
 #include <cstring>
 #include <iterator>
@@ -32,14 +27,22 @@
 #include <string>
 #include <typeinfo>
 
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include "action.h"
 #include "app.h"
 #include "container.h"
-#include "action.h"
 #include "log.h"
 #include "property.h"
 #include "utils.h"
 #include "visitor.h"
 #include "whole.h"
+
+std::atomic_ulong container_id = ATOMIC_VAR_INIT(1);
 
 std::vector<Action> cont_actions = {
 	{ "Create/Filesystem",         true },
@@ -88,7 +91,9 @@ std::vector<Action> cont_actions = {
 
 Container::Container (void)
 {
-	log_ctor ("ctor Container");
+	unique_id = std::atomic_fetch_add (&container_id, (unsigned long)1);
+	log_ctor ("ctor Container (%ld)", unique_id);
+
 	// Save a bit of space
 	const char* me = "Container";
 	const int   d  = (int) BaseProperty::Flags::Dot;
@@ -144,7 +149,7 @@ Container::~Container()
 		log_file ("file close: %d", fd);
 		fd = -1;
 	}
-	log_dtor ("dtor Container");
+	log_dtor ("dtor Container (%ld)", unique_id);
 }
 
 ContainerPtr

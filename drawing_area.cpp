@@ -558,6 +558,9 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	top_level->update_info();
 
+	unsigned int children = top_level->children.size();
+	set_size_request (-1, cont_height * children);
+
 	ContainerPtr tlc = top_level->get_container();
 
 	log_info ("\nDRAW:");
@@ -960,10 +963,12 @@ DrawingArea::set_data (GfxContainerPtr& g)
 
 	// check we've been given a top level object?
 
+#if 0
 	// invalidate window
 	unsigned int children = g->children.size();
 	//children = 14;
 	set_size_request (500, cont_height * children);
+#endif
 }
 
 GfxContainerPtr

@@ -509,9 +509,17 @@ BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk:
 
 
 void
-BaseDrawingArea::model_added (const GfxContainerPtr& UNUSED(cont), const GfxContainerPtr& UNUSED(parent))
+BaseDrawingArea::model_added (const GfxContainerPtr& cont, const GfxContainerPtr& parent)
 {
-	LOG_TRACE;
+	// LOG_TRACE;
+	std::string c = "NULL";
+	std::string p = "NULL";
+
+	if (cont)   c = cont->name;
+	if (parent) p = parent->name;
+
+	log_debug ("AREA model_added: %s to %s", c.c_str(), p.c_str());
+	get_window()->invalidate (false); // everything for now
 }
 
 void

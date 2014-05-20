@@ -177,6 +177,7 @@ protected:
 	bool visit_children (Visitor& v);
 
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
+	friend bool operator== (const ContainerPtr& lhs, const ContainerPtr& rhs);
 
 	MmapPtr	device_mmap;
 
@@ -278,8 +279,16 @@ protected:
 private:
 	void insert (std::uint64_t offset, std::uint64_t size, void* ptr);
 
+	std::uint64_t unique_id = 0;
+
 	std::vector<std::weak_ptr<IModel>> model_listeners;
 };
+
+inline bool
+operator== (const ContainerPtr& lhs, const ContainerPtr& rhs)
+{
+	return (lhs->unique_id == rhs->unique_id);
+}
 
 #endif // _CONTAINER_H_
 

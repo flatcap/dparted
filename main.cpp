@@ -34,11 +34,13 @@ main (int argc, char *argv[])
 {
 	LogHandlerPtr log_out = LogHandler::create (stdout);
 	if (log_out) {
-		log_out->start (Severity::AllMessages & ~(Severity::Ctor|Severity::Dtor|Severity::File|Severity::Utils|Severity::ConfigRead|Severity::Thread));
+		log_out->start (Severity::AllMessages & ~(Severity::Ctor|Severity::Dtor|Severity::File|Severity::Utils|Severity::ConfigRead|Severity::ThreadStart|Severity::ThreadEnd|Severity::Code));
 	}
 
 	LogHandlerPtr log_red = LogHandler::create (stdout);
 	if (log_red) {
+		log_red->background = 196;
+		log_red->foreground =  15;
 		log_red->start (Severity::Code);
 	}
 

@@ -98,6 +98,9 @@ GfxContainer::sync (void)
 	init(c);
 	for (auto child : c->get_children()) {
 		GfxContainerPtr g = GfxContainer::create (get_smart(), child);
+		if (name == "dummy") {
+			log_debug ("MARKER1");
+		}
 		children.push_back(g);
 	}
 
@@ -508,15 +511,51 @@ GfxContainer::add_listener (IGfxModel* m)
 	model_listeners.push_back(m);
 }
 
+GfxContainerPtr
+GfxContainer::find (const ContainerPtr& cont)
+{
+	if (!cont)
+		return {};
+
+	ContainerPtr c = container.lock();
+	if (c == cont)
+		return get_smart();
+
+	for (auto i : children) {
+		GfxContainerPtr g = i->find (cont);
+		if (g) {
+			return g;
+		}
+	}
+
+	return nullptr;
+}
+
 void
 GfxContainer::model_added (const ContainerPtr& cont, const ContainerPtr& parent)
 {
 	// LOG_TRACE;
-	log_debug ("model_added: %s to %s", cont->name.c_str(), parent->name.c_str());
+	log_debug ("GFX model_added: %s to %s", cont->name.c_str(), parent->name.c_str());
+
+	if (find (cont)) {
+		log_error ("Container shouldn't exist");
+		return;
+	}
+
+	GfxContainerPtr gparent = find (parent);
+	if (!gparent)
+		return;
+
+	GfxContainerPtr gchild = GfxContainer::create (get_smart(), cont);
+	if (gparent->name == "dummy") {
+		log_debug ("MARKER2");
+	}
+	gparent->children.push_back (gchild);
+	gchild->sync();
 
 	GfxContainerPtr toplevel = get_toplevel();
 	for (auto i : toplevel->model_listeners) {
-		i->model_added (nullptr, get_smart());	//XXX get this pointer once
+		i->model_added (gchild, gparent);
 	}
 }
 
