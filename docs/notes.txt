@@ -742,3 +742,12 @@ question.h default dialog responses
 
 log_error and above => backtrace in dlg box (advanced tab)
 
+log_gui?
+log_model?
+gui_tree, gui_area, etc
+
+usage colour determined per container by theme plugin
+	ext2 > 80% => red
+
+FAT label trim trailing whitespace
+
