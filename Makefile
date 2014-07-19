@@ -29,7 +29,7 @@ T	?= 1
 
 GUI	?= 1
 
-DISK	?= $(A)
+DISK	?= 0
 FILE	?= $(A)
 LOOP	?= 1
 LVM	?= $(A)
@@ -37,7 +37,7 @@ LVM	?= $(A)
 GPT	?= 1
 MSDOS	?= $(A)
 MD	?= $(A)
-LUKS	?= $(A)
+LUKS	?= 1
 
 BTRFS	?= 1
 EXTFS	?= 1
