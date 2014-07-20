@@ -23,8 +23,14 @@
 #include <gtkmm/treestore.h>
 
 #include "gfx_container.h"
+#include "gfx_container_listener.h"
+#include "theme.h"
+#include "theme_listener.h"
 
-class TreeView : public Gtk::TreeView
+class TreeView :
+	public Gtk::TreeView,
+	public IGfxContainerListener,
+	public IThemeListener
 {
 public:
 	TreeView();
@@ -33,7 +39,18 @@ public:
 	void init_treeview (GfxContainerPtr& c);
 	void set_focus (GfxContainerPtr& c);
 
+	virtual void gfx_container_added   (const GfxContainerPtr& cont, const GfxContainerPtr& parent);
+	virtual void gfx_container_busy    (const GfxContainerPtr& cont, int busy);
+	virtual void gfx_container_changed (const GfxContainerPtr& cont);
+	virtual void gfx_container_deleted (const GfxContainerPtr& cont);
+	virtual void gfx_container_resync  (const GfxContainerPtr& cont);
+
+	virtual void theme_changed (const ThemePtr& theme);
+	virtual void theme_dead    (const ThemePtr& theme);
+
 protected:
+	GfxContainerPtr top_level;
+
 	// Override Signal handler:
 	// Alternatively, use signal_button_press_event().connect_notify()
 	virtual bool on_button_press_event (GdkEventButton* ev);
@@ -73,9 +90,11 @@ protected:
 	Glib::RefPtr<Gdk::Pixbuf> get_colour_as_pixbuf (int size, const std::string& colstr);
 
 	// Map prop_name -> col_index, col type, align, precision, size
-	std::map<std::string,std::tuple<int,int,float,int,int>> col_list;
+	std::map<std::string, std::tuple<int, int, float, int, int>> col_list;
 
 private:
+	GfxContainerListenerPtr listener;
+
 	// POPUP
 	void setup_popup (void);
 	void on_menu_select (int option);

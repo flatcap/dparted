@@ -32,7 +32,7 @@ WarningDialog::~WarningDialog()
 WarningDialogPtr
 WarningDialog::create (QuestionPtr q)
 {
-	return_val_if_fail (q,nullptr);
+	return_val_if_fail (q, nullptr);
 	return WarningDialogPtr (new WarningDialog(q));
 }
 
@@ -48,7 +48,7 @@ WarningDialog::response (int button_id)
 int
 WarningDialog::run (void)
 {
-	return_val_if_fail (question,Gtk::ResponseType::RESPONSE_NONE);
+	return_val_if_fail (question, Gtk::ResponseType::RESPONSE_NONE);
 	LOG_TRACE;
 
 	std::string str;

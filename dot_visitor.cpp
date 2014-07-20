@@ -577,9 +577,9 @@ DotVisitor::get_dot (void)
 	std::string str;
 
 	str  = "digraph disks {\n";
-	str += "graph [ rankdir=\"TB\", color=\"white\",bgcolor=\"#000000\" ];\n";
+	str += "graph [ rankdir=\"TB\", color=\"white\", bgcolor=\"#000000\" ];\n";
 	str += "node [ shape=\"record\", color=\"black\", fillcolor=\"lightcyan\", style=\"filled\" ];\n";
-	str += "edge [ penwidth=3.0,color=\"#cccccc\" ];\n";
+	str += "edge [ penwidth=3.0, color=\"#cccccc\" ];\n";
 	str += "\n";
 
 	str += dot_objects.str();

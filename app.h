@@ -28,7 +28,6 @@
 #include <vector>
 
 #include "question.h"
-#include "message.h"
 #include "config_file.h"
 #include "container.h"
 
@@ -46,8 +45,7 @@ public:
 	App (void);
 	virtual ~App();
 
-	virtual bool ask    (QuestionPtr q);
-	virtual bool notify (Message& m);
+	virtual bool ask (QuestionPtr q);
 
 	ConfigFilePtr get_config (void);
 	bool set_config (const std::string& filename);
@@ -61,6 +59,7 @@ public:
 
 protected:
 	ConfigFilePtr config_file;
+	ContainerPtr top_level;
 
 	void start_thread (std::function<void(void)> fn, const char* desc);
 

@@ -29,10 +29,6 @@
 
 typedef std::function<void(std::uint64_t index, std::uint64_t thread_id, std::uint64_t fn_depth, Severity level, const char* function, const char* file, int line, const char* message)> log_callback_t;
 
-// Default handlers
-void log_stdout (long index, Severity level, const char* function, const char* file, int line, const char* message);
-void log_stderr (long index, Severity level, const char* function, const char* file, int line, const char* message);
-
 #ifdef DP_LOG_CHECK
 void log_redirect (const char* format __attribute__((unused)), ...) __attribute__((format (printf, 1, 2)));
 void log_redirect (const std::string& message);

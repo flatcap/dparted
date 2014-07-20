@@ -16,26 +16,29 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _MESSAGE_H_
-#define _MESSAGE_H_
+#ifndef _CONTAINER_LISTENER_H_
+#define _CONTAINER_LISTENER_H_
 
-#include <string>
-#include <vector>
 #include <memory>
 
-class Message;
+class Container;
+class IContainerListener;
 
-typedef std::shared_ptr<Message> MessagePtr;
+typedef std::shared_ptr<Container> ContainerPtr;
+typedef std::shared_ptr<IContainerListener> ContainerListenerPtr;
+typedef std::weak_ptr<IContainerListener> ContainerListenerWeak;
 
-class Message
+class IContainerListener
 {
 public:
-	Message (void);
-	virtual ~Message();
+	virtual ~IContainerListener() = default;
 
-	std::string title;
-	std::string message;
+	virtual void container_added   (const ContainerPtr& cont, const ContainerPtr& parent) = 0;
+	virtual void container_busy    (const ContainerPtr& cont, int busy) = 0;
+	virtual void container_changed (const ContainerPtr& cont) = 0;
+	virtual void container_deleted (const ContainerPtr& cont) = 0;
+	virtual void container_resync  (const ContainerPtr& cont) = 0;
 };
 
-#endif // _MESSAGE_H_
+#endif // _CONTAINER_LISTENER_H_
 

@@ -160,12 +160,12 @@ make_desc (std::string key)
 	return key;
 }
 
-std::map<std::string,std::string>
+std::map<std::string, std::string>
 btrfs_show_super (const std::string& dev)
 {
 	std::string command;
 	std::vector<std::string> output;
-	std::map<std::string,std::string> results;
+	std::map<std::string, std::string> results;
 
 	command = "btrfs-show-super " + dev;
 	int retval = execute_command_out (command, output);
@@ -223,7 +223,7 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 	if (dev.empty())	//XXX shouldn't happen
 		return;
 
-	std::map<std::string,std::string> info = btrfs_show_super (dev);
+	std::map<std::string, std::string> info = btrfs_show_super (dev);
 	if (info.empty()) {
 		log_debug ("btrfs_show_super failed");
 		return;

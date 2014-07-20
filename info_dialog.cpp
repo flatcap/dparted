@@ -32,7 +32,7 @@ InfoDialog::~InfoDialog()
 InfoDialogPtr
 InfoDialog::create (QuestionPtr q)
 {
-	return_val_if_fail (q,nullptr);
+	return_val_if_fail (q, nullptr);
 	return InfoDialogPtr (new InfoDialog(q));
 }
 
@@ -48,7 +48,7 @@ InfoDialog::response (int button_id)
 int
 InfoDialog::run (void)
 {
-	return_val_if_fail (question,Gtk::ResponseType::RESPONSE_NONE);
+	return_val_if_fail (question, Gtk::ResponseType::RESPONSE_NONE);
 	LOG_TRACE;
 
 	std::string str;

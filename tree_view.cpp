@@ -47,6 +47,8 @@ TreeView::TreeView (void)
 
 	set_has_tooltip (true);
 	set_activate_on_single_click (true);
+
+	listener = GfxContainerListenerPtr ((IGfxContainerListener*) this, [](IGfxContainerListener*){});
 }
 
 TreeView::~TreeView()
@@ -367,6 +369,10 @@ TreeView::add_column<Glib::RefPtr<Gdk::Pixbuf>> (Gtk::TreeModel::ColumnRecord& c
 void
 TreeView::init_treeview (GfxContainerPtr& gfx)
 {
+	top_level = gfx;
+
+	gfx->add_listener (listener);
+
 	theme = gui_app->get_theme();
 
 	/*	DEVICE	COLOUR	TYPE	NAME	DISPLAY
@@ -495,7 +501,9 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 	tree_model = Gtk::TreeStore::create (col_rec);
 	set_model (tree_model);
 
-	set_level_indentation (10);
+	set_level_indentation(0);
+	set_enable_tree_lines (true);
+	set_show_expanders (true);
 
 	//Connect signal:
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &TreeView::on_query_tooltip));
@@ -689,7 +697,7 @@ void
 TreeView::popup_menu (int x, int y)
 {
 	// Lamba to position popup menu
-	menu_popup.popup ([x,y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
+	menu_popup.popup ([x, y] (int& xc, int& yc, bool& in) { xc = x; yc = y; in = false; }, 0, gtk_get_current_event_time());
 }
 
 bool
@@ -717,5 +725,56 @@ TreeView::on_keypress (GdkEventKey* event)
 	}
 
 	return false;
+}
+
+
+void
+TreeView::gfx_container_added (const GfxContainerPtr& cont, const GfxContainerPtr& parent)
+{
+	// LOG_TRACE;
+	std::string c = "NULL";
+	std::string p = "NULL";
+
+	if (cont)   c = cont->name;
+	if (parent) p = parent->name;
+
+	log_debug ("TREEVIEW gfx_container_added: %s to %s", c.c_str(), p.c_str());
+}
+
+void
+TreeView::gfx_container_busy (const GfxContainerPtr& UNUSED(cont), int UNUSED(busy))
+{
+	LOG_TRACE;
+}
+
+void
+TreeView::gfx_container_changed (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
+}
+
+void
+TreeView::gfx_container_deleted (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
+}
+
+void
+TreeView::gfx_container_resync (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
+}
+
+
+void
+TreeView::theme_changed (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
+}
+
+void
+TreeView::theme_dead (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
 }
 

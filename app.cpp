@@ -35,7 +35,6 @@
 #include "log.h"
 #include "misc.h"
 #include "table.h"
-#include "utils.h"
 #ifdef DP_DISK
 #include "disk.h"
 #endif
@@ -48,6 +47,7 @@
 #ifdef DP_LVM
 #include "lvm_group.h"
 #endif
+#include "utils.h"
 
 AppPtr main_app;
 
@@ -76,16 +76,9 @@ App::~App()
 bool
 App::ask (QuestionPtr q)
 {
-	return_val_if_fail (q,false);
+	return_val_if_fail (q, false);
 
 	log_code ("%s not implemented", __PRETTY_FUNCTION__);
-	return false;
-}
-
-bool
-App::notify (Message& UNUSED(m))
-{
-	// Might need to queue these until we're ready to confront the user
 	return false;
 }
 
@@ -212,7 +205,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 	}
 #endif
 
-	ContainerPtr top_level = Container::create();
+	top_level = Container::create();	// Dropping any old results
 	top_level->name = "dummy";
 
 	if (devices.empty()) {
@@ -271,7 +264,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 bool
 App::process_queue_item (ContainerPtr item)
 {
-	return_val_if_fail (item,false);
+	return_val_if_fail (item, false);
 	LOG_TRACE;
 
 	std::uint64_t bufsize = item->bytes_size;
@@ -302,7 +295,7 @@ App::start_thread (std::function<void(void)> fn, const char* desc)
 #ifdef DP_THREADED
 	std::lock_guard<std::mutex> lock (thread_mutex);
 	thread_queue.push_back (
-		std::thread ([fn,desc]() {
+		std::thread ([fn, desc]() {
 			log_thread_start ("thread started: %s", desc);
 			fn();
 			log_thread_end   ("thread ended:   %s", desc);

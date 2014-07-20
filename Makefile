@@ -29,20 +29,20 @@ T	?= 1
 
 GUI	?= 1
 
-DISK	?= $(A)
+DISK	?= 0
 FILE	?= $(A)
 LOOP	?= 1
 LVM	?= $(A)
 
-GPT	?= $(A)
+GPT	?= 1
 MSDOS	?= $(A)
 MD	?= $(A)
 LUKS	?= 1
 
-BTRFS	?= $(A)
+BTRFS	?= 1
 EXTFS	?= 1
-FS_MISC	?= $(A)
-NTFS	?= $(A)
+FS_MISC	?= 1
+NTFS	?= 1
 
 LIST	?= $(A)
 PROP	?= $(A)
@@ -68,13 +68,13 @@ LINKS	= misc test
 SRC	+= block.cpp container.cpp filesystem.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
-SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp message.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp
+SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp
 
 # GUI - Graphical objects
 SRC	+= main.cpp
 
 # Misc header files
-HDR	+= log_trace.h mmap.h stringnum.h visitor.h log_severity.h
+HDR	+= action.h config_manager.h container_listener.h endian.h gfx_container_listener.h log_macro.h log_severity.h log_trace.h lvm2.h mmap.h stringnum.h theme_listener.h visitor.h
 
 CFLAGS-$(BTRFS)		+= -DDP_BTRFS
 CFLAGS-$(DISK)		+= -DDP_DISK
@@ -116,8 +116,6 @@ SRC-$(UNUSED)		+= icon_manager.cpp
 
 SRC	+= $(SRC-1)
 HDR	+= $(SRC:%.cpp=%.h)
-
-HDR	+= lvm2.h config_manager.h
 
 OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
@@ -232,6 +230,7 @@ docs:
 stats:
 	$(RM) stats
 	gitstats . stats
+	firefox stats/index.html
 
 xxx:
 	@grep --exclude xxx.txt -rHno "//[X]XX.*" . \

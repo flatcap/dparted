@@ -131,13 +131,13 @@ LvmGroup::perform_action (Action action)
 
 
 int
-LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
+LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>& deps)
 {
 	LOG_TRACE;
 
 	std::string command;
 	std::vector<std::string> output;
-	std::map<std::string,StringNum> tags;
+	std::map<std::string, StringNum> tags;
 	int added = 0;
 
 	/* Output fields from the 'pvs' command:
@@ -216,7 +216,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 		ContainerPtr c(t);
 		g->add_segment(c);	// Connect the LvmGroup to its constituent LvmTables
-		//XXX deps.insert (std::make_pair (g->uuid,t->uuid));
+		//XXX deps.insert (std::make_pair (g->uuid, t->uuid));
 
 		std::uint64_t size   = tags["LVM2_PVSEG_SIZE"];
 		std::uint64_t offset = tags["LVM2_PVSEG_START"];
@@ -261,7 +261,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 			if (lv_attr[0] == '-') {
 				// Not an image.  Therefore, it's a top-level entity.
-				deps.insert (std::make_pair (g->uuid,v->uuid));
+				deps.insert (std::make_pair (g->uuid, v->uuid));
 			}
 		}
 
@@ -302,14 +302,14 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 }
 
 void
-LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>& UNUSED(deps))
+LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string, std::string>& UNUSED(deps))
 {
 	return_if_fail (pieces);
 	LOG_TRACE;
 
 	std::string command;
 	std::vector<std::string> output;
-	std::map<std::string,StringNum> tags;
+	std::map<std::string, StringNum> tags;
 
 	/* LVM2_VG_NAME=shuffle
 	 * LVM2_PV_COUNT=1
@@ -380,14 +380,14 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 }
 
 void
-LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>& deps)
+LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>& deps)
 {
 	return_if_fail (pieces);
 	LOG_TRACE;
 
 	std::string command;
 	std::vector<std::string> output;
-	std::map<std::string,StringNum> tags;
+	std::map<std::string, StringNum> tags;
 
 	/* LVM2_VG_UUID=Usi3h1-mPFH-Z7kS-JNdQ-lron-H8CN-6dyTsC
 	 * LVM2_VG_NAME=shuffle
@@ -471,7 +471,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 			// A volume discovered here doesn't have any physical parts.
 			// Therefore, it's a top-level entity.
-			deps.insert (std::make_pair (g->uuid,v->uuid));
+			deps.insert (std::make_pair (g->uuid, v->uuid));
 		}
 
 		// Container
@@ -515,7 +515,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 
 		for (auto d : device_list) {
 			log_info ("DEP %s -> %s", v->uuid.c_str(), d.c_str());
-			deps.insert (std::make_pair (v->uuid,d));
+			deps.insert (std::make_pair (v->uuid, d));
 
 			log_info ("attr = %s", v->lv_attr.c_str());
 			// Add a metadata dependency
@@ -527,7 +527,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 				if (pos != std::string::npos) {
 					dep_name.replace (pos, 8, "_rmeta_");
 					log_debug ("ADD: %s -> %s", v->uuid.c_str(), dep_name.c_str());
-					deps.insert (std::make_pair (v->uuid,dep_name));
+					deps.insert (std::make_pair (v->uuid, dep_name));
 
 					// add a sibling dependency (image <-> metadata)
 					log_info ("SIBLING: %s <-> %s", dep_name.c_str(), d.c_str());
@@ -540,7 +540,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string,std::string>&
 			// Add an extra dependency for mirrors
 			std::string dep_name = v->mirror_log + "(0)";
 			log_debug ("ADD DEP: %s -> %s", v->uuid.c_str(), dep_name.c_str());
-			deps.insert (std::make_pair (v->uuid,dep_name));
+			deps.insert (std::make_pair (v->uuid, dep_name));
 		}
 	}
 
@@ -583,7 +583,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	LOG_TRACE;
 
 	ContainerPtr pieces = Container::create();
-	std::multimap<std::string,std::string> deps;
+	std::multimap<std::string, std::string> deps;
 
 	std::vector<ContainerPtr> t = find_all_type (top_level, "LvmTable");
 

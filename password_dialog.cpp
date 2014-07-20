@@ -33,7 +33,7 @@ PasswordDialog::PasswordDialog (QuestionPtr q) :
 	text.set_activates_default (true);
 
 	sp_toggle.set_active (false);
-	sp_toggle.signal_toggled().connect (sigc::mem_fun (this,&PasswordDialog::on_sp_toggle));
+	sp_toggle.signal_toggled().connect (sigc::mem_fun (this, &PasswordDialog::on_sp_toggle));
 
 	Gtk::Box* ca = get_content_area();
 
@@ -53,7 +53,7 @@ PasswordDialog::~PasswordDialog()
 PasswordDialogPtr
 PasswordDialog::create (QuestionPtr q)
 {
-	return_val_if_fail (q,nullptr);
+	return_val_if_fail (q, nullptr);
 	return PasswordDialogPtr (new PasswordDialog(q));
 }
 
@@ -70,7 +70,7 @@ PasswordDialog::response (int button_id)
 int
 PasswordDialog::run (void)
 {
-	return_val_if_fail (question,Gtk::ResponseType::RESPONSE_NONE);
+	return_val_if_fail (question, Gtk::ResponseType::RESPONSE_NONE);
 	LOG_TRACE;
 
 	std::string str;

@@ -20,10 +20,13 @@
 
 #include "base_drawing_area.h"
 #include "log.h"
+#include "utils.h"
 
 BaseDrawingArea::BaseDrawingArea (void)
 {
 	log_ctor ("ctor BaseDrawingArea");
+
+	listener = GfxContainerListenerPtr ((IGfxContainerListener*) this, [](IGfxContainerListener*){});
 }
 
 BaseDrawingArea::~BaseDrawingArea()
@@ -37,6 +40,8 @@ BaseDrawingArea::set_data (GfxContainerPtr& gfx)
 {
 	top_level = gfx;
 	//top_level->dump();
+
+	gfx->add_listener (listener);
 }
 
 void
@@ -502,6 +507,45 @@ BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk:
 	return_if_fail (cr);
 
 	cr->set_source_rgba (rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
+}
+
+
+void
+BaseDrawingArea::gfx_container_added (const GfxContainerPtr& cont, const GfxContainerPtr& parent)
+{
+	// LOG_TRACE;
+	std::string c = "NULL";
+	std::string p = "NULL";
+
+	if (cont)   c = cont->name;
+	if (parent) p = parent->name;
+
+	log_debug ("AREA gfx_container_added: %s to %s", c.c_str(), p.c_str());
+	get_window()->invalidate (false); // everything for now
+}
+
+void
+BaseDrawingArea::gfx_container_busy (const GfxContainerPtr& UNUSED(cont), int UNUSED(busy))
+{
+	LOG_TRACE;
+}
+
+void
+BaseDrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
+}
+
+void
+BaseDrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
+}
+
+void
+BaseDrawingArea::gfx_container_resync (const GfxContainerPtr& UNUSED(cont))
+{
+	LOG_TRACE;
 }
 
 

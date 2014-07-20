@@ -25,8 +25,6 @@ ChangePasswordDialog::ChangePasswordDialog (QuestionPtr q) :
 	new2 ("", 0.0, 0.5)
 {
 	log_ctor ("ctor ChangePasswordDialog");
-	image.set_from_icon_name ("dialog-password", Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
-	set_image (image);
 
 	Gtk::Box* ca = get_content_area();
 	// ca->set_spacing(0);
@@ -59,7 +57,7 @@ ChangePasswordDialog::ChangePasswordDialog (QuestionPtr q) :
 	sp_box.pack_start (sp_label, Gtk::PackOptions::PACK_SHRINK);
 	ca->pack_start (sp_box);
 	sp_toggle.set_active (false);
-	sp_toggle.signal_toggled().connect (sigc::mem_fun (this,&ChangePasswordDialog::on_sp_toggle));
+	sp_toggle.signal_toggled().connect (sigc::mem_fun (this, &ChangePasswordDialog::on_sp_toggle));
 
 	old.set_use_underline (true);
 	old.set_text_with_mnemonic ("_Old Password");
@@ -90,24 +88,54 @@ ChangePasswordDialog::~ChangePasswordDialog()
 ChangePasswordDialogPtr
 ChangePasswordDialog::create (QuestionPtr q)
 {
-	return_val_if_fail (q,nullptr);
+	return_val_if_fail (q, nullptr);
 	return ChangePasswordDialogPtr (new ChangePasswordDialog(q));
 }
 
 void
 ChangePasswordDialog::response (int button_id)
 {
+	return_if_fail (question);
+	question->result = button_id;
+	question->done();
 	log_debug ("ChangePasswordDialog::response = %d\n", button_id);
 }
 
 int
 ChangePasswordDialog::run (void)
 {
-	add_buttons();
+	return_val_if_fail (question, Gtk::ResponseType::RESPONSE_NONE);
+	LOG_TRACE;
 
-	set_title          (question->input["title"]);	//XXX might create empty map entry
-	set_message        (question->input["primary"]);
-	set_secondary_text (question->input["secondary"]);
+	std::string str;
+
+	str = question->get_input ("image");
+	if (str.empty()) {
+		str = "dialog-password";
+	}
+
+	image.set_from_icon_name (str, Gtk::BuiltinIconSize::ICON_SIZE_DIALOG);
+	set_image (image);
+
+	str = question->get_input ("title");
+	if (!str.empty()) {
+		set_title (str);
+	}
+
+	str = question->get_input ("primary");
+	if (str.empty()) {
+		str = "Error";
+	}
+	set_message (str);
+
+	str = question->get_input ("secondary");
+	set_secondary_text (str);
+
+	if (!add_buttons()) {
+		add_button ("Cancel", Gtk::ResponseType::RESPONSE_CANCEL);
+		add_button ("OK",     Gtk::ResponseType::RESPONSE_OK);
+		set_default_response (Gtk::ResponseType::RESPONSE_OK);
+	}
 
 	show_all();
 	return Dialog::run();

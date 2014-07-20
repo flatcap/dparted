@@ -72,7 +72,7 @@ Disk::create (const std::string& lsblk)
 {
 	DiskPtr d = create();
 
-	std::map<std::string,StringNum> tags;
+	std::map<std::string, StringNum> tags;
 	int scan;
 
 	parse_tagged_line (lsblk, " ", tags);

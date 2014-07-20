@@ -33,6 +33,7 @@
 
 #include "property.h"
 #include "mmap.h"
+#include "container_listener.h"
 #include "log.h"
 
 class Container;
@@ -97,8 +98,11 @@ public:
 
 	virtual std::set<ContainerPtr, compare>& get_children (void);
 
-	ContainerPtr get_smart  (void);
-	ContainerPtr get_parent (void);
+	ContainerPtr get_smart    (void);
+	ContainerPtr get_parent   (void);
+	ContainerPtr get_toplevel (void);
+
+	void add_listener (const ContainerListenerPtr& m);
 
 	std::vector<std::string> get_prop_names (void);
 	PPtr get_prop (const std::string& name);
@@ -173,10 +177,11 @@ protected:
 	bool visit_children (Visitor& v);
 
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
+	friend bool operator== (const ContainerPtr& lhs, const ContainerPtr& rhs);
 
 	MmapPtr	device_mmap;
 
-	std::map<std::string,PPtr> props;
+	std::map<std::string, PPtr> props;
 	std::set<ContainerPtr, compare> children;
 
 	std::vector<std::string> more_props;
@@ -273,7 +278,17 @@ protected:
 
 private:
 	void insert (std::uint64_t offset, std::uint64_t size, void* ptr);
+
+	std::uint64_t unique_id = 0;
+
+	std::vector<ContainerListenerWeak> container_listeners;
 };
+
+inline bool
+operator== (const ContainerPtr& lhs, const ContainerPtr& rhs)
+{
+	return (lhs->unique_id == rhs->unique_id);
+}
 
 #endif // _CONTAINER_H_
 

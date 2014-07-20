@@ -69,8 +69,6 @@ protected:
 	TreeView		treeview;
 	Gtk::Statusbar		statusbar;
 
-	ContainerPtr		top_level;
-
 	virtual bool on_delete_event (GdkEventAny* event);
 
 	// MENU
@@ -94,7 +92,7 @@ protected:
 	void insert_general_actions (std::string section, const std::vector<const char*>& commands);
 	void on_action_general (std::string section, std::string name);
 
-	std::map<std::string,Glib::RefPtr<Gio::SimpleAction>> action_map;
+	std::map<std::string, Glib::RefPtr<Gio::SimpleAction>> action_map;
 };
 
 

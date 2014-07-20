@@ -23,6 +23,7 @@
 #include "gfx_container.h"
 #include "gui_app.h"
 #include "log.h"
+#include "utils.h"
 
 GfxContainer::GfxContainer (void)
 {
@@ -37,6 +38,8 @@ GfxContainer::~GfxContainer()
 GfxContainerPtr
 GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 {
+	return_val_if_fail (c, nullptr);
+
 	GfxContainerPtr g (new GfxContainer());
 	g->self = g;
 
@@ -51,24 +54,6 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 
 	g->sync();
 	c->add_string_prop (std::string("gfx"), std::string("colour"), g->colour2);
-
-	if (c->is_a ("Filesystem")) {
-		std::string os;
-		switch (random() % 10) {
-			case 0:	os = "os_apple";   break;
-			case 1:	os = "os_bsd";     break;
-			case 2:	os = "os_debian";  break;
-			case 3:	os = "os_fedora";  break;
-			case 4:	os = "os_linux";   break;
-			case 5:	os = "os_redhat";  break;
-			case 6:	os = "os_suse";    break;
-			case 7:	os = "os_swap";    break;
-			case 8:	os = "os_ubuntu";  break;
-			case 9:	os = "os_windows"; break;
-		}
-		log_debug ("Filesystem: %s : %s", c->get_device_inherit().c_str(), os.c_str());
-		c->add_string_prop (std::string("gfx"), std::string("operating_system"), os);
-	}
 
 	return g;
 }
@@ -113,6 +98,9 @@ GfxContainer::sync (void)
 	init(c);
 	for (auto child : c->get_children()) {
 		GfxContainerPtr g = GfxContainer::create (get_smart(), child);
+		if (name == "dummy") {
+			log_debug ("MARKER1");
+		}
 		children.push_back(g);
 	}
 
@@ -145,8 +133,7 @@ GfxContainer::init (ContainerPtr c)
 		icon       = process_icon   (i);
 		usage      = process_bool   (u);
 	} catch (const std::string& e) {
-		log_debug ("Exception: %s", e.c_str());
-		exit(1);
+		log_error ("Exception: %s", e.c_str());
 	}
 
 	label = process_label (label_template);
@@ -389,9 +376,36 @@ operator<< (std::ostream& stream, const GfxContainerPtr& g)
 GfxContainerPtr
 GfxContainer::get_smart (void)
 {
-	return_val_if_fail (self.expired(),nullptr);
+	return_val_if_fail (!self.expired(), nullptr);
 
 	return self.lock();
+}
+
+ContainerListenerPtr
+GfxContainer::get_model (void)
+{
+	return_val_if_fail (!self.expired(), nullptr);
+
+	return std::dynamic_pointer_cast<IContainerListener> (self.lock());
+}
+
+GfxContainerPtr
+GfxContainer::get_parent (void)
+{
+	return parent.lock();
+}
+
+GfxContainerPtr
+GfxContainer::get_toplevel (void)
+{
+	GfxContainerPtr parent = get_smart();
+	GfxContainerPtr p = get_parent();
+	while (p) {
+		parent = p;
+		p = p->get_parent();
+	}
+
+	return parent;
 }
 
 
@@ -490,4 +504,104 @@ GfxContainer::dump (void)
 	return ss.str();
 }
 
+
+void
+GfxContainer::add_listener (GfxContainerListenerPtr& gcl)
+{
+	gfx_container_listeners.push_back(gcl);
+}
+
+GfxContainerPtr
+GfxContainer::find (const ContainerPtr& cont)
+{
+	if (!cont)
+		return {};
+
+	ContainerPtr c = container.lock();
+	if (c == cont)
+		return get_smart();
+
+	for (auto i : children) {
+		GfxContainerPtr g = i->find (cont);
+		if (g) {
+			return g;
+		}
+	}
+
+	return nullptr;
+}
+
+void
+GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& parent)
+{
+	// LOG_TRACE;
+	log_debug ("GFX container_added: %s to %s", cont->name.c_str(), parent->name.c_str());
+
+	if (find (cont)) {
+		log_error ("Container shouldn't exist");
+		return;
+	}
+
+	GfxContainerPtr gparent = find (parent);
+	if (!gparent)
+		return;
+
+	GfxContainerPtr gchild = GfxContainer::create (get_smart(), cont);
+	if (gparent->name == "dummy") {
+		log_debug ("MARKER2");
+	}
+	gparent->children.push_back (gchild);
+	gchild->sync();
+
+	GfxContainerPtr toplevel = get_toplevel();
+	for (auto i : toplevel->gfx_container_listeners) {
+		GfxContainerListenerPtr p = i.lock();
+		if (p) {
+			p->gfx_container_added (gchild, gparent);
+		} else {
+			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
+		}
+	}
+}
+
+void
+GfxContainer::container_busy (const ContainerPtr& cont, int busy)
+{
+	// LOG_TRACE;
+	log_debug ("container_busy: %s %d", cont->name.c_str(), busy);
+}
+
+void
+GfxContainer::container_changed (const ContainerPtr& cont)
+{
+	// LOG_TRACE;
+	log_debug ("container_deleted: %s", cont->name.c_str());
+}
+
+void
+GfxContainer::container_deleted (const ContainerPtr& cont)
+{
+	// LOG_TRACE;
+	log_debug ("container_deleted: %s", cont->name.c_str());
+}
+
+void
+GfxContainer::container_resync (const ContainerPtr& cont)
+{
+	// LOG_TRACE;
+	log_debug ("container_resync: %s", cont->name.c_str());
+}
+
+
+void
+GfxContainer::theme_changed (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
+}
+
+void
+GfxContainer::theme_dead (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
+}
 

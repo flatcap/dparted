@@ -16,13 +16,26 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "message.h"
+#ifndef _THEME_LISTENER_H_
+#define _THEME_LISTENER_H_
 
-Message::Message (void)
-{
-}
+#include <memory>
 
-Message::~Message()
+class Theme;
+class IThemeListener;
+
+typedef std::shared_ptr<Theme> ThemePtr;
+typedef std::shared_ptr<IThemeListener> ThemeListenerPtr;
+typedef std::weak_ptr<IThemeListener> ThemeListenerWeak;
+
+class IThemeListener
 {
-}
+public:
+	virtual ~IThemeListener() = default;
+
+	virtual void theme_changed (const ThemePtr& theme) = 0;
+	virtual void theme_dead    (const ThemePtr& theme) = 0;
+};
+
+#endif // _THEME_LISTENER_H_
 

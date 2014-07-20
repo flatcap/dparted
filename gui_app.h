@@ -27,9 +27,9 @@
 #include <glibmm/dispatcher.h>
 
 #include "app.h"
-#include "message.h"
 #include "gfx_container.h"
 #include "theme.h"
+#include "theme_listener.h"
 #include "window.h"
 
 class GuiApp;
@@ -40,14 +40,14 @@ extern GuiAppPtr gui_app;
 
 class GuiApp :
 	public App,
-	public Gtk::Application
+	public Gtk::Application,
+	public IThemeListener
 {
 public:
 	GuiApp (void);
 	virtual ~GuiApp();
 
-	virtual bool ask      (QuestionPtr q);
-	virtual bool notify (Message& m);
+	virtual bool ask (QuestionPtr q);
 	virtual void properties (GfxContainerPtr c);
 	ThemePtr get_theme (void);
 	void set_theme (ThemePtr theme);
@@ -62,6 +62,9 @@ public:
 	void on_action_help       (void);
 
 	virtual bool open_uri (const std::string& uri);
+
+	virtual void theme_changed (const ThemePtr& t);
+	virtual void theme_dead    (const ThemePtr& t);
 
 protected:
 	virtual void on_activate (void);

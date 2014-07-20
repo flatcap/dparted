@@ -16,13 +16,8 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-
 #include <algorithm>
+#include <atomic>
 #include <cerrno>
 #include <cstring>
 #include <iterator>
@@ -32,14 +27,22 @@
 #include <string>
 #include <typeinfo>
 
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include "action.h"
 #include "app.h"
 #include "container.h"
-#include "action.h"
 #include "log.h"
 #include "property.h"
 #include "utils.h"
 #include "visitor.h"
 #include "whole.h"
+
+std::atomic_ulong container_id = ATOMIC_VAR_INIT(1);
 
 std::vector<Action> cont_actions = {
 	{ "Create/Filesystem",         true },
@@ -88,7 +91,9 @@ std::vector<Action> cont_actions = {
 
 Container::Container (void)
 {
-	log_ctor ("ctor Container");
+	unique_id = std::atomic_fetch_add (&container_id, (unsigned long)1);
+	log_ctor ("ctor Container (%ld)", unique_id);
+
 	// Save a bit of space
 	const char* me = "Container";
 	const int   d  = (int) BaseProperty::Flags::Dot;
@@ -144,7 +149,7 @@ Container::~Container()
 		log_file ("file close: %d", fd);
 		fd = -1;
 	}
-	log_dtor ("dtor Container");
+	log_dtor ("dtor Container (%ld)", unique_id);
 }
 
 ContainerPtr
@@ -219,13 +224,29 @@ Container::add_child (ContainerPtr& child, bool probe)
 	++seqnum;
 	children.insert (child);
 
-	if (probe)
-		main_app->queue_add_probe (child);
+	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
-	if (bytes_size == 0)	// We are a dummy device
-		return;
+	if (probe) {
+		main_app->queue_add_probe (child);
+	}
 
 	child->parent = get_smart();
+
+	ContainerPtr toplevel = get_toplevel();
+	if (toplevel) {
+		for (auto i : toplevel->container_listeners) {
+			ContainerListenerPtr cl = i.lock();
+			if (cl) {
+				cl->container_added (child, get_smart());	//XXX get this pointer once
+			} else {
+				log_code ("remove listener from the collection");	//XXX remove it from the collection
+			}
+		}
+	}
+
+	if (bytes_size == 0) {	// We are a dummy device
+		return;
+	}
 
 	/* Check:
 	 *	available space
@@ -235,29 +256,6 @@ Container::add_child (ContainerPtr& child, bool probe)
 	 */
 
 	bytes_used += child->bytes_size;
-
-	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
-
-	ContainerPtr parent;
-	ContainerPtr p = get_parent();
-	while (p) {
-		parent = p;
-		p = p->get_parent();
-	}
-
-	const char* name = "";
-	if (parent) {
-		name = parent->name.c_str();
-	}
-	log_debug ("TOPLEVEL = %p (%s)", (void*) parent.get(), name);
-
-#if 0
-	log_debug ("%12lu %12lu %12lu %12lu",
-		child->parent_offset,
-		child->bytes_size,
-		child->bytes_used,
-		child->get_bytes_free());
-#endif
 }
 
 void
@@ -592,7 +590,7 @@ Container::add_string_prop (const std::string& owner, const std::string& name, c
 ContainerPtr
 Container::get_smart (void)
 {
-	return_val_if_fail (!self.expired(),nullptr);
+	return_val_if_fail (!self.expired(), nullptr);
 
 	return self.lock();
 }
@@ -601,6 +599,19 @@ ContainerPtr
 Container::get_parent (void)
 {
 	return parent.lock();
+}
+
+ContainerPtr
+Container::get_toplevel (void)
+{
+	ContainerPtr parent = get_smart();
+	ContainerPtr p = get_parent();
+	while (p) {
+		parent = p;
+		p = p->get_parent();
+	}
+
+	return parent;
 }
 
 
@@ -900,6 +911,13 @@ Container::dump (void)
 	std::stringstream s;
 	s << this;
 	return s.str();
+}
+
+
+void
+Container::add_listener (const ContainerListenerPtr& m)
+{
+	container_listeners.push_back(m);
 }
 
 

@@ -171,7 +171,7 @@ TextApp::run (int argc, char **argv)
 
 	if (error) {
 		usage();
-		exit(1);
+		return 1;
 	}
 
 	ContainerPtr top_level = main_app->scan (disks, nullptr);

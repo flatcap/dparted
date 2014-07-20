@@ -28,7 +28,10 @@
 #include <glibmm/refptr.h>
 
 #include "container.h"
+#include "gfx_container_listener.h"
+#include "container_listener.h"
 #include "theme.h"
+#include "theme_listener.h"
 
 class GfxContainer;
 
@@ -37,7 +40,9 @@ typedef std::shared_ptr<GfxContainer> GfxContainerPtr;
 /**
  * class GfxContainer - Shield the GUI from the messy Containers
  */
-class GfxContainer
+class GfxContainer :
+	public IContainerListener,
+	public IThemeListener
 {
 public:
 	//XXX theme updated?
@@ -71,8 +76,8 @@ public:
 	std::string               label_template;
 	std::string               treepath;
 
-	uint64_t bytes_size = 0;
-	uint64_t bytes_used = 0;
+	uint64_t bytes_size    = 0;
+	uint64_t bytes_used    = 0;
 	uint64_t parent_offset = 0;
 
 	bool usage = false;
@@ -84,23 +89,33 @@ public:
 	int get_index (const GfxContainerPtr& me);
 	int get_depth (void);
 
+	ContainerListenerPtr get_model (void);
 	ContainerPtr get_container (void);
 	std::string dump (void);
+
+	void add_listener (GfxContainerListenerPtr& gcl);
+	GfxContainerPtr get_parent (void);
+	GfxContainerPtr get_toplevel (void);
+
+	virtual void theme_changed (const ThemePtr& theme);
+	virtual void theme_dead    (const ThemePtr& theme);
 
 protected:
 	GfxContainer (void);
 	std::string process_label (const std::string& label_template);
 	GfxContainerPtr get_smart (void);
+	GfxContainerPtr find (const ContainerPtr& cont);
 
-	std::weak_ptr<Container> container;
+	std::weak_ptr<Container>    container;
 	std::weak_ptr<GfxContainer> parent;
 
 	Gdk::RGBA                 process_colour (const std::string& str);
-	Glib::RefPtr<Gdk::Pixbuf> process_icon (const std::string& str);
-	bool                      process_bool (const std::string& str);
+	Glib::RefPtr<Gdk::Pixbuf> process_icon   (const std::string& str);
+	bool                      process_bool   (const std::string& str);
 
 	bool focussed = false;
 	bool selected = false;
+	bool expanded = false;
 
 	int seqnum = -1;
 
@@ -110,6 +125,13 @@ protected:
 
 private:
 	std::weak_ptr<GfxContainer> self;
+	std::vector<GfxContainerListenerWeak> gfx_container_listeners;
+
+	virtual void container_added   (const ContainerPtr& cont, const ContainerPtr& parent);
+	virtual void container_busy    (const ContainerPtr& cont, int busy);
+	virtual void container_changed (const ContainerPtr& cont);
+	virtual void container_deleted (const ContainerPtr& cont);
+	virtual void container_resync  (const ContainerPtr& cont);
 };
 
 

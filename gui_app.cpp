@@ -275,10 +275,11 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	}
 
 	show_window();
-
-	ContainerPtr top_level = scan (disks, std::bind(&GuiApp::scan_callback, this, std::placeholders::_1));
-
 	activate();
+
+	top_level = scan (disks, std::bind(&GuiApp::scan_callback, this, std::placeholders::_1));
+	window->set_data (top_level);
+
 	return EXIT_SUCCESS;
 }
 
@@ -371,13 +372,6 @@ GuiApp::ask (QuestionPtr q)
 	vq.push_back (q);
 	dispatcher_ask.emit();
 	return true;
-}
-
-bool
-GuiApp::notify (Message& UNUSED(m))
-{
-	// Might need to queue these until we're ready to confront the user
-	return false;
 }
 
 
@@ -505,7 +499,8 @@ GuiApp::on_dispatch_ask (void)
 void
 GuiApp::on_dispatch_scan (void)
 {
-	window->set_data (scan_result);
+	log_info ("scan has finished: ignoring callback");
+	//window->set_data (scan_result);
 }
 
 
@@ -521,5 +516,18 @@ GuiApp::open_uri (const std::string& uri)
 	}
 
 	return true;
+}
+
+
+void
+GuiApp::theme_changed (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
+}
+
+void
+GuiApp::theme_dead (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
 }
 
