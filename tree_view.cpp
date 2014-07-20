@@ -47,6 +47,8 @@ TreeView::TreeView (void)
 
 	set_has_tooltip (true);
 	set_activate_on_single_click (true);
+
+	listener = GfxContainerListenerPtr ((IGfxContainerListener*) this, [](IGfxContainerListener*){});
 }
 
 TreeView::~TreeView()
@@ -369,7 +371,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 {
 	top_level = gfx;
 
-	gfx->add_listener (this);	//XXX when do listeners get removed?
+	gfx->add_listener (listener);
 
 	theme = gui_app->get_theme();
 

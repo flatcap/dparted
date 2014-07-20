@@ -234,11 +234,11 @@ Container::add_child (ContainerPtr& child, bool probe)
 
 	ContainerPtr toplevel = get_toplevel();
 	if (toplevel) {
-		for (auto i : toplevel->model_listeners) {
-			ModelPtr m = i.lock();
-			if (m) {
-				m->container_added (child, get_smart());	//XXX get this pointer once
-			}
+		for (auto i : toplevel->container_listeners) {
+			ContainerListenerPtr cl = i.lock();
+			if (cl) {
+				cl->container_added (child, get_smart());	//XXX get this pointer once
+			}	//XXX else remove it from the collection
 		}
 	}
 
@@ -913,9 +913,9 @@ Container::dump (void)
 
 
 void
-Container::add_listener (const ModelPtr& m)
+Container::add_listener (const ContainerListenerPtr& m)
 {
-	model_listeners.push_back(m);
+	container_listeners.push_back(m);
 }
 
 

@@ -102,7 +102,7 @@ public:
 	ContainerPtr get_parent   (void);
 	ContainerPtr get_toplevel (void);
 
-	void add_listener (const ModelPtr& m);
+	void add_listener (const ContainerListenerPtr& m);
 
 	std::vector<std::string> get_prop_names (void);
 	PPtr get_prop (const std::string& name);
@@ -281,7 +281,7 @@ private:
 
 	std::uint64_t unique_id = 0;
 
-	std::vector<std::weak_ptr<IContainerListener>> model_listeners;
+	std::vector<ContainerListenerWeak> container_listeners;
 };
 
 inline bool

@@ -381,7 +381,7 @@ GfxContainer::get_smart (void)
 	return self.lock();
 }
 
-ModelPtr
+ContainerListenerPtr
 GfxContainer::get_model (void)
 {
 	return_val_if_fail (!self.expired(), nullptr);
@@ -506,9 +506,9 @@ GfxContainer::dump (void)
 
 
 void
-GfxContainer::add_listener (IGfxContainerListener* m)
+GfxContainer::add_listener (GfxContainerListenerPtr& gcl)
 {
-	model_listeners.push_back(m);
+	gfx_container_listeners.push_back(gcl);
 }
 
 GfxContainerPtr
@@ -554,8 +554,11 @@ GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& par
 	gchild->sync();
 
 	GfxContainerPtr toplevel = get_toplevel();
-	for (auto i : toplevel->model_listeners) {
-		i->gfx_container_added (gchild, gparent);
+	for (auto i : toplevel->gfx_container_listeners) {
+		GfxContainerListenerPtr p = i.lock();
+		if (p) {
+			p->gfx_container_added (gchild, gparent);
+		}	//XXX else remove from the container
 	}
 }
 

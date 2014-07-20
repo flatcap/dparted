@@ -87,6 +87,8 @@ protected:
 	std::map<std::string, std::tuple<int, int, float, int, int>> col_list;
 
 private:
+	GfxContainerListenerPtr listener;
+
 	// POPUP
 	void setup_popup (void);
 	void on_menu_select (int option);

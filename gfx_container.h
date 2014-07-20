@@ -86,11 +86,11 @@ public:
 	int get_index (const GfxContainerPtr& me);
 	int get_depth (void);
 
-	ModelPtr get_model (void);
+	ContainerListenerPtr get_model (void);
 	ContainerPtr get_container (void);
 	std::string dump (void);
 
-	void add_listener (IGfxContainerListener* m);
+	void add_listener (GfxContainerListenerPtr& gcl);
 	GfxContainerPtr get_parent (void);
 	GfxContainerPtr get_toplevel (void);
 
@@ -119,7 +119,7 @@ protected:
 
 private:
 	std::weak_ptr<GfxContainer> self;
-	std::vector<IGfxContainerListener*> model_listeners;
+	std::vector<GfxContainerListenerWeak> gfx_container_listeners;
 
 	virtual void container_added   (const ContainerPtr& cont, const ContainerPtr& parent);
 	virtual void container_busy    (const ContainerPtr& cont, int busy);

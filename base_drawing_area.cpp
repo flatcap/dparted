@@ -25,6 +25,8 @@
 BaseDrawingArea::BaseDrawingArea (void)
 {
 	log_ctor ("ctor BaseDrawingArea");
+
+	listener = GfxContainerListenerPtr ((IGfxContainerListener*) this, [](IGfxContainerListener*){});
 }
 
 BaseDrawingArea::~BaseDrawingArea()
@@ -39,7 +41,7 @@ BaseDrawingArea::set_data (GfxContainerPtr& gfx)
 	top_level = gfx;
 	//top_level->dump();
 
-	gfx->add_listener (this);	//XXX when do listeners get removed?
+	gfx->add_listener (listener);
 }
 
 void

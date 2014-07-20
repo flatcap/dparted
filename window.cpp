@@ -599,7 +599,7 @@ Window::set_data (ContainerPtr c)
 
 	GfxContainerPtr g = GfxContainer::create (nullptr, c);
 
-	ModelPtr m = g->get_model();	// Only link the tops of the two trees
+	ContainerListenerPtr m = g->get_model();	// Only link the tops of the two trees
 	c->add_listener(m);
 
 	try {

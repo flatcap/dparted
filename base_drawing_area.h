@@ -60,7 +60,7 @@ protected:
 	int cont_height = 70;
 
 	GfxContainerPtr top_level;
-	std::vector<IGfxContainerListener*> model_listeners;
+	GfxContainerListenerPtr listener;
 
 	void escape_text (std::string &text);
 
