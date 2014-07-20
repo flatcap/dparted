@@ -558,7 +558,9 @@ GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& par
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
 			p->gfx_container_added (gchild, gparent);
-		}	//XXX else remove from the container
+		} else {
+			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
+		}
 	}
 }
 

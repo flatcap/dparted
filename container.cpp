@@ -238,7 +238,9 @@ Container::add_child (ContainerPtr& child, bool probe)
 			ContainerListenerPtr cl = i.lock();
 			if (cl) {
 				cl->container_added (child, get_smart());	//XXX get this pointer once
-			}	//XXX else remove it from the collection
+			} else {
+				log_code ("remove listener from the collection");	//XXX remove it from the collection
+			}
 		}
 	}
 
