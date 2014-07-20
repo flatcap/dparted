@@ -121,11 +121,11 @@ private:
 	std::weak_ptr<GfxContainer> self;
 	std::vector<IGfxContainerListener*> model_listeners;
 
-	virtual void model_added   (const ContainerPtr& cont, const ContainerPtr& parent);
-	virtual void model_busy    (const ContainerPtr& cont, int busy);
-	virtual void model_changed (const ContainerPtr& cont);
-	virtual void model_deleted (const ContainerPtr& cont);
-	virtual void model_resync  (const ContainerPtr& cont);
+	virtual void container_added   (const ContainerPtr& cont, const ContainerPtr& parent);
+	virtual void container_busy    (const ContainerPtr& cont, int busy);
+	virtual void container_changed (const ContainerPtr& cont);
+	virtual void container_deleted (const ContainerPtr& cont);
+	virtual void container_resync  (const ContainerPtr& cont);
 };
 
 

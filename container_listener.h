@@ -33,11 +33,11 @@ class IContainerListener
 public:
 	virtual ~IContainerListener() = default;
 
-	virtual void model_added   (const ContainerPtr& cont, const ContainerPtr& parent) = 0;
-	virtual void model_busy    (const ContainerPtr& cont, int busy) = 0;
-	virtual void model_changed (const ContainerPtr& cont) = 0;
-	virtual void model_deleted (const ContainerPtr& cont) = 0;
-	virtual void model_resync  (const ContainerPtr& cont) = 0;
+	virtual void container_added   (const ContainerPtr& cont, const ContainerPtr& parent) = 0;
+	virtual void container_busy    (const ContainerPtr& cont, int busy) = 0;
+	virtual void container_changed (const ContainerPtr& cont) = 0;
+	virtual void container_deleted (const ContainerPtr& cont) = 0;
+	virtual void container_resync  (const ContainerPtr& cont) = 0;
 };
 
 #endif // _CONTAINER_LISTENER_H_

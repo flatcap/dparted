@@ -727,7 +727,7 @@ TreeView::on_keypress (GdkEventKey* event)
 
 
 void
-TreeView::model_added (const GfxContainerPtr& cont, const GfxContainerPtr& parent)
+TreeView::gfx_container_added (const GfxContainerPtr& cont, const GfxContainerPtr& parent)
 {
 	// LOG_TRACE;
 	std::string c = "NULL";
@@ -736,29 +736,29 @@ TreeView::model_added (const GfxContainerPtr& cont, const GfxContainerPtr& paren
 	if (cont)   c = cont->name;
 	if (parent) p = parent->name;
 
-	log_debug ("TREEVIEW model_added: %s to %s", c.c_str(), p.c_str());
+	log_debug ("TREEVIEW gfx_container_added: %s to %s", c.c_str(), p.c_str());
 }
 
 void
-TreeView::model_busy (const GfxContainerPtr& UNUSED(cont), int UNUSED(busy))
+TreeView::gfx_container_busy (const GfxContainerPtr& UNUSED(cont), int UNUSED(busy))
 {
 	LOG_TRACE;
 }
 
 void
-TreeView::model_changed (const GfxContainerPtr& UNUSED(cont))
+TreeView::gfx_container_changed (const GfxContainerPtr& UNUSED(cont))
 {
 	LOG_TRACE;
 }
 
 void
-TreeView::model_deleted (const GfxContainerPtr& UNUSED(cont))
+TreeView::gfx_container_deleted (const GfxContainerPtr& UNUSED(cont))
 {
 	LOG_TRACE;
 }
 
 void
-TreeView::model_resync (const GfxContainerPtr& UNUSED(cont))
+TreeView::gfx_container_resync (const GfxContainerPtr& UNUSED(cont))
 {
 	LOG_TRACE;
 }

@@ -509,7 +509,7 @@ BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk:
 
 
 void
-BaseDrawingArea::model_added (const GfxContainerPtr& cont, const GfxContainerPtr& parent)
+BaseDrawingArea::gfx_container_added (const GfxContainerPtr& cont, const GfxContainerPtr& parent)
 {
 	// LOG_TRACE;
 	std::string c = "NULL";
@@ -518,30 +518,30 @@ BaseDrawingArea::model_added (const GfxContainerPtr& cont, const GfxContainerPtr
 	if (cont)   c = cont->name;
 	if (parent) p = parent->name;
 
-	log_debug ("AREA model_added: %s to %s", c.c_str(), p.c_str());
+	log_debug ("AREA gfx_container_added: %s to %s", c.c_str(), p.c_str());
 	get_window()->invalidate (false); // everything for now
 }
 
 void
-BaseDrawingArea::model_busy (const GfxContainerPtr& UNUSED(cont), int UNUSED(busy))
+BaseDrawingArea::gfx_container_busy (const GfxContainerPtr& UNUSED(cont), int UNUSED(busy))
 {
 	LOG_TRACE;
 }
 
 void
-BaseDrawingArea::model_changed (const GfxContainerPtr& UNUSED(cont))
+BaseDrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(cont))
 {
 	LOG_TRACE;
 }
 
 void
-BaseDrawingArea::model_deleted (const GfxContainerPtr& UNUSED(cont))
+BaseDrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(cont))
 {
 	LOG_TRACE;
 }
 
 void
-BaseDrawingArea::model_resync (const GfxContainerPtr& UNUSED(cont))
+BaseDrawingArea::gfx_container_resync (const GfxContainerPtr& UNUSED(cont))
 {
 	LOG_TRACE;
 }

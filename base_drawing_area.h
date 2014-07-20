@@ -50,11 +50,11 @@ public:
 	virtual void set_cont_height (int height);
 	virtual int  get_cont_height (void);
 
-	virtual void model_added   (const GfxContainerPtr& cont, const GfxContainerPtr& parent);
-	virtual void model_busy    (const GfxContainerPtr& cont, int busy);
-	virtual void model_changed (const GfxContainerPtr& cont);
-	virtual void model_deleted (const GfxContainerPtr& cont);
-	virtual void model_resync  (const GfxContainerPtr& cont);
+	virtual void gfx_container_added   (const GfxContainerPtr& cont, const GfxContainerPtr& parent);
+	virtual void gfx_container_busy    (const GfxContainerPtr& cont, int busy);
+	virtual void gfx_container_changed (const GfxContainerPtr& cont);
+	virtual void gfx_container_deleted (const GfxContainerPtr& cont);
+	virtual void gfx_container_resync  (const GfxContainerPtr& cont);
 
 protected:
 	int cont_height = 70;

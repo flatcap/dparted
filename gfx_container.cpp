@@ -532,10 +532,10 @@ GfxContainer::find (const ContainerPtr& cont)
 }
 
 void
-GfxContainer::model_added (const ContainerPtr& cont, const ContainerPtr& parent)
+GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& parent)
 {
 	// LOG_TRACE;
-	log_debug ("GFX model_added: %s to %s", cont->name.c_str(), parent->name.c_str());
+	log_debug ("GFX container_added: %s to %s", cont->name.c_str(), parent->name.c_str());
 
 	if (find (cont)) {
 		log_error ("Container shouldn't exist");
@@ -555,35 +555,35 @@ GfxContainer::model_added (const ContainerPtr& cont, const ContainerPtr& parent)
 
 	GfxContainerPtr toplevel = get_toplevel();
 	for (auto i : toplevel->model_listeners) {
-		i->model_added (gchild, gparent);
+		i->gfx_container_added (gchild, gparent);
 	}
 }
 
 void
-GfxContainer::model_busy (const ContainerPtr& cont, int busy)
+GfxContainer::container_busy (const ContainerPtr& cont, int busy)
 {
 	// LOG_TRACE;
-	log_debug ("model_busy: %s %d", cont->name.c_str(), busy);
+	log_debug ("container_busy: %s %d", cont->name.c_str(), busy);
 }
 
 void
-GfxContainer::model_changed (const ContainerPtr& cont)
+GfxContainer::container_changed (const ContainerPtr& cont)
 {
 	// LOG_TRACE;
-	log_debug ("model_deleted: %s", cont->name.c_str());
+	log_debug ("container_deleted: %s", cont->name.c_str());
 }
 
 void
-GfxContainer::model_deleted (const ContainerPtr& cont)
+GfxContainer::container_deleted (const ContainerPtr& cont)
 {
 	// LOG_TRACE;
-	log_debug ("model_deleted: %s", cont->name.c_str());
+	log_debug ("container_deleted: %s", cont->name.c_str());
 }
 
 void
-GfxContainer::model_resync (const ContainerPtr& cont)
+GfxContainer::container_resync (const ContainerPtr& cont)
 {
 	// LOG_TRACE;
-	log_debug ("model_resync: %s", cont->name.c_str());
+	log_debug ("container_resync: %s", cont->name.c_str());
 }
 

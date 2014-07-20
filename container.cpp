@@ -237,7 +237,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 		for (auto i : toplevel->model_listeners) {
 			ModelPtr m = i.lock();
 			if (m) {
-				m->model_added (child, get_smart());	//XXX get this pointer once
+				m->container_added (child, get_smart());	//XXX get this pointer once
 			}
 		}
 	}
