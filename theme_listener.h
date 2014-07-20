@@ -16,29 +16,26 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CONTAINER_LISTENER_H_
-#define _CONTAINER_LISTENER_H_
+#ifndef _THEME_LISTENER_H_
+#define _THEME_LISTENER_H_
 
 #include <memory>
 
-class Container;
-class IContainerListener;
+class Theme;
+class IThemeListener;
 
-typedef std::shared_ptr<Container> ContainerPtr;
-typedef std::shared_ptr<IContainerListener> ContainerListenerPtr;
-typedef std::weak_ptr<IContainerListener> ContainerListenerWeak;
+typedef std::shared_ptr<Theme> ThemePtr;
+typedef std::shared_ptr<IThemeListener> ThemeListenerPtr;
+typedef std::weak_ptr<IThemeListener> ThemeListenerWeak;
 
-class IContainerListener
+class IThemeListener
 {
 public:
-	virtual ~IContainerListener() = default;
+	virtual ~IThemeListener() = default;
 
-	virtual void container_added   (const ContainerPtr& cont, const ContainerPtr& parent) = 0;
-	virtual void container_busy    (const ContainerPtr& cont, int busy) = 0;
-	virtual void container_changed (const ContainerPtr& cont) = 0;
-	virtual void container_deleted (const ContainerPtr& cont) = 0;
-	virtual void container_resync  (const ContainerPtr& cont) = 0;
+	virtual void theme_changed (const ThemePtr& theme) = 0;
+	virtual void theme_dead    (const ThemePtr& theme) = 0;
 };
 
-#endif // _CONTAINER_LISTENER_H_
+#endif // _THEME_LISTENER_H_
 

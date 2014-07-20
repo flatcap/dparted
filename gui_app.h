@@ -29,6 +29,7 @@
 #include "app.h"
 #include "gfx_container.h"
 #include "theme.h"
+#include "theme_listener.h"
 #include "window.h"
 
 class GuiApp;
@@ -39,7 +40,8 @@ extern GuiAppPtr gui_app;
 
 class GuiApp :
 	public App,
-	public Gtk::Application
+	public Gtk::Application,
+	public IThemeListener
 {
 public:
 	GuiApp (void);
@@ -60,6 +62,9 @@ public:
 	void on_action_help       (void);
 
 	virtual bool open_uri (const std::string& uri);
+
+	virtual void theme_changed (const ThemePtr& t);
+	virtual void theme_dead    (const ThemePtr& t);
 
 protected:
 	virtual void on_activate (void);

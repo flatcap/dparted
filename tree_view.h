@@ -24,10 +24,13 @@
 
 #include "gfx_container.h"
 #include "gfx_container_listener.h"
+#include "theme.h"
+#include "theme_listener.h"
 
 class TreeView :
 	public Gtk::TreeView,
-	public IGfxContainerListener
+	public IGfxContainerListener,
+	public IThemeListener
 {
 public:
 	TreeView();
@@ -41,6 +44,9 @@ public:
 	virtual void gfx_container_changed (const GfxContainerPtr& cont);
 	virtual void gfx_container_deleted (const GfxContainerPtr& cont);
 	virtual void gfx_container_resync  (const GfxContainerPtr& cont);
+
+	virtual void theme_changed (const ThemePtr& theme);
+	virtual void theme_dead    (const ThemePtr& theme);
 
 protected:
 	GfxContainerPtr top_level;

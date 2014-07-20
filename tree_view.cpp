@@ -766,3 +766,15 @@ TreeView::gfx_container_resync (const GfxContainerPtr& UNUSED(cont))
 }
 
 
+void
+TreeView::theme_changed (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
+}
+
+void
+TreeView::theme_dead (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
+}
+

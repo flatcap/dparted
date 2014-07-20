@@ -592,3 +592,16 @@ GfxContainer::container_resync (const ContainerPtr& cont)
 	log_debug ("container_resync: %s", cont->name.c_str());
 }
 
+
+void
+GfxContainer::theme_changed (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
+}
+
+void
+GfxContainer::theme_dead (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
+}
+

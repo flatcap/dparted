@@ -74,7 +74,7 @@ SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp
 SRC	+= main.cpp
 
 # Misc header files
-HDR	+= action.h config_manager.h container_listener.h endian.h gfx_container_listener.h log_macro.h log_severity.h log_trace.h lvm2.h mmap.h stringnum.h visitor.h
+HDR	+= action.h config_manager.h container_listener.h endian.h gfx_container_listener.h log_macro.h log_severity.h log_trace.h lvm2.h mmap.h stringnum.h theme_listener.h visitor.h
 
 CFLAGS-$(BTRFS)		+= -DDP_BTRFS
 CFLAGS-$(DISK)		+= -DDP_DISK

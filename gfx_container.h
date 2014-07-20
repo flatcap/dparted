@@ -31,6 +31,7 @@
 #include "gfx_container_listener.h"
 #include "container_listener.h"
 #include "theme.h"
+#include "theme_listener.h"
 
 class GfxContainer;
 
@@ -39,7 +40,9 @@ typedef std::shared_ptr<GfxContainer> GfxContainerPtr;
 /**
  * class GfxContainer - Shield the GUI from the messy Containers
  */
-class GfxContainer : public IContainerListener
+class GfxContainer :
+	public IContainerListener,
+	public IThemeListener
 {
 public:
 	//XXX theme updated?
@@ -93,6 +96,9 @@ public:
 	void add_listener (GfxContainerListenerPtr& gcl);
 	GfxContainerPtr get_parent (void);
 	GfxContainerPtr get_toplevel (void);
+
+	virtual void theme_changed (const ThemePtr& theme);
+	virtual void theme_dead    (const ThemePtr& theme);
 
 protected:
 	GfxContainer (void);
