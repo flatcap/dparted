@@ -386,7 +386,7 @@ GfxContainer::get_model (void)
 {
 	return_val_if_fail (!self.expired(), nullptr);
 
-	return std::dynamic_pointer_cast<IModel> (self.lock());
+	return std::dynamic_pointer_cast<IContainerListener> (self.lock());
 }
 
 GfxContainerPtr
@@ -506,7 +506,7 @@ GfxContainer::dump (void)
 
 
 void
-GfxContainer::add_listener (IGfxModel* m)
+GfxContainer::add_listener (IGfxContainerListener* m)
 {
 	model_listeners.push_back(m);
 }

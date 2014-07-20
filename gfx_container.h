@@ -28,8 +28,8 @@
 #include <glibmm/refptr.h>
 
 #include "container.h"
-#include "gfx_model.h"
-#include "model.h"
+#include "gfx_container_listener.h"
+#include "container_listener.h"
 #include "theme.h"
 
 class GfxContainer;
@@ -39,7 +39,7 @@ typedef std::shared_ptr<GfxContainer> GfxContainerPtr;
 /**
  * class GfxContainer - Shield the GUI from the messy Containers
  */
-class GfxContainer : public IModel
+class GfxContainer : public IContainerListener
 {
 public:
 	//XXX theme updated?
@@ -90,7 +90,7 @@ public:
 	ContainerPtr get_container (void);
 	std::string dump (void);
 
-	void add_listener (IGfxModel* m);
+	void add_listener (IGfxContainerListener* m);
 	GfxContainerPtr get_parent (void);
 	GfxContainerPtr get_toplevel (void);
 
@@ -119,7 +119,7 @@ protected:
 
 private:
 	std::weak_ptr<GfxContainer> self;
-	std::vector<IGfxModel*> model_listeners;
+	std::vector<IGfxContainerListener*> model_listeners;
 
 	virtual void model_added   (const ContainerPtr& cont, const ContainerPtr& parent);
 	virtual void model_busy    (const ContainerPtr& cont, int busy);

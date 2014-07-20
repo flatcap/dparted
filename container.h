@@ -33,7 +33,7 @@
 
 #include "property.h"
 #include "mmap.h"
-#include "model.h"
+#include "container_listener.h"
 #include "log.h"
 
 class Container;
@@ -281,7 +281,7 @@ private:
 
 	std::uint64_t unique_id = 0;
 
-	std::vector<std::weak_ptr<IModel>> model_listeners;
+	std::vector<std::weak_ptr<IContainerListener>> model_listeners;
 };
 
 inline bool

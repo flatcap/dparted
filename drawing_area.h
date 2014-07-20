@@ -29,7 +29,7 @@
 
 #include "gfx_container.h"
 #include "base_drawing_area.h"
-#include "gfx_model.h"
+#include "gfx_container_listener.h"
 
 typedef struct { Rect r; GfxContainerPtr p; } Range;
 

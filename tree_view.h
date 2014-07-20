@@ -23,11 +23,11 @@
 #include <gtkmm/treestore.h>
 
 #include "gfx_container.h"
-#include "gfx_model.h"
+#include "gfx_container_listener.h"
 
 class TreeView :
 	public Gtk::TreeView,
-	public IGfxModel
+	public IGfxContainerListener
 {
 public:
 	TreeView();

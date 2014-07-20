@@ -22,7 +22,7 @@
 #include <gtkmm/drawingarea.h>
 
 #include "gfx_container.h"
-#include "gfx_model.h"
+#include "gfx_container_listener.h"
 
 typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
 
@@ -39,7 +39,7 @@ const int BLOCK_WIDTH =  24;	// Placeholder for icons
 
 class BaseDrawingArea :
 	public Gtk::DrawingArea,
-	public IGfxModel
+	public IGfxContainerListener
 {
 public:
 	BaseDrawingArea (void);
@@ -60,7 +60,7 @@ protected:
 	int cont_height = 70;
 
 	GfxContainerPtr top_level;
-	std::vector<IGfxModel*> model_listeners;
+	std::vector<IGfxContainerListener*> model_listeners;
 
 	void escape_text (std::string &text);
 

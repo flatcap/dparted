@@ -74,7 +74,7 @@ SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp
 SRC	+= main.cpp
 
 # Misc header files
-HDR	+= log_trace.h mmap.h stringnum.h visitor.h log_severity.h
+HDR	+= action.h config_manager.h container_listener.h endian.h gfx_container_listener.h log_macro.h log_severity.h log_trace.h lvm2.h mmap.h stringnum.h visitor.h
 
 CFLAGS-$(BTRFS)		+= -DDP_BTRFS
 CFLAGS-$(DISK)		+= -DDP_DISK
@@ -116,8 +116,6 @@ SRC-$(UNUSED)		+= icon_manager.cpp
 
 SRC	+= $(SRC-1)
 HDR	+= $(SRC:%.cpp=%.h)
-
-HDR	+= lvm2.h config_manager.h
 
 OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 

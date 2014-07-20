@@ -16,25 +16,29 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _GFX_MODEL_H_
-#define _GFX_MODEL_H_
+
+#ifndef _CONTAINER_LISTENER_H_
+#define _CONTAINER_LISTENER_H_
 
 #include <memory>
 
-class GfxContainer;
-typedef std::shared_ptr<GfxContainer> GfxContainerPtr;
+class Container;
+typedef std::shared_ptr<Container> ContainerPtr;
 
-class IGfxModel
+class IContainerListener;
+typedef std::shared_ptr<IContainerListener> ModelPtr;
+
+class IContainerListener
 {
 public:
-	virtual ~IGfxModel() = default;
+	virtual ~IContainerListener() = default;
 
-	virtual void model_added   (const GfxContainerPtr& cont, const GfxContainerPtr& parent) = 0;
-	virtual void model_busy    (const GfxContainerPtr& cont, int busy) = 0;
-	virtual void model_changed (const GfxContainerPtr& cont) = 0;
-	virtual void model_deleted (const GfxContainerPtr& cont) = 0;
-	virtual void model_resync  (const GfxContainerPtr& cont) = 0;
+	virtual void model_added   (const ContainerPtr& cont, const ContainerPtr& parent) = 0;
+	virtual void model_busy    (const ContainerPtr& cont, int busy) = 0;
+	virtual void model_changed (const ContainerPtr& cont) = 0;
+	virtual void model_deleted (const ContainerPtr& cont) = 0;
+	virtual void model_resync  (const ContainerPtr& cont) = 0;
 };
 
-#endif // _GFX_MODEL_H_
+#endif // _CONTAINER_LISTENER_H_
 
