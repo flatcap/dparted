@@ -333,7 +333,7 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 
 	log_utils ("vector:");
 	for (auto value : parts) {
-		log_utils ("\t>>%s<<", value.c_str());
+		log_utils ("\t%s", value.c_str());
 	}
 
 	return parts.size();
