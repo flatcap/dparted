@@ -46,7 +46,6 @@ public:
 	virtual void gfx_container_resync  (const GfxContainerPtr& cont);
 
 	virtual void theme_changed (const ThemePtr& theme);
-	virtual void theme_dead    (const ThemePtr& theme);
 
 protected:
 	GfxContainerPtr top_level;

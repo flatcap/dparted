@@ -62,6 +62,8 @@ public:
 
 	virtual bool open_uri (const std::string& uri);
 
+	void add_listener (const ThemeListenerPtr& tl);
+
 protected:
 	virtual void on_activate (void);
 	virtual void on_startup  (void);
@@ -90,6 +92,8 @@ protected:
 	void on_dispatch_ask  (void);
 	void on_dispatch_scan (void);
 	void scan_callback (ContainerPtr c);
+
+	std::vector<ThemeListenerWeak> theme_listeners;
 };
 
 

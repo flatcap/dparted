@@ -375,7 +375,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 	gfx->add_listener (gfx_listener);
 
 	theme = gui_app->get_theme();
-	theme->add_listener (theme_listener);	//XXX if theme
+	gui_app->add_listener (theme_listener);	//XXX if theme
 
 	/*	DEVICE	COLOUR	TYPE	NAME	DISPLAY
 	 *	loop0	none	block	loop0	empty
@@ -769,14 +769,9 @@ TreeView::gfx_container_resync (const GfxContainerPtr& UNUSED(cont))
 
 
 void
-TreeView::theme_changed (const ThemePtr& UNUSED(theme))
+TreeView::theme_changed (const ThemePtr& new_theme)
 {
 	LOG_TRACE;
-}
-
-void
-TreeView::theme_dead (const ThemePtr& UNUSED(theme))
-{
-	LOG_TRACE;
+	theme = new_theme;	//XXX force dropping of cached values
 }
 

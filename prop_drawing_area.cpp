@@ -199,3 +199,10 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 }
 
 
+void
+PropDrawingArea::theme_changed (const ThemePtr& new_theme)
+{
+	LOG_TRACE;
+	BaseDrawingArea::theme_changed (new_theme);
+}
+

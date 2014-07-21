@@ -126,9 +126,9 @@ GuiApp::on_startup (void)
 	LOG_TRACE;
 	Gtk::Application::on_startup();
 
-	Glib::RefPtr<Gtk::IconTheme> theme = Gtk::IconTheme::get_default();
+	Glib::RefPtr<Gtk::IconTheme> itheme = Gtk::IconTheme::get_default();
 
-	theme->append_search_path ("/home/flatcap/work/dparted/icons");		//XXX theme. hard-coded
+	itheme->append_search_path ("/home/flatcap/work/dparted/icons");		//XXX theme. hard-coded
 
 	add_action ("preferences", sigc::mem_fun (*this, &GuiApp::menu_preferences));
 	add_action ("help",        sigc::mem_fun (*this, &GuiApp::menu_help));
@@ -416,7 +416,17 @@ GuiApp::set_theme (const std::string& filename)
 		//if modified ask user if they're sure
 	}
 
+	log_listener ("Old Theme %p, New Theme %p\n", theme.get(), tp.get());
 	theme = tp;
+	for (auto i : theme_listeners) {
+		ThemeListenerPtr tl = i.lock();
+		if (tl) {
+			log_listener ("New Theme %p, notify %p\n", theme.get(), tl.get());
+			tl->theme_changed (theme);
+		} else {
+			log_code ("remove listener from the collection");	//XXX remove it from the collection
+		}
+	}
 	//tp->dump_config();
 
 	return true;
@@ -518,4 +528,13 @@ GuiApp::open_uri (const std::string& uri)
 	return true;
 }
 
+
+void
+GuiApp::add_listener (const ThemeListenerPtr& tl)
+{
+	return_if_fail (tl);
+
+	log_listener ("Theme %p add listener: %p\n", this, tl.get());
+	theme_listeners.push_back (tl);
+}
 

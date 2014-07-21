@@ -52,7 +52,7 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 
 	g->theme = gui_app->get_theme();
 
-	g->theme->add_listener (g);	//XXX if g->theme
+	gui_app->add_listener(g);
 
 	g->sync();
 	c->add_string_prop (std::string("gfx"), std::string("colour"), g->colour2);
@@ -600,14 +600,9 @@ GfxContainer::container_resync (const ContainerPtr& cont)
 
 
 void
-GfxContainer::theme_changed (const ThemePtr& UNUSED(theme))
+GfxContainer::theme_changed (const ThemePtr& new_theme)
 {
 	LOG_TRACE;
-}
-
-void
-GfxContainer::theme_dead (const ThemePtr& UNUSED(theme))
-{
-	LOG_TRACE;
+	theme = new_theme;	//XXX force dropping of cached values
 }
 

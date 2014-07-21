@@ -34,7 +34,6 @@ public:
 	virtual ~IThemeListener() = default;
 
 	virtual void theme_changed (const ThemePtr& theme) = 0;
-	virtual void theme_dead    (const ThemePtr& theme) = 0;
 };
 
 #endif // _THEME_LISTENER_H_

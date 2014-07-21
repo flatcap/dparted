@@ -27,6 +27,8 @@ BaseDrawingArea::BaseDrawingArea (void)
 {
 	log_ctor ("ctor BaseDrawingArea");
 
+	// Smart pointers with no deleter function
+	// We need these because we're statically allocated
 	gfx_listener   = GfxContainerListenerPtr ((IGfxContainerListener*) this, [](IGfxContainerListener*){});
 	theme_listener = ThemeListenerPtr        ((IThemeListener*)        this, [](IThemeListener*){});
 }
@@ -46,7 +48,7 @@ BaseDrawingArea::set_data (GfxContainerPtr& gfx)
 	gfx->add_listener (gfx_listener);
 
 	theme = gui_app->get_theme();
-	theme->add_listener (theme_listener);
+	gui_app->add_listener (theme_listener);
 }
 
 void
@@ -555,14 +557,9 @@ BaseDrawingArea::gfx_container_resync (const GfxContainerPtr& UNUSED(cont))
 
 
 void
-BaseDrawingArea::theme_changed (const ThemePtr& UNUSED(theme))
+BaseDrawingArea::theme_changed (const ThemePtr& new_theme)
 {
 	LOG_TRACE;
-}
-
-void
-BaseDrawingArea::theme_dead (const ThemePtr& UNUSED(theme))
-{
-	LOG_TRACE;
+	theme = new_theme;
 }
 

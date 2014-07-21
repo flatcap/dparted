@@ -98,7 +98,6 @@ public:
 	GfxContainerPtr get_toplevel (void);
 
 	virtual void theme_changed (const ThemePtr& theme);
-	virtual void theme_dead    (const ThemePtr& theme);
 
 protected:
 	GfxContainer (void);
