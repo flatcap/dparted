@@ -259,4 +259,3 @@ Theme::read_file (const std::string& filename)
 	return tp;
 }
 
-

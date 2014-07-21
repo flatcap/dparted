@@ -27,6 +27,7 @@
 #include <glibmm/refptr.h>
 
 #include "config_file.h"
+#include "theme_listener.h"
 
 class Theme;
 

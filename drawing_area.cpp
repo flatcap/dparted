@@ -1395,3 +1395,10 @@ DrawingArea::popup_on_keypress (GdkEventKey* event)
 }
 
 
+void
+DrawingArea::theme_changed (const ThemePtr& new_theme)
+{
+	LOG_TRACE;
+	BaseDrawingArea::theme_changed (new_theme);
+}
+

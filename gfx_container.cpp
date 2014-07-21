@@ -52,6 +52,8 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 
 	g->theme = gui_app->get_theme();
 
+	gui_app->add_listener(g);
+
 	g->sync();
 	c->add_string_prop (std::string("gfx"), std::string("colour"), g->colour2);
 
@@ -508,6 +510,9 @@ GfxContainer::dump (void)
 void
 GfxContainer::add_listener (GfxContainerListenerPtr& gcl)
 {
+	return_if_fail (gcl);
+
+	log_listener ("GfxContainer %p add listener: %p\n", this, gcl.get());
 	gfx_container_listeners.push_back(gcl);
 }
 
@@ -557,6 +562,7 @@ GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& par
 	for (auto i : toplevel->gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
+			log_listener ("Added child %p to GfxContainer %p\n", gchild.get(), gparent.get());
 			p->gfx_container_added (gchild, gparent);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
@@ -594,14 +600,9 @@ GfxContainer::container_resync (const ContainerPtr& cont)
 
 
 void
-GfxContainer::theme_changed (const ThemePtr& UNUSED(theme))
+GfxContainer::theme_changed (const ThemePtr& new_theme)
 {
 	LOG_TRACE;
-}
-
-void
-GfxContainer::theme_dead (const ThemePtr& UNUSED(theme))
-{
-	LOG_TRACE;
+	theme = new_theme;	//XXX force dropping of cached values
 }
 

@@ -40,8 +40,7 @@ extern GuiAppPtr gui_app;
 
 class GuiApp :
 	public App,
-	public Gtk::Application,
-	public IThemeListener
+	public Gtk::Application
 {
 public:
 	GuiApp (void);
@@ -63,8 +62,7 @@ public:
 
 	virtual bool open_uri (const std::string& uri);
 
-	virtual void theme_changed (const ThemePtr& t);
-	virtual void theme_dead    (const ThemePtr& t);
+	void add_listener (const ThemeListenerPtr& tl);
 
 protected:
 	virtual void on_activate (void);
@@ -94,6 +92,8 @@ protected:
 	void on_dispatch_ask  (void);
 	void on_dispatch_scan (void);
 	void scan_callback (ContainerPtr c);
+
+	std::vector<ThemeListenerWeak> theme_listeners;
 };
 
 

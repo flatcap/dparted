@@ -101,6 +101,12 @@ bool
 LuksTable::perform_action (Action action)
 {
 	if (action.name == "dummy.luks_table") {
+		std::string mapper = "/dev/mapper/luks-" + uuid;
+		if (is_mounted (mapper)) {
+			luks_close();
+		} else {
+			luks_open();
+		}
 		log_debug ("LuksTable perform: %s", action.name.c_str());
 		return true;
 	} else {
@@ -329,7 +335,10 @@ bool
 LuksTable::luks_close (void)
 {
 	//XXX close all dependents first, e.g. umount X, vgchange -an, etc
-	std::string command = "sudo cryptsetup close " + device;
+	children.clear();
+
+	std::string mapper = "/dev/mapper/luks-" + uuid;
+	std::string command = "sudo cryptsetup luksClose " + mapper;
 	std::vector<std::string> output;
 
 	int retval = execute_command_out (command, output);

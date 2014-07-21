@@ -31,6 +31,8 @@ public:
 
 	virtual void set_data (GfxContainerPtr& c);
 
+	virtual void theme_changed (const ThemePtr& theme);
+
 protected:
 	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape);

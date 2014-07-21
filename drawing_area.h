@@ -50,6 +50,8 @@ public:
 	bool on_keypress (GdkEventKey* event);
 	void set_focus (GfxContainerPtr& gfx);
 
+	virtual void theme_changed (const ThemePtr& theme);
+
 protected:
 	bool cont_recurse = true;
 
