@@ -89,7 +89,7 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 	if (log_mux.empty()) {
 		fprintf (stdout, "%s", message);
 	} else {
-		for (auto i : log_mux) {
+		for (auto &i : log_mux) {
 			if ((bool) (std::get<1>(i) & level)) {
 				std::get<2>(i) (seq_index, thread_num, fn_depth, level, function, file, line, message);	// Every log goes through this line
 			}
