@@ -52,6 +52,8 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 
 	g->theme = gui_app->get_theme();
 
+	g->theme->add_listener (g);	//XXX if g->theme
+
 	g->sync();
 	c->add_string_prop (std::string("gfx"), std::string("colour"), g->colour2);
 

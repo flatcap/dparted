@@ -915,9 +915,9 @@ Container::dump (void)
 
 
 void
-Container::add_listener (const ContainerListenerPtr& m)
+Container::add_listener (const ContainerListenerPtr& cl)
 {
-	container_listeners.push_back(m);
+	container_listeners.push_back (cl);
 }
 
 

@@ -519,15 +519,3 @@ GuiApp::open_uri (const std::string& uri)
 }
 
 
-void
-GuiApp::theme_changed (const ThemePtr& UNUSED(theme))
-{
-	LOG_TRACE;
-}
-
-void
-GuiApp::theme_dead (const ThemePtr& UNUSED(theme))
-{
-	LOG_TRACE;
-}
-

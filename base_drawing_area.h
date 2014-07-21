@@ -23,6 +23,7 @@
 
 #include "gfx_container.h"
 #include "gfx_container_listener.h"
+#include "theme_listener.h"
 
 typedef struct { int x, y, w, h; } Rect;		// x,y coords, width, height
 
@@ -39,7 +40,8 @@ const int BLOCK_WIDTH =  24;	// Placeholder for icons
 
 class BaseDrawingArea :
 	public Gtk::DrawingArea,
-	public IGfxContainerListener
+	public IGfxContainerListener,
+	public IThemeListener
 {
 public:
 	BaseDrawingArea (void);
@@ -56,11 +58,16 @@ public:
 	virtual void gfx_container_deleted (const GfxContainerPtr& cont);
 	virtual void gfx_container_resync  (const GfxContainerPtr& cont);
 
+	virtual void theme_changed (const ThemePtr& theme);
+	virtual void theme_dead    (const ThemePtr& theme);
+
 protected:
 	int cont_height = 70;
 
-	GfxContainerPtr top_level;
-	GfxContainerListenerPtr listener;
+	GfxContainerPtr         top_level;
+	GfxContainerListenerPtr gfx_listener;
+	ThemePtr                theme;
+	ThemeListenerPtr        theme_listener;
 
 	void escape_text (std::string &text);
 

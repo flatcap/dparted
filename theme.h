@@ -27,6 +27,7 @@
 #include <glibmm/refptr.h>
 
 #include "config_file.h"
+#include "theme_listener.h"
 
 class Theme;
 
@@ -52,6 +53,8 @@ public:
 
 	static ThemePtr read_file (const std::string& filename);
 
+	void add_listener (const ThemeListenerPtr& tl);
+
 protected:
 	ConfigFilePtr config_file;
 
@@ -65,6 +68,8 @@ protected:
 
 private:
 	//int seqnum = 0;
+
+	std::vector<ThemeListenerWeak> theme_listeners;
 };
 
 

@@ -93,7 +93,8 @@ protected:
 	std::map<std::string, std::tuple<int, int, float, int, int>> col_list;
 
 private:
-	GfxContainerListenerPtr listener;
+	GfxContainerListenerPtr gfx_listener;
+	ThemeListenerPtr theme_listener;
 
 	// POPUP
 	void setup_popup (void);

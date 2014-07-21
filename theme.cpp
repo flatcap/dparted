@@ -260,3 +260,9 @@ Theme::read_file (const std::string& filename)
 }
 
 
+void
+Theme::add_listener (const ThemeListenerPtr& tl)
+{
+	theme_listeners.push_back (tl);
+}
+

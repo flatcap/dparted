@@ -48,7 +48,8 @@ TreeView::TreeView (void)
 	set_has_tooltip (true);
 	set_activate_on_single_click (true);
 
-	listener = GfxContainerListenerPtr ((IGfxContainerListener*) this, [](IGfxContainerListener*){});
+	gfx_listener   = GfxContainerListenerPtr ((IGfxContainerListener*) this, [](IGfxContainerListener*){});
+	theme_listener = ThemeListenerPtr        ((IThemeListener*)        this, [](IThemeListener*){});
 }
 
 TreeView::~TreeView()
@@ -371,9 +372,10 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 {
 	top_level = gfx;
 
-	gfx->add_listener (listener);
+	gfx->add_listener (gfx_listener);
 
 	theme = gui_app->get_theme();
+	theme->add_listener (theme_listener);	//XXX if theme
 
 	/*	DEVICE	COLOUR	TYPE	NAME	DISPLAY
 	 *	loop0	none	block	loop0	empty

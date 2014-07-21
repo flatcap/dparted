@@ -21,12 +21,14 @@
 #include "base_drawing_area.h"
 #include "log.h"
 #include "utils.h"
+#include "gui_app.h"
 
 BaseDrawingArea::BaseDrawingArea (void)
 {
 	log_ctor ("ctor BaseDrawingArea");
 
-	listener = GfxContainerListenerPtr ((IGfxContainerListener*) this, [](IGfxContainerListener*){});
+	gfx_listener   = GfxContainerListenerPtr ((IGfxContainerListener*) this, [](IGfxContainerListener*){});
+	theme_listener = ThemeListenerPtr        ((IThemeListener*)        this, [](IThemeListener*){});
 }
 
 BaseDrawingArea::~BaseDrawingArea()
@@ -41,7 +43,10 @@ BaseDrawingArea::set_data (GfxContainerPtr& gfx)
 	top_level = gfx;
 	//top_level->dump();
 
-	gfx->add_listener (listener);
+	gfx->add_listener (gfx_listener);
+
+	theme = gui_app->get_theme();
+	theme->add_listener (theme_listener);
 }
 
 void
@@ -548,4 +553,16 @@ BaseDrawingArea::gfx_container_resync (const GfxContainerPtr& UNUSED(cont))
 	LOG_TRACE;
 }
 
+
+void
+BaseDrawingArea::theme_changed (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
+}
+
+void
+BaseDrawingArea::theme_dead (const ThemePtr& UNUSED(theme))
+{
+	LOG_TRACE;
+}
 
