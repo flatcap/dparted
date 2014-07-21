@@ -72,6 +72,7 @@ enum class Severity {
 	ThreadStart	= (1 << 28),		// Thread started
 	ThreadEnd	= (1 << 29),		// Thread ended
 	Utils		= (1 << 30),		// Vector contains...
+	Listener	= (1 << 31),		// Theme has changed
 
 	// Handy shortcuts
 	NoMessages      = 0,
@@ -83,7 +84,7 @@ enum class Severity {
 	AllWarning	= Warning,
 	AllNotice	= Verbose | User,
 	AllInfo		= Info | Progress | Quiet | Command,
-	AllDebug	= Debug | Trace | CommandIn | CommandOut | IoIn | IoOut | Dot | Hex | ConfigRead | ConfigWrite | Enter | Leave | File | Ctor | Dtor | ThreadStart | ThreadEnd | Utils
+	AllDebug	= Debug | Trace | CommandIn | CommandOut | IoIn | IoOut | Dot | Hex | ConfigRead | ConfigWrite | Enter | Leave | File | Ctor | Dtor | ThreadStart | ThreadEnd | Utils | Listener
 };
 
 #endif // _SEVERITY_H_

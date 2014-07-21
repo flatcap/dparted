@@ -237,6 +237,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 		for (auto i : toplevel->container_listeners) {
 			ContainerListenerPtr cl = i.lock();
 			if (cl) {
+				log_listener ("Added child %p to Container %p\n", child.get(), this);
 				cl->container_added (child, get_smart());	//XXX get this pointer once
 			} else {
 				log_code ("remove listener from the collection");	//XXX remove it from the collection
@@ -917,6 +918,9 @@ Container::dump (void)
 void
 Container::add_listener (const ContainerListenerPtr& cl)
 {
+	return_if_fail (cl);
+
+	log_listener ("Container %p add listener: %p\n", this, cl.get());
 	container_listeners.push_back (cl);
 }
 

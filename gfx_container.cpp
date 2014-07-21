@@ -510,6 +510,9 @@ GfxContainer::dump (void)
 void
 GfxContainer::add_listener (GfxContainerListenerPtr& gcl)
 {
+	return_if_fail (gcl);
+
+	log_listener ("GfxContainer %p add listener: %p\n", this, gcl.get());
 	gfx_container_listeners.push_back(gcl);
 }
 
@@ -559,6 +562,7 @@ GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& par
 	for (auto i : toplevel->gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
+			log_listener ("Added child %p to GfxContainer %p\n", gchild.get(), gparent.get());
 			p->gfx_container_added (gchild, gparent);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
