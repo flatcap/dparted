@@ -184,7 +184,7 @@ btrfs_show_super (const std::string& dev)
 	std::string value;
 
 	log_debug ("keys:");
-	for (auto line : output) {
+	for (auto& line : output) {
 		//XXX move these two tests before loop and doctor vector
 		if (line.substr (0, 11) == "superblock:") {
 			std::string dev2;
@@ -233,7 +233,7 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 	const char* me = "Btrfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
 	log_debug ("Props:");
-	for (auto i : info) {
+	for (auto& i : info) {
 		std::string key   = "btrfs." + i.first;
 		std::string desc  = make_desc (i.first);
 		std::string value = i.second;

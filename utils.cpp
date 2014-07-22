@@ -193,7 +193,7 @@ dump_regions (const std::string& desc, std::vector<std::pair<std::uint64_t, std:
 	if (region.empty()) {
 		ss << "empty";
 	}
-	for (auto r : region) {
+	for (auto& r : region) {
 		ss << r.first << "-" << r.second;
 	}
 	return ss.str();
@@ -332,7 +332,7 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 	}
 
 	log_utils ("vector:");
-	for (auto value : parts) {
+	for (auto& value : parts) {
 		log_utils ("\t%s", value.c_str());
 	}
 

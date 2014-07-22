@@ -169,7 +169,7 @@ Container::visit_children (Visitor& v)
 	if (!v.visit_enter(cont))
 		return false;
 
-	for (auto child : children) {
+	for (auto& child : children) {
 		if (!child->accept(v))
 			return false;
 	}
@@ -234,7 +234,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 
 	ContainerPtr toplevel = get_toplevel();
 	if (toplevel) {
-		for (auto i : toplevel->container_listeners) {
+		for (auto& i : toplevel->container_listeners) {
 			ContainerListenerPtr cl = i.lock();
 			if (cl) {
 				log_listener ("Added child %p to Container %p\n", child.get(), this);
@@ -375,7 +375,7 @@ Container::find (const std::string& search)
 
 	ContainerPtr item;
 
-	for (auto i : children) {
+	for (auto& i : children) {
 		if ((item = i->find (search)))
 			break;
 	}
@@ -546,7 +546,7 @@ std::vector<std::string>
 Container::get_prop_names (void)
 {
 	std::vector<std::string> names;
-	for (auto p : props) {
+	for (auto& p : props) {
 		names.push_back (p.second->name);
 	}
 
@@ -568,7 +568,7 @@ Container::get_all_props (bool inc_hidden /*=false*/)
 {
 	std::vector<PPtr> vv;
 
-	for (auto p : props) {
+	for (auto& p : props) {
 		if ((p.second->flags & BaseProperty::Flags::Hide) && !inc_hidden)
 			continue;
 
@@ -883,7 +883,7 @@ Container::get_type_long (void)
 {
 	std::string tl;
 
-	for (auto i : type) {
+	for (auto& i : type) {
 		tl += i + ".";
 	}
 

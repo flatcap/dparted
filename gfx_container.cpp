@@ -98,7 +98,7 @@ GfxContainer::sync (void)
 		return true;
 
 	init(c);
-	for (auto child : c->get_children()) {
+	for (auto& child : c->get_children()) {
 		GfxContainerPtr g = GfxContainer::create (get_smart(), child);
 		if (name == "dummy") {
 			log_debug ("MARKER1");
@@ -229,7 +229,7 @@ GfxContainer::update_info (void)
 		return true;
 	}
 
-	for (auto i : children) {
+	for (auto& i : children) {
 		i->update_info();
 	}
 
@@ -259,7 +259,7 @@ GfxContainer::dump2 (void)
 	log_debug ("%sseqnum         = %d", tabs.c_str(), seqnum);
 
 	++indent;
-	for (auto c : children) {
+	for (auto& c : children) {
 		c->dump();
 	}
 	--indent;
@@ -526,7 +526,7 @@ GfxContainer::find (const ContainerPtr& cont)
 	if (c == cont)
 		return get_smart();
 
-	for (auto i : children) {
+	for (auto& i : children) {
 		GfxContainerPtr g = i->find (cont);
 		if (g) {
 			return g;
@@ -559,7 +559,7 @@ GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& par
 	gchild->sync();
 
 	GfxContainerPtr toplevel = get_toplevel();
-	for (auto i : toplevel->gfx_container_listeners) {
+	for (auto& i : toplevel->gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
 			log_listener ("Added child %p to GfxContainer %p\n", gchild.get(), gparent.get());

@@ -179,7 +179,7 @@ TextApp::run (int argc, char **argv)
 #ifdef DP_DOT
 	if (dot) {
 		if (dot_separate) {
-			for (auto c : top_level->get_children()) {
+			for (auto& c : top_level->get_children()) {
 				DotVisitor dv;
 				dv.display  = !(dot_save_gv || dot_save_png);
 				dv.resize   = dot_resize;

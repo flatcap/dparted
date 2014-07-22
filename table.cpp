@@ -149,7 +149,7 @@ Table::fill_space (void)
 
 	std::uint64_t upto = 0;
 
-	for (auto c : children) {
+	for (auto& c : children) {
 		if (upto == c->parent_offset) {
 			upto += c->bytes_size;
 #if 0
@@ -190,13 +190,13 @@ Table::fill_space (void)
 		vm.push_back(p);
 	}
 
-	for (auto i : vm) {
+	for (auto& i : vm) {
 		add_child (i, false);	// add_free()
 	}
 
 #if 0
 	log_debug ("\nrecap");
-	for (auto c : children) {
+	for (auto& c : children) {
 		std::string s1 = get_size (c->bytes_size);
 		log_debug ("\t%-12s %12ld -> %12ld  %9s", c->name.c_str(), c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str());
 	}

@@ -224,7 +224,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 #endif
 	} else {
 		//XXX need to spot Lvm Groups
-		for (auto i : devices) {
+		for (auto& i : devices) {
 			// Examine all the devices in parallel
 			start_thread (std::bind (&App::identify_device, this, top_level, i), "App::identify_device");
 		}

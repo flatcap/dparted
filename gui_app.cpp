@@ -153,7 +153,7 @@ GuiApp::on_activate()
 
 #if 0
 	// make all windows visible
-	for (auto win : Gtk::Application::get_windows()) {
+	for (auto& win : Gtk::Application::get_windows()) {
 		win->present();
 	}
 #endif
@@ -191,7 +191,7 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 {
 	LOG_TRACE;
 	log_debug ("Open files:");
-	for (auto f : files) {
+	for (auto& f : files) {
 		log_debug (f->get_uri());
 	}
 
@@ -253,7 +253,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 
 	if (group.config.size()) {
 		log_debug ("config:");
-		for (auto c : group.config) {
+		for (auto& c : group.config) {
 			log_debug ("\t%s", c.c_str());
 			window->load_config (c);
 		}
@@ -264,7 +264,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 
 	if (group.theme.size()) {
 		log_debug ("theme:");
-		for (auto t : group.theme) {
+		for (auto& t : group.theme) {
 			log_debug ("\t%s", t.c_str());
 			window->load_theme (t);
 		}
@@ -418,7 +418,7 @@ GuiApp::set_theme (const std::string& filename)
 
 	log_listener ("Old Theme %p, New Theme %p\n", theme.get(), tp.get());
 	theme = tp;
-	for (auto i : theme_listeners) {
+	for (auto& i : theme_listeners) {
 		ThemeListenerPtr tl = i.lock();
 		if (tl) {
 			log_listener ("New Theme %p, notify %p\n", theme.get(), tl.get());
@@ -478,7 +478,7 @@ GuiApp::on_dispatch_ask (void)
 	dialog.set_title (q->title);
 
 	int id = 0;
-	for (auto a : q->answers) {
+	for (auto& a : q->answers) {
 		dialog.add_button (a, ++id);
 	}
 

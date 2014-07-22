@@ -58,12 +58,12 @@ LvmRaid::accept (Visitor& v)
 	if (!v.visit_enter(c))
 		return false;
 
-	for (auto m : metadata) {
+	for (auto& m : metadata) {
 		if (!m->accept(v))
 			return false;
 	}
 
-	for (auto s : subvols) {
+	for (auto& s : subvols) {
 		if (!s->accept(v))
 			return false;
 	}

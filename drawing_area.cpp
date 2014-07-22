@@ -443,7 +443,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, const Rect
 	uint64_t total = gfx->bytes_size;
 	uint64_t bpp   = total / inside.w;	// bytes per pixel
 
-	for (auto c : gfx->children) {
+	for (auto& c : gfx->children) {
 		if (c->bytes_size > total) {
 			total = c->bytes_size;		//XXX tmp -- need to get intermediate object
 			bpp   = total / inside.w;
@@ -582,7 +582,7 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 #endif
 	shape.h = cont_height;
 	if (top_level->name == "dummy") {
-		for (auto c : top_level->children) {
+		for (auto& c : top_level->children) {
 			//if (c->type == "Loop") {
 				draw_container (cr, shape, c);
 				shape.y += cont_height;
@@ -976,7 +976,7 @@ DrawingArea::get_focus (int x, int y)
 {
 	GfxContainerPtr match;
 
-	for (auto rg : vRange) {
+	for (auto& rg : vRange) {
 		Rect r = rg.r;
 		if ((x >= r.x) && (x < (r.x + r.w)) && (y >= r.y) && (y < (r.y + r.h))) {
 			match = rg.p;
@@ -1005,9 +1005,9 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 #if 0
 	for (; c; c = c->parent.lock()) {
 		log_debug (c->type.back());
-		auto tmp = c->get_actions();
+		auto& tmp = c->get_actions();
 		actions.insert (std::end (actions), std::begin (tmp), std::end (tmp));
-		for (auto t : tmp) {
+		for (auto& t : tmp) {
 			log_debug ("\t%s", t.name.c_str());
 		}
 	}
@@ -1028,7 +1028,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 
 #if 0
 	log_debug ("Actions:");
-	for (auto a : actions) {
+	for (auto& a : actions) {
 		int colour;
 		if (a.enabled) {
 			colour = 32;
@@ -1195,7 +1195,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 	return_if_fail (gfx);
 
 	std::vector<Widget*> items = menu_popup.get_children();
-	for (auto i : items) {
+	for (auto& i : items) {
 		menu_popup.remove (*i);
 	}
 
@@ -1215,7 +1215,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 	actions.push_back ({ "Paste Special", true });
 #endif
 
-	for (auto a : actions) {
+	for (auto& a : actions) {
 		log_debug (a.name);
 		std::size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
@@ -1370,7 +1370,7 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 
 #if 0
 	log_debug ("Actions:");
-	for (auto a : actions) {
+	for (auto& a : actions) {
 		log_debug ("\t%s", a->name.c_str());
 	}
 #endif

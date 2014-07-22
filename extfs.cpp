@@ -163,7 +163,7 @@ tune2fs (const std::string& dev)
 	std::string value;
 
 	log_debug ("keys:");
-	for (auto line : output) {
+	for (auto& line : output) {
 		if (line.substr (0, 7) == "tune2fs")
 			continue;
 
@@ -243,7 +243,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 	const char* me = "Extfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
 	log_debug ("Props:");
-	for (auto i : info) {
+	for (auto& i : info) {
 		std::string desc  = i.first;
 		std::string key   = make_key (desc);
 		std::string value = i.second;

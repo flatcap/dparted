@@ -70,7 +70,7 @@ Loop::create (const std::string& losetup)
 
 #if 0
 	log_info ("parts: (%ld)", parts.size());
-	for (auto i : parts) {
+	for (auto& i : parts) {
 		log_debug ("\t%s", i.c_str());
 	}
 #endif
@@ -212,7 +212,7 @@ Loop::discover (ContainerPtr& parent)
 	if (!losetup (output))
 		return;
 
-	for (auto line : output) {
+	for (auto& line : output) {
 		LoopPtr l = create (line);
 
 		l->get_fd();

@@ -166,7 +166,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 	command = "sudo pvs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options "
 			"pv_uuid,pv_size,pv_used,pv_attr,vg_extent_size,pvseg_start,pvseg_size,vg_name,vg_uuid,lv_uuid,lv_attr,segtype";
 
-	for (auto i : pieces->get_children()) {
+	for (auto& i : pieces->get_children()) {
 		if (i->is_a ("LvmTable")) {
 			log_info ("command: %s", i->get_device_name().c_str());
 			command += " " + i->get_device_name();
@@ -185,7 +185,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		return 0;
 	}
 
-	for (auto line : output) {
+	for (auto& line : output) {
 		parse_tagged_line (line, "\t", tags);
 
 		LvmPartitionPtr p = LvmPartition::create();
@@ -328,7 +328,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 	command = "sudo vgs --unquoted --separator='\t' --units=b --nosuffix --nameprefixes --noheadings --options "
 		"vg_uuid,vg_name,vg_seqno,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_extent_size";
 
-	for (auto i : pieces->get_children()) {
+	for (auto& i : pieces->get_children()) {
 		if (i->is_a ("LvmGroup"))
 			command += " " + i->name;
 	}
@@ -344,7 +344,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		return;
 	}
 
-	for (auto line : output) {
+	for (auto& line : output) {
 		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
@@ -361,7 +361,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		g->bytes_size		= tags["LVM2_VG_SIZE"];
 		g->block_size		= tags["LVM2_VG_EXTENT_SIZE"];
 		//XXX if group has no segments, then what?
-		for (auto s : g->segments) {
+		for (auto& s : g->segments) {
 			LvmTablePtr t = std::dynamic_pointer_cast<LvmTable>(s);
 			if (!t) {
 				//XXX bad children
@@ -411,7 +411,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 	command = "sudo lvs --all --unquoted --separator='\t' --units=b --nosuffix --noheadings --nameprefixes --sort lv_kernel_minor --options "
 		  "vg_uuid,lv_uuid,lv_name,lv_attr,mirror_log,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start_pe,devices";
 
-	for (auto i : pieces->get_children()) {
+	for (auto& i : pieces->get_children()) {
 		if (i->is_a ("LvmGroup"))
 			command += " " + i->name;
 	}
@@ -427,7 +427,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		return;
 	}
 
-	for (auto line : output) {
+	for (auto& line : output) {
 		parse_tagged_line (line, "\t", tags);
 
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
@@ -509,11 +509,11 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		explode (",", devices, device_list);
 
 		log_debug ("%s (%s)", v->name.c_str(), v->get_type().c_str());
-		for (auto d : device_list) {
+		for (auto& d : device_list) {
 			log_info ("Device: %s", d.c_str());
 		}
 
-		for (auto d : device_list) {
+		for (auto& d : device_list) {
 			log_info ("DEP %s -> %s", v->uuid.c_str(), d.c_str());
 			deps.insert (std::make_pair (v->uuid, d));
 
@@ -545,7 +545,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 	}
 
 	//for (int j = 0; j < 5; ++j) {
-	for (auto d : deps) {
+	for (auto& d : deps) {
 		std::string parent_id = d.first;
 		std::string child_id  = d.second;
 
@@ -588,7 +588,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	std::vector<ContainerPtr> t = find_all_type (top_level, "LvmTable");
 
 	log_info ("top_level: %ld tables", t.size());
-	for (auto i : t) {
+	for (auto& i : t) {
 		pieces->add_child (i, false);
 	}
 
@@ -598,7 +598,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	}
 
 	log_info ("Pieces (%ld)", pieces->get_children().size());
-	for (auto i : pieces->get_children()) {
+	for (auto& i : pieces->get_children()) {
 		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
 	}
 
@@ -606,7 +606,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	std::vector<ContainerPtr> v = find_all_type (pieces, "LvmVolume");
 	log_debug ("%ld volumes", v.size());
 
-	for (auto i : v) {
+	for (auto& i : v) {
 		if (i->is_a ("LvmMetadata"))		// nothing interesting here
 			continue;
 
@@ -620,7 +620,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	std::vector<ContainerPtr> g = find_all_type (pieces, "LvmGroup");
 	log_debug ("%ld groups", g.size());
 
-	for (auto i : g) {
+	for (auto& i : g) {
 		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
 		top_level->add_child (i, false);
 	}

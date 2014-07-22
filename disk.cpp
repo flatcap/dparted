@@ -244,7 +244,7 @@ Disk::discover (ContainerPtr& parent)
 	if (!lsblk (output))
 		return;
 
-	for (auto line : output) {
+	for (auto& line : output) {
 		DiskPtr d = Disk::create (line);
 
 		parent->add_child (d, true);

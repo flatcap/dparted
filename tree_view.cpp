@@ -116,7 +116,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 
 	Gtk::TreeModel::Row row;
 
-	for (auto x : gfx->children) {
+	for (auto& x : gfx->children) {
 		bool display = false;
 
 		if (x->treeview == "always")
@@ -143,7 +143,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 			row.set_value (0, x);		// Column zero is always the GfxContainer
 
 			log_debug ("Columns:");
-			for (auto i : col_list) {
+			for (auto& i : col_list) {
 				int index = -1;
 				int type = ct_string;
 				float align = 0;
@@ -409,7 +409,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 	std::string display = theme->get_config (name, "", "display", false);
 	std::vector<std::string> parts;
 	explode (",", display, parts);
-	for (auto i : parts) {
+	for (auto& i : parts) {
 		std::vector<std::string> multi;
 		explode ("+", i, multi);
 
@@ -423,7 +423,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 
 		Gtk::TreeModelColumn<int>* tmc = nullptr;
 		Gtk::CellRendererProgress* cell = nullptr;
-		for (auto j : multi) {
+		for (auto& j : multi) {
 			int index = -1;
 			int type = ct_string;
 			float align = 0.0;

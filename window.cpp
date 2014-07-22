@@ -248,7 +248,7 @@ Window::init_shortcuts (void)
 
 	Glib::RefPtr<Gtk::AccelGroup> accel = Gtk::AccelGroup::create();
 
-	for (auto k : keys) {
+	for (auto& k : keys) {
 		log_debug ("Keypress: %d : %d", k.first, k.second);
 		Gtk::MenuItem* i = manage (new Gtk::MenuItem());
 		i->signal_activate().connect (sigc::bind<int, int> (sigc::mem_fun (*this, &Window::on_keypress), k.first, k.second));
@@ -263,7 +263,7 @@ Window::init_shortcuts (void)
 void
 Window::insert_general_actions (std::string section, const std::vector<const char*>& commands)
 {
-	for (auto c : commands) {
+	for (auto& c : commands) {
 		std::string name = section + "." + c;
 		Glib::RefPtr<Gio::Action> a = add_action(name, sigc::bind<std::string, std::string> (sigc::mem_fun (*this, &Window::on_action_general), section, c));
 		Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic (a);
@@ -315,7 +315,7 @@ Window::init_actions (void)
 	s->set_enabled (false);
 #endif
 #if 0
-	for (auto a : action_map) {
+	for (auto& a : action_map) {
 		if (a.first[7] < 'n') {
 			a.second->set_enabled (false);
 		}
@@ -544,11 +544,11 @@ Window::init_menubar (Gtk::Box& box)
 void
 Window::set_actions (std::vector<Action>& list)
 {
-	for (auto a : action_map) {			// First, disable all the actions
+	for (auto& a : action_map) {			// First, disable all the actions
 		a.second->set_enabled (false);
 	}
 
-	for (auto a : list) {				// Then selectively enable the ones we want
+	for (auto& a : list) {				// Then selectively enable the ones we want
 		auto it = action_map.find (a.name);
 		if (it != std::end (action_map)) {
 			log_debug ("Enable: %s", a.name.c_str());

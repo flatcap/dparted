@@ -150,7 +150,7 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 
 	std::stringstream ss;
 	ss << "Backtrace:\n";
-	for (auto i : bt) {
+	for (auto& i : bt) {
 		if (i.substr (0, 17) == "assertion_failure")	// Skip me
 			continue;
 		ss << "\t" << i << "\n";
@@ -197,7 +197,7 @@ static std::vector<std::pair<Severity, std::string>> LogLevelNames = {
 std::string
 log_get_level_name (Severity level)
 {
-	for (auto i : LogLevelNames) {
+	for (auto& i : LogLevelNames) {
 		if (i.first == level) {
 			return i.second;
 		}
@@ -209,7 +209,7 @@ log_get_level_name (Severity level)
 Severity
 log_get_level_value (const std::string& name)
 {
-	for (auto i : LogLevelNames) {
+	for (auto& i : LogLevelNames) {
 		if (i.second == name) {
 			return i.first;
 		}

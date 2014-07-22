@@ -257,7 +257,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		g->add_child (p, true);
 	}
 
-	for (auto r : empty) {
+	for (auto& r : empty) {
 		PartitionPtr p = Partition::create();
 		p->bytes_size = (r.second-r.first+1);	p->bytes_size    *= 512;	//XXX two parts to avoid overflow
 		p->parent_offset = r.first;		p->parent_offset *= 512;
