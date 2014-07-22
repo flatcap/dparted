@@ -375,6 +375,7 @@ GuiApp::ask (QuestionPtr q)
 }
 
 
+#ifdef DP_AREA
 void
 GuiApp::properties (GfxContainerPtr c)
 {
@@ -383,6 +384,7 @@ GuiApp::properties (GfxContainerPtr c)
 	//XXX keep weak pointers to PropertiesDialog dialogs
 }
 
+#endif
 ThemePtr
 GuiApp::get_theme (void)
 {

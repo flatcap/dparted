@@ -20,6 +20,7 @@
 #define _BASE_DRAWING_AREA_H_
 
 #include <gtkmm/drawingarea.h>
+#include <gtkmm/tooltip.h>
 
 #include "gfx_container.h"
 #include "gfx_container_listener.h"

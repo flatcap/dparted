@@ -47,7 +47,9 @@ public:
 	virtual ~GuiApp();
 
 	virtual bool ask (QuestionPtr q);
+#ifdef DP_AREA
 	virtual void properties (GfxContainerPtr c);
+#endif
 	ThemePtr get_theme (void);
 	void set_theme (ThemePtr theme);
 

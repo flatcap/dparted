@@ -28,7 +28,9 @@
 
 #include "window.h"
 #include "action.h"
+#ifdef DP_AREA
 #include "drawing_area.h"
+#endif
 #include "gui_app.h"
 #include "log.h"
 #include "utils.h"
@@ -46,7 +48,9 @@ Window::Window (void)
 
 	inner_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 
+#ifdef DP_TREE
 	treeview.set_hexpand (true);
+#endif
 
 	add_events (Gdk::KEY_PRESS_MASK | Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 #if 0
@@ -54,7 +58,9 @@ Window::Window (void)
 #endif
 
 	eventbox.set_events (Gdk::KEY_PRESS_MASK);
+#ifdef DP_AREA
 	eventbox.signal_key_press_event().connect (sigc::mem_fun (drawingarea, &DrawingArea::on_keypress), false);
+#endif
 
 	signal_realize().connect (sigc::mem_fun (*this, &Window::my_realize));
 	signal_show().connect (sigc::mem_fun (*this, &Window::my_show));
@@ -75,8 +81,12 @@ Window::Window (void)
 		outer_box.add (eventbox);
 			eventbox.add (scrolledwindow);
 				scrolledwindow.add (inner_box);
+#ifdef DP_AREA
 					inner_box.pack_start (drawingarea, false, false);
+#endif
+#ifdef DP_TREE
 					inner_box.pack_start (treeview,    true,  true);
+#endif
 		outer_box.pack_end (statusbar, false, false);
 
 	// -------------------------------------
@@ -97,8 +107,12 @@ Window::Window (void)
 
 	log_debug ("%d,%d,%d,%d", tb, gx, tv, sb);
 	toolbar->set_visible (tb);
+#ifdef DP_AREA
 	drawingarea.set_visible (gx);
+#endif
+#ifdef DP_TREE
 	treeview.set_visible (tv);
+#endif
 	statusbar.set_visible (sb);
 
 #if 0
@@ -117,7 +131,9 @@ void
 Window::my_realize (void)
 {
 	LOG_TRACE;
+#ifdef DP_AREA
 	drawingarea.grab_focus();
+#endif
 }
 
 void
@@ -166,8 +182,12 @@ Window::set_focus (GfxContainerPtr cont)
 	cont->set_focus (true);
 	focus = cont;
 
+#ifdef DP_TREE
 	treeview.set_focus (focus);
+#endif
+#ifdef DP_AREA
 	drawingarea.set_focus (focus);
+#endif
 
 	log_debug ("Focus: %s", cont->dump().c_str());
 	return true;
@@ -602,11 +622,15 @@ Window::set_data (ContainerPtr c)
 	ContainerListenerPtr m = g->get_model();	// Only link the tops of the two trees
 	c->add_listener(m);
 
+#ifdef DP_TREE
 	try {
 		treeview.init_treeview(g);
 	} catch (...) {
 		log_error ("exception");
 	}
+#endif
+#ifdef DP_AREA
 	drawingarea.set_data(g);
+#endif
 }
 
