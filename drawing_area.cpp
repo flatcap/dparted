@@ -563,9 +563,9 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	ContainerPtr tlc = top_level->get_container();
 
-	log_info ("\nDRAW:");
+	log_info ("DRAW:");
 	log_info ("top_level = %p, tlc = %p", (void*) top_level.get(), (void*) tlc.get());
-	log_info ("children = %ld\n", top_level->children.size());
+	log_info ("children = %ld", top_level->children.size());
 
 	vRange.clear();
 

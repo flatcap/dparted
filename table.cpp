@@ -195,7 +195,7 @@ Table::fill_space (void)
 	}
 
 #if 0
-	log_debug ("\nrecap");
+	log_debug ("recap");
 	for (auto& c : children) {
 		std::string s1 = get_size (c->bytes_size);
 		log_debug ("\t%-12s %12ld -> %12ld  %9s", c->name.c_str(), c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str());

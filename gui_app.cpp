@@ -416,12 +416,12 @@ GuiApp::set_theme (const std::string& filename)
 		//if modified ask user if they're sure
 	}
 
-	log_listener ("Old Theme %p, New Theme %p\n", theme.get(), tp.get());
+	log_listener ("Old Theme %p, New Theme %p", theme.get(), tp.get());
 	theme = tp;
 	for (auto& i : theme_listeners) {
 		ThemeListenerPtr tl = i.lock();
 		if (tl) {
-			log_listener ("New Theme %p, notify %p\n", theme.get(), tl.get());
+			log_listener ("New Theme %p, notify %p", theme.get(), tl.get());
 			tl->theme_changed (theme);
 		} else {
 			log_code ("remove listener from the collection");	//XXX remove it from the collection
@@ -464,7 +464,7 @@ GuiApp::on_dispatch_ask (void)
 			dlg = WarningDialog::create(q);
 			break;
 		default:
-			log_error ("Unknown question type %d\n", (int) q->type);
+			log_error ("Unknown question type %d", (int) q->type);
 			break;
 	}
 
@@ -520,7 +520,7 @@ GuiApp::open_uri (const std::string& uri)
 	GError *error = NULL;
 	gtk_show_uri (nullptr, uri.c_str(), 0, &error);
 	if (error) {
-		log_error ("Can't open uri: %s\n", error->message);
+		log_error ("Can't open uri: %s", error->message);
 		g_error_free (error);
 		return false;
 	}
@@ -534,7 +534,7 @@ GuiApp::add_listener (const ThemeListenerPtr& tl)
 {
 	return_if_fail (tl);
 
-	log_listener ("Theme %p add listener: %p\n", this, tl.get());
+	log_listener ("Theme %p add listener: %p", this, tl.get());
 	theme_listeners.push_back (tl);
 }
 

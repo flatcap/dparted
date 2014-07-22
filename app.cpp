@@ -310,7 +310,7 @@ App::start_thread (std::function<void(void)> fn, const char* desc)
 bool
 App::open_uri (const std::string& uri)
 {
-	log_error ("Can't open uri: %s\n", uri.c_str());
+	log_error ("Can't open uri: %s", uri.c_str());
 	return false;
 }
 

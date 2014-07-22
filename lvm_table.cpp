@@ -308,7 +308,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 #if 0
 			log_info ("Config (0x%0x):", 4096+offset);
 			format_config (config);
-			log_debug ("\n%s", config.c_str());
+			log_debug ("%s", config.c_str());
 #endif
 		}
 	}

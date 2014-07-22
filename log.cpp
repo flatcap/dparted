@@ -139,7 +139,7 @@ log_remove_handler (int handle)
 		}
 	}
 
-	log_error ("Can't find log handle: %d\n", handle);
+	log_error ("Can't find log handle: %d", handle);
 }
 
 void
