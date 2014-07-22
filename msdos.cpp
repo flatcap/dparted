@@ -176,7 +176,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	MsdosPtr m = Msdos::create();
 
 	m->bytes_size = parent->bytes_size;
-	//m->device = parent->device;	//XXX only for partitions, main body should inherit
+	// m->device = parent->device;	//XXX only for partitions, main body should inherit
 	m->parent_offset = 0;
 
 	parent->add_child (m, false);

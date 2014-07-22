@@ -35,7 +35,7 @@
 #include "window.h"
 
 DrawingArea::DrawingArea (void)
-	//Glib::ObjectBase ("MyDrawingArea")
+	// Glib::ObjectBase ("MyDrawingArea")
 {
 	log_ctor ("ctor DrawingArea");
 	set_hexpand (true);
@@ -56,7 +56,7 @@ DrawingArea::DrawingArea (void)
 	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 300); // ms
 #endif
 
-	//set_tooltip_text ("tooltip number 1");
+	// set_tooltip_text ("tooltip number 1");
 
 	set_has_tooltip();	// We'll be handling the tooltips ourself
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &DrawingArea::on_textview_query_tooltip));
@@ -323,7 +323,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, const Rect
 		}
 	}
 
-	//Rect tab;
+	// Rect tab;
 	Rect inside { 0, 0, 0, 0 };
 
 	log_debug ("object = %s -- %d,%d", gfx->name.c_str(), shape.w, TAB_WIDTH);
@@ -463,7 +463,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, const Rect
 	}
 	//XXX vRange.push_front ({work, gfx});			// Associate a region with a container
 
-	//if (gfx->get_focus() && (has_focus() || menu_active)) {
+	// if (gfx->get_focus() && (has_focus() || menu_active)) {
 	if (gfx->get_focus()) {
 		draw_focus (cr, shape, (has_focus() || menu_active));
 	}
@@ -480,7 +480,7 @@ DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& sh
 
 	cr->save();
 	draw_border (cr, shape);				// Set clipping area
-	//cr->clip();
+	// cr->clip();
 
 	if (primary) {
 		cr->set_line_width(2);
@@ -583,10 +583,10 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	shape.h = cont_height;
 	if (top_level->name == "dummy") {
 		for (auto& c : top_level->children) {
-			//if (c->type == "Loop") {
+			// if (c->type == "Loop") {
 				draw_container (cr, shape, c);
 				shape.y += cont_height;
-			//}
+			// }
 		}
 	} else {
 		draw_container (cr, shape, top_level);
@@ -602,7 +602,7 @@ DrawingArea::on_timeout (int timer_number)
 {
 	log_debug ("timer");
 	get_window()->invalidate (false); // everything for now
-	//return (c->device == "/dev/sdc");
+	// return (c->device == "/dev/sdc");
 	return true;
 }
 
@@ -667,7 +667,7 @@ DrawingArea::on_keypress (GdkEventKey* event)
 
 	log_debug ("Key: %d (0x%x)", event->keyval, event->keyval);
 
-	//Extra keys: Delete, Insert, Space/Enter (select)?
+	// Extra keys: Delete, Insert, Space/Enter (select)?
 
 	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
@@ -835,7 +835,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	shape.h -= th;
 
 	draw_box (cr, shape, inside);
-	//draw_edge (cr, inside, "red");
+	// draw_edge (cr, inside, "red");
 
 	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 	draw_border (cr, inside);
@@ -851,7 +851,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	shape.w = 2*TAB_WIDTH + 2*GAP;
 
 	draw_box (cr, shape, inside);
-	//draw_edge (cr, inside, "red");
+	// draw_edge (cr, inside, "red");
 
 	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 	draw_border (cr, inside);
@@ -966,7 +966,7 @@ DrawingArea::set_data (GfxContainerPtr& g)
 #if 0
 	// invalidate window
 	unsigned int children = g->children.size();
-	//children = 14;
+	// children = 14;
 	set_size_request (500, cont_height * children);
 #endif
 }
@@ -1015,7 +1015,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 
 	if (actions.empty()) {
 		log_debug ("No actions");
-		//return;
+		// return;
 	}
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
@@ -1365,7 +1365,7 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 	std::vector<Action> actions = c->get_actions();
 	if (actions.empty()) {
 		log_debug ("No actions");
-		//return;
+		// return;
 	}
 
 #if 0

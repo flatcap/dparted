@@ -52,7 +52,7 @@ public:
 	virtual ContainerPtr find (const std::string& uuid);
 
 public:
-	//properties
+	// properties
 	std::string	lv_attr;
 	std::uint64_t	seg_count    = 0;
 	std::uint64_t	seg_start_pe = 0;

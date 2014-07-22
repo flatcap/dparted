@@ -115,7 +115,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	ext->bytes_size = bufsize;
 	ext->device = parent->device;
-	//ext->parent_offset = 0;		// Will be set by our parent
+	// ext->parent_offset = 0;		// Will be set by our parent
 
 	PartitionPtr res1 = Partition::create();
 	res1->sub_type ("Space");
@@ -138,7 +138,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 		std::vector<struct partition> vp;
 		num = ext->read_table (table_offset+buffer, bufsize, 0, vp);
 		log_debug ("num = %d", num);
-		//dump_hex (buffer, bufsize);
+		// dump_hex (buffer, bufsize);
 
 		if ((num < 0) || (vp.size() > 2)) {
 			log_error ("partition table is corrupt");	// bugger
@@ -164,8 +164,8 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 				m = MsdosPartition::create();
 				m->bytes_size = le64_to_cpu (part.size);
 
-				//m->parent_offset = table_offset + le64_to_cpu (part.start);
-				//m->device = parent->device;
+				// m->parent_offset = table_offset + le64_to_cpu (part.start);
+				// m->device = parent->device;
 
 				m->parent_offset = table_offset + le64_to_cpu (part.start) - ext->parent_offset;	// This is relative
 

@@ -36,7 +36,7 @@ Loop::Loop (void)
 	const char* me = "Loop";
 	const int   d  = (int) BaseProperty::Flags::Dot;
 	const int   s  = (int) BaseProperty::Flags::Size;
-	//const int   h  = (int) BaseProperty::Flags::Hide;
+	// const int   h  = (int) BaseProperty::Flags::Hide;
 
 	sub_type (me);
 

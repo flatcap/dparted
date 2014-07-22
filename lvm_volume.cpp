@@ -139,7 +139,7 @@ LvmVolume::add_child (ContainerPtr& child, bool probe)
 	} else if (child->is_a ("LvmPartition")) {
 		log_info ("PARTITION %s", child->name.c_str());
 		add_segment (child);
-		//Volume::add_child (child);
+		// Volume::add_child (child);
 		child->whole = get_smart();
 	} else if (child->is_a ("Space")) {
 		log_info ("SPACE %s", child->name.c_str());

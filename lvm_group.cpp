@@ -93,8 +93,8 @@ std::string
 make_device (std::string group, std::string volume)
 {
 	// Either:
-	//	/dev/GROUP/VOLUME
-	//	/dev/mapper/GROUP-VOLUME(*)
+	// 	/dev/GROUP/VOLUME
+	// 	/dev/mapper/GROUP-VOLUME(*)
 	// (*) with - replace with -- in both parts
 	expand_name (group);
 	expand_name (volume);
@@ -198,7 +198,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			g = LvmGroup::create();
 			g->name    = tags["VG_NAME"];
 			g->uuid    = vg_uuid;
-			//g->missing = true;
+			// g->missing = true;
 			pieces->add_child (g, false);
 			++added;
 		}
@@ -209,7 +209,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			log_info ("new table %s [SHOULDN'T HAPPEN]", pv_uuid.c_str());
 			t = LvmTable::create();
 			t->uuid    = pv_uuid;
-			//t->missing = true;
+			// t->missing = true;
 			pieces->add_child (t, false);
 			++added;
 		}
@@ -255,7 +255,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 
 			log_debug ("lv uuid = %s", lv_uuid.c_str());
 			v->uuid    = lv_uuid;
-			//v->missing = true;
+			// v->missing = true;
 			pieces->add_child (v, false);
 			++added;
 
@@ -272,10 +272,10 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 
 		// LvmTable
 		t->pv_attr	= tags["LVM2_PV_ATTR"];
-		//t->bytes_used	= tags["LVM2_PV_USED"];
+		// t->bytes_used	= tags["LVM2_PV_USED"];
 
 		//XXX for now rely on the LvmTable header on disk
-		//t->bytes_size	= tags["LVM2_PV_SIZE"];		//XXX this excludes the Reserved and Space
+		// t->bytes_size	= tags["LVM2_PV_SIZE"];		//XXX this excludes the Reserved and Space
 
 		// LvmPartition
 		p->parent_offset  = offset;
@@ -353,7 +353,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			log_info ("new group %s [SHOULDN'T HAPPEN]", vg_uuid.c_str());
 			g = LvmGroup::create();
 			g->uuid    = vg_uuid;
-			//g->missing = true;
+			// g->missing = true;
 		}
 
 		// Container
@@ -369,7 +369,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			t->set_alignment (g->block_size);
 		}
 		log_debug ("TRIGGER set_alignment: %ld", g->segments.size());
-		//g->bytes_used		= g->bytes_size - (std::uint64_t) tags["LVM2_VG_FREE"];
+		// g->bytes_used		= g->bytes_size - (std::uint64_t) tags["LVM2_VG_FREE"];
 
 		// LvmGroup
 		g->vg_attr		= tags["LVM2_VG_ATTR"];
@@ -436,7 +436,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			log_info ("new group %s [SHOULDN'T HAPPEN]", vg_uuid.c_str());
 			g = LvmGroup::create();
 			g->uuid    = vg_uuid;
-			//g->missing = true;
+			// g->missing = true;
 			pieces->add_child (g, false);
 		}
 
@@ -466,7 +466,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 				continue;
 			}
 			v->uuid    = lv_uuid;
-			//v->missing = true;
+			// v->missing = true;
 			pieces->add_child (v, false);
 
 			// A volume discovered here doesn't have any physical parts.
@@ -500,7 +500,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			v->device = make_device (g->name, v->name);
 			log_debug ("DEVNAME = %s", v->device.c_str());
 
-			//INTERNAL object => full
+			// INTERNAL object => full
 			v->bytes_used = v->bytes_size;
 		}
 
@@ -544,7 +544,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		}
 	}
 
-	//for (int j = 0; j < 5; ++j) {
+	// for (int j = 0; j < 5; ++j) {
 	for (auto& d : deps) {
 		std::string parent_id = d.first;
 		std::string child_id  = d.second;
@@ -602,7 +602,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
 	}
 
-	//probe leaves
+	// probe leaves
 	std::vector<ContainerPtr> v = find_all_type (pieces, "LvmVolume");
 	log_debug ("%ld volumes", v.size());
 

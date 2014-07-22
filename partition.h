@@ -45,7 +45,7 @@ public:
 	virtual void add_child (ContainerPtr& child, bool probe);
 
 public:
-	//properties
+	// properties
 	int ptype = 0;
 
 	VolumePtr volume;	//XXX not declared

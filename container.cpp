@@ -344,8 +344,8 @@ Container::get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces)
 {
 	spaces.clear();
 
-	//spaces[offset] = size
-	//spaces[0] = 123;
+	// spaces[offset] = size
+	// spaces[0] = 123;
 
 	return spaces.size();
 }
@@ -446,7 +446,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, 0);
 	if (buf == MAP_FAILED) {
 		log_error ("alloc failed: %s", strerror (errno));
-		//close (newfd);				//XXX may not be ours to close
+		// close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
 	log_file ("mmap created: %p, device %s, size %s", buf, device.c_str(), get_size (size).c_str());
@@ -477,7 +477,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 {
 	return_val_if_fail (c, stream);
 
-	//std::uint64_t bytes_free = c.bytes_size - c->bytes_used;
+	// std::uint64_t bytes_free = c.bytes_size - c->bytes_used;
 
 	std::string uuid = c->uuid;
 

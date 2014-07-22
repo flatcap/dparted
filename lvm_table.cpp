@@ -297,7 +297,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	if ((offset+size) > bufsize) {
 		log_info ("TOO BIG (%lu > %lu)", (offset+size), bufsize);
-		//return false;
+		// return false;
 	} else {
 		if (size > 0) {
 			config = std::string ((char*) (buffer+4096+offset), size-1);	//XXX validate
@@ -318,7 +318,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	//XXX If the lvmpv is resized ph->device_size might not be updated
 	// We should use this value, then "fix" it when we read the lvm vg
-	//t->bytes_size = le64_to_cpu (ph->device_size);
+	// t->bytes_size = le64_to_cpu (ph->device_size);
 	t->bytes_size = bufsize;	// For now
 	t->parent_offset = 0;
 	t->bytes_used = 0;
@@ -355,7 +355,7 @@ LvmTable::add_child (ContainerPtr& child, bool probe)
 
 	Table::add_child (child, probe);
 
-	//child->open_device();	// get a buffer
+	// child->open_device();	// get a buffer
 
 #if 0
 	log_debug ("%p, name %s, type %s, uuid: %s", child->mmap_buffer, child->name.c_str(), child->type.back().c_str(), child->uuid.c_str());

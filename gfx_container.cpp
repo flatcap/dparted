@@ -319,7 +319,7 @@ GfxContainer::process_icon (const std::string& str)
 
 	pb = theme->get_icon (str);
 	log_debug ("icon: %s %p", str.c_str(), (void*) pb.operator->());
-	//pb = Gdk::Pixbuf::create_from_file (str);
+	// pb = Gdk::Pixbuf::create_from_file (str);
 
 	return pb;
 }

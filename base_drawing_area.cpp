@@ -43,7 +43,7 @@ void
 BaseDrawingArea::set_data (GfxContainerPtr& gfx)
 {
 	top_level = gfx;
-	//top_level->dump();
+	// top_level->dump();
 
 	gfx->add_listener (gfx_listener);
 
@@ -317,7 +317,7 @@ BaseDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, const Rect&
 	cr->rectangle (work.x, work.y, work.w, work.h);
 	cr->fill();
 	cr->restore();
-	//draw_edge (cr, work, "red");
+	// draw_edge (cr, work, "red");
 
 	below = { shape.x, shape.y + (work.h + GAP), shape.w, shape.h - (work.h + GAP) };
 }
@@ -480,7 +480,7 @@ BaseDrawingArea::draw_text (const Cairo::RefPtr<Cairo::Context>& cr, const Rect&
 
 	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - icon label colour
 
-	//cr->move_to (shape.x + left, shape.y + shape.h - th);	// align to bottom
+	// cr->move_to (shape.x + left, shape.y + shape.h - th);	// align to bottom
 	cr->move_to (shape.x + SIDES, shape.y + RADIUS);	// align to top
 
 #if 0

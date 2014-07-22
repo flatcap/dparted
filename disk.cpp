@@ -140,9 +140,9 @@ bool
 Disk::find_devices_old (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
 {
 	// for /dev/sda look at
-	//	/sys/block/sda/size
-	//	/sys/block/sda/device/vendor
-	//	/sys/block/sda/device/model
+	// 	/sys/block/sda/size
+	// 	/sys/block/sda/device/vendor
+	// 	/sys/block/sda/device/model
 
 	int res;
 	std::uint64_t file_size_in_bytes;
@@ -188,7 +188,7 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	log_debug ("heads     = %d", geometry.heads);
 	log_debug ("sectors   = %d", geometry.sectors);
 	log_debug ("cylinders = %d", geometry.cylinders);	// truncated at ~500GiB
-	//close (fd);	// or keep it for later?
+	// close (fd);	// or keep it for later?
 #endif
 
 std::uint64_t

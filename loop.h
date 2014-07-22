@@ -45,7 +45,7 @@ public:
 	static bool identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& st);
 
 public:
-	//properties
+	// properties
 	bool		autoclear  = false;
 	bool		deleted    = false;
 	std::uint64_t	file_inode = 0;

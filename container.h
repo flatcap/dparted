@@ -145,7 +145,7 @@ public:
 	std::string   get_uuid_short                 (void);
 
 public:
-	//properties
+	// properties
 	std::string	name;
 	std::string	uuid;
 

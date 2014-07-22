@@ -49,7 +49,7 @@ LogObject::open_file (const std::string& name, bool truncate /*=false*/)
 	file = fopen (name.c_str(), flags);
 	if (file) {
 		filename = name;
-		//log_file ("file open: %d, '%s'", fd, name.c_str());	//XXX reinstate when we can handle early/late logging
+		// log_file ("file open: %d, '%s'", fd, name.c_str());	//XXX reinstate when we can handle early/late logging
 
 		if (reset_tty && (strncmp (filename.c_str(), "/dev/pts/", 9) == 0)) {
 			fprintf (file, "\033c");

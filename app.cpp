@@ -62,7 +62,7 @@ App::~App()
 	{	// Scope
 		for (auto& i : thread_queue) {
 			i.join();	// Wait for things to finish
-			//i.detach();	// Don't wait any longer
+			// i.detach();	// Don't wait any longer
 		}
 		std::lock_guard<std::mutex> lock (thread_mutex);
 		thread_queue.clear();
@@ -90,16 +90,16 @@ App::set_config (const std::string& filename)
 
 	cf = ConfigFile::read_file (filename);
 	if (!cf) {
-		//notify the user
+		// notify the user
 		return false;
 	}
 
 	if (config_file) {
-		//if modified ask user if they're sure
+		// if modified ask user if they're sure
 	}
 
 	config_file = cf;
-	//cf->dump_config();
+	// cf->dump_config();
 
 	return true;
 }

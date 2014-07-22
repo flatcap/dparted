@@ -53,7 +53,7 @@ public:
 	virtual bool set_alignment (std::uint64_t bytes);
 
 public:
-	//properties
+	// properties
 	std::string config;	// my volume
 	std::uint64_t metadata_size = 0;
 	std::string pv_attr;

@@ -63,17 +63,17 @@ TreeView::on_button_press_event (GdkEventButton* event)
 {
 	bool retval = false;
 
-	//Call base class, to allow normal handling,
-	//such as allowing the row to be selected by the right-click:
+	// Call base class, to allow normal handling,
+	// such as allowing the row to be selected by the right-click:
 	retval = Gtk::TreeView::on_button_press_event (event);
 
-	//Then do our custom stuff:
+	// Then do our custom stuff:
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
 		popup_menu (event->x_root, event->y_root);
 	}
 
 #if 0
-	//Then do our custom stuff:
+	// Then do our custom stuff:
 	if ((event->type == GDK_DOUBLE_BUTTON_PRESS) && (event->button == 1)) {
 		Glib::RefPtr<Gtk::TreeSelection> s1 = get_selection();
 		Gtk::TreeModel::iterator s2 = s1->get_selected();
@@ -89,7 +89,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 Glib::RefPtr<Gdk::Pixbuf>
 TreeView::get_colour_as_pixbuf (int size, const std::string& colstr)
 {
-	//circle, of specified colour, transparent background
+	// circle, of specified colour, transparent background
 	Gdk::RGBA colour = theme->get_colour (colstr);
 
 	Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create (Gdk::COLORSPACE_RGB, true, 8, size, size);
@@ -507,7 +507,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 	set_enable_tree_lines (true);
 	set_show_expanders (true);
 
-	//Connect signal:
+	// Connect signal:
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &TreeView::on_query_tooltip));
 
 	treeselection = get_selection();

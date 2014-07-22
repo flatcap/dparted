@@ -319,7 +319,7 @@ GuiApp::menu_about (void)
 	about.set_artists (artists);
 	about.set_license_type (Gtk::LICENSE_GPL_3_0);
 
-	//about.set_transient_for (recent_changes);
+	// about.set_transient_for (recent_changes);
 
 	about.set_icon_name ("dparted");
 
@@ -408,12 +408,12 @@ GuiApp::set_theme (const std::string& filename)
 
 	tp = Theme::read_file (filename);
 	if (!tp) {
-		//notify the user
+		// notify the user
 		return false;
 	}
 
 	if (theme) {
-		//if modified ask user if they're sure
+		// if modified ask user if they're sure
 	}
 
 	log_listener ("Old Theme %p, New Theme %p", theme.get(), tp.get());
@@ -427,7 +427,7 @@ GuiApp::set_theme (const std::string& filename)
 			log_code ("remove listener from the collection");	//XXX remove it from the collection
 		}
 	}
-	//tp->dump_config();
+	// tp->dump_config();
 
 	return true;
 }
@@ -510,7 +510,7 @@ void
 GuiApp::on_dispatch_scan (void)
 {
 	log_info ("scan has finished: ignoring callback");
-	//window->set_data (scan_result);
+	// window->set_data (scan_result);
 }
 
 

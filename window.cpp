@@ -39,7 +39,7 @@ Window::Window (void)
 	set_title ("DParted");
 
 	//XXX Arbitrary minimum requirement -- theme?
-	//set_size_request (800, 600);
+	// set_size_request (800, 600);
 
 	scrolledwindow.set_hexpand (true);
 	scrolledwindow.set_vexpand (true);
@@ -67,7 +67,7 @@ Window::Window (void)
 	outer_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 	outer_box.set_homogeneous (false);
 
-	//-------------------------------------
+	// -------------------------------------
 
 	add (outer_box);
 		init_menubar (outer_box);
@@ -79,7 +79,7 @@ Window::Window (void)
 					inner_box.pack_start (treeview,    true,  true);
 		outer_box.pack_end (statusbar, false, false);
 
-	//-------------------------------------
+	// -------------------------------------
 
 	bool tb = false;
 	bool gx = true;
@@ -125,7 +125,7 @@ Window::my_show (void)
 {
 	LOG_TRACE;
 	//XXX Arbitrary minimum requirement - theme?
-	//set_size_request (800, 600);
+	// set_size_request (800, 600);
 	resize (800, 250);
 }
 
@@ -233,9 +233,9 @@ Window::init_shortcuts (void)
 		{ 0,                 GDK_KEY_Right  },
 		{ 0,                 GDK_KEY_Down   },
 
-		//{ 0,                 GDK_KEY_Tab    },
-		//{ 0,                 GDK_KEY_space  },
-		//{ 0,                 GDK_KEY_Return },
+		// { 0,                 GDK_KEY_Tab    },
+		// { 0,                 GDK_KEY_space  },
+		// { 0,                 GDK_KEY_Return },
 
 		{ Gdk::CONTROL_MASK, GDK_KEY_C      },
 		{ Gdk::CONTROL_MASK, GDK_KEY_F      },
@@ -329,7 +329,7 @@ Window::init_menubar (Gtk::Box& box)
 {
 	builder = Gtk::Builder::create();
 
-	//Layout the actions in a menubar and toolbar:
+	// Layout the actions in a menubar and toolbar:
 	Glib::ustring ui_info =
 		"<interface><menu id='dparted-menu'>"
 		"<submenu>"

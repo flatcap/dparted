@@ -50,7 +50,7 @@ public:
 	static bool identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& st);
 
 public:
-	//properties
+	// properties
 	std::uint32_t	bios_cylinders = 0;	//XXX types
 	std::uint32_t	bios_heads     = 0;
 	std::uint32_t	bios_sectors   = 0;
@@ -60,12 +60,12 @@ public:
 	std::uint32_t	hw_heads       = 0;
 	std::uint32_t	hw_sectors     = 0;
 	bool		read_only      = false;
-	//std::string	model;
-	//std::string	path;
-	//std::uint32_t	type;
-	//std::uint64_t	sector_size;
-	//std::uint64_t	phys_sector_size;
-	//std::uint64_t	length;
+	// std::string	model;
+	// std::string	path;
+	// std::uint32_t	type;
+	// std::uint64_t	sector_size;
+	// std::uint64_t	phys_sector_size;
+	// std::uint64_t	length;
 
 	std::string mounts;	//XXX vector, move to partition, or filesystem
 

@@ -64,7 +64,7 @@ Theme::get_colour (const std::string& name)
 		c = (*it).second;
 	}
 
-	//c.set_alpha (0.3);
+	// c.set_alpha (0.3);
 	return c;
 }
 
@@ -219,7 +219,7 @@ Theme::get_config (const std::string& path, const std::string& name, const std::
 	}
 
 	return "";
-	//throw "can't find config: " + path + "/" + name + "/" + attr;
+	// throw "can't find config: " + path + "/" + name + "/" + attr;
 }
 
 std::vector<std::string>
@@ -245,16 +245,16 @@ Theme::read_file (const std::string& filename)
 
 	cf = ConfigFile::read_file (filename);
 	if (!cf) {
-		//notify the user
+		// notify the user
 		return nullptr;
 	}
 
 	if (tp->config_file) {
-		//if modified ask user if they're sure
+		// if modified ask user if they're sure
 	}
 
 	tp->config_file = cf;
-	//cf->dump_config();
+	// cf->dump_config();
 
 	return tp;
 }
