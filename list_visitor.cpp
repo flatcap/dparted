@@ -1,40 +1,18 @@
-/* Copyright (c) 2014 Richard Russon (FlatCap)
- *
- * This file is part of DParted.
- *
- * DParted is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * DParted is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 
 #include "list_visitor.h"
 #include "container.h"
-#include "log.h"
-#include "utils.h"
 
 ListVisitor::ListVisitor (void)
 {
-	log_ctor ("ctor ListVisitor");
 }
 
 ListVisitor::~ListVisitor()
 {
-	log_dtor ("dtor ListVisitor");
 }
 
 
 bool
-ListVisitor::visit_enter (ContainerPtr& UNUSED(c))
+ListVisitor::visit_enter (ContainerPtr&)
 {
 	++indent;
 	return true;
@@ -54,8 +32,6 @@ ListVisitor::visit_leave (void)
 bool
 ListVisitor::visit (ContainerPtr c)
 {
-	return_val_if_fail (c, false);
-
 	if (c->name != "dummy") {
 		std::string tabs;
 		if (indent > 0) {
@@ -71,5 +47,5 @@ ListVisitor::visit (ContainerPtr c)
 void
 ListVisitor::list (void)
 {
-	log_info (output);
+	printf (output.str().c_str());
 }

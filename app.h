@@ -27,17 +27,11 @@
 #include <thread>
 #include <vector>
 
-#include "question.h"
-#include "config_file.h"
-#include "container.h"
-
 class App;
-
-typedef std::function<void(ContainerPtr)> scan_async_cb_t;
 
 typedef std::shared_ptr<App> AppPtr;
 
-extern AppPtr main_app;
+extern AppPtr app;
 
 class App
 {
@@ -45,29 +39,13 @@ public:
 	App (void);
 	virtual ~App();
 
-	virtual bool ask (QuestionPtr q);
-
-	ConfigFilePtr get_config (void);
-	bool set_config (const std::string& filename);
-
-	ContainerPtr scan (std::vector<std::string>& devices, scan_async_cb_t fn);
-	bool identify_device (ContainerPtr parent, std::string& device);
-	bool process_queue_item (ContainerPtr item);
-	void queue_add_probe (ContainerPtr& item);
-
-	virtual bool open_uri (const std::string& uri);
+	int run (void);
 
 protected:
-	ConfigFilePtr config_file;
-	ContainerPtr top_level;
-
 	void start_thread (std::function<void(void)> fn, const char* desc);
 
-private:
-#ifdef DP_THREADED
 	std::mutex thread_mutex;
 	std::deque<std::thread> thread_queue;
-#endif
 };
 
 
