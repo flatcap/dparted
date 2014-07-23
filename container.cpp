@@ -5,7 +5,6 @@ Container::create (void)
 {
 	ContainerPtr p (new Container());
 	p->self = p;
-
 	return p;
 }
 
@@ -14,16 +13,5 @@ Container::add_child (ContainerPtr& child)
 {
 	std::lock_guard<std::mutex> lock (children_mutex);
 	children.insert (child);
-}
-
-int
-Container::count_children (void)
-{
-	int count = 1;
-	for (const auto& i : children) {
-		count += i->count_children();
-	}
-
-	return count;
 }
 
