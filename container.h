@@ -1,17 +1,9 @@
 #ifndef _CONTAINER_H_
 #define _CONTAINER_H_
 
-#include <cstdint>
-#include <map>
 #include <memory>
 #include <mutex>
 #include <set>
-#include <string>
-#include <tuple>
-#include <utility>
-#include <vector>
-
-#include <sys/types.h>
 
 class Container;
 
@@ -24,9 +16,6 @@ public:
 	virtual ~Container() = default;
 
 	virtual void add_child    (ContainerPtr& child);
-	virtual void delete_child (ContainerPtr& child);
-
-	void dump (int indent = 0);
 
 	std::set<ContainerPtr> children;
 	std::weak_ptr<Container> self;
