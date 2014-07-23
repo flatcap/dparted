@@ -34,8 +34,6 @@ public:
 
 	virtual ContainerPtr find (const std::string& uuid);
 
-	virtual bool is_a (const std::string& type);
-
 	virtual std::set<ContainerPtr>& get_children (void);
 
 	ContainerPtr get_smart    (void);
@@ -53,7 +51,6 @@ public:
 	std::string dump (void);
 
 public:
-	// properties
 	std::string	name;
 
 	int seqnum = 0;
@@ -73,8 +70,6 @@ protected:
 
 	std::set<ContainerPtr> children;
 	std::mutex mutex_children;
-
-	std::vector<std::string> more_props;
 
 private:
 	void insert (std::uint64_t offset, std::uint64_t size, void* ptr);

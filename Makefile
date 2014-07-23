@@ -7,7 +7,7 @@ OBJDIR	= .obj
 
 OUT	= dparted
 
-SRC	+= container.cpp app.cpp main.cpp list_visitor.cpp
+SRC	+= container.cpp main.cpp list_visitor.cpp
 OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
 CFLAGS	+= -std=c++11

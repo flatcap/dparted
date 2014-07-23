@@ -15,7 +15,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "app.h"
 #include "container.h"
 #include "visitor.h"
 
@@ -130,19 +129,6 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	return stream;
 }
 
-
-bool
-Container::is_a (const std::string& t)
-{
-	// Start with the most derived type
-	for (auto it = type.rbegin(); it != type.rend(); ++it) {
-		if ((*it) == t) {
-			return true;
-		}
-	}
-
-	return false;
-}
 
 void
 Container::sub_type (const char* n)
