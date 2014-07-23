@@ -51,7 +51,6 @@ public:
 	virtual void delete_child (ContainerPtr& child);
 
 	virtual ContainerPtr find (const std::string& uuid);
-	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);
 
 	virtual bool is_a (const std::string& type);
 

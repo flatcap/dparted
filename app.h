@@ -39,7 +39,8 @@ public:
 	App (void);
 	virtual ~App();
 
-	int run (void);
+	void test (void);
+	void wait_for_threads (void);
 
 protected:
 	void start_thread (std::function<void(void)> fn, const char* desc);

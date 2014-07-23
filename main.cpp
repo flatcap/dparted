@@ -10,7 +10,7 @@ main()
 	srandom (time (nullptr));
 
 	app = std::make_shared<App>();
-	app->run();
+	app->test();
 	app = nullptr;
 
 	return 0;

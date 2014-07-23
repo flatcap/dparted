@@ -82,6 +82,7 @@ Container::add_child (ContainerPtr& child)
 void
 Container::delete_child (ContainerPtr& child)
 {
+	std::lock_guard<std::mutex> lock (mutex_children);
 	for (auto it = children.begin(); it != children.end(); ++it) {
 		if (*it == child) {
 			children.erase (it);
