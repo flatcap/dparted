@@ -1,24 +1,3 @@
-##
-# Copyright (c) 2014 Richard Russon (FlatCap)
-#
-# This file is part of DParted.
-#
-# DParted is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# DParted is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with DParted.  If not, see <http://www.gnu.org/licenses/>.
-
-# ----------------------------------------------------------------------------
-
-# Configurables
 # A=All, V=Verbose, P=Profiling, L=LogCheck, D=Debug, T=Thread
 A	?= 0
 V	?= 0
@@ -78,50 +57,7 @@ SRC	+= main.cpp
 # Misc header files
 HDR	+= action.h config_manager.h container_listener.h endian.h gfx_container_listener.h log_macro.h log_severity.h log_trace.h lvm2.h mmap.h stringnum.h theme_listener.h visitor.h
 
-CFLAGS-$(BTRFS)		+= -DDP_BTRFS
-CFLAGS-$(DISK)		+= -DDP_DISK
-CFLAGS-$(DOT)		+= -DDP_DOT
-CFLAGS-$(EXTFS)		+= -DDP_EXTFS
-CFLAGS-$(FILE)		+= -DDP_FILE
-CFLAGS-$(FS_MISC)	+= -DDP_FS_MISC
-CFLAGS-$(GPT)		+= -DDP_GPT
-CFLAGS-$(GUI)		+= -DDP_GUI
-CFLAGS-$(TREE)		+= -DDP_TREE
-CFLAGS-$(AREA)		+= -DDP_AREA
-CFLAGS-$(HEX)		+= -DDP_HEX
-CFLAGS-$(LIST)		+= -DDP_LIST
-CFLAGS-$(LOOP)		+= -DDP_LOOP
-CFLAGS-$(LUKS)		+= -DDP_LUKS
-CFLAGS-$(LVM)		+= -DDP_LVM
-CFLAGS-$(MD)		+= -DDP_MD
-CFLAGS-$(MSDOS)		+= -DDP_MSDOS
-CFLAGS-$(NTFS)		+= -DDP_NTFS
-CFLAGS-$(PROP)		+= -DDP_PROP
-CFLAGS-$(UNUSED)	+= -DDP_UNUSED
-
-SRC-$(BTRFS)		+= btrfs.cpp
-SRC-$(DISK)		+= disk.cpp
-SRC-$(DOT)		+= dot_visitor.cpp
-SRC-$(EXTFS)		+= extfs.cpp
-SRC-$(FILE)		+= file.cpp
-SRC-$(FS_MISC)		+= fs_get.cpp fs_identify.cpp fs_usage.cpp
-SRC-$(GPT)		+= gpt.cpp gpt_partition.cpp
-SRC-$(GUI)		+= change_password_dialog.cpp default_theme.cpp dialog.cpp error_dialog.cpp gfx_container.cpp gui_app.cpp info_dialog.cpp option_group.cpp password_dialog.cpp question_dialog.cpp theme.cpp warning_dialog.cpp window.cpp
-SRC-$(HEX)		+= hex_visitor.cpp
 SRC-$(LIST)		+= list_visitor.cpp
-SRC-$(LOOP)		+= loop.cpp
-SRC-$(LUKS)		+= luks_partition.cpp luks_table.cpp
-SRC-$(LVM)		+= lvm_group.cpp lvm_linear.cpp lvm_mirror.cpp lvm_partition.cpp lvm_raid.cpp lvm_stripe.cpp lvm_table.cpp lvm_volume.cpp
-SRC-$(MD)		+= md_linear.cpp md_mirror.cpp md_partition.cpp md_raid.cpp md_stripe.cpp md_table.cpp md_volume.cpp
-SRC-$(MSDOS)		+= extended.cpp msdos.cpp msdos_partition.cpp
-SRC-$(NTFS)		+= ntfs.cpp
-SRC-$(PROP)		+= prop_visitor.cpp
-
-ifeq ($(GUI),1)
-	SRC-$(TREE)	+= tree_view.cpp
-	SRC-$(AREA)	+= base_drawing_area.cpp drawing_area.cpp prop_drawing_area.cpp properties_dialog.cpp
-	SRC-$(UNUSED)	+= icon_manager.cpp
-endif
 
 SRC	+= $(SRC-1)
 HDR	+= $(SRC:%.cpp=%.h)
@@ -134,31 +70,11 @@ CFLAGS	+= -ggdb
 CFLAGS	+= -Wall
 CFLAGS	+= -Wextra
 CFLAGS	+= -Wpedantic
-#CFLAGS	+= -fcolor-diagnostics
 LDFLAGS	+= -pthread
 LDFLAGS	+= -rdynamic
 
 CFLAGS	+= -fno-omit-frame-pointer
 CFLAGS	+= -fno-optimize-sibling-calls
-
-CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGDK_DISABLE_DEPRECATED
-CFLAGS	+= -DGDK_PIXBUF_DISABLE_DEPRECATED
-CFLAGS	+= -DGIOMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGLIBMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGLIBMM_G_DISABLE_DEPRECATED_UNDEFED
-CFLAGS	+= -DGTKMM_GTKMM_DISABLE_DEPRECATED_UNDEFED
-CFLAGS	+= -DGTK_DISABLE_DEPRECATED
-CFLAGS	+= -DHB_DISABLE_DEPRECATED
-CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
-CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
-
-#CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
-#CFLAGS	+= -DG_DISABLE_DEPRECATED
-
-# bug in ccache
-#CFLAGS	+= -Qunused-arguments
 
 PACKAGES += libconfig++
 ifeq ($(GUI),1)
@@ -192,7 +108,7 @@ ifeq ($(P),1)
 	LDFLAGS	+= -pg -fprofile-arcs
 endif
 
-all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT) tags
+all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT)
 
 # ----------------------------------------------------------------------------
 
@@ -230,38 +146,13 @@ $(DEPDIR) $(OBJDIR):
 
 # ----------------------------------------------------------------------------
 
-tags:	$(SRC) $(HDR)
-	$(QUIET_TAGS)ctags -I UNUSED -f - $(SRC) $(HDR) | grep -v -e "^_[A-Z0-9_]\+_H_	" -e "^[A-Za-z]\+Ptr	" > tags
-
-docs:
-	doxygen docs/doxygen.conf
-
-stats:
-	$(RM) stats
-	gitstats . stats
-	firefox stats/index.html
-
-xxx:
-	@grep --exclude xxx.txt -rHno "//[X]XX.*" . \
-		| expand -t8 \
-		| sed -e 's/  \+/ /g' -e 's/^..//' -e 's!//[X]XX *!!' \
-		| sort > xxx.txt
-	@wc -l xxx.txt
-
-links:	$(LINKS)
-
-$(LINKS):
-	ln -s ../dparted-$@ $@
-
 clean:
 	$(Q)$(RM) $(OUT) $(OBJ) gmon.out *.gcov
 
 distclean: clean
-	$(Q)$(RM) $(DEPDIR) $(OBJDIR) tags html stats xxx.txt
+	$(Q)$(RM) $(DEPDIR) $(OBJDIR)
 
 force:
 
 -include $(SRC:%.cpp=$(DEPDIR)/%.d)
-
-.PHONY:	docs stats xxx
 
