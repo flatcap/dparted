@@ -1,1 +1,0 @@
-#define BITMAP_MAGIC 0x6d746962

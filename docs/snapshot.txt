@@ -1,9 +1,0 @@
-LV     VG        Attr     LSize   Pool Origin Data%  Move Log Copy%  Convert
-media  protected owi-aos-   5.00g                                           
-ss1    protected Swi-I-s-   1.00g      media  100.00                        
-ss2    protected Swi-I-s-   1.00g      media  100.00                        
-ss3    protected swi-aos-   1.00g      media   78.37                        
-
-changes to media have already caused ss1,2 to overflow
-ss3 has a little space left
-

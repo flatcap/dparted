@@ -1,8 +1,0 @@
-Luks
-
-State		Icon			Fill		Display
--------------------------------------------------------------------------
-Closed		Padlock (closed)	Closed colour	Iconbox, empty!
-Open (empty)	Padlock (open)		Transparent	Iconbox
-Open (fs)	Padlock (open)		Child colour	Iconbox, child
-
