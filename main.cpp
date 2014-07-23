@@ -8,18 +8,7 @@ std::mutex thread_mutex;
 std::deque<std::thread> thread_queue;
 
 std::vector<std::weak_ptr<Container>> all_children;
-std::mutex mutex_children;
-
-void
-start_thread (std::function<void(void)> fn)
-{
-	std::lock_guard<std::mutex> lock (thread_mutex);
-	thread_queue.push_back (
-		std::thread ([fn]() {
-			fn();
-		})
-	);
-}
+std::mutex children_mutex;
 
 int
 count_containers (const ContainerPtr& c)
@@ -53,22 +42,12 @@ add_child (int i)
 
 	ContainerPtr c = Container::create();
 	{
-	std::lock_guard<std::mutex> lock (mutex_children);
+	std::lock_guard<std::mutex> lock (children_mutex);
 	all_children.push_back(c);
 	}
 	std::string s = "name" + std::to_string (i) + " ";
 	c->name = s;
 	parent->add_child(c);
-}
-
-void
-wait_for_threads (void)
-{
-	while (!thread_queue.empty()) {
-		thread_queue.front().join();
-		std::lock_guard<std::mutex> lock (thread_mutex);
-		thread_queue.pop_front();
-	}
 }
 
 int
@@ -81,10 +60,17 @@ main()
 	all_children.push_back(c);
 
 	for (int i = 0; i < 99; i++) {
-		start_thread (std::bind (add_child, i));
+		std::lock_guard<std::mutex> lock (thread_mutex);
+
+		thread_queue.push_back (std::thread ([i](){ add_child(i); }));
 	}
 
-	wait_for_threads();
+	while (!thread_queue.empty()) {
+		thread_queue.front().join();
+		std::lock_guard<std::mutex> lock (thread_mutex);
+		thread_queue.pop_front();
+	}
+
 	printf ("%dC/%ldV children\n", count_containers(c), all_children.size());
 
 	return 0;
