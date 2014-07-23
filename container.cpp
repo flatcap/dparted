@@ -19,3 +19,14 @@ Container::add_child (ContainerPtr& child)
 	child->parent = self;
 }
 
+int
+Container::count_children (void)
+{
+	int count = 1;
+	for (const auto& i : children) {
+		count += i->count_children();
+	}
+
+	return count;
+}
+

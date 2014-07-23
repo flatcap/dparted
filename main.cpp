@@ -10,20 +10,6 @@ std::deque<std::thread> thread_queue;
 std::vector<std::weak_ptr<Container>> all_children;
 std::mutex children_mutex;
 
-int
-count_containers (const ContainerPtr& c)
-{
-	if (!c)
-		return 0;
-
-	int count = 1;
-	for (const auto& i : c->children) {
-		count += count_containers(i);
-	}
-
-	return count;
-}
-
 void
 add_child (int i)
 {
@@ -71,7 +57,7 @@ main()
 		thread_queue.pop_front();
 	}
 
-	printf ("%dC/%ldV children\n", count_containers(c), all_children.size());
+	printf ("%dC/%ldV children\n", c->count_children(), all_children.size());
 
 	return 0;
 }
