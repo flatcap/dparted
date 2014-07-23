@@ -18,11 +18,8 @@
 #include "container.h"
 #include "visitor.h"
 
-std::atomic_ulong container_id = ATOMIC_VAR_INIT(1);
-
 Container::Container (void)
 {
-	unique_id = std::atomic_fetch_add (&container_id, (unsigned long)1);
 }
 
 Container::~Container()
@@ -72,7 +69,6 @@ void
 Container::add_child (ContainerPtr& child)
 {
 	std::lock_guard<std::mutex> lock (mutex_children);
-	++seqnum;
 	children.insert (child);
 
 	child->parent = get_smart();
@@ -88,53 +84,6 @@ Container::delete_child (ContainerPtr& child)
 			break;
 		}
 	}
-}
-
-ContainerPtr
-Container::find (const std::string& search)
-{
-	if (name == search) {
-		ContainerPtr c = get_smart();
-		return c;
-	}
-
-	std::size_t pos = search.find ("(0)");
-	if (pos == (search.length() - 3)) {
-		std::string search2 = search.substr (0, pos);
-		if (name == search2) {
-			ContainerPtr c = get_smart();
-			return c;
-		}
-	}
-
-	ContainerPtr item;
-
-	for (auto& i : children) {
-		if ((item = i->find (search)))
-			break;
-	}
-
-	return item;
-}
-
-
-/**
- * operator<<
- */
-std::ostream&
-operator<< (std::ostream& stream, const ContainerPtr& c)
-{
-	stream << c->name;
-
-	return stream;
-}
-
-
-void
-Container::sub_type (const char* n)
-{
-	name = n;
-	type.push_back (name);
 }
 
 
@@ -168,15 +117,6 @@ Container::get_toplevel (void)
 	}
 
 	return parent;
-}
-
-
-std::string
-Container::dump (void)
-{
-	std::stringstream s;
-	s << this;
-	return s.str();
 }
 
 
