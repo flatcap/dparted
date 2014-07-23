@@ -32,10 +32,8 @@ count_containers (const ContainerPtr& c)
 	if (!c)
 		return 0;
 
-	const auto& children = c->get_children();
-
 	int count = 1;
-	for (const auto& i : children) {
+	for (const auto& i : c->children) {
 		count += count_containers(i);
 	}
 
@@ -173,7 +171,7 @@ delete_child (void)
 		return;
 	}
 
-	ContainerPtr parent = child->get_parent();
+	ContainerPtr parent = child->parent.lock();
 	if (!parent) {
 		printf ("can't delete top-level\n");
 		return;
@@ -210,45 +208,31 @@ main()
 	c->name = "top";
 	all_children.push_back(c);
 
-	for (int i = 0; i < 99; i++) {
 #if 1
+	for (int i = 0; i < 99; i++) {
 		start_thread (std::bind (add_child, i), "new");
-#else
-		add_child(i);
-#endif
+		// add_child(i);
 	}
-
+#endif
 	wait_for_threads();
 	// printf ("START: %d\n", count_containers(c));
-
 #if 0
 	for (int i = 0; i < 100; i++) {
 		start_thread (std::bind (alter_child), "alter");
 	}
 #endif
-
 #if 0
 	for (int i = 0; i < 3; i++) {
 		// start_thread (std::bind (delete_child), "delete");
 		delete_child();
 	}
 #endif
-
 	// wait_for_threads();
 
 	// printf ("Threads have finished\n");
 	// c->dump();
-#if 1
 	// tidy_children();
 	printf ("%dC/%ldV children\n", count_containers(c), all_children.size());
-#endif
-
-	for (auto& i : thread_queue) {
-		i.join();	// Wait for things to finish
-		// i.detach();	// Don't wait any longer
-	}
-	std::lock_guard<std::mutex> lock (thread_mutex);
-	thread_queue.clear();
 
 	return 0;
 }

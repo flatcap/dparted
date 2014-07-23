@@ -59,7 +59,7 @@ clean:
 	$(Q)$(RM) $(OUT) $(OBJ)
 
 distclean: clean
-	$(Q)$(RM) $(DEPDIR) $(OBJDIR)
+	$(Q)$(RM) $(DEPDIR) $(OBJDIR) core.[0-9]*
 
 force:
 

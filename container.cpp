@@ -33,7 +33,7 @@ Container::add_child (ContainerPtr& child)
 	std::lock_guard<std::mutex> lock (mutex_children);
 	children.insert (child);
 
-	child->parent = get_smart();
+	child->parent = self;
 }
 
 void
@@ -42,43 +42,11 @@ Container::delete_child (ContainerPtr& child)
 	std::lock_guard<std::mutex> lock (mutex_children);
 	for (auto it = children.begin(); it != children.end(); ++it) {
 		if (*it == child) {
+			// printf ("delete: %p/%p\n", (void*) (*it).get(), (void*) child.get());
 			children.erase (it);
 			break;
 		}
 	}
-}
-
-
-std::set<ContainerPtr>&
-Container::get_children (void)
-{
-	return children;
-}
-
-
-ContainerPtr
-Container::get_smart (void)
-{
-	return self.lock();
-}
-
-ContainerPtr
-Container::get_parent (void)
-{
-	return parent.lock();
-}
-
-ContainerPtr
-Container::get_toplevel (void)
-{
-	ContainerPtr parent = get_smart();
-	ContainerPtr p = get_parent();
-	while (p) {
-		parent = p;
-		p = p->get_parent();
-	}
-
-	return parent;
 }
 
 

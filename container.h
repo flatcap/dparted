@@ -26,26 +26,18 @@ public:
 	virtual void add_child    (ContainerPtr& child);
 	virtual void delete_child (ContainerPtr& child);
 
-	virtual std::set<ContainerPtr>& get_children (void);
-
-	ContainerPtr get_smart    (void);
-	ContainerPtr get_parent   (void);
-	ContainerPtr get_toplevel (void);
-
-	std::string	name;
-
 	void dump (int indent = 0);
+
+	std::set<ContainerPtr> children;
+	std::weak_ptr<Container> self;
+	std::weak_ptr<Container> parent;
+
+	std::string name;
 
 protected:
 	Container (void) = default;
 
-	std::weak_ptr<Container> self;
-	std::weak_ptr<Container> parent;
-
-	std::set<ContainerPtr> children;
 	std::mutex mutex_children;
-
-	void insert (std::uint64_t offset, std::uint64_t size, void* ptr);
 };
 
 #endif // _CONTAINER_H_
