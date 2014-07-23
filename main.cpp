@@ -13,33 +13,26 @@ std::mutex children_mutex;
 void
 add_child (int i)
 {
-	int size = all_children.size();
-	if (size == 0) {
-		printf ("no children left\n");
-		return;
-	}
-
-	int pick = rand() % size;
+	int pick = rand() % all_children.size();
 	ContainerPtr parent = all_children[pick].lock();
 	if (!parent) {
-		printf ("child %d is dead\n", pick);
+		printf ("child is dead\n");
 		return;
 	}
 
 	ContainerPtr c = Container::create();
+	c->name = "name" + std::to_string (i) + " ";
 	{
-	std::lock_guard<std::mutex> lock (children_mutex);
-	all_children.push_back(c);
+		std::lock_guard<std::mutex> lock (children_mutex);
+		all_children.push_back(c);
 	}
-	std::string s = "name" + std::to_string (i) + " ";
-	c->name = s;
 	parent->add_child(c);
 }
 
 int
 main()
 {
-	srandom (time (nullptr));
+	// srandom (time (nullptr));
 
 	ContainerPtr c = Container::create();
 	c->name = "top";

@@ -9,14 +9,11 @@ Container::create (void)
 	return p;
 }
 
-
 void
 Container::add_child (ContainerPtr& child)
 {
-	std::lock_guard<std::mutex> lock (mutex_children);
+	std::lock_guard<std::mutex> lock (children_mutex);
 	children.insert (child);
-
-	child->parent = self;
 }
 
 int

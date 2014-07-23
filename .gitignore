@@ -1,17 +1,1 @@
-# build products
-/.dep
-/.obj
-/core.*
-/dparted
-/gmon.out
-/html
-/stats
-/xxx.txt
-
-# work dirs
-/backup
-/gtk
-/misc
-/test
-/watcher*
-
+/main

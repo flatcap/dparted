@@ -20,14 +20,13 @@ public:
 
 	std::set<ContainerPtr> children;
 	std::weak_ptr<Container> self;
-	std::weak_ptr<Container> parent;
 
 	std::string name;
 
 protected:
 	Container (void) = default;
 
-	std::mutex mutex_children;
+	std::mutex children_mutex;
 };
 
 #endif // _CONTAINER_H_
