@@ -15,12 +15,9 @@ CFLAGS	+= -ggdb
 CFLAGS	+= -Wall
 CFLAGS	+= -Wextra
 CFLAGS	+= -Wpedantic
+CFLAGS	+= -O2
 LDFLAGS	+= -pthread
 LDFLAGS	+= -rdynamic
-
-CFLAGS	+= -fno-omit-frame-pointer
-CFLAGS	+= -fno-optimize-sibling-calls
-CFLAGS	+= -DDP_THREADED
 
 all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT)
 
@@ -33,12 +30,10 @@ V	      = @
 Q	      = $(V:1=)
 QUIET_CC      = $(Q:@=@echo 'CC      '$<;)
 QUIET_LINK    = $(Q:@=@echo 'LD      '$@;)
-QUIET_TAGS    = $(Q:@=@echo 'TAGS    '$@;)
 
 ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
 	QUIET_CC      =
 	QUIET_LINK    =
-	QUIET_TAGS    =
 endif
 
 # ----------------------------------------------------------------------------
@@ -61,7 +56,7 @@ $(DEPDIR) $(OBJDIR):
 # ----------------------------------------------------------------------------
 
 clean:
-	$(Q)$(RM) $(OUT) $(OBJ) gmon.out *.gcov
+	$(Q)$(RM) $(OUT) $(OBJ)
 
 distclean: clean
 	$(Q)$(RM) $(DEPDIR) $(OBJDIR)
