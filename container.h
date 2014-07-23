@@ -75,7 +75,7 @@ public:
 
 	struct compare
 	{
-		bool operator() (const ContainerPtr a, const ContainerPtr b)
+		bool operator() (const ContainerPtr& a, const ContainerPtr& b)
 		{
 			return_val_if_fail (a, false);
 			return_val_if_fail (b, false);
@@ -182,7 +182,9 @@ protected:
 	MmapPtr	device_mmap;
 
 	std::map<std::string, PPtr> props;
+
 	std::set<ContainerPtr, compare> children;
+	std::mutex mutex_children;
 
 	std::vector<std::string> more_props;
 

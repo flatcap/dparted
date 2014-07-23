@@ -20,7 +20,7 @@
 
 # Configurables
 # A=All, V=Verbose, P=Profiling, L=LogCheck, D=Debug, T=Thread
-A	?= 1
+A	?= 0
 V	?= 0
 P	?= 0
 L	?= 0
@@ -28,8 +28,8 @@ D	?= 1
 T	?= 1
 
 GUI	?= 1
-TREE	?= 0
-AREA	?= 0
+TREE	?= 1
+AREA	?= 1
 
 DISK	?= 0
 FILE	?= $(A)
@@ -39,7 +39,7 @@ LVM	?= $(A)
 GPT	?= 1
 MSDOS	?= $(A)
 MD	?= $(A)
-LUKS	?= 1
+LUKS	?= $(A)
 
 BTRFS	?= 1
 EXTFS	?= 1

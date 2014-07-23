@@ -597,7 +597,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 		lvm_lvs (pieces, deps);
 	}
 
-	log_info ("Pieces (%ld)", pieces->get_children().size());
+	log_debug ("Pieces (%ld)", pieces->get_children().size());
 	for (auto& i : pieces->get_children()) {
 		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
 	}

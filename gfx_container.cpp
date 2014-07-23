@@ -101,9 +101,10 @@ GfxContainer::sync (void)
 	for (auto& child : c->get_children()) {
 		GfxContainerPtr g = GfxContainer::create (get_smart(), child);
 		if (name == "dummy") {
-			log_debug ("MARKER1");
+			log_code ("MARKER1");
 		}
-		children.push_back(g);
+		std::lock_guard<std::mutex> lock (mutex_children);
+		insert_child(g);
 	}
 
 	return true;
@@ -384,7 +385,7 @@ GfxContainer::get_smart (void)
 }
 
 ContainerListenerPtr
-GfxContainer::get_model (void)
+GfxContainer::get_listener (void)
 {
 	return_val_if_fail (!self.expired(), nullptr);
 
@@ -555,8 +556,11 @@ GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& par
 	if (gparent->name == "dummy") {
 		log_debug ("MARKER2");
 	}
-	gparent->children.push_back (gchild);
+	{
+	std::lock_guard<std::mutex> lock (mutex_children);
+	gparent->insert_child (gchild);
 	gchild->sync();
+	}
 
 	GfxContainerPtr toplevel = get_toplevel();
 	for (auto& i : toplevel->gfx_container_listeners) {
@@ -569,6 +573,37 @@ GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& par
 		}
 	}
 }
+
+
+bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)
+{
+	return_val_if_fail (a, true);
+	return_val_if_fail (b, true);
+
+	if (a->parent_offset != b->parent_offset)
+		return (a->parent_offset > b->parent_offset);
+
+	int x = a->name.compare (b->name);
+	if (x != 0)
+		return (x > 0);
+
+	return ((void*) a.get() > (void*) b.get());
+}
+
+void
+GfxContainer::insert_child (GfxContainerPtr& child)
+{
+	auto end = std::end (children);
+	for (auto it = std::begin (children); it < end; ++it) {
+		if (compare (child, *it)) {
+			children.insert (it, child);
+			return;
+		}
+	}
+
+	children.push_back (child);
+}
+
 
 void
 GfxContainer::container_busy (const ContainerPtr& cont, int busy)
@@ -605,4 +640,5 @@ GfxContainer::theme_changed (const ThemePtr& new_theme)
 	LOG_TRACE;
 	theme = new_theme;	//XXX force dropping of cached values
 }
+
 

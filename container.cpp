@@ -221,6 +221,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 	return_if_fail (child);
 	LOG_TRACE;
 
+	std::lock_guard<std::mutex> lock (mutex_children);
 	++seqnum;
 	children.insert (child);
 

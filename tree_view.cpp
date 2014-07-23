@@ -740,7 +740,7 @@ TreeView::gfx_container_added (const GfxContainerPtr& cont, const GfxContainerPt
 	if (cont)   c = cont->name;
 	if (parent) p = parent->name;
 
-	log_debug ("TREEVIEW gfx_container_added: %s to %s", c.c_str(), p.c_str());
+	log_info ("TREEVIEW gfx_container_added: %p:%s to %p:%s", cont.get(), c.c_str(), parent.get(), p.c_str());
 }
 
 void

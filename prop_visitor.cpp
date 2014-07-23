@@ -72,5 +72,5 @@ PropVisitor::visit (ContainerPtr c)
 void
 PropVisitor::list (void)
 {
-	log_debug (output);
+	log_info (output);
 }
