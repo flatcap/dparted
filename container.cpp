@@ -16,15 +16,6 @@
 #include <unistd.h>
 
 #include "container.h"
-#include "visitor.h"
-
-Container::Container (void)
-{
-}
-
-Container::~Container()
-{
-}
 
 ContainerPtr
 Container::create (void)
@@ -33,35 +24,6 @@ Container::create (void)
 	p->self = p;
 
 	return p;
-}
-
-
-bool
-Container::visit_children (Visitor& v)
-{
-	ContainerPtr cont = get_smart();
-	if (!v.visit_enter(cont))
-		return false;
-
-	for (auto& child : children) {
-		if (!child->accept(v))
-			return false;
-	}
-
-	if (!v.visit_leave())
-		return false;
-
-	return true;
-}
-
-bool
-Container::accept (Visitor& v)
-{
-	ContainerPtr c = get_smart();
-	if (!v.visit(c))
-		return false;
-
-	return visit_children(v);
 }
 
 
@@ -120,3 +82,12 @@ Container::get_toplevel (void)
 }
 
 
+void
+Container::dump (int indent)
+{
+	printf ("%*s%s\n", 8*indent, "", name.c_str());
+
+	for (const auto& c : children) {
+		c->dump (indent+1);
+	}
+}

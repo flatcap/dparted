@@ -14,8 +14,6 @@
 #include <sys/types.h>
 
 class Container;
-class Visitor;
-struct Action;
 
 typedef std::shared_ptr<Container> ContainerPtr;
 
@@ -23,8 +21,7 @@ class Container
 {
 public:
 	static ContainerPtr create (void);
-	virtual ~Container();
-	virtual bool accept (Visitor& v);
+	virtual ~Container() = default;
 
 	virtual void add_child    (ContainerPtr& child);
 	virtual void delete_child (ContainerPtr& child);
@@ -37,13 +34,13 @@ public:
 
 	std::string	name;
 
+	void dump (int indent = 0);
+
 protected:
-	Container (void);
+	Container (void) = default;
 
 	std::weak_ptr<Container> self;
 	std::weak_ptr<Container> parent;
-
-	bool visit_children (Visitor& v);
 
 	std::set<ContainerPtr> children;
 	std::mutex mutex_children;

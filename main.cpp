@@ -237,7 +237,7 @@ main()
 	// wait_for_threads();
 
 	// printf ("Threads have finished\n");
-	// run_list(c);
+	// c->dump();
 #if 1
 	// tidy_children();
 	printf ("%dC/%ldV children\n", count_containers(c), all_children.size());
