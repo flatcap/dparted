@@ -32,8 +32,6 @@ add_child (int i)
 int
 main()
 {
-	// srandom (time (nullptr));
-
 	ContainerPtr c = Container::create();
 	c->name = "top";
 	all_children.push_back(c);

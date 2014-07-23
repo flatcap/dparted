@@ -7,6 +7,7 @@ SRC	+= container.cpp main.cpp
 OBJ	= $(SRC:%.cpp=%.o)
 
 CFLAGS	+= -std=c++11
+CFLAGS	+= -ggdb
 CFLAGS	+= -Wall
 CFLAGS	+= -Wextra
 CFLAGS	+= -Wpedantic
