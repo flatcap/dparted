@@ -16,16 +16,22 @@ public:
 	virtual ~Container() = default;
 
 	virtual void add_child (ContainerPtr child);
+	virtual void delete_child (ContainerPtr child);
+
+	ContainerPtr pick_container (void);
+	ContainerPtr get_parent (void);
+	ContainerPtr get_smart (void);
 
 	void dump (int indent = 0);
-
-	std::set<ContainerPtr> children;
-	std::weak_ptr<Container> self;
 
 protected:
 	Container (void) = default;
 
-	std::mutex children_mutex;
+	std::set<ContainerPtr> children;
+	std::recursive_mutex children_mutex;
+
+	std::weak_ptr<Container> self;
+	std::weak_ptr<Container> parent;
 };
 
 #endif // _CONTAINER_H_

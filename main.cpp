@@ -10,36 +10,56 @@ std::deque<std::thread> thread_queue;
 void
 add_child (ContainerPtr parent)
 {
-	int ch = parent->children.size();
+	parent->add_child (Container::create());
+}
 
-	int pick = rand() % (ch+1);
-	if (pick == ch) {
-		parent->add_child(Container::create());
+void
+delete_child (ContainerPtr child)
+{
+	ContainerPtr parent = child->get_parent();
+	if (!parent) {
 		return;
 	}
 
-	auto it = std::begin (parent->children);
-	std::advance (it, pick);
-	add_child (*it);
+	parent->delete_child (child);
 }
 
-int
-main()
+void
+wait_for_threads (void)
 {
-	ContainerPtr c = Container::create();
-
-	for (int i = 0; i < 3999; i++) {
-		std::lock_guard<std::mutex> lock (thread_mutex);
-		thread_queue.push_back (std::thread ([&c](){ add_child(c); }));
-	}
-
 	while (!thread_queue.empty()) {
 		thread_queue.front().join();
 		std::lock_guard<std::mutex> lock (thread_mutex);
 		thread_queue.pop_front();
 	}
+}
 
-	// c->dump();
+int
+main()
+{
+	ContainerPtr top = Container::create();
+
+	for (int i = 0; i < 3999; i++) {
+		ContainerPtr parent = top->pick_container();
+
+		std::lock_guard<std::mutex> lock (thread_mutex);
+		thread_queue.push_back (std::thread ([parent](){ add_child (parent); }));
+	}
+
+#if 1
+	wait_for_threads();
+
+	for (int i = 0; i < 999; i++) {
+		ContainerPtr child = top->pick_container();
+
+		std::lock_guard<std::mutex> lock (thread_mutex);
+		thread_queue.push_back (std::thread ([child](){ delete_child (child); }));
+	}
+#endif
+
+	wait_for_threads();
+
+	// top->dump();
 
 	return 0;
 }
