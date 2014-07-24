@@ -19,7 +19,7 @@ main()
 {
 	ContainerPtr c = Container::create();
 
-	for (int i = 0; i < 999; i++) {
+	for (int i = 0; i < 3999; i++) {
 		std::lock_guard<std::mutex> lock (thread_mutex);
 		thread_queue.push_back (std::thread ([&c](){ add_child(c); }));
 	}
