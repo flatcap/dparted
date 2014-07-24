@@ -8,10 +8,19 @@ std::mutex thread_mutex;
 std::deque<std::thread> thread_queue;
 
 void
-add_child (ContainerPtr& parent)
+add_child (ContainerPtr parent)
 {
-	ContainerPtr child = Container::create();
-	parent->add_child(child);
+	int ch = parent->children.size();
+
+	int pick = rand() % (ch+1);
+	if (pick == ch) {
+		parent->add_child(Container::create());
+		return;
+	}
+
+	auto it = std::begin (parent->children);
+	std::advance (it, pick);
+	add_child (*it);
 }
 
 int
@@ -29,6 +38,8 @@ main()
 		std::lock_guard<std::mutex> lock (thread_mutex);
 		thread_queue.pop_front();
 	}
+
+	// c->dump();
 
 	return 0;
 }

@@ -15,7 +15,9 @@ public:
 	static ContainerPtr create (void);
 	virtual ~Container() = default;
 
-	virtual void add_child (ContainerPtr& child);
+	virtual void add_child (ContainerPtr child);
+
+	void dump (int indent = 0);
 
 	std::set<ContainerPtr> children;
 	std::weak_ptr<Container> self;
