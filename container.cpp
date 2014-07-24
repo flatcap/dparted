@@ -37,7 +37,7 @@ void
 Container::dump (int indent)
 {
 	std::lock_guard<std::recursive_mutex> lock (children_mutex);
-	printf ("%*sContainer\n", 8*indent, "");
+	printf ("%*s%s\n", 8*indent, "", name.c_str());
 
 	for (const auto& c : children) {
 		c->dump (indent+1);
@@ -71,5 +71,31 @@ ContainerPtr
 Container::get_parent (void)
 {
 	return parent.lock();
+}
+
+int
+Container::count_children (void)
+{
+	std::lock_guard<std::recursive_mutex> lock (children_mutex);
+	int count = 1;
+	for (const auto& i : children) {
+		count += i->count_children();
+	}
+
+	return count;
+}
+
+void
+Container::set_name (const std::string& str)
+{
+	std::lock_guard<std::mutex> lock (props_mutex);
+	name = str;
+}
+
+void
+Container::alter (const std::string& addition)
+{
+	std::lock_guard<std::mutex> lock (props_mutex);
+	name += addition;
 }
 
