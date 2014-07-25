@@ -1,0 +1,40 @@
+Undo Toolbar/Timeline
+
+Scale will change with time (and dot positions)
+
+Tooltips on hover, e.g.
+	"Resize /dev/sda2 from 100Mib to 150Mib (About 15 minutes ago)"
+
+Click on a change to place view after that change
+Click on [Clean Slate] (button left of timeline) to undo all changes
+Click on [Now] (button right of timeline) to redo all changes
+	Equivalent to clicking on the last change dot
+
+Buttons:
+	|<  Rewind to beginning
+	<<  Back on change
+	>>  Forward one change
+	>|  Forward to end
+
+Icon on tooltip denoting type of action: Resize, Format, etc
+
+Need to show cursor on timeline
+	Eye icon instead of dot?
+		See gnome guidelines about disembodied parts!
+	Arrow
+	Colour
+		ambiguous if there's only two dots
+	Box around dot [ * ]
+
+Actions/Pending area needs clear feedback on state of Undo/Redo
+	Undo actions (things done) in black
+	Redo actions (in buffer) in grey
+		Hard to see what you're agreeing to redo
+	Just highlight viewed line/state?
+	List empty => no highlight => no pending actions
+
+Undo/Redo menus need to specify *what* they're about to do
+
+Clean slate button = "Undo all" highlight base of arrow
+Now                = "Redo all" highlight point of arrow
+
