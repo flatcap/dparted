@@ -159,8 +159,6 @@ public:
 	std::uint64_t	bytes_size = 0;
 	std::uint64_t	bytes_used = 0;
 
-	ContainerPtr	whole;	//XXX move to protected?
-
 	bool missing = false;
 
 	int seqnum = 0;
@@ -173,12 +171,12 @@ protected:
 
 	std::vector<std::string> type;
 
+	ContainerPtr whole;
+
 	bool visit_children (Visitor& v);
 
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 	friend bool operator== (const ContainerPtr& lhs, const ContainerPtr& rhs);
-
-	MmapPtr	device_mmap;
 
 	std::map<std::string, PPtr> props;
 
@@ -278,9 +276,11 @@ protected:
 	}
 
 private:
-	void insert (std::uint64_t offset, std::uint64_t size, void* ptr);
+	MmapPtr	device_mmap;
 
 	std::uint64_t unique_id = 0;
+
+	void insert (std::uint64_t offset, std::uint64_t size, void* ptr);
 
 	std::vector<ContainerListenerWeak> container_listeners;
 };

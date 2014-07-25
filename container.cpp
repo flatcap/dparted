@@ -91,7 +91,7 @@ std::vector<Action> cont_actions = {
 
 Container::Container (void)
 {
-	unique_id = std::atomic_fetch_add (&container_id, (unsigned long)1);
+	unique_id = std::atomic_fetch_add (&container_id, (std::uint64_t)1);
 	log_ctor ("ctor Container (%ld)", unique_id);
 
 	// Save a bit of space

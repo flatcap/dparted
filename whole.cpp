@@ -90,7 +90,7 @@ Whole::add_segment (ContainerPtr seg)
 {
 	segments.insert (seg);
 
-	seg->whole = get_smart();
+	// seg->whole = get_smart();	//XXX this belongs here, but whole can't be protected
 }
 
 
