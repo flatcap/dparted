@@ -21,6 +21,7 @@
 #include <ratio>
 #include <chrono>
 #include <thread>
+#include <algorithm>
 
 #include <fcntl.h>
 #include <sys/types.h>
@@ -48,6 +49,7 @@
 #include "lvm_group.h"
 #endif
 #include "utils.h"
+#include "list_visitor.h"
 
 AppPtr main_app;
 
@@ -312,5 +314,225 @@ App::open_uri (const std::string& uri)
 {
 	log_error ("Can't open uri: %s", uri.c_str());
 	return false;
+}
+
+
+std::vector<std::weak_ptr<Container>> all_children;
+std::mutex mutex_children;
+
+int
+count_containers (const ContainerPtr& c)
+{
+	if (!c)
+		return 0;
+
+	const auto& children = c->get_children();
+
+	int count = 1;
+	for (const auto& i : children) {
+		count += count_containers(i);
+	}
+
+	return count;
+}
+
+void
+dump_children (void)
+{
+	for (auto c : all_children) {
+		if (c.expired())
+			printf ("X");
+		else
+			printf ("O");
+	}
+}
+
+void
+tidy_children (void)
+{
+	// log_info ("TIDY ---------------------------------------------------------------------------------------------------------------------");
+	// log_info ("\t%ld children", all_children.size());
+	int live = 0;
+	int dead = 0;
+	for (auto c : all_children) {
+		if (c.expired())
+			dead++;
+		else
+			live++;
+	}
+	// log_info ("\t\t%d live", live);
+	// log_info ("\t\t%d dead", dead);
+
+	// printf ("REMOVE_IF\n");
+	// printf ("\t"); dump_children(); printf ("\n");
+	auto new_end = std::remove_if (std::begin(all_children), std::end(all_children), [](std::weak_ptr<Container>& c) { return c.expired(); });
+	// printf ("\t"); dump_children(); printf ("\n");
+
+	// log_info ("\tcheck start");
+	for (auto it = begin(all_children); it != new_end; ++it) {
+		if ((*it).expired())
+			log_code ("\tdead link missed");
+	}
+
+#if 0
+	for (auto it = new_end; it != end(all_children); ++it) {
+		if (!(*it).expired())
+			log_info ("\t\tlive link deleted");
+	}
+#endif
+	// log_info ("\tcheck end");
+
+	int before = all_children.size();
+	all_children.erase (new_end, std::end(all_children));
+	int after  = all_children.size();
+	if (before != after) {
+		log_info ("\ttidied %d children", (before-after));
+	}
+
+	live = 0;
+	dead = 0;
+	for (auto c : all_children) {
+		if (c.expired())
+			dead++;
+		else
+			live++;
+	}
+	if (dead != 0) {
+		log_code ("\t%ld children (after)", all_children.size());
+		log_code ("\t\t%d live", live);
+		log_code ("\t\t%d dead", dead);
+	}
+
+}
+
+void
+add_child (int i)
+{
+	int size = all_children.size();
+	if (size == 0) {
+		log_code ("no children left");
+		return;
+	}
+
+	int pick = rand() % size;
+	ContainerPtr parent = all_children[pick].lock();
+	if (!parent) {
+		log_code ("child %d is dead", pick);
+		return;
+	}
+
+	ContainerPtr c = Container::create();
+	{
+	std::lock_guard<std::mutex> lock (mutex_children);
+	all_children.push_back(c);
+	}
+	std::string s = "name" + std::to_string (i) + " ";
+	c->name = s;
+	parent->add_child(c, false);
+}
+
+void
+alter_child (void)
+{
+	int size = all_children.size();
+	if (size == 0) {
+		log_code ("no children left");
+		return;
+	}
+
+	int pick = rand() % size;
+	ContainerPtr child = all_children[pick].lock();
+	if (!child) {
+		log_code ("child %d is dead", pick);
+		return;
+	}
+
+	child->name += 'M';
+}
+
+void
+delete_child (void)
+{
+	int size = all_children.size();
+	if (size == 0) {
+		log_code ("no children left");
+		return;
+	}
+
+	int pick = (rand() % (size-1)) + 1;	// Skip 0
+
+	ContainerPtr child = all_children[pick].lock();
+	if (!child) {
+		log_code ("child %d is dead", pick);
+		return;
+	}
+
+	ContainerPtr parent = child->get_parent();
+	if (!parent) {
+		log_code ("can't delete top-level");
+		return;
+	}
+
+	{
+	std::lock_guard<std::mutex> lock (mutex_children);
+	printf ("\tdeleting: %d children\n", count_containers(child));
+	printf ("%dC/%ldV children\n", count_containers(all_children[0].lock()), all_children.size());
+	parent->delete_child (child);
+	all_children.erase (std::begin(all_children)+pick);
+	tidy_children();
+	printf ("%dC/%ldV children\n", count_containers(all_children[0].lock()), all_children.size());
+	}
+}
+
+void
+App::wait_for_threads (void)
+{
+	// printf ("Waiting for threads to finish\n");
+	while (!thread_queue.empty()) {
+		thread_queue.front().join();
+		std::lock_guard<std::mutex> lock (thread_mutex);
+		thread_queue.pop_front();
+	}
+}
+
+void
+App::test (void)
+{
+	ContainerPtr c = Container::create();
+	c->name = "top";
+	all_children.push_back(c);
+
+	for (int i = 0; i < 99; i++) {
+#if 1
+		start_thread (std::bind (add_child, i), "new");
+#else
+		add_child(i);
+#endif
+	}
+
+	wait_for_threads();
+	// printf ("START: %d\n", count_containers(c));
+
+#if 0
+	for (int i = 0; i < 100; i++) {
+		start_thread (std::bind (alter_child), "alter");
+	}
+#endif
+
+#if 0
+	for (int i = 0; i < 3; i++) {
+		// start_thread (std::bind (delete_child), "delete");
+		delete_child();
+	}
+#endif
+
+	// wait_for_threads();
+
+	// printf ("Threads have finished\n");
+	// run_list(c);
+#if 1
+	// tidy_children();
+	printf ("%dC/%ldV children\n", count_containers(c), all_children.size());
+#endif
 }
 

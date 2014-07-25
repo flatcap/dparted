@@ -233,6 +233,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 
 	child->parent = get_smart();
 
+#if 0
 	ContainerPtr toplevel = get_toplevel();
 	if (toplevel) {
 		for (auto& i : toplevel->container_listeners) {
@@ -258,11 +259,13 @@ Container::add_child (ContainerPtr& child, bool probe)
 	 */
 
 	bytes_used += child->bytes_size;
+#endif
 }
 
 void
 Container::delete_child (ContainerPtr& child)
 {
+	std::lock_guard<std::mutex> lock (mutex_children);
 	for (auto it = children.begin(); it != children.end(); ++it) {
 		if (*it == child) {
 			children.erase (it);
@@ -488,10 +491,13 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	}
 
 	stream
-		<< "[" << c->type.back() << "]:"
-		<< c->name << "(" << uuid << "), "
-		<< '"' << c->device << '"' << "(" << c->fd << "),"
 #if 0
+		<< "[" << c->type.back() << "]:"
+#endif
+		<< c->name
+#if 0
+		<< "(" << uuid << "), "
+		<< '"' << c->device << '"' << "(" << c->fd << "),"
 		<< " S:" //<< c->bytes_size
 						<< "(" << get_size (c->bytes_size)    << "), "
 		<< " U:" //<< c->bytes_used
@@ -500,9 +506,9 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 						<< "(" << get_size (   bytes_free)    << "), "
 		<< " P:" //<< c->parent_offset
 						<< "(" << get_size (c->parent_offset) << "), "
-#endif
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
+#endif
 		;
 
 	return stream;
