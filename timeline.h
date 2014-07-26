@@ -20,9 +20,14 @@
 #define _TIMELINE_H_
 
 #include <memory>
+#include <tuple>
+#include <string>
+#include <vector>
 
 #include "container.h"
 #include "container_listener.h"
+
+typedef std::tuple<std::string,ContainerPtr,ContainerPtr,std::string> Event;	// Date, old, new, description
 
 class Timeline;
 
@@ -44,6 +49,8 @@ protected:
 	virtual void container_resync  (const ContainerPtr& cont);
 
 	std::weak_ptr<Timeline> self;
+
+	std::vector<Event> event_list;
 };
 
 #endif // _TIMELINE_H_
