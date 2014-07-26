@@ -17,6 +17,7 @@
  */
 
 #include "timeline.h"
+#include "log.h"
 #include "utils.h"
 
 Timeline::Timeline (void)
@@ -25,22 +26,32 @@ Timeline::Timeline (void)
 
 Timeline::~Timeline()
 {
+	for (auto& e : event_list) {
+		log_code ("%s (%d): %p/%p : %s",
+			std::get<0>(e).c_str(),
+			(int) std::get<1>(e),
+			std::get<2>(e).get(),
+			std::get<3>(e).get(),
+			std::get<4>(e).c_str());
+	}
 }
 
 TimelinePtr
-Timeline::create (void)
+Timeline::create (ContainerPtr& cont)
 {
 	TimelinePtr p (new Timeline());
 	p->self = p;
+	cont->add_listener (p);
 
 	return p;
 }
 
 
 void
-Timeline::container_added (const ContainerPtr& UNUSED(cont), const ContainerPtr& UNUSED(parent))
+Timeline::container_added (const ContainerPtr& cont, const ContainerPtr& UNUSED(parent), const char* description)
 {
 	LOG_TRACE;
+	event_list.push_back (std::make_tuple ("2014-07-26 23:43:08", EventType::t_add, nullptr, cont, description));
 }
 
 void

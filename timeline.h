@@ -27,7 +27,13 @@
 #include "container.h"
 #include "container_listener.h"
 
-typedef std::tuple<std::string,ContainerPtr,ContainerPtr,std::string> Event;	// Date, old, new, description
+enum class EventType {
+	t_add,		// A container was added
+	t_delete,	// ... deleted
+	t_edit		// ... changed
+};
+
+typedef std::tuple<std::string,EventType,ContainerPtr,ContainerPtr,std::string> Event;	// Date, event type, old, new, description
 
 class Timeline;
 
@@ -36,13 +42,13 @@ typedef std::shared_ptr<Timeline> TimelinePtr;
 class Timeline : public IContainerListener
 {
 public:
-	static TimelinePtr create (void);
+	static TimelinePtr create (ContainerPtr& cont);
 	virtual ~Timeline();
 
 protected:
 	Timeline (void);
 
-	virtual void container_added   (const ContainerPtr& cont, const ContainerPtr& parent);
+	virtual void container_added   (const ContainerPtr& cont, const ContainerPtr& parent, const char* description);
 	virtual void container_busy    (const ContainerPtr& cont, int busy);
 	virtual void container_changed (const ContainerPtr& cont);
 	virtual void container_deleted (const ContainerPtr& cont);

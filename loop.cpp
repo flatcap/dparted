@@ -222,7 +222,8 @@ Loop::discover (ContainerPtr& parent)
 		size = lseek (l->fd, 0, SEEK_END);
 		l->bytes_size = size;
 
-		parent->add_child (l, true);
+		std::string desc = "Discovered loopback device: " + l->get_device_short();
+		parent->add_child (l, true, desc.c_str());
 	}
 }
 

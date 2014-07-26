@@ -50,6 +50,7 @@
 #endif
 #include "utils.h"
 #include "list_visitor.h"
+#include "timeline.h"
 
 AppPtr main_app;
 
@@ -209,6 +210,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 
 	top_level = Container::create();	// Dropping any old results
 	top_level->name = "dummy";
+	timeline = Timeline::create (top_level);
 
 	if (devices.empty()) {
 		// Check all device types at once
