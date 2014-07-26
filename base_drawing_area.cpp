@@ -463,12 +463,12 @@ BaseDrawingArea::draw_text (const Cairo::RefPtr<Cairo::Context>& cr, const Rect&
 	cr->clip();
 
 	Pango::FontDescription font;
-	font.set_family ("Liberation Sans Bold");	//THEME - icon label font
+	font.set_family ("Liberation Sans Bold");	// THEME - icon label font
 
 	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (cr);
 	layout->set_font_description (font);
 
-	font.set_size (11 * Pango::SCALE);		//THEME - icon label size
+	font.set_size (11 * Pango::SCALE);		// THEME - icon label size
 	layout->set_font_description (font);
 
 	escape_text (text);
@@ -478,7 +478,7 @@ BaseDrawingArea::draw_text (const Cairo::RefPtr<Cairo::Context>& cr, const Rect&
 	int th = 0;
 	layout->get_pixel_size (tw, th);
 
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - icon label colour
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	// THEME - icon label colour
 
 	// cr->move_to (shape.x + left, shape.y + shape.h - th);	// align to bottom
 	cr->move_to (shape.x + SIDES, shape.y + RADIUS);	// align to top

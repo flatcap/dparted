@@ -67,7 +67,7 @@ public:
 
 protected:
 	Gtk::Box		outer_box;	//XXX dynamically create the ones we don't care about?
-	Gtk::Toolbar*		toolbar = nullptr;	//do not delete
+	Gtk::Toolbar*		toolbar = nullptr;	// do not delete
 	Gtk::EventBox		eventbox;
 	Gtk::ScrolledWindow	scrolledwindow;
 	Gtk::Box		inner_box;

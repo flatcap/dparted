@@ -875,12 +875,12 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	}
 	labeld = "<b>" + labeld + "</b>";
 
-	font.set_family ("Liberation Sans");		//THEME - block_label_font
+	font.set_family ("Liberation Sans");		// THEME - block_label_font
 
-	font.set_size (12 * Pango::SCALE);		//THEME - block_label_font_size
+	font.set_size (12 * Pango::SCALE);		// THEME - block_label_font_size
 	layoutd->set_font_description (font);
 
-	font.set_size (8 * Pango::SCALE);		//THEME - ratio of block_label_font_size
+	font.set_size (8 * Pango::SCALE);		// THEME - ratio of block_label_font_size
 	layouts->set_font_description (font);
 
 	layoutd->set_markup (labeld);
@@ -896,20 +896,20 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	ys = below.y + below.h - hs;
 
 	// Draw block label
-	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);	//THEME - block_label_highlight_colour
+	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);	// THEME - block_label_highlight_colour
 	cr->move_to (xd+2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 	cr->move_to (xd-2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 	cr->move_to (xd+0, yd+2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 	cr->move_to (xd+0, yd-2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 
 	cr->move_to (xd, yd);
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	// THEME - block_label_text_colour
 	layoutd->update_from_cairo_context (cr);
 	layoutd->show_in_cairo_context (cr);
 
 	// Draw size label
 	cr->move_to (xs, ys);
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	// THEME - block_label_text_colour
 	layouts->update_from_cairo_context (cr);
 	layouts->show_in_cairo_context (cr);
 #endif

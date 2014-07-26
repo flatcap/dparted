@@ -120,12 +120,12 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	PartitionPtr res1 = Partition::create();
 	res1->sub_type ("Space");
 	res1->sub_type ("Reserved");
-	res1->bytes_size    = 512;		//align (512, 1024*1024);
+	res1->bytes_size    = 512;		// align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
 	ext->add_child (res1, false);		// change to add_reserved?
 
-	for (int loop = 0; loop < 50; ++loop) {		//what's the upper limit? prob 255 in the kernel
+	for (int loop = 0; loop < 50; ++loop) {		// what's the upper limit? prob 255 in the kernel
 		if (le16_to_cpup (table_offset+buffer+510) != 0xAA55) {
 			log_error ("not an extended partition");
 			log_debug ("%s (%s), %ld", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);

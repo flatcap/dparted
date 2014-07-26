@@ -138,7 +138,7 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		log_error ("probe empty");
 		m = Misc::create();
 		m->sub_type ("Zero");
-	} else { //if (is_random (buffer, bufsize)) {
+	} else { // if (is_random (buffer, bufsize)) {
 		log_error ("probe random");
 		m = Misc::create();
 		m->sub_type ("Random");

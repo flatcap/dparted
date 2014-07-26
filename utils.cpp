@@ -62,18 +62,18 @@ delete_region (std::vector<std::pair<std::uint64_t, std::uint64_t>>& region, std
 		 * 4 |<-->xxx<-->|	!s & !f		split region
 		 */
 		if (start == (*it).first) {
-			if (finish == (*it).second) {		//1
+			if (finish == (*it).second) {		// 1
 				region.erase (it);
 				break;
-			} else {				//2
+			} else {				// 2
 				(*it).first = finish+1;
 				break;
 			}
 		} else {
-			if (finish == (*it).second) {		//3
+			if (finish == (*it).second) {		// 3
 				(*it).second = start-1;
 				break;
-			} else {				//4
+			} else {				// 4
 				int end = (*it).second;
 				(*it).second = start-1;
 				region.insert (it+1, { finish+1, end });

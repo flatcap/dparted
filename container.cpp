@@ -496,13 +496,13 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 #if 0
 		<< "(" << uuid << "), "
 		<< '"' << c->device << '"' << "(" << c->fd << "),"
-		<< " S:" //<< c->bytes_size
+		<< " S:" // << c->bytes_size
 						<< "(" << get_size (c->bytes_size)    << "), "
-		<< " U:" //<< c->bytes_used
+		<< " U:" // << c->bytes_used
 						<< "(" << get_size (c->bytes_used)    << "), "
-		<< " F:" //<<   bytes_free
+		<< " F:" // <<   bytes_free
 						<< "(" << get_size (   bytes_free)    << "), "
-		<< " P:" //<< c->parent_offset
+		<< " P:" // << c->parent_offset
 						<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
