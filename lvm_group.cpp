@@ -93,8 +93,8 @@ std::string
 make_device (std::string group, std::string volume)
 {
 	// Either:
-	// 	/dev/GROUP/VOLUME
-	// 	/dev/mapper/GROUP-VOLUME(*)
+	//	/dev/GROUP/VOLUME
+	//	/dev/mapper/GROUP-VOLUME(*)
 	// (*) with - replace with -- in both parts
 	expand_name (group);
 	expand_name (volume);

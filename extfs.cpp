@@ -106,7 +106,7 @@ parse_line (const std::string& line, std::string& key, std::string& value)
 	k = line.substr (0, pos);
 	v = line.substr (pos);
 
-	pos = v.find_first_not_of (" 	", 1);	// Space, Tab
+	pos = v.find_first_not_of (" \t", 1);	// Space, Tab
 	if (pos == std::string::npos)
 		return false;
 

@@ -98,14 +98,14 @@ File::discover (ContainerPtr& UNUSED(parent))
 	LOG_TRACE;
 
 	// Config
-	// 	[files]
-	// 	dir = ~/vm
-	// 	file = /tmp/test.img
-	// 	suffix = img
+	//	[files]
+	//	dir = ~/vm
+	//	file = /tmp/test.img
+	//	suffix = img
 
 	// iterate through config
-	// 	file => add that file
-	// 	dir  => add dir/*.img
+	//	file => add that file
+	//	dir  => add dir/*.img
 }
 
 bool

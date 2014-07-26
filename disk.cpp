@@ -140,9 +140,9 @@ bool
 Disk::find_devices_old (const std::string& name, int fd, struct stat& st, ContainerPtr& list)
 {
 	// for /dev/sda look at
-	// 	/sys/block/sda/size
-	// 	/sys/block/sda/device/vendor
-	// 	/sys/block/sda/device/model
+	//	/sys/block/sda/size
+	//	/sys/block/sda/device/vendor
+	//	/sys/block/sda/device/model
 
 	int res;
 	std::uint64_t file_size_in_bytes;
