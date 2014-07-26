@@ -86,7 +86,7 @@ private:
 
 	std::deque<Range> vRange;
 
-	//bool mouse_close = false;
+	// bool mouse_close = false;
 
 	// POPUP
 	void setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions);

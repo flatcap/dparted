@@ -44,7 +44,7 @@ public:
 	static bool identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& st);
 
 public:
-	//properties
+	// properties
 
 protected:
 	File (void);

@@ -91,7 +91,7 @@ std::vector<Action> cont_actions = {
 
 Container::Container (void)
 {
-	unique_id = std::atomic_fetch_add (&container_id, (unsigned long)1);
+	unique_id = std::atomic_fetch_add (&container_id, (std::uint64_t)1);
 	log_ctor ("ctor Container (%ld)", unique_id);
 
 	// Save a bit of space
@@ -169,7 +169,7 @@ Container::visit_children (Visitor& v)
 	if (!v.visit_enter(cont))
 		return false;
 
-	for (auto child : children) {
+	for (auto& child : children) {
 		if (!child->accept(v))
 			return false;
 	}
@@ -221,6 +221,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 	return_if_fail (child);
 	LOG_TRACE;
 
+	std::lock_guard<std::mutex> lock (mutex_children);
 	++seqnum;
 	children.insert (child);
 
@@ -234,10 +235,10 @@ Container::add_child (ContainerPtr& child, bool probe)
 
 	ContainerPtr toplevel = get_toplevel();
 	if (toplevel) {
-		for (auto i : toplevel->container_listeners) {
+		for (auto& i : toplevel->container_listeners) {
 			ContainerListenerPtr cl = i.lock();
 			if (cl) {
-				log_listener ("Added child %p to Container %p\n", child.get(), this);
+				log_listener ("Added child %p to Container %p", child.get(), this);
 				cl->container_added (child, get_smart());	//XXX get this pointer once
 			} else {
 				log_code ("remove listener from the collection");	//XXX remove it from the collection
@@ -262,6 +263,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 void
 Container::delete_child (ContainerPtr& child)
 {
+	std::lock_guard<std::mutex> lock (mutex_children);
 	for (auto it = children.begin(); it != children.end(); ++it) {
 		if (*it == child) {
 			children.erase (it);
@@ -344,8 +346,8 @@ Container::get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces)
 {
 	spaces.clear();
 
-	//spaces[offset] = size
-	//spaces[0] = 123;
+	// spaces[offset] = size
+	// spaces[0] = 123;
 
 	return spaces.size();
 }
@@ -375,7 +377,7 @@ Container::find (const std::string& search)
 
 	ContainerPtr item;
 
-	for (auto i : children) {
+	for (auto& i : children) {
 		if ((item = i->find (search)))
 			break;
 	}
@@ -446,7 +448,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 	buf = mmap (NULL, size, PROT_READ, MAP_SHARED, newfd, 0);
 	if (buf == MAP_FAILED) {
 		log_error ("alloc failed: %s", strerror (errno));
-		//close (newfd);				//XXX may not be ours to close
+		// close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
 	log_file ("mmap created: %p, device %s, size %s", buf, device.c_str(), get_size (size).c_str());
@@ -477,7 +479,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 {
 	return_val_if_fail (c, stream);
 
-	//std::uint64_t bytes_free = c.bytes_size - c->bytes_used;
+	// std::uint64_t bytes_free = c.bytes_size - c->bytes_used;
 
 	std::string uuid = c->uuid;
 
@@ -487,21 +489,24 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	}
 
 	stream
-		<< "[" << c->type.back() << "]:"
-		<< c->name << "(" << uuid << "), "
-		<< '"' << c->device << '"' << "(" << c->fd << "),"
 #if 0
-		<< " S:" //<< c->bytes_size
-						<< "(" << get_size (c->bytes_size)    << "), "
-		<< " U:" //<< c->bytes_used
-						<< "(" << get_size (c->bytes_used)    << "), "
-		<< " F:" //<<   bytes_free
-						<< "(" << get_size (   bytes_free)    << "), "
-		<< " P:" //<< c->parent_offset
-						<< "(" << get_size (c->parent_offset) << "), "
+		<< "[" << c->type.back() << "]:"
 #endif
+		<< c->name
+#if 0
+		<< "(" << uuid << "), "
+		<< '"' << c->device << '"' << "(" << c->fd << "),"
+		<< " S:" // << c->bytes_size
+						<< "(" << get_size (c->bytes_size)    << "), "
+		<< " U:" // << c->bytes_used
+						<< "(" << get_size (c->bytes_used)    << "), "
+		<< " F:" // <<   bytes_free
+						<< "(" << get_size (   bytes_free)    << "), "
+		<< " P:" // << c->parent_offset
+						<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
+#endif
 		;
 
 	return stream;
@@ -546,7 +551,7 @@ std::vector<std::string>
 Container::get_prop_names (void)
 {
 	std::vector<std::string> names;
-	for (auto p : props) {
+	for (auto& p : props) {
 		names.push_back (p.second->name);
 	}
 
@@ -568,7 +573,7 @@ Container::get_all_props (bool inc_hidden /*=false*/)
 {
 	std::vector<PPtr> vv;
 
-	for (auto p : props) {
+	for (auto& p : props) {
 		if ((p.second->flags & BaseProperty::Flags::Hide) && !inc_hidden)
 			continue;
 
@@ -883,7 +888,7 @@ Container::get_type_long (void)
 {
 	std::string tl;
 
-	for (auto i : type) {
+	for (auto& i : type) {
 		tl += i + ".";
 	}
 
@@ -920,7 +925,7 @@ Container::add_listener (const ContainerListenerPtr& cl)
 {
 	return_if_fail (cl);
 
-	log_listener ("Container %p add listener: %p\n", this, cl.get());
+	log_listener ("Container %p add listener: %p", this, cl.get());
 	container_listeners.push_back (cl);
 }
 

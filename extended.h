@@ -43,7 +43,7 @@ public:
 	virtual std::uint8_t* get_buffer (std::uint64_t offset, std::uint64_t size);
 
 public:
-	//properties
+	// properties
 
 protected:
 	Extended (void);

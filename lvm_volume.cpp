@@ -64,7 +64,7 @@ LvmVolume::accept (Visitor& v)
 		return false;
 	}
 
-	for (auto i : metadata) {
+	for (auto& i : metadata) {
 		LvmLinearPtr meta = std::dynamic_pointer_cast<LvmLinear>(i);
 		if (!v.visit(meta)) {
 			log_debug ("LvmVolume metadata failed");
@@ -72,7 +72,7 @@ LvmVolume::accept (Visitor& v)
 		}
 	}
 
-	for (auto i : subvols) {
+	for (auto& i : subvols) {
 		//XXX need most-derived type, really
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume>(i);
 		if (!v.visit(vol)) {
@@ -139,7 +139,7 @@ LvmVolume::add_child (ContainerPtr& child, bool probe)
 	} else if (child->is_a ("LvmPartition")) {
 		log_info ("PARTITION %s", child->name.c_str());
 		add_segment (child);
-		//Volume::add_child (child);
+		// Volume::add_child (child);
 		child->whole = get_smart();
 	} else if (child->is_a ("Space")) {
 		log_info ("SPACE %s", child->name.c_str());
@@ -149,10 +149,10 @@ LvmVolume::add_child (ContainerPtr& child, bool probe)
 		Volume::add_child (child, probe);
 
 #if 0
-		for (auto i : subvols) {
+		for (auto& i : subvols) {
 			LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume>(i);
 			log_info ("subvol %s, %ld segments", v->name.c_str(), v->segments.size());
-			for (auto j : v->segments) {
+			for (auto& j : v->segments) {
 				j->add_child (child, false);
 			}
 		}
@@ -171,7 +171,7 @@ LvmVolume::find (const std::string& search)
 		search2 = search.substr (0, pos);
 	}
 
-	for (auto i : metadata) {
+	for (auto& i : metadata) {
 		if (i->uuid == search) {
 			log_info ("metadata uuid %s", i->uuid.c_str());
 			return i;
@@ -186,7 +186,7 @@ LvmVolume::find (const std::string& search)
 		}
 	}
 
-	for (auto i : subvols) {
+	for (auto& i : subvols) {
 		if (i->uuid == search) {
 			log_info ("subvols uuid %s", i->uuid.c_str());
 			return i;

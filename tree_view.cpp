@@ -63,17 +63,17 @@ TreeView::on_button_press_event (GdkEventButton* event)
 {
 	bool retval = false;
 
-	//Call base class, to allow normal handling,
-	//such as allowing the row to be selected by the right-click:
+	// Call base class, to allow normal handling,
+	// such as allowing the row to be selected by the right-click:
 	retval = Gtk::TreeView::on_button_press_event (event);
 
-	//Then do our custom stuff:
+	// Then do our custom stuff:
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
 		popup_menu (event->x_root, event->y_root);
 	}
 
 #if 0
-	//Then do our custom stuff:
+	// Then do our custom stuff:
 	if ((event->type == GDK_DOUBLE_BUTTON_PRESS) && (event->button == 1)) {
 		Glib::RefPtr<Gtk::TreeSelection> s1 = get_selection();
 		Gtk::TreeModel::iterator s2 = s1->get_selected();
@@ -89,7 +89,7 @@ TreeView::on_button_press_event (GdkEventButton* event)
 Glib::RefPtr<Gdk::Pixbuf>
 TreeView::get_colour_as_pixbuf (int size, const std::string& colstr)
 {
-	//circle, of specified colour, transparent background
+	// circle, of specified colour, transparent background
 	Gdk::RGBA colour = theme->get_colour (colstr);
 
 	Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create (Gdk::COLORSPACE_RGB, true, 8, size, size);
@@ -116,7 +116,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 
 	Gtk::TreeModel::Row row;
 
-	for (auto x : gfx->children) {
+	for (auto& x : gfx->children) {
 		bool display = false;
 
 		if (x->treeview == "always")
@@ -143,7 +143,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 			row.set_value (0, x);		// Column zero is always the GfxContainer
 
 			log_debug ("Columns:");
-			for (auto i : col_list) {
+			for (auto& i : col_list) {
 				int index = -1;
 				int type = ct_string;
 				float align = 0;
@@ -409,7 +409,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 	std::string display = theme->get_config (name, "", "display", false);
 	std::vector<std::string> parts;
 	explode (",", display, parts);
-	for (auto i : parts) {
+	for (auto& i : parts) {
 		std::vector<std::string> multi;
 		explode ("+", i, multi);
 
@@ -423,7 +423,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 
 		Gtk::TreeModelColumn<int>* tmc = nullptr;
 		Gtk::CellRendererProgress* cell = nullptr;
-		for (auto j : multi) {
+		for (auto& j : multi) {
 			int index = -1;
 			int type = ct_string;
 			float align = 0.0;
@@ -507,7 +507,7 @@ TreeView::init_treeview (GfxContainerPtr& gfx)
 	set_enable_tree_lines (true);
 	set_show_expanders (true);
 
-	//Connect signal:
+	// Connect signal:
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &TreeView::on_query_tooltip));
 
 	treeselection = get_selection();
@@ -740,7 +740,7 @@ TreeView::gfx_container_added (const GfxContainerPtr& cont, const GfxContainerPt
 	if (cont)   c = cont->name;
 	if (parent) p = parent->name;
 
-	log_debug ("TREEVIEW gfx_container_added: %s to %s", c.c_str(), p.c_str());
+	log_info ("TREEVIEW gfx_container_added: %p:%s to %p:%s", cont.get(), c.c_str(), parent.get(), p.c_str());
 }
 
 void

@@ -41,7 +41,7 @@ PropDrawingArea::set_data (GfxContainerPtr& g)
 bool
 PropDrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
-	//return Gtk::DrawingArea::on_draw (cr);
+	// return Gtk::DrawingArea::on_draw (cr);
 	return_val_if_fail (top_level, true);
 
 	Gtk::Allocation allocation = get_allocation();
@@ -89,7 +89,7 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 		display = "box";
 	}
 
-	//Rect tab;
+	// Rect tab;
 	Rect inside;
 
 	log_debug ("object = %s -- %d,%d", cont->name.c_str(), shape.w, TAB_WIDTH);

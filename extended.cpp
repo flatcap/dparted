@@ -115,17 +115,17 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	ext->bytes_size = bufsize;
 	ext->device = parent->device;
-	//ext->parent_offset = 0;		// Will be set by our parent
+	// ext->parent_offset = 0;		// Will be set by our parent
 
 	PartitionPtr res1 = Partition::create();
 	res1->sub_type ("Space");
 	res1->sub_type ("Reserved");
-	res1->bytes_size    = 512;		//align (512, 1024*1024);
+	res1->bytes_size    = 512;		// align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
 	ext->add_child (res1, false);		// change to add_reserved?
 
-	for (int loop = 0; loop < 50; ++loop) {		//what's the upper limit? prob 255 in the kernel
+	for (int loop = 0; loop < 50; ++loop) {		// what's the upper limit? prob 255 in the kernel
 		if (le16_to_cpup (table_offset+buffer+510) != 0xAA55) {
 			log_error ("not an extended partition");
 			log_debug ("%s (%s), %ld", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
@@ -138,7 +138,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 		std::vector<struct partition> vp;
 		num = ext->read_table (table_offset+buffer, bufsize, 0, vp);
 		log_debug ("num = %d", num);
-		//dump_hex (buffer, bufsize);
+		// dump_hex (buffer, bufsize);
 
 		if ((num < 0) || (vp.size() > 2)) {
 			log_error ("partition table is corrupt");	// bugger
@@ -164,8 +164,8 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 				m = MsdosPartition::create();
 				m->bytes_size = le64_to_cpu (part.size);
 
-				//m->parent_offset = table_offset + le64_to_cpu (part.start);
-				//m->device = parent->device;
+				// m->parent_offset = table_offset + le64_to_cpu (part.start);
+				// m->device = parent->device;
 
 				m->parent_offset = table_offset + le64_to_cpu (part.start) - ext->parent_offset;	// This is relative
 

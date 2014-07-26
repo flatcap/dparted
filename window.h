@@ -25,6 +25,7 @@
 
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/box.h>
+#include <gtkmm/builder.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/menubar.h>
 #include <gtkmm/radioaction.h>
@@ -35,8 +36,13 @@
 #include <gtkmm/spinbutton.h>
 #include <giomm/simpleactiongroup.h>
 
+#ifdef DP_TREE
 #include "tree_view.h"
+#endif
+#ifdef DP_AREA
 #include "drawing_area.h"
+#endif
+#include "gfx_container.h"
 
 class Window;
 
@@ -61,12 +67,16 @@ public:
 
 protected:
 	Gtk::Box		outer_box;	//XXX dynamically create the ones we don't care about?
-	Gtk::Toolbar*		toolbar = nullptr;	//do not delete
+	Gtk::Toolbar*		toolbar = nullptr;	// do not delete
 	Gtk::EventBox		eventbox;
 	Gtk::ScrolledWindow	scrolledwindow;
 	Gtk::Box		inner_box;
+#ifdef DP_AREA
 	DrawingArea		drawingarea;
+#endif
+#ifdef DP_TREE
 	TreeView		treeview;
+#endif
 	Gtk::Statusbar		statusbar;
 
 	virtual bool on_delete_event (GdkEventAny* event);

@@ -28,6 +28,8 @@ D	?= 1
 T	?= 1
 
 GUI	?= 1
+TREE	?= 1
+AREA	?= 1
 
 DISK	?= 0
 FILE	?= $(A)
@@ -37,7 +39,7 @@ LVM	?= $(A)
 GPT	?= 1
 MSDOS	?= $(A)
 MD	?= $(A)
-LUKS	?= 1
+LUKS	?= $(A)
 
 BTRFS	?= 1
 EXTFS	?= 1
@@ -84,6 +86,8 @@ CFLAGS-$(FILE)		+= -DDP_FILE
 CFLAGS-$(FS_MISC)	+= -DDP_FS_MISC
 CFLAGS-$(GPT)		+= -DDP_GPT
 CFLAGS-$(GUI)		+= -DDP_GUI
+CFLAGS-$(TREE)		+= -DDP_TREE
+CFLAGS-$(AREA)		+= -DDP_AREA
 CFLAGS-$(HEX)		+= -DDP_HEX
 CFLAGS-$(LIST)		+= -DDP_LIST
 CFLAGS-$(LOOP)		+= -DDP_LOOP
@@ -102,7 +106,7 @@ SRC-$(EXTFS)		+= extfs.cpp
 SRC-$(FILE)		+= file.cpp
 SRC-$(FS_MISC)		+= fs_get.cpp fs_identify.cpp fs_usage.cpp
 SRC-$(GPT)		+= gpt.cpp gpt_partition.cpp
-SRC-$(GUI)		+= base_drawing_area.cpp change_password_dialog.cpp default_theme.cpp dialog.cpp drawing_area.cpp error_dialog.cpp gfx_container.cpp gui_app.cpp info_dialog.cpp option_group.cpp password_dialog.cpp properties_dialog.cpp prop_drawing_area.cpp question_dialog.cpp theme.cpp tree_view.cpp warning_dialog.cpp window.cpp
+SRC-$(GUI)		+= change_password_dialog.cpp default_theme.cpp dialog.cpp error_dialog.cpp gfx_container.cpp gui_app.cpp info_dialog.cpp option_group.cpp password_dialog.cpp question_dialog.cpp theme.cpp warning_dialog.cpp window.cpp
 SRC-$(HEX)		+= hex_visitor.cpp
 SRC-$(LIST)		+= list_visitor.cpp
 SRC-$(LOOP)		+= loop.cpp
@@ -112,7 +116,12 @@ SRC-$(MD)		+= md_linear.cpp md_mirror.cpp md_partition.cpp md_raid.cpp md_stripe
 SRC-$(MSDOS)		+= extended.cpp msdos.cpp msdos_partition.cpp
 SRC-$(NTFS)		+= ntfs.cpp
 SRC-$(PROP)		+= prop_visitor.cpp
-SRC-$(UNUSED)		+= icon_manager.cpp
+
+ifeq ($(GUI),1)
+	SRC-$(TREE)	+= tree_view.cpp
+	SRC-$(AREA)	+= base_drawing_area.cpp drawing_area.cpp prop_drawing_area.cpp properties_dialog.cpp
+	SRC-$(UNUSED)	+= icon_manager.cpp
+endif
 
 SRC	+= $(SRC-1)
 HDR	+= $(SRC:%.cpp=%.h)

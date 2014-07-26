@@ -163,7 +163,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 	l->uuid                 = get_fixed_str (buffer+168, 40);
 	l->bytes_size           = parent->bytes_size;
 
-	//for (int i = 0; i < 16; ++i) {
+	// for (int i = 0; i < 16; ++i) {
 	l->pass1_active     = be32_to_cpup (buffer+208);	// 0x0000DEAD/0x00AC71F3
 	l->pass1_iterations = be32_to_cpup (buffer+212);
 	l->pass1_salt       = read_hex     (buffer+216, 32);
@@ -180,7 +180,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	log_debug ("header size = %ld", l->header_size);
 
-	//l->device      = "/dev/mapper/luks-" + l->uuid;
+	// l->device      = "/dev/mapper/luks-" + l->uuid;
 
 	log_debug ("Parent: %s", parent->get_device_name().c_str());
 

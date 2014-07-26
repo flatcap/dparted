@@ -98,7 +98,7 @@ ChangePasswordDialog::response (int button_id)
 	return_if_fail (question);
 	question->result = button_id;
 	question->done();
-	log_debug ("ChangePasswordDialog::response = %d\n", button_id);
+	log_debug ("ChangePasswordDialog::response = %d", button_id);
 }
 
 int

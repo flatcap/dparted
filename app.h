@@ -57,6 +57,9 @@ public:
 
 	virtual bool open_uri (const std::string& uri);
 
+	void test (void);
+	void wait_for_threads (void);
+
 protected:
 	ConfigFilePtr config_file;
 	ContainerPtr top_level;

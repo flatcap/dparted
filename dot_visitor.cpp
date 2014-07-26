@@ -209,7 +209,7 @@ dot_container (std::shared_ptr<T> t)
 
 	std::stringstream output;
 
-	for (auto prop : p->get_all_props()) {
+	for (auto& prop : p->get_all_props()) {
 		if (!(prop->flags & BaseProperty::Flags::Dot)) {
 			log_debug ("Dot ignore : %s", prop->name.c_str());
 			continue;
@@ -275,7 +275,7 @@ dot_whole (std::shared_ptr<T> t)
 
 	if (count > 0) {
 		output << dot_row ("segments", count);
-		for (auto i : p->segments) {
+		for (auto& i : p->segments) {
 			output << dot_row ("", i);
 		}
 	}
@@ -301,7 +301,7 @@ dot_lvm_volume (std::shared_ptr<T> t)
 	unsigned int count = p->metadata.size();
 	if (count > 0) {
 		output << dot_row ("metadata", count);
-		for (auto i : p->metadata) {
+		for (auto& i : p->metadata) {
 			output << dot_row ("", i);
 		}
 	}
@@ -309,7 +309,7 @@ dot_lvm_volume (std::shared_ptr<T> t)
 	count = p->subvols.size();
 	if (count > 0) {
 		output << dot_row ("subvols", count);
-		for (auto i : p->subvols) {
+		for (auto& i : p->subvols) {
 			output << dot_row ("", i);
 		}
 	}
@@ -490,7 +490,7 @@ DotVisitor::visit (WholePtr f)
 	dot_objects << dump_table (f, dot_whole(f));
 	dot_links   << parent_link(f);
 
-	for (auto i : f->segments) {
+	for (auto& i : f->segments) {
 		dot_objects << dump_table (i, dot_container(i));
 		dot_links   << parent_link(i);
 	}

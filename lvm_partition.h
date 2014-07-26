@@ -40,7 +40,7 @@ public:
 	virtual bool perform_action (Action action);
 
 public:
-	//properties
+	// properties
 #if 0
 	std::uint64_t	dev_size;	//XXX not declared
 	std::uint64_t	pe_start;	// 1048576

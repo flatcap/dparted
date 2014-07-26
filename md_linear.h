@@ -39,7 +39,7 @@ public:
 	virtual bool perform_action (Action action);
 
 public:
-	//properties
+	// properties
 
 protected:
 	MdLinear (void);

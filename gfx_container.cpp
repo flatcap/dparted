@@ -98,12 +98,13 @@ GfxContainer::sync (void)
 		return true;
 
 	init(c);
-	for (auto child : c->get_children()) {
+	for (auto& child : c->get_children()) {
 		GfxContainerPtr g = GfxContainer::create (get_smart(), child);
 		if (name == "dummy") {
-			log_debug ("MARKER1");
+			log_code ("MARKER1");
 		}
-		children.push_back(g);
+		std::lock_guard<std::mutex> lock (mutex_children);
+		insert_child(g);
 	}
 
 	return true;
@@ -229,7 +230,7 @@ GfxContainer::update_info (void)
 		return true;
 	}
 
-	for (auto i : children) {
+	for (auto& i : children) {
 		i->update_info();
 	}
 
@@ -259,7 +260,7 @@ GfxContainer::dump2 (void)
 	log_debug ("%sseqnum         = %d", tabs.c_str(), seqnum);
 
 	++indent;
-	for (auto c : children) {
+	for (auto& c : children) {
 		c->dump();
 	}
 	--indent;
@@ -319,7 +320,7 @@ GfxContainer::process_icon (const std::string& str)
 
 	pb = theme->get_icon (str);
 	log_debug ("icon: %s %p", str.c_str(), (void*) pb.operator->());
-	//pb = Gdk::Pixbuf::create_from_file (str);
+	// pb = Gdk::Pixbuf::create_from_file (str);
 
 	return pb;
 }
@@ -384,7 +385,7 @@ GfxContainer::get_smart (void)
 }
 
 ContainerListenerPtr
-GfxContainer::get_model (void)
+GfxContainer::get_listener (void)
 {
 	return_val_if_fail (!self.expired(), nullptr);
 
@@ -512,7 +513,7 @@ GfxContainer::add_listener (GfxContainerListenerPtr& gcl)
 {
 	return_if_fail (gcl);
 
-	log_listener ("GfxContainer %p add listener: %p\n", this, gcl.get());
+	log_listener ("GfxContainer %p add listener: %p", this, gcl.get());
 	gfx_container_listeners.push_back(gcl);
 }
 
@@ -526,7 +527,7 @@ GfxContainer::find (const ContainerPtr& cont)
 	if (c == cont)
 		return get_smart();
 
-	for (auto i : children) {
+	for (auto& i : children) {
 		GfxContainerPtr g = i->find (cont);
 		if (g) {
 			return g;
@@ -555,20 +556,54 @@ GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& par
 	if (gparent->name == "dummy") {
 		log_debug ("MARKER2");
 	}
-	gparent->children.push_back (gchild);
+	{
+	std::lock_guard<std::mutex> lock (mutex_children);
+	gparent->insert_child (gchild);
 	gchild->sync();
+	}
 
 	GfxContainerPtr toplevel = get_toplevel();
-	for (auto i : toplevel->gfx_container_listeners) {
+	for (auto& i : toplevel->gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
-			log_listener ("Added child %p to GfxContainer %p\n", gchild.get(), gparent.get());
+			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
 			p->gfx_container_added (gchild, gparent);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
 		}
 	}
 }
+
+
+bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)
+{
+	return_val_if_fail (a, true);
+	return_val_if_fail (b, true);
+
+	if (a->parent_offset != b->parent_offset)
+		return (a->parent_offset > b->parent_offset);
+
+	int x = a->name.compare (b->name);
+	if (x != 0)
+		return (x > 0);
+
+	return ((void*) a.get() > (void*) b.get());
+}
+
+void
+GfxContainer::insert_child (GfxContainerPtr& child)
+{
+	auto end = std::end (children);
+	for (auto it = std::begin (children); it < end; ++it) {
+		if (compare (child, *it)) {
+			children.insert (it, child);
+			return;
+		}
+	}
+
+	children.push_back (child);
+}
+
 
 void
 GfxContainer::container_busy (const ContainerPtr& cont, int busy)
@@ -605,4 +640,5 @@ GfxContainer::theme_changed (const ThemePtr& new_theme)
 	LOG_TRACE;
 	theme = new_theme;	//XXX force dropping of cached values
 }
+
 

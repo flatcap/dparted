@@ -216,7 +216,7 @@ PropertiesDialog::my_show (void)
 
 	Gtk::TextBuffer::iterator iter = textbuffer->get_iter_at_offset(0);
 	std::string owner;
-	for (auto p : props) {
+	for (auto& p : props) {
 		if (owner != p->owner) {
 			owner = p->owner;
 			iter = textbuffer->insert_with_tag (iter, owner + "\n", "heading");

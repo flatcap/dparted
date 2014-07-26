@@ -45,7 +45,7 @@ public:
 	bool luks_close (void);
 
 public:
-	//properties
+	// properties
 	std::string   cipher_mode;
 	std::string   cipher_name;
 	std::string   hash_spec;

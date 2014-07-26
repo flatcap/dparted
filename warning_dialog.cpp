@@ -42,7 +42,7 @@ WarningDialog::response (int button_id)
 	return_if_fail (question);
 	question->result = button_id;
 	question->done();
-	log_debug ("WarningDialog::response = %d\n", button_id);
+	log_debug ("WarningDialog::response = %d", button_id);
 }
 
 int

@@ -40,19 +40,19 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	//virtual void add_segment (ContainerPtr& seg);
+	// virtual void add_segment (ContainerPtr& seg);
 
 	static void discover (ContainerPtr& top_level);
 
 public:
-	//properties
+	// properties
 	std::uint64_t	lv_count = 0;	//XXX this matches children.size()
 	std::uint64_t	pv_count = 0;	//XXX put this in seg_count in Whole
 	std::string	vg_attr;
 	std::uint64_t	vg_seqno = 0;
 
 	// vector of components, e.g. /dev/loop0, /dev/loop1, ...
-	//std::vector<std::string> components;	// do we need this, shouldn't we just use a the segments vector?
+	// std::vector<std::string> components;	// do we need this, shouldn't we just use a the segments vector?
 
 protected:
 	LvmGroup (void);

@@ -28,7 +28,9 @@
 
 #include "window.h"
 #include "action.h"
+#ifdef DP_AREA
 #include "drawing_area.h"
+#endif
 #include "gui_app.h"
 #include "log.h"
 #include "utils.h"
@@ -39,14 +41,16 @@ Window::Window (void)
 	set_title ("DParted");
 
 	//XXX Arbitrary minimum requirement -- theme?
-	//set_size_request (800, 600);
+	// set_size_request (800, 600);
 
 	scrolledwindow.set_hexpand (true);
 	scrolledwindow.set_vexpand (true);
 
 	inner_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 
+#ifdef DP_TREE
 	treeview.set_hexpand (true);
+#endif
 
 	add_events (Gdk::KEY_PRESS_MASK | Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::LEAVE_NOTIFY_MASK);
 #if 0
@@ -54,7 +58,9 @@ Window::Window (void)
 #endif
 
 	eventbox.set_events (Gdk::KEY_PRESS_MASK);
+#ifdef DP_AREA
 	eventbox.signal_key_press_event().connect (sigc::mem_fun (drawingarea, &DrawingArea::on_keypress), false);
+#endif
 
 	signal_realize().connect (sigc::mem_fun (*this, &Window::my_realize));
 	signal_show().connect (sigc::mem_fun (*this, &Window::my_show));
@@ -67,7 +73,7 @@ Window::Window (void)
 	outer_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 	outer_box.set_homogeneous (false);
 
-	//-------------------------------------
+	// -------------------------------------
 
 	add (outer_box);
 		init_menubar (outer_box);
@@ -75,11 +81,15 @@ Window::Window (void)
 		outer_box.add (eventbox);
 			eventbox.add (scrolledwindow);
 				scrolledwindow.add (inner_box);
+#ifdef DP_AREA
 					inner_box.pack_start (drawingarea, false, false);
+#endif
+#ifdef DP_TREE
 					inner_box.pack_start (treeview,    true,  true);
+#endif
 		outer_box.pack_end (statusbar, false, false);
 
-	//-------------------------------------
+	// -------------------------------------
 
 	bool tb = false;
 	bool gx = true;
@@ -97,8 +107,12 @@ Window::Window (void)
 
 	log_debug ("%d,%d,%d,%d", tb, gx, tv, sb);
 	toolbar->set_visible (tb);
+#ifdef DP_AREA
 	drawingarea.set_visible (gx);
+#endif
+#ifdef DP_TREE
 	treeview.set_visible (tv);
+#endif
 	statusbar.set_visible (sb);
 
 #if 0
@@ -117,7 +131,9 @@ void
 Window::my_realize (void)
 {
 	LOG_TRACE;
+#ifdef DP_AREA
 	drawingarea.grab_focus();
+#endif
 }
 
 void
@@ -125,7 +141,7 @@ Window::my_show (void)
 {
 	LOG_TRACE;
 	//XXX Arbitrary minimum requirement - theme?
-	//set_size_request (800, 600);
+	// set_size_request (800, 600);
 	resize (800, 250);
 }
 
@@ -166,8 +182,12 @@ Window::set_focus (GfxContainerPtr cont)
 	cont->set_focus (true);
 	focus = cont;
 
+#ifdef DP_TREE
 	treeview.set_focus (focus);
+#endif
+#ifdef DP_AREA
 	drawingarea.set_focus (focus);
+#endif
 
 	log_debug ("Focus: %s", cont->dump().c_str());
 	return true;
@@ -233,9 +253,9 @@ Window::init_shortcuts (void)
 		{ 0,                 GDK_KEY_Right  },
 		{ 0,                 GDK_KEY_Down   },
 
-		//{ 0,                 GDK_KEY_Tab    },
-		//{ 0,                 GDK_KEY_space  },
-		//{ 0,                 GDK_KEY_Return },
+		// { 0,                 GDK_KEY_Tab    },
+		// { 0,                 GDK_KEY_space  },
+		// { 0,                 GDK_KEY_Return },
 
 		{ Gdk::CONTROL_MASK, GDK_KEY_C      },
 		{ Gdk::CONTROL_MASK, GDK_KEY_F      },
@@ -248,7 +268,7 @@ Window::init_shortcuts (void)
 
 	Glib::RefPtr<Gtk::AccelGroup> accel = Gtk::AccelGroup::create();
 
-	for (auto k : keys) {
+	for (auto& k : keys) {
 		log_debug ("Keypress: %d : %d", k.first, k.second);
 		Gtk::MenuItem* i = manage (new Gtk::MenuItem());
 		i->signal_activate().connect (sigc::bind<int, int> (sigc::mem_fun (*this, &Window::on_keypress), k.first, k.second));
@@ -263,7 +283,7 @@ Window::init_shortcuts (void)
 void
 Window::insert_general_actions (std::string section, const std::vector<const char*>& commands)
 {
-	for (auto c : commands) {
+	for (auto& c : commands) {
 		std::string name = section + "." + c;
 		Glib::RefPtr<Gio::Action> a = add_action(name, sigc::bind<std::string, std::string> (sigc::mem_fun (*this, &Window::on_action_general), section, c));
 		Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic (a);
@@ -315,7 +335,7 @@ Window::init_actions (void)
 	s->set_enabled (false);
 #endif
 #if 0
-	for (auto a : action_map) {
+	for (auto& a : action_map) {
 		if (a.first[7] < 'n') {
 			a.second->set_enabled (false);
 		}
@@ -329,7 +349,7 @@ Window::init_menubar (Gtk::Box& box)
 {
 	builder = Gtk::Builder::create();
 
-	//Layout the actions in a menubar and toolbar:
+	// Layout the actions in a menubar and toolbar:
 	Glib::ustring ui_info =
 		"<interface><menu id='dparted-menu'>"
 		"<submenu>"
@@ -544,11 +564,11 @@ Window::init_menubar (Gtk::Box& box)
 void
 Window::set_actions (std::vector<Action>& list)
 {
-	for (auto a : action_map) {			// First, disable all the actions
+	for (auto& a : action_map) {			// First, disable all the actions
 		a.second->set_enabled (false);
 	}
 
-	for (auto a : list) {				// Then selectively enable the ones we want
+	for (auto& a : list) {				// Then selectively enable the ones we want
 		auto it = action_map.find (a.name);
 		if (it != std::end (action_map)) {
 			log_debug ("Enable: %s", a.name.c_str());
@@ -599,14 +619,18 @@ Window::set_data (ContainerPtr c)
 
 	GfxContainerPtr g = GfxContainer::create (nullptr, c);
 
-	ContainerListenerPtr m = g->get_model();	// Only link the tops of the two trees
-	c->add_listener(m);
+	ContainerListenerPtr cl = g->get_listener();	// Only link the tops of the two trees
+	c->add_listener (cl);	//XXX this should happen in the GfxContainer code
 
+#ifdef DP_TREE
 	try {
 		treeview.init_treeview(g);
 	} catch (...) {
 		log_error ("exception");
 	}
+#endif
+#ifdef DP_AREA
 	drawingarea.set_data(g);
+#endif
 }
 

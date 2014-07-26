@@ -50,6 +50,7 @@ public:
 	static GfxContainerPtr create (GfxContainerPtr parent, ContainerPtr c);
 
 	std::vector<GfxContainerPtr> children;
+	std::mutex mutex_children;
 
 	bool sync (void);
 	void dump2 (void);
@@ -89,7 +90,7 @@ public:
 	int get_index (const GfxContainerPtr& me);
 	int get_depth (void);
 
-	ContainerListenerPtr get_model (void);
+	ContainerListenerPtr get_listener (void);
 	ContainerPtr get_container (void);
 	std::string dump (void);
 
@@ -98,6 +99,8 @@ public:
 	GfxContainerPtr get_toplevel (void);
 
 	virtual void theme_changed (const ThemePtr& theme);
+
+	void insert_child (GfxContainerPtr& child);
 
 protected:
 	GfxContainer (void);

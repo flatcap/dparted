@@ -49,7 +49,7 @@ public:
 	virtual void delete_child (ContainerPtr& child);
 
 public:
-	//properties
+	// properties
 
 protected:
 	LvmMirror (void);

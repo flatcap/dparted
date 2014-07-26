@@ -41,10 +41,10 @@ Dialog::on_help (void)
 	GError *error = nullptr;
 	gtk_show_uri (nullptr, help_url.c_str(), 0, &error);
 	if (error) {
-		log_debug ("Can't open uri: %s\n", error->message);
+		log_debug ("Can't open uri: %s", error->message);
 		g_error_free (error);
 	} else {
-		log_debug ("HELP: %s\n", help_url.c_str());
+		log_debug ("HELP: %s", help_url.c_str());
 	}
 }
 

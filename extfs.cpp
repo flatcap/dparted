@@ -106,7 +106,7 @@ parse_line (const std::string& line, std::string& key, std::string& value)
 	k = line.substr (0, pos);
 	v = line.substr (pos);
 
-	pos = v.find_first_not_of (" 	", 1);	// Space, Tab
+	pos = v.find_first_not_of (" \t", 1);	// Space, Tab
 	if (pos == std::string::npos)
 		return false;
 
@@ -163,7 +163,7 @@ tune2fs (const std::string& dev)
 	std::string value;
 
 	log_debug ("keys:");
-	for (auto line : output) {
+	for (auto& line : output) {
 		if (line.substr (0, 7) == "tune2fs")
 			continue;
 
@@ -172,7 +172,7 @@ tune2fs (const std::string& dev)
 			continue;
 		}
 
-		log_debug ("\t>>%s<<", key.c_str());
+		log_debug ("\t%s", key.c_str());
 		results[key] = value;
 	}
 
@@ -243,7 +243,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 	const char* me = "Extfs";
 	more_props.reserve (info.size());	// if this vector is reallocated the app will die
 	log_debug ("Props:");
-	for (auto i : info) {
+	for (auto& i : info) {
 		std::string desc  = i.first;
 		std::string key   = make_key (desc);
 		std::string value = i.second;

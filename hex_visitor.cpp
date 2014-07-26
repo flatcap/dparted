@@ -112,7 +112,7 @@ HexVisitor::visit (LvmGroupPtr c)
 	std::uint64_t bufsize = 0;
 
 	//XXX offsets should be cumulative across the segments
-	for (auto i : c->segments) {
+	for (auto& i : c->segments) {
 		bufsize = i->bytes_size;
 		buf = i->get_buffer (0, bufsize);
 		dump (i, buf, bufsize);

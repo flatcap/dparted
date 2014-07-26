@@ -42,7 +42,7 @@ QuestionDialog::response (int button_id)
 	return_if_fail (question);
 	question->result = button_id;
 	question->done();
-	log_debug ("QuestionDialog::response = %d\n", button_id);
+	log_debug ("QuestionDialog::response = %d", button_id);
 }
 
 int

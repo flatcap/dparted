@@ -64,7 +64,7 @@ PasswordDialog::response (int button_id)
 	question->result = button_id;
 	question->output["password"] = text.get_text();
 	question->done();
-	log_debug ("PasswordDialog::response = %d\n", button_id);
+	log_debug ("PasswordDialog::response = %d", button_id);
 }
 
 int

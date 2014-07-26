@@ -43,7 +43,7 @@ public:
 	virtual void add_segment (ContainerPtr seg);
 
 public:
-	//properties
+	// properties
 	// seg_count - LVM2_SEG_COUNT
 	std::set<ContainerPtr, Container::compare> segments;	//XXX not declared
 

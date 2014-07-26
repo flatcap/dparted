@@ -45,7 +45,7 @@ public:
 	static ExtfsPtr get_ext4 (ContainerPtr parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 public:
-	//properties
+	// properties
 
 protected:
 	Extfs (void);

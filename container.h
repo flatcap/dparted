@@ -25,7 +25,6 @@
 #include <mutex>
 #include <set>
 #include <string>
-#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -75,7 +74,7 @@ public:
 
 	struct compare
 	{
-		bool operator() (const ContainerPtr a, const ContainerPtr b)
+		bool operator() (const ContainerPtr& a, const ContainerPtr& b)
 		{
 			return_val_if_fail (a, false);
 			return_val_if_fail (b, false);
@@ -145,7 +144,7 @@ public:
 	std::string   get_uuid_short                 (void);
 
 public:
-	//properties
+	// properties
 	std::string	name;
 	std::string	uuid;
 
@@ -179,10 +178,10 @@ protected:
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 	friend bool operator== (const ContainerPtr& lhs, const ContainerPtr& rhs);
 
-	MmapPtr	device_mmap;
-
 	std::map<std::string, PPtr> props;
+
 	std::set<ContainerPtr, compare> children;
+	std::mutex mutex_children;
 
 	std::vector<std::string> more_props;
 
@@ -277,7 +276,7 @@ protected:
 	}
 
 private:
-	void insert (std::uint64_t offset, std::uint64_t size, void* ptr);
+	MmapPtr	device_mmap;
 
 	std::uint64_t unique_id = 0;
 

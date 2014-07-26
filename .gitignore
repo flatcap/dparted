@@ -1,6 +1,7 @@
 # build products
 /.dep
 /.obj
+/core.*
 /dparted
 /gmon.out
 /html

@@ -123,7 +123,7 @@ ConfigFile::read_file (const std::string& filename)
 	ConfigFilePtr cf = ConfigFile::create();
 
 	parse_config (root, cf->config);
-	//cf->dump_config();
+	// cf->dump_config();
 
 	return cf;
 }
@@ -132,7 +132,7 @@ void
 ConfigFile::dump_config (void)
 {
 	log_debug ("Config:");
-	for (auto c : config) {
+	for (auto& c : config) {
 		log_debug ("\t%s = %s", c.first.c_str(), c.second.c_str());
 	}
 }
@@ -248,7 +248,7 @@ ConfigFile::get_children (const std::string& name)
 	std::vector<std::string> children;
 
 	int len = name.length();
-	for (auto it : config) {
+	for (auto& it : config) {
 		bool match = (it.first.compare (0, len, name) == 0);
 		if (match) {
 			std::string s = it.first.substr (len+1);

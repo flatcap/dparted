@@ -35,7 +35,7 @@
 #include "window.h"
 
 DrawingArea::DrawingArea (void)
-	//Glib::ObjectBase ("MyDrawingArea")
+	// Glib::ObjectBase ("MyDrawingArea")
 {
 	log_ctor ("ctor DrawingArea");
 	set_hexpand (true);
@@ -56,7 +56,7 @@ DrawingArea::DrawingArea (void)
 	sigc::connection conn = Glib::signal_timeout().connect (my_slot, 300); // ms
 #endif
 
-	//set_tooltip_text ("tooltip number 1");
+	// set_tooltip_text ("tooltip number 1");
 
 	set_has_tooltip();	// We'll be handling the tooltips ourself
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &DrawingArea::on_textview_query_tooltip));
@@ -323,7 +323,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, const Rect
 		}
 	}
 
-	//Rect tab;
+	// Rect tab;
 	Rect inside { 0, 0, 0, 0 };
 
 	log_debug ("object = %s -- %d,%d", gfx->name.c_str(), shape.w, TAB_WIDTH);
@@ -443,7 +443,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, const Rect
 	uint64_t total = gfx->bytes_size;
 	uint64_t bpp   = total / inside.w;	// bytes per pixel
 
-	for (auto c : gfx->children) {
+	for (auto& c : gfx->children) {
 		if (c->bytes_size > total) {
 			total = c->bytes_size;		//XXX tmp -- need to get intermediate object
 			bpp   = total / inside.w;
@@ -463,7 +463,7 @@ DrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, const Rect
 	}
 	//XXX vRange.push_front ({work, gfx});			// Associate a region with a container
 
-	//if (gfx->get_focus() && (has_focus() || menu_active)) {
+	// if (gfx->get_focus() && (has_focus() || menu_active)) {
 	if (gfx->get_focus()) {
 		draw_focus (cr, shape, (has_focus() || menu_active));
 	}
@@ -480,7 +480,7 @@ DrawingArea::draw_focus (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& sh
 
 	cr->save();
 	draw_border (cr, shape);				// Set clipping area
-	//cr->clip();
+	// cr->clip();
 
 	if (primary) {
 		cr->set_line_width(2);
@@ -563,9 +563,9 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	ContainerPtr tlc = top_level->get_container();
 
-	log_info ("\nDRAW:");
+	log_info ("DRAW:");
 	log_info ("top_level = %p, tlc = %p", (void*) top_level.get(), (void*) tlc.get());
-	log_info ("children = %ld\n", top_level->children.size());
+	log_info ("children = %ld", top_level->children.size());
 
 	vRange.clear();
 
@@ -582,11 +582,11 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 #endif
 	shape.h = cont_height;
 	if (top_level->name == "dummy") {
-		for (auto c : top_level->children) {
-			//if (c->type == "Loop") {
+		for (auto& c : top_level->children) {
+			// if (c->type == "Loop") {
 				draw_container (cr, shape, c);
 				shape.y += cont_height;
-			//}
+			// }
 		}
 	} else {
 		draw_container (cr, shape, top_level);
@@ -602,7 +602,7 @@ DrawingArea::on_timeout (int timer_number)
 {
 	log_debug ("timer");
 	get_window()->invalidate (false); // everything for now
-	//return (c->device == "/dev/sdc");
+	// return (c->device == "/dev/sdc");
 	return true;
 }
 
@@ -667,7 +667,7 @@ DrawingArea::on_keypress (GdkEventKey* event)
 
 	log_debug ("Key: %d (0x%x)", event->keyval, event->keyval);
 
-	//Extra keys: Delete, Insert, Space/Enter (select)?
+	// Extra keys: Delete, Insert, Space/Enter (select)?
 
 	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
@@ -835,7 +835,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	shape.h -= th;
 
 	draw_box (cr, shape, inside);
-	//draw_edge (cr, inside, "red");
+	// draw_edge (cr, inside, "red");
 
 	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 	draw_border (cr, inside);
@@ -851,7 +851,7 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	shape.w = 2*TAB_WIDTH + 2*GAP;
 
 	draw_box (cr, shape, inside);
-	//draw_edge (cr, inside, "red");
+	// draw_edge (cr, inside, "red");
 
 	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);
 	draw_border (cr, inside);
@@ -875,12 +875,12 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	}
 	labeld = "<b>" + labeld + "</b>";
 
-	font.set_family ("Liberation Sans");		//THEME - block_label_font
+	font.set_family ("Liberation Sans");		// THEME - block_label_font
 
-	font.set_size (12 * Pango::SCALE);		//THEME - block_label_font_size
+	font.set_size (12 * Pango::SCALE);		// THEME - block_label_font_size
 	layoutd->set_font_description (font);
 
-	font.set_size (8 * Pango::SCALE);		//THEME - ratio of block_label_font_size
+	font.set_size (8 * Pango::SCALE);		// THEME - ratio of block_label_font_size
 	layouts->set_font_description (font);
 
 	layoutd->set_markup (labeld);
@@ -896,20 +896,20 @@ draw_container_examples (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPt
 	ys = below.y + below.h - hs;
 
 	// Draw block label
-	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);	//THEME - block_label_highlight_colour
+	cr->set_source_rgba (1.0, 1.0, 1.0, 1.0);	// THEME - block_label_highlight_colour
 	cr->move_to (xd+2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 	cr->move_to (xd-2, yd+0); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 	cr->move_to (xd+0, yd+2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 	cr->move_to (xd+0, yd-2); layoutd->update_from_cairo_context (cr); layoutd->show_in_cairo_context (cr);
 
 	cr->move_to (xd, yd);
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	// THEME - block_label_text_colour
 	layoutd->update_from_cairo_context (cr);
 	layoutd->show_in_cairo_context (cr);
 
 	// Draw size label
 	cr->move_to (xs, ys);
-	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	//THEME - block_label_text_colour
+	cr->set_source_rgba (0.0, 0.0, 0.0, 1.0);	// THEME - block_label_text_colour
 	layouts->update_from_cairo_context (cr);
 	layouts->show_in_cairo_context (cr);
 #endif
@@ -966,7 +966,7 @@ DrawingArea::set_data (GfxContainerPtr& g)
 #if 0
 	// invalidate window
 	unsigned int children = g->children.size();
-	//children = 14;
+	// children = 14;
 	set_size_request (500, cont_height * children);
 #endif
 }
@@ -976,7 +976,7 @@ DrawingArea::get_focus (int x, int y)
 {
 	GfxContainerPtr match;
 
-	for (auto rg : vRange) {
+	for (auto& rg : vRange) {
 		Rect r = rg.r;
 		if ((x >= r.x) && (x < (r.x + r.w)) && (y >= r.y) && (y < (r.y + r.h))) {
 			match = rg.p;
@@ -1005,9 +1005,9 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 #if 0
 	for (; c; c = c->parent.lock()) {
 		log_debug (c->type.back());
-		auto tmp = c->get_actions();
+		auto& tmp = c->get_actions();
 		actions.insert (std::end (actions), std::begin (tmp), std::end (tmp));
-		for (auto t : tmp) {
+		for (auto& t : tmp) {
 			log_debug ("\t%s", t.name.c_str());
 		}
 	}
@@ -1015,7 +1015,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 
 	if (actions.empty()) {
 		log_debug ("No actions");
-		//return;
+		// return;
 	}
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
@@ -1028,7 +1028,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 
 #if 0
 	log_debug ("Actions:");
-	for (auto a : actions) {
+	for (auto& a : actions) {
 		int colour;
 		if (a.enabled) {
 			colour = 32;
@@ -1195,7 +1195,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 	return_if_fail (gfx);
 
 	std::vector<Widget*> items = menu_popup.get_children();
-	for (auto i : items) {
+	for (auto& i : items) {
 		menu_popup.remove (*i);
 	}
 
@@ -1215,7 +1215,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 	actions.push_back ({ "Paste Special", true });
 #endif
 
-	for (auto a : actions) {
+	for (auto& a : actions) {
 		log_debug (a.name);
 		std::size_t pos = a.name.find_first_of ('/');
 		if (pos == std::string::npos) {
@@ -1365,12 +1365,12 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 	std::vector<Action> actions = c->get_actions();
 	if (actions.empty()) {
 		log_debug ("No actions");
-		//return;
+		// return;
 	}
 
 #if 0
 	log_debug ("Actions:");
-	for (auto a : actions) {
+	for (auto& a : actions) {
 		log_debug ("\t%s", a->name.c_str());
 	}
 #endif

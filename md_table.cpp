@@ -139,7 +139,7 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 		return false;
 
 	buffer  += 4096;	// Ignore the first 4KiB
-	//bufsize -= 4096;	//XXX not used
+	// bufsize -= 4096;	//XXX not used
 
 	if (!is_mdtable (buffer))
 		return false;

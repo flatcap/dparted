@@ -42,7 +42,7 @@ public:
 	static bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 public:
-	//properties
+	// properties
 
 protected:
 	Misc (void);

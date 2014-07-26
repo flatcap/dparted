@@ -34,13 +34,28 @@ main (int argc, char *argv[])
 {
 	LogHandlerPtr log_out = LogHandler::create (stdout);
 	if (log_out) {
-		log_out->start (Severity::AllMessages & ~(Severity::Ctor|Severity::Dtor|Severity::File|Severity::Utils|Severity::ConfigRead|Severity::ThreadStart|Severity::ThreadEnd|Severity::Code));
+		log_out->start (Severity::AllMessages & ~(
+			Severity::Debug|
+			Severity::Command|
+			Severity::CommandIn|
+			Severity::CommandOut|
+			Severity::Ctor|
+			Severity::Dtor|
+			Severity::File|
+			Severity::Utils|
+			Severity::ConfigRead|
+			Severity::ThreadStart|
+			Severity::ThreadEnd|
+			Severity::Enter|
+			Severity::Leave|
+			Severity::Code
+		));
 	}
 
 	LogHandlerPtr log_red = LogHandler::create (stdout);
 	if (log_red) {
-		log_red->background = 196;
-		log_red->foreground =  15;
+		log_red->background =  16;
+		log_red->foreground = 196;
 		log_red->start (Severity::Code);
 	}
 
@@ -57,6 +72,7 @@ main (int argc, char *argv[])
 	text_app = std::make_shared<TextApp>();
 	main_app = text_app;
 	status = text_app->run (argc, argv);
+	// text_app->test();
 	text_app = nullptr;
 #endif
 	main_app = nullptr;

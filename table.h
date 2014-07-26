@@ -47,7 +47,7 @@ public:
 	virtual bool set_alignment (std::uint64_t bytes);
 
 public:
-	//properties
+	// properties
 
 protected:
 	Table (void);

@@ -191,7 +191,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	PartitionPtr res1 = Partition::create();
 	res1->sub_type ("Space");
 	res1->sub_type ("Reserved");
-	res1->bytes_size    = 512 * 34;		//align (512 * 34, 1024*1024);
+	res1->bytes_size    = 512 * 34;		// align (512 * 34, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
 	g->add_child (res1, false);		// change to add_reserved?
@@ -199,7 +199,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	PartitionPtr res2 = Partition::create();
 	res2->sub_type ("Space");
 	res2->sub_type ("Reserved");
-	res2->bytes_size    = 512 * 33;		//align (512 * 33, 1024*1024);
+	res2->bytes_size    = 512 * 33;		// align (512 * 33, 1024*1024);
 	res2->bytes_used    = res2->bytes_size;
 	res2->parent_offset = g->bytes_size - res2->bytes_size;		// End of the partition
 	g->add_child (res2, false);
@@ -210,7 +210,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	delete_region (empty, sect_offset, 33);
 
 	buffer += 1024;
-	//bufsize -= 1024;	//XXX not used
+	// bufsize -= 1024;	//XXX not used
 				// for range checking
 	std::string device = g->get_device_name();
 
@@ -257,7 +257,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		g->add_child (p, true);
 	}
 
-	for (auto r : empty) {
+	for (auto& r : empty) {
 		PartitionPtr p = Partition::create();
 		p->bytes_size = (r.second-r.first+1);	p->bytes_size    *= 512;	//XXX two parts to avoid overflow
 		p->parent_offset = r.first;		p->parent_offset *= 512;

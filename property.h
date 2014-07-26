@@ -68,7 +68,7 @@ public:
 	BaseProperty& operator= (BaseProperty&& other) = default;
 
 	void set_type (std::string)              { type = Tag::t_string; }
-	void set_type (std::vector<std::string>) { type = Tag::t_list; }
+	void set_type (std::vector<std::string>) { type = Tag::t_list;   }
 	void set_type (const char*)              { type = Tag::t_string; }
 	void set_type (double)                   { type = Tag::t_double; }
 	void set_type (bool)                     { type = Tag::t_bool;   }

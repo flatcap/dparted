@@ -56,7 +56,7 @@ LogHandler::create (const std::string& filename, bool truncate /*=false*/)
 		return nullptr;
 	}
 
-	//log_file ("file open: '%s'", name.c_str());	//XXX reinstate when we can handle early/late logging
+	// log_file ("file open: '%s'", name.c_str());	//XXX reinstate when we can handle early/late logging
 
 	LogHandlerPtr lh (new LogHandler());
 	lh->file       = f;

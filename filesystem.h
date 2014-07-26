@@ -46,7 +46,7 @@ public:
 	bool get_mounted_usage (ContainerPtr parent);
 
 public:
-	//properties
+	// properties
 
 protected:
 	Filesystem (void);

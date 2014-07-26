@@ -194,7 +194,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 	std::uint64_t cfree = -1;	// free space in clusters
 
 	log_debug ("keys:");
-	for (auto line : output) {
+	for (auto& line : output) {
 		if (line.empty())
 			continue;
 
