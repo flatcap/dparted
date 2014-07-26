@@ -233,7 +233,6 @@ Container::add_child (ContainerPtr& child, bool probe)
 
 	child->parent = get_smart();
 
-#if 0
 	ContainerPtr toplevel = get_toplevel();
 	if (toplevel) {
 		for (auto& i : toplevel->container_listeners) {
@@ -259,7 +258,6 @@ Container::add_child (ContainerPtr& child, bool probe)
 	 */
 
 	bytes_used += child->bytes_size;
-#endif
 }
 
 void

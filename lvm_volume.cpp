@@ -138,7 +138,6 @@ LvmVolume::add_child (ContainerPtr& child, bool probe)
 		child->whole = get_smart();
 	} else if (child->is_a ("LvmPartition")) {
 		log_info ("PARTITION %s", child->name.c_str());
-		child->whole = get_smart();	//XXX this belongs in add_segment
 		add_segment (child);
 		// Volume::add_child (child);
 		child->whole = get_smart();

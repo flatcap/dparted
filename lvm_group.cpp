@@ -215,7 +215,6 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		}
 
 		ContainerPtr c(t);
-		c->whole = g;	//XXX this belongs in add_segment
 		g->add_segment(c);	// Connect the LvmGroup to its constituent LvmTables
 		//XXX deps.insert (std::make_pair (g->uuid, t->uuid));
 

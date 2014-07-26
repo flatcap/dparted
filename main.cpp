@@ -30,7 +30,7 @@
 #include "log_handler.h"
 
 int
-main (int, char *[])
+main (int argc, char *argv[])
 {
 	LogHandlerPtr log_out = LogHandler::create (stdout);
 	if (log_out) {
@@ -71,8 +71,8 @@ main (int, char *[])
 #else
 	text_app = std::make_shared<TextApp>();
 	main_app = text_app;
-	// status = text_app->run (argc, argv);
-	text_app->test();
+	status = text_app->run (argc, argv);
+	// text_app->test();
 	text_app = nullptr;
 #endif
 	main_app = nullptr;
