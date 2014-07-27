@@ -54,7 +54,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	virtual void add_child    (ContainerPtr& child, bool probe);
+	virtual void add_child    (ContainerPtr& child, bool probe, const char* description = nullptr);
 	virtual void delete_child (ContainerPtr& child);
 	virtual void move_child   (ContainerPtr& child, std::uint64_t offset, std::uint64_t size);
 
@@ -108,10 +108,10 @@ public:
 	std::vector<PPtr> get_all_props (bool inc_hidden = false);
 
 	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe)
+	void add_child (std::shared_ptr<T>& child, bool probe, const char* description = nullptr)
 	{
 		ContainerPtr c (child);
-		add_child (c, probe);
+		add_child (c, probe, description);
 	}
 
 	void sub_type (const char* name);

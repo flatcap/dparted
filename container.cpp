@@ -216,7 +216,7 @@ Container::perform_action (Action action)
 
 
 void
-Container::add_child (ContainerPtr& child, bool probe)
+Container::add_child (ContainerPtr& child, bool probe, const char* description)
 {
 	return_if_fail (child);
 	LOG_TRACE;
@@ -239,7 +239,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 			ContainerListenerPtr cl = i.lock();
 			if (cl) {
 				log_listener ("Added child %p to Container %p", child.get(), this);
-				cl->container_added (child, get_smart());	//XXX get this pointer once
+				cl->container_added (child, get_smart(), description);	//XXX get this pointer once
 			} else {
 				log_code ("remove listener from the collection");	//XXX remove it from the collection
 			}

@@ -538,7 +538,7 @@ GfxContainer::find (const ContainerPtr& cont)
 }
 
 void
-GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& parent)
+GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& parent, const char* UNUSED(description))
 {
 	// LOG_TRACE;
 	log_debug ("GFX container_added: %s to %s", cont->name.c_str(), parent->name.c_str());

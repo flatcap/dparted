@@ -113,7 +113,7 @@ LvmVolume::perform_action (Action action)
 
 
 void
-LvmVolume::add_child (ContainerPtr& child, bool probe)
+LvmVolume::add_child (ContainerPtr& child, bool probe, const char* description)
 {
 	return_if_fail (child);
 
@@ -143,10 +143,10 @@ LvmVolume::add_child (ContainerPtr& child, bool probe)
 		child->whole = get_smart();
 	} else if (child->is_a ("Space")) {
 		log_info ("SPACE %s", child->name.c_str());
-		Volume::add_child (child, false);
+		Volume::add_child (child, false, description);
 	} else {
 		// filesystem
-		Volume::add_child (child, probe);
+		Volume::add_child (child, probe, description);
 
 #if 0
 		for (auto& i : subvols) {

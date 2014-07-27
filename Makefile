@@ -27,7 +27,7 @@ L	?= 0
 D	?= 1
 T	?= 1
 
-GUI	?= 1
+GUI	?= 0
 TREE	?= 1
 AREA	?= 1
 
@@ -46,7 +46,7 @@ EXTFS	?= 1
 FS_MISC	?= 1
 NTFS	?= 1
 
-LIST	?= $(A)
+LIST	?= 1
 PROP	?= $(A)
 DOT	?= $(A)
 HEX	?= $(A)
@@ -70,7 +70,7 @@ LINKS	= misc test
 SRC	+= block.cpp container.cpp filesystem.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
-SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp
+SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp timeline.cpp
 
 # GUI - Graphical objects
 SRC	+= main.cpp

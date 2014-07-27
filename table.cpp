@@ -191,7 +191,7 @@ Table::fill_space (void)
 	}
 
 	for (auto& i : vm) {
-		add_child (i, false);	// add_free()
+		add_child (i, false, "Marked unused space");	// add_free()
 	}
 
 #if 0

@@ -86,7 +86,7 @@ LvmMirror::perform_action (Action action)
 
 
 void
-LvmMirror::add_child (ContainerPtr& child, bool probe)
+LvmMirror::add_child (ContainerPtr& child, bool probe, const char* description)
 {
 	return_if_fail (child);
 
@@ -137,7 +137,7 @@ LvmMirror::add_child (ContainerPtr& child, bool probe)
 	child->parent = this;
 #endif
 	//XXX for now
-	LvmVolume::add_child (child, probe);
+	LvmVolume::add_child (child, probe, description);
 }
 
 void

@@ -39,13 +39,13 @@ public:
 	virtual bool perform_action (Action action);
 
 	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe)
+	void add_child (std::shared_ptr<T>& child, bool probe, const char* description)
 	{
 		ContainerPtr c (child);
-		add_child (c, probe);
+		add_child (c, probe, description);
 	}
 
-	virtual void add_child    (ContainerPtr& child, bool probe);
+	virtual void add_child    (ContainerPtr& child, bool probe, const char* description);
 	virtual void delete_child (ContainerPtr& child);
 
 public:

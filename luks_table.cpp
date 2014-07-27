@@ -208,9 +208,10 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	p->bytes_size = l->header_size;
 	p->bytes_used = l->header_size;
-	l->add_child (p, false);
+	l->add_child (p, false, "Marked LUKS reserved space");
 
-	parent->add_child (l, false);
+	std::string desc = "Identified LUKS encrypted header";
+	parent->add_child (l, false, desc.c_str());
 	l->luks_open();
 
 	return true;
@@ -296,7 +297,8 @@ LuksTable::luks_open_actual (const std::string& device, const std::string& passw
 	p->parent_offset = header_size;
 	p->device = "/dev/mapper/luks-" + uuid;
 
-	add_child (p, probe);
+	std::string desc = "Discovered LUKS encrypted partition: " + p->device;
+	add_child (p, probe, desc.c_str());
 
 	//XXX check mount really succeeded
 
@@ -320,7 +322,8 @@ LuksTable::luks_open (void)
 		p->parent_offset = header_size;
 		p->device = mapper;
 
-		add_child (p, true);
+		std::string desc = "Unlocked LUKS encrypted parition: " + p->device;
+		add_child (p, true, desc.c_str());
 	} else {
 		QuestionPtr q = Question::create (std::bind(&LuksTable::on_reply, this, std::placeholders::_1));
 		q->type = Question::Type::Password;
