@@ -26,9 +26,13 @@ Timeline::Timeline (void)
 
 Timeline::~Timeline()
 {
+	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+
 	for (auto& e : event_list) {
-		log_code ("%s (%d): %p/%p : %s",
-			std::get<0>(e).c_str(),
+		std::chrono::steady_clock::time_point then = std::get<0>(e);
+		int ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
+		log_code ("%3dms ago (%d): %p/%p : %s",
+			ms,
 			(int) std::get<1>(e),
 			std::get<2>(e).get(),
 			std::get<3>(e).get(),
@@ -51,7 +55,15 @@ void
 Timeline::container_added (const ContainerPtr& cont, const ContainerPtr& UNUSED(parent), const char* description)
 {
 	LOG_TRACE;
-	event_list.push_back (std::make_tuple ("2014-07-26 23:43:08", EventType::t_add, nullptr, cont, description));
+	std::string desc;
+	if (description) {
+		desc = description;
+	} else {
+		desc = "Unknown event";
+		desc = "";
+	}
+
+	event_list.push_back (std::make_tuple (std::chrono::steady_clock::now(), EventType::t_add, nullptr, cont, desc));
 }
 
 void

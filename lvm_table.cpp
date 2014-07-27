@@ -327,7 +327,8 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	t->metadata_size = 1048576;		//XXX read from header
 
-	parent->add_child (t, false);
+	std::string desc = "Discovered LVM table: " + t->uuid;
+	parent->add_child (t, false, desc.c_str());
 
 	PartitionPtr p = Partition::create();
 	p->sub_type ("Space");
@@ -335,7 +336,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	p->bytes_size = t->metadata_size;
 	p->bytes_used = t->metadata_size;
 	p->parent_offset = 0;
-	t->add_child (p, false);
+	t->add_child (p, false, "Marked unused LVM space");
 
 	//XXX add alignment -- can't do this without the group's block size
 
@@ -344,7 +345,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 
 void
-LvmTable::add_child (ContainerPtr& child, bool probe)
+LvmTable::add_child (ContainerPtr& child, bool probe, const char* description)
 {
 	return_if_fail (child);
 
@@ -353,7 +354,7 @@ LvmTable::add_child (ContainerPtr& child, bool probe)
 		child->parent_offset += metadata_size;
 	}
 
-	Table::add_child (child, probe);
+	Table::add_child (child, probe, description);
 
 	// child->open_device();	// get a buffer
 
@@ -397,7 +398,7 @@ LvmTable::set_alignment (std::uint64_t bytes)
 	s->bytes_used = remainder;
 	s->parent_offset = bytes_size - remainder;
 	ContainerPtr c(s);
-	add_child (c, false);
+	add_child (c, false, "Marked LVM alignment space");
 
 	return true;
 }

@@ -23,6 +23,8 @@
 #include <tuple>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <ctime>
 
 #include "container.h"
 #include "container_listener.h"
@@ -33,7 +35,7 @@ enum class EventType {
 	t_edit		// ... changed
 };
 
-typedef std::tuple<std::string,EventType,ContainerPtr,ContainerPtr,std::string> Event;	// Date, event type, old, new, description
+typedef std::tuple<std::chrono::steady_clock::time_point,EventType,ContainerPtr,ContainerPtr,std::string> Event;	// Date, event type, old, new, description
 
 class Timeline;
 

@@ -263,7 +263,8 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
-	parent->add_child (l, true);
+	std::string desc = "Identified loopback device: " + l->get_device_short();
+	parent->add_child (l, true, desc.c_str());
 	return true;
 }
 

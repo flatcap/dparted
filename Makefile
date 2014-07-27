@@ -27,7 +27,7 @@ L	?= 0
 D	?= 1
 T	?= 1
 
-GUI	?= 1
+GUI	?= 0
 TREE	?= 1
 AREA	?= 1
 
@@ -46,7 +46,7 @@ EXTFS	?= 1
 FS_MISC	?= 1
 NTFS	?= 1
 
-LIST	?= $(A)
+LIST	?= 1
 PROP	?= $(A)
 DOT	?= $(A)
 HEX	?= $(A)
