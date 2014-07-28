@@ -26,6 +26,8 @@
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
+#include <gtkmm/button.h>
+#include <gtkmm/buttonbox.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/menubar.h>
 #include <gtkmm/radioaction.h>
@@ -69,6 +71,13 @@ protected:
 	Gtk::EventBox		eventbox;
 	Gtk::ScrolledWindow	scrolledwindow;
 	Gtk::Box		inner_box;
+
+	Gtk::ButtonBox time_box;
+	Gtk::Button time_back;
+	Gtk::Button time_forward;
+
+	void button_clicked (int num);
+
 #ifdef DP_AREA
 	DrawingArea		drawingarea;
 #endif

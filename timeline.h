@@ -45,6 +45,8 @@ public:
 	static TimelinePtr create (ContainerPtr& cont);
 	virtual ~Timeline();
 
+	bool adjust (int amount);
+
 protected:
 	Timeline (void);
 

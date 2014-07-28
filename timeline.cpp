@@ -31,7 +31,7 @@ Timeline::~Timeline()
 	for (auto& e : event_list) {
 		std::chrono::steady_clock::time_point then = std::get<0>(e);
 		int ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
-		log_code ("%3dms ago (%d): %p/%p : %s",
+		log_debug ("%3dms ago (%d): %p/%p : %s",
 			ms,
 			(int) std::get<1>(e),
 			std::get<2>(e).get(),
@@ -90,4 +90,11 @@ Timeline::container_resync (const ContainerPtr& UNUSED(cont))
 	LOG_TRACE;
 }
 
+
+bool
+Timeline::adjust (int amount)
+{
+	log_code ("adjust timeline %+d", amount);
+	return false;
+}
 

@@ -63,7 +63,7 @@ Window::Window (void)
 #endif
 
 	signal_realize().connect (sigc::mem_fun (*this, &Window::my_realize));
-	signal_show().connect (sigc::mem_fun (*this, &Window::my_show));
+	signal_show().connect    (sigc::mem_fun (*this, &Window::my_show));
 
 	set_default_icon_name ("dparted");
 
@@ -72,6 +72,17 @@ Window::Window (void)
 
 	outer_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 	outer_box.set_homogeneous (false);
+
+	time_box.set_orientation (Gtk::ORIENTATION_HORIZONTAL);
+	time_box.set_layout (Gtk::ButtonBoxStyle::BUTTONBOX_START);
+	time_back.set_label ("Back");
+	time_forward.set_label ("Forward");
+
+	time_back.signal_clicked().connect    (sigc::bind<int> (sigc::mem_fun (*this, &Window::button_clicked), 1));
+	time_forward.signal_clicked().connect (sigc::bind<int> (sigc::mem_fun (*this, &Window::button_clicked), 2));
+
+	// time_back.signal_clicked().connect    (std::bind (&Window::button_clicked, this, 1));
+	// time_forward.signal_clicked().connect (std::bind (&Window::button_clicked, this, 2));
 
 	// -------------------------------------
 
@@ -87,6 +98,9 @@ Window::Window (void)
 #ifdef DP_TREE
 					inner_box.pack_start (treeview,    true,  true);
 #endif
+		outer_box.add (time_box);
+			time_box.pack_start (time_back);
+			time_box.pack_start (time_forward);
 		outer_box.pack_end (statusbar, false, false);
 
 	// -------------------------------------
@@ -142,7 +156,7 @@ Window::my_show (void)
 	LOG_TRACE;
 	//XXX Arbitrary minimum requirement - theme?
 	// set_size_request (800, 600);
-	resize (800, 250);
+	// resize (800, 250);
 }
 
 
@@ -228,11 +242,12 @@ Window::set_geometry (int x, int y, int w, int h)
 	w = std::max (w, 100);
 	h = std::max (h, 100);
 
+	// log_code ("x = %d, y = %d, w = %d, h = %d\n", x, y, w, h);
 	move (x, y);
 	resize (w, h);
 
-	log_debug ("pg = %d", parse_geometry ("800x400+200+50"));
-	log_debug ("pg = %d", parse_geometry ("800x400-0-0"));
+	// log_debug ("pg = %d", parse_geometry ("800x400+200+50"));
+	// log_debug ("pg = %d", parse_geometry ("800x400-0-0"));
 
 	//XXX do something smart with negative x,y?
 #if 0
@@ -632,5 +647,17 @@ Window::set_data (ContainerPtr c)
 #ifdef DP_AREA
 	drawingarea.set_data(g);
 #endif
+}
+
+
+void
+Window::button_clicked (int num)
+{
+	// LOG_TRACE;
+	if (num == 1) {
+		main_app->adjust_timeline (-1);
+	} else if (num == 2) {
+		main_app->adjust_timeline (+1);
+	}
 }
 
