@@ -791,3 +791,21 @@ Timeline:
 		*creates* a timeline
 	timeline is a listener of container
 
+menu info cached in gui
+if it changes, container_changed()
+needs recursive listener
+
+commands need list of prerequisites/constraints
+i.e. I expect Container of size X, with Y children.
+If these constraints fail, stop processing.
+Leave redo-buffer intact, just in case.
+User might allow modified commands.
+
+Need to notify on delete (e.g. children of deleted containers)
+e.g. Properties dialog -- could disappear:
+	Ask: Do nothing? Close?
+		[X] Remember my decision
+
+Each task can only alter the data of *ONE* container.
+Many containers (children) may still be added/removed in one stroke.
+
