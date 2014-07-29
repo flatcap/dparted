@@ -40,3 +40,5 @@ Delete
 		Increase A1's seqnum
 		Increase B1's seqnum
 
+Because the timeline's linear, I can simply exchange new containers for old.
+

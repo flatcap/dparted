@@ -753,3 +753,41 @@ FAT label trim trailing whitespace
 
 Config listener (there'll be a lot of these)
 
+Which commands can I *REALLY* undo?
+If I preserve the old metadata/superblocks, etc
+Partition delete/undelete - easy
+Entire partition table delete/undelete - easy
+Overwrite fs with same type of fs - medium
+Overwrite fs with different fs - hard
+
+recursive listeners
+
+timeline - singleton?
+	or multiple objects pointing to
+	one master object
+
+If there's two timelines, back() needs to cause events
+that will be correcly  interpreted by another timeline
+(and ignored by itself).
+
+sigc:: -> std::bind?
+
+Time Stretcher:
+	A way to scale down the speed of the app
+	(in realistic amounts)
+	Time how long a function/thread/etc lasts
+	Multiply by a compile/config time factor
+	Sleep before adding container and returning
+
+Timeline:
+	Can't swap out top-level
+	top-level can only add_child/remove_child -- nothing else
+	how to turn on/off recording?
+	start_recording() returns a timeline ptr
+		int recording++
+	end_recording() returns a timeline ptr
+		int recording--
+	start_recording (container)
+		*creates* a timeline
+	timeline is a listener of container
+
