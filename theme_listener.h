@@ -21,12 +21,9 @@
 
 #include <memory>
 
-class Theme;
-class IThemeListener;
-
-typedef std::shared_ptr<Theme> ThemePtr;
-typedef std::shared_ptr<IThemeListener> ThemeListenerPtr;
-typedef std::weak_ptr<IThemeListener> ThemeListenerWeak;
+typedef std::shared_ptr<class Theme> ThemePtr;
+typedef std::shared_ptr<class IThemeListener> ThemeListenerPtr;
+typedef std::weak_ptr<class IThemeListener> ThemeListenerWeak;
 
 class IThemeListener
 {

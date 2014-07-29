@@ -25,9 +25,7 @@
 
 #include "filesystem.h"
 
-class Btrfs;
-
-typedef std::shared_ptr<Btrfs> BtrfsPtr;
+typedef std::shared_ptr<class Btrfs> BtrfsPtr;
 
 class Btrfs : public Filesystem
 {

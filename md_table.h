@@ -25,9 +25,7 @@
 
 #include "table.h"
 
-class MdTable;
-
-typedef std::shared_ptr<MdTable> MdTablePtr;
+typedef std::shared_ptr<class MdTable> MdTablePtr;
 
 class MdTable : public Table
 {

@@ -25,9 +25,7 @@
 
 #include "container.h"
 
-class Table;
-
-typedef std::shared_ptr<Table> TablePtr;
+typedef std::shared_ptr<class Table> TablePtr;
 
 /**
  * class Table - Divides a Block into Partition objects

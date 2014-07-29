@@ -24,9 +24,7 @@
 
 #include "partition.h"
 
-class MdPartition;
-
-typedef std::shared_ptr<MdPartition> MdPartitionPtr;
+typedef std::shared_ptr<class MdPartition> MdPartitionPtr;
 
 class MdPartition : public Partition
 {

@@ -26,9 +26,7 @@
 #include "table.h"
 #include "lvm_group.h"
 
-class LvmTable;
-
-typedef std::shared_ptr<LvmTable> LvmTablePtr;
+typedef std::shared_ptr<class LvmTable> LvmTablePtr;
 
 class LvmTable : public Table
 {

@@ -24,9 +24,7 @@
 
 #include "md_volume.h"
 
-class MdStripe;
-
-typedef std::shared_ptr<MdStripe> MdStripePtr;
+typedef std::shared_ptr<class MdStripe> MdStripePtr;
 
 class MdStripe : public MdVolume
 {

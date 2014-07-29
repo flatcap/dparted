@@ -25,9 +25,7 @@
 
 #include "filesystem.h"
 
-class Ntfs;
-
-typedef std::shared_ptr<Ntfs> NtfsPtr;
+typedef std::shared_ptr<class Ntfs> NtfsPtr;
 
 class Ntfs : public Filesystem
 {

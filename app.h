@@ -32,11 +32,9 @@
 #include "container.h"
 #include "timeline.h"
 
-class App;
-
 typedef std::function<void(ContainerPtr)> scan_async_cb_t;
 
-typedef std::shared_ptr<App> AppPtr;
+typedef std::shared_ptr<class App> AppPtr;
 
 extern AppPtr main_app;
 

@@ -27,9 +27,7 @@
 
 #include "log.h"
 
-class BaseProperty;
-
-typedef std::shared_ptr<BaseProperty> PPtr;
+typedef std::shared_ptr<class BaseProperty> PPtr;
 
 typedef std::function<std::string              (void)> get_string_t;
 typedef std::function<std::vector<std::string> (void)> get_list_t;

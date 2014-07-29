@@ -32,9 +32,7 @@
 #include "theme_listener.h"
 #include "window.h"
 
-class GuiApp;
-
-typedef std::shared_ptr<GuiApp> GuiAppPtr;
+typedef std::shared_ptr<class GuiApp> GuiAppPtr;
 
 extern GuiAppPtr gui_app;
 

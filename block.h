@@ -25,9 +25,7 @@
 
 #include "container.h"
 
-class Block;
-
-typedef std::shared_ptr<Block> BlockPtr;
+typedef std::shared_ptr<class Block> BlockPtr;
 
 /**
  * class Block - Mass storage device

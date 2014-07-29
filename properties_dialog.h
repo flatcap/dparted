@@ -28,8 +28,7 @@
 #include "gfx_container.h"
 #include "prop_drawing_area.h"
 
-class PropertiesDialog;
-typedef std::shared_ptr<PropertiesDialog> PropertiesDialogPtr;
+typedef std::shared_ptr<class PropertiesDialog> PropertiesDialogPtr;
 
 class PropertiesDialog : public Gtk::Dialog
 {

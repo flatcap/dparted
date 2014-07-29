@@ -24,9 +24,7 @@
 
 #include "volume.h"
 
-class MdVolume;
-
-typedef std::shared_ptr<MdVolume> MdVolumePtr;
+typedef std::shared_ptr<class MdVolume> MdVolumePtr;
 
 class MdVolume : public Volume
 {

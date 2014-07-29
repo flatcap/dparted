@@ -33,9 +33,7 @@
 #include "theme.h"
 #include "theme_listener.h"
 
-class GfxContainer;
-
-typedef std::shared_ptr<GfxContainer> GfxContainerPtr;
+typedef std::shared_ptr<class GfxContainer> GfxContainerPtr;
 
 /**
  * class GfxContainer - Shield the GUI from the messy Containers

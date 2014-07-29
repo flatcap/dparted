@@ -25,9 +25,7 @@
 
 #include "table.h"
 
-class Gpt;
-
-typedef std::shared_ptr<Gpt> GptPtr;
+typedef std::shared_ptr<class Gpt> GptPtr;
 
 class Gpt : public Table
 {

@@ -44,9 +44,7 @@
 #endif
 #include "gfx_container.h"
 
-class Window;
-
-typedef std::shared_ptr<Window> WindowPtr;
+typedef std::shared_ptr<class Window> WindowPtr;
 
 class Window : public Gtk::ApplicationWindow
 {

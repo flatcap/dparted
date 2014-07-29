@@ -25,9 +25,7 @@
 
 #include "partition.h"
 
-class LvmPartition;
-
-typedef std::shared_ptr<LvmPartition> LvmPartitionPtr;
+typedef std::shared_ptr<class LvmPartition> LvmPartitionPtr;
 
 class LvmPartition : public Partition
 {

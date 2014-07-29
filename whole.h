@@ -26,9 +26,7 @@
 
 #include "container.h"
 
-class Whole;
-
-typedef std::shared_ptr<Whole> WholePtr;
+typedef std::shared_ptr<class Whole> WholePtr;
 
 class Whole : public Container
 {

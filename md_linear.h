@@ -24,9 +24,7 @@
 
 #include "md_volume.h"
 
-class MdLinear;
-
-typedef std::shared_ptr<MdLinear> MdLinearPtr;
+typedef std::shared_ptr<class MdLinear> MdLinearPtr;
 
 class MdLinear : public MdVolume
 {

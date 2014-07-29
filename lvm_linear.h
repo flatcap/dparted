@@ -24,9 +24,7 @@
 
 #include "lvm_volume.h"
 
-class LvmLinear;
-
-typedef std::shared_ptr<LvmLinear> LvmLinearPtr;
+typedef std::shared_ptr<class LvmLinear> LvmLinearPtr;
 
 class LvmLinear : public LvmVolume
 {

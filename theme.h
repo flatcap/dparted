@@ -29,9 +29,7 @@
 #include "config_file.h"
 #include "theme_listener.h"
 
-class Theme;
-
-typedef std::shared_ptr<Theme> ThemePtr;
+typedef std::shared_ptr<class Theme> ThemePtr;
 
 class Theme
 {

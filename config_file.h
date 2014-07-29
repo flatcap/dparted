@@ -26,9 +26,7 @@
 
 #include "config.h"
 
-class ConfigFile;
-
-typedef std::shared_ptr<ConfigFile> ConfigFilePtr;
+typedef std::shared_ptr<class ConfigFile> ConfigFilePtr;
 
 /**
  * class ConfigFile - Manages a bunch of nested strings

@@ -24,9 +24,7 @@
 
 #include "whole.h"
 
-class Volume;
-
-typedef std::shared_ptr<Volume> VolumePtr;
+typedef std::shared_ptr<class Volume> VolumePtr;
 
 /**
  * class Volume - An ordered, named, set of Partition objects

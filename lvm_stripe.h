@@ -24,9 +24,7 @@
 
 #include "lvm_volume.h"
 
-class LvmStripe;
-
-typedef std::shared_ptr<LvmStripe> LvmStripePtr;
+typedef std::shared_ptr<class LvmStripe> LvmStripePtr;
 
 class LvmStripe : public LvmVolume
 {

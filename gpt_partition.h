@@ -24,9 +24,7 @@
 
 #include "partition.h"
 
-class GptPartition;
-
-typedef std::shared_ptr<GptPartition> GptPartitionPtr;
+typedef std::shared_ptr<class GptPartition> GptPartitionPtr;
 
 class GptPartition : public Partition
 {

@@ -26,9 +26,7 @@
 
 #include "block.h"
 
-class Loop;
-
-typedef std::shared_ptr<Loop> LoopPtr;
+typedef std::shared_ptr<class Loop> LoopPtr;
 
 class Loop : public Block
 {

@@ -25,9 +25,7 @@
 
 #include "filesystem.h"
 
-class Extfs;
-
-typedef std::shared_ptr<Extfs> ExtfsPtr;
+typedef std::shared_ptr<class Extfs> ExtfsPtr;
 
 class Extfs : public Filesystem
 {

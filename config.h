@@ -25,9 +25,7 @@
 
 //XXX static_assert : sizeof (d_value) == sizeof (l_value)
 
-class Config;
-
-typedef std::shared_ptr<Config> ConfigPtr;
+typedef std::shared_ptr<class Config> ConfigPtr;
 
 class Config
 {

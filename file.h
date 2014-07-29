@@ -26,9 +26,7 @@
 
 #include "container.h"
 
-class File;
-
-typedef std::shared_ptr<File> FilePtr;
+typedef std::shared_ptr<class File> FilePtr;
 
 class File : public Container
 {

@@ -24,9 +24,7 @@
 
 #include "md_volume.h"
 
-class MdRaid;
-
-typedef std::shared_ptr<MdRaid> MdRaidPtr;
+typedef std::shared_ptr<class MdRaid> MdRaidPtr;
 
 class MdRaid : public MdVolume
 {

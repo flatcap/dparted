@@ -27,9 +27,7 @@
 #include "log.h"
 #include "question.h"
 
-class Dialog;
-
-typedef std::shared_ptr<Dialog> DialogPtr;
+typedef std::shared_ptr<class Dialog> DialogPtr;
 
 class Dialog : public Gtk::MessageDialog
 {

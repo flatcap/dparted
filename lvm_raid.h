@@ -24,9 +24,7 @@
 
 #include "lvm_volume.h"
 
-class LvmRaid;
-
-typedef std::shared_ptr<LvmRaid> LvmRaidPtr;
+typedef std::shared_ptr<class LvmRaid> LvmRaidPtr;
 
 class LvmRaid : public LvmVolume
 {

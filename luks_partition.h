@@ -24,9 +24,7 @@
 
 #include "partition.h"
 
-class LuksPartition;
-
-typedef std::shared_ptr<LuksPartition> LuksPartitionPtr;
+typedef std::shared_ptr<class LuksPartition> LuksPartitionPtr;
 
 class LuksPartition : public Partition
 {

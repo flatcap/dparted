@@ -23,9 +23,7 @@
 
 #include "app.h"
 
-class TextApp;
-
-typedef std::shared_ptr<TextApp> TextAppPtr;
+typedef std::shared_ptr<class TextApp> TextAppPtr;
 
 extern TextAppPtr text_app;
 

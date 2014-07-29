@@ -25,9 +25,7 @@
 
 #include "dialog.h"
 
-class ErrorDialog;
-
-typedef std::shared_ptr<ErrorDialog> ErrorDialogPtr;
+typedef std::shared_ptr<class ErrorDialog> ErrorDialogPtr;
 
 class ErrorDialog : public Dialog
 {

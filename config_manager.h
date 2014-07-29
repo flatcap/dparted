@@ -25,9 +25,7 @@
 
 #include "config_file.h"
 
-class ConfigManager;
-
-typedef std::shared_ptr<ConfigManager> ConfigManagerPtr;
+typedef std::shared_ptr<class ConfigManager> ConfigManagerPtr;
 
 class ConfigManager
 {

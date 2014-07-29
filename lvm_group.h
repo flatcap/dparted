@@ -26,9 +26,7 @@
 
 #include "whole.h"
 
-class LvmGroup;
-
-typedef std::shared_ptr<LvmGroup> LvmGroupPtr;
+typedef std::shared_ptr<class LvmGroup> LvmGroupPtr;
 
 class LvmGroup : public Whole
 {

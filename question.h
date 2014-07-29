@@ -26,9 +26,7 @@
 
 #include "container.h"
 
-class Question;
-
-typedef std::shared_ptr<Question> QuestionPtr;
+typedef std::shared_ptr<class Question> QuestionPtr;
 typedef std::function<void(QuestionPtr)> question_cb_t;
 
 class Question

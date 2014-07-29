@@ -25,9 +25,7 @@
 
 #include "container.h"
 
-class Filesystem;
-
-typedef std::shared_ptr<Filesystem> FilesystemPtr;
+typedef std::shared_ptr<class Filesystem> FilesystemPtr;
 
 /**
  * class Filesystem - The actual object containing your files

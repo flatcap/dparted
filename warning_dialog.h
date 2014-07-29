@@ -25,9 +25,7 @@
 
 #include "dialog.h"
 
-class WarningDialog;
-
-typedef std::shared_ptr<WarningDialog> WarningDialogPtr;
+typedef std::shared_ptr<class WarningDialog> WarningDialogPtr;
 
 class WarningDialog : public Dialog
 {

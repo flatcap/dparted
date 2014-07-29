@@ -28,9 +28,7 @@
 
 typedef std::function<void(Severity level, const char* function, const char* file, int line, const char* message)> log_handler_t;
 
-class LogHandler;
-
-typedef std::shared_ptr<LogHandler> LogHandlerPtr;
+typedef std::shared_ptr<class LogHandler> LogHandlerPtr;
 
 class LogHandler
 {

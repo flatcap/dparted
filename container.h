@@ -35,11 +35,10 @@
 #include "container_listener.h"
 #include "log.h"
 
-class Container;
 class Visitor;
 struct Action;
 
-typedef std::shared_ptr<Container> ContainerPtr;
+typedef std::shared_ptr<class Container> ContainerPtr;
 
 /**
  * class Container - Base class for all containers

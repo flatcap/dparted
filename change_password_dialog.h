@@ -26,9 +26,7 @@
 
 #include "dialog.h"
 
-class ChangePasswordDialog;
-
-typedef std::shared_ptr<ChangePasswordDialog> ChangePasswordDialogPtr;
+typedef std::shared_ptr<class ChangePasswordDialog> ChangePasswordDialogPtr;
 
 class ChangePasswordDialog : public Dialog
 {

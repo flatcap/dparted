@@ -25,9 +25,7 @@
 
 #include "msdos.h"
 
-class Extended;
-
-typedef std::shared_ptr<Extended> ExtendedPtr;
+typedef std::shared_ptr<class Extended> ExtendedPtr;
 
 class Extended : public Msdos
 {

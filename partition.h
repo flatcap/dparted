@@ -26,9 +26,7 @@
 #include "container.h"
 #include "volume.h"
 
-class Partition;
-
-typedef std::shared_ptr<Partition> PartitionPtr;
+typedef std::shared_ptr<class Partition> PartitionPtr;
 
 /**
  * class Partition - A subdivision of a Block

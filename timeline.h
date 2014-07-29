@@ -37,9 +37,7 @@ enum class EventType {
 
 typedef std::tuple<std::chrono::steady_clock::time_point,EventType,ContainerPtr,ContainerPtr,std::string> Event;	// Date, event type, old, new, description
 
-class Timeline;
-
-typedef std::shared_ptr<Timeline> TimelinePtr;
+typedef std::shared_ptr<class Timeline> TimelinePtr;
 
 class Timeline : public IContainerListener
 {

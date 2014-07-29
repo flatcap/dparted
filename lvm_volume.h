@@ -26,9 +26,7 @@
 
 #include "volume.h"
 
-class LvmVolume;
-
-typedef std::shared_ptr<LvmVolume> LvmVolumePtr;
+typedef std::shared_ptr<class LvmVolume> LvmVolumePtr;
 
 class LvmVolume : public Volume
 {

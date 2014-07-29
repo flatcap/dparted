@@ -27,9 +27,7 @@
 
 #include "block.h"
 
-class Disk;
-
-typedef std::shared_ptr<Disk> DiskPtr;
+typedef std::shared_ptr<class Disk> DiskPtr;
 
 class Disk : public Block
 {

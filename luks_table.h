@@ -25,9 +25,7 @@
 #include "table.h"
 #include "question.h"
 
-class LuksTable;
-
-typedef std::shared_ptr<LuksTable> LuksTablePtr;
+typedef std::shared_ptr<class LuksTable> LuksTablePtr;
 
 class LuksTable : public Table
 {

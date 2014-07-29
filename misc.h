@@ -25,9 +25,7 @@
 
 #include "container.h"
 
-class Misc;
-
-typedef std::shared_ptr<Misc> MiscPtr;
+typedef std::shared_ptr<class Misc> MiscPtr;
 
 class Misc : public Container
 {

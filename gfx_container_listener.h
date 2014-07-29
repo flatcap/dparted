@@ -21,12 +21,9 @@
 
 #include <memory>
 
-class GfxContainer;
-class IGfxContainerListener;
-
-typedef std::shared_ptr<GfxContainer> GfxContainerPtr;
-typedef std::shared_ptr<IGfxContainerListener> GfxContainerListenerPtr;
-typedef std::weak_ptr<IGfxContainerListener> GfxContainerListenerWeak;
+typedef std::shared_ptr<class GfxContainer> GfxContainerPtr;
+typedef std::shared_ptr<class IGfxContainerListener> GfxContainerListenerPtr;
+typedef std::weak_ptr<class IGfxContainerListener> GfxContainerListenerWeak;
 
 class IGfxContainerListener
 {

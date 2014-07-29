@@ -24,9 +24,7 @@
 
 #include "lvm_volume.h"
 
-class LvmMirror;
-
-typedef std::shared_ptr<LvmMirror> LvmMirrorPtr;
+typedef std::shared_ptr<class LvmMirror> LvmMirrorPtr;
 
 class LvmMirror : public LvmVolume
 {

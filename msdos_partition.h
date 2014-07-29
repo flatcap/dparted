@@ -24,9 +24,7 @@
 
 #include "partition.h"
 
-class MsdosPartition;
-
-typedef std::shared_ptr<MsdosPartition> MsdosPartitionPtr;
+typedef std::shared_ptr<class MsdosPartition> MsdosPartitionPtr;
 
 class MsdosPartition : public Partition
 {

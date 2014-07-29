@@ -25,9 +25,7 @@
 
 #include "dialog.h"
 
-class QuestionDialog;
-
-typedef std::shared_ptr<QuestionDialog> QuestionDialogPtr;
+typedef std::shared_ptr<class QuestionDialog> QuestionDialogPtr;
 
 class QuestionDialog : public Dialog
 {

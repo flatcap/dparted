@@ -25,9 +25,7 @@
 
 #include "table.h"
 
-class Msdos;
-
-typedef std::shared_ptr<Msdos> MsdosPtr;
+typedef std::shared_ptr<class Msdos> MsdosPtr;
 
 struct partition {
 	std::uint64_t start;

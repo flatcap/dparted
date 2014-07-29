@@ -24,9 +24,7 @@
 
 #include "md_volume.h"
 
-class MdMirror;
-
-typedef std::shared_ptr<MdMirror> MdMirrorPtr;
+typedef std::shared_ptr<class MdMirror> MdMirrorPtr;
 
 class MdMirror : public MdVolume
 {

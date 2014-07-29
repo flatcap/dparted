@@ -25,9 +25,7 @@
 
 #include "dialog.h"
 
-class InfoDialog;
-
-typedef std::shared_ptr<InfoDialog> InfoDialogPtr;
+typedef std::shared_ptr<class InfoDialog> InfoDialogPtr;
 
 class InfoDialog : public Dialog
 {
