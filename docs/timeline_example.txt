@@ -1,0 +1,32 @@
+Timeline
+
+Top-level
+Loop
+Gpt
+3 * partition
+3 * fs
+
+right-click on tree/area partition
+	ask gfx for menus
+		ask containers for menus
+Select menu item
+	Delete partition
+
+Validate request
+	is it still valid to delete this partition?
+
+Create vector of commands
+	// Front end
+	shell command
+	Human description
+	time estimate
+	// Back end
+	output
+	backup of metadata
+	'go' criteria
+
+Manipulate containers (RCU)
+	Send notifications
+		gfx update
+		tree/area/pending
+
