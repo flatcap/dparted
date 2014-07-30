@@ -32,6 +32,17 @@ Whole::Whole (void)
 	sub_type (me);
 }
 
+Whole::Whole (const Whole& c) :
+	Whole()
+{
+	segments = c.segments;
+}
+
+Whole::Whole (Whole&& c)
+{
+	swap (c);
+}
+
 Whole::~Whole()
 {
 	log_dtor ("dtor Whole");
@@ -44,6 +55,66 @@ Whole::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Whole&
+Whole::operator= (const Whole& c)
+{
+	segments = c.segments;
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Whole&
+Whole::operator= (Whole&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Whole::swap (Whole& c)
+{
+	std::swap (segments, c.segments);
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Whole& lhs, Whole& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Whole*
+Whole::clone (void)
+{
+	return new Whole (*this);
+}
+
+WholePtr
+Whole::copy (void)
+{
+	Whole *c = clone();
+
+	WholePtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

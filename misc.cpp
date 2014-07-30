@@ -35,6 +35,17 @@ Misc::Misc (void)
 	sub_type (me);
 }
 
+Misc::Misc (const Misc& UNUSED(c)) :
+	Misc()
+{
+	// No properties
+}
+
+Misc::Misc (Misc&& c)
+{
+	swap (c);
+}
+
 Misc::~Misc()
 {
 	log_dtor ("dtor Misc");
@@ -47,6 +58,66 @@ Misc::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Misc&
+Misc::operator= (const Misc& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Misc&
+Misc::operator= (Misc&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Misc::swap (Misc& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Misc& lhs, Misc& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Misc*
+Misc::clone (void)
+{
+	return new Misc (*this);
+}
+
+MiscPtr
+Misc::copy (void)
+{
+	Misc *c = clone();
+
+	MiscPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

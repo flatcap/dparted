@@ -283,7 +283,6 @@ Container::swap (Container& c)
 	//	unique_id
 	// non-copyable:
 	//	mutex_children
-
 }
 
 /**

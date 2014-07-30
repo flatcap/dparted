@@ -49,6 +49,17 @@ Table::Table (void)
 	sub_type (me);
 }
 
+Table::Table (const Table& UNUSED(c)) :
+	Table()
+{
+	// No properties
+}
+
+Table::Table (Table&& c)
+{
+	swap (c);
+}
+
 Table::~Table()
 {
 	log_dtor ("dtor Table");
@@ -61,6 +72,66 @@ Table::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Table&
+Table::operator= (const Table& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Table&
+Table::operator= (Table&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Table::swap (Table& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Table& lhs, Table& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Table*
+Table::clone (void)
+{
+	return new Table (*this);
+}
+
+TablePtr
+Table::copy (void)
+{
+	Table *c = clone();
+
+	TablePtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

@@ -51,6 +51,17 @@ Filesystem::Filesystem (void)
 	sub_type (me);
 }
 
+Filesystem::Filesystem (const Filesystem& UNUSED(c)) :
+	Filesystem()
+{
+	// No properties
+}
+
+Filesystem::Filesystem (Filesystem&& c)
+{
+	swap (c);
+}
+
 Filesystem::~Filesystem()
 {
 	log_dtor ("dtor Filesystem");
@@ -63,6 +74,66 @@ Filesystem::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Filesystem&
+Filesystem::operator= (const Filesystem& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Filesystem&
+Filesystem::operator= (Filesystem&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Filesystem::swap (Filesystem& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Filesystem& lhs, Filesystem& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Filesystem*
+Filesystem::clone (void)
+{
+	return new Filesystem (*this);
+}
+
+FilesystemPtr
+Filesystem::copy (void)
+{
+	Filesystem *c = clone();
+
+	FilesystemPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

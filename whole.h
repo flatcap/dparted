@@ -33,6 +33,14 @@ class Whole : public Container
 public:
 	static WholePtr create (void);
 	virtual ~Whole();
+	Whole& operator= (const Whole& c);
+	Whole& operator= (Whole&& c);
+
+	void swap (Whole& c);
+	friend void swap (Whole& lhs, Whole& rhs);
+
+	WholePtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -47,6 +55,10 @@ public:
 
 protected:
 	Whole (void);
+	Whole (const Whole& c);
+	Whole (Whole&& c);
+
+	virtual Whole* clone (void);
 };
 
 #endif // _WHOLE_H_
