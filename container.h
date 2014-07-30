@@ -48,7 +48,16 @@ class Container
 public:
 	static ContainerPtr create (void);
 	virtual ~Container();
+
+	Container& operator= (const Container& c);
+	Container& operator= (Container&& c);
+
+	void swap (Container& c);
+	friend void swap (Container& lhs, Container& rhs);
+
 	virtual bool accept (Visitor& v);
+
+	ContainerPtr copy (void);
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
@@ -118,6 +127,7 @@ public:
 
 	PPtr add_string_prop (const std::string& owner, const std::string& name, const std::string& value);
 
+public:
 	// Property helper functions
 	std::uint64_t get_absolute_offset            (void);
 	std::uint64_t get_bytes_free                 (void);
@@ -166,6 +176,10 @@ public:
 
 protected:
 	Container (void);
+	Container (const Container& c);
+	Container (Container&& c);
+
+	virtual Container* clone (void);
 
 	std::weak_ptr<Container> self;
 	std::weak_ptr<Container> parent;
