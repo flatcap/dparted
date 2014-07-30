@@ -538,7 +538,7 @@ GfxContainer::find (const ContainerPtr& cont)
 }
 
 void
-GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& parent, const char* UNUSED(description))
+GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& cont, const char* UNUSED(description))
 {
 	// LOG_TRACE;
 	log_debug ("GFX container_added: %s to %s", cont->name.c_str(), parent->name.c_str());
@@ -567,7 +567,7 @@ GfxContainer::container_added (const ContainerPtr& cont, const ContainerPtr& par
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
 			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
-			p->gfx_container_added (gchild, gparent);
+			p->gfx_container_added (gparent, gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
 		}

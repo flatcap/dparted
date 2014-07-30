@@ -45,10 +45,12 @@ public:
 	static TimelinePtr create (ContainerPtr& cont);
 	virtual ~Timeline();
 
+	bool adjust (int amount);
+
 protected:
 	Timeline (void);
 
-	virtual void container_added   (const ContainerPtr& cont, const ContainerPtr& parent, const char* description);
+	virtual void container_added   (const ContainerPtr& parent, const ContainerPtr& cont, const char* description);
 	virtual void container_busy    (const ContainerPtr& cont, int busy);
 	virtual void container_changed (const ContainerPtr& cont);
 	virtual void container_deleted (const ContainerPtr& cont);
@@ -57,6 +59,9 @@ protected:
 	std::weak_ptr<Timeline> self;
 
 	std::vector<Event> event_list;
+	// event_cursor points to the end of the event_list unless we're
+	// re-wound time.  In that case it points to the first redo item.
+	std::vector<Event>::iterator event_cursor;
 };
 
 #endif // _TIMELINE_H_

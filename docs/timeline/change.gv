@@ -1,0 +1,79 @@
+digraph change {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.1"
+		ranksep="0.5"
+		labelloc="t"
+		label=<<B><U>Change</U></B>>
+	];
+
+	node [
+		fontsize="12"
+		style="solid"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#CCCCCC"
+	];
+
+	edge [
+		penwidth="1.0"
+		color="#666666"
+		arrowsize="0.5"
+	];
+
+	subgraph cluster_change1 {
+		color=transparent;
+		labelloc="t"
+		label="Start"
+
+		Start_T [ label=<Top>           ];
+		Start_A [ label=<A<SUB>1</SUB>> ];
+		Start_B [ label=<B<SUB>1</SUB>> ];
+		Start_C [ label=<C<SUB>1</SUB>> ];
+		Start_D [ label=<D<SUB>1</SUB>> ];
+
+		Start_T -> Start_A;
+		Start_A -> Start_B;
+		Start_B -> Start_C;
+		Start_B -> Start_D;
+	}
+
+	subgraph cluster_change2 {
+		color=transparent;
+		labelloc="t"
+		label="Change"
+
+		Change_T [ label=<Top>                                              ];
+		Change_A [ label=<A<SUB>1</SUB>> style="filled" fillcolor="#ffff80" ];
+		Change_B [ label=<B<SUB>2</SUB>> style="filled" fillcolor="#ff8080" ];
+		Change_C [ label=<C<SUB>1</SUB>>                                    ];
+		Change_D [ label=<D<SUB>1</SUB>>                                    ];
+
+		Change_T -> Change_A;
+		Change_A -> Change_B;
+		Change_B -> Change_C;
+		Change_B -> Change_D;
+	}
+
+	subgraph cluster_change3 {
+		color=transparent;
+		labelloc="t"
+		label="Undo"
+
+		Undo_T [ label=<Top>                                              ];
+		Undo_A [ label=<A<SUB>1</SUB>> style="filled" fillcolor="#ffff80" ];
+		Undo_B [ label=<B<SUB>1</SUB>> style="filled" fillcolor="#ffff80" ];
+		Undo_C [ label=<C<SUB>1</SUB>>                                    ];
+		Undo_D [ label=<D<SUB>1</SUB>>                                    ];
+
+		Undo_T -> Undo_A;
+		Undo_A -> Undo_B;
+		Undo_B -> Undo_C;
+		Undo_B -> Undo_D;
+	}
+}
+

@@ -39,7 +39,7 @@ public:
 	void init_treeview (GfxContainerPtr& c);
 	void set_focus (GfxContainerPtr& c);
 
-	virtual void gfx_container_added   (const GfxContainerPtr& cont, const GfxContainerPtr& parent);
+	virtual void gfx_container_added   (const GfxContainerPtr& parent, const GfxContainerPtr& cont);
 	virtual void gfx_container_busy    (const GfxContainerPtr& cont, int busy);
 	virtual void gfx_container_changed (const GfxContainerPtr& cont);
 	virtual void gfx_container_deleted (const GfxContainerPtr& cont);

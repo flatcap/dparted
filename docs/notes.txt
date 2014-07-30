@@ -753,3 +753,98 @@ FAT label trim trailing whitespace
 
 Config listener (there'll be a lot of these)
 
+Which commands can I *REALLY* undo?
+If I preserve the old metadata/superblocks, etc
+Partition delete/undelete - easy
+Entire partition table delete/undelete - easy
+Overwrite fs with same type of fs - medium
+Overwrite fs with different fs - hard
+
+recursive listeners
+
+timeline - singleton?
+	or multiple objects pointing to
+	one master object
+
+If there's two timelines, back() needs to cause events
+that will be correcly  interpreted by another timeline
+(and ignored by itself).
+
+sigc:: -> std::bind?
+
+Time Stretcher:
+	A way to scale down the speed of the app
+	(in realistic amounts)
+	Time how long a function/thread/etc lasts
+	Multiply by a compile/config time factor
+	Sleep before adding container and returning
+
+Timeline:
+	Can't swap out top-level
+	top-level can only add_child/remove_child -- nothing else
+	how to turn on/off recording?
+	start_recording() returns a timeline ptr
+		int recording++
+	end_recording() returns a timeline ptr
+		int recording--
+	start_recording (container)
+		*creates* a timeline
+	timeline is a listener of container
+
+menu info cached in gui
+if it changes, container_changed()
+needs recursive listener
+
+commands need list of prerequisites/constraints
+i.e. I expect Container of size X, with Y children.
+If these constraints fail, stop processing.
+Leave redo-buffer intact, just in case.
+User might allow modified commands.
+
+Need to notify on delete (e.g. children of deleted containers)
+e.g. Properties dialog -- could disappear:
+	Ask: Do nothing? Close?
+		[X] Remember my decision
+
+Each task can only alter the data of *ONE* container.
+Many containers (children) may still be added/removed in one stroke.
+
+Scope
+	data is app-level
+	theme is app-level (for now; could be window-level)
+	focus is window-level
+		things within the window are in sync
+		things in other windows are not
+
+	App::set_data()
+	App::set_theme()
+	Window::set_focus()
+
+	Each window has:
+		it's own gfx tree which could be themed differently
+		it's own selection of toolbar/area/tree/undobar/pending/status sections
+
+Luks
+	Dialog -> Busy (which prevents what?)
+	Cancel -> Done
+	OK -> Probe, open, notification
+	What does this need to lock (if anything)?
+
+Listeners
+	treeview each row listens to a container
+	area listens to top-level recursively
+	property dialog listens to one container
+	timeline listens to top-level recursively
+
+Questions may need more context info
+	Question: "Enter passphrase for /dev/sda1"
+	Context: "/dev/sda1 is a LUKS encrypted partition"
+
+Busy column in treeview
+Busy hourglass in area
+	to show working
+
+Testing
+	trap keys (window level) to increase/decrease the fill
+	of the filesystems => notifications => gfx update
+

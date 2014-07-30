@@ -538,3 +538,11 @@ App::test (void)
 #endif
 }
 
+
+bool
+App::adjust_timeline (int amount)
+{
+	// LOG_TRACE;
+	return timeline->adjust (amount);
+}
+

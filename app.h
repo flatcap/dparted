@@ -59,6 +59,8 @@ public:
 	void test (void);
 	void wait_for_threads (void);
 
+	bool adjust_timeline (int amount);
+
 protected:
 	ConfigFilePtr config_file;
 	ContainerPtr top_level;

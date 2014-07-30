@@ -1,0 +1,50 @@
+Timeline
+
+Add
+	Add node
+		Copy B1 -> B2
+		Add E1 to B2
+		Update B2
+		Exchange B2 for B1 in A1's children
+		Save B1, B2 to timeline
+		Increase A1's seqnum
+
+	Undo
+		Exchange B1 for B2 in A1's children
+		Increase A1's seqnum
+		Increase B1's seqnum
+
+Change
+	Change node
+		Copy B1 -> B2
+		Make changes to B2
+		Exchange B2 for B1 in A1's children
+		Save B1, B2 to timeline
+		Increase A1's seqnum
+
+	Undo
+		Exchange B1 for B2 in A1's children
+		Increase A1's seqnum
+		Increase B1's seqnum
+
+Delete
+	Delete node
+		Copy B1 -> B2
+		Delete E1 from B2
+		Update B2
+		Exchange B2 for B1 in A1's children
+		Save B1, B2 to timeline
+		Increase A1's seqnum
+
+	Undo
+		Exchange B1 for B2 in A1's children
+		Increase A1's seqnum
+		Increase B1's seqnum
+
+Because the timeline's linear, I can simply exchange new containers for old.
+The exchanges need to be atomic
+Will any exchanges involve reordering the children vector?
+rewind_time() * n followed by new action => drop redo buffer
+	ask user first
+	Are you sure? Yes? No? [X] Remember my choice
+

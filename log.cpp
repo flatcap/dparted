@@ -96,7 +96,8 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 		}
 	}
 
-	if ((level & Severity::Enter) == Severity::Enter) ++fn_depth;
+	if ((level & Severity::Enter) == Severity::Enter)
+		++fn_depth;
 }
 
 /**

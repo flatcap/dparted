@@ -1,0 +1,47 @@
+Two simultaneous update events
+
+--------------------------------------------------------------------------------
+
+Thread 1 - Delete node
+	Copy B1 -> B2
+	Delete E1 from B2
+	Update B2
+	Exchange B2 for B1 in A1's children
+	Save B1, B2 to timeline
+	Increase A1's seqnum
+
+Thread 2 - Change node
+	Copy B1 -> B2
+	Exchange B2 for B1 in A1's children
+	Save B1, B2 to timeline
+	Increase A1's seqnum
+
+T1 gets to Exchange first T2 isn't relevant and must be prevented
+T2 gets to Exchange first, T1 waits and then continues.
+
+--------------------------------------------------------------------------------
+
+Thread 1 - Change node
+	Copy B1 -> B2
+	Make changes to B2
+	Exchange B2 for B1 in A1's children
+	Save B1, B2 to timeline
+	Increase A1's seqnum
+
+Thread 2 - Change node
+	Copy B1 -> B3
+	Make changes to B3
+	Exchange B3 for B1 in A1's children
+	Save B1, B3 to timeline
+	Increase A1's seqnum
+
+T1 makes change to B2
+T2 makes change to B3
+
+One thread get the lock first and then has it's changes
+overwritten by the other thread.
+
+--------------------------------------------------------------------------------
+
+Each container needs a write mutex
+
