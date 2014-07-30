@@ -18,7 +18,10 @@ Validate request
 Create vector of commands
 	// Front end
 	shell command
-	Human description
+	Human description of the action and more details:
+		Delete partition /dev/sda1
+		This partition contains a filesystem (ext3) called "Work".
+		It contains 150GiB of data (about 2500 files).
 	time estimate
 	// Back end
 	output
