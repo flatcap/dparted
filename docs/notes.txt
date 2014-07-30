@@ -809,3 +809,42 @@ e.g. Properties dialog -- could disappear:
 Each task can only alter the data of *ONE* container.
 Many containers (children) may still be added/removed in one stroke.
 
+Scope
+	data is app-level
+	theme is app-level (for now; could be window-level)
+	focus is window-level
+		things within the window are in sync
+		things in other windows are not
+
+	App::set_data()
+	App::set_theme()
+	Window::set_focus()
+
+	Each window has:
+		it's own gfx tree which could be themed differently
+		it's own selection of toolbar/area/tree/undobar/pending/status sections
+
+Luks
+	Dialog -> Busy (which prevents what?)
+	Cancel -> Done
+	OK -> Probe, open, notification
+	What does this need to lock (if anything)?
+
+Listeners
+	treeview each row listens to a container
+	area listens to top-level recursively
+	property dialog listens to one container
+	timeline listens to top-level recursively
+
+Questions may need more context info
+	Question: "Enter passphrase for /dev/sda1"
+	Context: "/dev/sda1 is a LUKS encrypted partition"
+
+Busy column in treeview
+Busy hourglass in area
+	to show working
+
+Testing
+	trap keys (window level) to increase/decrease the fill
+	of the filesystems => notifications => gfx update
+
