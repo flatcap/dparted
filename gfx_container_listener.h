@@ -30,7 +30,7 @@ class IGfxContainerListener
 public:
 	virtual ~IGfxContainerListener() = default;
 
-	virtual void gfx_container_added   (const GfxContainerPtr& cont, const GfxContainerPtr& parent) = 0;
+	virtual void gfx_container_added   (const GfxContainerPtr& parent, const GfxContainerPtr& cont) = 0;
 	virtual void gfx_container_busy    (const GfxContainerPtr& cont, int busy) = 0;
 	virtual void gfx_container_changed (const GfxContainerPtr& cont) = 0;
 	virtual void gfx_container_deleted (const GfxContainerPtr& cont) = 0;

@@ -518,7 +518,7 @@ BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk:
 
 
 void
-BaseDrawingArea::gfx_container_added (const GfxContainerPtr& cont, const GfxContainerPtr& parent)
+BaseDrawingArea::gfx_container_added (const GfxContainerPtr& parent, const GfxContainerPtr& cont)
 {
 	// LOG_TRACE;
 	std::string c = "NULL";

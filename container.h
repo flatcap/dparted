@@ -176,6 +176,7 @@ protected:
 
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 	friend bool operator== (const ContainerPtr& lhs, const ContainerPtr& rhs);
+	friend bool exchange (ContainerPtr& existing, ContainerPtr& replacement);
 
 	std::map<std::string, PPtr> props;
 

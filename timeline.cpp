@@ -19,6 +19,7 @@
 #include "timeline.h"
 #include "log.h"
 #include "utils.h"
+#include "container.h"
 
 Timeline::Timeline (void)
 {
@@ -33,7 +34,7 @@ Timeline::~Timeline()
 		int ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
 		log_debug ("%3dms ago (%d): %p/%p : %s",
 			ms,
-			(int) std::get<1>(e),
+			std::get<1>(e),
 			std::get<2>(e).get(),
 			std::get<3>(e).get(),
 			std::get<4>(e).c_str());
@@ -52,9 +53,15 @@ Timeline::create (ContainerPtr& cont)
 
 
 void
-Timeline::container_added (const ContainerPtr& cont, const ContainerPtr& UNUSED(parent), const char* description)
+Timeline::container_added (const ContainerPtr& parent, const ContainerPtr& cont, const char* description)
 {
 	LOG_TRACE;
+
+	if (event_cursor != std::end (event_list)) {
+		log_error ("TIMELINE CURRENTLY REWOUND");
+		return;
+	}
+
 	std::string desc;
 	if (description) {
 		desc = description;
@@ -63,7 +70,8 @@ Timeline::container_added (const ContainerPtr& cont, const ContainerPtr& UNUSED(
 		desc = "";
 	}
 
-	event_list.push_back (std::make_tuple (std::chrono::steady_clock::now(), EventType::t_add, nullptr, cont, desc));
+	event_list.push_back (std::make_tuple (std::chrono::steady_clock::now(), EventType::t_add, parent, cont, desc));
+	event_cursor = std::end (event_list);
 }
 
 void
@@ -94,7 +102,36 @@ Timeline::container_resync (const ContainerPtr& UNUSED(cont))
 bool
 Timeline::adjust (int amount)
 {
-	log_code ("adjust timeline %+d", amount);
+	return_val_if_fail (amount, false);
+	// log_code ("adjust timeline %+d", amount);
+
+	if (amount < 0) {
+		if (event_cursor == std::begin (event_list)) {
+			log_code ("already at the beginning");
+			return false;
+		}
+
+		event_cursor--;
+
+		ContainerPtr cold = std::get<2>(*event_cursor);
+		ContainerPtr cnew = std::get<3>(*event_cursor);
+
+		log_info ("Undo event: %s", std::get<4>(*event_cursor).c_str());
+		exchange (cold, cnew);
+	} else {
+		if (event_cursor == std::end (event_list)) {
+			log_info ("already at the end");
+			return false;
+		}
+
+		ContainerPtr cold = std::get<2>(*event_cursor);
+		ContainerPtr cnew = std::get<3>(*event_cursor);
+
+		log_info ("Redo event: %s", std::get<4>(*event_cursor).c_str());
+		exchange (cold, cnew);
+
+		event_cursor++;
+	}
 	return false;
 }
 

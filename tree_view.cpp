@@ -731,7 +731,7 @@ TreeView::on_keypress (GdkEventKey* event)
 
 
 void
-TreeView::gfx_container_added (const GfxContainerPtr& cont, const GfxContainerPtr& parent)
+TreeView::gfx_container_added (const GfxContainerPtr& parent, const GfxContainerPtr& cont)
 {
 	// LOG_TRACE;
 	std::string c = "NULL";

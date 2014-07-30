@@ -53,7 +53,7 @@ public:
 	virtual void set_cont_height (int height);
 	virtual int  get_cont_height (void);
 
-	virtual void gfx_container_added   (const GfxContainerPtr& cont, const GfxContainerPtr& parent);
+	virtual void gfx_container_added   (const GfxContainerPtr& parent, const GfxContainerPtr& cont);
 	virtual void gfx_container_busy    (const GfxContainerPtr& cont, int busy);
 	virtual void gfx_container_changed (const GfxContainerPtr& cont);
 	virtual void gfx_container_deleted (const GfxContainerPtr& cont);

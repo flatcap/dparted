@@ -239,7 +239,7 @@ Container::add_child (ContainerPtr& child, bool probe, const char* description)
 			ContainerListenerPtr cl = i.lock();
 			if (cl) {
 				log_listener ("Added child %p to Container %p", child.get(), this);
-				cl->container_added (child, get_smart(), description);	//XXX get this pointer once
+				cl->container_added (get_smart(), child, description);	//XXX get this pointer once
 			} else {
 				log_code ("remove listener from the collection");	//XXX remove it from the collection
 			}
@@ -510,6 +510,21 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 		;
 
 	return stream;
+}
+
+bool
+exchange (ContainerPtr& existing, ContainerPtr& replacement)
+{
+	int e = 0;
+	int r = 0;
+
+	if (existing)    e = existing->unique_id;
+	if (replacement) r = replacement->unique_id;
+
+	log_code ("exchange %ld, %ld", e, r);
+	// std::lock_guard<std::mutex> lock (mutex_children);
+
+	return false;
 }
 
 
