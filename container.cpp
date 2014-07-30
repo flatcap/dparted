@@ -479,9 +479,13 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 {
 	return_val_if_fail (c, stream);
 
-	// std::uint64_t bytes_free = c.bytes_size - c->bytes_used;
+	std::uint64_t bytes_free = c->bytes_size - c->bytes_used;
 
 	std::string uuid = c->uuid;
+	std::string type;
+	if (c->type.size() > 0) {
+		type = c->type.back();
+	}
 
 	if (uuid.size() > 8) {
 		std::size_t index = uuid.find_first_of (":-. ");
@@ -489,23 +493,24 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	}
 
 	stream
-#if 0
-		<< "[" << c->type.back() << "]:"
+#if 1
+		<< "[" << type << "]:"
 #endif
 		<< c->name
-#if 0
+#if 1
 		<< "(" << uuid << "), "
 		<< '"' << c->device << '"' << "(" << c->fd << "),"
-		<< " S:" // << c->bytes_size
+		<< " S:" << c->bytes_size
 						<< "(" << get_size (c->bytes_size)    << "), "
-		<< " U:" // << c->bytes_used
+		<< " U:" << c->bytes_used
 						<< "(" << get_size (c->bytes_used)    << "), "
-		<< " F:" // <<   bytes_free
+		<< " F:" <<   bytes_free
 						<< "(" << get_size (   bytes_free)    << "), "
-		<< " P:" // << c->parent_offset
+		<< " P:" << c->parent_offset
 						<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
+		<< " uniq: " << c->unique_id
 #endif
 		;
 
