@@ -32,6 +32,17 @@ LvmMirror::LvmMirror (void)
 	sub_type (me);
 }
 
+LvmMirror::LvmMirror (const LvmMirror& UNUSED(c)) :
+	LvmMirror()
+{
+	// No properties
+}
+
+LvmMirror::LvmMirror (LvmMirror&& c)
+{
+	swap (c);
+}
+
 LvmMirror::~LvmMirror()
 {
 	log_dtor ("dtor LvmMirror");
@@ -44,6 +55,66 @@ LvmMirror::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+LvmMirror&
+LvmMirror::operator= (const LvmMirror& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+LvmMirror&
+LvmMirror::operator= (LvmMirror&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+LvmMirror::swap (LvmMirror& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (LvmMirror& lhs, LvmMirror& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmMirror*
+LvmMirror::clone (void)
+{
+	return new LvmMirror (*this);
+}
+
+LvmMirrorPtr
+LvmMirror::copy (void)
+{
+	LvmMirror *c = clone();
+
+	LvmMirrorPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

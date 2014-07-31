@@ -37,6 +37,25 @@ LvmVolume::LvmVolume (void)
 	declare_prop_var (me, "stripe_size",  stripe_size,  "desc of stripe_size",  0);
 }
 
+LvmVolume::LvmVolume (const LvmVolume& c) :
+	LvmVolume()
+{
+	lv_attr      = c.lv_attr;
+	seg_count    = c.seg_count;
+	seg_start_pe = c.seg_start_pe;
+	stripes      = c.stripes;
+	stripe_size  = c.stripe_size;
+	mirror_log   = c.mirror_log;
+	metadata     = c.metadata;
+	subvols      = c.subvols;
+	sibling      = c.sibling;
+}
+
+LvmVolume::LvmVolume (LvmVolume&& c)
+{
+	swap (c);
+}
+
 LvmVolume::~LvmVolume()
 {
 	log_dtor ("dtor LvmVolume");
@@ -49,6 +68,82 @@ LvmVolume::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+LvmVolume&
+LvmVolume::operator= (const LvmVolume& c)
+{
+	lv_attr      = c.lv_attr;
+	seg_count    = c.seg_count;
+	seg_start_pe = c.seg_start_pe;
+	stripes      = c.stripes;
+	stripe_size  = c.stripe_size;
+	mirror_log   = c.mirror_log;
+	metadata     = c.metadata;
+	subvols      = c.subvols;
+	sibling      = c.sibling;
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+LvmVolume&
+LvmVolume::operator= (LvmVolume&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+LvmVolume::swap (LvmVolume& c)
+{
+	std::swap (lv_attr,      c.lv_attr);
+	std::swap (seg_count,    c.seg_count);
+	std::swap (seg_start_pe, c.seg_start_pe);
+	std::swap (stripes,      c.stripes);
+	std::swap (stripe_size,  c.stripe_size);
+	std::swap (mirror_log,   c.mirror_log);
+	std::swap (metadata,     c.metadata);
+	std::swap (subvols,      c.subvols);
+	std::swap (sibling,      c.sibling);
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (LvmVolume& lhs, LvmVolume& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmVolume*
+LvmVolume::clone (void)
+{
+	return new LvmVolume (*this);
+}
+
+LvmVolumePtr
+LvmVolume::copy (void)
+{
+	LvmVolume *c = clone();
+
+	LvmVolumePtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

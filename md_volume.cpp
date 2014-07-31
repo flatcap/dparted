@@ -28,6 +28,17 @@ MdVolume::MdVolume (void)
 	sub_type (me);
 }
 
+MdVolume::MdVolume (const MdVolume& UNUSED(c)) :
+	MdVolume()
+{
+	// No properties
+}
+
+MdVolume::MdVolume (MdVolume&& c)
+{
+	swap (c);
+}
+
 MdVolume::~MdVolume()
 {
 	log_dtor ("dtor MdVolume");
@@ -40,6 +51,66 @@ MdVolume::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+MdVolume&
+MdVolume::operator= (const MdVolume& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+MdVolume&
+MdVolume::operator= (MdVolume&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+MdVolume::swap (MdVolume& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (MdVolume& lhs, MdVolume& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdVolume*
+MdVolume::clone (void)
+{
+	return new MdVolume (*this);
+}
+
+MdVolumePtr
+MdVolume::copy (void)
+{
+	MdVolume *c = clone();
+
+	MdVolumePtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

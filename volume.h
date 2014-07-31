@@ -34,6 +34,14 @@ class Volume : public Whole
 public:
 	static VolumePtr create (void);
 	virtual ~Volume();
+	Volume& operator= (const Volume& c);
+	Volume& operator= (Volume&& c);
+
+	void swap (Volume& c);
+	friend void swap (Volume& lhs, Volume& rhs);
+
+	VolumePtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -44,6 +52,10 @@ public:
 
 protected:
 	Volume (void);
+	Volume (const Volume& c);
+	Volume (Volume&& c);
+
+	virtual Volume* clone (void);
 };
 
 #endif // _VOLUME_H_

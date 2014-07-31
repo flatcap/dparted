@@ -31,6 +31,14 @@ class MdRaid : public MdVolume
 public:
 	static MdRaidPtr create (void);
 	virtual ~MdRaid();
+	MdRaid& operator= (const MdRaid& c);
+	MdRaid& operator= (MdRaid&& c);
+
+	void swap (MdRaid& c);
+	friend void swap (MdRaid& lhs, MdRaid& rhs);
+
+	MdRaidPtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +49,10 @@ public:
 
 protected:
 	MdRaid (void);
+	MdRaid (const MdRaid& c);
+	MdRaid (MdRaid&& c);
+
+	virtual MdRaid* clone (void);
 };
 
 #endif // _MD_RAID_H_

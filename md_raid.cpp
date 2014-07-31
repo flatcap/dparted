@@ -28,6 +28,17 @@ MdRaid::MdRaid (void)
 	sub_type (me);
 }
 
+MdRaid::MdRaid (const MdRaid& UNUSED(c)) :
+	MdRaid()
+{
+	// No properties
+}
+
+MdRaid::MdRaid (MdRaid&& c)
+{
+	swap (c);
+}
+
 MdRaid::~MdRaid()
 {
 	log_dtor ("dtor MdRaid");
@@ -40,6 +51,66 @@ MdRaid::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+MdRaid&
+MdRaid::operator= (const MdRaid& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+MdRaid&
+MdRaid::operator= (MdRaid&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+MdRaid::swap (MdRaid& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (MdRaid& lhs, MdRaid& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdRaid*
+MdRaid::clone (void)
+{
+	return new MdRaid (*this);
+}
+
+MdRaidPtr
+MdRaid::copy (void)
+{
+	MdRaid *c = clone();
+
+	MdRaidPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

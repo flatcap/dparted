@@ -31,6 +31,14 @@ class MdMirror : public MdVolume
 public:
 	static MdMirrorPtr create (void);
 	virtual ~MdMirror();
+	MdMirror& operator= (const MdMirror& c);
+	MdMirror& operator= (MdMirror&& c);
+
+	void swap (MdMirror& c);
+	friend void swap (MdMirror& lhs, MdMirror& rhs);
+
+	MdMirrorPtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +49,10 @@ public:
 
 protected:
 	MdMirror (void);
+	MdMirror (const MdMirror& c);
+	MdMirror (MdMirror&& c);
+
+	virtual MdMirror* clone (void);
 };
 
 #endif // _MD_MIRROR_H_

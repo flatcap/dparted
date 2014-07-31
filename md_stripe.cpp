@@ -28,6 +28,17 @@ MdStripe::MdStripe (void)
 	sub_type (me);
 }
 
+MdStripe::MdStripe (const MdStripe& UNUSED(c)) :
+	MdStripe()
+{
+	// No properties
+}
+
+MdStripe::MdStripe (MdStripe&& c)
+{
+	swap (c);
+}
+
 MdStripe::~MdStripe()
 {
 	log_dtor ("dtor MdStripe");
@@ -40,6 +51,66 @@ MdStripe::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+MdStripe&
+MdStripe::operator= (const MdStripe& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+MdStripe&
+MdStripe::operator= (MdStripe&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+MdStripe::swap (MdStripe& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (MdStripe& lhs, MdStripe& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdStripe*
+MdStripe::clone (void)
+{
+	return new MdStripe (*this);
+}
+
+MdStripePtr
+MdStripe::copy (void)
+{
+	MdStripe *c = clone();
+
+	MdStripePtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

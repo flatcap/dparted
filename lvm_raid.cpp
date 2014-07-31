@@ -31,6 +31,17 @@ LvmRaid::LvmRaid (void)
 	sub_type (me);
 }
 
+LvmRaid::LvmRaid (const LvmRaid& UNUSED(c)) :
+	LvmRaid()
+{
+	// No properties
+}
+
+LvmRaid::LvmRaid (LvmRaid&& c)
+{
+	swap (c);
+}
+
 LvmRaid::~LvmRaid()
 {
 	log_dtor ("dtor LvmRaid");
@@ -43,6 +54,66 @@ LvmRaid::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+LvmRaid&
+LvmRaid::operator= (const LvmRaid& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+LvmRaid&
+LvmRaid::operator= (LvmRaid&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+LvmRaid::swap (LvmRaid& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (LvmRaid& lhs, LvmRaid& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmRaid*
+LvmRaid::clone (void)
+{
+	return new LvmRaid (*this);
+}
+
+LvmRaidPtr
+LvmRaid::copy (void)
+{
+	LvmRaid *c = clone();
+
+	LvmRaidPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

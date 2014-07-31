@@ -31,6 +31,14 @@ class MdVolume : public Volume
 public:
 	static MdVolumePtr create (void);
 	virtual ~MdVolume();
+	MdVolume& operator= (const MdVolume& c);
+	MdVolume& operator= (MdVolume&& c);
+
+	void swap (MdVolume& c);
+	friend void swap (MdVolume& lhs, MdVolume& rhs);
+
+	MdVolumePtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +49,10 @@ public:
 
 protected:
 	MdVolume (void);
+	MdVolume (const MdVolume& c);
+	MdVolume (MdVolume&& c);
+
+	virtual MdVolume* clone (void);
 };
 
 #endif // _MD_VOLUME_H_

@@ -28,6 +28,17 @@ MdMirror::MdMirror (void)
 	sub_type (me);
 }
 
+MdMirror::MdMirror (const MdMirror& UNUSED(c)) :
+	MdMirror()
+{
+	// No properties
+}
+
+MdMirror::MdMirror (MdMirror&& c)
+{
+	swap (c);
+}
+
 MdMirror::~MdMirror()
 {
 	log_dtor ("dtor MdMirror");
@@ -40,6 +51,66 @@ MdMirror::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+MdMirror&
+MdMirror::operator= (const MdMirror& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+MdMirror&
+MdMirror::operator= (MdMirror&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+MdMirror::swap (MdMirror& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (MdMirror& lhs, MdMirror& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdMirror*
+MdMirror::clone (void)
+{
+	return new MdMirror (*this);
+}
+
+MdMirrorPtr
+MdMirror::copy (void)
+{
+	MdMirror *c = clone();
+
+	MdMirrorPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

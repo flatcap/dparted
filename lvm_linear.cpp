@@ -31,6 +31,17 @@ LvmLinear::LvmLinear (void)
 	sub_type (me);
 }
 
+LvmLinear::LvmLinear (const LvmLinear& UNUSED(c)) :
+	LvmLinear()
+{
+	// No properties
+}
+
+LvmLinear::LvmLinear (LvmLinear&& c)
+{
+	swap (c);
+}
+
 LvmLinear::~LvmLinear()
 {
 	log_dtor ("dtor LvmLinear");
@@ -43,6 +54,66 @@ LvmLinear::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+LvmLinear&
+LvmLinear::operator= (const LvmLinear& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+LvmLinear&
+LvmLinear::operator= (LvmLinear&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+LvmLinear::swap (LvmLinear& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (LvmLinear& lhs, LvmLinear& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmLinear*
+LvmLinear::clone (void)
+{
+	return new LvmLinear (*this);
+}
+
+LvmLinearPtr
+LvmLinear::copy (void)
+{
+	LvmLinear *c = clone();
+
+	LvmLinearPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

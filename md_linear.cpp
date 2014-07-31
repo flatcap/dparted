@@ -28,6 +28,17 @@ MdLinear::MdLinear (void)
 	sub_type (me);
 }
 
+MdLinear::MdLinear (const MdLinear& UNUSED(c)) :
+	MdLinear()
+{
+	// No properties
+}
+
+MdLinear::MdLinear (MdLinear&& c)
+{
+	swap (c);
+}
+
 MdLinear::~MdLinear()
 {
 	log_dtor ("dtor MdLinear");
@@ -40,6 +51,66 @@ MdLinear::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+MdLinear&
+MdLinear::operator= (const MdLinear& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+MdLinear&
+MdLinear::operator= (MdLinear&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+MdLinear::swap (MdLinear& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (MdLinear& lhs, MdLinear& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdLinear*
+MdLinear::clone (void)
+{
+	return new MdLinear (*this);
+}
+
+MdLinearPtr
+MdLinear::copy (void)
+{
+	MdLinear *c = clone();
+
+	MdLinearPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

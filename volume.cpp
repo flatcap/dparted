@@ -31,6 +31,17 @@ Volume::Volume (void)
 	sub_type (me);
 }
 
+Volume::Volume (const Volume& UNUSED(c)) :
+	Volume()
+{
+	// No properties
+}
+
+Volume::Volume (Volume&& c)
+{
+	swap (c);
+}
+
 Volume::~Volume()
 {
 	log_dtor ("dtor Volume");
@@ -43,6 +54,66 @@ Volume::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Volume&
+Volume::operator= (const Volume& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Volume&
+Volume::operator= (Volume&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Volume::swap (Volume& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Volume& lhs, Volume& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Volume*
+Volume::clone (void)
+{
+	return new Volume (*this);
+}
+
+VolumePtr
+Volume::copy (void)
+{
+	Volume *c = clone();
+
+	VolumePtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

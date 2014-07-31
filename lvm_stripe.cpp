@@ -31,6 +31,17 @@ LvmStripe::LvmStripe (void)
 	sub_type (me);
 }
 
+LvmStripe::LvmStripe (const LvmStripe& UNUSED(c)) :
+	LvmStripe()
+{
+	// No properties
+}
+
+LvmStripe::LvmStripe (LvmStripe&& c)
+{
+	swap (c);
+}
+
 LvmStripe::~LvmStripe()
 {
 	log_dtor ("dtor LvmStripe");
@@ -43,6 +54,66 @@ LvmStripe::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+LvmStripe&
+LvmStripe::operator= (const LvmStripe& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+LvmStripe&
+LvmStripe::operator= (LvmStripe&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+LvmStripe::swap (LvmStripe& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (LvmStripe& lhs, LvmStripe& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmStripe*
+LvmStripe::clone (void)
+{
+	return new LvmStripe (*this);
+}
+
+LvmStripePtr
+LvmStripe::copy (void)
+{
+	LvmStripe *c = clone();
+
+	LvmStripePtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 
