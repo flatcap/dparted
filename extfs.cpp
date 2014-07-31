@@ -36,6 +36,17 @@ Extfs::Extfs (void)
 	sub_type (me);
 }
 
+Extfs::Extfs (const Extfs& UNUSED(c)) :
+	Extfs()
+{
+	// No properties
+}
+
+Extfs::Extfs (Extfs&& c)
+{
+	swap (c);
+}
+
 Extfs::~Extfs()
 {
 	log_dtor ("dtor Extfs");
@@ -48,6 +59,66 @@ Extfs::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Extfs&
+Extfs::operator= (const Extfs& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Extfs&
+Extfs::operator= (Extfs&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Extfs::swap (Extfs& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Extfs& lhs, Extfs& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Extfs*
+Extfs::clone (void)
+{
+	return new Extfs (*this);
+}
+
+ExtfsPtr
+Extfs::copy (void)
+{
+	Extfs *c = clone();
+
+	ExtfsPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

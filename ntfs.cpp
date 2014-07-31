@@ -36,6 +36,17 @@ Ntfs::Ntfs (void)
 	sub_type (me);
 }
 
+Ntfs::Ntfs (const Ntfs& UNUSED(c)) :
+	Ntfs()
+{
+	// No properties
+}
+
+Ntfs::Ntfs (Ntfs&& c)
+{
+	swap (c);
+}
+
 Ntfs::~Ntfs()
 {
 	log_dtor ("dtor Ntfs");
@@ -48,6 +59,66 @@ Ntfs::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Ntfs&
+Ntfs::operator= (const Ntfs& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Ntfs&
+Ntfs::operator= (Ntfs&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Ntfs::swap (Ntfs& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Ntfs& lhs, Ntfs& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Ntfs*
+Ntfs::clone (void)
+{
+	return new Ntfs (*this);
+}
+
+NtfsPtr
+Ntfs::copy (void)
+{
+	Ntfs *c = clone();
+
+	NtfsPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

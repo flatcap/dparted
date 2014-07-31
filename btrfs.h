@@ -32,6 +32,14 @@ class Btrfs : public Filesystem
 public:
 	static BtrfsPtr create (void);
 	virtual ~Btrfs();
+	Btrfs& operator= (const Btrfs& c);
+	Btrfs& operator= (Btrfs&& c);
+
+	void swap (Btrfs& c);
+	friend void swap (Btrfs& lhs, Btrfs& rhs);
+
+	BtrfsPtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -44,6 +52,10 @@ public:
 
 protected:
 	Btrfs (void);
+	Btrfs (const Btrfs& c);
+	Btrfs (Btrfs&& c);
+
+	virtual Btrfs* clone (void);
 
 	bool get_btrfs_usage (void);
 	void get_btrfs_sb (ContainerPtr c);

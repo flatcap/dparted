@@ -36,6 +36,17 @@ Btrfs::Btrfs (void)
 	sub_type (me);
 }
 
+Btrfs::Btrfs (const Btrfs& UNUSED(c)) :
+	Btrfs()
+{
+	// No properties
+}
+
+Btrfs::Btrfs (Btrfs&& c)
+{
+	swap (c);
+}
+
 Btrfs::~Btrfs()
 {
 	log_dtor ("dtor Btrfs");
@@ -48,6 +59,66 @@ Btrfs::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Btrfs&
+Btrfs::operator= (const Btrfs& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Btrfs&
+Btrfs::operator= (Btrfs&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Btrfs::swap (Btrfs& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Btrfs& lhs, Btrfs& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Btrfs*
+Btrfs::clone (void)
+{
+	return new Btrfs (*this);
+}
+
+BtrfsPtr
+Btrfs::copy (void)
+{
+	Btrfs *c = clone();
+
+	BtrfsPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 
