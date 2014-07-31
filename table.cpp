@@ -49,9 +49,10 @@ Table::Table (void)
 	sub_type (me);
 }
 
-Table::Table (const Table& UNUSED(c)) :
-	Table()
+Table::Table (const Table& c) :
+	Container(c)
 {
+	Table();
 	// No properties
 }
 

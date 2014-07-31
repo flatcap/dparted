@@ -36,9 +36,10 @@ Btrfs::Btrfs (void)
 	sub_type (me);
 }
 
-Btrfs::Btrfs (const Btrfs& UNUSED(c)) :
-	Btrfs()
+Btrfs::Btrfs (const Btrfs& c) :
+	Filesystem(c)
 {
+	Btrfs();
 	// No properties
 }
 

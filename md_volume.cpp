@@ -28,9 +28,10 @@ MdVolume::MdVolume (void)
 	sub_type (me);
 }
 
-MdVolume::MdVolume (const MdVolume& UNUSED(c)) :
-	MdVolume()
+MdVolume::MdVolume (const MdVolume& c) :
+	Volume(c)
 {
+	MdVolume();
 	// No properties
 }
 

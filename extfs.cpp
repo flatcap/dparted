@@ -36,9 +36,10 @@ Extfs::Extfs (void)
 	sub_type (me);
 }
 
-Extfs::Extfs (const Extfs& UNUSED(c)) :
-	Extfs()
+Extfs::Extfs (const Extfs& c) :
+	Filesystem(c)
 {
+	Extfs();
 	// No properties
 }
 

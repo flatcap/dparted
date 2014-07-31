@@ -50,9 +50,10 @@ Block::Block (void)
 	sub_type (me);
 }
 
-Block::Block (const Block& UNUSED(c)) :
-	Block()
+Block::Block (const Block& c) :
+	Container(c)
 {
+	Block();
 	// No properties
 }
 

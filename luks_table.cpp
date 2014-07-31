@@ -57,8 +57,9 @@ LuksTable::LuksTable (void)
 }
 
 LuksTable::LuksTable (const LuksTable& c) :
-	LuksTable()
+	Table(c)
 {
+	LuksTable();
 	cipher_mode          = c.cipher_mode;
 	cipher_name          = c.cipher_name;
 	hash_spec            = c.hash_spec;

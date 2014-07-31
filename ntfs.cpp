@@ -36,9 +36,10 @@ Ntfs::Ntfs (void)
 	sub_type (me);
 }
 
-Ntfs::Ntfs (const Ntfs& UNUSED(c)) :
-	Ntfs()
+Ntfs::Ntfs (const Ntfs& c) :
+	Filesystem(c)
 {
+	Ntfs();
 	// No properties
 }
 

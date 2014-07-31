@@ -31,9 +31,10 @@ LvmLinear::LvmLinear (void)
 	sub_type (me);
 }
 
-LvmLinear::LvmLinear (const LvmLinear& UNUSED(c)) :
-	LvmLinear()
+LvmLinear::LvmLinear (const LvmLinear& c) :
+	LvmVolume(c)
 {
+	LvmLinear();
 	// No properties
 }
 

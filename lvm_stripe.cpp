@@ -31,9 +31,10 @@ LvmStripe::LvmStripe (void)
 	sub_type (me);
 }
 
-LvmStripe::LvmStripe (const LvmStripe& UNUSED(c)) :
-	LvmStripe()
+LvmStripe::LvmStripe (const LvmStripe& c) :
+	LvmVolume(c)
 {
+	LvmStripe();
 	// No properties
 }
 

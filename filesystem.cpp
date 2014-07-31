@@ -51,9 +51,10 @@ Filesystem::Filesystem (void)
 	sub_type (me);
 }
 
-Filesystem::Filesystem (const Filesystem& UNUSED(c)) :
-	Filesystem()
+Filesystem::Filesystem (const Filesystem& c) :
+	Container(c)
 {
+	Filesystem();
 	// No properties
 }
 

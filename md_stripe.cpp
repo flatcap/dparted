@@ -28,9 +28,10 @@ MdStripe::MdStripe (void)
 	sub_type (me);
 }
 
-MdStripe::MdStripe (const MdStripe& UNUSED(c)) :
-	MdStripe()
+MdStripe::MdStripe (const MdStripe& c) :
+	MdVolume(c)
 {
+	MdStripe();
 	// No properties
 }
 

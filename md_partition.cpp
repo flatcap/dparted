@@ -31,9 +31,10 @@ MdPartition::MdPartition (void)
 	sub_type (me);
 }
 
-MdPartition::MdPartition (const MdPartition& UNUSED(c)) :
-	MdPartition()
+MdPartition::MdPartition (const MdPartition& c) :
+	Partition(c)
 {
+	MdPartition();
 	// No properties
 }
 

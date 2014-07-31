@@ -31,9 +31,10 @@ Volume::Volume (void)
 	sub_type (me);
 }
 
-Volume::Volume (const Volume& UNUSED(c)) :
-	Volume()
+Volume::Volume (const Volume& c) :
+	Whole(c)
 {
+	Volume();
 	// No properties
 }
 

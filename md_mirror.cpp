@@ -28,9 +28,10 @@ MdMirror::MdMirror (void)
 	sub_type (me);
 }
 
-MdMirror::MdMirror (const MdMirror& UNUSED(c)) :
-	MdMirror()
+MdMirror::MdMirror (const MdMirror& c) :
+	MdVolume(c)
 {
+	MdMirror();
 	// No properties
 }
 

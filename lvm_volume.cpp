@@ -38,8 +38,9 @@ LvmVolume::LvmVolume (void)
 }
 
 LvmVolume::LvmVolume (const LvmVolume& c) :
-	LvmVolume()
+	Volume(c)
 {
+	LvmVolume();
 	lv_attr      = c.lv_attr;
 	seg_count    = c.seg_count;
 	seg_start_pe = c.seg_start_pe;

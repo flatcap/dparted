@@ -57,8 +57,9 @@ Loop::Loop (void)
 }
 
 Loop::Loop (const Loop& c) :
-	Loop()
+	Block(c)
 {
+	Loop();
 	autoclear  = c.autoclear;
 	deleted    = c.deleted;
 	file_inode = c.file_inode;

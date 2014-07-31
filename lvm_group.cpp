@@ -53,8 +53,9 @@ LvmGroup::LvmGroup (void)
 }
 
 LvmGroup::LvmGroup (const LvmGroup& c) :
-	LvmGroup()
+	Whole(c)
 {
+	LvmGroup();
 	lv_count = c.lv_count;
 	pv_count = c.pv_count;
 	vg_attr  = c.vg_attr;

@@ -28,9 +28,10 @@ MsdosPartition::MsdosPartition (void)
 	sub_type (me);
 }
 
-MsdosPartition::MsdosPartition (const MsdosPartition& UNUSED(c)) :
-	MsdosPartition()
+MsdosPartition::MsdosPartition (const MsdosPartition& c) :
+	Partition(c)
 {
+	MsdosPartition();
 	// No properties
 }
 

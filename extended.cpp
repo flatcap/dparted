@@ -40,9 +40,10 @@ Extended::Extended (void)
 	sub_type (me);
 }
 
-Extended::Extended (const Extended& UNUSED(c)) :
-	Extended()
+Extended::Extended (const Extended& c) :
+	Msdos(c)
 {
+	Extended();
 	// No properties
 }
 

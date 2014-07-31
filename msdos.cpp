@@ -45,9 +45,10 @@ Msdos::Msdos (void)
 	sub_type (me);
 }
 
-Msdos::Msdos (const Msdos& UNUSED(c)) :
-	Msdos()
+Msdos::Msdos (const Msdos& c) :
+	Table(c)
 {
+	Msdos();
 	// No properties
 }
 

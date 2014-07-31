@@ -33,8 +33,9 @@ Whole::Whole (void)
 }
 
 Whole::Whole (const Whole& c) :
-	Whole()
+	Container(c)
 {
+	Whole();
 	segments = c.segments;
 }
 

@@ -44,8 +44,9 @@ LvmTable::LvmTable (void)
 }
 
 LvmTable::LvmTable (const LvmTable& c) :
-	LvmTable()
+	Table(c)
 {
+	LvmTable();
 	config        = c.config;
 	metadata_size = c.metadata_size;
 	pv_attr       = c.pv_attr;

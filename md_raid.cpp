@@ -28,9 +28,10 @@ MdRaid::MdRaid (void)
 	sub_type (me);
 }
 
-MdRaid::MdRaid (const MdRaid& UNUSED(c)) :
-	MdRaid()
+MdRaid::MdRaid (const MdRaid& c) :
+	MdVolume(c)
 {
+	MdRaid();
 	// No properties
 }
 

@@ -31,9 +31,10 @@ LvmRaid::LvmRaid (void)
 	sub_type (me);
 }
 
-LvmRaid::LvmRaid (const LvmRaid& UNUSED(c)) :
-	LvmRaid()
+LvmRaid::LvmRaid (const LvmRaid& c) :
+	LvmVolume(c)
 {
+	LvmRaid();
 	// No properties
 }
 

@@ -35,9 +35,10 @@ Misc::Misc (void)
 	sub_type (me);
 }
 
-Misc::Misc (const Misc& UNUSED(c)) :
-	Misc()
+Misc::Misc (const Misc& c) :
+	Container(c)
 {
+	Misc();
 	// No properties
 }
 

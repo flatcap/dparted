@@ -31,9 +31,10 @@ LvmPartition::LvmPartition (void)
 	sub_type (me);
 }
 
-LvmPartition::LvmPartition (const LvmPartition& UNUSED(c)) :
-	LvmPartition()
+LvmPartition::LvmPartition (const LvmPartition& c) :
+	Partition(c)
 {
+	LvmPartition();
 	// No properties
 }
 

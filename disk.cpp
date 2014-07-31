@@ -54,8 +54,9 @@ Disk::Disk (void)
 }
 
 Disk::Disk (const Disk& c) :
-	Disk()
+	Block(c)
 {
+	Disk();
 	bios_cylinders = c.bios_cylinders;
 	bios_heads     = c.bios_heads;
 	bios_sectors   = c.bios_sectors;

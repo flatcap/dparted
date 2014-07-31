@@ -28,9 +28,10 @@ MdLinear::MdLinear (void)
 	sub_type (me);
 }
 
-MdLinear::MdLinear (const MdLinear& UNUSED(c)) :
-	MdLinear()
+MdLinear::MdLinear (const MdLinear& c) :
+	MdVolume(c)
 {
+	MdLinear();
 	// No properties
 }
 

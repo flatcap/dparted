@@ -46,9 +46,10 @@ LuksPartition::create (void)
 }
 
 
-LuksPartition::LuksPartition (const LuksPartition& UNUSED(c)) :
-	LuksPartition()
+LuksPartition::LuksPartition (const LuksPartition& c) :
+	Partition(c)
 {
+	LuksPartition();
 	// No properties
 }
 

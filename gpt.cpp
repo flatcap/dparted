@@ -69,9 +69,10 @@ Gpt::Gpt (void)
 	sub_type (me);
 }
 
-Gpt::Gpt (const Gpt& UNUSED(c)) :
-	Gpt()
+Gpt::Gpt (const Gpt& c) :
+	Table(c)
 {
+	Gpt();
 	// No properties
 }
 

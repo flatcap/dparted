@@ -28,9 +28,10 @@ GptPartition::GptPartition (void)
 	sub_type (me);
 }
 
-GptPartition::GptPartition (const GptPartition& UNUSED(c)) :
-	GptPartition()
+GptPartition::GptPartition (const GptPartition& c) :
+	Partition(c)
 {
+	GptPartition();
 	// No properties
 }
 

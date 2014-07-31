@@ -47,8 +47,9 @@ MdTable::MdTable (void)
 }
 
 MdTable::MdTable (const MdTable& c) :
-	MdTable()
+	Table(c)
 {
+	MdTable();
 	chunk_size  = c.chunk_size;
 	chunks_used = c.chunks_used;
 	data_offset = c.data_offset;

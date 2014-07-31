@@ -24,11 +24,11 @@
 #include <string>
 #include <vector>
 
-#include "container.h"
+#include "block.h"
 
 typedef std::shared_ptr<class File> FilePtr;
 
-class File : public Container
+class File : public Block
 {
 public:
 	static FilePtr create (void);

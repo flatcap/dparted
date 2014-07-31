@@ -32,9 +32,10 @@ LvmMirror::LvmMirror (void)
 	sub_type (me);
 }
 
-LvmMirror::LvmMirror (const LvmMirror& UNUSED(c)) :
-	LvmMirror()
+LvmMirror::LvmMirror (const LvmMirror& c) :
+	LvmVolume(c)
 {
+	LvmMirror();
 	// No properties
 }
 

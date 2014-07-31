@@ -39,9 +39,10 @@ File::File (void)
 	sub_type (me);
 }
 
-File::File (const File& UNUSED(c)) :
-	File()
+File::File (const File& c) :
+	Block(c)
 {
+	File();
 	// No properties
 }
 
@@ -133,7 +134,7 @@ File::get_actions (void)
 		{ "dummy.file", true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> parent_actions = Block::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -147,7 +148,7 @@ File::perform_action (Action action)
 		log_debug ("File perform: %s", action.name.c_str());
 		return true;
 	} else {
-		return Container::perform_action (action);
+		return Block::perform_action (action);
 	}
 }
 
