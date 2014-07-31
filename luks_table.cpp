@@ -40,7 +40,7 @@
 
 LuksTable::LuksTable (void)
 {
-	log_ctor ("ctor LuksTable");
+	LOG_CTOR;
 	const char* me = "LuksTable";
 
 	sub_type (me);
@@ -60,6 +60,7 @@ LuksTable::LuksTable (const LuksTable& c) :
 	Table(c)
 {
 	LuksTable();
+	LOG_CTOR;
 	cipher_mode          = c.cipher_mode;
 	cipher_name          = c.cipher_name;
 	hash_spec            = c.hash_spec;
@@ -79,12 +80,13 @@ LuksTable::LuksTable (const LuksTable& c) :
 
 LuksTable::LuksTable (LuksTable&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 LuksTable::~LuksTable()
 {
-	log_dtor ("dtor LuksTable");
+	LOG_DTOR;
 }
 
 LuksTablePtr

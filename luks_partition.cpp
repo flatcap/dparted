@@ -25,7 +25,7 @@
 
 LuksPartition::LuksPartition (void)
 {
-	log_ctor ("ctor LuksPartition");
+	LOG_CTOR;
 	const char* me = "LuksPartition";
 
 	sub_type (me);
@@ -33,7 +33,7 @@ LuksPartition::LuksPartition (void)
 
 LuksPartition::~LuksPartition()
 {
-	log_dtor ("dtor LuksPartition");
+	LOG_DTOR;
 }
 
 LuksPartitionPtr
@@ -50,11 +50,13 @@ LuksPartition::LuksPartition (const LuksPartition& c) :
 	Partition(c)
 {
 	LuksPartition();
+	LOG_CTOR;
 	// No properties
 }
 
 LuksPartition::LuksPartition (LuksPartition&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 

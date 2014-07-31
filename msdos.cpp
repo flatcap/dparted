@@ -39,7 +39,7 @@
 
 Msdos::Msdos (void)
 {
-	log_ctor ("ctor Msdos");
+	LOG_CTOR;
 	const char* me = "Msdos";
 
 	sub_type (me);
@@ -49,17 +49,19 @@ Msdos::Msdos (const Msdos& c) :
 	Table(c)
 {
 	Msdos();
+	LOG_CTOR;
 	// No properties
 }
 
 Msdos::Msdos (Msdos&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Msdos::~Msdos()
 {
-	log_dtor ("dtor Msdos");
+	LOG_DTOR;
 }
 
 MsdosPtr

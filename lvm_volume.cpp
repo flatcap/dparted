@@ -25,7 +25,7 @@
 
 LvmVolume::LvmVolume (void)
 {
-	log_ctor ("ctor LvmVolume");
+	LOG_CTOR;
 	const char* me = "LvmVolume";
 
 	sub_type (me);
@@ -41,6 +41,7 @@ LvmVolume::LvmVolume (const LvmVolume& c) :
 	Volume(c)
 {
 	LvmVolume();
+	LOG_CTOR;
 	lv_attr      = c.lv_attr;
 	seg_count    = c.seg_count;
 	seg_start_pe = c.seg_start_pe;
@@ -54,12 +55,13 @@ LvmVolume::LvmVolume (const LvmVolume& c) :
 
 LvmVolume::LvmVolume (LvmVolume&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 LvmVolume::~LvmVolume()
 {
-	log_dtor ("dtor LvmVolume");
+	LOG_DTOR;
 }
 
 LvmVolumePtr

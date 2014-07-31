@@ -34,7 +34,7 @@
 
 Extended::Extended (void)
 {
-	log_ctor ("ctor Extended");
+	LOG_CTOR;
 	const char* me = "Extended";
 
 	sub_type (me);
@@ -44,17 +44,19 @@ Extended::Extended (const Extended& c) :
 	Msdos(c)
 {
 	Extended();
+	LOG_CTOR;
 	// No properties
 }
 
 Extended::Extended (Extended&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Extended::~Extended()
 {
-	log_dtor ("dtor Extended");
+	LOG_DTOR;
 }
 
 ExtendedPtr

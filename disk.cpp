@@ -36,7 +36,7 @@
 
 Disk::Disk (void)
 {
-	log_ctor ("ctor Disk");
+	LOG_CTOR;
 	const char* me = "Disk";
 
 	sub_type (me);
@@ -57,6 +57,7 @@ Disk::Disk (const Disk& c) :
 	Block(c)
 {
 	Disk();
+	LOG_CTOR;
 	bios_cylinders = c.bios_cylinders;
 	bios_heads     = c.bios_heads;
 	bios_sectors   = c.bios_sectors;
@@ -71,12 +72,13 @@ Disk::Disk (const Disk& c) :
 
 Disk::Disk (Disk&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Disk::~Disk()
 {
-	log_dtor ("dtor Disk");
+	LOG_DTOR;
 }
 
 DiskPtr

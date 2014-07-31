@@ -31,7 +31,7 @@
 
 LvmTable::LvmTable (void)
 {
-	log_ctor ("ctor LvmTable");
+	LOG_CTOR;
 	// Save a bit of space
 	const char* me = "LvmTable";
 	const int   s  = (int) BaseProperty::Flags::Size;
@@ -47,6 +47,7 @@ LvmTable::LvmTable (const LvmTable& c) :
 	Table(c)
 {
 	LvmTable();
+	LOG_CTOR;
 	config        = c.config;
 	metadata_size = c.metadata_size;
 	pv_attr       = c.pv_attr;
@@ -55,12 +56,13 @@ LvmTable::LvmTable (const LvmTable& c) :
 
 LvmTable::LvmTable (LvmTable&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 LvmTable::~LvmTable()
 {
-	log_dtor ("dtor LvmTable");
+	LOG_DTOR;
 }
 
 LvmTablePtr

@@ -26,7 +26,7 @@
 
 Partition::Partition (void)
 {
-	log_ctor ("ctor Partition");
+	LOG_CTOR;
 	const char* me = "Partition";
 
 	sub_type (me);
@@ -38,18 +38,20 @@ Partition::Partition (const Partition& c) :
 	Container(c)
 {
 	Partition();
+	LOG_CTOR;
 	ptype  = c.ptype;
 	volume = c.volume;
 }
 
 Partition::Partition (Partition&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Partition::~Partition()
 {
-	log_dtor ("dtor Partition");
+	LOG_DTOR;
 }
 
 PartitionPtr

@@ -21,12 +21,12 @@
 ErrorDialog::ErrorDialog (QuestionPtr q) :
 	Dialog(q)
 {
-	log_ctor ("ctor ErrorDialog");
+	LOG_CTOR;
 }
 
 ErrorDialog::~ErrorDialog()
 {
-	log_dtor ("dtor ErrorDialog");
+	LOG_DTOR;
 }
 
 ErrorDialogPtr

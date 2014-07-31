@@ -25,7 +25,7 @@
 
 MdPartition::MdPartition (void)
 {
-	log_ctor ("ctor MdPartition");
+	LOG_CTOR;
 	const char* me = "MdPartition";
 
 	sub_type (me);
@@ -35,17 +35,19 @@ MdPartition::MdPartition (const MdPartition& c) :
 	Partition(c)
 {
 	MdPartition();
+	LOG_CTOR;
 	// No properties
 }
 
 MdPartition::MdPartition (MdPartition&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 MdPartition::~MdPartition()
 {
-	log_dtor ("dtor MdPartition");
+	LOG_DTOR;
 }
 
 MdPartitionPtr

@@ -30,7 +30,7 @@
 
 Extfs::Extfs (void)
 {
-	log_ctor ("ctor Extfs");
+	LOG_CTOR;
 	const char* me = "Extfs";
 
 	sub_type (me);
@@ -40,17 +40,19 @@ Extfs::Extfs (const Extfs& c) :
 	Filesystem(c)
 {
 	Extfs();
+	LOG_CTOR;
 	// No properties
 }
 
 Extfs::Extfs (Extfs&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Extfs::~Extfs()
 {
-	log_dtor ("dtor Extfs");
+	LOG_DTOR;
 }
 
 ExtfsPtr

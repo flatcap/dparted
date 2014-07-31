@@ -25,7 +25,7 @@
 
 LvmPartition::LvmPartition (void)
 {
-	log_ctor ("ctor LvmPartition");
+	LOG_CTOR;
 	const char* me = "LvmPartition";
 
 	sub_type (me);
@@ -35,17 +35,19 @@ LvmPartition::LvmPartition (const LvmPartition& c) :
 	Partition(c)
 {
 	LvmPartition();
+	LOG_CTOR;
 	// No properties
 }
 
 LvmPartition::LvmPartition (LvmPartition&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 LvmPartition::~LvmPartition()
 {
-	log_dtor ("dtor LvmPartition");
+	LOG_DTOR;
 }
 
 LvmPartitionPtr

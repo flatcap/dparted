@@ -22,7 +22,7 @@
 
 MsdosPartition::MsdosPartition (void)
 {
-	log_ctor ("ctor MsdosPartition");
+	LOG_CTOR;
 	const char* me = "MsdosPartition";
 
 	sub_type (me);
@@ -32,17 +32,19 @@ MsdosPartition::MsdosPartition (const MsdosPartition& c) :
 	Partition(c)
 {
 	MsdosPartition();
+	LOG_CTOR;
 	// No properties
 }
 
 MsdosPartition::MsdosPartition (MsdosPartition&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 MsdosPartition::~MsdosPartition()
 {
-	log_dtor ("dtor MsdosPartition");
+	LOG_DTOR;
 }
 
 MsdosPartitionPtr

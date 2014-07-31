@@ -22,7 +22,7 @@
 
 MdStripe::MdStripe (void)
 {
-	log_ctor ("ctor MdStripe");
+	LOG_CTOR;
 	const char* me = "MdStripe";
 
 	sub_type (me);
@@ -32,17 +32,19 @@ MdStripe::MdStripe (const MdStripe& c) :
 	MdVolume(c)
 {
 	MdStripe();
+	LOG_CTOR;
 	// No properties
 }
 
 MdStripe::MdStripe (MdStripe&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 MdStripe::~MdStripe()
 {
-	log_dtor ("dtor MdStripe");
+	LOG_DTOR;
 }
 
 MdStripePtr

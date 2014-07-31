@@ -26,7 +26,7 @@
 
 Whole::Whole (void)
 {
-	log_ctor ("ctor Whole");
+	LOG_CTOR;
 	const char* me = "Whole";
 
 	sub_type (me);
@@ -36,17 +36,19 @@ Whole::Whole (const Whole& c) :
 	Container(c)
 {
 	Whole();
+	LOG_CTOR;
 	segments = c.segments;
 }
 
 Whole::Whole (Whole&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Whole::~Whole()
 {
-	log_dtor ("dtor Whole");
+	LOG_DTOR;
 }
 
 WholePtr

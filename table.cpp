@@ -43,7 +43,7 @@
 
 Table::Table (void)
 {
-	log_ctor ("ctor Table");
+	LOG_CTOR;
 	const char* me = "Table";
 
 	sub_type (me);
@@ -53,17 +53,19 @@ Table::Table (const Table& c) :
 	Container(c)
 {
 	Table();
+	LOG_CTOR;
 	// No properties
 }
 
 Table::Table (Table&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Table::~Table()
 {
-	log_dtor ("dtor Table");
+	LOG_DTOR;
 }
 
 TablePtr

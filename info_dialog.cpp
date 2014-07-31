@@ -21,12 +21,12 @@
 InfoDialog::InfoDialog (QuestionPtr q) :
 	Dialog(q)
 {
-	log_ctor ("ctor InfoDialog");
+	LOG_CTOR;
 }
 
 InfoDialog::~InfoDialog()
 {
-	log_dtor ("dtor InfoDialog");
+	LOG_DTOR;
 }
 
 InfoDialogPtr

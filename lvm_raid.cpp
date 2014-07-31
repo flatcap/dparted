@@ -25,7 +25,7 @@
 
 LvmRaid::LvmRaid (void)
 {
-	log_ctor ("ctor LvmRaid");
+	LOG_CTOR;
 	const char* me = "LvmRaid";
 
 	sub_type (me);
@@ -35,17 +35,19 @@ LvmRaid::LvmRaid (const LvmRaid& c) :
 	LvmVolume(c)
 {
 	LvmRaid();
+	LOG_CTOR;
 	// No properties
 }
 
 LvmRaid::LvmRaid (LvmRaid&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 LvmRaid::~LvmRaid()
 {
-	log_dtor ("dtor LvmRaid");
+	LOG_DTOR;
 }
 
 LvmRaidPtr

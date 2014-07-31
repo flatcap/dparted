@@ -30,7 +30,7 @@
 
 Btrfs::Btrfs (void)
 {
-	log_ctor ("ctor Btrfs");
+	LOG_CTOR;
 	const char* me = "Btrfs";
 
 	sub_type (me);
@@ -40,17 +40,19 @@ Btrfs::Btrfs (const Btrfs& c) :
 	Filesystem(c)
 {
 	Btrfs();
+	LOG_CTOR;
 	// No properties
 }
 
 Btrfs::Btrfs (Btrfs&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Btrfs::~Btrfs()
 {
-	log_dtor ("dtor Btrfs");
+	LOG_DTOR;
 }
 
 BtrfsPtr

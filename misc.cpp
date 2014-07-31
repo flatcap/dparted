@@ -29,7 +29,7 @@
 
 Misc::Misc (void)
 {
-	log_ctor ("ctor Misc");
+	LOG_CTOR;
 	const char* me = "Misc";
 
 	sub_type (me);
@@ -39,17 +39,19 @@ Misc::Misc (const Misc& c) :
 	Container(c)
 {
 	Misc();
+	LOG_CTOR;
 	// No properties
 }
 
 Misc::Misc (Misc&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Misc::~Misc()
 {
-	log_dtor ("dtor Misc");
+	LOG_DTOR;
 }
 
 MiscPtr

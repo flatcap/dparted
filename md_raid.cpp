@@ -22,7 +22,7 @@
 
 MdRaid::MdRaid (void)
 {
-	log_ctor ("ctor MdRaid");
+	LOG_CTOR;
 	const char* me = "MdRaid";
 
 	sub_type (me);
@@ -32,17 +32,19 @@ MdRaid::MdRaid (const MdRaid& c) :
 	MdVolume(c)
 {
 	MdRaid();
+	LOG_CTOR;
 	// No properties
 }
 
 MdRaid::MdRaid (MdRaid&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 MdRaid::~MdRaid()
 {
-	log_dtor ("dtor MdRaid");
+	LOG_DTOR;
 }
 
 MdRaidPtr

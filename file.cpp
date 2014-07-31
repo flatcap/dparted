@@ -33,7 +33,7 @@
 
 File::File (void)
 {
-	log_ctor ("ctor File");
+	LOG_CTOR;
 	const char* me = "File";
 
 	sub_type (me);
@@ -43,17 +43,19 @@ File::File (const File& c) :
 	Block(c)
 {
 	File();
+	LOG_CTOR;
 	// No properties
 }
 
 File::File (File&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 File::~File()
 {
-	log_dtor ("dtor File");
+	LOG_DTOR;
 }
 
 FilePtr

@@ -23,12 +23,12 @@
 TypeVisitor::TypeVisitor (const std::string& search) :
 	type (search)
 {
-	log_ctor ("ctor TypeVisitor");
+	LOG_CTOR;
 }
 
 TypeVisitor::~TypeVisitor()
 {
-	log_dtor ("dtor TypeVisitor");
+	LOG_DTOR;
 }
 
 bool

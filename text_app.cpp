@@ -42,12 +42,12 @@ TextAppPtr text_app;
 
 TextApp::TextApp (void)
 {
-	log_ctor ("ctor TextApp");
+	LOG_CTOR;
 }
 
 TextApp::~TextApp()
 {
-	log_dtor ("dtor TextApp");
+	LOG_DTOR;
 }
 
 

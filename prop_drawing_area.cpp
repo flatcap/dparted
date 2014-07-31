@@ -22,12 +22,12 @@
 
 PropDrawingArea::PropDrawingArea (void)
 {
-	log_ctor ("ctor PropDrawingArea");
+	LOG_CTOR;
 }
 
 PropDrawingArea::~PropDrawingArea()
 {
-	log_dtor ("dtor PropDrawingArea");
+	LOG_DTOR;
 }
 
 

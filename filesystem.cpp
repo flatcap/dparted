@@ -45,7 +45,7 @@
 
 Filesystem::Filesystem (void)
 {
-	log_ctor ("ctor Filesystem");
+	LOG_CTOR;
 	const char* me = "Filesystem";
 
 	sub_type (me);
@@ -55,17 +55,19 @@ Filesystem::Filesystem (const Filesystem& c) :
 	Container(c)
 {
 	Filesystem();
+	LOG_CTOR;
 	// No properties
 }
 
 Filesystem::Filesystem (Filesystem&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Filesystem::~Filesystem()
 {
-	log_dtor ("dtor Filesystem");
+	LOG_DTOR;
 }
 
 FilesystemPtr

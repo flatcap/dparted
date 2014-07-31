@@ -25,7 +25,7 @@
 
 LvmLinear::LvmLinear (void)
 {
-	log_ctor ("ctor LvmLinear");
+	LOG_CTOR;
 	const char* me = "LvmLinear";
 
 	sub_type (me);
@@ -35,17 +35,19 @@ LvmLinear::LvmLinear (const LvmLinear& c) :
 	LvmVolume(c)
 {
 	LvmLinear();
+	LOG_CTOR;
 	// No properties
 }
 
 LvmLinear::LvmLinear (LvmLinear&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 LvmLinear::~LvmLinear()
 {
-	log_dtor ("dtor LvmLinear");
+	LOG_DTOR;
 }
 
 LvmLinearPtr

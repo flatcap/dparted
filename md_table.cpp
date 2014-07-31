@@ -28,7 +28,7 @@
 
 MdTable::MdTable (void)
 {
-	log_ctor ("ctor MdTable");
+	LOG_CTOR;
 	// Save a bit of space
 	const char* me = "MdTable";
 	const int   s  = (int) BaseProperty::Flags::Size;
@@ -50,6 +50,7 @@ MdTable::MdTable (const MdTable& c) :
 	Table(c)
 {
 	MdTable();
+	LOG_CTOR;
 	chunk_size  = c.chunk_size;
 	chunks_used = c.chunks_used;
 	data_offset = c.data_offset;
@@ -63,12 +64,13 @@ MdTable::MdTable (const MdTable& c) :
 
 MdTable::MdTable (MdTable&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 MdTable::~MdTable()
 {
-	log_dtor ("dtor MdTable");
+	LOG_DTOR;
 }
 
 MdTablePtr

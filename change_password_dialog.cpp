@@ -24,7 +24,7 @@ ChangePasswordDialog::ChangePasswordDialog (QuestionPtr q) :
 	new1 ("", 0.0, 0.5),
 	new2 ("", 0.0, 0.5)
 {
-	log_ctor ("ctor ChangePasswordDialog");
+	LOG_CTOR;
 
 	Gtk::Box* ca = get_content_area();
 	// ca->set_spacing(0);
@@ -82,7 +82,7 @@ ChangePasswordDialog::ChangePasswordDialog (QuestionPtr q) :
 
 ChangePasswordDialog::~ChangePasswordDialog()
 {
-	log_dtor ("dtor ChangePasswordDialog");
+	LOG_DTOR;
 }
 
 ChangePasswordDialogPtr

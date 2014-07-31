@@ -22,7 +22,7 @@
 
 MdMirror::MdMirror (void)
 {
-	log_ctor ("ctor MdMirror");
+	LOG_CTOR;
 	const char* me = "MdMirror";
 
 	sub_type (me);
@@ -32,17 +32,19 @@ MdMirror::MdMirror (const MdMirror& c) :
 	MdVolume(c)
 {
 	MdMirror();
+	LOG_CTOR;
 	// No properties
 }
 
 MdMirror::MdMirror (MdMirror&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 MdMirror::~MdMirror()
 {
-	log_dtor ("dtor MdMirror");
+	LOG_DTOR;
 }
 
 MdMirrorPtr

@@ -22,7 +22,7 @@
 
 GptPartition::GptPartition (void)
 {
-	log_ctor ("ctor GptPartition");
+	LOG_CTOR;
 	const char* me = "GptPartition";
 
 	sub_type (me);
@@ -32,17 +32,19 @@ GptPartition::GptPartition (const GptPartition& c) :
 	Partition(c)
 {
 	GptPartition();
+	LOG_CTOR;
 	// No properties
 }
 
 GptPartition::GptPartition (GptPartition&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 GptPartition::~GptPartition()
 {
-	log_dtor ("dtor GptPartition");
+	LOG_DTOR;
 }
 
 GptPartitionPtr

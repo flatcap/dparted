@@ -30,7 +30,7 @@
 
 Ntfs::Ntfs (void)
 {
-	log_ctor ("ctor Ntfs");
+	LOG_CTOR;
 	const char* me = "Ntfs";
 
 	sub_type (me);
@@ -40,17 +40,19 @@ Ntfs::Ntfs (const Ntfs& c) :
 	Filesystem(c)
 {
 	Ntfs();
+	LOG_CTOR;
 	// No properties
 }
 
 Ntfs::Ntfs (Ntfs&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Ntfs::~Ntfs()
 {
-	log_dtor ("dtor Ntfs");
+	LOG_DTOR;
 }
 
 NtfsPtr

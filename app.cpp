@@ -56,7 +56,7 @@ AppPtr main_app;
 
 App::App (void)
 {
-	log_ctor ("ctor App");
+	LOG_CTOR;
 }
 
 App::~App()
@@ -72,7 +72,7 @@ App::~App()
 	}
 #endif
 
-	log_dtor ("dtor App");
+	LOG_DTOR;
 }
 
 

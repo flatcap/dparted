@@ -21,12 +21,12 @@
 QuestionDialog::QuestionDialog (QuestionPtr q) :
 	Dialog(q)
 {
-	log_ctor ("ctor QuestionDialog");
+	LOG_CTOR;
 }
 
 QuestionDialog::~QuestionDialog()
 {
-	log_dtor ("dtor QuestionDialog");
+	LOG_DTOR;
 }
 
 QuestionDialogPtr

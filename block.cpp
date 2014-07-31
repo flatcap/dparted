@@ -44,7 +44,7 @@
 
 Block::Block (void)
 {
-	log_ctor ("ctor Block");
+	LOG_CTOR;
 	const char* me = "Block";
 
 	sub_type (me);
@@ -54,17 +54,19 @@ Block::Block (const Block& c) :
 	Container(c)
 {
 	Block();
+	LOG_CTOR;
 	// No properties
 }
 
 Block::Block (Block&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Block::~Block()
 {
-	log_dtor ("dtor Block");
+	LOG_DTOR;
 }
 
 BlockPtr

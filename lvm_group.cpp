@@ -41,7 +41,7 @@
 
 LvmGroup::LvmGroup (void)
 {
-	log_ctor ("ctor LvmGroup");
+	LOG_CTOR;
 	const char* me = "LvmGroup";
 
 	sub_type (me);
@@ -56,6 +56,7 @@ LvmGroup::LvmGroup (const LvmGroup& c) :
 	Whole(c)
 {
 	LvmGroup();
+	LOG_CTOR;
 	lv_count = c.lv_count;
 	pv_count = c.pv_count;
 	vg_attr  = c.vg_attr;
@@ -64,12 +65,13 @@ LvmGroup::LvmGroup (const LvmGroup& c) :
 
 LvmGroup::LvmGroup (LvmGroup&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 LvmGroup::~LvmGroup()
 {
-	log_dtor ("dtor LvmGroup");
+	LOG_DTOR;
 }
 
 LvmGroupPtr

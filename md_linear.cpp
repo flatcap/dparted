@@ -22,7 +22,7 @@
 
 MdLinear::MdLinear (void)
 {
-	log_ctor ("ctor MdLinear");
+	LOG_CTOR;
 	const char* me = "MdLinear";
 
 	sub_type (me);
@@ -32,17 +32,19 @@ MdLinear::MdLinear (const MdLinear& c) :
 	MdVolume(c)
 {
 	MdLinear();
+	LOG_CTOR;
 	// No properties
 }
 
 MdLinear::MdLinear (MdLinear&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 MdLinear::~MdLinear()
 {
-	log_dtor ("dtor MdLinear");
+	LOG_DTOR;
 }
 
 MdLinearPtr

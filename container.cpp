@@ -92,7 +92,7 @@ std::vector<Action> cont_actions = {
 Container::Container (void)
 {
 	unique_id = std::atomic_fetch_add (&container_id, (std::uint64_t)1);
-	log_ctor ("ctor Container (%ld)", unique_id);
+	log_ctor ("ctor %s (%ld)", __PRETTY_FUNCTION__, unique_id);
 
 	// Save a bit of space
 	const char* me = "Container";
@@ -145,7 +145,7 @@ Container::Container (void)
 Container::Container (const Container& c) :
 	Container()
 {
-	log_code ("COPY");
+	LOG_CTOR;
 	name                = c.name;
 	uuid                = c.uuid;
 
@@ -178,6 +178,7 @@ Container::Container (const Container& c) :
 
 Container::Container (Container&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
@@ -188,7 +189,7 @@ Container::~Container()
 		log_file ("file close: %d", fd);
 		fd = -1;
 	}
-	log_dtor ("dtor Container (%ld)", unique_id);
+	LOG_DTOR;
 }
 
 ContainerPtr

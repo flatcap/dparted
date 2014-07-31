@@ -31,7 +31,7 @@
 
 Loop::Loop (void)
 {
-	log_ctor ("ctor Loop");
+	LOG_CTOR;
 	// Save a bit of space
 	const char* me = "Loop";
 	const int   d  = (int) BaseProperty::Flags::Dot;
@@ -60,6 +60,7 @@ Loop::Loop (const Loop& c) :
 	Block(c)
 {
 	Loop();
+	LOG_CTOR;
 	autoclear  = c.autoclear;
 	deleted    = c.deleted;
 	file_inode = c.file_inode;
@@ -74,12 +75,13 @@ Loop::Loop (const Loop& c) :
 
 Loop::Loop (Loop&& c)
 {
+	LOG_CTOR;
 	swap (c);
 }
 
 Loop::~Loop()
 {
-	log_dtor ("dtor Loop");
+	LOG_DTOR;
 }
 
 LoopPtr
