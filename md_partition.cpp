@@ -31,6 +31,17 @@ MdPartition::MdPartition (void)
 	sub_type (me);
 }
 
+MdPartition::MdPartition (const MdPartition& UNUSED(c)) :
+	MdPartition()
+{
+	// No properties
+}
+
+MdPartition::MdPartition (MdPartition&& c)
+{
+	swap (c);
+}
+
 MdPartition::~MdPartition()
 {
 	log_dtor ("dtor MdPartition");
@@ -43,6 +54,66 @@ MdPartition::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+MdPartition&
+MdPartition::operator= (const MdPartition& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+MdPartition&
+MdPartition::operator= (MdPartition&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+MdPartition::swap (MdPartition& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (MdPartition& lhs, MdPartition& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdPartition*
+MdPartition::clone (void)
+{
+	return new MdPartition (*this);
+}
+
+MdPartitionPtr
+MdPartition::copy (void)
+{
+	MdPartition *c = clone();
+
+	MdPartitionPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

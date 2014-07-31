@@ -31,6 +31,14 @@ class MsdosPartition : public Partition
 public:
 	static MsdosPartitionPtr create (void);
 	virtual ~MsdosPartition();
+	MsdosPartition& operator= (const MsdosPartition& c);
+	MsdosPartition& operator= (MsdosPartition&& c);
+
+	void swap (MsdosPartition& c);
+	friend void swap (MsdosPartition& lhs, MsdosPartition& rhs);
+
+	MsdosPartitionPtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +49,10 @@ public:
 
 protected:
 	MsdosPartition (void);
+	MsdosPartition (const MsdosPartition& c);
+	MsdosPartition (MsdosPartition&& c);
+
+	virtual MsdosPartition* clone (void);
 };
 
 #endif // _MSDOS_PARTITION_H_

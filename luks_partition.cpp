@@ -46,6 +46,77 @@ LuksPartition::create (void)
 }
 
 
+LuksPartition::LuksPartition (const LuksPartition& UNUSED(c)) :
+	LuksPartition()
+{
+	// No properties
+}
+
+LuksPartition::LuksPartition (LuksPartition&& c)
+{
+	swap (c);
+}
+
+/**
+ * operator= (copy)
+ */
+LuksPartition&
+LuksPartition::operator= (const LuksPartition& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+LuksPartition&
+LuksPartition::operator= (LuksPartition&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+LuksPartition::swap (LuksPartition& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (LuksPartition& lhs, LuksPartition& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LuksPartition*
+LuksPartition::clone (void)
+{
+	return new LuksPartition (*this);
+}
+
+LuksPartitionPtr
+LuksPartition::copy (void)
+{
+	LuksPartition *c = clone();
+
+	LuksPartitionPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
+}
+
+
 bool
 LuksPartition::accept (Visitor& v)
 {

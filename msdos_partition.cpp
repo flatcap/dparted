@@ -28,6 +28,17 @@ MsdosPartition::MsdosPartition (void)
 	sub_type (me);
 }
 
+MsdosPartition::MsdosPartition (const MsdosPartition& UNUSED(c)) :
+	MsdosPartition()
+{
+	// No properties
+}
+
+MsdosPartition::MsdosPartition (MsdosPartition&& c)
+{
+	swap (c);
+}
+
 MsdosPartition::~MsdosPartition()
 {
 	log_dtor ("dtor MsdosPartition");
@@ -40,6 +51,66 @@ MsdosPartition::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+MsdosPartition&
+MsdosPartition::operator= (const MsdosPartition& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+MsdosPartition&
+MsdosPartition::operator= (MsdosPartition&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+MsdosPartition::swap (MsdosPartition& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (MsdosPartition& lhs, MsdosPartition& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MsdosPartition*
+MsdosPartition::clone (void)
+{
+	return new MsdosPartition (*this);
+}
+
+MsdosPartitionPtr
+MsdosPartition::copy (void)
+{
+	MsdosPartition *c = clone();
+
+	MsdosPartitionPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

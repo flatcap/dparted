@@ -31,6 +31,17 @@ LvmPartition::LvmPartition (void)
 	sub_type (me);
 }
 
+LvmPartition::LvmPartition (const LvmPartition& UNUSED(c)) :
+	LvmPartition()
+{
+	// No properties
+}
+
+LvmPartition::LvmPartition (LvmPartition&& c)
+{
+	swap (c);
+}
+
 LvmPartition::~LvmPartition()
 {
 	log_dtor ("dtor LvmPartition");
@@ -43,6 +54,66 @@ LvmPartition::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+LvmPartition&
+LvmPartition::operator= (const LvmPartition& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+LvmPartition&
+LvmPartition::operator= (LvmPartition&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+LvmPartition::swap (LvmPartition& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (LvmPartition& lhs, LvmPartition& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmPartition*
+LvmPartition::clone (void)
+{
+	return new LvmPartition (*this);
+}
+
+LvmPartitionPtr
+LvmPartition::copy (void)
+{
+	LvmPartition *c = clone();
+
+	LvmPartitionPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

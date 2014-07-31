@@ -28,6 +28,17 @@ GptPartition::GptPartition (void)
 	sub_type (me);
 }
 
+GptPartition::GptPartition (const GptPartition& UNUSED(c)) :
+	GptPartition()
+{
+	// No properties
+}
+
+GptPartition::GptPartition (GptPartition&& c)
+{
+	swap (c);
+}
+
 GptPartition::~GptPartition()
 {
 	log_dtor ("dtor GptPartition");
@@ -40,6 +51,66 @@ GptPartition::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+GptPartition&
+GptPartition::operator= (const GptPartition& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+GptPartition&
+GptPartition::operator= (GptPartition&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+GptPartition::swap (GptPartition& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (GptPartition& lhs, GptPartition& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+GptPartition*
+GptPartition::clone (void)
+{
+	return new GptPartition (*this);
+}
+
+GptPartitionPtr
+GptPartition::copy (void)
+{
+	GptPartition *c = clone();
+
+	GptPartitionPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

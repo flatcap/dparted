@@ -31,6 +31,14 @@ class LuksPartition : public Partition
 public:
 	static LuksPartitionPtr create (void);
 	virtual ~LuksPartition();
+	LuksPartition& operator= (const LuksPartition& c);
+	LuksPartition& operator= (LuksPartition&& c);
+
+	void swap (LuksPartition& c);
+	friend void swap (LuksPartition& lhs, LuksPartition& rhs);
+
+	LuksPartitionPtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +49,10 @@ public:
 
 protected:
 	LuksPartition (void);
+	LuksPartition (const LuksPartition& c);
+	LuksPartition (LuksPartition&& c);
+
+	virtual LuksPartition* clone (void);
 };
 
 #endif // _LUKS_PARTITION_H_
