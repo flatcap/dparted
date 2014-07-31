@@ -56,6 +56,31 @@ LuksTable::LuksTable (void)
 	declare_prop_var (me, "version",              version,              "Version",              0);
 }
 
+LuksTable::LuksTable (const LuksTable& c) :
+	LuksTable()
+{
+	cipher_mode          = c.cipher_mode;
+	cipher_name          = c.cipher_name;
+	hash_spec            = c.hash_spec;
+	key_bits             = c.key_bits;
+	mk_digest            = c.mk_digest;
+	mk_digest_iterations = c.mk_digest_iterations;
+	mk_digest_salt       = c.mk_digest_salt;
+	payload_offset       = c.payload_offset;
+	version              = c.version;
+	pass1_active         = c.pass1_active;
+	pass1_iterations     = c.pass1_iterations;
+	pass1_salt           = c.pass1_salt;
+	pass1_key_offset     = c.pass1_key_offset;
+	pass1_stripes        = c.pass1_stripes;
+	header_size          = c.header_size;
+}
+
+LuksTable::LuksTable (LuksTable&& c)
+{
+	swap (c);
+}
+
 LuksTable::~LuksTable()
 {
 	log_dtor ("dtor LuksTable");
@@ -68,6 +93,94 @@ LuksTable::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+LuksTable&
+LuksTable::operator= (const LuksTable& c)
+{
+	cipher_mode          = c.cipher_mode;
+	cipher_name          = c.cipher_name;
+	hash_spec            = c.hash_spec;
+	key_bits             = c.key_bits;
+	mk_digest            = c.mk_digest;
+	mk_digest_iterations = c.mk_digest_iterations;
+	mk_digest_salt       = c.mk_digest_salt;
+	payload_offset       = c.payload_offset;
+	version              = c.version;
+	pass1_active         = c.pass1_active;
+	pass1_iterations     = c.pass1_iterations;
+	pass1_salt           = c.pass1_salt;
+	pass1_key_offset     = c.pass1_key_offset;
+	pass1_stripes        = c.pass1_stripes;
+	header_size          = c.header_size;
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+LuksTable&
+LuksTable::operator= (LuksTable&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+LuksTable::swap (LuksTable& c)
+{
+	std::swap (cipher_mode,          c.cipher_mode);
+	std::swap (cipher_name,          c.cipher_name);
+	std::swap (hash_spec,            c.hash_spec);
+	std::swap (key_bits,             c.key_bits);
+	std::swap (mk_digest,            c.mk_digest);
+	std::swap (mk_digest_iterations, c.mk_digest_iterations);
+	std::swap (mk_digest_salt,       c.mk_digest_salt);
+	std::swap (payload_offset,       c.payload_offset);
+	std::swap (version,              c.version);
+	std::swap (pass1_active,         c.pass1_active);
+	std::swap (pass1_iterations,     c.pass1_iterations);
+	std::swap (pass1_salt,           c.pass1_salt);
+	std::swap (pass1_key_offset,     c.pass1_key_offset);
+	std::swap (pass1_stripes,        c.pass1_stripes);
+	std::swap (header_size,          c.header_size);
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (LuksTable& lhs, LuksTable& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LuksTable*
+LuksTable::clone (void)
+{
+	return new LuksTable (*this);
+}
+
+LuksTablePtr
+LuksTable::copy (void)
+{
+	LuksTable *c = clone();
+
+	LuksTablePtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

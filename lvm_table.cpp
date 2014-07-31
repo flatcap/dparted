@@ -43,6 +43,20 @@ LvmTable::LvmTable (void)
 	declare_prop_var (me, "pv_attr",       pv_attr,       "desc of pv_attr",       0);
 }
 
+LvmTable::LvmTable (const LvmTable& c) :
+	LvmTable()
+{
+	config        = c.config;
+	metadata_size = c.metadata_size;
+	pv_attr       = c.pv_attr;
+	group         = c.group;
+}
+
+LvmTable::LvmTable (LvmTable&& c)
+{
+	swap (c);
+}
+
 LvmTable::~LvmTable()
 {
 	log_dtor ("dtor LvmTable");
@@ -55,6 +69,72 @@ LvmTable::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+LvmTable&
+LvmTable::operator= (const LvmTable& c)
+{
+	config        = c.config;
+	metadata_size = c.metadata_size;
+	pv_attr       = c.pv_attr;
+	group         = c.group;
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+LvmTable&
+LvmTable::operator= (LvmTable&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+LvmTable::swap (LvmTable& c)
+{
+	std::swap (config,        c.config);
+	std::swap (metadata_size, c.metadata_size);
+	std::swap (pv_attr,       c.pv_attr);
+	std::swap (group,         c.group);
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (LvmTable& lhs, LvmTable& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmTable*
+LvmTable::clone (void)
+{
+	return new LvmTable (*this);
+}
+
+LvmTablePtr
+LvmTable::copy (void)
+{
+	LvmTable *c = clone();
+
+	LvmTablePtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

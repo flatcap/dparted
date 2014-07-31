@@ -40,6 +40,17 @@ Extended::Extended (void)
 	sub_type (me);
 }
 
+Extended::Extended (const Extended& UNUSED(c)) :
+	Extended()
+{
+	// No properties
+}
+
+Extended::Extended (Extended&& c)
+{
+	swap (c);
+}
+
 Extended::~Extended()
 {
 	log_dtor ("dtor Extended");
@@ -52,6 +63,66 @@ Extended::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Extended&
+Extended::operator= (const Extended& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Extended&
+Extended::operator= (Extended&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Extended::swap (Extended& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Extended& lhs, Extended& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Extended*
+Extended::clone (void)
+{
+	return new Extended (*this);
+}
+
+ExtendedPtr
+Extended::copy (void)
+{
+	Extended *c = clone();
+
+	ExtendedPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

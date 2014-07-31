@@ -69,6 +69,17 @@ Gpt::Gpt (void)
 	sub_type (me);
 }
 
+Gpt::Gpt (const Gpt& UNUSED(c)) :
+	Gpt()
+{
+	// No properties
+}
+
+Gpt::Gpt (Gpt&& c)
+{
+	swap (c);
+}
+
 Gpt::~Gpt()
 {
 	log_dtor ("dtor Gpt");
@@ -81,6 +92,66 @@ Gpt::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Gpt&
+Gpt::operator= (const Gpt& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Gpt&
+Gpt::operator= (Gpt&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Gpt::swap (Gpt& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Gpt& lhs, Gpt& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Gpt*
+Gpt::clone (void)
+{
+	return new Gpt (*this);
+}
+
+GptPtr
+Gpt::copy (void)
+{
+	Gpt *c = clone();
+
+	GptPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

@@ -45,6 +45,17 @@ Msdos::Msdos (void)
 	sub_type (me);
 }
 
+Msdos::Msdos (const Msdos& UNUSED(c)) :
+	Msdos()
+{
+	// No properties
+}
+
+Msdos::Msdos (Msdos&& c)
+{
+	swap (c);
+}
+
 Msdos::~Msdos()
 {
 	log_dtor ("dtor Msdos");
@@ -57,6 +68,66 @@ Msdos::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Msdos&
+Msdos::operator= (const Msdos& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Msdos&
+Msdos::operator= (Msdos&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Msdos::swap (Msdos& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Msdos& lhs, Msdos& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Msdos*
+Msdos::clone (void)
+{
+	return new Msdos (*this);
+}
+
+MsdosPtr
+Msdos::copy (void)
+{
+	Msdos *c = clone();
+
+	MsdosPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

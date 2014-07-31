@@ -33,6 +33,14 @@ class LvmTable : public Table
 public:
 	static LvmTablePtr create (void);
 	virtual ~LvmTable();
+	LvmTable& operator= (const LvmTable& c);
+	LvmTable& operator= (LvmTable&& c);
+
+	void swap (LvmTable& c);
+	friend void swap (LvmTable& lhs, LvmTable& rhs);
+
+	LvmTablePtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -60,6 +68,10 @@ public:
 
 protected:
 	LvmTable (void);
+	LvmTable (const LvmTable& c);
+	LvmTable (LvmTable&& c);
+
+	virtual LvmTable* clone (void);
 };
 
 #endif // _LVM_TABLE_H_

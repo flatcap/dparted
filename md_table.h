@@ -32,6 +32,14 @@ class MdTable : public Table
 public:
 	static MdTablePtr create (void);
 	virtual ~MdTable();
+	MdTable& operator= (const MdTable& c);
+	MdTable& operator= (MdTable&& c);
+
+	void swap (MdTable& c);
+	friend void swap (MdTable& lhs, MdTable& rhs);
+
+	MdTablePtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -53,6 +61,10 @@ public:
 
 protected:
 	MdTable (void);
+	MdTable (const MdTable& c);
+	MdTable (MdTable&& c);
+
+	virtual MdTable* clone (void);
 };
 
 #endif // _MD_TABLE_H_
