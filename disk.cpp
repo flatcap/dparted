@@ -53,6 +53,26 @@ Disk::Disk (void)
 	declare_prop_var (me, "read_only",      read_only,      "Read Only",      0);
 }
 
+Disk::Disk (const Disk& c) :
+	Disk()
+{
+	bios_cylinders = c.bios_cylinders;
+	bios_heads     = c.bios_heads;
+	bios_sectors   = c.bios_sectors;
+	did            = c.did;
+	host           = c.host;
+	hw_cylinders   = c.hw_cylinders;
+	hw_heads       = c.hw_heads;
+	hw_sectors     = c.hw_sectors;
+	read_only      = c.read_only;
+	mounts         = c.mounts;
+}
+
+Disk::Disk (Disk&& c)
+{
+	swap (c);
+}
+
 Disk::~Disk()
 {
 	log_dtor ("dtor Disk");
@@ -94,6 +114,84 @@ Disk::create (const std::string& lsblk)
 	d->mounts = tags["MOUNTPOINT"];
 
 	return d;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Disk&
+Disk::operator= (const Disk& c)
+{
+	bios_cylinders = c.bios_cylinders;
+	bios_heads     = c.bios_heads;
+	bios_sectors   = c.bios_sectors;
+	did            = c.did;
+	host           = c.host;
+	hw_cylinders   = c.hw_cylinders;
+	hw_heads       = c.hw_heads;
+	hw_sectors     = c.hw_sectors;
+	read_only      = c.read_only;
+	mounts         = c.mounts;
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Disk&
+Disk::operator= (Disk&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Disk::swap (Disk& c)
+{
+	std::swap (bios_cylinders, c.bios_cylinders);
+	std::swap (bios_heads,     c.bios_heads);
+	std::swap (bios_sectors,   c.bios_sectors);
+	std::swap (did,            c.did);
+	std::swap (host,           c.host);
+	std::swap (hw_cylinders,   c.hw_cylinders);
+	std::swap (hw_heads,       c.hw_heads);
+	std::swap (hw_sectors,     c.hw_sectors);
+	std::swap (read_only,      c.read_only);
+	std::swap (mounts,         c.mounts);
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Disk& lhs, Disk& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Disk*
+Disk::clone (void)
+{
+	return new Disk (*this);
+}
+
+DiskPtr
+Disk::copy (void)
+{
+	Disk *c = clone();
+
+	DiskPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

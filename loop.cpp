@@ -56,6 +56,26 @@ Loop::Loop (void)
 	declare_prop_fn (me, "flags",            (get_string_t) std::bind(&Loop::get_flags,            this), "desc of flags",            d);
 }
 
+Loop::Loop (const Loop& c) :
+	Loop()
+{
+	autoclear  = c.autoclear;
+	deleted    = c.deleted;
+	file_inode = c.file_inode;
+	file_major = c.file_major;
+	file_minor = c.file_minor;
+	file_name  = c.file_name;
+	offset     = c.offset;
+	partscan   = c.partscan;
+	read_only  = c.read_only;
+	sizelimit  = c.sizelimit;
+}
+
+Loop::Loop (Loop&& c)
+{
+	swap (c);
+}
+
 Loop::~Loop()
 {
 	log_dtor ("dtor Loop");
@@ -114,6 +134,84 @@ Loop::create (const std::string& losetup)
 	l->uuid = ss.str();
 
 	return l;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Loop&
+Loop::operator= (const Loop& c)
+{
+	autoclear  = c.autoclear;
+	deleted    = c.deleted;
+	file_inode = c.file_inode;
+	file_major = c.file_major;
+	file_minor = c.file_minor;
+	file_name  = c.file_name;
+	offset     = c.offset;
+	partscan   = c.partscan;
+	read_only  = c.read_only;
+	sizelimit  = c.sizelimit;
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Loop&
+Loop::operator= (Loop&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Loop::swap (Loop& c)
+{
+	std::swap (autoclear,  c.autoclear);
+	std::swap (deleted,    c.deleted);
+	std::swap (file_inode, c.file_inode);
+	std::swap (file_major, c.file_major);
+	std::swap (file_minor, c.file_minor);
+	std::swap (file_name,  c.file_name);
+	std::swap (offset,     c.offset);
+	std::swap (partscan,   c.partscan);
+	std::swap (read_only,  c.read_only);
+	std::swap (sizelimit,  c.sizelimit);
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Loop& lhs, Loop& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Loop*
+Loop::clone (void)
+{
+	return new Loop (*this);
+}
+
+LoopPtr
+Loop::copy (void)
+{
+	Loop *c = clone();
+
+	LoopPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

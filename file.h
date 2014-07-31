@@ -33,6 +33,14 @@ class File : public Container
 public:
 	static FilePtr create (void);
 	virtual ~File();
+	File& operator= (const File& c);
+	File& operator= (File&& c);
+
+	void swap (File& c);
+	friend void swap (File& lhs, File& rhs);
+
+	FilePtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -46,6 +54,10 @@ public:
 
 protected:
 	File (void);
+	File (const File& c);
+	File (File&& c);
+
+	virtual File* clone (void);
 };
 
 #endif // _FILE_H_

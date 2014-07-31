@@ -39,6 +39,17 @@ File::File (void)
 	sub_type (me);
 }
 
+File::File (const File& UNUSED(c)) :
+	File()
+{
+	// No properties
+}
+
+File::File (File&& c)
+{
+	swap (c);
+}
+
 File::~File()
 {
 	log_dtor ("dtor File");
@@ -51,6 +62,66 @@ File::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+File&
+File::operator= (const File& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+File&
+File::operator= (File&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+File::swap (File& UNUSED(c))
+{
+	// No properties
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (File& lhs, File& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+File*
+File::clone (void)
+{
+	return new File (*this);
+}
+
+FilePtr
+File::copy (void)
+{
+	File *c = clone();
+
+	FilePtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 

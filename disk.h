@@ -35,6 +35,14 @@ public:
 	static DiskPtr create (void);
 	static DiskPtr create (const std::string& lsblk);
 	virtual ~Disk();
+	Disk& operator= (const Disk& c);
+	Disk& operator= (Disk&& c);
+
+	void swap (Disk& c);
+	friend void swap (Disk& lhs, Disk& rhs);
+
+	DiskPtr copy (void);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -69,6 +77,10 @@ public:
 
 protected:
 	Disk (void);
+	Disk (const Disk& c);
+	Disk (Disk&& c);
+
+	virtual Disk* clone (void);
 };
 
 #endif // _DISK_H_
