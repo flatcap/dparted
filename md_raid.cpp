@@ -102,18 +102,6 @@ MdRaid::clone (void)
 	return new MdRaid (*this);
 }
 
-MdRaidPtr
-MdRaid::copy (void)
-{
-	MdRaid *c = clone();
-
-	MdRaidPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 MdRaid::accept (Visitor& v)

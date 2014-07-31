@@ -135,18 +135,6 @@ LvmVolume::clone (void)
 	return new LvmVolume (*this);
 }
 
-LvmVolumePtr
-LvmVolume::copy (void)
-{
-	LvmVolume *c = clone();
-
-	LvmVolumePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 LvmVolume::accept (Visitor& v)

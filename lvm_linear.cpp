@@ -105,18 +105,6 @@ LvmLinear::clone (void)
 	return new LvmLinear (*this);
 }
 
-LvmLinearPtr
-LvmLinear::copy (void)
-{
-	LvmLinear *c = clone();
-
-	LvmLinearPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 LvmLinear::accept (Visitor& v)

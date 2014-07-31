@@ -39,8 +39,6 @@ public:
 	void swap (Loop& c);
 	friend void swap (Loop& lhs, Loop& rhs);
 
-	LoopPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

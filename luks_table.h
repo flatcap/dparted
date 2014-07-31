@@ -38,8 +38,6 @@ public:
 	void swap (LuksTable& c);
 	friend void swap (LuksTable& lhs, LuksTable& rhs);
 
-	LuksTablePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

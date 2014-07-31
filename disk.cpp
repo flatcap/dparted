@@ -183,18 +183,6 @@ Disk::clone (void)
 	return new Disk (*this);
 }
 
-DiskPtr
-Disk::copy (void)
-{
-	Disk *c = clone();
-
-	DiskPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Disk::accept (Visitor& v)

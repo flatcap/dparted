@@ -143,18 +143,6 @@ Gpt::clone (void)
 	return new Gpt (*this);
 }
 
-GptPtr
-Gpt::copy (void)
-{
-	Gpt *c = clone();
-
-	GptPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Gpt::accept (Visitor& v)

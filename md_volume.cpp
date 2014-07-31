@@ -102,18 +102,6 @@ MdVolume::clone (void)
 	return new MdVolume (*this);
 }
 
-MdVolumePtr
-MdVolume::copy (void)
-{
-	MdVolume *c = clone();
-
-	MdVolumePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 MdVolume::accept (Visitor& v)

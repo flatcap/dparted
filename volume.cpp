@@ -105,18 +105,6 @@ Volume::clone (void)
 	return new Volume (*this);
 }
 
-VolumePtr
-Volume::copy (void)
-{
-	Volume *c = clone();
-
-	VolumePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Volume::accept (Visitor& v)

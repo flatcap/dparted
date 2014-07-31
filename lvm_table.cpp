@@ -126,18 +126,6 @@ LvmTable::clone (void)
 	return new LvmTable (*this);
 }
 
-LvmTablePtr
-LvmTable::copy (void)
-{
-	LvmTable *c = clone();
-
-	LvmTablePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 LvmTable::accept (Visitor& v)

@@ -41,8 +41,6 @@ public:
 	void swap (Table& c);
 	friend void swap (Table& lhs, Table& rhs);
 
-	TablePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

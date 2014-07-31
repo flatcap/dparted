@@ -37,8 +37,6 @@ public:
 	void swap (MdLinear& c);
 	friend void swap (MdLinear& lhs, MdLinear& rhs);
 
-	MdLinearPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

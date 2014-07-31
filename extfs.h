@@ -38,8 +38,6 @@ public:
 	void swap (Extfs& c);
 	friend void swap (Extfs& lhs, Extfs& rhs);
 
-	ExtfsPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

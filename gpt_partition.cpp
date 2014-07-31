@@ -102,18 +102,6 @@ GptPartition::clone (void)
 	return new GptPartition (*this);
 }
 
-GptPartitionPtr
-GptPartition::copy (void)
-{
-	GptPartition *c = clone();
-
-	GptPartitionPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 GptPartition::accept (Visitor& v)

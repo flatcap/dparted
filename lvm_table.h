@@ -39,8 +39,6 @@ public:
 	void swap (LvmTable& c);
 	friend void swap (LvmTable& lhs, LvmTable& rhs);
 
-	LvmTablePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

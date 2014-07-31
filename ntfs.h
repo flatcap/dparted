@@ -38,8 +38,6 @@ public:
 	void swap (Ntfs& c);
 	friend void swap (Ntfs& lhs, Ntfs& rhs);
 
-	NtfsPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

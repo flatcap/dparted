@@ -39,8 +39,6 @@ public:
 	void swap (File& c);
 	friend void swap (File& lhs, File& rhs);
 
-	FilePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

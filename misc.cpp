@@ -109,18 +109,6 @@ Misc::clone (void)
 	return new Misc (*this);
 }
 
-MiscPtr
-Misc::copy (void)
-{
-	Misc *c = clone();
-
-	MiscPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Misc::accept (Visitor& v)

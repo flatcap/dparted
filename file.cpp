@@ -113,18 +113,6 @@ File::clone (void)
 	return new File (*this);
 }
 
-FilePtr
-File::copy (void)
-{
-	File *c = clone();
-
-	FilePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 File::accept (Visitor& v)

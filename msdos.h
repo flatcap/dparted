@@ -44,8 +44,6 @@ public:
 	void swap (Msdos& c);
 	friend void swap (Msdos& lhs, Msdos& rhs);
 
-	MsdosPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

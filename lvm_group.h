@@ -39,8 +39,6 @@ public:
 	void swap (LvmGroup& c);
 	friend void swap (LvmGroup& lhs, LvmGroup& rhs);
 
-	LvmGroupPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

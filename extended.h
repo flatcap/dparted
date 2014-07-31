@@ -38,8 +38,6 @@ public:
 	void swap (Extended& c);
 	friend void swap (Extended& lhs, Extended& rhs);
 
-	ExtendedPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

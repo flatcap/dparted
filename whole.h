@@ -39,8 +39,6 @@ public:
 	void swap (Whole& c);
 	friend void swap (Whole& lhs, Whole& rhs);
 
-	WholePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

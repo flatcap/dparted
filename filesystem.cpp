@@ -125,18 +125,6 @@ Filesystem::clone (void)
 	return new Filesystem (*this);
 }
 
-FilesystemPtr
-Filesystem::copy (void)
-{
-	Filesystem *c = clone();
-
-	FilesystemPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Filesystem::accept (Visitor& v)

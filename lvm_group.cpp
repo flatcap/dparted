@@ -135,18 +135,6 @@ LvmGroup::clone (void)
 	return new LvmGroup (*this);
 }
 
-LvmGroupPtr
-LvmGroup::copy (void)
-{
-	LvmGroup *c = clone();
-
-	LvmGroupPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 LvmGroup::accept (Visitor& v)

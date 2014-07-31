@@ -172,18 +172,6 @@ LuksTable::clone (void)
 	return new LuksTable (*this);
 }
 
-LuksTablePtr
-LuksTable::copy (void)
-{
-	LuksTable *c = clone();
-
-	LuksTablePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 LuksTable::accept (Visitor& v)

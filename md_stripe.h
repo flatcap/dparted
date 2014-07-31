@@ -37,8 +37,6 @@ public:
 	void swap (MdStripe& c);
 	friend void swap (MdStripe& lhs, MdStripe& rhs);
 
-	MdStripePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

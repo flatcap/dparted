@@ -38,8 +38,6 @@ public:
 	void swap (Btrfs& c);
 	friend void swap (Btrfs& lhs, Btrfs& rhs);
 
-	BtrfsPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

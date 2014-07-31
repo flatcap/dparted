@@ -110,18 +110,6 @@ Ntfs::clone (void)
 	return new Ntfs (*this);
 }
 
-NtfsPtr
-Ntfs::copy (void)
-{
-	Ntfs *c = clone();
-
-	NtfsPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Ntfs::accept (Visitor& v)

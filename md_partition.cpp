@@ -105,18 +105,6 @@ MdPartition::clone (void)
 	return new MdPartition (*this);
 }
 
-MdPartitionPtr
-MdPartition::copy (void)
-{
-	MdPartition *c = clone();
-
-	MdPartitionPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 MdPartition::accept (Visitor& v)

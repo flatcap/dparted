@@ -39,8 +39,6 @@ public:
 	void swap (LvmVolume& c);
 	friend void swap (LvmVolume& lhs, LvmVolume& rhs);
 
-	LvmVolumePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

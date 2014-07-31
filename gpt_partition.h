@@ -37,8 +37,6 @@ public:
 	void swap (GptPartition& c);
 	friend void swap (GptPartition& lhs, GptPartition& rhs);
 
-	GptPartitionPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

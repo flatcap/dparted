@@ -203,18 +203,6 @@ Loop::clone (void)
 	return new Loop (*this);
 }
 
-LoopPtr
-Loop::copy (void)
-{
-	Loop *c = clone();
-
-	LoopPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Loop::accept (Visitor& v)

@@ -37,8 +37,6 @@ public:
 	void swap (LvmLinear& c);
 	friend void swap (LvmLinear& lhs, LvmLinear& rhs);
 
-	LvmLinearPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

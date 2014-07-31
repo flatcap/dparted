@@ -110,18 +110,6 @@ Btrfs::clone (void)
 	return new Btrfs (*this);
 }
 
-BtrfsPtr
-Btrfs::copy (void)
-{
-	Btrfs *c = clone();
-
-	BtrfsPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Btrfs::accept (Visitor& v)

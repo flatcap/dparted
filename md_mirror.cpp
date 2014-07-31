@@ -102,18 +102,6 @@ MdMirror::clone (void)
 	return new MdMirror (*this);
 }
 
-MdMirrorPtr
-MdMirror::copy (void)
-{
-	MdMirror *c = clone();
-
-	MdMirrorPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 MdMirror::accept (Visitor& v)

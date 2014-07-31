@@ -102,18 +102,6 @@ MsdosPartition::clone (void)
 	return new MsdosPartition (*this);
 }
 
-MsdosPartitionPtr
-MsdosPartition::copy (void)
-{
-	MsdosPartition *c = clone();
-
-	MsdosPartitionPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 MsdosPartition::accept (Visitor& v)

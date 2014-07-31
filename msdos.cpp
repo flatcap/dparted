@@ -119,18 +119,6 @@ Msdos::clone (void)
 	return new Msdos (*this);
 }
 
-MsdosPtr
-Msdos::copy (void)
-{
-	Msdos *c = clone();
-
-	MsdosPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Msdos::accept (Visitor& v)

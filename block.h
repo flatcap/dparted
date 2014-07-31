@@ -44,8 +44,6 @@ public:
 
 	virtual bool accept (Visitor& v);
 
-	BlockPtr copy (void);
-
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 

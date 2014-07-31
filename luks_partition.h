@@ -37,8 +37,6 @@ public:
 	void swap (LuksPartition& c);
 	friend void swap (LuksPartition& lhs, LuksPartition& rhs);
 
-	LuksPartitionPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

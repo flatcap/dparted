@@ -112,18 +112,6 @@ Block::clone (void)
 	return new Block (*this);
 }
 
-BlockPtr
-Block::copy (void)
-{
-	Block *c = clone();
-
-	BlockPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Block::accept (Visitor& v)

@@ -144,18 +144,6 @@ MdTable::clone (void)
 	return new MdTable (*this);
 }
 
-MdTablePtr
-MdTable::copy (void)
-{
-	MdTable *c = clone();
-
-	MdTablePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 MdTable::accept (Visitor& v)

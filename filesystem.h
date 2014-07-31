@@ -41,8 +41,6 @@ public:
 	void swap (Filesystem& c);
 	friend void swap (Filesystem& lhs, Filesystem& rhs);
 
-	FilesystemPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

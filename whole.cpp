@@ -106,18 +106,6 @@ Whole::clone (void)
 	return new Whole (*this);
 }
 
-WholePtr
-Whole::copy (void)
-{
-	Whole *c = clone();
-
-	WholePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Whole::accept (Visitor& v)

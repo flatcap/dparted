@@ -105,18 +105,6 @@ LvmPartition::clone (void)
 	return new LvmPartition (*this);
 }
 
-LvmPartitionPtr
-LvmPartition::copy (void)
-{
-	LvmPartition *c = clone();
-
-	LvmPartitionPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 LvmPartition::accept (Visitor& v)

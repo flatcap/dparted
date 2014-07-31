@@ -37,8 +37,6 @@ public:
 	void swap (MdPartition& c);
 	friend void swap (MdPartition& lhs, MdPartition& rhs);
 
-	MdPartitionPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

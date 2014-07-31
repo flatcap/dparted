@@ -37,8 +37,6 @@ public:
 	void swap (MdRaid& c);
 	friend void swap (MdRaid& lhs, MdRaid& rhs);
 
-	MdRaidPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

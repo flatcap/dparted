@@ -105,18 +105,6 @@ LvmStripe::clone (void)
 	return new LvmStripe (*this);
 }
 
-LvmStripePtr
-LvmStripe::copy (void)
-{
-	LvmStripe *c = clone();
-
-	LvmStripePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 LvmStripe::accept (Visitor& v)

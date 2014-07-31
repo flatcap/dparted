@@ -37,8 +37,6 @@ public:
 	void swap (MdMirror& c);
 	friend void swap (MdMirror& lhs, MdMirror& rhs);
 
-	MdMirrorPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

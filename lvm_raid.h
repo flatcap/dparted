@@ -37,8 +37,6 @@ public:
 	void swap (LvmRaid& c);
 	friend void swap (LvmRaid& lhs, LvmRaid& rhs);
 
-	LvmRaidPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

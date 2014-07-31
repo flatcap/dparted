@@ -38,8 +38,6 @@ public:
 	void swap (Gpt& c);
 	friend void swap (Gpt& lhs, Gpt& rhs);
 
-	GptPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

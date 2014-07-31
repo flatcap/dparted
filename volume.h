@@ -40,8 +40,6 @@ public:
 	void swap (Volume& c);
 	friend void swap (Volume& lhs, Volume& rhs);
 
-	VolumePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

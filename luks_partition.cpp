@@ -105,18 +105,6 @@ LuksPartition::clone (void)
 	return new LuksPartition (*this);
 }
 
-LuksPartitionPtr
-LuksPartition::copy (void)
-{
-	LuksPartition *c = clone();
-
-	LuksPartitionPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 LuksPartition::accept (Visitor& v)

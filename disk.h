@@ -41,8 +41,6 @@ public:
 	void swap (Disk& c);
 	friend void swap (Disk& lhs, Disk& rhs);
 
-	DiskPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

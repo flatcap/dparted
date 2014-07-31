@@ -38,8 +38,6 @@ public:
 	void swap (MdTable& c);
 	friend void swap (MdTable& lhs, MdTable& rhs);
 
-	MdTablePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

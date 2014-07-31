@@ -106,18 +106,6 @@ LvmMirror::clone (void)
 	return new LvmMirror (*this);
 }
 
-LvmMirrorPtr
-LvmMirror::copy (void)
-{
-	LvmMirror *c = clone();
-
-	LvmMirrorPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 LvmMirror::accept (Visitor& v)

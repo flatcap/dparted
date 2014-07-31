@@ -37,8 +37,6 @@ public:
 	void swap (LvmStripe& c);
 	friend void swap (LvmStripe& lhs, LvmStripe& rhs);
 
-	LvmStripePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

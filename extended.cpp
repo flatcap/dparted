@@ -114,18 +114,6 @@ Extended::clone (void)
 	return new Extended (*this);
 }
 
-ExtendedPtr
-Extended::copy (void)
-{
-	Extended *c = clone();
-
-	ExtendedPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Extended::accept (Visitor& v)

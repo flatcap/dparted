@@ -38,8 +38,6 @@ public:
 	void swap (LvmPartition& c);
 	friend void swap (LvmPartition& lhs, LvmPartition& rhs);
 
-	LvmPartitionPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

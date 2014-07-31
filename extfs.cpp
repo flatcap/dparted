@@ -110,18 +110,6 @@ Extfs::clone (void)
 	return new Extfs (*this);
 }
 
-ExtfsPtr
-Extfs::copy (void)
-{
-	Extfs *c = clone();
-
-	ExtfsPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Extfs::accept (Visitor& v)

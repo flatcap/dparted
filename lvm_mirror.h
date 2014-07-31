@@ -37,8 +37,6 @@ public:
 	void swap (LvmMirror& c);
 	friend void swap (LvmMirror& lhs, LvmMirror& rhs);
 
-	LvmMirrorPtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

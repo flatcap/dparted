@@ -37,8 +37,6 @@ public:
 	void swap (MdVolume& c);
 	friend void swap (MdVolume& lhs, MdVolume& rhs);
 
-	MdVolumePtr copy (void);
-
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);

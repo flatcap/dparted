@@ -123,18 +123,6 @@ Table::clone (void)
 	return new Table (*this);
 }
 
-TablePtr
-Table::copy (void)
-{
-	Table *c = clone();
-
-	TablePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 Table::accept (Visitor& v)

@@ -102,18 +102,6 @@ MdStripe::clone (void)
 	return new MdStripe (*this);
 }
 
-MdStripePtr
-MdStripe::copy (void)
-{
-	MdStripe *c = clone();
-
-	MdStripePtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 MdStripe::accept (Visitor& v)

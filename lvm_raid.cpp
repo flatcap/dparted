@@ -105,18 +105,6 @@ LvmRaid::clone (void)
 	return new LvmRaid (*this);
 }
 
-LvmRaidPtr
-LvmRaid::copy (void)
-{
-	LvmRaid *c = clone();
-
-	LvmRaidPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 LvmRaid::accept (Visitor& v)

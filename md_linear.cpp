@@ -102,18 +102,6 @@ MdLinear::clone (void)
 	return new MdLinear (*this);
 }
 
-MdLinearPtr
-MdLinear::copy (void)
-{
-	MdLinear *c = clone();
-
-	MdLinearPtr cp (c);
-
-	c->self = cp;
-
-	return cp;
-}
-
 
 bool
 MdLinear::accept (Visitor& v)
