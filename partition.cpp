@@ -64,9 +64,6 @@ Partition::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Partition&
 Partition::operator= (const Partition& c)
 {
@@ -76,9 +73,6 @@ Partition::operator= (const Partition& c)
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Partition&
 Partition::operator= (Partition&& c)
 {
@@ -87,9 +81,6 @@ Partition::operator= (Partition&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Partition::swap (Partition& c)
 {
@@ -97,9 +88,6 @@ Partition::swap (Partition& c)
 	std::swap (volume, c.volume);
 }
 
-/**
- * swap (global)
- */
 void
 swap (Partition& lhs, Partition& rhs)
 {

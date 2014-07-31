@@ -57,9 +57,6 @@ MdLinear::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 MdLinear&
 MdLinear::operator= (const MdLinear& UNUSED(c))
 {
@@ -68,9 +65,6 @@ MdLinear::operator= (const MdLinear& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 MdLinear&
 MdLinear::operator= (MdLinear&& c)
 {
@@ -79,18 +73,12 @@ MdLinear::operator= (MdLinear&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 MdLinear::swap (MdLinear& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (MdLinear& lhs, MdLinear& rhs)
 {

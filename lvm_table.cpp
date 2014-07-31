@@ -75,9 +75,6 @@ LvmTable::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 LvmTable&
 LvmTable::operator= (const LvmTable& c)
 {
@@ -89,9 +86,6 @@ LvmTable::operator= (const LvmTable& c)
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 LvmTable&
 LvmTable::operator= (LvmTable&& c)
 {
@@ -100,9 +94,6 @@ LvmTable::operator= (LvmTable&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 LvmTable::swap (LvmTable& c)
 {
@@ -112,9 +103,6 @@ LvmTable::swap (LvmTable& c)
 	std::swap (group,         c.group);
 }
 
-/**
- * swap (global)
- */
 void
 swap (LvmTable& lhs, LvmTable& rhs)
 {

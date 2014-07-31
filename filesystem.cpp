@@ -80,9 +80,6 @@ Filesystem::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Filesystem&
 Filesystem::operator= (const Filesystem& UNUSED(c))
 {
@@ -91,9 +88,6 @@ Filesystem::operator= (const Filesystem& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Filesystem&
 Filesystem::operator= (Filesystem&& c)
 {
@@ -102,18 +96,12 @@ Filesystem::operator= (Filesystem&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Filesystem::swap (Filesystem& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (Filesystem& lhs, Filesystem& rhs)
 {

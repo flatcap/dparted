@@ -78,9 +78,6 @@ Table::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Table&
 Table::operator= (const Table& UNUSED(c))
 {
@@ -89,9 +86,6 @@ Table::operator= (const Table& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Table&
 Table::operator= (Table&& c)
 {
@@ -100,18 +94,12 @@ Table::operator= (Table&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Table::swap (Table& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (Table& lhs, Table& rhs)
 {

@@ -60,9 +60,6 @@ LvmPartition::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 LvmPartition&
 LvmPartition::operator= (const LvmPartition& UNUSED(c))
 {
@@ -71,9 +68,6 @@ LvmPartition::operator= (const LvmPartition& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 LvmPartition&
 LvmPartition::operator= (LvmPartition&& c)
 {
@@ -82,18 +76,12 @@ LvmPartition::operator= (LvmPartition&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 LvmPartition::swap (LvmPartition& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (LvmPartition& lhs, LvmPartition& rhs)
 {

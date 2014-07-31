@@ -65,9 +65,6 @@ Btrfs::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Btrfs&
 Btrfs::operator= (const Btrfs& UNUSED(c))
 {
@@ -76,9 +73,6 @@ Btrfs::operator= (const Btrfs& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Btrfs&
 Btrfs::operator= (Btrfs&& c)
 {
@@ -87,18 +81,12 @@ Btrfs::operator= (Btrfs&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Btrfs::swap (Btrfs& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (Btrfs& lhs, Btrfs& rhs)
 {

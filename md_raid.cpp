@@ -57,9 +57,6 @@ MdRaid::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 MdRaid&
 MdRaid::operator= (const MdRaid& UNUSED(c))
 {
@@ -68,9 +65,6 @@ MdRaid::operator= (const MdRaid& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 MdRaid&
 MdRaid::operator= (MdRaid&& c)
 {
@@ -79,18 +73,12 @@ MdRaid::operator= (MdRaid&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 MdRaid::swap (MdRaid& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (MdRaid& lhs, MdRaid& rhs)
 {

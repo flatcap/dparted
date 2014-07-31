@@ -57,9 +57,6 @@ MdVolume::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 MdVolume&
 MdVolume::operator= (const MdVolume& UNUSED(c))
 {
@@ -68,9 +65,6 @@ MdVolume::operator= (const MdVolume& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 MdVolume&
 MdVolume::operator= (MdVolume&& c)
 {
@@ -79,18 +73,12 @@ MdVolume::operator= (MdVolume&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 MdVolume::swap (MdVolume& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (MdVolume& lhs, MdVolume& rhs)
 {

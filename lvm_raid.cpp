@@ -60,9 +60,6 @@ LvmRaid::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 LvmRaid&
 LvmRaid::operator= (const LvmRaid& UNUSED(c))
 {
@@ -71,9 +68,6 @@ LvmRaid::operator= (const LvmRaid& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 LvmRaid&
 LvmRaid::operator= (LvmRaid&& c)
 {
@@ -82,18 +76,12 @@ LvmRaid::operator= (LvmRaid&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 LvmRaid::swap (LvmRaid& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (LvmRaid& lhs, LvmRaid& rhs)
 {

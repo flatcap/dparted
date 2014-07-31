@@ -68,9 +68,6 @@ File::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 File&
 File::operator= (const File& UNUSED(c))
 {
@@ -79,9 +76,6 @@ File::operator= (const File& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 File&
 File::operator= (File&& c)
 {
@@ -90,18 +84,12 @@ File::operator= (File&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 File::swap (File& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (File& lhs, File& rhs)
 {

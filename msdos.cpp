@@ -74,9 +74,6 @@ Msdos::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Msdos&
 Msdos::operator= (const Msdos& UNUSED(c))
 {
@@ -85,9 +82,6 @@ Msdos::operator= (const Msdos& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Msdos&
 Msdos::operator= (Msdos&& c)
 {
@@ -96,18 +90,12 @@ Msdos::operator= (Msdos&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Msdos::swap (Msdos& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (Msdos& lhs, Msdos& rhs)
 {

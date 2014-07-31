@@ -60,9 +60,6 @@ MdPartition::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 MdPartition&
 MdPartition::operator= (const MdPartition& UNUSED(c))
 {
@@ -71,9 +68,6 @@ MdPartition::operator= (const MdPartition& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 MdPartition&
 MdPartition::operator= (MdPartition&& c)
 {
@@ -82,18 +76,12 @@ MdPartition::operator= (MdPartition&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 MdPartition::swap (MdPartition& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (MdPartition& lhs, MdPartition& rhs)
 {

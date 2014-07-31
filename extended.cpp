@@ -69,9 +69,6 @@ Extended::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Extended&
 Extended::operator= (const Extended& UNUSED(c))
 {
@@ -80,9 +77,6 @@ Extended::operator= (const Extended& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Extended&
 Extended::operator= (Extended&& c)
 {
@@ -91,18 +85,12 @@ Extended::operator= (Extended&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Extended::swap (Extended& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (Extended& lhs, Extended& rhs)
 {

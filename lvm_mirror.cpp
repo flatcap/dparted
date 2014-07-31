@@ -61,9 +61,6 @@ LvmMirror::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 LvmMirror&
 LvmMirror::operator= (const LvmMirror& UNUSED(c))
 {
@@ -72,9 +69,6 @@ LvmMirror::operator= (const LvmMirror& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 LvmMirror&
 LvmMirror::operator= (LvmMirror&& c)
 {
@@ -83,18 +77,12 @@ LvmMirror::operator= (LvmMirror&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 LvmMirror::swap (LvmMirror& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (LvmMirror& lhs, LvmMirror& rhs)
 {

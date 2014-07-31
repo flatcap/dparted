@@ -84,9 +84,6 @@ LvmGroup::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 LvmGroup&
 LvmGroup::operator= (const LvmGroup& c)
 {
@@ -98,9 +95,6 @@ LvmGroup::operator= (const LvmGroup& c)
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 LvmGroup&
 LvmGroup::operator= (LvmGroup&& c)
 {
@@ -109,9 +103,6 @@ LvmGroup::operator= (LvmGroup&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 LvmGroup::swap (LvmGroup& c)
 {
@@ -121,9 +112,6 @@ LvmGroup::swap (LvmGroup& c)
 	std::swap (vg_seqno, c.vg_seqno);
 }
 
-/**
- * swap (global)
- */
 void
 swap (LvmGroup& lhs, LvmGroup& rhs)
 {

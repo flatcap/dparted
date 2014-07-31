@@ -83,9 +83,6 @@ MdTable::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 MdTable&
 MdTable::operator= (const MdTable& c)
 {
@@ -102,9 +99,6 @@ MdTable::operator= (const MdTable& c)
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 MdTable&
 MdTable::operator= (MdTable&& c)
 {
@@ -113,9 +107,6 @@ MdTable::operator= (MdTable&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 MdTable::swap (MdTable& c)
 {
@@ -130,9 +121,6 @@ MdTable::swap (MdTable& c)
 	std::swap (vol_uuid,    c.vol_uuid);
 }
 
-/**
- * swap (global)
- */
 void
 swap (MdTable& lhs, MdTable& rhs)
 {

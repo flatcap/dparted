@@ -65,9 +65,6 @@ Extfs::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Extfs&
 Extfs::operator= (const Extfs& UNUSED(c))
 {
@@ -76,9 +73,6 @@ Extfs::operator= (const Extfs& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Extfs&
 Extfs::operator= (Extfs&& c)
 {
@@ -87,18 +81,12 @@ Extfs::operator= (Extfs&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Extfs::swap (Extfs& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (Extfs& lhs, Extfs& rhs)
 {

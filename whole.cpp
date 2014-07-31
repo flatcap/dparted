@@ -61,9 +61,6 @@ Whole::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Whole&
 Whole::operator= (const Whole& c)
 {
@@ -72,9 +69,6 @@ Whole::operator= (const Whole& c)
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Whole&
 Whole::operator= (Whole&& c)
 {
@@ -83,18 +77,12 @@ Whole::operator= (Whole&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Whole::swap (Whole& c)
 {
 	std::swap (segments, c.segments);
 }
 
-/**
- * swap (global)
- */
 void
 swap (Whole& lhs, Whole& rhs)
 {

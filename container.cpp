@@ -202,9 +202,6 @@ Container::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Container&
 Container::operator= (const Container& c)
 {
@@ -240,9 +237,6 @@ Container::operator= (const Container& c)
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Container&
 Container::operator= (Container&& c)
 {
@@ -251,9 +245,6 @@ Container::operator= (Container&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Container::swap (Container& c)
 {
@@ -287,9 +278,6 @@ Container::swap (Container& c)
 	//	mutex_children
 }
 
-/**
- * swap (global)
- */
 void
 swap (Container& lhs, Container& rhs)
 {
@@ -626,9 +614,6 @@ Container::close_buffer (std::uint8_t* buffer, std::uint64_t size)
 }
 
 
-/**
- * operator<<
- */
 std::ostream&
 operator<< (std::ostream& stream, const ContainerPtr& c)
 {

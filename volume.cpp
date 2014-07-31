@@ -60,9 +60,6 @@ Volume::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Volume&
 Volume::operator= (const Volume& UNUSED(c))
 {
@@ -71,9 +68,6 @@ Volume::operator= (const Volume& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Volume&
 Volume::operator= (Volume&& c)
 {
@@ -82,18 +76,12 @@ Volume::operator= (Volume&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Volume::swap (Volume& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (Volume& lhs, Volume& rhs)
 {

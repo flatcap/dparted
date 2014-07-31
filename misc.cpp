@@ -64,9 +64,6 @@ Misc::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Misc&
 Misc::operator= (const Misc& UNUSED(c))
 {
@@ -75,9 +72,6 @@ Misc::operator= (const Misc& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Misc&
 Misc::operator= (Misc&& c)
 {
@@ -86,18 +80,12 @@ Misc::operator= (Misc&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Misc::swap (Misc& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (Misc& lhs, Misc& rhs)
 {

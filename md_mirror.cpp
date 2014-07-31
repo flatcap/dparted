@@ -57,9 +57,6 @@ MdMirror::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 MdMirror&
 MdMirror::operator= (const MdMirror& UNUSED(c))
 {
@@ -68,9 +65,6 @@ MdMirror::operator= (const MdMirror& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 MdMirror&
 MdMirror::operator= (MdMirror&& c)
 {
@@ -79,18 +73,12 @@ MdMirror::operator= (MdMirror&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 MdMirror::swap (MdMirror& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (MdMirror& lhs, MdMirror& rhs)
 {

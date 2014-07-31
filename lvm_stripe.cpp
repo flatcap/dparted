@@ -60,9 +60,6 @@ LvmStripe::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 LvmStripe&
 LvmStripe::operator= (const LvmStripe& UNUSED(c))
 {
@@ -71,9 +68,6 @@ LvmStripe::operator= (const LvmStripe& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 LvmStripe&
 LvmStripe::operator= (LvmStripe&& c)
 {
@@ -82,18 +76,12 @@ LvmStripe::operator= (LvmStripe&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 LvmStripe::swap (LvmStripe& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (LvmStripe& lhs, LvmStripe& rhs)
 {

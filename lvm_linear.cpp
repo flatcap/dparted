@@ -60,9 +60,6 @@ LvmLinear::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 LvmLinear&
 LvmLinear::operator= (const LvmLinear& UNUSED(c))
 {
@@ -71,9 +68,6 @@ LvmLinear::operator= (const LvmLinear& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 LvmLinear&
 LvmLinear::operator= (LvmLinear&& c)
 {
@@ -82,18 +76,12 @@ LvmLinear::operator= (LvmLinear&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 LvmLinear::swap (LvmLinear& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (LvmLinear& lhs, LvmLinear& rhs)
 {

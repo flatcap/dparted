@@ -99,9 +99,6 @@ LuksTable::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 LuksTable&
 LuksTable::operator= (const LuksTable& c)
 {
@@ -124,9 +121,6 @@ LuksTable::operator= (const LuksTable& c)
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 LuksTable&
 LuksTable::operator= (LuksTable&& c)
 {
@@ -135,9 +129,6 @@ LuksTable::operator= (LuksTable&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 LuksTable::swap (LuksTable& c)
 {
@@ -158,9 +149,6 @@ LuksTable::swap (LuksTable& c)
 	std::swap (header_size,          c.header_size);
 }
 
-/**
- * swap (global)
- */
 void
 swap (LuksTable& lhs, LuksTable& rhs)
 {

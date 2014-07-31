@@ -57,9 +57,6 @@ MdStripe::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 MdStripe&
 MdStripe::operator= (const MdStripe& UNUSED(c))
 {
@@ -68,9 +65,6 @@ MdStripe::operator= (const MdStripe& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 MdStripe&
 MdStripe::operator= (MdStripe&& c)
 {
@@ -79,18 +73,12 @@ MdStripe::operator= (MdStripe&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 MdStripe::swap (MdStripe& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (MdStripe& lhs, MdStripe& rhs)
 {

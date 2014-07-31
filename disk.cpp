@@ -120,9 +120,6 @@ Disk::create (const std::string& lsblk)
 }
 
 
-/**
- * operator= (copy)
- */
 Disk&
 Disk::operator= (const Disk& c)
 {
@@ -140,9 +137,6 @@ Disk::operator= (const Disk& c)
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Disk&
 Disk::operator= (Disk&& c)
 {
@@ -151,9 +145,6 @@ Disk::operator= (Disk&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Disk::swap (Disk& c)
 {
@@ -169,9 +160,6 @@ Disk::swap (Disk& c)
 	std::swap (mounts,         c.mounts);
 }
 
-/**
- * swap (global)
- */
 void
 swap (Disk& lhs, Disk& rhs)
 {

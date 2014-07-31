@@ -60,9 +60,6 @@ LuksPartition::LuksPartition (LuksPartition&& c)
 	swap (c);
 }
 
-/**
- * operator= (copy)
- */
 LuksPartition&
 LuksPartition::operator= (const LuksPartition& UNUSED(c))
 {
@@ -71,9 +68,6 @@ LuksPartition::operator= (const LuksPartition& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 LuksPartition&
 LuksPartition::operator= (LuksPartition&& c)
 {
@@ -82,18 +76,12 @@ LuksPartition::operator= (LuksPartition&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 LuksPartition::swap (LuksPartition& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (LuksPartition& lhs, LuksPartition& rhs)
 {

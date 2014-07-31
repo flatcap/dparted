@@ -57,9 +57,6 @@ MsdosPartition::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 MsdosPartition&
 MsdosPartition::operator= (const MsdosPartition& UNUSED(c))
 {
@@ -68,9 +65,6 @@ MsdosPartition::operator= (const MsdosPartition& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 MsdosPartition&
 MsdosPartition::operator= (MsdosPartition&& c)
 {
@@ -79,18 +73,12 @@ MsdosPartition::operator= (MsdosPartition&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 MsdosPartition::swap (MsdosPartition& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (MsdosPartition& lhs, MsdosPartition& rhs)
 {

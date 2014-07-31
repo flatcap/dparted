@@ -140,9 +140,6 @@ Loop::create (const std::string& losetup)
 }
 
 
-/**
- * operator= (copy)
- */
 Loop&
 Loop::operator= (const Loop& c)
 {
@@ -160,9 +157,6 @@ Loop::operator= (const Loop& c)
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Loop&
 Loop::operator= (Loop&& c)
 {
@@ -171,9 +165,6 @@ Loop::operator= (Loop&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Loop::swap (Loop& c)
 {
@@ -189,9 +180,6 @@ Loop::swap (Loop& c)
 	std::swap (sizelimit,  c.sizelimit);
 }
 
-/**
- * swap (global)
- */
 void
 swap (Loop& lhs, Loop& rhs)
 {

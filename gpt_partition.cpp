@@ -57,9 +57,6 @@ GptPartition::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 GptPartition&
 GptPartition::operator= (const GptPartition& UNUSED(c))
 {
@@ -68,9 +65,6 @@ GptPartition::operator= (const GptPartition& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 GptPartition&
 GptPartition::operator= (GptPartition&& c)
 {
@@ -79,18 +73,12 @@ GptPartition::operator= (GptPartition&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 GptPartition::swap (GptPartition& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (GptPartition& lhs, GptPartition& rhs)
 {

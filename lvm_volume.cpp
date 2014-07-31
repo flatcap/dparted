@@ -74,9 +74,6 @@ LvmVolume::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 LvmVolume&
 LvmVolume::operator= (const LvmVolume& c)
 {
@@ -93,9 +90,6 @@ LvmVolume::operator= (const LvmVolume& c)
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 LvmVolume&
 LvmVolume::operator= (LvmVolume&& c)
 {
@@ -104,9 +98,6 @@ LvmVolume::operator= (LvmVolume&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 LvmVolume::swap (LvmVolume& c)
 {
@@ -121,9 +112,6 @@ LvmVolume::swap (LvmVolume& c)
 	std::swap (sibling,      c.sibling);
 }
 
-/**
- * swap (global)
- */
 void
 swap (LvmVolume& lhs, LvmVolume& rhs)
 {

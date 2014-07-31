@@ -98,9 +98,6 @@ Gpt::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Gpt&
 Gpt::operator= (const Gpt& UNUSED(c))
 {
@@ -109,9 +106,6 @@ Gpt::operator= (const Gpt& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Gpt&
 Gpt::operator= (Gpt&& c)
 {
@@ -120,18 +114,12 @@ Gpt::operator= (Gpt&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Gpt::swap (Gpt& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (Gpt& lhs, Gpt& rhs)
 {

@@ -65,9 +65,6 @@ Ntfs::create (void)
 }
 
 
-/**
- * operator= (copy)
- */
 Ntfs&
 Ntfs::operator= (const Ntfs& UNUSED(c))
 {
@@ -76,9 +73,6 @@ Ntfs::operator= (const Ntfs& UNUSED(c))
 	return *this;
 }
 
-/**
- * operator= (move)
- */
 Ntfs&
 Ntfs::operator= (Ntfs&& c)
 {
@@ -87,18 +81,12 @@ Ntfs::operator= (Ntfs&& c)
 }
 
 
-/**
- * swap (member)
- */
 void
 Ntfs::swap (Ntfs& UNUSED(c))
 {
 	// No properties
 }
 
-/**
- * swap (global)
- */
 void
 swap (Ntfs& lhs, Ntfs& rhs)
 {
