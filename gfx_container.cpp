@@ -130,9 +130,9 @@ GfxContainer::init (ContainerPtr c)
 		std::string i  = theme->get_config (path, name, "icon");
 		std::string u  = theme->get_config (path, name, "usage");
 
+		background = process_colour (bg);
 		colour     = process_colour (c);
 		colour2    = c;
-		background = process_colour (bg);
 		icon       = process_icon   (i);
 		usage      = process_bool   (u);
 	} catch (const std::string& e) {

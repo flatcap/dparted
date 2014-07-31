@@ -42,7 +42,7 @@ LvmPartition::LvmPartition (const LvmPartition& c) :
 LvmPartition::LvmPartition (LvmPartition&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 LvmPartition::~LvmPartition()
@@ -71,7 +71,7 @@ LvmPartition::operator= (const LvmPartition& UNUSED(c))
 LvmPartition&
 LvmPartition::operator= (LvmPartition&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

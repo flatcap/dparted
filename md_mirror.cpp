@@ -39,7 +39,7 @@ MdMirror::MdMirror (const MdMirror& c) :
 MdMirror::MdMirror (MdMirror&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 MdMirror::~MdMirror()
@@ -68,7 +68,7 @@ MdMirror::operator= (const MdMirror& UNUSED(c))
 MdMirror&
 MdMirror::operator= (MdMirror&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

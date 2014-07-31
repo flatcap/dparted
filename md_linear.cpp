@@ -39,7 +39,7 @@ MdLinear::MdLinear (const MdLinear& c) :
 MdLinear::MdLinear (MdLinear&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 MdLinear::~MdLinear()
@@ -68,7 +68,7 @@ MdLinear::operator= (const MdLinear& UNUSED(c))
 MdLinear&
 MdLinear::operator= (MdLinear&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

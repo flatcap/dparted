@@ -60,7 +60,7 @@ Table::Table (const Table& c) :
 Table::Table (Table&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Table::~Table()
@@ -89,7 +89,7 @@ Table::operator= (const Table& UNUSED(c))
 Table&
 Table::operator= (Table&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

@@ -46,7 +46,7 @@ Misc::Misc (const Misc& c) :
 Misc::Misc (Misc&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Misc::~Misc()
@@ -75,7 +75,7 @@ Misc::operator= (const Misc& UNUSED(c))
 Misc&
 Misc::operator= (Misc&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

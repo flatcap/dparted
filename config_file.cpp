@@ -258,7 +258,7 @@ ConfigFile::get_children (const std::string& name)
 			}
 
 			if (children.empty() || (children.size() && (s != children.back()))) {
-				children.push_back (s);
+				children.push_back(s);
 			}
 		} else {
 			if (children.size()) {

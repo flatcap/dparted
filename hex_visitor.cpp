@@ -126,7 +126,7 @@ HexVisitor::visit (LvmGroupPtr c)
 void
 HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 {
-	return_if_fail (c);
+	return_if_fail(c);
 	return_if_fail (buf);
 
 	log_hex (c->get_type_long());

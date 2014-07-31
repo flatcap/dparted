@@ -76,7 +76,7 @@ Loop::Loop (const Loop& c) :
 Loop::Loop (Loop&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Loop::~Loop()
@@ -160,7 +160,7 @@ Loop::operator= (const Loop& c)
 Loop&
 Loop::operator= (Loop&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

@@ -42,7 +42,7 @@ LvmLinear::LvmLinear (const LvmLinear& c) :
 LvmLinear::LvmLinear (LvmLinear&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 LvmLinear::~LvmLinear()
@@ -71,7 +71,7 @@ LvmLinear::operator= (const LvmLinear& UNUSED(c))
 LvmLinear&
 LvmLinear::operator= (LvmLinear&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

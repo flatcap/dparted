@@ -51,7 +51,7 @@ Extended::Extended (const Extended& c) :
 Extended::Extended (Extended&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Extended::~Extended()
@@ -80,7 +80,7 @@ Extended::operator= (const Extended& UNUSED(c))
 Extended&
 Extended::operator= (Extended&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

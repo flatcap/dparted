@@ -39,7 +39,7 @@ MdRaid::MdRaid (const MdRaid& c) :
 MdRaid::MdRaid (MdRaid&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 MdRaid::~MdRaid()
@@ -68,7 +68,7 @@ MdRaid::operator= (const MdRaid& UNUSED(c))
 MdRaid&
 MdRaid::operator= (MdRaid&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

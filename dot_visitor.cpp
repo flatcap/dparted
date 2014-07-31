@@ -56,7 +56,7 @@ DotVisitor::~DotVisitor()
 bool
 DotVisitor::visit_enter (ContainerPtr& c)
 {
-	parents.push (c);
+	parents.push(c);
 	return true;
 }
 

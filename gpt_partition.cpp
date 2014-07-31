@@ -39,7 +39,7 @@ GptPartition::GptPartition (const GptPartition& c) :
 GptPartition::GptPartition (GptPartition&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 GptPartition::~GptPartition()
@@ -68,7 +68,7 @@ GptPartition::operator= (const GptPartition& UNUSED(c))
 GptPartition&
 GptPartition::operator= (GptPartition&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

@@ -62,7 +62,7 @@ Filesystem::Filesystem (const Filesystem& c) :
 Filesystem::Filesystem (Filesystem&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Filesystem::~Filesystem()
@@ -91,7 +91,7 @@ Filesystem::operator= (const Filesystem& UNUSED(c))
 Filesystem&
 Filesystem::operator= (Filesystem&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

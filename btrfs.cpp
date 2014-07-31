@@ -47,7 +47,7 @@ Btrfs::Btrfs (const Btrfs& c) :
 Btrfs::Btrfs (Btrfs&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Btrfs::~Btrfs()
@@ -76,7 +76,7 @@ Btrfs::operator= (const Btrfs& UNUSED(c))
 Btrfs&
 Btrfs::operator= (Btrfs&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

@@ -42,7 +42,7 @@ LvmStripe::LvmStripe (const LvmStripe& c) :
 LvmStripe::LvmStripe (LvmStripe&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 LvmStripe::~LvmStripe()
@@ -71,7 +71,7 @@ LvmStripe::operator= (const LvmStripe& UNUSED(c))
 LvmStripe&
 LvmStripe::operator= (LvmStripe&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

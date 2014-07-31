@@ -43,7 +43,7 @@ LvmMirror::LvmMirror (const LvmMirror& c) :
 LvmMirror::LvmMirror (LvmMirror&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 LvmMirror::~LvmMirror()
@@ -72,7 +72,7 @@ LvmMirror::operator= (const LvmMirror& UNUSED(c))
 LvmMirror&
 LvmMirror::operator= (LvmMirror&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

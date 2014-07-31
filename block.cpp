@@ -61,7 +61,7 @@ Block::Block (const Block& c) :
 Block::Block (Block&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Block::~Block()
@@ -90,7 +90,7 @@ Block::operator= (const Block& UNUSED(c))
 Block&
 Block::operator= (Block&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

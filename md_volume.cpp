@@ -39,7 +39,7 @@ MdVolume::MdVolume (const MdVolume& c) :
 MdVolume::MdVolume (MdVolume&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 MdVolume::~MdVolume()
@@ -68,7 +68,7 @@ MdVolume::operator= (const MdVolume& UNUSED(c))
 MdVolume&
 MdVolume::operator= (MdVolume&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

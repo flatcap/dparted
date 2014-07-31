@@ -43,7 +43,7 @@ Whole::Whole (const Whole& c) :
 Whole::Whole (Whole&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Whole::~Whole()
@@ -72,7 +72,7 @@ Whole::operator= (const Whole& c)
 Whole&
 Whole::operator= (Whole&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

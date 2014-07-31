@@ -34,7 +34,7 @@ PropDrawingArea::~PropDrawingArea()
 void
 PropDrawingArea::set_data (GfxContainerPtr& g)
 {
-	BaseDrawingArea::set_data (g);
+	BaseDrawingArea::set_data(g);
 	set_size_request (500, cont_height/2);
 }
 

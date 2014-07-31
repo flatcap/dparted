@@ -39,7 +39,7 @@ MsdosPartition::MsdosPartition (const MsdosPartition& c) :
 MsdosPartition::MsdosPartition (MsdosPartition&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 MsdosPartition::~MsdosPartition()
@@ -68,7 +68,7 @@ MsdosPartition::operator= (const MsdosPartition& UNUSED(c))
 MsdosPartition&
 MsdosPartition::operator= (MsdosPartition&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

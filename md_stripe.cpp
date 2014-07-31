@@ -39,7 +39,7 @@ MdStripe::MdStripe (const MdStripe& c) :
 MdStripe::MdStripe (MdStripe&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 MdStripe::~MdStripe()
@@ -68,7 +68,7 @@ MdStripe::operator= (const MdStripe& UNUSED(c))
 MdStripe&
 MdStripe::operator= (MdStripe&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

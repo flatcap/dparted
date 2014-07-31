@@ -50,7 +50,7 @@ File::File (const File& c) :
 File::File (File&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 File::~File()
@@ -79,7 +79,7 @@ File::operator= (const File& UNUSED(c))
 File&
 File::operator= (File&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

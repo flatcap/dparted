@@ -103,8 +103,8 @@ Container::Container (void)
 
 	sub_type (me);
 
-	PPtr tls = declare_prop_fn  (me, "top_level_size", (get_uint64_t) std::bind(&Container::get_top_level_size, this),  "desc of tls", s|h);
-	PPtr ps  = declare_prop_fn  (me, "parent_size",    (get_uint64_t) std::bind(&Container::get_parent_size,    this),  "desc of ps",  s|h);
+	PPtr tls = declare_prop_fn  (me, "top_level_size", (get_uint64_t) std::bind (&Container::get_top_level_size, this),  "desc of tls", s|h);
+	PPtr ps  = declare_prop_fn  (me, "parent_size",    (get_uint64_t) std::bind (&Container::get_parent_size,    this),  "desc of ps",  s|h);
 	PPtr bs  = declare_prop_var (me, "bytes_size",     bytes_size,                                                      "Size",        d|s|p, ps);
 
 	declare_prop_var (me, "absolute_size", bytes_size,    "desc of abs size",  s|p,   tls);
@@ -118,26 +118,26 @@ Container::Container (void)
 	declare_prop_var (me, "uuid",          uuid,          "UUID",              0);
 	declare_prop_var (me, "file_desc",     fd,            "desc of ref_count", 0);
 
-	declare_prop_fn (me, "device_inherit",             (get_string_t) std::bind(&Container::get_device_inherit,             this), "desc of ",                   0);
-	declare_prop_fn (me, "device_major_inherit",       (get_uint64_t) std::bind(&Container::get_device_major_inherit,       this), "desc of ",                   0);
-	declare_prop_fn (me, "device_minor_inherit",       (get_uint64_t) std::bind(&Container::get_device_minor_inherit,       this), "desc of ",                   0);
-	declare_prop_fn (me, "device_major_minor",         (get_string_t) std::bind(&Container::get_device_major_minor,         this), "desc of device_major_minor", d);
-	declare_prop_fn (me, "device_short",               (get_string_t) std::bind(&Container::get_device_short,               this), "desc of device_short",       d);
-	declare_prop_fn (me, "device_major_minor_inherit", (get_string_t) std::bind(&Container::get_device_major_minor_inherit, this), "desc of device_major_minor", 0);
-	declare_prop_fn (me, "device_short_inherit",       (get_string_t) std::bind(&Container::get_device_short_inherit,       this), "desc of device_short",       0);
-	declare_prop_fn (me, "name_default",               (get_string_t) std::bind(&Container::get_name_default,               this), "desc of name default",       d);
-	declare_prop_fn (me, "path_name",                  (get_string_t) std::bind(&Container::get_path_name,                  this), "desc of get_path_name",      0);
-	declare_prop_fn (me, "path_type",                  (get_string_t) std::bind(&Container::get_path_type,                  this), "desc of get_path_type",      0);
-	declare_prop_fn (me, "type",                       (get_string_t) std::bind(&Container::get_type,                       this), "desc of type",               d);
-	declare_prop_fn (me, "type_long",                  (get_string_t) std::bind(&Container::get_type_long,                  this), "desc of type long",          0);
-	declare_prop_fn (me, "uuid_short",                 (get_string_t) std::bind(&Container::get_uuid_short,                 this), "desc of uuid_short",         d);
-	declare_prop_fn (me, "bytes_free",                 (get_uint64_t) std::bind(&Container::get_bytes_free,                 this), "desc of bytes_free",         s|p, bs);
-	declare_prop_fn (me, "absolute_offset",            (get_uint64_t) std::bind(&Container::get_absolute_offset,            this), "desc of abs off",            s|p, tls);
-	declare_prop_fn (me, "file_desc_inherit",          (get_int64_t)  std::bind(&Container::get_file_desc_inherit,          this), "desc of file_desc_inherit",  0);
-	declare_prop_fn (me, "object_addr",                (get_string_t) std::bind(&Container::get_object_addr,                this), "desc of object_addr",        0);
-	declare_prop_fn (me, "ref_count",                  (get_int64_t)  std::bind(&Container::get_ref_count,                  this), "desc of ref_count",          0);
-	declare_prop_fn (me, "mmap_addr",                  (get_string_t) std::bind(&Container::get_mmap_addr,                  this), "desc of ref_count",          0);
-	declare_prop_fn (me, "mmap_size",                  (get_uint64_t) std::bind(&Container::get_mmap_size,                  this), "desc of ref_count",          0);
+	declare_prop_fn (me, "device_inherit",             (get_string_t) std::bind (&Container::get_device_inherit,             this), "desc of ",                   0);
+	declare_prop_fn (me, "device_major_inherit",       (get_uint64_t) std::bind (&Container::get_device_major_inherit,       this), "desc of ",                   0);
+	declare_prop_fn (me, "device_minor_inherit",       (get_uint64_t) std::bind (&Container::get_device_minor_inherit,       this), "desc of ",                   0);
+	declare_prop_fn (me, "device_major_minor",         (get_string_t) std::bind (&Container::get_device_major_minor,         this), "desc of device_major_minor", d);
+	declare_prop_fn (me, "device_short",               (get_string_t) std::bind (&Container::get_device_short,               this), "desc of device_short",       d);
+	declare_prop_fn (me, "device_major_minor_inherit", (get_string_t) std::bind (&Container::get_device_major_minor_inherit, this), "desc of device_major_minor", 0);
+	declare_prop_fn (me, "device_short_inherit",       (get_string_t) std::bind (&Container::get_device_short_inherit,       this), "desc of device_short",       0);
+	declare_prop_fn (me, "name_default",               (get_string_t) std::bind (&Container::get_name_default,               this), "desc of name default",       d);
+	declare_prop_fn (me, "path_name",                  (get_string_t) std::bind (&Container::get_path_name,                  this), "desc of get_path_name",      0);
+	declare_prop_fn (me, "path_type",                  (get_string_t) std::bind (&Container::get_path_type,                  this), "desc of get_path_type",      0);
+	declare_prop_fn (me, "type",                       (get_string_t) std::bind (&Container::get_type,                       this), "desc of type",               d);
+	declare_prop_fn (me, "type_long",                  (get_string_t) std::bind (&Container::get_type_long,                  this), "desc of type long",          0);
+	declare_prop_fn (me, "uuid_short",                 (get_string_t) std::bind (&Container::get_uuid_short,                 this), "desc of uuid_short",         d);
+	declare_prop_fn (me, "bytes_free",                 (get_uint64_t) std::bind (&Container::get_bytes_free,                 this), "desc of bytes_free",         s|p, bs);
+	declare_prop_fn (me, "absolute_offset",            (get_uint64_t) std::bind (&Container::get_absolute_offset,            this), "desc of abs off",            s|p, tls);
+	declare_prop_fn (me, "file_desc_inherit",          (get_int64_t)  std::bind (&Container::get_file_desc_inherit,          this), "desc of file_desc_inherit",  0);
+	declare_prop_fn (me, "object_addr",                (get_string_t) std::bind (&Container::get_object_addr,                this), "desc of object_addr",        0);
+	declare_prop_fn (me, "ref_count",                  (get_int64_t)  std::bind (&Container::get_ref_count,                  this), "desc of ref_count",          0);
+	declare_prop_fn (me, "mmap_addr",                  (get_string_t) std::bind (&Container::get_mmap_addr,                  this), "desc of ref_count",          0);
+	declare_prop_fn (me, "mmap_size",                  (get_uint64_t) std::bind (&Container::get_mmap_size,                  this), "desc of ref_count",          0);
 
 	more_props.resize (10);		//XXX this will break the properties if it gets reallocated
 }
@@ -179,7 +179,7 @@ Container::Container (const Container& c) :
 Container::Container (Container&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Container::~Container()
@@ -240,7 +240,7 @@ Container::operator= (const Container& c)
 Container&
 Container::operator= (Container&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 
@@ -297,7 +297,7 @@ Container::copy (void)
 {
 	Container *c = clone();
 
-	ContainerPtr cp (c);
+	ContainerPtr cp(c);
 
 	c->self = cp;
 
@@ -533,7 +533,7 @@ Container::find (const std::string& search)
 
 void deleter (Mmap* m)
 {
-	return_if_fail (m);
+	return_if_fail(m);
 
 	std::uint64_t size = 0;
 	void* ptr = nullptr;

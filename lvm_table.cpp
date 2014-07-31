@@ -57,7 +57,7 @@ LvmTable::LvmTable (const LvmTable& c) :
 LvmTable::LvmTable (LvmTable&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 LvmTable::~LvmTable()
@@ -89,7 +89,7 @@ LvmTable::operator= (const LvmTable& c)
 LvmTable&
 LvmTable::operator= (LvmTable&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

@@ -202,7 +202,7 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 void
 GuiApp::scan_callback (ContainerPtr c)
 {
-	return_if_fail (c);
+	return_if_fail(c);
 	return_if_fail (window);
 	LOG_TRACE;
 
@@ -254,7 +254,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		log_debug ("config:");
 		for (auto& c : group.config) {
 			log_debug ("\t%s", c.c_str());
-			window->load_config (c);
+			window->load_config(c);
 		}
 	}
 
@@ -265,7 +265,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		log_debug ("theme:");
 		for (auto& t : group.theme) {
 			log_debug ("\t%s", t.c_str());
-			window->load_theme (t);
+			window->load_theme(t);
 		}
 	}
 
@@ -368,7 +368,7 @@ GuiApp::ask (QuestionPtr q)
 {
 	return_val_if_fail (q, false);
 
-	vq.push_back (q);
+	vq.push_back(q);
 	dispatcher_ask.emit();
 	return true;
 }

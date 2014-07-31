@@ -957,9 +957,9 @@ DrawingArea::get_protective (GfxContainerPtr& gfx)
 void
 DrawingArea::set_data (GfxContainerPtr& g)
 {
-	return_if_fail (g);
+	return_if_fail(g);
 
-	BaseDrawingArea::set_data (g);
+	BaseDrawingArea::set_data(g);
 
 	// check we've been given a top level object?
 
@@ -1141,7 +1141,7 @@ DrawingArea::left (GfxContainerPtr g)
 		if (is_visible(g))
 			return g;
 
-	} while (g);
+	} while(g);
 
 	return g;
 }
@@ -1163,7 +1163,7 @@ DrawingArea::right (GfxContainerPtr g)
 		if (is_visible(g))
 			return g;
 
-	} while (g);
+	} while(g);
 
 	return nullptr;
 }

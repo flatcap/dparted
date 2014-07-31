@@ -48,7 +48,7 @@ Timeline::create (ContainerPtr& cont)
 {
 	TimelinePtr p (new Timeline());
 	p->self = p;
-	cont->add_listener (p);
+	cont->add_listener(p);
 
 	return p;
 }

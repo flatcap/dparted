@@ -66,7 +66,7 @@ LvmGroup::LvmGroup (const LvmGroup& c) :
 LvmGroup::LvmGroup (LvmGroup&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 LvmGroup::~LvmGroup()
@@ -98,7 +98,7 @@ LvmGroup::operator= (const LvmGroup& c)
 LvmGroup&
 LvmGroup::operator= (LvmGroup&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

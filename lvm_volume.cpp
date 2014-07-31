@@ -56,7 +56,7 @@ LvmVolume::LvmVolume (const LvmVolume& c) :
 LvmVolume::LvmVolume (LvmVolume&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 LvmVolume::~LvmVolume()
@@ -93,7 +93,7 @@ LvmVolume::operator= (const LvmVolume& c)
 LvmVolume&
 LvmVolume::operator= (LvmVolume&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

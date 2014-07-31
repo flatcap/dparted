@@ -57,7 +57,7 @@ LuksPartition::LuksPartition (const LuksPartition& c) :
 LuksPartition::LuksPartition (LuksPartition&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 LuksPartition&
@@ -71,7 +71,7 @@ LuksPartition::operator= (const LuksPartition& UNUSED(c))
 LuksPartition&
 LuksPartition::operator= (LuksPartition&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

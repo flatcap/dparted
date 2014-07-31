@@ -56,7 +56,7 @@ Msdos::Msdos (const Msdos& c) :
 Msdos::Msdos (Msdos&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Msdos::~Msdos()
@@ -85,7 +85,7 @@ Msdos::operator= (const Msdos& UNUSED(c))
 Msdos&
 Msdos::operator= (Msdos&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

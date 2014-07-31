@@ -65,7 +65,7 @@ MdTable::MdTable (const MdTable& c) :
 MdTable::MdTable (MdTable&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 MdTable::~MdTable()
@@ -102,7 +102,7 @@ MdTable::operator= (const MdTable& c)
 MdTable&
 MdTable::operator= (MdTable&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

@@ -558,7 +558,7 @@ void
 TreeView::set_focus (GfxContainerPtr& c)
 {
 	log_debug ("focus: %s", c->treepath.c_str());
-	return_if_fail (c);
+	return_if_fail(c);
 
 	if (c->treepath.empty()) {
 		log_debug ("TreeView: not visible");
@@ -594,7 +594,7 @@ TreeView::on_selection_changed()
 	log_debug ("sel: %s", c->dump());
 
 	Window *dp = reinterpret_cast<Window*> (get_toplevel());
-	dp->set_focus (c);
+	dp->set_focus(c);
 #endif
 }
 

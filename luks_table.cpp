@@ -81,7 +81,7 @@ LuksTable::LuksTable (const LuksTable& c) :
 LuksTable::LuksTable (LuksTable&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 LuksTable::~LuksTable()
@@ -124,7 +124,7 @@ LuksTable::operator= (const LuksTable& c)
 LuksTable&
 LuksTable::operator= (LuksTable&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 
@@ -421,7 +421,7 @@ LuksTable::luks_open (void)
 		QuestionPtr q = Question::create (std::bind(&LuksTable::on_reply, this, std::placeholders::_1));
 		q->type = Question::Type::Password;
 		q->input = { { "device", device } };
-		main_app->ask (q);
+		main_app->ask(q);
 	}
 
 	return true;	// Not really true, we're waiting for the user

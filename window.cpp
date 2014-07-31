@@ -301,7 +301,7 @@ Window::insert_general_actions (std::string section, const std::vector<const cha
 	for (auto& c : commands) {
 		std::string name = section + "." + c;
 		Glib::RefPtr<Gio::Action> a = add_action(name, sigc::bind<std::string, std::string> (sigc::mem_fun (*this, &Window::on_action_general), section, c));
-		Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic (a);
+		Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(a);
 		action_map[name] = s;
 	}
 }
@@ -310,25 +310,25 @@ void
 Window::init_actions (void)
 {
 	auto group = Gio::SimpleActionGroup::create();
-	group->add_action("open",  sigc::mem_fun (*gui_app, &GuiApp::on_action_file_open));
-	group->add_action("close", sigc::mem_fun (*gui_app, &GuiApp::on_action_file_close));
-	group->add_action("quit",  sigc::mem_fun (*gui_app, &GuiApp::on_action_file_quit));
+	group->add_action ("open",  sigc::mem_fun (*gui_app, &GuiApp::on_action_file_open));
+	group->add_action ("close", sigc::mem_fun (*gui_app, &GuiApp::on_action_file_close));
+	group->add_action ("quit",  sigc::mem_fun (*gui_app, &GuiApp::on_action_file_quit));
 	insert_action_group ("file", group);
 
 	group = Gio::SimpleActionGroup::create();
-	group->add_action("x",          sigc::mem_fun (*gui_app, &GuiApp::on_action_plugin));
-	group->add_action("y",          sigc::mem_fun (*gui_app, &GuiApp::on_action_plugin));
-	group->add_action("configure",  sigc::mem_fun (*gui_app, &GuiApp::on_action_plugin));
+	group->add_action ("x",          sigc::mem_fun (*gui_app, &GuiApp::on_action_plugin));
+	group->add_action ("y",          sigc::mem_fun (*gui_app, &GuiApp::on_action_plugin));
+	group->add_action ("configure",  sigc::mem_fun (*gui_app, &GuiApp::on_action_plugin));
 	insert_action_group ("plugin", group);
 
 	group = Gio::SimpleActionGroup::create();
-	group->add_action("contents",     sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
-	group->add_action("whats_this",   sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
-	group->add_action("report_issue", sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
-	group->add_action("faq",          sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
-	group->add_action("community",    sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
-	group->add_action("homepage",     sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
-	group->add_action("about",        sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action ("contents",     sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action ("whats_this",   sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action ("report_issue", sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action ("faq",          sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action ("community",    sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action ("homepage",     sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
+	group->add_action ("about",        sigc::mem_fun (*gui_app, &GuiApp::on_action_help));
 	insert_action_group ("help", group);
 
 	insert_general_actions ("edit",       { "cut", "copy", "paste", "paste_special", "undo", "redo", "clear_all_ops", "apply_all_ops", "find", "find_next", "find_previous", "preferences" });
@@ -346,7 +346,7 @@ Window::init_actions (void)
 	Glib::RefPtr<Gio::Action> a;
 	a = lookup_action ("edit.cut");
 	a->reference();		//XXX seems to be a bug in Gtk+/Gtkmm
-	Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic (a);
+	Glib::RefPtr<Gio::SimpleAction> s = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(a);
 	s->set_enabled (false);
 #endif
 #if 0
@@ -623,13 +623,13 @@ Window::on_action_general (std::string section, std::string name)
 	}
 
 	Action a = { section + '.' + name, true };
-	c->perform_action (a);
+	c->perform_action(a);
 }
 
 void
 Window::set_data (ContainerPtr c)
 {
-	return_if_fail (c);
+	return_if_fail(c);
 	LOG_TRACE;
 
 	GfxContainerPtr g = GfxContainer::create (nullptr, c);

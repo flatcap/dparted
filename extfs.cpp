@@ -47,7 +47,7 @@ Extfs::Extfs (const Extfs& c) :
 Extfs::Extfs (Extfs&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Extfs::~Extfs()
@@ -76,7 +76,7 @@ Extfs::operator= (const Extfs& UNUSED(c))
 Extfs&
 Extfs::operator= (Extfs&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

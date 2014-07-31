@@ -80,7 +80,7 @@ Gpt::Gpt (const Gpt& c) :
 Gpt::Gpt (Gpt&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Gpt::~Gpt()
@@ -109,7 +109,7 @@ Gpt::operator= (const Gpt& UNUSED(c))
 Gpt&
 Gpt::operator= (Gpt&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

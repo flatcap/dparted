@@ -46,7 +46,7 @@ Partition::Partition (const Partition& c) :
 Partition::Partition (Partition&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Partition::~Partition()
@@ -76,7 +76,7 @@ Partition::operator= (const Partition& c)
 Partition&
 Partition::operator= (Partition&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

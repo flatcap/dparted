@@ -136,7 +136,7 @@ log_remove_handler (int handle)
 	auto end = std::end (log_mux);
 	for (auto i = std::begin (log_mux); i != end; ++i) {
 		if (std::get<0>(*i) == handle) {
-			log_mux.erase (i);
+			log_mux.erase(i);
 			return;
 		}
 	}

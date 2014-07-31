@@ -42,7 +42,7 @@ LvmRaid::LvmRaid (const LvmRaid& c) :
 LvmRaid::LvmRaid (LvmRaid&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 LvmRaid::~LvmRaid()
@@ -71,7 +71,7 @@ LvmRaid::operator= (const LvmRaid& UNUSED(c))
 LvmRaid&
 LvmRaid::operator= (LvmRaid&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

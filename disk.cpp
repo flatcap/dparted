@@ -73,7 +73,7 @@ Disk::Disk (const Disk& c) :
 Disk::Disk (Disk&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Disk::~Disk()
@@ -140,7 +140,7 @@ Disk::operator= (const Disk& c)
 Disk&
 Disk::operator= (Disk&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

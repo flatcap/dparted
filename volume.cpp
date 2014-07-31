@@ -42,7 +42,7 @@ Volume::Volume (const Volume& c) :
 Volume::Volume (Volume&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Volume::~Volume()
@@ -71,7 +71,7 @@ Volume::operator= (const Volume& UNUSED(c))
 Volume&
 Volume::operator= (Volume&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

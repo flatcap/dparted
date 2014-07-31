@@ -42,7 +42,7 @@ MdPartition::MdPartition (const MdPartition& c) :
 MdPartition::MdPartition (MdPartition&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 MdPartition::~MdPartition()
@@ -71,7 +71,7 @@ MdPartition::operator= (const MdPartition& UNUSED(c))
 MdPartition&
 MdPartition::operator= (MdPartition&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 

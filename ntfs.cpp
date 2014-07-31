@@ -47,7 +47,7 @@ Ntfs::Ntfs (const Ntfs& c) :
 Ntfs::Ntfs (Ntfs&& c)
 {
 	LOG_CTOR;
-	swap (c);
+	swap(c);
 }
 
 Ntfs::~Ntfs()
@@ -76,7 +76,7 @@ Ntfs::operator= (const Ntfs& UNUSED(c))
 Ntfs&
 Ntfs::operator= (Ntfs&& c)
 {
-	swap (c);
+	swap(c);
 	return *this;
 }
 
@@ -185,7 +185,7 @@ parse_line (std::string line, std::string& key, std::string& value)
 	if (v[0] != ' ')
 		return false;
 
-	v = v.substr (1);
+	v = v.substr(1);
 
 	key   = k;
 	value = v;
