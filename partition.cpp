@@ -34,6 +34,19 @@ Partition::Partition (void)
 	declare_prop_var (me, "ptype", ptype, "desc of ptype", 0);
 }
 
+Partition::Partition (const Partition& c) :
+	Container(c)
+{
+	Partition();
+	ptype  = c.ptype;
+	volume = c.volume;
+}
+
+Partition::Partition (Partition&& c)
+{
+	swap (c);
+}
+
 Partition::~Partition()
 {
 	log_dtor ("dtor Partition");
@@ -46,6 +59,56 @@ Partition::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+/**
+ * operator= (copy)
+ */
+Partition&
+Partition::operator= (const Partition& c)
+{
+	ptype  = c.ptype;
+	volume = c.volume;
+
+	return *this;
+}
+
+/**
+ * operator= (move)
+ */
+Partition&
+Partition::operator= (Partition&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+/**
+ * swap (member)
+ */
+void
+Partition::swap (Partition& c)
+{
+	std::swap (ptype,  c.ptype);
+	std::swap (volume, c.volume);
+}
+
+/**
+ * swap (global)
+ */
+void
+swap (Partition& lhs, Partition& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Partition*
+Partition::clone (void)
+{
+	return new Partition (*this);
 }
 
 
