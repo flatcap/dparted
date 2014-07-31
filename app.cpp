@@ -342,10 +342,11 @@ void
 dump_children (void)
 {
 	for (auto c : all_children) {
-		if (c.expired())
+		if (c.expired()) {
 			printf ("X");
-		else
+		} else {
 			printf ("O");
+		}
 	}
 }
 
@@ -357,10 +358,11 @@ tidy_children (void)
 	int live = 0;
 	int dead = 0;
 	for (auto c : all_children) {
-		if (c.expired())
+		if (c.expired()) {
 			dead++;
-		else
+		} else {
 			live++;
+		}
 	}
 	// log_info ("\t\t%d live", live);
 	// log_info ("\t\t%d dead", dead);
@@ -372,14 +374,16 @@ tidy_children (void)
 
 	// log_info ("\tcheck start");
 	for (auto it = begin(all_children); it != new_end; ++it) {
-		if ((*it).expired())
+		if ((*it).expired()) {
 			log_code ("\tdead link missed");
+		}
 	}
 
 #if 0
 	for (auto it = new_end; it != end(all_children); ++it) {
-		if (!(*it).expired())
+		if (!(*it).expired()) {
 			log_info ("\t\tlive link deleted");
+		}
 	}
 #endif
 	// log_info ("\tcheck end");
@@ -394,10 +398,11 @@ tidy_children (void)
 	live = 0;
 	dead = 0;
 	for (auto c : all_children) {
-		if (c.expired())
+		if (c.expired()) {
 			dead++;
-		else
+		} else {
 			live++;
+		}
 	}
 	if (dead != 0) {
 		log_code ("\t%ld children (after)", all_children.size());

@@ -393,8 +393,9 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		"vg_uuid,vg_name,vg_seqno,pv_count,lv_count,vg_attr,vg_size,vg_free,vg_extent_size";
 
 	for (auto& i : pieces->get_children()) {
-		if (i->is_a ("LvmGroup"))
+		if (i->is_a ("LvmGroup")) {
 			command += " " + i->name;
+		}
 	}
 
 	int retval = execute_command_out (command, output);
@@ -476,8 +477,9 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		  "vg_uuid,lv_uuid,lv_name,lv_attr,mirror_log,lv_size,lv_path,lv_kernel_major,lv_kernel_minor,seg_count,segtype,stripes,stripe_size,seg_start_pe,devices";
 
 	for (auto& i : pieces->get_children()) {
-		if (i->is_a ("LvmGroup"))
+		if (i->is_a ("LvmGroup")) {
 			command += " " + i->name;
+		}
 	}
 
 	int retval = execute_command_out (command, output);

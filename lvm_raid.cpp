@@ -110,13 +110,15 @@ LvmRaid::accept (Visitor& v)
 		return false;
 
 	for (auto& m : metadata) {
-		if (!m->accept(v))
+		if (!m->accept(v)) {
 			return false;
+		}
 	}
 
 	for (auto& s : subvols) {
-		if (!s->accept(v))
+		if (!s->accept(v)) {
 			return false;
+		}
 	}
 
 	if (!v.visit_leave())

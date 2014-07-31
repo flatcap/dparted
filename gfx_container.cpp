@@ -493,8 +493,7 @@ GfxContainer::get_right (void)
 		}
 		me = gparent;
 		gparent = gparent->parent.lock();
-	}
-	while (gparent);
+	} while (gparent);
 
 	return nullptr;
 }

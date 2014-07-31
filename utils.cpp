@@ -323,8 +323,9 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 		log_utils ("start = %ld, end = %ld", start, end);
 
 		max--;
-		if (max < 2)
+		if (max < 2) {
 			break;
+		}
 	}
 
 	if (start != input.size()) {
@@ -351,8 +352,9 @@ get_backtrace (bool reverse /*=false*/)
 	for (int x = 1; x < size; ++x) {			// Skip 0 (ourself)
 		std::string sym = demangle (symbols[x]);
 		bt.push_back (sym);
-		if (sym.substr (0, 4) == "main")		// Just libc after this
+		if (sym.substr (0, 4) == "main") {		// Just libc after this
 			break;
+		}
 	}
 	free (symbols);
 	if (reverse) {

@@ -242,8 +242,9 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 				}
 			}
 		} else {
-			if (parent)
+			if (parent) {
 				row = *parent;
+			}
 		}
 
 		if (x->children.size() > 0) {
@@ -568,8 +569,9 @@ TreeView::set_focus (GfxContainerPtr& c)
 	Gtk::TreeModel::iterator it = treeselection->get_selected();
 	if (it) {
 		std::string current_path = tree_model->get_string (*it);
-		if (c->treepath == current_path)
+		if (c->treepath == current_path) {
 			return;
+		}
 	}
 
 	Gtk::TreeModel::Path path (c->treepath);

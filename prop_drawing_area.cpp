@@ -68,8 +68,9 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 	return_if_fail (cont);
 
 #if 0
-	if (!top_level->update_info())
+	if (!top_level->update_info()) {
 		return;
+	}
 #endif
 
 	std::string display = cont->display;

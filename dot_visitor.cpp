@@ -188,7 +188,9 @@ DotVisitor::parent_link (std::shared_ptr<T> t)
 	if (parents.size() > 0) {
 		ContainerPtr c(t);
 		ContainerPtr parent = parents.top();
-		if (parent->name == "dummy") return ""; // Ignore the top level container
+		if (parent->name == "dummy") {
+			return ""; // Ignore the top level container
+		}
 
 		link << "obj_" << (void*) parent.get() << " -> obj_" << (void*) c.get() << ";\n";
 	}

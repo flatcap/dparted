@@ -295,8 +295,9 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		if (buffer[56]) {
 			p->name.clear();
 			for (int j = 0; j < 32; j += 2) {
-				if (buffer[56+j] == 0)
+				if (buffer[56+j] == 0) {
 					break;
+				}
 				p->name += buffer[56+j];
 			}
 		}

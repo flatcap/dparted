@@ -313,8 +313,9 @@ Container::visit_children (Visitor& v)
 		return false;
 
 	for (auto& child : children) {
-		if (!child->accept(v))
+		if (!child->accept(v)) {
 			return false;
+		}
 	}
 
 	if (!v.visit_leave())
@@ -521,8 +522,9 @@ Container::find (const std::string& search)
 	ContainerPtr item;
 
 	for (auto& i : children) {
-		if ((item = i->find (search)))
+		if ((item = i->find (search))) {
 			break;
+		}
 	}
 
 	return item;
@@ -814,8 +816,9 @@ Container::get_device_inherit (void)
 		return "";
 
 	while ((p = p->parent.lock())) {
-		if (!p->device.empty())
+		if (!p->device.empty()) {
 			return p->device;
+		}
 	}
 
 	return "";
@@ -832,8 +835,9 @@ Container::get_device_major_inherit (void)
 		return 0;
 
 	while ((p = p->parent.lock())) {
-		if (p->device_major > 0)
+		if (p->device_major > 0) {
 			return p->device_major;
+		}
 	}
 
 	return 0;
@@ -859,8 +863,9 @@ Container::get_device_major_minor_inherit (void)
 		return "";
 
 	while ((p = p->parent.lock())) {
-		if (p->device_major > 0)
+		if (p->device_major > 0) {
 			return std::to_string (p->device_major) + ":" + std::to_string (p->device_minor);
+		}
 	}
 
 	return "";
@@ -877,8 +882,9 @@ Container::get_device_minor_inherit (void)
 		return 0;
 
 	while ((p = p->parent.lock())) {
-		if (device_major > 0)		// This is not a typo
+		if (device_major > 0) {		// This is not a typo
 			return device_minor;
+		}
 	}
 
 	return 0;
@@ -901,8 +907,9 @@ Container::get_device_short_inherit (void)
 		return "";
 
 	while ((p = p->parent.lock())) {
-		if (!p->device.empty())
+		if (!p->device.empty()) {
 			return shorten_device (p->device);
+		}
 	}
 
 	return "";
@@ -919,8 +926,9 @@ Container::get_file_desc_inherit (void)
 		return -1;
 
 	while ((p = p->parent.lock())) {
-		if (p->fd >= 0)
+		if (p->fd >= 0) {
 			return p->fd;
+		}
 	}
 
 	return -1;

@@ -228,8 +228,9 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 				ext->add_child (m, true, desc.c_str());
 			}
 		}
-		if (vp.size() == 1)
+		if (vp.size() == 1) {
 			break;
+		}
 	}
 
 	ext->fill_space();		// optional

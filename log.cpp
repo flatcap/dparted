@@ -96,8 +96,9 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 		}
 	}
 
-	if ((level & Severity::Enter) == Severity::Enter)
+	if ((level & Severity::Enter) == Severity::Enter) {
 		++fn_depth;
+	}
 }
 
 /**
@@ -152,8 +153,9 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 	std::stringstream ss;
 	ss << "Backtrace:\n";
 	for (auto& i : bt) {
-		if (i.substr (0, 17) == "assertion_failure")	// Skip me
+		if (i.substr (0, 17) == "assertion_failure") {	// Skip me
 			continue;
+		}
 		ss << "\t" << i << "\n";
 	}
 
