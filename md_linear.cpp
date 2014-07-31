@@ -98,6 +98,7 @@ swap (MdLinear& lhs, MdLinear& rhs)
 MdLinear*
 MdLinear::clone (void)
 {
+	LOG_TRACE;
 	return new MdLinear (*this);
 }
 

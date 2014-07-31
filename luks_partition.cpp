@@ -101,6 +101,7 @@ swap (LuksPartition& lhs, LuksPartition& rhs)
 LuksPartition*
 LuksPartition::clone (void)
 {
+	LOG_TRACE;
 	return new LuksPartition (*this);
 }
 

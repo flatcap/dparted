@@ -109,6 +109,7 @@ swap (File& lhs, File& rhs)
 File*
 File::clone (void)
 {
+	LOG_TRACE;
 	return new File (*this);
 }
 

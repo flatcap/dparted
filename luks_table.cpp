@@ -168,6 +168,7 @@ swap (LuksTable& lhs, LuksTable& rhs)
 LuksTable*
 LuksTable::clone (void)
 {
+	LOG_TRACE;
 	return new LuksTable (*this);
 }
 

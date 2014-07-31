@@ -105,6 +105,7 @@ swap (Misc& lhs, Misc& rhs)
 Misc*
 Misc::clone (void)
 {
+	LOG_TRACE;
 	return new Misc (*this);
 }
 

@@ -145,6 +145,7 @@ Container::Container (void)
 Container::Container (const Container& c) :
 	Container()
 {
+	log_code ("COPY");
 	name                = c.name;
 	uuid                = c.uuid;
 
@@ -298,6 +299,7 @@ swap (Container& lhs, Container& rhs)
 Container*
 Container::clone (void)
 {
+	LOG_TRACE;
 	return new Container (*this);
 }
 

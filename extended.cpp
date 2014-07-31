@@ -110,6 +110,7 @@ swap (Extended& lhs, Extended& rhs)
 Extended*
 Extended::clone (void)
 {
+	LOG_TRACE;
 	return new Extended (*this);
 }
 

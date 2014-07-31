@@ -98,6 +98,7 @@ swap (GptPartition& lhs, GptPartition& rhs)
 GptPartition*
 GptPartition::clone (void)
 {
+	LOG_TRACE;
 	return new GptPartition (*this);
 }
 

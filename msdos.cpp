@@ -115,6 +115,7 @@ swap (Msdos& lhs, Msdos& rhs)
 Msdos*
 Msdos::clone (void)
 {
+	LOG_TRACE;
 	return new Msdos (*this);
 }
 

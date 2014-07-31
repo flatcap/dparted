@@ -199,6 +199,7 @@ swap (Loop& lhs, Loop& rhs)
 Loop*
 Loop::clone (void)
 {
+	LOG_TRACE;
 	return new Loop (*this);
 }
 

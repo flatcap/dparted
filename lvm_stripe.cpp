@@ -101,6 +101,7 @@ swap (LvmStripe& lhs, LvmStripe& rhs)
 LvmStripe*
 LvmStripe::clone (void)
 {
+	LOG_TRACE;
 	return new LvmStripe (*this);
 }
 

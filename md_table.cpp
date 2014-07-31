@@ -140,6 +140,7 @@ swap (MdTable& lhs, MdTable& rhs)
 MdTable*
 MdTable::clone (void)
 {
+	LOG_TRACE;
 	return new MdTable (*this);
 }
 

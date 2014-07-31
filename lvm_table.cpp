@@ -122,6 +122,7 @@ swap (LvmTable& lhs, LvmTable& rhs)
 LvmTable*
 LvmTable::clone (void)
 {
+	LOG_TRACE;
 	return new LvmTable (*this);
 }
 

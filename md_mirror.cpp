@@ -98,6 +98,7 @@ swap (MdMirror& lhs, MdMirror& rhs)
 MdMirror*
 MdMirror::clone (void)
 {
+	LOG_TRACE;
 	return new MdMirror (*this);
 }
 

@@ -102,6 +102,7 @@ swap (Whole& lhs, Whole& rhs)
 Whole*
 Whole::clone (void)
 {
+	LOG_TRACE;
 	return new Whole (*this);
 }
 

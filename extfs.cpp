@@ -106,6 +106,7 @@ swap (Extfs& lhs, Extfs& rhs)
 Extfs*
 Extfs::clone (void)
 {
+	LOG_TRACE;
 	return new Extfs (*this);
 }
 

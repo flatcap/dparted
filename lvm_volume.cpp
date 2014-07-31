@@ -131,6 +131,7 @@ swap (LvmVolume& lhs, LvmVolume& rhs)
 LvmVolume*
 LvmVolume::clone (void)
 {
+	LOG_TRACE;
 	return new LvmVolume (*this);
 }
 

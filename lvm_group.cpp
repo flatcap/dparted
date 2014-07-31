@@ -131,6 +131,7 @@ swap (LvmGroup& lhs, LvmGroup& rhs)
 LvmGroup*
 LvmGroup::clone (void)
 {
+	LOG_TRACE;
 	return new LvmGroup (*this);
 }
 

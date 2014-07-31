@@ -139,6 +139,7 @@ swap (Gpt& lhs, Gpt& rhs)
 Gpt*
 Gpt::clone (void)
 {
+	LOG_TRACE;
 	return new Gpt (*this);
 }
 

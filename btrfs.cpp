@@ -106,6 +106,7 @@ swap (Btrfs& lhs, Btrfs& rhs)
 Btrfs*
 Btrfs::clone (void)
 {
+	LOG_TRACE;
 	return new Btrfs (*this);
 }
 

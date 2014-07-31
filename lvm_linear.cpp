@@ -101,6 +101,7 @@ swap (LvmLinear& lhs, LvmLinear& rhs)
 LvmLinear*
 LvmLinear::clone (void)
 {
+	LOG_TRACE;
 	return new LvmLinear (*this);
 }
 

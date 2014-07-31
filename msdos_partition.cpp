@@ -98,6 +98,7 @@ swap (MsdosPartition& lhs, MsdosPartition& rhs)
 MsdosPartition*
 MsdosPartition::clone (void)
 {
+	LOG_TRACE;
 	return new MsdosPartition (*this);
 }
 

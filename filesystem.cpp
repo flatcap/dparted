@@ -121,6 +121,7 @@ swap (Filesystem& lhs, Filesystem& rhs)
 Filesystem*
 Filesystem::clone (void)
 {
+	LOG_TRACE;
 	return new Filesystem (*this);
 }
 

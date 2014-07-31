@@ -101,6 +101,7 @@ swap (LvmPartition& lhs, LvmPartition& rhs)
 LvmPartition*
 LvmPartition::clone (void)
 {
+	LOG_TRACE;
 	return new LvmPartition (*this);
 }
 

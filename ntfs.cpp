@@ -106,6 +106,7 @@ swap (Ntfs& lhs, Ntfs& rhs)
 Ntfs*
 Ntfs::clone (void)
 {
+	LOG_TRACE;
 	return new Ntfs (*this);
 }
 

@@ -101,6 +101,7 @@ swap (LvmRaid& lhs, LvmRaid& rhs)
 LvmRaid*
 LvmRaid::clone (void)
 {
+	LOG_TRACE;
 	return new LvmRaid (*this);
 }
 

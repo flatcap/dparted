@@ -108,6 +108,7 @@ swap (Block& lhs, Block& rhs)
 Block*
 Block::clone (void)
 {
+	LOG_TRACE;
 	return new Block (*this);
 }
 

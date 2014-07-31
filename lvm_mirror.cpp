@@ -102,6 +102,7 @@ swap (LvmMirror& lhs, LvmMirror& rhs)
 LvmMirror*
 LvmMirror::clone (void)
 {
+	LOG_TRACE;
 	return new LvmMirror (*this);
 }
 

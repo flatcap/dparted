@@ -98,6 +98,7 @@ swap (MdStripe& lhs, MdStripe& rhs)
 MdStripe*
 MdStripe::clone (void)
 {
+	LOG_TRACE;
 	return new MdStripe (*this);
 }
 

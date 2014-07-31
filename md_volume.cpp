@@ -98,6 +98,7 @@ swap (MdVolume& lhs, MdVolume& rhs)
 MdVolume*
 MdVolume::clone (void)
 {
+	LOG_TRACE;
 	return new MdVolume (*this);
 }
 

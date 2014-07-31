@@ -27,7 +27,7 @@
 
 GfxContainer::GfxContainer (void)
 {
-	log_ctor ("ctor GfxContainer");
+	// log_ctor ("ctor GfxContainer");
 }
 
 GfxContainer::~GfxContainer()

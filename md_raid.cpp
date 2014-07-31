@@ -98,6 +98,7 @@ swap (MdRaid& lhs, MdRaid& rhs)
 MdRaid*
 MdRaid::clone (void)
 {
+	LOG_TRACE;
 	return new MdRaid (*this);
 }
 

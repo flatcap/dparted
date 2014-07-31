@@ -101,6 +101,7 @@ swap (Volume& lhs, Volume& rhs)
 Volume*
 Volume::clone (void)
 {
+	LOG_TRACE;
 	return new Volume (*this);
 }
 

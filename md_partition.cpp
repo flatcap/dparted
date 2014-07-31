@@ -101,6 +101,7 @@ swap (MdPartition& lhs, MdPartition& rhs)
 MdPartition*
 MdPartition::clone (void)
 {
+	LOG_TRACE;
 	return new MdPartition (*this);
 }
 

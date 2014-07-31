@@ -119,6 +119,7 @@ swap (Table& lhs, Table& rhs)
 Table*
 Table::clone (void)
 {
+	LOG_TRACE;
 	return new Table (*this);
 }
 

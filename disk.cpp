@@ -179,6 +179,7 @@ swap (Disk& lhs, Disk& rhs)
 Disk*
 Disk::clone (void)
 {
+	LOG_TRACE;
 	return new Disk (*this);
 }
 
