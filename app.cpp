@@ -489,12 +489,14 @@ delete_child (void)
 void
 App::wait_for_threads (void)
 {
+#ifdef DP_THREADED
 	// printf ("Waiting for threads to finish\n");
 	while (!thread_queue.empty()) {
 		thread_queue.front().join();
 		std::lock_guard<std::mutex> lock (thread_mutex);
 		thread_queue.pop_front();
 	}
+#endif
 }
 
 void

@@ -210,7 +210,7 @@ LvmVolume::add_child (ContainerPtr& child, bool probe, const char* description)
 		return;
 	}
 
-	log_info ("volume: %s (%s), child: %s (%s)", name.c_str(), get_type().c_str(), child->name.c_str(), child->get_type().c_str());
+	log_debug ("volume: %s (%s), child: %s (%s)", name.c_str(), get_type().c_str(), child->name.c_str(), child->get_type().c_str());
 	if (child->is_a ("LvmMetadata")) {
 		metadata.insert (child);
 		log_debug ("metadata: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());

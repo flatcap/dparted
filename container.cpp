@@ -564,7 +564,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		return nullptr;
 	}
 
-	log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
+	log_debug ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
 
 	if (device_mmap) {
 		void* buf = (*device_mmap).second;
@@ -633,7 +633,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 {
 	return_val_if_fail (c, stream);
 
-	std::uint64_t bytes_free = c->bytes_size - c->bytes_used;
+	// std::uint64_t bytes_free = c->bytes_size - c->bytes_used;
 
 	std::string uuid = c->uuid;
 	std::string type;
@@ -647,20 +647,20 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	}
 
 	stream
-#if 1
+#if 0
 		<< "[" << type << "]:"
 #endif
 		<< c->name
-#if 1
+#if 0
 		<< "(" << uuid << "), "
 		<< '"' << c->device << '"' << "(" << c->fd << "),"
-		<< " S:" << c->bytes_size
+		<< " S:" // << c->bytes_size
 						<< "(" << get_size (c->bytes_size)    << "), "
-		<< " U:" << c->bytes_used
+		<< " U:" // << c->bytes_used
 						<< "(" << get_size (c->bytes_used)    << "), "
-		<< " F:" <<   bytes_free
+		<< " F:" // <<   bytes_free
 						<< "(" << get_size (   bytes_free)    << "), "
-		<< " P:" << c->parent_offset
+		<< " P:" // << c->parent_offset
 						<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
