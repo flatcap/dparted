@@ -32,6 +32,12 @@ class LuksTable : public Table
 public:
 	static LuksTablePtr create (void);
 	virtual ~LuksTable();
+	LuksTable& operator= (const LuksTable& c);
+	LuksTable& operator= (LuksTable&& c);
+
+	void swap (LuksTable& c);
+	friend void swap (LuksTable& lhs, LuksTable& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -64,6 +70,10 @@ public:
 
 protected:
 	LuksTable (void);
+	LuksTable (const LuksTable& c);
+	LuksTable (LuksTable&& c);
+
+	virtual LuksTable* clone (void);
 
 	void on_reply (QuestionPtr q);
 	bool is_luks (const std::string& device);

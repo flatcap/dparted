@@ -25,7 +25,7 @@
 
 BaseDrawingArea::BaseDrawingArea (void)
 {
-	log_ctor ("ctor BaseDrawingArea");
+	LOG_CTOR;
 
 	// Smart pointers with no deleter function
 	// We need these because we're statically allocated
@@ -35,7 +35,7 @@ BaseDrawingArea::BaseDrawingArea (void)
 
 BaseDrawingArea::~BaseDrawingArea()
 {
-	log_dtor ("dtor BaseDrawingArea");
+	LOG_DTOR;
 }
 
 

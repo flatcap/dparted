@@ -31,6 +31,12 @@ class LvmMirror : public LvmVolume
 public:
 	static LvmMirrorPtr create (void);
 	virtual ~LvmMirror();
+	LvmMirror& operator= (const LvmMirror& c);
+	LvmMirror& operator= (LvmMirror&& c);
+
+	void swap (LvmMirror& c);
+	friend void swap (LvmMirror& lhs, LvmMirror& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -51,6 +57,10 @@ public:
 
 protected:
 	LvmMirror (void);
+	LvmMirror (const LvmMirror& c);
+	LvmMirror (LvmMirror&& c);
+
+	virtual LvmMirror* clone (void);
 #if 0
 	std::vector<ContainerPtr> mirrors;
 	ContainerPtr log;

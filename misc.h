@@ -32,6 +32,12 @@ class Misc : public Container
 public:
 	static MiscPtr create (void);
 	virtual ~Misc();
+	Misc& operator= (const Misc& c);
+	Misc& operator= (Misc&& c);
+
+	void swap (Misc& c);
+	friend void swap (Misc& lhs, Misc& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -44,6 +50,10 @@ public:
 
 protected:
 	Misc (void);
+	Misc (const Misc& c);
+	Misc (Misc&& c);
+
+	virtual Misc* clone (void);
 };
 
 #endif // _MISC_H_

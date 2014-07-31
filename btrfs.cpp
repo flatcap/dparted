@@ -30,15 +30,29 @@
 
 Btrfs::Btrfs (void)
 {
-	log_ctor ("ctor Btrfs");
+	LOG_CTOR;
 	const char* me = "Btrfs";
 
 	sub_type (me);
 }
 
+Btrfs::Btrfs (const Btrfs& c) :
+	Filesystem(c)
+{
+	Btrfs();
+	LOG_CTOR;
+	// No properties
+}
+
+Btrfs::Btrfs (Btrfs&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Btrfs::~Btrfs()
 {
-	log_dtor ("dtor Btrfs");
+	LOG_DTOR;
 }
 
 BtrfsPtr
@@ -48,6 +62,43 @@ Btrfs::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Btrfs&
+Btrfs::operator= (const Btrfs& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+Btrfs&
+Btrfs::operator= (Btrfs&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Btrfs::swap (Btrfs& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (Btrfs& lhs, Btrfs& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Btrfs*
+Btrfs::clone (void)
+{
+	LOG_TRACE;
+	return new Btrfs (*this);
 }
 
 

@@ -39,15 +39,29 @@
 
 Msdos::Msdos (void)
 {
-	log_ctor ("ctor Msdos");
+	LOG_CTOR;
 	const char* me = "Msdos";
 
 	sub_type (me);
 }
 
+Msdos::Msdos (const Msdos& c) :
+	Table(c)
+{
+	Msdos();
+	LOG_CTOR;
+	// No properties
+}
+
+Msdos::Msdos (Msdos&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Msdos::~Msdos()
 {
-	log_dtor ("dtor Msdos");
+	LOG_DTOR;
 }
 
 MsdosPtr
@@ -57,6 +71,43 @@ Msdos::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Msdos&
+Msdos::operator= (const Msdos& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+Msdos&
+Msdos::operator= (Msdos&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Msdos::swap (Msdos& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (Msdos& lhs, Msdos& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Msdos*
+Msdos::clone (void)
+{
+	LOG_TRACE;
+	return new Msdos (*this);
 }
 
 

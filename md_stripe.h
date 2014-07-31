@@ -31,6 +31,12 @@ class MdStripe : public MdVolume
 public:
 	static MdStripePtr create (void);
 	virtual ~MdStripe();
+	MdStripe& operator= (const MdStripe& c);
+	MdStripe& operator= (MdStripe&& c);
+
+	void swap (MdStripe& c);
+	friend void swap (MdStripe& lhs, MdStripe& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +47,10 @@ public:
 
 protected:
 	MdStripe (void);
+	MdStripe (const MdStripe& c);
+	MdStripe (MdStripe&& c);
+
+	virtual MdStripe* clone (void);
 };
 
 #endif // _MD_STRIPE_H_

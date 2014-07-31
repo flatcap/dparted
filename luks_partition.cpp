@@ -25,7 +25,7 @@
 
 LuksPartition::LuksPartition (void)
 {
-	log_ctor ("ctor LuksPartition");
+	LOG_CTOR;
 	const char* me = "LuksPartition";
 
 	sub_type (me);
@@ -33,7 +33,7 @@ LuksPartition::LuksPartition (void)
 
 LuksPartition::~LuksPartition()
 {
-	log_dtor ("dtor LuksPartition");
+	LOG_DTOR;
 }
 
 LuksPartitionPtr
@@ -43,6 +43,57 @@ LuksPartition::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+LuksPartition::LuksPartition (const LuksPartition& c) :
+	Partition(c)
+{
+	LuksPartition();
+	LOG_CTOR;
+	// No properties
+}
+
+LuksPartition::LuksPartition (LuksPartition&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
+LuksPartition&
+LuksPartition::operator= (const LuksPartition& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+LuksPartition&
+LuksPartition::operator= (LuksPartition&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+LuksPartition::swap (LuksPartition& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (LuksPartition& lhs, LuksPartition& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LuksPartition*
+LuksPartition::clone (void)
+{
+	LOG_TRACE;
+	return new LuksPartition (*this);
 }
 
 

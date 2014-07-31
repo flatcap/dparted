@@ -53,7 +53,7 @@ get_reiserfs (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	f->bytes_size = (blocks_total * block_size);
 	f->bytes_used = (blocks_total - blocks_free) * block_size;
 
-	log_info ("reiser: %s, %s, %ld, %ld", f->uuid.c_str(), f->name.c_str(), f->bytes_size, f->bytes_used);
+	log_debug ("reiser: %s, %s, %ld, %ld", f->uuid.c_str(), f->name.c_str(), f->bytes_size, f->bytes_used);
 
 	get_reiserfs_usage(f);
 	return f;
@@ -148,10 +148,10 @@ get_vfat (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		}
 
 		f->bytes_used = f->bytes_size - (free_clust * 512 * sect_clust);
-		log_info ("size = %ld, used = %ld", f->bytes_size, f->bytes_used);
+		log_debug ("size = %ld, used = %ld", f->bytes_size, f->bytes_used);
 	}
 
-	log_info ("res = %d, sect/fat = %d", reserved, sect_fat);
+	log_debug ("res = %d, sect/fat = %d", reserved, sect_fat);
 
 	get_vfat_usage(f);
 	return f;

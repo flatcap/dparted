@@ -30,15 +30,29 @@
 
 Extfs::Extfs (void)
 {
-	log_ctor ("ctor Extfs");
+	LOG_CTOR;
 	const char* me = "Extfs";
 
 	sub_type (me);
 }
 
+Extfs::Extfs (const Extfs& c) :
+	Filesystem(c)
+{
+	Extfs();
+	LOG_CTOR;
+	// No properties
+}
+
+Extfs::Extfs (Extfs&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Extfs::~Extfs()
 {
-	log_dtor ("dtor Extfs");
+	LOG_DTOR;
 }
 
 ExtfsPtr
@@ -48,6 +62,43 @@ Extfs::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Extfs&
+Extfs::operator= (const Extfs& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+Extfs&
+Extfs::operator= (Extfs&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Extfs::swap (Extfs& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (Extfs& lhs, Extfs& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Extfs*
+Extfs::clone (void)
+{
+	LOG_TRACE;
+	return new Extfs (*this);
 }
 
 

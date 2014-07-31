@@ -26,15 +26,29 @@
 
 LvmMirror::LvmMirror (void)
 {
-	log_ctor ("ctor LvmMirror");
+	LOG_CTOR;
 	const char* me = "LvmMirror";
 
 	sub_type (me);
 }
 
+LvmMirror::LvmMirror (const LvmMirror& c) :
+	LvmVolume(c)
+{
+	LvmMirror();
+	LOG_CTOR;
+	// No properties
+}
+
+LvmMirror::LvmMirror (LvmMirror&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 LvmMirror::~LvmMirror()
 {
-	log_dtor ("dtor LvmMirror");
+	LOG_DTOR;
 }
 
 LvmMirrorPtr
@@ -44,6 +58,43 @@ LvmMirror::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+LvmMirror&
+LvmMirror::operator= (const LvmMirror& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+LvmMirror&
+LvmMirror::operator= (LvmMirror&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+LvmMirror::swap (LvmMirror& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (LvmMirror& lhs, LvmMirror& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmMirror*
+LvmMirror::clone (void)
+{
+	LOG_TRACE;
+	return new LvmMirror (*this);
 }
 
 

@@ -31,6 +31,12 @@ class MdLinear : public MdVolume
 public:
 	static MdLinearPtr create (void);
 	virtual ~MdLinear();
+	MdLinear& operator= (const MdLinear& c);
+	MdLinear& operator= (MdLinear&& c);
+
+	void swap (MdLinear& c);
+	friend void swap (MdLinear& lhs, MdLinear& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +47,10 @@ public:
 
 protected:
 	MdLinear (void);
+	MdLinear (const MdLinear& c);
+	MdLinear (MdLinear&& c);
+
+	virtual MdLinear* clone (void);
 };
 
 #endif // _MD_LINEAR_H_

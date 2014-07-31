@@ -25,15 +25,29 @@
 
 LvmLinear::LvmLinear (void)
 {
-	log_ctor ("ctor LvmLinear");
+	LOG_CTOR;
 	const char* me = "LvmLinear";
 
 	sub_type (me);
 }
 
+LvmLinear::LvmLinear (const LvmLinear& c) :
+	LvmVolume(c)
+{
+	LvmLinear();
+	LOG_CTOR;
+	// No properties
+}
+
+LvmLinear::LvmLinear (LvmLinear&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 LvmLinear::~LvmLinear()
 {
-	log_dtor ("dtor LvmLinear");
+	LOG_DTOR;
 }
 
 LvmLinearPtr
@@ -43,6 +57,43 @@ LvmLinear::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+LvmLinear&
+LvmLinear::operator= (const LvmLinear& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+LvmLinear&
+LvmLinear::operator= (LvmLinear&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+LvmLinear::swap (LvmLinear& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (LvmLinear& lhs, LvmLinear& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmLinear*
+LvmLinear::clone (void)
+{
+	LOG_TRACE;
+	return new LvmLinear (*this);
 }
 
 

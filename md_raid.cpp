@@ -22,15 +22,29 @@
 
 MdRaid::MdRaid (void)
 {
-	log_ctor ("ctor MdRaid");
+	LOG_CTOR;
 	const char* me = "MdRaid";
 
 	sub_type (me);
 }
 
+MdRaid::MdRaid (const MdRaid& c) :
+	MdVolume(c)
+{
+	MdRaid();
+	LOG_CTOR;
+	// No properties
+}
+
+MdRaid::MdRaid (MdRaid&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 MdRaid::~MdRaid()
 {
-	log_dtor ("dtor MdRaid");
+	LOG_DTOR;
 }
 
 MdRaidPtr
@@ -40,6 +54,43 @@ MdRaid::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+MdRaid&
+MdRaid::operator= (const MdRaid& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+MdRaid&
+MdRaid::operator= (MdRaid&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+MdRaid::swap (MdRaid& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (MdRaid& lhs, MdRaid& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdRaid*
+MdRaid::clone (void)
+{
+	LOG_TRACE;
+	return new MdRaid (*this);
 }
 
 

@@ -32,6 +32,12 @@ class Ntfs : public Filesystem
 public:
 	static NtfsPtr create (void);
 	virtual ~Ntfs();
+	Ntfs& operator= (const Ntfs& c);
+	Ntfs& operator= (Ntfs&& c);
+
+	void swap (Ntfs& c);
+	friend void swap (Ntfs& lhs, Ntfs& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -44,6 +50,10 @@ public:
 
 protected:
 	Ntfs (void);
+	Ntfs (const Ntfs& c);
+	Ntfs (Ntfs&& c);
+
+	virtual Ntfs* clone (void);
 
 	bool get_ntfs_usage (void);
 	void get_ntfs_sb (ContainerPtr c);

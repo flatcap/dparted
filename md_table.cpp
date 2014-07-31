@@ -28,7 +28,7 @@
 
 MdTable::MdTable (void)
 {
-	log_ctor ("ctor MdTable");
+	LOG_CTOR;
 	// Save a bit of space
 	const char* me = "MdTable";
 	const int   s  = (int) BaseProperty::Flags::Size;
@@ -46,9 +46,31 @@ MdTable::MdTable (void)
 	declare_prop_var (me, "vol_uuid",    vol_uuid,    "desc of vol_uuid",    0);
 }
 
+MdTable::MdTable (const MdTable& c) :
+	Table(c)
+{
+	MdTable();
+	LOG_CTOR;
+	chunk_size  = c.chunk_size;
+	chunks_used = c.chunks_used;
+	data_offset = c.data_offset;
+	data_size   = c.data_size;
+	raid_disks  = c.raid_disks;
+	raid_layout = c.raid_layout;
+	raid_type   = c.raid_type;
+	vol_name    = c.vol_name;
+	vol_uuid    = c.vol_uuid;
+}
+
+MdTable::MdTable (MdTable&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 MdTable::~MdTable()
 {
-	log_dtor ("dtor MdTable");
+	LOG_DTOR;
 }
 
 MdTablePtr
@@ -58,6 +80,59 @@ MdTable::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+MdTable&
+MdTable::operator= (const MdTable& c)
+{
+	chunk_size  = c.chunk_size;
+	chunks_used = c.chunks_used;
+	data_offset = c.data_offset;
+	data_size   = c.data_size;
+	raid_disks  = c.raid_disks;
+	raid_layout = c.raid_layout;
+	raid_type   = c.raid_type;
+	vol_name    = c.vol_name;
+	vol_uuid    = c.vol_uuid;
+
+	return *this;
+}
+
+MdTable&
+MdTable::operator= (MdTable&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+MdTable::swap (MdTable& c)
+{
+	std::swap (chunk_size,  c.chunk_size);
+	std::swap (chunks_used, c.chunks_used);
+	std::swap (data_offset, c.data_offset);
+	std::swap (data_size,   c.data_size);
+	std::swap (raid_disks,  c.raid_disks);
+	std::swap (raid_layout, c.raid_layout);
+	std::swap (raid_type,   c.raid_type);
+	std::swap (vol_name,    c.vol_name);
+	std::swap (vol_uuid,    c.vol_uuid);
+}
+
+void
+swap (MdTable& lhs, MdTable& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdTable*
+MdTable::clone (void)
+{
+	LOG_TRACE;
+	return new MdTable (*this);
 }
 
 

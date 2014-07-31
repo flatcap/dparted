@@ -45,15 +45,29 @@
 
 Filesystem::Filesystem (void)
 {
-	log_ctor ("ctor Filesystem");
+	LOG_CTOR;
 	const char* me = "Filesystem";
 
 	sub_type (me);
 }
 
+Filesystem::Filesystem (const Filesystem& c) :
+	Container(c)
+{
+	Filesystem();
+	LOG_CTOR;
+	// No properties
+}
+
+Filesystem::Filesystem (Filesystem&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Filesystem::~Filesystem()
 {
-	log_dtor ("dtor Filesystem");
+	LOG_DTOR;
 }
 
 FilesystemPtr
@@ -63,6 +77,43 @@ Filesystem::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Filesystem&
+Filesystem::operator= (const Filesystem& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+Filesystem&
+Filesystem::operator= (Filesystem&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Filesystem::swap (Filesystem& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (Filesystem& lhs, Filesystem& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Filesystem*
+Filesystem::clone (void)
+{
+	LOG_TRACE;
+	return new Filesystem (*this);
 }
 
 
@@ -135,7 +186,7 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 #endif
 
 	if (f) {
-		log_info ("volume: %s (%s), child: %s", parent->name.c_str(), parent->get_type().c_str(), f->name.c_str());
+		log_debug ("volume: %s (%s), child: %s", parent->name.c_str(), parent->get_type().c_str(), f->name.c_str());
 		std::string desc = "Discovered " + f->get_type() + " filesystem";
 		parent->add_child (f, false, desc.c_str());	//XXX assumption fs is a leaf
 						//XXX move this into get_*?

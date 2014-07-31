@@ -31,6 +31,12 @@ class MdPartition : public Partition
 public:
 	static MdPartitionPtr create (void);
 	virtual ~MdPartition();
+	MdPartition& operator= (const MdPartition& c);
+	MdPartition& operator= (MdPartition&& c);
+
+	void swap (MdPartition& c);
+	friend void swap (MdPartition& lhs, MdPartition& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +47,10 @@ public:
 
 protected:
 	MdPartition (void);
+	MdPartition (const MdPartition& c);
+	MdPartition (MdPartition&& c);
+
+	virtual MdPartition* clone (void);
 };
 
 #endif // _MD_PARTITION_H_

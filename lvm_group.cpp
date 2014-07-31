@@ -41,7 +41,7 @@
 
 LvmGroup::LvmGroup (void)
 {
-	log_ctor ("ctor LvmGroup");
+	LOG_CTOR;
 	const char* me = "LvmGroup";
 
 	sub_type (me);
@@ -52,9 +52,26 @@ LvmGroup::LvmGroup (void)
 	declare_prop_var (me, "vg_seqno", vg_seqno, "desc of vg_seqno", 0);
 }
 
+LvmGroup::LvmGroup (const LvmGroup& c) :
+	Whole(c)
+{
+	LvmGroup();
+	LOG_CTOR;
+	lv_count = c.lv_count;
+	pv_count = c.pv_count;
+	vg_attr  = c.vg_attr;
+	vg_seqno = c.vg_seqno;
+}
+
+LvmGroup::LvmGroup (LvmGroup&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 LvmGroup::~LvmGroup()
 {
-	log_dtor ("dtor LvmGroup");
+	LOG_DTOR;
 }
 
 LvmGroupPtr
@@ -64,6 +81,49 @@ LvmGroup::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+LvmGroup&
+LvmGroup::operator= (const LvmGroup& c)
+{
+	lv_count = c.lv_count;
+	pv_count = c.pv_count;
+	vg_attr  = c.vg_attr;
+	vg_seqno = c.vg_seqno;
+
+	return *this;
+}
+
+LvmGroup&
+LvmGroup::operator= (LvmGroup&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+LvmGroup::swap (LvmGroup& c)
+{
+	std::swap (lv_count, c.lv_count);
+	std::swap (pv_count, c.pv_count);
+	std::swap (vg_attr,  c.vg_attr);
+	std::swap (vg_seqno, c.vg_seqno);
+}
+
+void
+swap (LvmGroup& lhs, LvmGroup& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmGroup*
+LvmGroup::clone (void)
+{
+	LOG_TRACE;
+	return new LvmGroup (*this);
 }
 
 

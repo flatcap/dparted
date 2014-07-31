@@ -23,12 +23,12 @@
 UuidVisitor::UuidVisitor (const std::string& search) :
 	uuid (search)
 {
-	log_ctor ("ctor UuidVisitor");
+	LOG_CTOR;
 }
 
 UuidVisitor::~UuidVisitor()
 {
-	log_dtor ("dtor UuidVisitor");
+	LOG_DTOR;
 }
 
 bool

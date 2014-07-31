@@ -23,7 +23,7 @@ PasswordDialog::PasswordDialog (QuestionPtr q) :
 	sp_box (Gtk::ORIENTATION_HORIZONTAL),
 	pass_label ("Passphrase:", 0.0, 0.5)
 {
-	log_ctor ("ctor PasswordDialog");
+	LOG_CTOR;
 
 	sp_label.set_use_underline (true);
 	sp_label.set_label ("Show _Password");
@@ -47,7 +47,7 @@ PasswordDialog::PasswordDialog (QuestionPtr q) :
 
 PasswordDialog::~PasswordDialog()
 {
-	log_dtor ("dtor PasswordDialog");
+	LOG_DTOR;
 }
 
 PasswordDialogPtr

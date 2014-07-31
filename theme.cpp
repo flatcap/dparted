@@ -29,13 +29,13 @@
 
 Theme::Theme (void)
 {
-	log_ctor ("ctor Theme");
+	LOG_CTOR;
 	init_icons();
 }
 
 Theme::~Theme()
 {
-	log_dtor ("dtor Theme");
+	LOG_DTOR;
 }
 
 

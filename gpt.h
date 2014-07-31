@@ -32,6 +32,12 @@ class Gpt : public Table
 public:
 	static GptPtr create (void);
 	virtual ~Gpt();
+	Gpt& operator= (const Gpt& c);
+	Gpt& operator= (Gpt&& c);
+
+	void swap (Gpt& c);
+	friend void swap (Gpt& lhs, Gpt& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -44,6 +50,10 @@ public:
 
 protected:
 	Gpt (void);
+	Gpt (const Gpt& c);
+	Gpt (Gpt&& c);
+
+	virtual Gpt* clone (void);
 };
 
 #endif // _GPT_H_

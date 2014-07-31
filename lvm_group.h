@@ -33,6 +33,12 @@ class LvmGroup : public Whole
 public:
 	static LvmGroupPtr create (void);
 	virtual ~LvmGroup();
+	LvmGroup& operator= (const LvmGroup& c);
+	LvmGroup& operator= (LvmGroup&& c);
+
+	void swap (LvmGroup& c);
+	friend void swap (LvmGroup& lhs, LvmGroup& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -54,6 +60,10 @@ public:
 
 protected:
 	LvmGroup (void);
+	LvmGroup (const LvmGroup& c);
+	LvmGroup (LvmGroup&& c);
+
+	virtual LvmGroup* clone (void);
 
 	static int  lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>& deps);
 	static void lvm_vgs (ContainerPtr& pieces, std::multimap<std::string, std::string>& deps);

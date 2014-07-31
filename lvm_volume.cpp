@@ -25,7 +25,7 @@
 
 LvmVolume::LvmVolume (void)
 {
-	log_ctor ("ctor LvmVolume");
+	LOG_CTOR;
 	const char* me = "LvmVolume";
 
 	sub_type (me);
@@ -37,9 +37,31 @@ LvmVolume::LvmVolume (void)
 	declare_prop_var (me, "stripe_size",  stripe_size,  "desc of stripe_size",  0);
 }
 
+LvmVolume::LvmVolume (const LvmVolume& c) :
+	Volume(c)
+{
+	LvmVolume();
+	LOG_CTOR;
+	lv_attr      = c.lv_attr;
+	seg_count    = c.seg_count;
+	seg_start_pe = c.seg_start_pe;
+	stripes      = c.stripes;
+	stripe_size  = c.stripe_size;
+	mirror_log   = c.mirror_log;
+	metadata     = c.metadata;
+	subvols      = c.subvols;
+	sibling      = c.sibling;
+}
+
+LvmVolume::LvmVolume (LvmVolume&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 LvmVolume::~LvmVolume()
 {
-	log_dtor ("dtor LvmVolume");
+	LOG_DTOR;
 }
 
 LvmVolumePtr
@@ -49,6 +71,59 @@ LvmVolume::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+LvmVolume&
+LvmVolume::operator= (const LvmVolume& c)
+{
+	lv_attr      = c.lv_attr;
+	seg_count    = c.seg_count;
+	seg_start_pe = c.seg_start_pe;
+	stripes      = c.stripes;
+	stripe_size  = c.stripe_size;
+	mirror_log   = c.mirror_log;
+	metadata     = c.metadata;
+	subvols      = c.subvols;
+	sibling      = c.sibling;
+
+	return *this;
+}
+
+LvmVolume&
+LvmVolume::operator= (LvmVolume&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+LvmVolume::swap (LvmVolume& c)
+{
+	std::swap (lv_attr,      c.lv_attr);
+	std::swap (seg_count,    c.seg_count);
+	std::swap (seg_start_pe, c.seg_start_pe);
+	std::swap (stripes,      c.stripes);
+	std::swap (stripe_size,  c.stripe_size);
+	std::swap (mirror_log,   c.mirror_log);
+	std::swap (metadata,     c.metadata);
+	std::swap (subvols,      c.subvols);
+	std::swap (sibling,      c.sibling);
+}
+
+void
+swap (LvmVolume& lhs, LvmVolume& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmVolume*
+LvmVolume::clone (void)
+{
+	LOG_TRACE;
+	return new LvmVolume (*this);
 }
 
 
@@ -125,7 +200,7 @@ LvmVolume::add_child (ContainerPtr& child, bool probe, const char* description)
 		return;
 	}
 
-	log_info ("volume: %s (%s), child: %s (%s)", name.c_str(), get_type().c_str(), child->name.c_str(), child->get_type().c_str());
+	log_debug ("volume: %s (%s), child: %s (%s)", name.c_str(), get_type().c_str(), child->name.c_str(), child->get_type().c_str());
 	if (child->is_a ("LvmMetadata")) {
 		metadata.insert (child);
 		log_debug ("metadata: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());

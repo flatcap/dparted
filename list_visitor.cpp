@@ -24,12 +24,12 @@
 
 ListVisitor::ListVisitor (void)
 {
-	log_ctor ("ctor ListVisitor");
+	LOG_CTOR;
 }
 
 ListVisitor::~ListVisitor()
 {
-	log_dtor ("dtor ListVisitor");
+	LOG_DTOR;
 }
 
 

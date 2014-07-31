@@ -32,6 +32,12 @@ class Extended : public Msdos
 public:
 	static ExtendedPtr create (void);
 	virtual ~Extended();
+	Extended& operator= (const Extended& c);
+	Extended& operator= (Extended&& c);
+
+	void swap (Extended& c);
+	friend void swap (Extended& lhs, Extended& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -45,6 +51,10 @@ public:
 
 protected:
 	Extended (void);
+	Extended (const Extended& c);
+	Extended (Extended&& c);
+
+	virtual Extended* clone (void);
 };
 
 #endif // _EXTENDED_H_

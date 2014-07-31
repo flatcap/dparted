@@ -31,7 +31,6 @@
 #include "block.h"
 #include "action.h"
 #include "log.h"
-#include "visitor.h"
 #ifdef DP_DISK
 #include "disk.h"
 #endif
@@ -41,18 +40,33 @@
 #ifdef DP_LOOP
 #include "loop.h"
 #endif
+#include "visitor.h"
 
 Block::Block (void)
 {
-	log_ctor ("ctor Block");
+	LOG_CTOR;
 	const char* me = "Block";
 
 	sub_type (me);
 }
 
+Block::Block (const Block& c) :
+	Container(c)
+{
+	Block();
+	LOG_CTOR;
+	// No properties
+}
+
+Block::Block (Block&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Block::~Block()
 {
-	log_dtor ("dtor Block");
+	LOG_DTOR;
 }
 
 BlockPtr
@@ -62,6 +76,43 @@ Block::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Block&
+Block::operator= (const Block& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+Block&
+Block::operator= (Block&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Block::swap (Block& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (Block& lhs, Block& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Block*
+Block::clone (void)
+{
+	LOG_TRACE;
+	return new Block (*this);
 }
 
 

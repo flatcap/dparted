@@ -21,12 +21,12 @@
 WarningDialog::WarningDialog (QuestionPtr q) :
 	Dialog(q)
 {
-	log_ctor ("ctor WarningDialog");
+	LOG_CTOR;
 }
 
 WarningDialog::~WarningDialog()
 {
-	log_dtor ("dtor WarningDialog");
+	LOG_DTOR;
 }
 
 WarningDialogPtr

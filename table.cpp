@@ -43,15 +43,29 @@
 
 Table::Table (void)
 {
-	log_ctor ("ctor Table");
+	LOG_CTOR;
 	const char* me = "Table";
 
 	sub_type (me);
 }
 
+Table::Table (const Table& c) :
+	Container(c)
+{
+	Table();
+	LOG_CTOR;
+	// No properties
+}
+
+Table::Table (Table&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Table::~Table()
 {
-	log_dtor ("dtor Table");
+	LOG_DTOR;
 }
 
 TablePtr
@@ -61,6 +75,43 @@ Table::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Table&
+Table::operator= (const Table& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+Table&
+Table::operator= (Table&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Table::swap (Table& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (Table& lhs, Table& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Table*
+Table::clone (void)
+{
+	LOG_TRACE;
+	return new Table (*this);
 }
 
 

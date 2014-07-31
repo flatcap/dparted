@@ -31,6 +31,12 @@ class LvmLinear : public LvmVolume
 public:
 	static LvmLinearPtr create (void);
 	virtual ~LvmLinear();
+	LvmLinear& operator= (const LvmLinear& c);
+	LvmLinear& operator= (LvmLinear&& c);
+
+	void swap (LvmLinear& c);
+	friend void swap (LvmLinear& lhs, LvmLinear& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +47,10 @@ public:
 
 protected:
 	LvmLinear (void);
+	LvmLinear (const LvmLinear& c);
+	LvmLinear (LvmLinear&& c);
+
+	virtual LvmLinear* clone (void);
 };
 
 #endif // _LVM_LINEAR_H_

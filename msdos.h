@@ -38,6 +38,12 @@ class Msdos : public Table
 public:
 	static MsdosPtr create (void);
 	virtual ~Msdos();
+	Msdos& operator= (const Msdos& c);
+	Msdos& operator= (Msdos&& c);
+
+	void swap (Msdos& c);
+	friend void swap (Msdos& lhs, Msdos& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -50,6 +56,10 @@ public:
 
 protected:
 	Msdos (void);
+	Msdos (const Msdos& c);
+	Msdos (Msdos&& c);
+
+	virtual Msdos* clone (void);
 
 	virtual bool read_partition (std::uint8_t* buffer, int index, struct partition* part);
 	virtual unsigned int read_table (std::uint8_t* buffer, std::uint64_t bufsize, std::uint64_t offset, std::vector<struct partition>& vp);

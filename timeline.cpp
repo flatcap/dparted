@@ -23,6 +23,7 @@
 
 Timeline::Timeline (void)
 {
+	LOG_CTOR;
 }
 
 Timeline::~Timeline()
@@ -39,6 +40,7 @@ Timeline::~Timeline()
 			std::get<3>(e).get(),
 			std::get<4>(e).c_str());
 	}
+	LOG_DTOR;
 }
 
 TimelinePtr

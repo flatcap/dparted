@@ -36,6 +36,12 @@ class Partition : public Container
 public:
 	static PartitionPtr create (void);
 	virtual ~Partition();
+	Partition& operator= (const Partition& c);
+	Partition& operator= (Partition&& c);
+
+	void swap (Partition& c);
+	friend void swap (Partition& lhs, Partition& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -54,6 +60,10 @@ public:
 
 protected:
 	Partition (void);
+	Partition (const Partition& c);
+	Partition (Partition&& c);
+
+	virtual Partition* clone (void);
 };
 
 #endif // _PARTITION_H_

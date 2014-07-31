@@ -26,15 +26,29 @@
 
 Whole::Whole (void)
 {
-	log_ctor ("ctor Whole");
+	LOG_CTOR;
 	const char* me = "Whole";
 
 	sub_type (me);
 }
 
+Whole::Whole (const Whole& c) :
+	Container(c)
+{
+	Whole();
+	LOG_CTOR;
+	segments = c.segments;
+}
+
+Whole::Whole (Whole&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Whole::~Whole()
 {
-	log_dtor ("dtor Whole");
+	LOG_DTOR;
 }
 
 WholePtr
@@ -44,6 +58,43 @@ Whole::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Whole&
+Whole::operator= (const Whole& c)
+{
+	segments = c.segments;
+
+	return *this;
+}
+
+Whole&
+Whole::operator= (Whole&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Whole::swap (Whole& c)
+{
+	std::swap (segments, c.segments);
+}
+
+void
+swap (Whole& lhs, Whole& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Whole*
+Whole::clone (void)
+{
+	LOG_TRACE;
+	return new Whole (*this);
 }
 
 

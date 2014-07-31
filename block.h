@@ -35,6 +35,13 @@ class Block : public Container
 public:
 	static BlockPtr create (void);
 	virtual ~Block();
+
+	Block& operator= (const Block& c);
+	Block& operator= (Block&& c);
+
+	void swap (Block& c);
+	friend void swap (Block& lhs, Block& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -45,6 +52,10 @@ public:
 
 protected:
 	Block (void);
+	Block (const Block& c);
+	Block (Block&& c);
+
+	virtual Block* clone (void);
 };
 
 #endif // _BLOCK_H_

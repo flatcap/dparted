@@ -92,7 +92,7 @@ std::vector<Action> cont_actions = {
 Container::Container (void)
 {
 	unique_id = std::atomic_fetch_add (&container_id, (std::uint64_t)1);
-	log_ctor ("ctor Container (%ld)", unique_id);
+	log_ctor ("ctor %s (%ld)", __PRETTY_FUNCTION__, unique_id);
 
 	// Save a bit of space
 	const char* me = "Container";
@@ -142,6 +142,46 @@ Container::Container (void)
 	more_props.resize (10);		//XXX this will break the properties if it gets reallocated
 }
 
+Container::Container (const Container& c) :
+	Container()
+{
+	LOG_CTOR;
+	name                = c.name;
+	uuid                = c.uuid;
+
+	device              = c.device;
+	device_major        = c.device_major;
+	device_minor        = c.device_minor;
+	fd                  = c.fd;
+
+	parent_offset       = c.parent_offset;
+	block_size          = c.block_size;
+	bytes_size          = c.bytes_size;
+	bytes_used          = c.bytes_used;
+
+	parent              = c.parent;
+	type                = c.type;
+	children            = c.children;
+	more_props          = c.more_props;
+	whole               = c.whole;
+	device_mmap         = c.device_mmap;
+	container_listeners = c.container_listeners;
+
+	// Of the remaining Container members:
+	// generated
+	//	self
+	//	props
+	//	unique_id
+	// non-copyable:
+	//	mutex_children
+}
+
+Container::Container (Container&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Container::~Container()
 {
 	if (fd >= 0) {
@@ -149,7 +189,7 @@ Container::~Container()
 		log_file ("file close: %d", fd);
 		fd = -1;
 	}
-	log_dtor ("dtor Container (%ld)", unique_id);
+	LOG_DTOR;
 }
 
 ContainerPtr
@@ -159,6 +199,109 @@ Container::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Container&
+Container::operator= (const Container& c)
+{
+	name                = c.name;
+	uuid                = c.uuid;
+
+	device              = c.device;
+	device_major        = c.device_major;
+	device_minor        = c.device_minor;
+	fd                  = c.fd;
+
+	parent_offset       = c.parent_offset;
+	block_size          = c.block_size;
+	bytes_size          = c.bytes_size;
+	bytes_used          = c.bytes_used;
+
+	parent              = c.parent;
+	type                = c.type;
+	children            = c.children;
+	more_props          = c.more_props;
+	whole               = c.whole;
+	device_mmap         = c.device_mmap;
+	container_listeners = c.container_listeners;
+
+	// Of the remaining Container members:
+	// generated
+	//	self
+	//	props
+	//	unique_id
+	// non-copyable:
+	//	mutex_children
+
+	return *this;
+}
+
+Container&
+Container::operator= (Container&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Container::swap (Container& c)
+{
+	std::swap (name,                c.name);
+	std::swap (uuid,                c.uuid);
+
+	std::swap (device,              c.device);
+	std::swap (device_major,        c.device_major);
+	std::swap (device_minor,        c.device_minor);
+	std::swap (fd,                  c.fd);
+
+	std::swap (parent_offset,       c.parent_offset);
+	std::swap (block_size,          c.block_size);
+	std::swap (bytes_size,          c.bytes_size);
+	std::swap (bytes_used,          c.bytes_used);
+
+	std::swap (parent,              c.parent);
+	std::swap (type,                c.type);
+	std::swap (children,            c.children);
+	std::swap (more_props,          c.more_props);
+	std::swap (whole,               c.whole);
+	std::swap (device_mmap,         c.device_mmap);
+	std::swap (container_listeners, c.container_listeners);
+
+	// Of the remaining Container members:
+	// generated
+	//	self
+	//	props
+	//	unique_id
+	// non-copyable:
+	//	mutex_children
+}
+
+void
+swap (Container& lhs, Container& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Container*
+Container::clone (void)
+{
+	LOG_TRACE;
+	return new Container (*this);
+}
+
+ContainerPtr
+Container::copy (void)
+{
+	Container *c = clone();
+
+	ContainerPtr cp (c);
+
+	c->self = cp;
+
+	return cp;
 }
 
 
@@ -410,7 +553,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		return nullptr;
 	}
 
-	log_info ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
+	log_debug ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
 
 	if (device_mmap) {
 		void* buf = (*device_mmap).second;
@@ -471,17 +614,18 @@ Container::close_buffer (std::uint8_t* buffer, std::uint64_t size)
 }
 
 
-/**
- * operator<<
- */
 std::ostream&
 operator<< (std::ostream& stream, const ContainerPtr& c)
 {
 	return_val_if_fail (c, stream);
 
-	// std::uint64_t bytes_free = c.bytes_size - c->bytes_used;
+	// std::uint64_t bytes_free = c->bytes_size - c->bytes_used;
 
 	std::string uuid = c->uuid;
+	std::string type;
+	if (c->type.size() > 0) {
+		type = c->type.back();
+	}
 
 	if (uuid.size() > 8) {
 		std::size_t index = uuid.find_first_of (":-. ");
@@ -490,7 +634,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 
 	stream
 #if 0
-		<< "[" << c->type.back() << "]:"
+		<< "[" << type << "]:"
 #endif
 		<< c->name
 #if 0
@@ -506,6 +650,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 						<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
+		<< " uniq: " << c->unique_id
 #endif
 		;
 

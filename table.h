@@ -35,6 +35,12 @@ class Table : public Container
 public:
 	static TablePtr create (void);
 	virtual ~Table();
+	Table& operator= (const Table& c);
+	Table& operator= (Table&& c);
+
+	void swap (Table& c);
+	friend void swap (Table& lhs, Table& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -49,6 +55,10 @@ public:
 
 protected:
 	Table (void);
+	Table (const Table& c);
+	Table (Table&& c);
+
+	virtual Table* clone (void);
 
 	std::uint64_t fill_space (void);
 };

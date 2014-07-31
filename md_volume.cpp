@@ -22,15 +22,29 @@
 
 MdVolume::MdVolume (void)
 {
-	log_ctor ("ctor MdVolume");
+	LOG_CTOR;
 	const char* me = "MdVolume";
 
 	sub_type (me);
 }
 
+MdVolume::MdVolume (const MdVolume& c) :
+	Volume(c)
+{
+	MdVolume();
+	LOG_CTOR;
+	// No properties
+}
+
+MdVolume::MdVolume (MdVolume&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 MdVolume::~MdVolume()
 {
-	log_dtor ("dtor MdVolume");
+	LOG_DTOR;
 }
 
 MdVolumePtr
@@ -40,6 +54,43 @@ MdVolume::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+MdVolume&
+MdVolume::operator= (const MdVolume& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+MdVolume&
+MdVolume::operator= (MdVolume&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+MdVolume::swap (MdVolume& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (MdVolume& lhs, MdVolume& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdVolume*
+MdVolume::clone (void)
+{
+	LOG_TRACE;
+	return new MdVolume (*this);
 }
 
 

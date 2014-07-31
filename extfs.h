@@ -32,6 +32,12 @@ class Extfs : public Filesystem
 public:
 	static ExtfsPtr create (void);
 	virtual ~Extfs();
+	Extfs& operator= (const Extfs& c);
+	Extfs& operator= (Extfs&& c);
+
+	void swap (Extfs& c);
+	friend void swap (Extfs& lhs, Extfs& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -47,6 +53,10 @@ public:
 
 protected:
 	Extfs (void);
+	Extfs (const Extfs& c);
+	Extfs (Extfs&& c);
+
+	virtual Extfs* clone (void);
 
 	std::vector<std::string> more_props;
 	std::vector<std::string> features;

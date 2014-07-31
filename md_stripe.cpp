@@ -22,15 +22,29 @@
 
 MdStripe::MdStripe (void)
 {
-	log_ctor ("ctor MdStripe");
+	LOG_CTOR;
 	const char* me = "MdStripe";
 
 	sub_type (me);
 }
 
+MdStripe::MdStripe (const MdStripe& c) :
+	MdVolume(c)
+{
+	MdStripe();
+	LOG_CTOR;
+	// No properties
+}
+
+MdStripe::MdStripe (MdStripe&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 MdStripe::~MdStripe()
 {
-	log_dtor ("dtor MdStripe");
+	LOG_DTOR;
 }
 
 MdStripePtr
@@ -40,6 +54,43 @@ MdStripe::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+MdStripe&
+MdStripe::operator= (const MdStripe& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+MdStripe&
+MdStripe::operator= (MdStripe&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+MdStripe::swap (MdStripe& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (MdStripe& lhs, MdStripe& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdStripe*
+MdStripe::clone (void)
+{
+	LOG_TRACE;
+	return new MdStripe (*this);
 }
 
 

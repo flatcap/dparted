@@ -31,6 +31,12 @@ class GptPartition : public Partition
 public:
 	static GptPartitionPtr create (void);
 	virtual ~GptPartition();
+	GptPartition& operator= (const GptPartition& c);
+	GptPartition& operator= (GptPartition&& c);
+
+	void swap (GptPartition& c);
+	friend void swap (GptPartition& lhs, GptPartition& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +47,10 @@ public:
 
 protected:
 	GptPartition (void);
+	GptPartition (const GptPartition& c);
+	GptPartition (GptPartition&& c);
+
+	virtual GptPartition* clone (void);
 };
 
 #endif // _GPT_PARTITION_H_

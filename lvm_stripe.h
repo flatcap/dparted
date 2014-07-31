@@ -31,6 +31,12 @@ class LvmStripe : public LvmVolume
 public:
 	static LvmStripePtr create (void);
 	virtual ~LvmStripe();
+	LvmStripe& operator= (const LvmStripe& c);
+	LvmStripe& operator= (LvmStripe&& c);
+
+	void swap (LvmStripe& c);
+	friend void swap (LvmStripe& lhs, LvmStripe& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +47,10 @@ public:
 
 protected:
 	LvmStripe (void);
+	LvmStripe (const LvmStripe& c);
+	LvmStripe (LvmStripe&& c);
+
+	virtual LvmStripe* clone (void);
 };
 
 #endif // _LVM_STRIPE_H_

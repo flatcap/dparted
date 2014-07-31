@@ -25,15 +25,29 @@
 
 LvmStripe::LvmStripe (void)
 {
-	log_ctor ("ctor LvmStripe");
+	LOG_CTOR;
 	const char* me = "LvmStripe";
 
 	sub_type (me);
 }
 
+LvmStripe::LvmStripe (const LvmStripe& c) :
+	LvmVolume(c)
+{
+	LvmStripe();
+	LOG_CTOR;
+	// No properties
+}
+
+LvmStripe::LvmStripe (LvmStripe&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 LvmStripe::~LvmStripe()
 {
-	log_dtor ("dtor LvmStripe");
+	LOG_DTOR;
 }
 
 LvmStripePtr
@@ -43,6 +57,43 @@ LvmStripe::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+LvmStripe&
+LvmStripe::operator= (const LvmStripe& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+LvmStripe&
+LvmStripe::operator= (LvmStripe&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+LvmStripe::swap (LvmStripe& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (LvmStripe& lhs, LvmStripe& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmStripe*
+LvmStripe::clone (void)
+{
+	LOG_TRACE;
+	return new LvmStripe (*this);
 }
 
 

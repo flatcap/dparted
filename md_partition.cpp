@@ -25,15 +25,29 @@
 
 MdPartition::MdPartition (void)
 {
-	log_ctor ("ctor MdPartition");
+	LOG_CTOR;
 	const char* me = "MdPartition";
 
 	sub_type (me);
 }
 
+MdPartition::MdPartition (const MdPartition& c) :
+	Partition(c)
+{
+	MdPartition();
+	LOG_CTOR;
+	// No properties
+}
+
+MdPartition::MdPartition (MdPartition&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 MdPartition::~MdPartition()
 {
-	log_dtor ("dtor MdPartition");
+	LOG_DTOR;
 }
 
 MdPartitionPtr
@@ -43,6 +57,43 @@ MdPartition::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+MdPartition&
+MdPartition::operator= (const MdPartition& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+MdPartition&
+MdPartition::operator= (MdPartition&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+MdPartition::swap (MdPartition& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (MdPartition& lhs, MdPartition& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdPartition*
+MdPartition::clone (void)
+{
+	LOG_TRACE;
+	return new MdPartition (*this);
 }
 
 

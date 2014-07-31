@@ -25,15 +25,29 @@
 
 LvmRaid::LvmRaid (void)
 {
-	log_ctor ("ctor LvmRaid");
+	LOG_CTOR;
 	const char* me = "LvmRaid";
 
 	sub_type (me);
 }
 
+LvmRaid::LvmRaid (const LvmRaid& c) :
+	LvmVolume(c)
+{
+	LvmRaid();
+	LOG_CTOR;
+	// No properties
+}
+
+LvmRaid::LvmRaid (LvmRaid&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 LvmRaid::~LvmRaid()
 {
-	log_dtor ("dtor LvmRaid");
+	LOG_DTOR;
 }
 
 LvmRaidPtr
@@ -43,6 +57,43 @@ LvmRaid::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+LvmRaid&
+LvmRaid::operator= (const LvmRaid& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+LvmRaid&
+LvmRaid::operator= (LvmRaid&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+LvmRaid::swap (LvmRaid& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (LvmRaid& lhs, LvmRaid& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmRaid*
+LvmRaid::clone (void)
+{
+	LOG_TRACE;
+	return new LvmRaid (*this);
 }
 
 

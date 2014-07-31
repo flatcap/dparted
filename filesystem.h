@@ -35,6 +35,12 @@ class Filesystem : public Container
 public:
 	static FilesystemPtr create (void);
 	virtual ~Filesystem();
+	Filesystem& operator= (const Filesystem& c);
+	Filesystem& operator= (Filesystem&& c);
+
+	void swap (Filesystem& c);
+	friend void swap (Filesystem& lhs, Filesystem& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -48,6 +54,10 @@ public:
 
 protected:
 	Filesystem (void);
+	Filesystem (const Filesystem& c);
+	Filesystem (Filesystem&& c);
+
+	virtual Filesystem* clone (void);
 
 private:
 	std::uint64_t ext2_get_usage (void);

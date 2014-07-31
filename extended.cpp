@@ -34,15 +34,29 @@
 
 Extended::Extended (void)
 {
-	log_ctor ("ctor Extended");
+	LOG_CTOR;
 	const char* me = "Extended";
 
 	sub_type (me);
 }
 
+Extended::Extended (const Extended& c) :
+	Msdos(c)
+{
+	Extended();
+	LOG_CTOR;
+	// No properties
+}
+
+Extended::Extended (Extended&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Extended::~Extended()
 {
-	log_dtor ("dtor Extended");
+	LOG_DTOR;
 }
 
 ExtendedPtr
@@ -52,6 +66,43 @@ Extended::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Extended&
+Extended::operator= (const Extended& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+Extended&
+Extended::operator= (Extended&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Extended::swap (Extended& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (Extended& lhs, Extended& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Extended*
+Extended::clone (void)
+{
+	LOG_TRACE;
+	return new Extended (*this);
 }
 
 

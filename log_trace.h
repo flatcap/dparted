@@ -29,8 +29,12 @@
 
 #ifdef DEBUG
 #define LOG_TRACE		LogTrace __le(__PRETTY_FUNCTION__, __FILE__, __LINE__)
+#define LOG_CTOR		log_ctor ("ctor %s", __PRETTY_FUNCTION__)
+#define LOG_DTOR		log_ctor ("dtor %s", __PRETTY_FUNCTION__)
 #else
 #define LOG_TRACE		do {} while (0)
+#define LOG_CTOR		do {} while (0)
+#define LOG_DTOR		do {} while (0)
 #endif
 
 class LogTrace

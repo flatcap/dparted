@@ -33,15 +33,29 @@
 
 File::File (void)
 {
-	log_ctor ("ctor File");
+	LOG_CTOR;
 	const char* me = "File";
 
 	sub_type (me);
 }
 
+File::File (const File& c) :
+	Block(c)
+{
+	File();
+	LOG_CTOR;
+	// No properties
+}
+
+File::File (File&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 File::~File()
 {
-	log_dtor ("dtor File");
+	LOG_DTOR;
 }
 
 FilePtr
@@ -51,6 +65,43 @@ File::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+File&
+File::operator= (const File& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+File&
+File::operator= (File&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+File::swap (File& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (File& lhs, File& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+File*
+File::clone (void)
+{
+	LOG_TRACE;
+	return new File (*this);
 }
 
 
@@ -73,7 +124,7 @@ File::get_actions (void)
 		{ "dummy.file", true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> parent_actions = Block::get_actions();
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
@@ -87,7 +138,7 @@ File::perform_action (Action action)
 		log_debug ("File perform: %s", action.name.c_str());
 		return true;
 	} else {
-		return Container::perform_action (action);
+		return Block::perform_action (action);
 	}
 }
 

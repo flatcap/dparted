@@ -33,6 +33,12 @@ class LvmVolume : public Volume
 public:
 	static LvmVolumePtr create (void);
 	virtual ~LvmVolume();
+	LvmVolume& operator= (const LvmVolume& c);
+	LvmVolume& operator= (LvmVolume&& c);
+
+	void swap (LvmVolume& c);
+	friend void swap (LvmVolume& lhs, LvmVolume& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -66,6 +72,10 @@ public:
 
 protected:
 	LvmVolume (void);
+	LvmVolume (const LvmVolume& c);
+	LvmVolume (LvmVolume&& c);
+
+	virtual LvmVolume* clone (void);
 };
 
 #endif // _LVM_VOLUME_H_

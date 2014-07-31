@@ -31,7 +31,7 @@
 
 Loop::Loop (void)
 {
-	log_ctor ("ctor Loop");
+	LOG_CTOR;
 	// Save a bit of space
 	const char* me = "Loop";
 	const int   d  = (int) BaseProperty::Flags::Dot;
@@ -56,9 +56,32 @@ Loop::Loop (void)
 	declare_prop_fn (me, "flags",            (get_string_t) std::bind(&Loop::get_flags,            this), "desc of flags",            d);
 }
 
+Loop::Loop (const Loop& c) :
+	Block(c)
+{
+	Loop();
+	LOG_CTOR;
+	autoclear  = c.autoclear;
+	deleted    = c.deleted;
+	file_inode = c.file_inode;
+	file_major = c.file_major;
+	file_minor = c.file_minor;
+	file_name  = c.file_name;
+	offset     = c.offset;
+	partscan   = c.partscan;
+	read_only  = c.read_only;
+	sizelimit  = c.sizelimit;
+}
+
+Loop::Loop (Loop&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Loop::~Loop()
 {
-	log_dtor ("dtor Loop");
+	LOG_DTOR;
 }
 
 LoopPtr
@@ -114,6 +137,61 @@ Loop::create (const std::string& losetup)
 	l->uuid = ss.str();
 
 	return l;
+}
+
+
+Loop&
+Loop::operator= (const Loop& c)
+{
+	autoclear  = c.autoclear;
+	deleted    = c.deleted;
+	file_inode = c.file_inode;
+	file_major = c.file_major;
+	file_minor = c.file_minor;
+	file_name  = c.file_name;
+	offset     = c.offset;
+	partscan   = c.partscan;
+	read_only  = c.read_only;
+	sizelimit  = c.sizelimit;
+
+	return *this;
+}
+
+Loop&
+Loop::operator= (Loop&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Loop::swap (Loop& c)
+{
+	std::swap (autoclear,  c.autoclear);
+	std::swap (deleted,    c.deleted);
+	std::swap (file_inode, c.file_inode);
+	std::swap (file_major, c.file_major);
+	std::swap (file_minor, c.file_minor);
+	std::swap (file_name,  c.file_name);
+	std::swap (offset,     c.offset);
+	std::swap (partscan,   c.partscan);
+	std::swap (read_only,  c.read_only);
+	std::swap (sizelimit,  c.sizelimit);
+}
+
+void
+swap (Loop& lhs, Loop& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Loop*
+Loop::clone (void)
+{
+	LOG_TRACE;
+	return new Loop (*this);
 }
 
 

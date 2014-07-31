@@ -32,6 +32,12 @@ class LvmPartition : public Partition
 public:
 	static LvmPartitionPtr create (void);
 	virtual ~LvmPartition();
+	LvmPartition& operator= (const LvmPartition& c);
+	LvmPartition& operator= (LvmPartition&& c);
+
+	void swap (LvmPartition& c);
+	friend void swap (LvmPartition& lhs, LvmPartition& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -68,6 +74,10 @@ public:
 
 protected:
 	LvmPartition (void);
+	LvmPartition (const LvmPartition& c);
+	LvmPartition (LvmPartition&& c);
+
+	virtual LvmPartition* clone (void);
 };
 
 #endif // _LVM_PARTITION_H_

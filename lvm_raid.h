@@ -31,6 +31,12 @@ class LvmRaid : public LvmVolume
 public:
 	static LvmRaidPtr create (void);
 	virtual ~LvmRaid();
+	LvmRaid& operator= (const LvmRaid& c);
+	LvmRaid& operator= (LvmRaid&& c);
+
+	void swap (LvmRaid& c);
+	friend void swap (LvmRaid& lhs, LvmRaid& rhs);
+
 	virtual bool accept (Visitor& v);
 
 	virtual std::vector<Action> get_actions (void);
@@ -41,6 +47,10 @@ public:
 
 protected:
 	LvmRaid (void);
+	LvmRaid (const LvmRaid& c);
+	LvmRaid (LvmRaid&& c);
+
+	virtual LvmRaid* clone (void);
 };
 
 #endif // _LVM_RAID_H_

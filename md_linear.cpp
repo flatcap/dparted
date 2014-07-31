@@ -22,15 +22,29 @@
 
 MdLinear::MdLinear (void)
 {
-	log_ctor ("ctor MdLinear");
+	LOG_CTOR;
 	const char* me = "MdLinear";
 
 	sub_type (me);
 }
 
+MdLinear::MdLinear (const MdLinear& c) :
+	MdVolume(c)
+{
+	MdLinear();
+	LOG_CTOR;
+	// No properties
+}
+
+MdLinear::MdLinear (MdLinear&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 MdLinear::~MdLinear()
 {
-	log_dtor ("dtor MdLinear");
+	LOG_DTOR;
 }
 
 MdLinearPtr
@@ -40,6 +54,43 @@ MdLinear::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+MdLinear&
+MdLinear::operator= (const MdLinear& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+MdLinear&
+MdLinear::operator= (MdLinear&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+MdLinear::swap (MdLinear& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (MdLinear& lhs, MdLinear& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+MdLinear*
+MdLinear::clone (void)
+{
+	LOG_TRACE;
+	return new MdLinear (*this);
 }
 
 

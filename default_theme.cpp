@@ -24,7 +24,7 @@
 
 DefaultTheme::DefaultTheme (void)
 {
-	log_ctor ("ctor DefaultTheme");
+	LOG_CTOR;
 #if 0
 	config = {
 		{ "Container.Filesystem.display",      "box" },
@@ -41,7 +41,7 @@ DefaultTheme::DefaultTheme (void)
 
 DefaultTheme::~DefaultTheme()
 {
-	log_dtor ("dtor DefaultTheme");
+	LOG_DTOR;
 }
 
 

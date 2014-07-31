@@ -30,15 +30,29 @@
 
 Ntfs::Ntfs (void)
 {
-	log_ctor ("ctor Ntfs");
+	LOG_CTOR;
 	const char* me = "Ntfs";
 
 	sub_type (me);
 }
 
+Ntfs::Ntfs (const Ntfs& c) :
+	Filesystem(c)
+{
+	Ntfs();
+	LOG_CTOR;
+	// No properties
+}
+
+Ntfs::Ntfs (Ntfs&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Ntfs::~Ntfs()
 {
-	log_dtor ("dtor Ntfs");
+	LOG_DTOR;
 }
 
 NtfsPtr
@@ -48,6 +62,43 @@ Ntfs::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Ntfs&
+Ntfs::operator= (const Ntfs& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+Ntfs&
+Ntfs::operator= (Ntfs&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Ntfs::swap (Ntfs& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (Ntfs& lhs, Ntfs& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Ntfs*
+Ntfs::clone (void)
+{
+	LOG_TRACE;
+	return new Ntfs (*this);
 }
 
 

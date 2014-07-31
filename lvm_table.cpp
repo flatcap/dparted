@@ -31,7 +31,7 @@
 
 LvmTable::LvmTable (void)
 {
-	log_ctor ("ctor LvmTable");
+	LOG_CTOR;
 	// Save a bit of space
 	const char* me = "LvmTable";
 	const int   s  = (int) BaseProperty::Flags::Size;
@@ -43,9 +43,26 @@ LvmTable::LvmTable (void)
 	declare_prop_var (me, "pv_attr",       pv_attr,       "desc of pv_attr",       0);
 }
 
+LvmTable::LvmTable (const LvmTable& c) :
+	Table(c)
+{
+	LvmTable();
+	LOG_CTOR;
+	config        = c.config;
+	metadata_size = c.metadata_size;
+	pv_attr       = c.pv_attr;
+	group         = c.group;
+}
+
+LvmTable::LvmTable (LvmTable&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 LvmTable::~LvmTable()
 {
-	log_dtor ("dtor LvmTable");
+	LOG_DTOR;
 }
 
 LvmTablePtr
@@ -55,6 +72,49 @@ LvmTable::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+LvmTable&
+LvmTable::operator= (const LvmTable& c)
+{
+	config        = c.config;
+	metadata_size = c.metadata_size;
+	pv_attr       = c.pv_attr;
+	group         = c.group;
+
+	return *this;
+}
+
+LvmTable&
+LvmTable::operator= (LvmTable&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+LvmTable::swap (LvmTable& c)
+{
+	std::swap (config,        c.config);
+	std::swap (metadata_size, c.metadata_size);
+	std::swap (pv_attr,       c.pv_attr);
+	std::swap (group,         c.group);
+}
+
+void
+swap (LvmTable& lhs, LvmTable& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+LvmTable*
+LvmTable::clone (void)
+{
+	LOG_TRACE;
+	return new LvmTable (*this);
 }
 
 

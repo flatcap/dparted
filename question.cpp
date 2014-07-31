@@ -22,12 +22,12 @@
 
 Question::Question (void)
 {
-	log_ctor ("ctor Question");
+	LOG_CTOR;
 }
 
 Question::~Question()
 {
-	log_dtor ("dtor Question");
+	LOG_DTOR;
 }
 
 

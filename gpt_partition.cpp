@@ -22,15 +22,29 @@
 
 GptPartition::GptPartition (void)
 {
-	log_ctor ("ctor GptPartition");
+	LOG_CTOR;
 	const char* me = "GptPartition";
 
 	sub_type (me);
 }
 
+GptPartition::GptPartition (const GptPartition& c) :
+	Partition(c)
+{
+	GptPartition();
+	LOG_CTOR;
+	// No properties
+}
+
+GptPartition::GptPartition (GptPartition&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 GptPartition::~GptPartition()
 {
-	log_dtor ("dtor GptPartition");
+	LOG_DTOR;
 }
 
 GptPartitionPtr
@@ -40,6 +54,43 @@ GptPartition::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+GptPartition&
+GptPartition::operator= (const GptPartition& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+GptPartition&
+GptPartition::operator= (GptPartition&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+GptPartition::swap (GptPartition& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (GptPartition& lhs, GptPartition& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+GptPartition*
+GptPartition::clone (void)
+{
+	LOG_TRACE;
+	return new GptPartition (*this);
 }
 
 

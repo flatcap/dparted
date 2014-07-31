@@ -25,15 +25,29 @@
 
 Volume::Volume (void)
 {
-	log_ctor ("ctor Volume");
+	LOG_CTOR;
 	const char* me = "Volume";
 
 	sub_type (me);
 }
 
+Volume::Volume (const Volume& c) :
+	Whole(c)
+{
+	Volume();
+	LOG_CTOR;
+	// No properties
+}
+
+Volume::Volume (Volume&& c)
+{
+	LOG_CTOR;
+	swap (c);
+}
+
 Volume::~Volume()
 {
-	log_dtor ("dtor Volume");
+	LOG_DTOR;
 }
 
 VolumePtr
@@ -43,6 +57,43 @@ Volume::create (void)
 	p->self = p;
 
 	return p;
+}
+
+
+Volume&
+Volume::operator= (const Volume& UNUSED(c))
+{
+	// No properties
+
+	return *this;
+}
+
+Volume&
+Volume::operator= (Volume&& c)
+{
+	swap (c);
+	return *this;
+}
+
+
+void
+Volume::swap (Volume& UNUSED(c))
+{
+	// No properties
+}
+
+void
+swap (Volume& lhs, Volume& rhs)
+{
+	lhs.swap (rhs);
+}
+
+
+Volume*
+Volume::clone (void)
+{
+	LOG_TRACE;
+	return new Volume (*this);
 }
 
 

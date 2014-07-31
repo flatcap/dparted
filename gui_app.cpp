@@ -58,8 +58,7 @@ GuiAppPtr gui_app;
 GuiApp::GuiApp (void) :
 	Gtk::Application ("org.flatcap.test.area", Gio::ApplicationFlags (Gio::APPLICATION_HANDLES_COMMAND_LINE))
 {
-	log_ctor ("ctor GuiApp");
-	LOG_TRACE;
+	LOG_CTOR;
 	Glib::set_application_name ("dparted");
 
 	dispatcher_ask.connect  (sigc::mem_fun (*this, &GuiApp::on_dispatch_ask));
@@ -68,7 +67,7 @@ GuiApp::GuiApp (void) :
 
 GuiApp::~GuiApp()
 {
-	log_dtor ("dtor GuiApp");
+	LOG_DTOR;
 }
 
 

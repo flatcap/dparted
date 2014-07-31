@@ -633,17 +633,17 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 	LOG_TRACE;
 
 	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *dp = reinterpret_cast<Window*> (get_toplevel());
-	if (!dp) {
+	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	if (!win) {
 		log_debug ("No Window");
 		return false;
 	}
-	GfxContainerPtr gfx = dp->get_focus();
+	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
 		log_debug ("No focus");
 		gfx = get_focus (0, 0);
 		if (gfx) {
-			dp->set_focus (gfx);
+			win->set_focus (gfx);
 		}
 	}
 
@@ -670,13 +670,13 @@ DrawingArea::on_keypress (GdkEventKey* event)
 	// Extra keys: Delete, Insert, Space/Enter (select)?
 
 	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *dp = reinterpret_cast<Window*> (get_toplevel());
-	if (!dp) {
+	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	if (!win) {
 		log_debug ("No Window");
 		return false;
 	}
 
-	GfxContainerPtr gfx = dp->get_focus();
+	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
 		log_debug ("No focus");
 		return false;
@@ -698,19 +698,19 @@ DrawingArea::on_keypress (GdkEventKey* event)
 			handled = true;
 			break;
 		case GDK_KEY_Left:	// 65361 (0xFF51)
-			redraw = dp->set_focus (left(gfx));
+			redraw = win->set_focus (left(gfx));
 			handled = true;
 			break;
 		case GDK_KEY_Right:	// 65363 (0xFF53)
-			redraw = dp->set_focus (right(gfx));
+			redraw = win->set_focus (right(gfx));
 			handled = true;
 			break;
 		case GDK_KEY_Up:	// 65362 (0xFF52)
-			redraw = dp->set_focus (up(gfx));
+			redraw = win->set_focus (up(gfx));
 			handled = true;
 			break;
 		case GDK_KEY_Down:	// 65364 (0xFF54)
-			redraw = dp->set_focus (down(gfx));
+			redraw = win->set_focus (down(gfx));
 			handled = true;
 			break;
 	}
@@ -730,7 +730,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	grab_focus();				// Place the windows focus on the DrawingArea
 
 	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *dp = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = reinterpret_cast<Window*> (get_toplevel());
 
 	GfxContainerPtr selection;
 
@@ -739,7 +739,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 		if ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
 		    (event->y >= r.y) && (event->y < (r.y + r.h))) {
-			if (dp->set_focus (rg.p)) {
+			if (win->set_focus (rg.p)) {
 				get_window()->invalidate (false);
 			}
 			selection = rg.p;
@@ -1018,13 +1018,13 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 		// return;
 	}
 
-	Window *dp = reinterpret_cast<Window*> (get_toplevel());
-	if (!dp) {
+	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	if (!win) {
 		log_debug ("No Window");
 		return;
 	}
 
-	dp->set_actions (actions);
+	win->set_actions (actions);
 
 #if 0
 	log_debug ("Actions:");
@@ -1303,13 +1303,13 @@ bool
 DrawingArea::get_coords (int& x, int& y)
 {
 	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *dp = reinterpret_cast<Window*> (get_toplevel());
-	if (!dp) {
+	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	if (!win) {
 		log_debug ("No Window");
 		return false;
 	}
 
-	GfxContainerPtr gfx = dp->get_focus();
+	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
 		log_debug ("No focus");
 		return false;
