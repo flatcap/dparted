@@ -1,0 +1,9 @@
+4 Gpt Add Partition -- Using half the space
+-------------------------------------------
+
+copy Gpt2 -> Gpt3						txn (Change, Gpt2, Gpt3)
+copy Space1 -> Space3						txn (Change, Space1, Space3)
+resize_child (Gpt3, Space3)					txn (Change, Space1, Space3)
+create Part3			add_child (Gpt3, Part3)		txn (Add, Gpt3, Part3)
+create Fs3			add_child (Part3, Fs3)		txn (Add, Part3, Fs3)
+
