@@ -6,7 +6,7 @@ digraph add {
 		nodesep="0.1"
 		ranksep="0.5"
 		labelloc="t"
-		label=<<U>Add Partition</U>>
+		label=<<U>Add Partition - Split</U>>
 	];
 
 	node [
@@ -59,11 +59,11 @@ digraph add {
 
 		b_Top -> b_G2;
 		b_G2 -> b_X1;
-		b_G2 -> b_S2
-		b_G2 -> b_P1
-		b_G2 -> b_S3
-		b_G2 -> b_X2
-		b_P1 -> b_F1
+		b_G2 -> b_S2;
+		b_G2 -> b_P1;
+		b_G2 -> b_S3;
+		b_G2 -> b_X2;
+		b_P1 -> b_F1;
 	}
 }
 

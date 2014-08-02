@@ -6,7 +6,7 @@ digraph add {
 		nodesep="0.1"
 		ranksep="0.5"
 		labelloc="t"
-		label=<<U>Add Partition</U>>
+		label=<<U>Add Partition - Half</U>>
 	];
 
 	node [

@@ -25,7 +25,7 @@ digraph add {
 		arrowsize="0.5"
 	];
 
-	subgraph cluster_add1 {
+	subgraph cluster1 {
 		color=transparent;
 		labelloc="t"
 		label=""
@@ -46,7 +46,7 @@ digraph add {
 		a_P1 -> a_F1;
 	}
 
-	subgraph cluster_add2 {
+	subgraph cluster2 {
 		color=transparent;
 		labelloc="t"
 		label=""
