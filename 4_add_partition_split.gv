@@ -1,4 +1,4 @@
-digraph add {
+digraph add_partition_split {
 	graph [
 		rankdir="TB"
 		bgcolor="white"

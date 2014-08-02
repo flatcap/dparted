@@ -1,4 +1,4 @@
-digraph add {
+digraph resize_partition {
 	graph [
 		rankdir="TB"
 		bgcolor="white"
@@ -24,6 +24,7 @@ digraph add {
 		color="#666666"
 		arrowsize="0.5"
 	];
+
 
 	subgraph cluster1 {
 		color=transparent;

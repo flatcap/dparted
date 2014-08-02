@@ -1,4 +1,4 @@
-digraph add {
+digraph add_partition_replace {
 	graph [
 		rankdir="TB"
 		bgcolor="white"

@@ -1,4 +1,4 @@
-digraph add {
+digraph gpt_discover {
 	graph [
 		rankdir="TB"
 		bgcolor="white"
