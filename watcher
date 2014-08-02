@@ -21,8 +21,8 @@ while :; do
 		sleep 0.5
 		touch $STAMP_CODE
 		killall display
-		X=4.1; dot -Tpng $X.gv | display -geometry -250+0 -title $X - & sleep 0.1
-		X=4.2; dot -Tpng $X.gv | display -geometry   -0+0 -title $X - & sleep 0.1
+		X=5.1; dot -Tpng $X.gv | display -geometry -250+0 -title $X - & sleep 0.1
+		X=5.2; dot -Tpng $X.gv | display -geometry   -0+0 -title $X - & sleep 0.1
 		xdotool mousemove 1340 50
 		xdotool mousemove 1340 740
 	fi

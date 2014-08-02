@@ -1,5 +1,4 @@
-4 Gpt Add Partition -- Using half the space
--------------------------------------------
+Gpt Add Partition -- Using half the space
 
 copy Gpt2 -> Gpt3						txn (Change, Gpt2, Gpt3)
 copy Space1 -> Space3						txn (Change, Space1, Space3)

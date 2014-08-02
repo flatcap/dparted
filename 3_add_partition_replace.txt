@@ -1,5 +1,4 @@
-3 Gpt Add Partition -- Filling space
-------------------------------------
+Gpt Add Partition -- Filling space
 
 copy Gpt2 -> Gpt3						txn (Change, Gpt2, Gpt3)
 delete_child (Gpt3, Space1)					txn (Delete, Gpt3, Space1)
