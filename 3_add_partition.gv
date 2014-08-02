@@ -1,0 +1,65 @@
+digraph add {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.1"
+		ranksep="0.5"
+		labelloc="t"
+		label=<<U>Add Partition</U>>
+	];
+
+	node [
+		fontsize="12"
+		style="solid"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+	];
+
+	edge [
+		penwidth="0.3"
+		color="#666666"
+		arrowsize="0.5"
+	];
+
+
+	subgraph cluster1 {
+		color=transparent;
+		labelloc="t"
+		label=""
+
+		a_Top [ label=<Top>                                              ];
+		a_G1  [ label=<G<SUB>1</SUB>> style="filled" fillcolor="#ffff80" ];
+		a_X1  [ label=<>              style="filled" fillcolor="#80ff80" ];
+		a_S1  [ label=<S<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		a_X2  [ label=<>              style="filled" fillcolor="#80ff80" ];
+
+		a_Top -> a_G1;
+		a_G1 -> a_X1;
+		a_G1 -> a_S1;
+		a_G1 -> a_X2;
+	}
+
+	subgraph cluster2 {
+		color=transparent;
+		labelloc="t"
+		label=""
+
+		b_Top [ label=<Top>                                              ];
+		b_G2  [ label=<G<SUB>2</SUB>> style="filled" fillcolor="#ffff80" ];
+		b_X1  [ label=<>              style="filled" fillcolor="#80ff80" ];
+		b_P1  [ label=<P<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		b_F1  [ label=<F<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		b_X2  [ label=<>              style="filled" fillcolor="#80ff80" ];
+
+		b_Top -> b_G2;
+		b_G2 -> b_X1;
+		b_G2 -> b_P1;
+		b_G2 -> b_X2;
+		b_P1 -> b_F1;
+	}
+}
+
