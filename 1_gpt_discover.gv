@@ -1,0 +1,67 @@
+digraph add {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.1"
+		ranksep="0.5"
+		labelloc="t"
+		label=<<U>Gpt Discover</U>>
+	];
+
+	node [
+		fontsize="12"
+		style="solid"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+	];
+
+	edge [
+		penwidth="0.3"
+		color="#666666"
+		arrowsize="0.5"
+	];
+
+
+	subgraph cluster1 {
+		color=transparent;
+		labelloc="t"
+		label=""
+
+		a_Top [ label=<Top>                                              ];
+		a_G1  [ label=<G<SUB>1</SUB>> style="filled" fillcolor="#ffff80" ];
+
+		a_Top -> a_G1;
+	}
+
+	subgraph cluster2 {
+		color=transparent;
+		labelloc="t"
+		label=""
+
+		b_Top [ label=<Top>                                              ];
+		b_G1  [ label=<G<SUB>2</SUB>> style="filled" fillcolor="#ffff80" ];
+		b_R1  [ label=<R<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		b_P1  [ label=<P<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		b_F1  [ label=<F<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		b_S1  [ label=<S<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		b_P2  [ label=<P<SUB>2</SUB>> style="filled" fillcolor="#80ff80" ];
+		b_F2  [ label=<F<SUB>2</SUB>> style="filled" fillcolor="#80ff80" ];
+		b_S2  [ label=<S<SUB>2</SUB>> style="filled" fillcolor="#80ff80" ];
+		b_R2  [ label=<R<SUB>2</SUB>> style="filled" fillcolor="#80ff80" ];
+
+		b_Top -> b_G1;
+		b_G1 -> b_R1;
+		b_G1 -> b_P1;
+		b_G1 -> b_S1;
+		b_G1 -> b_P2;
+		b_G1 -> b_S2;
+		b_G1 -> b_R2;
+		b_P1 -> b_F1;
+		b_P2 -> b_F2;
+	}
+}
+
