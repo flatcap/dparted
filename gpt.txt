@@ -1,0 +1,41 @@
+2 Gpt Discover
+--------------
+
+copy Gpt1 -> Gpt2						txn (Change, Gpt1, Gpt2)
+
+read header
+
+create Res1			add_child (Gpt2, Res1)		txn (Add, Gpt2, Res1)
+create Res2			add_child (Gpt2, Res2)		txn (Add, Gpt2, Res2)
+create Part1			add_child (Gpt2, Part1)		txn (Add, Gpt2, Part1)
+create Part2			add_child (Gpt2, Part2)		txn (Add, Gpt2, Part2)
+create Space1			add_child (Gpt2, Space1)	txn (Add, Gpt2, Space1)
+create Space2			add_child (Gpt2, Space2)	txn (Add, Gpt2, Space2)
+
+3 Gpt Add Partition -- Filling space
+------------------------------------
+
+copy Gpt2 -> Gpt3						txn (Change, Gpt2, Gpt3)
+delete_child (Gpt3, Space1)					txn (Delete, Gpt3, Space1)
+create Part3			add_child (Gpt3, Part3)		txn (Add, Gpt3, Part3)
+create Fs3			add_child (Part3, Fs3)		txn (Add, Part3, Fs3)
+
+4 Gpt Add Partition -- Using half the space
+-------------------------------------------
+
+copy Gpt2 -> Gpt3						txn (Change, Gpt2, Gpt3)
+copy Space1 -> Space3						txn (Change, Space1, Space3)
+resize_child (Gpt3, Space3)					txn (Change, Space1, Space3)
+create Part3			add_child (Gpt3, Part3)		txn (Add, Gpt3, Part3)
+create Fs3			add_child (Part3, Fs3)		txn (Add, Part3, Fs3)
+
+5 Gpt Add Partition -- Splitting the space
+------------------------------------------
+
+copy Gpt2 -> Gpt3						txn (Change, Gpt2, Gpt3)
+copy Space1 -> Space3						txn (Change, Space1, Space3)
+resize_child (Gpt3, Space3)					txn (Change, Space1, Space3)
+create Space4			add_child (Gpt3, Space4)	txn (Add, Gpt, Space4)
+create Part3			add_child (Gpt3, Part3)		txn (Add, Gpt3, Part3)
+create Fs3			add_child (Part3, Fs3)		txn (Add, Part3, Fs3)
+

@@ -1,0 +1,9 @@
+Resize Partition/Filesystem
+
+copy Gpt2 -> Gpt3						txn (Change, Gpt2, Gpt3)
+copy Part1 -> Part3						txn (Change, Part1, Part3)
+copy Space1 -> Space3						txn (Change, Space1, Space3)
+copy Fs1 -> Fs3							txn (Change, Fs1, Fs3)
+
+resize_child (Gpt3, Part3)					txn (Change, Part1, Part3)
+resize_child (Gpt3, Part3)					txn (Change, Part1, Part3)

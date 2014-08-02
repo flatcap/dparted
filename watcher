@@ -1,0 +1,35 @@
+#!/bin/bash
+
+WATCH="*.gv"
+STAMP_THIS=$(mktemp)
+STAMP_CODE=$(mktemp)
+WAIT=1
+
+reset
+touch $STAMP_THIS
+touch -d "1 year ago" $STAMP_CODE
+
+while :; do
+	NEWER=0
+	for i in $WATCH; do
+		if [ $i -nt $STAMP_CODE ]; then
+			NEWER=1
+			break;
+		fi
+	done
+	if [ $NEWER = 1 ]; then
+		sleep 0.5
+		touch $STAMP_CODE
+		killall display
+		X=6.1; dot -Tpng $X.gv | display -geometry -170+0 -title $X - & sleep 0.1
+		X=6.2; dot -Tpng $X.gv | display -geometry   -0+0 -title $X - & sleep 0.1
+		xdotool mousemove 1340 50
+		xdotool mousemove 1340 740
+	fi
+
+	[ $0 -nt $STAMP_THIS ] && exec $0
+
+	sleep $WAIT
+done
+
+
