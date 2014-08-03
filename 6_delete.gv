@@ -1,0 +1,67 @@
+digraph resize_partition {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.1"
+		ranksep="0.5"
+		labelloc="t"
+		label=<<U>Delete</U>>
+	];
+
+	node [
+		fontsize="12"
+		style="solid"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+	];
+
+	edge [
+		penwidth="0.3"
+		color="#666666"
+		arrowsize="0.5"
+	];
+
+
+	subgraph cluster1 {
+		color=transparent;
+		labelloc="t"
+		label=""
+
+		at [ label=<Top>                                              ];
+		a1 [ label=<A<SUB>1</SUB>> style="filled" fillcolor="#ffff80" ];
+		a2 [ label=<>              style="filled" fillcolor="#80ff80" ];
+		a3 [ label=<B>             style="filled" fillcolor="#80ff80" ];
+		a4 [ label=<>              style="filled" fillcolor="#80ff80" ];
+		a5 [ label=<D>             style="filled" fillcolor="#80ff80" ];
+		a6 [ label=<E>             style="filled" fillcolor="#80ff80" ];
+		a7 [ label=<F>             style="filled" fillcolor="#80ff80" ];
+
+		at -> a1;
+		a1 -> a2;
+		a1 -> a3;
+		a1 -> a4;
+		a3 -> a5;
+		a3 -> a6;
+		a3 -> a7;
+	}
+
+	subgraph cluster2 {
+		color=transparent;
+		labelloc="t"
+		label=""
+
+		bt [ label=<Top>                                              ];
+		b1 [ label=<A<SUB>2</SUB>> style="filled" fillcolor="#ffff80" ];
+		b2 [ label=<>              style="filled" fillcolor="#80ff80" ];
+		b4 [ label=<>              style="filled" fillcolor="#80ff80" ];
+
+		bt -> b1;
+		b1 -> b2;
+		b1 -> b4;
+	}
+}
+

@@ -2,10 +2,10 @@
 GPT ADD PARTITION -- REPLACE
 
 	CONTAINER				TRANSACTION			DISK
-	copy (Gpt1, Gpt2)			Change: Gpt1, Gpt2              n/a
-	delete_child (Gpt2, Space1)		Delete: Gpt2, Space1            n/a
-	add_child (Gpt2, Part1)			Add: Gpt2, Part1                create Part1
-	add_child (Part1, Fs1)			Add: Part1, Fs1                 create Fs1
+	copy (Gpt1, Gpt2)			Change: Gpt1, Gpt2		n/a
+	delete_child (Gpt2, Space1)		Delete: Gpt2, Space1		n/a
+	add_child (Gpt2, Part1)			Add: Gpt2, Part1		create Part1
+	add_child (Part1, Fs1)			Add: Part1, Fs1			create Fs1
 
 	commit (Gpt1, Gpt2, "Add Partition")
 		swap (Gpt1, Gpt2)
