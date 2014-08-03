@@ -33,9 +33,9 @@ digraph add_partition_replace {
 
 		a_Top [ label=<Top>                                              ];
 		a_G1  [ label=<G<SUB>1</SUB>> style="filled" fillcolor="#ffff80" ];
-		a_X1  [ label=<>              style="filled" fillcolor="#80ff80" ];
+		a_X1  [ label=<>                                                 ];
 		a_S1  [ label=<S<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
-		a_X2  [ label=<>              style="filled" fillcolor="#80ff80" ];
+		a_X2  [ label=<>                                                 ];
 
 		a_Top -> a_G1;
 		a_G1 -> a_X1;
@@ -50,10 +50,10 @@ digraph add_partition_replace {
 
 		b_Top [ label=<Top>                                              ];
 		b_G2  [ label=<G<SUB>2</SUB>> style="filled" fillcolor="#ffff80" ];
-		b_X1  [ label=<>              style="filled" fillcolor="#80ff80" ];
+		b_X1  [ label=<>                                                 ];
 		b_P1  [ label=<P<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
 		b_F1  [ label=<F<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
-		b_X2  [ label=<>              style="filled" fillcolor="#80ff80" ];
+		b_X2  [ label=<>                                                 ];
 
 		b_Top -> b_G2;
 		b_G2 -> b_X1;

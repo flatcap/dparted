@@ -1,7 +1,27 @@
-Gpt Add Partition -- Filling space
+------------------------------------------------------------------------------------------------------------------------
+GPT ADD PARTITION -- REPLACE
 
-copy Gpt2 -> Gpt3						txn (Change, Gpt2, Gpt3)
-delete_child (Gpt3, Space1)					txn (Delete, Gpt3, Space1)
-create Part3			add_child (Gpt3, Part3)		txn (Add, Gpt3, Part3)
-create Fs3			add_child (Part3, Fs3)		txn (Add, Part3, Fs3)
+	CONTAINER				TRANSACTION			DISK
+	copy (Gpt1, Gpt2)			Change: Gpt1, Gpt2              n/a
+	delete_child (Gpt2, Space1)		Delete: Gpt2, Space1            n/a
+	add_child (Gpt2, Part1)			Add: Gpt2, Part1                create Part1
+	add_child (Part1, Fs1)			Add: Part1, Fs1                 create Fs1
+
+	commit (Gpt1, Gpt2, "Add Partition")
+		swap (Gpt1, Gpt2)
+		notify_change (Gpt1, Gpt2)
+		notify_delete (Gpt2, Space1)
+		notify_add    (Gpt2, Part1)
+		notify_add    (Part1, Fs1)
+
+------------------------------------------------------------------------------------------------------------------------
+UNDO
+	uncommit()
+		notify_delete (Part1, Fs1)
+		notify_delete (Gpt2, Part1)
+		notify_add    (Gpt2, Space1)
+		notify_change (Gpt2, Gpt1)
+		swap (Gpt2, Gpt1)
+
+------------------------------------------------------------------------------------------------------------------------
 
