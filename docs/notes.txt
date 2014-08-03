@@ -865,3 +865,15 @@ Farm out into shared libraries:
 List of commands to be executed can be saved and then run (using dparted/cli) as a script
 	#!/usr/sbin/dparted --script
 
+class Container
+{
+protected:
+	std::uint8_t* save_metadata();
+}
+
+run cli tools, but re-route writes, e.g.
+	mke2fs /dev/sda1
+but intercept all the writes to disk (LD_PRELOAD)
+and save the overwritten data to a sparse file
+allows us to undo dangerous commands
+
