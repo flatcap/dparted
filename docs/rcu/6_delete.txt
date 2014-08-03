@@ -1,0 +1,43 @@
+------------------------------------------------------------------------------------------------------------------------
+DELETE
+
+	CONTAINER				TRANSACTION			DISK
+	copy (A1, A2)				Change: A1, A2			n/a
+	delete_child (A2, B)			Delete: B, D			delete part
+						Delete: B, E
+						Delete: B, F
+						Delete: A2, B
+
+	commit (A1, A2, "Delete")
+		swap (A1, A2)
+		notify_delete (B, D)
+		notify_delete (B, E)
+		notify_delete (B, F)
+		notify_delete (A2, B)
+
+------------------------------------------------------------------------------------------------------------------------
+
+Listener on
+	A1	copied to A2
+	A1	notify_change
+	D	notify_delete
+	E	notify_delete
+	F	notify_delete
+	B	notify_delete
+
+------------------------------------------------------------------------------------------------------------------------
+
+UNDO
+	swap (A2, A1)
+
+------------------------------------------------------------------------------------------------------------------------
+
+Listener on
+	A1	notify_change
+	B	notify_add
+	D	notify_add
+	E	notify_add
+	F	notify_add
+
+------------------------------------------------------------------------------------------------------------------------
+
