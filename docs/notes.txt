@@ -848,3 +848,18 @@ Testing
 	trap keys (window level) to increase/decrease the fill
 	of the filesystems => notifications => gfx update
 
+Action:
+	delete X - delete X and all its children
+	empty X  - delete only X's children
+
+Farm out into shared libraries:
+	all disk identification
+		quick (weak check), e.g. magic
+		thorough validation, e.g. checksums
+	all non-trivial commands, e.g.
+		delete partition
+		create partition
+	write wrappers around libraries
+	make sure all actions in dparted can be duplicated simply on the command line
+
+

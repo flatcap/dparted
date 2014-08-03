@@ -36,9 +36,9 @@ digraph resize_partition {
 		a2 [ label=<>              style="filled" fillcolor="#80ff80" ];
 		a3 [ label=<B>             style="filled" fillcolor="#80ff80" ];
 		a4 [ label=<>              style="filled" fillcolor="#80ff80" ];
-		a5 [ label=<D>             style="filled" fillcolor="#80ff80" ];
-		a6 [ label=<E>             style="filled" fillcolor="#80ff80" ];
-		a7 [ label=<F>             style="filled" fillcolor="#80ff80" ];
+		a5 [ label=<C>             style="filled" fillcolor="#80ff80" ];
+		a6 [ label=<D>             style="filled" fillcolor="#80ff80" ];
+		a7 [ label=<E>             style="filled" fillcolor="#80ff80" ];
 
 		at -> a1;
 		a1 -> a2;
