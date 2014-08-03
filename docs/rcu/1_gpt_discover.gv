@@ -32,9 +32,6 @@ digraph gpt_discover {
 		label=""
 
 		a_Top [ label=<Top>                                              ];
-		a_G1  [ label=<G<SUB>1</SUB>> style="filled" fillcolor="#ffff80" ];
-
-		a_Top -> a_G1;
 	}
 
 	subgraph cluster2 {
@@ -43,7 +40,7 @@ digraph gpt_discover {
 		label=""
 
 		b_Top [ label=<Top>                                              ];
-		b_G1  [ label=<G<SUB>2</SUB>> style="filled" fillcolor="#ffff80" ];
+		b_G1  [ label=<G<SUB>2</SUB>> style="filled" fillcolor="#80ff80" ];
 		b_R1  [ label=<R<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
 		b_P1  [ label=<P<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
 		b_F1  [ label=<F<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
