@@ -862,4 +862,6 @@ Farm out into shared libraries:
 	write wrappers around libraries
 	make sure all actions in dparted can be duplicated simply on the command line
 
+List of commands to be executed can be saved and then run (using dparted/cli) as a script
+	#!/usr/sbin/dparted --script
 
