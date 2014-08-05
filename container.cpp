@@ -43,6 +43,7 @@
 #include "whole.h"
 
 std::atomic_ulong container_id = ATOMIC_VAR_INIT(1);
+std::mutex mutex_write_lock;
 
 std::vector<Action> cont_actions = {
 	{ "Create/Filesystem",         true },
@@ -165,7 +166,9 @@ Container::Container (const Container& c) :
 	more_props          = c.more_props;
 	whole               = c.whole;
 	device_mmap         = c.device_mmap;
-	container_listeners = c.container_listeners;
+	//RAR container_listeners = c.container_listeners;
+	//RAR don't copy listeners, do it on the ::swap
+	//RAR where's seqnum?
 
 	// Of the remaining Container members:
 	// generated
@@ -360,7 +363,7 @@ Container::perform_action (Action action)
 
 
 void
-Container::add_child (ContainerPtr& child, bool probe, const char* description)
+Container::add_child (ContainerPtr& child, bool probe)
 {
 	return_if_fail (child);
 	LOG_TRACE;
@@ -375,20 +378,10 @@ Container::add_child (ContainerPtr& child, bool probe, const char* description)
 		main_app->queue_add_probe (child);
 	}
 
-	child->parent = get_smart();
+	ContainerPtr parent = get_smart();		// Smart pointer to ourself
+	child->parent = parent;
 
-	ContainerPtr toplevel = get_toplevel();
-	if (toplevel) {
-		for (auto& i : toplevel->container_listeners) {
-			ContainerListenerPtr cl = i.lock();
-			if (cl) {
-				log_listener ("Added child %p to Container %p", child.get(), this);
-				cl->container_added (get_smart(), child, description);	//XXX get this pointer once
-			} else {
-				log_code ("remove listener from the collection");	//XXX remove it from the collection
-			}
-		}
-	}
+	notify_add (parent, child);
 
 	if (bytes_size == 0) {	// We are a dummy device
 		return;
@@ -621,7 +614,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 {
 	return_val_if_fail (c, stream);
 
-	// std::uint64_t bytes_free = c->bytes_size - c->bytes_used;
+	std::uint64_t bytes_free = c->bytes_size - c->bytes_used;
 
 	std::string uuid = c->uuid;
 	std::string type;
@@ -635,11 +628,11 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	}
 
 	stream
-#if 0
+#if 1
 		<< "[" << type << "]:"
 #endif
 		<< c->name
-#if 0
+#if 1
 		<< "(" << uuid << "), "
 		<< '"' << c->device << '"' << "(" << c->fd << "),"
 		<< " S:" // << c->bytes_size
@@ -660,15 +653,15 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 }
 
 bool
-exchange (ContainerPtr& existing, ContainerPtr& replacement)
+exchange (ContainerPtr& UNUSED(existing), ContainerPtr& UNUSED(replacement))
 {
-	int e = 0;
-	int r = 0;
+	// int e = 0;
+	// int r = 0;
 
-	if (existing)    e = existing->unique_id;
-	if (replacement) r = replacement->unique_id;
+	// if (existing)    e = existing->unique_id;
+	// if (replacement) r = replacement->unique_id;
 
-	log_code ("exchange %ld, %ld", e, r);
+	// log_code ("exchange %ld, %ld", e, r);
 	// std::lock_guard<std::mutex> lock (mutex_children);
 
 	return false;
@@ -1097,4 +1090,70 @@ Container::add_listener (const ContainerListenerPtr& cl)
 	container_listeners.push_back (cl);
 }
 
+ContainerPtr
+Container::start_transaction (void)
+{
+	ContainerPtr new_cont = this->copy();
+	if (!new_cont) {
+		log_error ("Copy failed");
+		return {};
+	}
 
+	if (!mutex_write_lock.try_lock()) {
+		log_code ("Can't get global write lock");
+		return {};
+	}
+
+	TransactionPtr t = Transaction::create (new_cont, mutex_write_lock);
+	if (!t) {
+		mutex_write_lock.unlock();
+		log_error ("Couldn't create a transaction");
+		return {};
+	}
+
+	new_cont->txn = t;
+
+	return new_cont;
+}
+
+bool
+Container::commit_transaction (void)
+{
+	LOG_TRACE;
+	return false;
+}
+
+
+void
+Container::notify_add (ContainerPtr parent, ContainerPtr child)
+{
+	for (auto c = get_smart(); c; c = c->get_parent()) {			// Ascend the container tree
+		log_code ("%s : %s", __FUNCTION__, c->name.c_str());
+
+		for (auto& i : c->container_listeners) {
+			ContainerListenerPtr cl = i.lock();
+			if (cl) {
+				cl->container_added (parent, child);
+			} else {
+				log_code ("remove listener from the collection");	//XXX remove it from the collection
+			}
+		}
+	}
+}
+
+void
+Container::notify_change (ContainerPtr parent, ContainerPtr before, ContainerPtr after)
+{
+	for (auto c = get_smart(); c; c = c->get_parent()) {			// Ascend the container tree
+		log_code ("%s : %s", __FUNCTION__, c->name.c_str());
+
+		for (auto& i : c->container_listeners) {
+			ContainerListenerPtr cl = i.lock();
+			if (cl) {
+				cl->container_changed (parent, before, after);
+			} else {
+				log_code ("remove listener from the collection");	//XXX remove it from the collection
+			}
+		}
+	}
+}

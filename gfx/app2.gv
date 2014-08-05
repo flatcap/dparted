@@ -30,7 +30,7 @@ digraph app {
 
 	main -> app;
 
-	app -> timeline;
+	app:e -> timeline;
 	timeline -> cont_t:ne;
 
 	cfg1 -> app [ dir=back ];

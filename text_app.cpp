@@ -212,6 +212,27 @@ TextApp::run (int argc, char **argv)
 #ifdef DP_PROP
 	if (prop) run_prop (top_level);
 #endif
+#if 0
+	auto it1 = std::begin (top_level->get_children());
+	ContainerPtr c1 = *it1;
+	// log_code (c1);
+
+	auto it2 = std::begin (c1->get_children());
+	ContainerPtr c2 = *it2;
+	// log_code (c2);
+
+	auto it3 = std::begin (c2->get_children());
+	advance (it3, 8);
+	ContainerPtr c3 = *it3;
+	// log_code (c3);
+
+	auto it4 = std::begin (c3->get_children());
+	ContainerPtr c4 = *it4;
+	log_code (c4);
+
+	ContainerPtr dupe = c4->copy();
+	log_code (dupe);
+#endif
 
 	return 0;
 }

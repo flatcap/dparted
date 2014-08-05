@@ -141,11 +141,11 @@ Partition::perform_action (Action action)
 
 
 void
-Partition::add_child (ContainerPtr& child, bool probe, const char* description)
+Partition::add_child (ContainerPtr& child, bool probe)
 {
 	return_if_fail (child);
 
-	Container::add_child (child, probe, description);
+	Container::add_child (child, probe);
 
 	if ((children.size() == 1) && (get_bytes_free() != 0)) {
 		PartitionPtr p = Partition::create();
@@ -154,7 +154,7 @@ Partition::add_child (ContainerPtr& child, bool probe, const char* description)
 		p->bytes_size = get_bytes_free();
 		p->bytes_used = p->bytes_size;
 		p->parent_offset = this->bytes_size - p->bytes_size;	// End of the device
-		Container::add_child (p, false, "Discovered unreachable space");
+		Container::add_child (p, false);	//RAR "Discovered unreachable space"
 	}
 }
 

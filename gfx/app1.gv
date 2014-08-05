@@ -46,7 +46,7 @@ digraph app {
 
 	app:e -> timeline;
 	timeline -> cont_t;
-	cfg1 -> app:e [ dir=back ];
+	cfg1 -> app [ dir=back ];
 	app:se -> cont_t [ style=dotted ];
 
 	app -> theme;

@@ -566,7 +566,7 @@ GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& c
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
 			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
-			p->gfx_container_added (gparent, gchild);
+			//RAR p->gfx_container_added (gparent, gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
 		}

@@ -25,7 +25,7 @@ V	?= 0
 P	?= 0
 L	?= 0
 D	?= 1
-T	?= 1
+T	?= 0
 
 GUI	?= 0
 TREE	?= 1
@@ -41,10 +41,10 @@ MSDOS	?= $(A)
 MD	?= $(A)
 LUKS	?= $(A)
 
-BTRFS	?= 1
-EXTFS	?= 1
-FS_MISC	?= 1
-NTFS	?= 1
+BTRFS	?= 0
+EXTFS	?= 0
+FS_MISC	?= 0
+NTFS	?= 0
 
 LIST	?= 1
 PROP	?= $(A)
@@ -70,7 +70,7 @@ LINKS	= misc test
 SRC	+= block.cpp container.cpp filesystem.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
-SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp timeline.cpp
+SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp timeline.cpp transaction.cpp
 
 # GUI - Graphical objects
 SRC	+= main.cpp

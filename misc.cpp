@@ -186,7 +186,7 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	MiscPtr m;
 	if (is_empty (buffer, bufsize)) {
-		log_error ("probe empty");
+		//RAR log_error ("probe empty");
 		m = Misc::create();
 		m->sub_type ("Zero");
 	} else { // if (is_random (buffer, bufsize)) {
@@ -196,7 +196,8 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	if (m) {
-		parent->add_child (m, false, "Discovered unidentified partition");
+		//RAR "Discovered unidentified partition"
+		parent->add_child (m, false);
 
 		m->bytes_size = parent->bytes_size;
 		m->bytes_used = 0;

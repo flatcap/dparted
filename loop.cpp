@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <sstream>
 
+#include "container.h"
 #include "loop.h"
 #include "action.h"
 #include "app.h"
@@ -290,6 +291,9 @@ Loop::discover (ContainerPtr& parent)
 	if (!losetup (output))
 		return;
 
+	ContainerPtr new_parent = parent->start_transaction();
+
+	//RAR need to discover, create, THEN add_child (to reduce the time in the write mutex)
 	for (auto& line : output) {
 		LoopPtr l = create (line);
 
@@ -300,9 +304,11 @@ Loop::discover (ContainerPtr& parent)
 		size = lseek (l->fd, 0, SEEK_END);
 		l->bytes_size = size;
 
-		std::string desc = "Discovered loopback device: " + l->get_device_short();
-		parent->add_child (l, true, desc.c_str());
+		new_parent->add_child (l, false);	//RAR probe=true
 	}
+
+	//RAR exchange (parent, new_parent);
+	new_parent->commit_transaction();
 }
 
 bool
@@ -341,8 +347,8 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
-	std::string desc = "Identified loopback device: " + l->get_device_short();
-	parent->add_child (l, true, desc.c_str());
+	//RAR std::string desc = "Identified loopback device: " + l->get_device_short();
+	parent->add_child (l, true);
 	return true;
 }
 

@@ -30,10 +30,11 @@
 
 #include <sys/types.h>
 
-#include "property.h"
-#include "mmap.h"
 #include "container_listener.h"
 #include "log.h"
+#include "mmap.h"
+#include "property.h"
+#include "transaction.h"
 
 class Visitor;
 struct Action;
@@ -62,7 +63,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	virtual void add_child    (ContainerPtr& child, bool probe, const char* description = nullptr);
+	virtual void add_child    (ContainerPtr& child, bool probe);
 	virtual void delete_child (ContainerPtr& child);
 	virtual void move_child   (ContainerPtr& child, std::uint64_t offset, std::uint64_t size);
 
@@ -109,6 +110,10 @@ public:
 	ContainerPtr get_parent   (void);
 	ContainerPtr get_toplevel (void);
 
+	ContainerPtr start_transaction (void);
+	bool         commit_transaction (void);
+	TransactionPtr txn;
+
 	void add_listener (const ContainerListenerPtr& m);
 
 	std::vector<std::string> get_prop_names (void);
@@ -116,10 +121,10 @@ public:
 	std::vector<PPtr> get_all_props (bool inc_hidden = false);
 
 	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe, const char* description = nullptr)
+	void add_child (std::shared_ptr<T>& child, bool probe)
 	{
 		ContainerPtr c (child);
-		add_child (c, probe, description);
+		add_child (c, probe);
 	}
 
 	void sub_type (const char* name);
@@ -293,6 +298,10 @@ private:
 	MmapPtr	device_mmap;
 
 	std::uint64_t unique_id = 0;
+
+	//void listener_notify (std::function<void (void)> fn);
+	void notify_add    (ContainerPtr parent, ContainerPtr child);
+	void notify_change (ContainerPtr parent, ContainerPtr before, ContainerPtr after);
 
 	std::vector<ContainerListenerWeak> container_listeners;
 };

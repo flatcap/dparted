@@ -44,16 +44,17 @@ Timeline::~Timeline()
 }
 
 TimelinePtr
-Timeline::create (ContainerPtr& cont)
+Timeline::create (ContainerPtr& UNUSED(cont))
 {
 	TimelinePtr p (new Timeline());
 	p->self = p;
-	cont->add_listener(p);
+	//RAR cont->add_listener(p);
 
 	return p;
 }
 
 
+#if 0
 void
 Timeline::container_added (const ContainerPtr& parent, const ContainerPtr& cont, const char* description)
 {
@@ -76,30 +77,7 @@ Timeline::container_added (const ContainerPtr& parent, const ContainerPtr& cont,
 	event_cursor = std::end (event_list);
 }
 
-void
-Timeline::container_busy (const ContainerPtr& UNUSED(cont), int UNUSED(busy))
-{
-	LOG_TRACE;
-}
-
-void
-Timeline::container_changed (const ContainerPtr& UNUSED(cont))
-{
-	LOG_TRACE;
-}
-
-void
-Timeline::container_deleted (const ContainerPtr& UNUSED(cont))
-{
-	LOG_TRACE;
-}
-
-void
-Timeline::container_resync (const ContainerPtr& UNUSED(cont))
-{
-	LOG_TRACE;
-}
-
+#endif
 
 bool
 Timeline::adjust (int amount)
@@ -135,5 +113,18 @@ Timeline::adjust (int amount)
 		event_cursor++;
 	}
 	return false;
+}
+
+
+void
+Timeline::container_added (const ContainerPtr& UNUSED(parent), const ContainerPtr& UNUSED(child))
+{
+	LOG_TRACE;
+}
+
+void
+Timeline::container_changed (const ContainerPtr& UNUSED(parent), const ContainerPtr& UNUSED(before), const ContainerPtr& UNUSED(after))
+{
+	LOG_TRACE;
 }
 
