@@ -1,22 +1,26 @@
 digraph app {
-	graph [ rankdir="TB", bgcolor="#002200", color=white ];
-	node  [ shape=record, style=filled, fillcolor="#002200", color="#002200" ];
-	edge  [ penwidth=1.5, color="#ffffff" ];
+	graph [ rankdir="TB", bgcolor="#ffffff", color="#000000" ];
+	node  [ shape=record, style=filled, fillcolor="#ffffff", color="#000000" ];
+	edge  [ penwidth=1.5, color="#000000" ];
 
-	cfg1 [ label="Config File" fontcolor=white color=white fillcolor="#002200" ];
-	cfg2 [ label="Config File" fontcolor=white color=white fillcolor="#002200" ];
+	cfg1 [ label="Config File" fontcolor="#000000" color="#000000" fillcolor="#ffffff" ];
+	cfg2 [ label="Config File" fontcolor="#000000" color="#000000" fillcolor="#ffffff" ];
 
-	main [ label="Main" fillcolor=white ];
+	main [ label="Main" fillcolor="#ffffff" ];
 
 	theme         [ label="Theme"         fillcolor=pink ];
 	window        [ label="Window"        fillcolor=pink ];
 	drawing_area  [ label="Drawing Area"  fillcolor=pink ];
 	tree_view     [ label="Tree View"     fillcolor=pink ];
 
-	timeline [ label="Timeline"    fillcolor=white ];
-	txn      [ label="Transaction" fillcolor=white ];
+	timeline [ label="Timeline" fillcolor="#ffffff" ];
+	txn      [ label="Txn"      fillcolor="#ffffff" ];
 
-	app [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3"><tr><td bgcolor="white">App</td></tr><tr><td bgcolor="pink">Gui App</td></tr></table>> ];
+	app [ label=<
+		<table bgcolor="white:pink" gradientangle="270" border="0" cellborder="0" cellspacing="0" cellpadding="0">
+			<tr><td cellspacing="0" cellpadding="0">App</td></tr>
+			<tr><td cellspacing="0" cellpadding="0">Gui App</td></tr>
+		</table>> ];
 
 	gfx_t [ label="Gfx Cont"  fillcolor=pink ];
 	gfx_a [ label="A"         fillcolor=pink ];
@@ -32,20 +36,21 @@ digraph app {
 	gfx_t -> gfx_b;
 	gfx_t -> gfx_c;
 
-	cont_t -> txn;
 	cont_t -> cont_a;
 	cont_t -> cont_b;
 	cont_t -> cont_c;
 
-	gfx_t -> cont_t [ constraint=false color=grey penwidth=0.5 ];
-	gfx_a -> cont_a [ constraint=false color=grey penwidth=0.5 ];
-	gfx_b -> cont_b [ constraint=false color=grey penwidth=0.5 ];
-	gfx_c -> cont_c [ constraint=false color=grey penwidth=0.5 ];
+	gfx_t -> cont_t [ constraint=false color="#444444" penwidth=0.5 ];
+	gfx_a -> cont_a [ constraint=false color="#444444" penwidth=0.5 ];
+	gfx_b -> cont_b [ constraint=false color="#444444" penwidth=0.5 ];
+	gfx_c -> cont_c [ constraint=false color="#444444" penwidth=0.5 ];
 
 	main -> app;
 
-	app:e -> timeline;
+	app -> timeline;
 	timeline -> cont_t;
+	timeline -> txn;
+	txn -> cont_c;
 	cfg1 -> app [ dir=back ];
 	app:se -> cont_t [ style=dotted ];
 
@@ -59,7 +64,14 @@ digraph app {
 	drawing_area -> gfx_t;
 	tree_view -> gfx_t;
 
+	cont_a -> cont_b -> cont_c [ style=invis ];
+	gfx_a  -> gfx_b  -> gfx_c  [ style=invis ];
+
+	{ rank=same cont_a cont_b cont_c }
+	{ rank=same gfx_a  gfx_b  gfx_c  }
+
 	{ rank=same cfg1 app timeline }
+	{ rank=same window txn }
 	{ rank=same theme cfg2 }
-	{ rank=same cont_t gfx_t txn }
+	{ rank=same cont_t gfx_t }
 }

@@ -1,20 +1,20 @@
 digraph app {
-	graph [ rankdir="TB", bgcolor="#002200", color=white ];
-	node  [ shape=record, style=filled, fillcolor="#002200", color="#002200" ];
-	edge  [ penwidth=1.5, color="#ffffff" ];
+	graph [ rankdir="TB", bgcolor="#ffffff", color="#000000" ];
+	node  [ shape=record, style=filled, fillcolor="#ffffff", color="#000000" ];
+	edge  [ penwidth=1.5, color="#000000" ];
 
-	cfg1 [ label="Config File" fontcolor=white color=white fillcolor="#002200" ];
-	cfg2 [ label="Config File" fontcolor=white color=white fillcolor="#002200" ];
+	cfg1 [ label="Config File" fontcolor="#000000" color="#000000" fillcolor="#ffffff" ];
+	cfg2 [ label="Config File" fontcolor="#000000" color="#000000" fillcolor="#ffffff" ];
 
-	main [ label="Main" fillcolor=white ];
+	main [ label="Main" fillcolor="#ffffff" ];
 
 	theme         [ label="Theme"         fillcolor=pink ];
 	window        [ label="Window"        fillcolor=pink ];
 	drawing_area  [ label="Drawing Area"  fillcolor=pink ];
 	tree_view     [ label="Tree View"     fillcolor=pink ];
 
-	timeline [ label="Timeline"    fillcolor=white ];
-	txn      [ label="Transaction" fillcolor=white ];
+	timeline [ label="Timeline" fillcolor="#ffffff" ];
+	txn      [ label="Txn"      fillcolor="#ffffff" ];
 
 	app [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3"><tr><td bgcolor="white">App</td></tr><tr><td bgcolor="pink">Gui App</td></tr></table>> ];
 
@@ -23,7 +23,6 @@ digraph app {
 	cont_b [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">B</td><td bgcolor="cyan">B</td></tr></table>> ];
 	cont_c [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">C</td><td bgcolor="cyan">C</td></tr></table>> ];
 
-	cont_t -> txn;
 	cont_t -> cont_a;
 	cont_t -> cont_b;
 	cont_t -> cont_c;
@@ -32,6 +31,8 @@ digraph app {
 
 	app:e -> timeline;
 	timeline -> cont_t:ne;
+	timeline -> txn;
+	txn->cont_c;
 
 	cfg1 -> app [ dir=back ];
 	app -> cont_t:ne [ style=dotted ];
@@ -47,7 +48,7 @@ digraph app {
 	drawing_area -> cont_t:nw;
 	tree_view -> cont_t:nw;
 
-	{ rank=same cont_t txn }
 	{ rank=same cfg1 app timeline }
+	{ rank=same window txn }
 	{ rank=same theme cfg2 window }
 }
