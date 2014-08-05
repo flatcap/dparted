@@ -16,21 +16,17 @@ digraph app {
 	timeline [ label="Timeline" fillcolor="#ffffff" ];
 	txn      [ label="Txn"      fillcolor="#ffffff" ];
 
-	app [ label=<
-		<table bgcolor="white:pink" gradientangle="270" border="0" cellborder="0" cellspacing="0" cellpadding="0">
-			<tr><td cellspacing="0" cellpadding="0">App</td></tr>
-			<tr><td cellspacing="0" cellpadding="0">Gui App</td></tr>
-		</table>> ];
+	app [ shape=none style=none label=<<table port="t" border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td bgcolor="white" border="1" cellspacing="0" cellpadding="3">App</td></tr><tr><td bgcolor="pink" border="1" cellspacing="0" cellpadding="3">Gui App</td></tr></table>> ];
 
-	gfx_t [ label="Gfx Cont"  fillcolor=pink ];
+	gfx_t [ label="Top Gfx"   fillcolor=pink ];
 	gfx_a [ label="A"         fillcolor=pink ];
 	gfx_b [ label="B"         fillcolor=pink ];
 	gfx_c [ label="C"         fillcolor=pink ];
 
-	cont_t [ label="Top Level" fillcolor=cyan ];
-	cont_a [ label="A"         fillcolor=cyan ];
-	cont_b [ label="B"         fillcolor=cyan ];
-	cont_c [ label="C"         fillcolor=cyan ];
+	cont_t [ label="Top Cont" fillcolor=cyan ];
+	cont_a [ label="A"        fillcolor=cyan ];
+	cont_b [ label="B"        fillcolor=cyan ];
+	cont_c [ label="C"        fillcolor=cyan ];
 
 	gfx_t -> gfx_a;
 	gfx_t -> gfx_b;
@@ -45,19 +41,20 @@ digraph app {
 	gfx_b -> cont_b [ constraint=false color="#444444" penwidth=0.5 ];
 	gfx_c -> cont_c [ constraint=false color="#444444" penwidth=0.5 ];
 
-	main -> app;
+	main -> app:t;
 
-	app -> timeline;
+	app:t -> timeline;
 	timeline -> cont_t;
 	timeline -> txn;
 	txn -> cont_c;
-	cfg1 -> app [ dir=back ];
+	cfg1 -> app:t [ style=invis ];
+	app:t -> cfg1;
 	app:se -> cont_t [ style=dotted ];
 
-	app -> theme;
+	app:t -> theme;
 	cfg2 -> theme [ dir=back ];
 
-	app -> window;
+	app:t -> window;
 	window -> drawing_area;
 	window -> tree_view;
 

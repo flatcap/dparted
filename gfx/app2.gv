@@ -16,37 +16,37 @@ digraph app {
 	timeline [ label="Timeline" fillcolor="#ffffff" ];
 	txn      [ label="Txn"      fillcolor="#ffffff" ];
 
-	app [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3"><tr><td bgcolor="white">App</td></tr><tr><td bgcolor="pink">Gui App</td></tr></table>> ];
+	app [ shape=none style=none label=<<table port="t" border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td bgcolor="white" border="1" cellspacing="0" cellpadding="3">App</td></tr><tr><td bgcolor="pink" border="1" cellspacing="0" cellpadding="3">Gui App</td></tr></table>> ];
 
-	cont_t [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">Gfx</td><td bgcolor="cyan">Cont</td></tr></table>> ];
-	cont_a [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">A</td><td bgcolor="cyan">A</td></tr></table>> ];
-	cont_b [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">B</td><td bgcolor="cyan">B</td></tr></table>> ];
-	cont_c [ label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">C</td><td bgcolor="cyan">C</td></tr></table>> ];
+	cont_t [ shape=none style=none label=<<table port="t" border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">Gfx</td><td bgcolor="cyan">Cont</td></tr></table>> ];
+	cont_a [ shape=none style=none label=<<table port="t" border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">A</td><td bgcolor="cyan">A</td></tr></table>> ];
+	cont_b [ shape=none style=none label=<<table port="t" border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">B</td><td bgcolor="cyan">B</td></tr></table>> ];
+	cont_c [ shape=none style=none label=<<table port="t" border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">C</td><td bgcolor="cyan">C</td></tr></table>> ];
 
-	cont_t -> cont_a;
-	cont_t -> cont_b;
-	cont_t -> cont_c;
+	cont_t:t -> cont_a:t;
+	cont_t:t -> cont_b:t;
+	cont_t:t -> cont_c:t;
 
-	main -> app;
+	main -> app:t;
 
-	app:e -> timeline;
-	timeline -> cont_t:ne;
+	app:t -> timeline;
+	timeline -> cont_t:t;
 	timeline -> txn;
-	txn->cont_c;
+	txn->cont_c:t;
 
-	cfg1 -> app [ dir=back ];
-	app -> cont_t:ne [ style=dotted ];
+	cfg1 -> app:t [ dir=back ];
+	app:t -> cont_t:t [ style=dotted ];
 
-	app -> theme;
+	app:t -> theme;
 	cfg2 -> theme [ dir=back ];
 	theme -> window [ style=invis ];
 
-	app -> window;
+	app:t -> window;
 	window -> drawing_area;
 	window -> tree_view;
 
-	drawing_area -> cont_t:nw;
-	tree_view -> cont_t:nw;
+	drawing_area -> cont_t:t;
+	tree_view -> cont_t:t;
 
 	{ rank=same cfg1 app timeline }
 	{ rank=same window txn }
