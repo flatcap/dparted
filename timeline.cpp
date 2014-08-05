@@ -116,15 +116,3 @@ Timeline::adjust (int amount)
 }
 
 
-void
-Timeline::container_added (const ContainerPtr& UNUSED(parent), const ContainerPtr& UNUSED(child))
-{
-	LOG_TRACE;
-}
-
-void
-Timeline::container_changed (const ContainerPtr& UNUSED(parent), const ContainerPtr& UNUSED(before), const ContainerPtr& UNUSED(after))
-{
-	LOG_TRACE;
-}
-

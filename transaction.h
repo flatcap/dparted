@@ -23,14 +23,14 @@
 #include <mutex>
 #include <vector>
 
-#include "container_listener.h"
-
 typedef std::shared_ptr<class Transaction> TransactionPtr;
 
-class Transaction : public IContainerListener
+#include "container.h"
+
+class Transaction
 {
 public:
-	static TransactionPtr create (const ContainerPtr& cont, std::mutex& m);
+	static TransactionPtr create (std::mutex& m);
 	virtual ~Transaction();
 
 	void add_action (const std::string& action);
@@ -38,9 +38,6 @@ public:
 
 protected:
 	Transaction (std::mutex& m);
-
-	void container_added   (const ContainerPtr& parent, const ContainerPtr& cont);
-	void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after);
 
 	std::vector<std::string> actions;
 

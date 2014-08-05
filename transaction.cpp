@@ -30,14 +30,18 @@ Transaction::Transaction (std::mutex& m) :
 Transaction::~Transaction()
 {
 	mutex_write_lock.unlock();
+
+	log_code ("Actions:");
+	for (auto a : actions) {
+		log_code ("\t%s", a.c_str());
+	}
 }
 
 TransactionPtr
-Transaction::create (const ContainerPtr& cont, std::mutex& m)
+Transaction::create (std::mutex& m)
 {
 	TransactionPtr p (new Transaction(m));
 	p->self = p;
-	cont->add_listener(p);
 
 	return p;
 }
@@ -57,15 +61,4 @@ Transaction::commit (void)
 	}
 }
 
-void
-Transaction::container_added (const ContainerPtr& UNUSED(parent), const ContainerPtr& UNUSED(cont))
-{
-	LOG_TRACE;
-}
-
-void
-Transaction::container_changed (const ContainerPtr& UNUSED(parent), const ContainerPtr& UNUSED(before), const ContainerPtr& UNUSED(after))
-{
-	LOG_TRACE;
-}
 

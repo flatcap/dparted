@@ -291,7 +291,7 @@ Loop::discover (ContainerPtr& parent)
 	if (!losetup (output))
 		return;
 
-	ContainerPtr new_parent = parent->start_transaction();
+	ContainerPtr new_parent = main_app->start_transaction (parent);
 
 	//RAR need to discover, create, THEN add_child (to reduce the time in the write mutex)
 	for (auto& line : output) {
@@ -308,7 +308,7 @@ Loop::discover (ContainerPtr& parent)
 	}
 
 	//RAR exchange (parent, new_parent);
-	new_parent->commit_transaction();
+	main_app->commit_transaction();
 }
 
 bool

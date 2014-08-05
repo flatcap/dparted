@@ -53,6 +53,7 @@
 #include "timeline.h"
 
 AppPtr main_app;
+std::mutex mutex_write_lock;
 
 App::App (void)
 {
@@ -551,5 +552,37 @@ App::adjust_timeline (int amount)
 {
 	// LOG_TRACE;
 	return timeline->adjust (amount);
+}
+
+
+ContainerPtr
+App::start_transaction (ContainerPtr orig)
+{
+	ContainerPtr new_cont = orig->copy();
+	if (!new_cont) {
+		log_error ("Copy failed");
+		return {};
+	}
+
+	if (!mutex_write_lock.try_lock()) {
+		log_code ("Can't get global write lock");
+		return {};
+	}
+
+	new_cont->txn = Transaction::create (mutex_write_lock);
+	if (!new_cont->txn) {
+		mutex_write_lock.unlock();
+		log_error ("Couldn't create a transaction");
+		return {};
+	}
+
+	return new_cont;
+}
+
+bool
+App::commit_transaction (void)
+{
+	LOG_TRACE;
+	return false;
 }
 

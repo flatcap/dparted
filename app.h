@@ -60,6 +60,8 @@ public:
 	void wait_for_threads (void);
 
 	bool adjust_timeline (int amount);
+	ContainerPtr start_transaction (ContainerPtr orig);
+	bool         commit_transaction (void);
 
 protected:
 	ConfigFilePtr config_file;

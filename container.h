@@ -34,12 +34,13 @@
 #include "log.h"
 #include "mmap.h"
 #include "property.h"
-#include "transaction.h"
 
 class Visitor;
 struct Action;
 
 typedef std::shared_ptr<class Container> ContainerPtr;
+
+#include "transaction.h"
 
 /**
  * class Container - Base class for all containers
@@ -110,8 +111,6 @@ public:
 	ContainerPtr get_parent   (void);
 	ContainerPtr get_toplevel (void);
 
-	ContainerPtr start_transaction (void);
-	bool         commit_transaction (void);
 	TransactionPtr txn;
 
 	void add_listener (const ContainerListenerPtr& m);
@@ -298,10 +297,6 @@ private:
 	MmapPtr	device_mmap;
 
 	std::uint64_t unique_id = 0;
-
-	//void listener_notify (std::function<void (void)> fn);
-	void notify_add    (ContainerPtr parent, ContainerPtr child);
-	void notify_change (ContainerPtr parent, ContainerPtr before, ContainerPtr after);
 
 	std::vector<ContainerListenerWeak> container_listeners;
 };

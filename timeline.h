@@ -27,7 +27,6 @@
 #include <ctime>
 
 #include "container.h"
-#include "container_listener.h"
 
 enum class EventType {
 	t_add,		// A container was added
@@ -39,7 +38,7 @@ typedef std::tuple<std::chrono::steady_clock::time_point,EventType,ContainerPtr,
 
 typedef std::shared_ptr<class Timeline> TimelinePtr;
 
-class Timeline : public IContainerListener
+class Timeline
 {
 public:
 	static TimelinePtr create (ContainerPtr& cont);
@@ -49,9 +48,6 @@ public:
 
 protected:
 	Timeline (void);
-
-	virtual void container_added   (const ContainerPtr& parent, const ContainerPtr& child);
-	virtual void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after);
 
 	std::weak_ptr<Timeline> self;
 

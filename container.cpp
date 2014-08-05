@@ -43,7 +43,6 @@
 #include "whole.h"
 
 std::atomic_ulong container_id = ATOMIC_VAR_INIT(1);
-std::mutex mutex_write_lock;
 
 std::vector<Action> cont_actions = {
 	{ "Create/Filesystem",         true },
@@ -374,6 +373,12 @@ Container::add_child (ContainerPtr& child, bool probe)
 
 	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
+	ContainerPtr top = get_toplevel();
+	TransactionPtr txn = top->txn;
+
+	std::string action = "add_child: " + child->get_name_default();
+	txn->add_action (action);
+
 	if (probe) {
 		main_app->queue_add_probe (child);
 	}
@@ -381,7 +386,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 	ContainerPtr parent = get_smart();		// Smart pointer to ourself
 	child->parent = parent;
 
-	notify_add (parent, child);
+	//RAR notify_add (parent, child);
 
 	if (bytes_size == 0) {	// We are a dummy device
 		return;
@@ -1090,70 +1095,4 @@ Container::add_listener (const ContainerListenerPtr& cl)
 	container_listeners.push_back (cl);
 }
 
-ContainerPtr
-Container::start_transaction (void)
-{
-	ContainerPtr new_cont = this->copy();
-	if (!new_cont) {
-		log_error ("Copy failed");
-		return {};
-	}
 
-	if (!mutex_write_lock.try_lock()) {
-		log_code ("Can't get global write lock");
-		return {};
-	}
-
-	TransactionPtr t = Transaction::create (new_cont, mutex_write_lock);
-	if (!t) {
-		mutex_write_lock.unlock();
-		log_error ("Couldn't create a transaction");
-		return {};
-	}
-
-	new_cont->txn = t;
-
-	return new_cont;
-}
-
-bool
-Container::commit_transaction (void)
-{
-	LOG_TRACE;
-	return false;
-}
-
-
-void
-Container::notify_add (ContainerPtr parent, ContainerPtr child)
-{
-	for (auto c = get_smart(); c; c = c->get_parent()) {			// Ascend the container tree
-		log_code ("%s : %s", __FUNCTION__, c->name.c_str());
-
-		for (auto& i : c->container_listeners) {
-			ContainerListenerPtr cl = i.lock();
-			if (cl) {
-				cl->container_added (parent, child);
-			} else {
-				log_code ("remove listener from the collection");	//XXX remove it from the collection
-			}
-		}
-	}
-}
-
-void
-Container::notify_change (ContainerPtr parent, ContainerPtr before, ContainerPtr after)
-{
-	for (auto c = get_smart(); c; c = c->get_parent()) {			// Ascend the container tree
-		log_code ("%s : %s", __FUNCTION__, c->name.c_str());
-
-		for (auto& i : c->container_listeners) {
-			ContainerListenerPtr cl = i.lock();
-			if (cl) {
-				cl->container_changed (parent, before, after);
-			} else {
-				log_code ("remove listener from the collection");	//XXX remove it from the collection
-			}
-		}
-	}
-}
