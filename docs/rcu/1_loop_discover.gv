@@ -1,0 +1,36 @@
+digraph gpt_discover {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.1"
+		ranksep="0.5"
+	];
+
+	node [
+		fontsize="12"
+		style="solid"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+	];
+
+	edge [
+		penwidth="0.3"
+		color="#666666"
+		arrowsize="0.5"
+	];
+
+
+	b_Top [ label=<Top>                                              ];
+	b_L0  [ label=<L<SUB>0</SUB>> style="filled" fillcolor="#80ff80" ];
+	b_L1  [ label=<L<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+	b_L2  [ label=<L<SUB>2</SUB>> style="filled" fillcolor="#80ff80" ];
+
+	b_Top -> b_L0;
+	b_Top -> b_L1;
+	b_Top -> b_L2;
+}
+
