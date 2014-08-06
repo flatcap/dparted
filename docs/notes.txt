@@ -877,3 +877,65 @@ but intercept all the writes to disk (LD_PRELOAD)
 and save the overwritten data to a sparse file
 allows us to undo dangerous commands
 
+quota info
+	how do I find it?
+	how do I display it?
+
+Mustn't keep mounted/removeable disks mmap'd
+don't interfere with the user
+
+password manager should lock memory
+so should anyone USING a password (any variables)
+then they should scrub the memory before unlocking
+
+filesystem actions:
+	empty, tidy, clean
+	what would they do?
+	what might be useful to do?
+
+start_thread/end_thread
+	global thread_count++/--
+	display count at exit (if != 1)
+
+how do I handle updates from background processes?  e.g.
+	filesystem free space has changed
+	disk mounted
+Just set the values and notify?
+	needs write lock
+	only change/notify if the value's changed
+
+double notifications:
+	ok for drawing area
+	bad for tree view
+
+table discover:
+	after validating partitions
+	1 notification for all parts
+
+will container::unique_id be needed in release version?
+
+change theme to use css
+
+bg cron tasks, e.g. check free space
+	try_lock_for (n secs)
+then give up.  updating later will be ok
+n = cron period / 4 ?
+
+theme - fs fill - multiple levels
+	low usage - green
+	med usage - amber
+	high usage - red
+
+what do I do with the pending changes when I detect external changes?
+how do i detect external changes?
+how often do I poll?
+
+some properties, e.g. fs usage should be preserved across backup/restore
+
+should I disallow actions on mounted drives?
+yes, at least until I can find/kill all users, e.g.
+	mount, cwd, processes, etc
+
+swap needs to be a real object
+needs to know about being mounted & getting swap usage
+
