@@ -1,0 +1,4 @@
+if resize_child() auto backs up
+is there an issue if I resize twice?
+when would I need to resize twice?
+
