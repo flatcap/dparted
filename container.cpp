@@ -657,6 +657,12 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	return stream;
 }
 
+inline bool
+operator== (const ContainerPtr& lhs, const ContainerPtr& rhs)
+{
+	return (lhs->unique_id == rhs->unique_id);
+}
+
 bool
 exchange (ContainerPtr& UNUSED(existing), ContainerPtr& UNUSED(replacement))
 {
@@ -750,6 +756,19 @@ Container::add_string_prop (const std::string& owner, const std::string& name, c
 	more_props.push_back (value);
 	PPtr p = declare_prop_var (owner.c_str(), name.c_str(), more_props.back(), "desc", 0);
 	return p;
+}
+
+PPtr
+Container::declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags)
+{
+	return_val_if_fail (owner, nullptr);
+	return_val_if_fail (name,  nullptr);
+	return_val_if_fail (desc,  nullptr);
+
+	PPtr pv (new PropArray (owner, name, v, index, desc, flags));
+	props[name] = pv;
+
+	return pv;
 }
 
 
