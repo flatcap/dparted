@@ -230,8 +230,8 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	// m->device = parent->device;	//XXX only for partitions, main body should inherit
 	m->parent_offset = 0;
 
-	std::string desc = "Identified MSDOS partition table";
-	parent->add_child (m, false, desc.c_str());
+	//RAR std::string desc = "Identified MSDOS partition table";
+	parent->add_child (m, false);
 
 	std::vector<struct partition> vp;
 	count = m->read_table (buffer, bufsize, 0, vp);
@@ -247,8 +247,8 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res1->bytes_size    = 512;		// align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	desc = "Marked MSDOS reserved space";
-	m->add_child (res1, false, desc.c_str());
+	//RAR desc = "Marked MSDOS reserved space";
+	m->add_child (res1, false);
 
 	for (unsigned int i = 0; i < vp.size(); ++i) {
 		std::string s1 = get_size (le64_to_cpu (vp[i].start));
@@ -279,8 +279,8 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 			c->parent_offset = le64_to_cpu (vp[i].start);
 			c->device = part_name;
-			std::string desc = "Discovered MSDOS Extended partition: " + c->device;
-			m->add_child (c, false, desc.c_str());
+			//RAR std::string desc = "Discovered MSDOS Extended partition: " + c->device;
+			m->add_child (c, false);
 		} else {
 			PartitionPtr p = Partition::create();
 			p->ptype = vp[i].type;
@@ -290,8 +290,8 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			c->parent_offset = le64_to_cpu (vp[i].start);
 			c->device = part_name;
 
-			std::string desc = "Discovered MSDOS partition: " + c->device;
-			m->add_child (c, true, desc.c_str());
+			//RAR std::string desc = "Discovered MSDOS partition: " + c->device;
+			m->add_child (c, true);
 		}
 	}
 

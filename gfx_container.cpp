@@ -537,7 +537,7 @@ GfxContainer::find (const ContainerPtr& cont)
 }
 
 void
-GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& cont, const char* UNUSED(description))
+GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& cont)
 {
 	// LOG_TRACE;
 	log_debug ("GFX container_added: %s to %s", cont->name.c_str(), parent->name.c_str());
@@ -573,6 +573,11 @@ GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& c
 	}
 }
 
+void
+GfxContainer::container_changed (const ContainerPtr& UNUSED(parent), const ContainerPtr& UNUSED(before), const ContainerPtr& UNUSED(after))
+{
+	LOG_TRACE;
+}
 
 bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)
 {
@@ -602,36 +607,6 @@ GfxContainer::insert_child (GfxContainerPtr& child)
 
 	children.push_back (child);
 }
-
-
-void
-GfxContainer::container_busy (const ContainerPtr& cont, int busy)
-{
-	// LOG_TRACE;
-	log_debug ("container_busy: %s %d", cont->name.c_str(), busy);
-}
-
-void
-GfxContainer::container_changed (const ContainerPtr& cont)
-{
-	// LOG_TRACE;
-	log_debug ("container_deleted: %s", cont->name.c_str());
-}
-
-void
-GfxContainer::container_deleted (const ContainerPtr& cont)
-{
-	// LOG_TRACE;
-	log_debug ("container_deleted: %s", cont->name.c_str());
-}
-
-void
-GfxContainer::container_resync (const ContainerPtr& cont)
-{
-	// LOG_TRACE;
-	log_debug ("container_resync: %s", cont->name.c_str());
-}
-
 
 void
 GfxContainer::theme_changed (const ThemePtr& new_theme)

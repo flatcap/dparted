@@ -43,9 +43,9 @@ public:
 	virtual bool perform_action (Action action);
 
 	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe, const char* description);
+	void add_child (std::shared_ptr<T>& child, bool probe);
 
-	virtual void add_child    (ContainerPtr& child, bool probe, const char* description);
+	virtual void add_child    (ContainerPtr& child, bool probe);
 	virtual void delete_child (ContainerPtr& child);
 
 public:
@@ -64,10 +64,11 @@ protected:
 };
 
 template<class T>
-void add_child (std::shared_ptr<T>& child, bool probe, const char* description)
+void
+LvmMirror::add_child (std::shared_ptr<T>& child, bool probe)
 {
 	ContainerPtr c (child);
-	add_child (c, probe, description);
+	add_child (c, probe);
 }
 
 #endif // _LVM_MIRROR_H_

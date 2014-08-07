@@ -82,30 +82,7 @@ public:
 
 	virtual bool is_a (const std::string& type);
 
-	struct compare
-	{
-		bool operator() (const ContainerPtr& a, const ContainerPtr& b)
-		{
-			return_val_if_fail (a, false);
-			return_val_if_fail (b, false);
-
-			if (a->parent_offset != b->parent_offset)
-				return (a->parent_offset < b->parent_offset);
-
-			std::uint64_t da = (a->device_major << 10) + a->device_minor;
-			std::uint64_t db = (b->device_major << 10) + b->device_minor;
-			if (da != db)
-				return (da < db);
-
-			int x = a->name.compare (b->name);	//XXX default name?
-			if (x != 0)
-				return (x < 0);
-
-			return ((void*) a.get() < (void*) b.get());
-		}
-	};
-
-	virtual std::set<ContainerPtr, compare>& get_children (void);
+	virtual std::vector<ContainerPtr>& get_children (void);
 
 	ContainerPtr get_smart    (void);
 	ContainerPtr get_parent   (void);
@@ -124,11 +101,7 @@ public:
 	std::vector<PPtr> get_all_props (bool inc_hidden = false);
 
 	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe)
-	{
-		ContainerPtr c (child);
-		add_child (c, probe);
-	}
+	void add_child (std::shared_ptr<T>& child, bool probe);
 
 	void sub_type (const char* name);
 	std::string dump (void);
@@ -207,7 +180,7 @@ protected:
 
 	std::map<std::string, PPtr> props;
 
-	std::set<ContainerPtr, compare> children;
+	std::vector<ContainerPtr> children;
 	std::mutex mutex_children;
 	TransactionPtr txn;
 	ContainerPtr previous;	// used by backup/restore
@@ -220,6 +193,9 @@ protected:
 	template<typename T>
 	PPtr declare_prop_fn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags, PPtr var2 = nullptr);
 	PPtr declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags);
+
+	void _add_child (std::vector<ContainerPtr>& vec, ContainerPtr& child);
+	bool _insert (const ContainerPtr& a, const ContainerPtr& b);
 
 private:
 	MmapPtr	device_mmap;
@@ -304,6 +280,14 @@ Container::declare_prop_fn (const char* owner, const char* name, std::function<T
 	}
 
 	return pf;
+}
+
+template<class T>
+void
+Container::add_child (std::shared_ptr<T>& child, bool probe)
+{
+	ContainerPtr c (child);
+	add_child (c, probe);
 }
 
 

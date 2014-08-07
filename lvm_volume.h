@@ -45,9 +45,9 @@ public:
 	virtual bool perform_action (Action action);
 
 	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe, const char* description);
+	void add_child (std::shared_ptr<T>& child, bool probe);
 
-	virtual void add_child (ContainerPtr& child, bool probe, const char* description);
+	virtual void add_child (ContainerPtr& child, bool probe);
 
 	virtual ContainerPtr find (const std::string& uuid);
 
@@ -61,8 +61,8 @@ public:
 
 	std::string	mirror_log;		//XXX not declared
 
-	std::set<ContainerPtr, Container::compare> metadata;	//XXX not declared
-	std::set<ContainerPtr, Container::compare> subvols;	//XXX not declared
+	std::vector<ContainerPtr> metadata;	//XXX not declared
+	std::vector<ContainerPtr> subvols;	//XXX not declared
 
 	ContainerPtr sibling;
 
@@ -75,10 +75,11 @@ protected:
 };
 
 template<class T>
-void add_child (std::shared_ptr<T>& child, bool probe, const char* description)
+void
+LvmVolume::add_child (std::shared_ptr<T>& child, bool probe)
 {
 	ContainerPtr c (child);
-	add_child (c, probe, description);
+	add_child (c, probe);
 }
 
 #endif // _LVM_VOLUME_H_

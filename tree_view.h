@@ -87,7 +87,8 @@ private:
 
 
 template <class T>
-int add_column (Gtk::TreeModel::ColumnRecord& col_rec, Gtk::TreeView::Column* col, float align, int size)
+int
+TreeView::add_column (Gtk::TreeModel::ColumnRecord& col_rec, Gtk::TreeView::Column* col, float align, int size)
 {
 	auto* tmc = new Gtk::TreeModelColumn<T>;
 	auto* cell = Gtk::manage (new Gtk::CellRendererText);

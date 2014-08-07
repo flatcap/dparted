@@ -369,7 +369,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 
 	std::lock_guard<std::mutex> lock (mutex_children);
 	++seqnum;
-	children.insert (child);
+	_add_child (children, child);
 
 	TransactionPtr t = get_txn();
 	if (t) {
@@ -418,6 +418,38 @@ Container::move_child (ContainerPtr& UNUSED(child), std::uint64_t UNUSED(offset)
 {
 }
 
+
+bool
+Container::_insert (const ContainerPtr& a, const ContainerPtr& b)
+{
+	if (a->parent_offset != b->parent_offset)
+		return (a->parent_offset < b->parent_offset);
+
+	std::uint64_t da = (a->device_major << 10) + a->device_minor;
+	std::uint64_t db = (b->device_major << 10) + b->device_minor;
+	if (da != db)
+		return (da < db);
+
+	int x = a->name.compare (b->name);	//XXX default name?
+	if (x != 0)
+		return (x < 0);
+
+	return ((void*) a.get() < (void*) b.get());
+}
+
+void
+Container::_add_child (std::vector<ContainerPtr>& vec, ContainerPtr& child)
+{
+	auto end = std::end (vec);
+	for (auto it = std::begin (vec); it != end; ++it) {
+		if (_insert (*it, child)) {
+			vec.insert (it, child);
+			return;
+		}
+	}
+
+	vec.push_back (child);
+}
 
 int
 Container::get_fd (void)
@@ -701,7 +733,7 @@ Container::sub_type (const char* n)
 }
 
 
-std::set<ContainerPtr, Container::compare>&
+std::vector<ContainerPtr>&
 Container::get_children (void)
 {
 	LOG_TRACE;
