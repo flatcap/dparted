@@ -44,9 +44,6 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe);
-
 	virtual void add_child (ContainerPtr& child, bool probe);
 
 	virtual ContainerPtr find (const std::string& uuid);
@@ -73,14 +70,6 @@ protected:
 
 	virtual LvmVolume* clone (void);
 };
-
-template<class T>
-void
-LvmVolume::add_child (std::shared_ptr<T>& child, bool probe)
-{
-	ContainerPtr c (child);
-	add_child (c, probe);
-}
 
 #endif // _LVM_VOLUME_H_
 

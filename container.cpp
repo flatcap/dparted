@@ -420,7 +420,7 @@ Container::move_child (ContainerPtr& UNUSED(child), std::uint64_t UNUSED(offset)
 
 
 bool
-Container::_insert (const ContainerPtr& a, const ContainerPtr& b)
+insert_here (const ContainerPtr& a, const ContainerPtr& b)
 {
 	if (a->parent_offset != b->parent_offset)
 		return (a->parent_offset < b->parent_offset);
@@ -442,7 +442,7 @@ Container::_add_child (std::vector<ContainerPtr>& vec, ContainerPtr& child)
 {
 	auto end = std::end (vec);
 	for (auto it = std::begin (vec); it != end; ++it) {
-		if (_insert (*it, child)) {
+		if (insert_here (*it, child)) {
 			vec.insert (it, child);
 			return;
 		}
@@ -450,6 +450,7 @@ Container::_add_child (std::vector<ContainerPtr>& vec, ContainerPtr& child)
 
 	vec.push_back (child);
 }
+
 
 int
 Container::get_fd (void)

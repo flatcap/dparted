@@ -195,7 +195,6 @@ protected:
 	PPtr declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags);
 
 	void _add_child (std::vector<ContainerPtr>& vec, ContainerPtr& child);
-	bool _insert (const ContainerPtr& a, const ContainerPtr& b);
 
 private:
 	MmapPtr	device_mmap;

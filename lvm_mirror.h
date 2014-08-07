@@ -42,9 +42,6 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe);
-
 	virtual void add_child    (ContainerPtr& child, bool probe);
 	virtual void delete_child (ContainerPtr& child);
 
@@ -62,14 +59,6 @@ protected:
 	ContainerPtr log;
 #endif
 };
-
-template<class T>
-void
-LvmMirror::add_child (std::shared_ptr<T>& child, bool probe)
-{
-	ContainerPtr c (child);
-	add_child (c, probe);
-}
 
 #endif // _LVM_MIRROR_H_
 
