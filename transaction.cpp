@@ -22,8 +22,9 @@
 #include "container.h"
 #include "utils.h"
 
-Transaction::Transaction (std::mutex& m) :
-	mutex_write_lock(m)
+std::mutex mutex_write_lock;
+
+Transaction::Transaction (void)
 {
 }
 
@@ -38,27 +39,16 @@ Transaction::~Transaction()
 }
 
 TransactionPtr
-Transaction::create (std::mutex& m)
+Transaction::create (void)
 {
-	TransactionPtr p (new Transaction(m));
-	p->self = p;
+	if (!mutex_write_lock.try_lock()) {
+		log_code ("Can't get global write lock");
+		return {};
+	}
+
+	TransactionPtr p (new Transaction());
+	p->self   = p;
 
 	return p;
 }
-
-void
-Transaction::add_action (const std::string& action)
-{
-	actions.push_back (action);
-}
-
-void
-Transaction::commit (void)
-{
-	log_code ("Actions:");
-	for (auto& a : actions) {
-		log_code ("\t%s", a.c_str());
-	}
-}
-
 

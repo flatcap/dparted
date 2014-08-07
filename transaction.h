@@ -26,24 +26,20 @@
 typedef std::shared_ptr<class Transaction> TransactionPtr;
 
 #include "container.h"
+#include "container_listener.h"
 
 class Transaction
 {
 public:
-	static TransactionPtr create (std::mutex& m);
+	static TransactionPtr create (void);
 	virtual ~Transaction();
-
-	void add_action (const std::string& action);
-	void commit (void);
-
-protected:
-	Transaction (std::mutex& m);
 
 	std::vector<std::string> actions;
 
-private:
+protected:
+	Transaction (void);
+
 	std::weak_ptr<Transaction> self;
-	std::mutex& mutex_write_lock;
 };
 
 #endif // _TRANSACTION_H_

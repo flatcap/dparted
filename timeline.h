@@ -27,6 +27,7 @@
 #include <ctime>
 
 #include "container.h"
+#include "transaction.h"
 
 enum class EventType {
 	t_add,		// A container was added
@@ -45,6 +46,8 @@ public:
 	virtual ~Timeline();
 
 	bool adjust (int amount);
+
+	bool commit (TransactionPtr txn);
 
 protected:
 	Timeline (void);

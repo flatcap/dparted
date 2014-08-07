@@ -111,7 +111,11 @@ public:
 	ContainerPtr get_parent   (void);
 	ContainerPtr get_toplevel (void);
 
-	TransactionPtr txn;
+	bool start_transaction  (void);
+	bool commit_transaction (void);
+	void cancel_transaction (void);
+
+	ContainerPtr backup (void);
 
 	void add_listener (const ContainerListenerPtr& m);
 
@@ -130,6 +134,11 @@ public:
 	std::string dump (void);
 
 	PPtr add_string_prop (const std::string& owner, const std::string& name, const std::string& value);
+
+	void notify_add (ContainerPtr parent, ContainerPtr child);
+	// notify_delete
+	// notify_change
+	// ...
 
 public:
 	// Property helper functions
@@ -200,6 +209,9 @@ protected:
 
 	std::set<ContainerPtr, compare> children;
 	std::mutex mutex_children;
+	TransactionPtr txn;
+	ContainerPtr previous;	// used by backup/restore
+	TransactionPtr get_txn (void);
 
 	std::vector<std::string> more_props;
 

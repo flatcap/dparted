@@ -371,22 +371,21 @@ Container::add_child (ContainerPtr& child, bool probe)
 	++seqnum;
 	children.insert (child);
 
+	TransactionPtr t = get_txn();
+	if (t) {
+		t->actions.push_back ("add_child");
+	}
+
 	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
-
-	ContainerPtr top = get_toplevel();
-	TransactionPtr txn = top->txn;
-
-	std::string action = "add_child: " + child->get_name_default();
-	txn->add_action (action);
 
 	if (probe) {
 		main_app->queue_add_probe (child);
 	}
 
-	ContainerPtr parent = get_smart();		// Smart pointer to ourself
+	ContainerPtr parent = get_smart();		// Smart pointer to myself
 	child->parent = parent;
 
-	//RAR notify_add (parent, child);
+	notify_add (parent, child);
 
 	if (bytes_size == 0) {	// We are a dummy device
 		return;
@@ -799,6 +798,18 @@ Container::get_toplevel (void)
 	return parent;
 }
 
+TransactionPtr
+Container::get_txn (void)
+{
+	for (auto c = get_smart(); c; c = c->get_parent()) {			// Ascend the container tree
+		if (c->txn) {
+			return txn;
+		}
+	}
+
+	return nullptr;
+}
+
 
 std::uint64_t
 Container::get_absolute_offset (void)
@@ -1114,4 +1125,61 @@ Container::add_listener (const ContainerListenerPtr& cl)
 	container_listeners.push_back (cl);
 }
 
+
+bool
+Container::start_transaction (void)
+{
+	txn = Transaction::create();
+
+	return (txn != nullptr);
+}
+
+bool
+Container::commit_transaction (void)
+{
+	LOG_TRACE;
+	return false;
+}
+
+void
+Container::cancel_transaction (void)
+{
+	LOG_TRACE;
+}
+
+
+ContainerPtr
+Container::backup (void)
+{
+	LOG_TRACE;
+
+	ContainerPtr c = this->copy();
+	if (!c)
+		return {};
+
+	TransactionPtr t = get_txn();
+	if (t) {
+		t->actions.push_back ("backup container");
+	}
+
+	c->previous = get_smart();
+	return c;
+}
+
+void
+Container::notify_add (ContainerPtr parent, ContainerPtr child)
+{
+	for (auto c = get_smart(); c; c = c->get_parent()) {			// Ascend the container tree
+		// log_code ("%s : %s", __FUNCTION__, c->name.c_str());
+
+		for (auto& i : c->container_listeners) {
+			ContainerListenerPtr cl = i.lock();
+			if (cl) {
+				cl->container_added (parent, child);
+			} else {
+				log_code ("remove listener from the collection");	//XXX remove it from the collection
+			}
+		}
+	}
+}
 

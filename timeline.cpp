@@ -116,3 +116,11 @@ Timeline::adjust (int amount)
 }
 
 
+bool
+Timeline::commit (TransactionPtr txn)
+{
+	return_val_if_fail (txn, false);
+
+	return false;
+}
+

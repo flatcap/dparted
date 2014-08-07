@@ -291,24 +291,36 @@ Loop::discover (ContainerPtr& parent)
 	if (!losetup (output))
 		return;
 
-	ContainerPtr new_parent = main_app->start_transaction (parent);
-
-	//RAR need to discover, create, THEN add_child (to reduce the time in the write mutex)
+	std::vector<LoopPtr> loops;
 	for (auto& line : output) {
 		LoopPtr l = create (line);
 
 		l->get_fd();
 
-		// move to container::find_size or utils (or block::)
 		off_t size;
-		size = lseek (l->fd, 0, SEEK_END);
+		size = lseek (l->fd, 0, SEEK_END);	//XXX move to container::find_size or utils (or block::)
 		l->bytes_size = size;
 
-		new_parent->add_child (l, false);	//RAR probe=true
+		loops.push_back(l);
 	}
 
-	//RAR exchange (parent, new_parent);
-	main_app->commit_transaction();
+	// Only now do we take the write lock
+	if (!parent->start_transaction()) {
+		log_error ("loop discover failed");
+		return;
+	}
+
+	ContainerPtr new_parent = parent->backup();
+	if (!new_parent) {
+		log_error ("backup failed");
+		return;
+	}
+
+	for (auto l : loops) {
+		new_parent->add_child (l, true);
+	}
+
+	parent->commit_transaction();
 }
 
 bool
