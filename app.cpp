@@ -319,7 +319,7 @@ App::open_uri (const std::string& uri)
 }
 
 
-std::vector<std::weak_ptr<Container>> all_children;
+std::vector<ContainerWeak> all_children;
 std::mutex mutex_children;
 
 int
@@ -369,7 +369,7 @@ tidy_children (void)
 
 	// printf ("REMOVE_IF\n");
 	// printf ("\t"); dump_children(); printf ("\n");
-	auto new_end = std::remove_if (std::begin(all_children), std::end(all_children), [](std::weak_ptr<Container>& c) { return c.expired(); });
+	auto new_end = std::remove_if (std::begin(all_children), std::end(all_children), [](ContainerWeak& c) { return c.expired(); });
 	// printf ("\t"); dump_children(); printf ("\n");
 
 	// log_info ("\tcheck start");

@@ -39,6 +39,7 @@ class Visitor;
 struct Action;
 
 typedef std::shared_ptr<class Container> ContainerPtr;
+typedef std::weak_ptr  <class Container> ContainerWeak;
 
 #include "transaction.h"
 
@@ -167,8 +168,8 @@ protected:
 
 	virtual Container* clone (void);
 
-	std::weak_ptr<Container> self;
-	std::weak_ptr<Container> parent;
+	ContainerWeak self;
+	ContainerWeak parent;
 
 	std::vector<std::string> type;
 

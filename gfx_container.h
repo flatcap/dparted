@@ -34,6 +34,7 @@
 #include "theme_listener.h"
 
 typedef std::shared_ptr<class GfxContainer> GfxContainerPtr;
+typedef std::weak_ptr  <class GfxContainer> GfxContainerWeak;
 
 /**
  * class GfxContainer - Shield the GUI from the messy Containers
@@ -106,8 +107,8 @@ protected:
 	GfxContainerPtr get_smart (void);
 	GfxContainerPtr find (const ContainerPtr& cont);
 
-	std::weak_ptr<Container>    container;
-	std::weak_ptr<GfxContainer> parent;
+	ContainerWeak    container;
+	GfxContainerWeak parent;
 
 	Gdk::RGBA                 process_colour (const std::string& str);
 	Glib::RefPtr<Gdk::Pixbuf> process_icon   (const std::string& str);
@@ -124,7 +125,7 @@ protected:
 	friend std::ostream& operator<< (std::ostream& stream, const GfxContainerPtr& c);
 
 private:
-	std::weak_ptr<GfxContainer> self;
+	GfxContainerWeak self;
 	std::vector<GfxContainerListenerWeak> gfx_container_listeners;
 
 	virtual void container_added   (const ContainerPtr& parent, const ContainerPtr& child);

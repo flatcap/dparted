@@ -24,6 +24,7 @@
 #include <vector>
 
 typedef std::shared_ptr<class Transaction> TransactionPtr;
+typedef std::weak_ptr  <class Transaction> TransactionWeak;
 
 #include "container.h"
 #include "container_listener.h"
@@ -39,7 +40,7 @@ public:
 protected:
 	Transaction (void);
 
-	std::weak_ptr<Transaction> self;
+	TransactionWeak self;
 };
 
 #endif // _TRANSACTION_H_

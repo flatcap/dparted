@@ -38,6 +38,7 @@ enum class EventType {
 typedef std::tuple<std::chrono::steady_clock::time_point,EventType,ContainerPtr,ContainerPtr,std::string> Event;	// Date, event type, old, new, description
 
 typedef std::shared_ptr<class Timeline> TimelinePtr;
+typedef std::weak_ptr  <class Timeline> TimelineWeak;
 
 class Timeline
 {
@@ -52,7 +53,7 @@ public:
 protected:
 	Timeline (void);
 
-	std::weak_ptr<Timeline> self;
+	TimelineWeak self;
 
 	std::vector<Event> event_list;
 	// event_cursor points to the end of the event_list unless we're

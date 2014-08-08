@@ -21,9 +21,9 @@
 
 #include <memory>
 
-typedef std::shared_ptr<class Container> ContainerPtr;
+typedef std::shared_ptr<class Container>          ContainerPtr;
 typedef std::shared_ptr<class IContainerListener> ContainerListenerPtr;
-typedef std::weak_ptr<class IContainerListener> ContainerListenerWeak;
+typedef std::weak_ptr  <class IContainerListener> ContainerListenerWeak;
 
 class IContainerListener
 {

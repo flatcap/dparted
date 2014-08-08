@@ -27,6 +27,7 @@
 #include "config.h"
 
 typedef std::shared_ptr<class ConfigFile> ConfigFilePtr;
+typedef std::weak_ptr  <class ConfigFile> ConfigFileWeak;
 
 /**
  * class ConfigFile - Manages a bunch of nested strings
@@ -64,7 +65,7 @@ protected:
 	std::map<std::string, std::string> config;
 
 private:
-	std::weak_ptr<ConfigFile> self;
+	ConfigFileWeak self;
 };
 
 
