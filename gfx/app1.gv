@@ -14,7 +14,6 @@ digraph app {
 	tree_view     [ label="Tree View"     fillcolor="#ffc0c0" ];
 
 	timeline [ label="Timeline" fillcolor="#ffffff" ];
-	txn      [ label="Txn"      fillcolor="#ffffff" ];
 
 	app [ shape=none style=none label=<<table port="t" border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td bgcolor="#ffffff" border="1" cellspacing="0" cellpadding="3">App</td></tr><tr><td bgcolor="#ffc0c0" border="1" cellspacing="0" cellpadding="3">Gui App</td></tr></table>> ];
 
@@ -50,11 +49,6 @@ digraph app {
 	cont_c2 -> cont_d;
 	cfg1 -> app:t [ style=invis ];
 	app:t -> cfg1;
-	app:se -> cont_t [ style=dotted ];
-
-	txn -> cont_c;
-	txn -> cont_c2;
-	txn -> timeline [ style=dotted ];
 
 	app:t -> theme;
 	cfg2 -> theme [ dir=back ];
@@ -68,14 +62,13 @@ digraph app {
 
 	cont_a -> cont_b -> cont_c [ style=invis ];
 	gfx_a  -> gfx_b  -> gfx_c  [ style=invis ];
-	cont_t -> txn              [ style=invis ];
 	theme -> window            [ style=invis ];
 
 	{ rank=same cont_a cont_b cont_c }
 	{ rank=same gfx_a  gfx_b  gfx_c  }
 
 	{ rank=same cfg1 app timeline }
-	{ rank=same cont_t txn }
+	{ rank=same cont_c cont_c2 }
 	{ rank=same theme cfg2 window }
 	{ rank=same cont_t gfx_t }
 }
