@@ -231,8 +231,20 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	g->block_size = 0;
 	g->uuid = read_guid (buffer+568);
 
-	//RAR std::string desc = "Discovered GPT partition table";
-	parent->add_child (g, false);
+	std::lock_guard<std::mutex> lock (mutex_write_lock);
+
+	if (!Container::start_transaction ("Gpt: probe")) {
+		log_error ("gpt probe failed");
+		return false;
+	}
+
+	ContainerPtr new_parent = parent->backup();
+	if (!new_parent) {
+		log_error ("backup failed");
+		return false;
+	}
+
+	new_parent->add_child (g, false);
 
 	// Assumption: 1MiB alignment (for now)
 	// Should reserved bits be allocated after actual partitions?
@@ -329,6 +341,8 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		//RAR desc = "Marked GPT empty space";
 		g->add_child (p, false);
 	}
+
+	Container::commit_transaction();
 
 	return true;
 }

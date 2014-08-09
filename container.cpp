@@ -377,6 +377,9 @@ Container::add_child (ContainerPtr& child, bool probe)
 		_add_child (children, child);
 	} else {
 		// log_code ("REAL container %s", get_device_name().c_str());
+		std::lock_guard<std::mutex> lock (mutex_children);
+		++seqnum;
+		_add_child (children, child);
 	}
 
 	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());

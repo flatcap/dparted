@@ -187,9 +187,24 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 
 	if (f) {
 		log_debug ("volume: %s (%s), child: %s", parent->name.c_str(), parent->get_type().c_str(), f->name.c_str());
-		//RAR std::string desc = "Discovered " + f->get_type() + " filesystem";
-		parent->add_child (f, false);	//XXX assumption fs is a leaf
-						//XXX move this into get_*?
+
+		std::lock_guard<std::mutex> lock (mutex_write_lock);
+
+		if (!Container::start_transaction ("Filesystem: probe")) {
+			log_error ("misc probe failed");
+			return false;
+		}
+
+		ContainerPtr new_parent = parent->backup();
+		if (!new_parent) {
+			log_error ("backup failed");
+			return false;
+		}
+
+		new_parent->add_child (f, false);	//XXX assumption fs is a leaf
+							//XXX move this into get_*?
+		Container::commit_transaction();
+
 		return true;
 	}
 

@@ -41,10 +41,10 @@ MSDOS	?= $(A)
 MD	?= $(A)
 LUKS	?= $(A)
 
-BTRFS	?= 0
-EXTFS	?= 0
-FS_MISC	?= 0
-NTFS	?= 0
+BTRFS	?= 1
+EXTFS	?= 1
+FS_MISC	?= 1
+NTFS	?= 1
 
 LIST	?= 0
 PROP	?= $(A)
