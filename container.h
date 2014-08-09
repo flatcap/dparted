@@ -43,6 +43,8 @@ typedef std::weak_ptr  <class Container> ContainerWeak;
 
 #include "transaction.h"
 
+extern std::mutex mutex_write_lock;
+
 /**
  * class Container - Base class for all containers
  */
@@ -89,10 +91,6 @@ public:
 	ContainerPtr get_parent   (void);
 	ContainerPtr get_toplevel (void);
 
-	bool start_transaction  (void);
-	bool commit_transaction (void);
-	void cancel_transaction (void);
-
 	ContainerPtr backup (void);
 
 	void add_listener (const ContainerListenerPtr& m);
@@ -108,6 +106,10 @@ public:
 	std::string dump (void);
 
 	PPtr add_string_prop (const std::string& owner, const std::string& name, const std::string& value);
+
+	static bool start_transaction  (const std::string& desc = "");
+	static bool commit_transaction (const std::string& desc = "");
+	static void cancel_transaction (void);
 
 	void notify_add (ContainerPtr parent, ContainerPtr child);
 	// notify_delete
@@ -183,9 +185,7 @@ protected:
 
 	std::vector<ContainerPtr> children;
 	std::mutex mutex_children;
-	TransactionPtr txn;
 	ContainerPtr previous;	// used by backup/restore
-	TransactionPtr get_txn (void);
 
 	std::vector<std::string> more_props;
 

@@ -64,7 +64,6 @@ public:
 
 protected:
 	ConfigFilePtr config_file;
-	ContainerPtr top_level;
 	TimelinePtr timeline;
 
 	void start_thread (std::function<void(void)> fn, const char* desc);

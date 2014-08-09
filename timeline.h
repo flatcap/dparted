@@ -19,23 +19,15 @@
 #ifndef _TIMELINE_H_
 #define _TIMELINE_H_
 
-#include <memory>
-#include <tuple>
-#include <string>
-#include <vector>
 #include <chrono>
 #include <ctime>
+#include <deque>
+#include <memory>
+#include <string>
+#include <tuple>
 
 #include "container.h"
 #include "transaction.h"
-
-enum class EventType {
-	t_add,		// A container was added
-	t_delete,	// ... deleted
-	t_edit		// ... changed
-};
-
-typedef std::tuple<std::chrono::steady_clock::time_point,EventType,ContainerPtr,ContainerPtr,std::string> Event;	// Date, event type, old, new, description
 
 typedef std::shared_ptr<class Timeline> TimelinePtr;
 typedef std::weak_ptr  <class Timeline> TimelineWeak;
@@ -47,6 +39,7 @@ public:
 	virtual ~Timeline();
 
 	bool adjust (int amount);
+	ContainerPtr get_top_level (void) { return top_level; }
 
 	bool commit (TransactionPtr txn);
 
@@ -54,11 +47,12 @@ protected:
 	Timeline (void);
 
 	TimelineWeak self;
+	ContainerPtr top_level;
 
-	std::vector<Event> event_list;
-	// event_cursor points to the end of the event_list unless we're
+	std::deque<Transaction> txn_list;
+	// txn_cursor points to the end of the txn_list unless we're
 	// re-wound time.  In that case it points to the first redo item.
-	std::vector<Event>::iterator event_cursor;
+	std::deque<Transaction>::iterator txn_cursor;
 };
 
 #endif // _TIMELINE_H_

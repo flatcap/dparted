@@ -208,7 +208,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 	}
 #endif
 
-	top_level = Container::create();	// Dropping any old results
+	ContainerPtr top_level = Container::create();	// Dropping any old results
 	top_level->name = "dummy";
 	timeline = Timeline::create (top_level);
 
@@ -293,7 +293,7 @@ App::process_queue_item (ContainerPtr item)
 
 
 void
-App::start_thread (std::function<void(void)> fn, const char* UNUSED(desc))
+App::start_thread (std::function<void(void)> fn, const char* desc)
 {
 	//XXX use of desc is clumsy, but will do for now
 #ifdef DP_THREADED

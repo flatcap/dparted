@@ -44,6 +44,9 @@
 
 std::atomic_ulong container_id = ATOMIC_VAR_INIT(1);
 
+std::mutex mutex_write_lock;
+TransactionPtr txn;
+
 std::vector<Action> cont_actions = {
 	{ "Create/Filesystem",         true },
 	{ "Create/Partition",          true },
@@ -367,13 +370,13 @@ Container::add_child (ContainerPtr& child, bool probe)
 	return_if_fail (child);
 	LOG_TRACE;
 
-	std::lock_guard<std::mutex> lock (mutex_children);
-	++seqnum;
-	_add_child (children, child);
-
-	TransactionPtr t = get_txn();
-	if (t) {
-		t->actions.push_back ("add_child");
+	if (bytes_size == 0) {
+		// log_code ("DUMMY container %s", get_device_name().c_str());
+		std::lock_guard<std::mutex> lock (mutex_children);
+		++seqnum;
+		_add_child (children, child);
+	} else {
+		// log_code ("REAL container %s", get_device_name().c_str());
 	}
 
 	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
@@ -385,7 +388,9 @@ Container::add_child (ContainerPtr& child, bool probe)
 	ContainerPtr parent = get_smart();		// Smart pointer to myself
 	child->parent = parent;
 
-	notify_add (parent, child);
+	if (txn) {
+		txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
+	}
 
 	if (bytes_size == 0) {	// We are a dummy device
 		return;
@@ -748,6 +753,7 @@ Container::get_children (void)
 std::vector<std::string>
 Container::get_prop_names (void)
 {
+	//XXX c++ magic?
 	std::vector<std::string> names;
 	for (auto& p : props) {
 		names.push_back (p.second->name);
@@ -771,6 +777,7 @@ Container::get_all_props (bool inc_hidden /*=false*/)
 {
 	std::vector<PPtr> vv;
 
+	//XXX what's the magic C++11 way of doing this?
 	for (auto& p : props) {
 		if ((p.second->flags & BaseProperty::Flags::Hide) && !inc_hidden)
 			continue;
@@ -829,18 +836,6 @@ Container::get_toplevel (void)
 	}
 
 	return parent;
-}
-
-TransactionPtr
-Container::get_txn (void)
-{
-	for (auto c = get_smart(); c; c = c->get_parent()) {			// Ascend the container tree
-		if (c->txn) {
-			return txn;
-		}
-	}
-
-	return nullptr;
 }
 
 
@@ -1160,17 +1155,47 @@ Container::add_listener (const ContainerListenerPtr& cl)
 
 
 bool
-Container::start_transaction (void)
+Container::start_transaction (const std::string& desc)
 {
-	txn = Transaction::create();
+	LOG_TRACE;
 
-	return (txn != nullptr);
+	if (mutex_write_lock.try_lock()) {
+		log_code ("need write_lock first");
+		mutex_write_lock.unlock();
+		return false;
+	}
+
+	txn = Transaction::create();
+	if (txn) {
+		txn->description = desc;
+	}
+
+	return (bool) txn;
 }
 
 bool
-Container::commit_transaction (void)
+Container::commit_transaction (const std::string& desc)
 {
 	LOG_TRACE;
+
+	if (!txn) {
+		log_code ("No txn to commit");
+		return false;
+	}
+
+	if (mutex_write_lock.try_lock()) {
+		log_code ("need write_lock first -- no commit");
+		mutex_write_lock.unlock();
+		return false;
+	}
+
+	if (txn && (!desc.empty())) {
+		txn->description = desc;
+	}
+
+	main_app->get_timeline()->commit (txn);
+	txn = nullptr;
+
 	return false;
 }
 
@@ -1178,6 +1203,19 @@ void
 Container::cancel_transaction (void)
 {
 	LOG_TRACE;
+
+	if (!txn) {
+		log_code ("No txn to commit");
+		return;
+	}
+
+	if (mutex_write_lock.try_lock()) {
+		log_code ("need write_lock first -- no cancel");
+		mutex_write_lock.unlock();
+		return;
+	}
+
+	txn = nullptr;
 }
 
 
@@ -1186,16 +1224,19 @@ Container::backup (void)
 {
 	LOG_TRACE;
 
-	ContainerPtr c = this->copy();
+	ContainerPtr prev = get_smart();
+
+	ContainerPtr c = prev->copy();
 	if (!c)
 		return {};
 
-	TransactionPtr t = get_txn();
-	if (t) {
-		t->actions.push_back ("backup container");
+	c->previous = prev;
+
+	if (txn) {
+		//XXX get_txn() function that checks we have a lock
+		txn->notifications.push_back (std::make_tuple (NotifyType::t_change, prev, c));
 	}
 
-	c->previous = get_smart();
 	return c;
 }
 

@@ -22,32 +22,20 @@
 #include "container.h"
 #include "utils.h"
 
-std::mutex mutex_write_lock;
-
 Transaction::Transaction (void)
 {
 }
 
 Transaction::~Transaction()
 {
-	mutex_write_lock.unlock();
-
-	log_code ("Actions:");
-	for (auto a : actions) {
-		log_code ("\t%s", a.c_str());
-	}
 }
 
 TransactionPtr
 Transaction::create (void)
 {
-	if (!mutex_write_lock.try_lock()) {
-		log_code ("Can't get global write lock");
-		return {};
-	}
-
 	TransactionPtr p (new Transaction());
-	p->self   = p;
+	p->self      = p;
+	p->timestamp = std::chrono::steady_clock::now();
 
 	return p;
 }

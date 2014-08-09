@@ -16,10 +16,13 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "timeline.h"
-#include "log.h"
-#include "utils.h"
+#include <chrono>
+
 #include "container.h"
+#include "log.h"
+#include "timeline.h"
+#include "transaction.h"
+#include "utils.h"
 
 Timeline::Timeline (void)
 {
@@ -28,56 +31,29 @@ Timeline::Timeline (void)
 
 Timeline::~Timeline()
 {
-	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-
-	for (auto& e : event_list) {
-		std::chrono::steady_clock::time_point then = std::get<0>(e);
-		int ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
-		log_debug ("%3dms ago (%d): %p/%p : %s",
-			ms,
-			std::get<1>(e),
-			std::get<2>(e).get(),
-			std::get<3>(e).get(),
-			std::get<4>(e).c_str());
-	}
+	// for (auto& t : txn_list) {
+	// 	std::chrono::steady_clock::time_point then = std::get<0>(t);
+	// 	int ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
+	// 	log_debug ("%3dms ago (%d): %p/%p : %s",
+	// 		ms,
+	// 		std::get<1>(t),
+	// 		std::get<2>(t).get(),
+	// 		std::get<3>(t).get(),
+	// 		std::get<4>(t).c_str());
+	// }
 	LOG_DTOR;
 }
 
 TimelinePtr
-Timeline::create (ContainerPtr& UNUSED(cont))
+Timeline::create (ContainerPtr& cont)
 {
 	TimelinePtr p (new Timeline());
 	p->self = p;
-	//RAR cont->add_listener(p);
+	p->top_level = cont;
 
 	return p;
 }
 
-
-#if 0
-void
-Timeline::container_added (const ContainerPtr& parent, const ContainerPtr& cont, const char* description)
-{
-	LOG_TRACE;
-
-	if (event_cursor != std::end (event_list)) {
-		log_error ("TIMELINE CURRENTLY REWOUND");
-		return;
-	}
-
-	std::string desc;
-	if (description) {
-		desc = description;
-	} else {
-		desc = "Unknown event";
-		desc = "";
-	}
-
-	event_list.push_back (std::make_tuple (std::chrono::steady_clock::now(), EventType::t_add, parent, cont, desc));
-	event_cursor = std::end (event_list);
-}
-
-#endif
 
 bool
 Timeline::adjust (int amount)
@@ -85,33 +61,33 @@ Timeline::adjust (int amount)
 	return_val_if_fail (amount, false);
 	// log_code ("adjust timeline %+d", amount);
 
-	if (amount < 0) {
-		if (event_cursor == std::begin (event_list)) {
-			log_code ("already at the beginning");
-			return false;
-		}
+	// if (amount < 0) {
+	// 	if (txn_cursor == std::begin (txn_list)) {
+	// 		log_code ("already at the beginning");
+	// 		return false;
+	// 	}
 
-		event_cursor--;
+	// 	txn_cursor--;
 
-		ContainerPtr cold = std::get<2>(*event_cursor);
-		ContainerPtr cnew = std::get<3>(*event_cursor);
+	// 	ContainerPtr cold = std::get<2>(*txn_cursor);
+	// 	ContainerPtr cnew = std::get<3>(*txn_cursor);
 
-		log_info ("Undo event: %s", std::get<4>(*event_cursor).c_str());
-		exchange (cold, cnew);
-	} else {
-		if (event_cursor == std::end (event_list)) {
-			log_info ("already at the end");
-			return false;
-		}
+	// 	log_info ("Undo event: %s", std::get<4>(*txn_cursor).c_str());
+	// 	exchange (cold, cnew);
+	// } else {
+	// 	if (txn_cursor == std::end (txn_list)) {
+	// 		log_info ("already at the end");
+	// 		return false;
+	// 	}
 
-		ContainerPtr cold = std::get<2>(*event_cursor);
-		ContainerPtr cnew = std::get<3>(*event_cursor);
+	// 	ContainerPtr cold = std::get<2>(*txn_cursor);
+	// 	ContainerPtr cnew = std::get<3>(*txn_cursor);
 
-		log_info ("Redo event: %s", std::get<4>(*event_cursor).c_str());
-		exchange (cold, cnew);
+	// 	log_info ("Redo event: %s", std::get<4>(*txn_cursor).c_str());
+	// 	exchange (cold, cnew);
 
-		event_cursor++;
-	}
+	// 	txn_cursor++;
+	// }
 	return false;
 }
 
@@ -121,6 +97,21 @@ Timeline::commit (TransactionPtr txn)
 {
 	return_val_if_fail (txn, false);
 
-	return false;
+	const char *names[] = { "add", "delete", "change" };
+
+	log_code ("Commit: %s", txn->description.c_str());
+	for (auto n : txn->notifications) {
+		std::string n1 {"Empty"}; ContainerPtr c1 = std::get<1>(n).lock(); if (c1) n1 = c1->get_name_default();
+		std::string n2 {"Empty"}; ContainerPtr c2 = std::get<2>(n).lock(); if (c2) n2 = c2->get_name_default();
+
+		log_code ("\t%s: %s %s", names[(int) std::get<0>(n)], n1.c_str(), n2.c_str());
+	}
+
+	// txn_list.push_back (std::make_tuple (std::chrono::steady_clock::now(), EventType::t_add, before, after, desc));
+	// txn_cursor = std::end (txn_list);
+
+	//RAR notify_add (...)
+
+	return true;
 }
 

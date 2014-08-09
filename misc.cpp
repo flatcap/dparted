@@ -196,12 +196,27 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	if (m) {
-		//RAR "Discovered unidentified partition"
-		parent->add_child (m, false);
+		std::lock_guard<std::mutex> lock (mutex_write_lock);
 
-		m->bytes_size = parent->bytes_size;
+		if (!Container::start_transaction ("Misc: probe")) {
+			log_error ("misc probe failed");
+			return false;
+		}
+
+		ContainerPtr new_parent = parent->backup();
+		if (!new_parent) {
+			log_error ("backup failed");
+			return false;
+		}
+
+		new_parent->add_child (m, false);
+
+		m->bytes_size = new_parent->bytes_size;
 		m->bytes_used = 0;
 		m->parent_offset = 0;
+
+		Container::commit_transaction();
+
 		return true;
 	}
 

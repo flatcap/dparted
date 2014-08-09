@@ -305,7 +305,9 @@ Loop::discover (ContainerPtr& parent)
 	}
 
 	// Only now do we take the write lock
-	if (!parent->start_transaction()) {
+	std::lock_guard<std::mutex> lock (mutex_write_lock);
+
+	if (!Container::start_transaction ("Loop: discover devices")) {
 		log_error ("loop discover failed");
 		return;
 	}
@@ -320,7 +322,7 @@ Loop::discover (ContainerPtr& parent)
 		new_parent->add_child (l, true);
 	}
 
-	parent->commit_transaction();
+	Container::commit_transaction();
 }
 
 bool

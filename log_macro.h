@@ -35,6 +35,7 @@
 #define log_thread_start     log_redirect
 #define log_thread_end       log_redirect
 #define log_utils            log_redirect
+#define log_listener         log_redirect
 #else
 // Log level: EMERG
 #define log_system_emergency(...) log_redirect (Severity::SystemEmergency, __PRETTY_FUNCTION__, __FILE__, __LINE__, __VA_ARGS__)

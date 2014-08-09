@@ -20,14 +20,21 @@
 #define _TRANSACTION_H_
 
 #include <memory>
-#include <mutex>
+#include <string>
 #include <vector>
 
 typedef std::shared_ptr<class Transaction> TransactionPtr;
 typedef std::weak_ptr  <class Transaction> TransactionWeak;
 
 #include "container.h"
-#include "container_listener.h"
+
+enum class NotifyType {
+	t_add,		// A container was added
+	t_delete,	// ... deleted
+	t_change	// ... changed
+};
+
+typedef std::tuple<NotifyType,ContainerWeak,ContainerWeak> Notification;
 
 class Transaction
 {
@@ -35,7 +42,9 @@ public:
 	static TransactionPtr create (void);
 	virtual ~Transaction();
 
-	std::vector<std::string> actions;
+	std::chrono::steady_clock::time_point timestamp;
+	std::string description;
+	std::vector<Notification> notifications;
 
 protected:
 	Transaction (void);
