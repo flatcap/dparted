@@ -237,8 +237,8 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 #ifdef DP_THREADED
 	if (fn) {
 		// Start a thread to watch the existing threads.
-		// When the existing thread have finished notify the user with fn().
-		std::thread ([&](){
+		// When the existing threads have finished notify the user with fn().
+		std::thread ([=](){
 			log_thread_start ("Waiting for threads to finish");
 			while (!thread_queue.empty()) {
 				thread_queue.front().join();

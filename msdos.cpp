@@ -226,12 +226,18 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	MsdosPtr m = Msdos::create();
 
-	m->bytes_size = parent->bytes_size;
-	// m->device = parent->device;	//XXX only for partitions, main body should inherit
+	ContainerPtr new_parent = Container::start_transaction (parent, "Msdos: probe");
+	if (!new_parent) {
+		log_error ("gpt probe failed");
+		return false;
+	}
+
+	m->bytes_size = new_parent->bytes_size;
+	// m->device = new_parent->device;	//XXX only for partitions, main body should inherit
 	m->parent_offset = 0;
 
 	//RAR std::string desc = "Identified MSDOS partition table";
-	parent->add_child (m, false);
+	new_parent->add_child (m, false);
 
 	std::vector<struct partition> vp;
 	count = m->read_table (buffer, bufsize, 0, vp);
@@ -260,7 +266,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 		ContainerPtr c;
 
-		std::string part_name = make_part_dev (parent->device, i+1);
+		std::string part_name = make_part_dev (new_parent->device, i+1);
 		//XXX check it's not empty
 
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
@@ -296,6 +302,8 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	m->fill_space();		// optional
+
+	Container::commit_transaction();
 
 	return true;
 }
