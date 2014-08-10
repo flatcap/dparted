@@ -92,6 +92,7 @@ public:
 	ContainerPtr get_toplevel (void);
 
 	ContainerPtr backup (void);
+	void notify (NotifyType type, ContainerPtr first, ContainerPtr second);
 
 	void add_listener (const ContainerListenerPtr& m);
 
@@ -107,7 +108,7 @@ public:
 
 	PPtr add_string_prop (const std::string& owner, const std::string& name, const std::string& value);
 
-	static bool start_transaction  (const std::string& desc = "");
+	static ContainerPtr start_transaction (ContainerPtr& parent, const std::string& desc = "");
 	static bool commit_transaction (const std::string& desc = "");
 	static void cancel_transaction (void);
 
@@ -179,7 +180,7 @@ protected:
 
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 	friend bool operator== (const ContainerPtr& lhs, const ContainerPtr& rhs);
-	friend bool exchange (ContainerPtr& existing, ContainerPtr& replacement);
+	friend bool exchange (ContainerPtr existing, ContainerPtr replacement);
 
 	std::map<std::string, PPtr> props;
 

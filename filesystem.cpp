@@ -188,16 +188,9 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 	if (f) {
 		log_debug ("volume: %s (%s), child: %s", parent->name.c_str(), parent->get_type().c_str(), f->name.c_str());
 
-		std::lock_guard<std::mutex> lock (mutex_write_lock);
-
-		if (!Container::start_transaction ("Filesystem: probe")) {
-			log_error ("misc probe failed");
-			return false;
-		}
-
-		ContainerPtr new_parent = parent->backup();
+		ContainerPtr new_parent = Container::start_transaction (parent, "Filesystem: probe");
 		if (!new_parent) {
-			log_error ("backup failed");
+			log_error ("misc probe failed");
 			return false;
 		}
 

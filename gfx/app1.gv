@@ -14,6 +14,7 @@ digraph app {
 	tree_view     [ label="Tree View"     fillcolor="#ffc0c0" ];
 
 	timeline [ label="Timeline" fillcolor="#ffffff" ];
+	txn_list [ label="Txn List" fillcolor="#ffffff" ];
 
 	app [ shape=none style=none label=<<table port="t" border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td bgcolor="#ffffff" border="1" cellspacing="0" cellpadding="3">App</td></tr><tr><td bgcolor="#ffc0c0" border="1" cellspacing="0" cellpadding="3">Gui App</td></tr></table>> ];
 
@@ -46,6 +47,9 @@ digraph app {
 
 	app:t -> timeline;
 	timeline -> cont_t;
+	timeline -> txn_list;
+	txn_list -> cont_c;
+	txn_list -> cont_c2;
 	cont_c2 -> cont_d;
 	cfg1 -> app:t [ style=invis ];
 	app:t -> cfg1;

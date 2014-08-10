@@ -659,7 +659,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 {
 	return_val_if_fail (c, stream);
 
-	std::uint64_t bytes_free = c->bytes_size - c->bytes_used;
+	// std::uint64_t bytes_free = c->bytes_size - c->bytes_used;
 
 	std::string uuid = c->uuid;
 	std::string type;
@@ -682,12 +682,12 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 		<< '"' << c->device << '"' << "(" << c->fd << "),"
 		<< " S:" // << c->bytes_size
 						<< "(" << get_size (c->bytes_size)    << "), "
-		<< " U:" // << c->bytes_used
-						<< "(" << get_size (c->bytes_used)    << "), "
-		<< " F:" // <<   bytes_free
-						<< "(" << get_size (   bytes_free)    << "), "
-		<< " P:" // << c->parent_offset
-						<< "(" << get_size (c->parent_offset) << "), "
+		// << " U:" // << c->bytes_used
+		// 				<< "(" << get_size (c->bytes_used)    << "), "
+		// << " F:" // <<   bytes_free
+		// 				<< "(" << get_size (   bytes_free)    << "), "
+		// << " P:" // << c->parent_offset
+		// 				<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
 		<< " uniq: " << c->unique_id
@@ -704,18 +704,33 @@ operator== (const ContainerPtr& lhs, const ContainerPtr& rhs)
 }
 
 bool
-exchange (ContainerPtr& UNUSED(existing), ContainerPtr& UNUSED(replacement))
+exchange (ContainerPtr existing, ContainerPtr replacement)
 {
-	// int e = 0;
-	// int r = 0;
+	return_val_if_fail (existing, false);
+	return_val_if_fail (replacement, false);
 
-	// if (existing)    e = existing->unique_id;
-	// if (replacement) r = replacement->unique_id;
+	ContainerPtr p = existing->parent.lock();
+	if (!p) {
+		// log_error ("no parent");
+		return false;
+	}
 
-	// log_code ("exchange %ld, %ld", e, r);
-	// std::lock_guard<std::mutex> lock (mutex_children);
+	// log_code ("exchange %ld, %ld", existing->unique_id, replacement->unique_id);
 
-	return false;
+	std::lock_guard<std::mutex> lock (p->mutex_children);
+
+	auto it = std::find_if (std::begin (p->children),
+			std::end (p->children),
+			[&] (ContainerPtr& c) { return (c->unique_id == existing->unique_id); });
+
+	if (it == std::end (p->children)) {
+		log_error ("Parent doesn't have that child");
+		return false;
+	}
+
+	*it = replacement;
+
+	return true;
 }
 
 
@@ -1157,23 +1172,24 @@ Container::add_listener (const ContainerListenerPtr& cl)
 }
 
 
-bool
-Container::start_transaction (const std::string& desc)
+ContainerPtr
+Container::start_transaction (ContainerPtr& parent, const std::string& desc)
 {
 	LOG_TRACE;
 
-	if (mutex_write_lock.try_lock()) {
-		log_code ("need write_lock first");
-		mutex_write_lock.unlock();
-		return false;
+	txn = Transaction::create (mutex_write_lock);
+	if (!txn) {
+		return {};
+	}
+	txn->description = desc;
+
+	ContainerPtr copy = parent->backup();
+	if (!copy) {
+		log_error ("backup failed");
+		return {};
 	}
 
-	txn = Transaction::create();
-	if (txn) {
-		txn->description = desc;
-	}
-
-	return (bool) txn;
+	return copy;
 }
 
 bool
@@ -1183,12 +1199,6 @@ Container::commit_transaction (const std::string& desc)
 
 	if (!txn) {
 		log_code ("No txn to commit");
-		return false;
-	}
-
-	if (mutex_write_lock.try_lock()) {
-		log_code ("need write_lock first -- no commit");
-		mutex_write_lock.unlock();
 		return false;
 	}
 
@@ -1212,12 +1222,6 @@ Container::cancel_transaction (void)
 		return;
 	}
 
-	if (mutex_write_lock.try_lock()) {
-		log_code ("need write_lock first -- no cancel");
-		mutex_write_lock.unlock();
-		return;
-	}
-
 	txn = nullptr;
 }
 
@@ -1228,6 +1232,11 @@ Container::backup (void)
 	LOG_TRACE;
 
 	ContainerPtr prev = get_smart();
+
+	if (prev->parent.expired()) {
+		// We're a dummy device.  Don't make any changes
+		return prev;
+	}
 
 	ContainerPtr c = prev->copy();
 	if (!c)
@@ -1260,3 +1269,19 @@ Container::notify_add (ContainerPtr parent, ContainerPtr child)
 	}
 }
 
+void
+Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
+{
+	LOG_TRACE;
+
+	switch (type) {
+		case NotifyType::t_add:
+			notify_add (first, second);
+			break;
+		case NotifyType::t_delete:
+		case NotifyType::t_change:
+			// void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after) = 0;
+		default:
+			break;
+	}
+}

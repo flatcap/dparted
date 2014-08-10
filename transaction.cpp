@@ -22,20 +22,23 @@
 #include "container.h"
 #include "utils.h"
 
-Transaction::Transaction (void)
+Transaction::Transaction (std::mutex& m) :
+	timestamp (std::chrono::steady_clock::now()),
+	write_lock(m)
 {
+	write_lock.lock();
 }
 
 Transaction::~Transaction()
 {
+	write_lock.unlock();
 }
 
 TransactionPtr
-Transaction::create (void)
+Transaction::create (std::mutex& write_lock)
 {
-	TransactionPtr p (new Transaction());
-	p->self      = p;
-	p->timestamp = std::chrono::steady_clock::now();
+	TransactionPtr p (new Transaction (write_lock));
+	p->self = p;
 
 	return p;
 }

@@ -196,16 +196,9 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	if (m) {
-		std::lock_guard<std::mutex> lock (mutex_write_lock);
-
-		if (!Container::start_transaction ("Misc: probe")) {
-			log_error ("misc probe failed");
-			return false;
-		}
-
-		ContainerPtr new_parent = parent->backup();
+		ContainerPtr new_parent = Container::start_transaction (parent, "Misc: probe");
 		if (!new_parent) {
-			log_error ("backup failed");
+			log_error ("misc probe failed");
 			return false;
 		}
 

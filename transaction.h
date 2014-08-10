@@ -26,20 +26,20 @@
 typedef std::shared_ptr<class Transaction> TransactionPtr;
 typedef std::weak_ptr  <class Transaction> TransactionWeak;
 
-#include "container.h"
-
 enum class NotifyType {
-	t_add,		// A container was added
-	t_delete,	// ... deleted
-	t_change	// ... changed
+	t_add,		// Parent,    New Child
+	t_delete,	// Parent,    Old Child
+	t_change	// Old Child, New Child
 };
+
+#include "container.h"
 
 typedef std::tuple<NotifyType,ContainerWeak,ContainerWeak> Notification;
 
 class Transaction
 {
 public:
-	static TransactionPtr create (void);
+	static TransactionPtr create (std::mutex& write_lock);
 	virtual ~Transaction();
 
 	std::chrono::steady_clock::time_point timestamp;
@@ -47,8 +47,9 @@ public:
 	std::vector<Notification> notifications;
 
 protected:
-	Transaction (void);
+	Transaction (std::mutex& write_lock);
 
+	std::mutex& write_lock;
 	TransactionWeak self;
 };
 

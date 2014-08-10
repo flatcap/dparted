@@ -231,16 +231,9 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	g->block_size = 0;
 	g->uuid = read_guid (buffer+568);
 
-	std::lock_guard<std::mutex> lock (mutex_write_lock);
-
-	if (!Container::start_transaction ("Gpt: probe")) {
-		log_error ("gpt probe failed");
-		return false;
-	}
-
-	ContainerPtr new_parent = parent->backup();
+	ContainerPtr new_parent = Container::start_transaction (parent, "Gpt: probe");
 	if (!new_parent) {
-		log_error ("backup failed");
+		log_error ("gpt probe failed");
 		return false;
 	}
 

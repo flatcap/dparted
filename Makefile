@@ -46,7 +46,7 @@ EXTFS	?= 1
 FS_MISC	?= 1
 NTFS	?= 1
 
-LIST	?= 0
+LIST	?= 1
 PROP	?= $(A)
 DOT	?= $(A)
 HEX	?= $(A)

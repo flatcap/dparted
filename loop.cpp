@@ -304,19 +304,10 @@ Loop::discover (ContainerPtr& parent)
 		loops.push_back(l);
 	}
 
-	// Only now do we take the write lock
-	std::lock_guard<std::mutex> lock (mutex_write_lock);
-
-	if (!Container::start_transaction ("Loop: discover devices")) {
-		log_error ("loop discover failed");
+	// The transaction manages the write lock
+	ContainerPtr new_parent = Container::start_transaction (parent, "Loop: discover devices");
+	if (!new_parent)
 		return;
-	}
-
-	ContainerPtr new_parent = parent->backup();
-	if (!new_parent) {
-		log_error ("backup failed");
-		return;
-	}
 
 	for (auto l : loops) {
 		new_parent->add_child (l, true);

@@ -99,18 +99,28 @@ Timeline::commit (TransactionPtr txn)
 
 	const char *names[] = { "add", "delete", "change" };
 
-	log_code ("Commit: %s", txn->description.c_str());
-	for (auto n : txn->notifications) {
-		std::string n1 {"Empty"}; ContainerPtr c1 = std::get<1>(n).lock(); if (c1) n1 = c1->get_name_default();
-		std::string n2 {"Empty"}; ContainerPtr c2 = std::get<2>(n).lock(); if (c2) n2 = c2->get_name_default();
-
-		log_code ("\t%s: %s %s", names[(int) std::get<0>(n)], n1.c_str(), n2.c_str());
+	if (txn->notifications.empty()) {
+		log_code ("empty transaction");
+		return false;
 	}
 
-	// txn_list.push_back (std::make_tuple (std::chrono::steady_clock::now(), EventType::t_add, before, after, desc));
-	// txn_cursor = std::end (txn_list);
+	auto n = txn->notifications[0];					// First notification is the top-level of all the changes
+	exchange (std::get<1>(n).lock(), std::get<2>(n).lock());	// Put the new containers into place
 
-	//RAR notify_add (...)
+	log_code ("Commit: %s", txn->description.c_str());
+	for (auto n : txn->notifications) {
+		NotifyType type = std::get<0>(n);
+		std::stringstream n1; ContainerPtr c1 = std::get<1>(n).lock(); if (c1) n1 << c1;
+		std::stringstream n2; ContainerPtr c2 = std::get<2>(n).lock(); if (c2) n2 << c2;
+
+		log_code ("\t%s:", names[(int) type]);
+		log_code ("\t\t%s", n1.str().c_str());
+		log_code ("\t\t%s", n2.str().c_str());
+
+		c1->notify (type, c1, c2);				// Let everyone know about the changes
+	}
+
+	txn_cursor = std::end (txn_list);
 
 	return true;
 }
