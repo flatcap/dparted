@@ -387,7 +387,6 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	t->metadata_size = 1048576;		//XXX read from header
 
-	//RAR std::string desc = "Discovered LVM table: " + t->uuid;
 	parent->add_child (t, false);
 
 	PartitionPtr p = Partition::create();
@@ -396,7 +395,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	p->bytes_size = t->metadata_size;
 	p->bytes_used = t->metadata_size;
 	p->parent_offset = 0;
-	t->add_child (p, false);	//RAR "Marked unused LVM space"
+	t->add_child (p, false);
 
 	//XXX add alignment -- can't do this without the group's block size
 
@@ -458,7 +457,7 @@ LvmTable::set_alignment (std::uint64_t bytes)
 	s->bytes_used = remainder;
 	s->parent_offset = bytes_size - remainder;
 	ContainerPtr c(s);
-	add_child (c, false);	//RAR "Marked LVM alignment space"
+	add_child (c, false);
 
 	return true;
 }
