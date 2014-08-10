@@ -146,7 +146,11 @@ void
 App::queue_add_probe (ContainerPtr& item)
 {
 	return_if_fail (item);
+#ifdef DP_THREADED
 	start_thread (std::bind (&App::process_queue_item, this, item), "App::process_queue_item");
+#else
+	work_queue.push_back (item);
+#endif
 }
 
 bool
@@ -208,7 +212,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 	}
 #endif
 
-	top_level = Container::create();	// Dropping any old results
+	ContainerPtr top_level = Container::create();	// Dropping any old results
 	top_level->name = "dummy";
 	timeline = Timeline::create (top_level);
 
@@ -234,10 +238,18 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 		}
 	}
 
+#ifndef DP_THREADED
+	while (!work_queue.empty()) {
+		ContainerPtr c = work_queue.front();
+		work_queue.pop_front();
+		process_queue_item (c);
+	}
+#endif
+
 #ifdef DP_THREADED
 	if (fn) {
 		// Start a thread to watch the existing threads.
-		// When the existing thread have finished notify the user with fn().
+		// When the existing threads have finished notify the user with fn().
 		std::thread ([=](){
 			log_thread_start ("Waiting for threads to finish");
 			while (!thread_queue.empty()) {
@@ -292,11 +304,11 @@ App::process_queue_item (ContainerPtr item)
 }
 
 
+#ifdef DP_THREADED
 void
 App::start_thread (std::function<void(void)> fn, const char* desc)
 {
 	//XXX use of desc is clumsy, but will do for now
-#ifdef DP_THREADED
 	std::lock_guard<std::mutex> lock (thread_mutex);
 	thread_queue.push_back (
 		std::thread ([fn, desc]() {
@@ -305,11 +317,16 @@ App::start_thread (std::function<void(void)> fn, const char* desc)
 			log_thread_end   ("thread ended:   %s", desc);
 		})
 	);
-#else
-	fn();
-#endif
 }
 
+#else
+void
+App::start_thread (std::function<void(void)> fn, const char* UNUSED(desc))
+{
+	fn();
+}
+
+#endif
 
 bool
 App::open_uri (const std::string& uri)
@@ -319,7 +336,7 @@ App::open_uri (const std::string& uri)
 }
 
 
-std::vector<std::weak_ptr<Container>> all_children;
+std::vector<ContainerWeak> all_children;
 std::mutex mutex_children;
 
 int
@@ -369,7 +386,7 @@ tidy_children (void)
 
 	// printf ("REMOVE_IF\n");
 	// printf ("\t"); dump_children(); printf ("\n");
-	auto new_end = std::remove_if (std::begin(all_children), std::end(all_children), [](std::weak_ptr<Container>& c) { return c.expired(); });
+	auto new_end = std::remove_if (std::begin(all_children), std::end(all_children), [](ContainerWeak& c) { return c.expired(); });
 	// printf ("\t"); dump_children(); printf ("\n");
 
 	// log_info ("\tcheck start");
@@ -552,4 +569,11 @@ App::adjust_timeline (int amount)
 	// LOG_TRACE;
 	return timeline->adjust (amount);
 }
+
+TimelinePtr
+App::get_timeline (void)
+{
+	return timeline;
+}
+
 

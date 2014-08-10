@@ -1,0 +1,25 @@
+Resize 1
+	T2 = T1->backup();
+	Pe = T2->resize (Pb, start, size);
+	T2->commit();
+
+Resize 2
+	T2 = T1->backup();
+	Pe = T2->resize (Pb, size);
+	T2->commit();
+
+Resize 3
+	T2 = T1->backup();
+	Pe = T2->resize (Pb, start, size);
+	T2->commit();
+
+Resize 4
+	T2 = T1->backup();
+	Pe = T2->resize (Pb, start, size);
+	T2->commit();
+
+Resize 5
+	T2 = T1->backup();
+	Pe = T2->resize (Pb, start, size);
+	T2->commit();
+

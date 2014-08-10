@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------------------------------------------------
+Resize Partition/Filesystem
+
+	CONTAINER				TRANSACTION			DISK
+	copy (Gpt1, Gpt2)			Change: Gpt1, Gpt2
+	copy (Part1, Part2)			Change: Part1, Part2
+	Gpt2 swap (Part1, Part2)
+	copy (Fs1, Fs2)				Change: Fs1, Fs2
+	add_child (Part2, Fs2)
+	copy (Space1, Space2)			Change: Space1, Space2
+	Gpt2 swap (Space1, Space2)
+
+	resize_child (Gpt2, Part2)		Change: Part1, Part2		resize partition
+	resize_child (Part2, Fs2)		Change: Part2, Fs2		resize fs
+
+	commit (Gpt1, Gpt2, "Resize partition")
+		swap (Gpt1, Gpt2)
+		notify_change (Gpt1, Gpt2)
+		notify_change (Part1, Part2)
+		notify_change (Space1, Space2)
+		notify_change (Fs1, Fs2)
+

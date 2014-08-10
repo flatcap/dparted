@@ -44,6 +44,9 @@
 
 std::atomic_ulong container_id = ATOMIC_VAR_INIT(1);
 
+std::mutex mutex_write_lock;
+TransactionPtr txn;
+
 std::vector<Action> cont_actions = {
 	{ "Create/Filesystem",         true },
 	{ "Create/Partition",          true },
@@ -165,7 +168,9 @@ Container::Container (const Container& c) :
 	more_props          = c.more_props;
 	whole               = c.whole;
 	device_mmap         = c.device_mmap;
-	container_listeners = c.container_listeners;
+	//RAR container_listeners = c.container_listeners;
+	//RAR don't copy listeners, do it on the ::swap
+	//RAR where's seqnum?
 
 	// Of the remaining Container members:
 	// generated
@@ -360,14 +365,22 @@ Container::perform_action (Action action)
 
 
 void
-Container::add_child (ContainerPtr& child, bool probe, const char* description)
+Container::add_child (ContainerPtr& child, bool probe)
 {
 	return_if_fail (child);
 	LOG_TRACE;
 
-	std::lock_guard<std::mutex> lock (mutex_children);
-	++seqnum;
-	children.insert (child);
+	if (bytes_size == 0) {
+		// log_code ("DUMMY container %s", get_device_name().c_str());
+		std::lock_guard<std::mutex> lock (mutex_children);
+		++seqnum;
+		_add_child (children, child);
+	} else {
+		// log_code ("REAL container %s", get_device_name().c_str());
+		std::lock_guard<std::mutex> lock (mutex_children);
+		++seqnum;
+		_add_child (children, child);
+	}
 
 	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
@@ -375,19 +388,11 @@ Container::add_child (ContainerPtr& child, bool probe, const char* description)
 		main_app->queue_add_probe (child);
 	}
 
-	child->parent = get_smart();
+	ContainerPtr parent = get_smart();		// Smart pointer to myself
+	child->parent = parent;
 
-	ContainerPtr toplevel = get_toplevel();
-	if (toplevel) {
-		for (auto& i : toplevel->container_listeners) {
-			ContainerListenerPtr cl = i.lock();
-			if (cl) {
-				log_listener ("Added child %p to Container %p", child.get(), this);
-				cl->container_added (get_smart(), child, description);	//XXX get this pointer once
-			} else {
-				log_code ("remove listener from the collection");	//XXX remove it from the collection
-			}
-		}
+	if (txn) {
+		txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
 	}
 
 	if (bytes_size == 0) {	// We are a dummy device
@@ -419,6 +424,40 @@ Container::delete_child (ContainerPtr& child)
 void
 Container::move_child (ContainerPtr& UNUSED(child), std::uint64_t UNUSED(offset), std::uint64_t UNUSED(size))
 {
+}
+
+
+bool
+insert_here (const ContainerPtr& a, const ContainerPtr& b)
+{
+	//RAR CHECK ALL THIS
+	if (a->parent_offset != b->parent_offset)
+		return (a->parent_offset > b->parent_offset);
+
+	std::uint64_t da = (a->device_major << 10) + a->device_minor;
+	std::uint64_t db = (b->device_major << 10) + b->device_minor;
+	if (da != db)
+		return (da > db);
+
+	int x = a->name.compare (b->name);	//XXX default name?
+	if (x != 0)
+		return (x > 0);
+
+	return ((void*) a.get() > (void*) b.get());
+}
+
+void
+Container::_add_child (std::vector<ContainerPtr>& vec, ContainerPtr& child)
+{
+	auto end = std::end (vec);
+	for (auto it = std::begin (vec); it != end; ++it) {
+		if (insert_here (*it, child)) {
+			vec.insert (it, child);
+			return;
+		}
+	}
+
+	vec.push_back (child);
 }
 
 
@@ -635,21 +674,21 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	}
 
 	stream
-#if 0
+#if 1
 		<< "[" << type << "]:"
 #endif
 		<< c->name
-#if 0
+#if 1
 		<< "(" << uuid << "), "
 		<< '"' << c->device << '"' << "(" << c->fd << "),"
 		<< " S:" // << c->bytes_size
 						<< "(" << get_size (c->bytes_size)    << "), "
-		<< " U:" // << c->bytes_used
-						<< "(" << get_size (c->bytes_used)    << "), "
-		<< " F:" // <<   bytes_free
-						<< "(" << get_size (   bytes_free)    << "), "
-		<< " P:" // << c->parent_offset
-						<< "(" << get_size (c->parent_offset) << "), "
+		// << " U:" // << c->bytes_used
+		// 				<< "(" << get_size (c->bytes_used)    << "), "
+		// << " F:" // <<   bytes_free
+		// 				<< "(" << get_size (   bytes_free)    << "), "
+		// << " P:" // << c->parent_offset
+		// 				<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
 		<< " uniq: " << c->unique_id
@@ -659,19 +698,40 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	return stream;
 }
 
-bool
-exchange (ContainerPtr& existing, ContainerPtr& replacement)
+inline bool
+operator== (const ContainerPtr& lhs, const ContainerPtr& rhs)
 {
-	int e = 0;
-	int r = 0;
+	return (lhs->unique_id == rhs->unique_id);
+}
 
-	if (existing)    e = existing->unique_id;
-	if (replacement) r = replacement->unique_id;
+bool
+exchange (ContainerPtr existing, ContainerPtr replacement)
+{
+	return_val_if_fail (existing, false);
+	return_val_if_fail (replacement, false);
 
-	log_code ("exchange %ld, %ld", e, r);
-	// std::lock_guard<std::mutex> lock (mutex_children);
+	ContainerPtr p = existing->parent.lock();
+	if (!p) {
+		// log_error ("no parent");
+		return false;
+	}
 
-	return false;
+	// log_code ("exchange %ld, %ld", existing->unique_id, replacement->unique_id);
+
+	std::lock_guard<std::mutex> lock (p->mutex_children);
+
+	auto it = std::find_if (std::begin (p->children),
+			std::end (p->children),
+			[&] (ContainerPtr& c) { return (c->unique_id == existing->unique_id); });
+
+	if (it == std::end (p->children)) {
+		log_error ("Parent doesn't have that child");
+		return false;
+	}
+
+	*it = replacement;
+
+	return true;
 }
 
 
@@ -698,7 +758,7 @@ Container::sub_type (const char* n)
 }
 
 
-std::set<ContainerPtr, Container::compare>&
+std::vector<ContainerPtr>&
 Container::get_children (void)
 {
 	LOG_TRACE;
@@ -712,6 +772,7 @@ Container::get_children (void)
 std::vector<std::string>
 Container::get_prop_names (void)
 {
+	//XXX c++ magic?
 	std::vector<std::string> names;
 	for (auto& p : props) {
 		names.push_back (p.second->name);
@@ -735,6 +796,7 @@ Container::get_all_props (bool inc_hidden /*=false*/)
 {
 	std::vector<PPtr> vv;
 
+	//XXX what's the magic C++11 way of doing this?
 	for (auto& p : props) {
 		if ((p.second->flags & BaseProperty::Flags::Hide) && !inc_hidden)
 			continue;
@@ -752,6 +814,19 @@ Container::add_string_prop (const std::string& owner, const std::string& name, c
 	more_props.push_back (value);
 	PPtr p = declare_prop_var (owner.c_str(), name.c_str(), more_props.back(), "desc", 0);
 	return p;
+}
+
+PPtr
+Container::declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags)
+{
+	return_val_if_fail (owner, nullptr);
+	return_val_if_fail (name,  nullptr);
+	return_val_if_fail (desc,  nullptr);
+
+	PPtr pv (new PropArray (owner, name, v, index, desc, flags));
+	props[name] = pv;
+
+	return pv;
 }
 
 
@@ -1098,3 +1173,116 @@ Container::add_listener (const ContainerListenerPtr& cl)
 }
 
 
+ContainerPtr
+Container::start_transaction (ContainerPtr& parent, const std::string& desc)
+{
+	LOG_TRACE;
+
+	txn = Transaction::create (mutex_write_lock);
+	if (!txn) {
+		return {};
+	}
+	txn->description = desc;
+
+	ContainerPtr copy = parent->backup();
+	if (!copy) {
+		log_error ("backup failed");
+		return {};
+	}
+
+	return copy;
+}
+
+bool
+Container::commit_transaction (const std::string& desc)
+{
+	LOG_TRACE;
+
+	if (!txn) {
+		log_code ("No txn to commit");
+		return false;
+	}
+
+	if (txn && (!desc.empty())) {
+		txn->description = desc;
+	}
+
+	main_app->get_timeline()->commit (txn);
+	txn = nullptr;
+
+	return false;
+}
+
+void
+Container::cancel_transaction (void)
+{
+	LOG_TRACE;
+
+	if (!txn) {
+		log_code ("No txn to commit");
+		return;
+	}
+
+	txn = nullptr;
+}
+
+
+ContainerPtr
+Container::backup (void)
+{
+	LOG_TRACE;
+
+	ContainerPtr prev = get_smart();
+
+	if (prev->parent.expired()) {
+		// We're a dummy device.  Don't make any changes
+		return prev;
+	}
+
+	ContainerPtr c = prev->copy();
+	if (!c)
+		return {};
+
+	c->previous = prev;
+
+	if (txn) {
+		//XXX get_txn() function that checks we have a lock
+		txn->notifications.push_back (std::make_tuple (NotifyType::t_change, prev, c));
+	}
+
+	return c;
+}
+
+void
+Container::notify_add (ContainerPtr parent, ContainerPtr child)
+{
+	for (auto c = get_smart(); c; c = c->get_parent()) {			// Ascend the container tree
+		// log_code ("%s : %s", __FUNCTION__, c->name.c_str());
+
+		for (auto& i : c->container_listeners) {
+			ContainerListenerPtr cl = i.lock();
+			if (cl) {
+				cl->container_added (parent, child);
+			} else {
+				log_code ("remove listener from the collection");	//XXX remove it from the collection
+			}
+		}
+	}
+}
+
+void
+Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
+{
+	LOG_TRACE;
+
+	switch (type) {
+		case NotifyType::t_add:
+			notify_add (first, second);
+			break;
+		case NotifyType::t_delete:
+		case NotifyType::t_change:
+			// void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after) = 0;
+		default:
+			break;
+	}
+}

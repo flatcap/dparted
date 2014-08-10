@@ -48,14 +48,15 @@ main (int argc, char *argv[])
 			Severity::ThreadEnd|
 			Severity::Enter|
 			Severity::Leave|
+			Severity::Listener|
 			Severity::Code
 		));
 	}
 
 	LogHandlerPtr log_red = LogHandler::create (stdout);
 	if (log_red) {
-		log_red->background =  16;
-		log_red->foreground = 196;
+		// log_red->background =  16;
+		// log_red->foreground = 196;
 		log_red->start (Severity::Code);
 	}
 

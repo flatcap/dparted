@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <sstream>
 
+#include "container.h"
 #include "loop.h"
 #include "action.h"
 #include "app.h"
@@ -290,19 +291,29 @@ Loop::discover (ContainerPtr& parent)
 	if (!losetup (output))
 		return;
 
+	std::vector<LoopPtr> loops;
 	for (auto& line : output) {
 		LoopPtr l = create (line);
 
 		l->get_fd();
 
-		// move to container::find_size or utils (or block::)
 		off_t size;
-		size = lseek (l->fd, 0, SEEK_END);
+		size = lseek (l->fd, 0, SEEK_END);	//XXX move to container::find_size or utils (or block::)
 		l->bytes_size = size;
 
-		std::string desc = "Discovered loopback device: " + l->get_device_short();
-		parent->add_child (l, true, desc.c_str());
+		loops.push_back(l);
 	}
+
+	// The transaction manages the write lock
+	ContainerPtr new_parent = Container::start_transaction (parent, "Loop: discover devices");
+	if (!new_parent)
+		return;
+
+	for (auto l : loops) {
+		new_parent->add_child (l, true);
+	}
+
+	Container::commit_transaction();
 }
 
 bool
@@ -341,8 +352,8 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
-	std::string desc = "Identified loopback device: " + l->get_device_short();
-	parent->add_child (l, true, desc.c_str());
+	//RAR std::string desc = "Identified loopback device: " + l->get_device_short();
+	parent->add_child (l, true);
 	return true;
 }
 

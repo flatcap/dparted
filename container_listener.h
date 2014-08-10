@@ -21,20 +21,24 @@
 
 #include <memory>
 
-typedef std::shared_ptr<class Container> ContainerPtr;
+typedef std::shared_ptr<class Container>          ContainerPtr;
 typedef std::shared_ptr<class IContainerListener> ContainerListenerPtr;
-typedef std::weak_ptr<class IContainerListener> ContainerListenerWeak;
+typedef std::weak_ptr  <class IContainerListener> ContainerListenerWeak;
 
 class IContainerListener
 {
 public:
 	virtual ~IContainerListener() = default;
 
+	virtual void container_added   (const ContainerPtr& parent, const ContainerPtr& child) = 0;
+	virtual void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after) = 0;
+#if 0
 	virtual void container_added   (const ContainerPtr& parent, const ContainerPtr& cont, const char* description) = 0;
 	virtual void container_busy    (const ContainerPtr& cont, int busy) = 0;
 	virtual void container_changed (const ContainerPtr& cont) = 0;
 	virtual void container_deleted (const ContainerPtr& cont) = 0;
 	virtual void container_resync  (const ContainerPtr& cont) = 0;
+#endif
 };
 
 #endif // _CONTAINER_LISTENER_H_

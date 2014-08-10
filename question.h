@@ -27,6 +27,8 @@
 #include "container.h"
 
 typedef std::shared_ptr<class Question> QuestionPtr;
+typedef std::weak_ptr  <class Question> QuestionWeak;
+
 typedef std::function<void(QuestionPtr)> question_cb_t;
 
 class Question
@@ -57,7 +59,7 @@ protected:
 	Question (void);
 
 	question_cb_t done_fn = nullptr;
-	std::weak_ptr<Question> self;
+	QuestionWeak self;
 };
 
 #endif // _QUESTION_H_

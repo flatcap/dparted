@@ -44,14 +44,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe, const char* description)
-	{
-		ContainerPtr c (child);
-		add_child (c, probe, description);
-	}
-
-	virtual void add_child (ContainerPtr& child, bool probe, const char* description);
+	virtual void add_child (ContainerPtr& child, bool probe);
 
 	virtual ContainerPtr find (const std::string& uuid);
 
@@ -65,8 +58,8 @@ public:
 
 	std::string	mirror_log;		//XXX not declared
 
-	std::set<ContainerPtr, Container::compare> metadata;	//XXX not declared
-	std::set<ContainerPtr, Container::compare> subvols;	//XXX not declared
+	std::vector<ContainerPtr> metadata;	//XXX not declared
+	std::vector<ContainerPtr> subvols;	//XXX not declared
 
 	ContainerPtr sibling;
 

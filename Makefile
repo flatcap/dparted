@@ -27,7 +27,7 @@ L	?= 0
 D	?= 1
 T	?= 1
 
-GUI	?= 0
+GUI	?= 1
 TREE	?= 1
 AREA	?= 1
 
@@ -46,7 +46,7 @@ EXTFS	?= 1
 FS_MISC	?= 1
 NTFS	?= 1
 
-LIST	?= 1
+LIST	?= $(A)
 PROP	?= $(A)
 DOT	?= $(A)
 HEX	?= $(A)
@@ -70,7 +70,7 @@ LINKS	= misc test
 SRC	+= block.cpp container.cpp filesystem.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
 
 # Library - Non-graphical miscellany
-SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp timeline.cpp
+SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp property.cpp question.cpp type_visitor.cpp utils.cpp uuid_visitor.cpp text_app.cpp timeline.cpp transaction.cpp
 
 # GUI - Graphical objects
 SRC	+= main.cpp
@@ -86,8 +86,10 @@ CFLAGS-$(FILE)		+= -DDP_FILE
 CFLAGS-$(FS_MISC)	+= -DDP_FS_MISC
 CFLAGS-$(GPT)		+= -DDP_GPT
 CFLAGS-$(GUI)		+= -DDP_GUI
-CFLAGS-$(TREE)		+= -DDP_TREE
-CFLAGS-$(AREA)		+= -DDP_AREA
+ifeq ($(GUI),1)
+	CFLAGS-$(TREE)	+= -DDP_TREE
+	CFLAGS-$(AREA)	+= -DDP_AREA
+endif
 CFLAGS-$(HEX)		+= -DDP_HEX
 CFLAGS-$(LIST)		+= -DDP_LIST
 CFLAGS-$(LOOP)		+= -DDP_LOOP
@@ -130,7 +132,6 @@ OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
 CFLAGS	+= $(CFLAGS-1)
 CFLAGS	+= -std=c++11
-CFLAGS	+= -ggdb
 CFLAGS	+= -Wall
 CFLAGS	+= -Wextra
 CFLAGS	+= -Wpedantic
@@ -141,18 +142,20 @@ LDFLAGS	+= -rdynamic
 CFLAGS	+= -fno-omit-frame-pointer
 CFLAGS	+= -fno-optimize-sibling-calls
 
-CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGDK_DISABLE_DEPRECATED
-CFLAGS	+= -DGDK_PIXBUF_DISABLE_DEPRECATED
-CFLAGS	+= -DGIOMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGLIBMM_DISABLE_DEPRECATED
-CFLAGS	+= -DGLIBMM_G_DISABLE_DEPRECATED_UNDEFED
-CFLAGS	+= -DGTKMM_GTKMM_DISABLE_DEPRECATED_UNDEFED
-CFLAGS	+= -DGTK_DISABLE_DEPRECATED
-CFLAGS	+= -DHB_DISABLE_DEPRECATED
-CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
-CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
+ifeq ($(GUI),1)
+	CFLAGS	+= -DCAIROMM_DISABLE_DEPRECATED
+	CFLAGS	+= -DGDKMM_DISABLE_DEPRECATED
+	CFLAGS	+= -DGDK_DISABLE_DEPRECATED
+	CFLAGS	+= -DGDK_PIXBUF_DISABLE_DEPRECATED
+	CFLAGS	+= -DGIOMM_DISABLE_DEPRECATED
+	CFLAGS	+= -DGLIBMM_DISABLE_DEPRECATED
+	CFLAGS	+= -DGLIBMM_G_DISABLE_DEPRECATED_UNDEFED
+	CFLAGS	+= -DGTKMM_GTKMM_DISABLE_DEPRECATED_UNDEFED
+	CFLAGS	+= -DGTK_DISABLE_DEPRECATED
+	CFLAGS	+= -DHB_DISABLE_DEPRECATED
+	CFLAGS	+= -DPANGOMM_DISABLE_DEPRECATED
+	CFLAGS	+= -DPANGO_DISABLE_DEPRECATED
+endif
 
 #CFLAGS	+= -DGTKMM_DISABLE_DEPRECATED
 #CFLAGS	+= -DG_DISABLE_DEPRECATED
@@ -173,6 +176,7 @@ endif
 ifeq ($(D),1)
 	CFLAGS	+= -DDEBUG
 	CFLAGS	+= -include iostream
+	CFLAGS	+= -ggdb
 else
 	CFLAGS	+= -D_GLIBCXX_IOSTREAM
 endif

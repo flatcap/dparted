@@ -276,7 +276,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	show_window();
 	activate();
 
-	top_level = scan (disks, std::bind(&GuiApp::scan_callback, this, std::placeholders::_1));
+	ContainerPtr top_level = scan (disks, std::bind(&GuiApp::scan_callback, this, std::placeholders::_1));
 	window->set_data (top_level);
 
 	return EXIT_SUCCESS;

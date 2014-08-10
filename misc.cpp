@@ -186,7 +186,7 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	MiscPtr m;
 	if (is_empty (buffer, bufsize)) {
-		log_error ("probe empty");
+		//RAR log_error ("probe empty");
 		m = Misc::create();
 		m->sub_type ("Zero");
 	} else { // if (is_random (buffer, bufsize)) {
@@ -196,11 +196,20 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	if (m) {
-		parent->add_child (m, false, "Discovered unidentified partition");
+		ContainerPtr new_parent = Container::start_transaction (parent, "Misc: probe");
+		if (!new_parent) {
+			log_error ("misc probe failed");
+			return false;
+		}
 
-		m->bytes_size = parent->bytes_size;
+		new_parent->add_child (m, false);
+
+		m->bytes_size = new_parent->bytes_size;
 		m->bytes_used = 0;
 		m->parent_offset = 0;
+
+		Container::commit_transaction();
+
 		return true;
 	}
 

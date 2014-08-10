@@ -187,9 +187,17 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 
 	if (f) {
 		log_debug ("volume: %s (%s), child: %s", parent->name.c_str(), parent->get_type().c_str(), f->name.c_str());
-		std::string desc = "Discovered " + f->get_type() + " filesystem";
-		parent->add_child (f, false, desc.c_str());	//XXX assumption fs is a leaf
-						//XXX move this into get_*?
+
+		ContainerPtr new_parent = Container::start_transaction (parent, "Filesystem: probe");
+		if (!new_parent) {
+			log_error ("misc probe failed");
+			return false;
+		}
+
+		new_parent->add_child (f, false);	//XXX assumption fs is a leaf
+							//XXX move this into get_*?
+		Container::commit_transaction();
+
 		return true;
 	}
 

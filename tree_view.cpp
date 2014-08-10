@@ -732,6 +732,7 @@ TreeView::on_keypress (GdkEventKey* event)
 }
 
 
+#if 0
 void
 TreeView::gfx_container_added (const GfxContainerPtr& parent, const GfxContainerPtr& cont)
 {
@@ -745,30 +746,7 @@ TreeView::gfx_container_added (const GfxContainerPtr& parent, const GfxContainer
 	log_info ("TREEVIEW gfx_container_added: %p:%s to %p:%s", cont.get(), c.c_str(), parent.get(), p.c_str());
 }
 
-void
-TreeView::gfx_container_busy (const GfxContainerPtr& UNUSED(cont), int UNUSED(busy))
-{
-	LOG_TRACE;
-}
-
-void
-TreeView::gfx_container_changed (const GfxContainerPtr& UNUSED(cont))
-{
-	LOG_TRACE;
-}
-
-void
-TreeView::gfx_container_deleted (const GfxContainerPtr& UNUSED(cont))
-{
-	LOG_TRACE;
-}
-
-void
-TreeView::gfx_container_resync (const GfxContainerPtr& UNUSED(cont))
-{
-	LOG_TRACE;
-}
-
+#endif
 
 void
 TreeView::theme_changed (const ThemePtr& new_theme)

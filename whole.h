@@ -49,7 +49,7 @@ public:
 public:
 	// properties
 	// seg_count - LVM2_SEG_COUNT
-	std::set<ContainerPtr, Container::compare> segments;	//XXX not declared
+	std::vector<ContainerPtr> segments;	//XXX not declared
 
 protected:
 	Whole (void);

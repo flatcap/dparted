@@ -60,10 +60,10 @@ public:
 	void wait_for_threads (void);
 
 	bool adjust_timeline (int amount);
+	TimelinePtr get_timeline (void);
 
 protected:
 	ConfigFilePtr config_file;
-	ContainerPtr top_level;
 	TimelinePtr timeline;
 
 	void start_thread (std::function<void(void)> fn, const char* desc);
@@ -72,6 +72,8 @@ private:
 #ifdef DP_THREADED
 	std::mutex thread_mutex;
 	std::deque<std::thread> thread_queue;
+#else
+	std::deque<ContainerPtr> work_queue;
 #endif
 };
 

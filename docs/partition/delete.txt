@@ -1,0 +1,28 @@
+Delete 1
+	T2 = T1->backup();
+	T2->delete_child (Sb);
+	Pe = Partition::create();
+	T2->add_child (Pe);
+	T2->commit();
+
+Delete 2
+	T2 = T1->backup();
+	T2->delete_child (Sb);
+	T2->delete_child (Sc);
+	Se = Space::create();
+	T2->add_child (Se);
+	T2->commit();
+
+Delete 3
+	T2 = T1->backup();
+	T2->delete_child (Sb);
+	Sd = T2->resize_child (Sa, start, size);
+	T2->commit();
+
+Delete 4
+	T2 = T1->backup();
+	T2->delete_child (Sb); // move
+	T2->delete_child (Sc);
+	Sd = T2->resize_child (Sa, start, size);
+	T2->commit();
+

@@ -188,7 +188,7 @@ LvmVolume::perform_action (Action action)
 
 
 void
-LvmVolume::add_child (ContainerPtr& child, bool probe, const char* description)
+LvmVolume::add_child (ContainerPtr& child, bool probe)
 {
 	return_if_fail (child);
 
@@ -202,12 +202,12 @@ LvmVolume::add_child (ContainerPtr& child, bool probe, const char* description)
 
 	log_debug ("volume: %s (%s), child: %s (%s)", name.c_str(), get_type().c_str(), child->name.c_str(), child->get_type().c_str());
 	if (child->is_a ("LvmMetadata")) {
-		metadata.insert (child);
+		_add_child (metadata, child);
 		log_debug ("metadata: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 		log_info ("METADATA %s", child->name.c_str());
 		//XXX no this is self-contained child->whole = this;
 	} else if (child->is_a ("LvmVolume")) {
-		subvols.insert (child);
+		_add_child (subvols, child);
 		log_debug ("subvols: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 		log_info ("SUBVOL %s", child->name.c_str());
 		child->whole = get_smart();
@@ -218,10 +218,10 @@ LvmVolume::add_child (ContainerPtr& child, bool probe, const char* description)
 		child->whole = get_smart();
 	} else if (child->is_a ("Space")) {
 		log_info ("SPACE %s", child->name.c_str());
-		Volume::add_child (child, false, description);
+		Volume::add_child (child, false);
 	} else {
 		// filesystem
-		Volume::add_child (child, probe, description);
+		Volume::add_child (child, probe);
 
 #if 0
 		for (auto& i : subvols) {

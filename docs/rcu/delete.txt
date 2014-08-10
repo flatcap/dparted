@@ -1,0 +1,52 @@
+
+B Extended::get_actions()
+{
+	Actions for B
+		Resize B
+		Empty B		(Delete C,D,E)
+		Delete B	(Delete B,C,D,E)
+}
+
+User selects 'delete'
+
+Extended::perform_action ('delete')
+{
+	txn = create_txn()		takes  global_write_lock()
+
+	A2 = A1 Extended::copy ()
+	A2 Extended::delete_child (B)
+
+	txn.commit(A1, A2, "Delete Extended Partition /dev/sda5")
+}
+
+Extended::copy()
+{
+	create copy			txn += C(A1,A2)
+}
+
+Extended::delete_child (B)
+{
+	create_command (
+		fdisk -d /dev/sda5
+		"Delete Extended Partition /dev/sda5"
+		PreReq: /dev/sda5, offset=X, size=Y
+	)
+
+	depth first search
+		txn += D(B,C)
+		txn += D(B,D)
+		txn += D(B,E)
+		txn += D(A2,B)
+}
+
+timeline::commit(txn)
+{
+	Add txn to timeline
+	for each item notify
+		notify_change (A1,A2)
+		notify_delete (C)
+		notify_delete (D)
+		notify_delete (E)
+		notify_delete (B)
+}
+

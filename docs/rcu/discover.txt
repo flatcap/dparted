@@ -1,0 +1,56 @@
+
+Gpt::discover()
+{
+	txn = create_txn()
+		global_write_lock()
+
+	G2 = G1 Gpt::copy()
+
+	read disk
+
+	create_table()
+
+	create Res1		add_child (Gpt2, Res1)		txn (Add, Gpt2, Res1)
+	create Res2		add_child (Gpt2, Res2)		txn (Add, Gpt2, Res2)
+	create Part1		add_child (Gpt2, Part1)		txn (Add, Gpt2, Part1)
+	create Part2		add_child (Gpt2, Part2)		txn (Add, Gpt2, Part2)
+	create Space1		add_child (Gpt2, Space1)	txn (Add, Gpt2, Space1)
+	create Space2		add_child (Gpt2, Space2)	txn (Add, Gpt2, Space2)
+}
+
+Gpt::copy()
+{
+	create copy						txn += C(G1,G2)
+}
+
+Gpt::create_table()
+{
+	create_command (
+		gpt --create /dev/sda
+		Create a GPT partition table
+		PreReq: size is X, /dev/sda is empty
+	)
+}
+
+Gpt::add_child(X)
+{
+	create_command (
+		gpt --add --size X --posn Y
+		Create a GPT Partition
+		PreReq: size is X, range X,X+Y is empty
+	)
+}
+
+timeline::commit(txn)
+{
+	Add txn to timeline
+	for each item notify
+		notify_change (Gpt1, Gpt2)
+		notify_add    (Gpt2, Res1)
+		notify_add    (Gpt2, Res2)
+		notify_add    (Gpt2, Part1)
+		notify_add    (Gpt2, Part2)
+		notify_add    (Gpt2, Space1)
+		notify_add    (Gpt2, Space2)
+}
+

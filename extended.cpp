@@ -174,8 +174,8 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	res1->bytes_size    = 512;		// align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	std::string desc = "Discovered extended partition: " + res1->get_device_short();
-	ext->add_child (res1, false, desc.c_str());		// change to add_reserved?
+	//RAR std::string desc = "Discovered extended partition: " + res1->get_device_short();
+	ext->add_child (res1, false);		// change to add_reserved?
 
 	for (int loop = 0; loop < 50; ++loop) {		// what's the upper limit? prob 255 in the kernel
 		if (le16_to_cpup (table_offset+buffer+510) != 0xAA55) {
@@ -224,8 +224,8 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 				m->device = make_part_dev (parent->get_device_name(), loop+5);
 				//XXX check it's not empty
 
-				std::string desc = "Discovered MSDOS partition: " + m->get_device_short();
-				ext->add_child (m, true, desc.c_str());
+				//RAR std::string desc = "Discovered MSDOS partition: " + m->get_device_short();
+				ext->add_child (m, true);
 			}
 		}
 		if (vp.size() == 1) {

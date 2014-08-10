@@ -39,12 +39,6 @@ public:
 	void init_treeview (GfxContainerPtr& c);
 	void set_focus (GfxContainerPtr& c);
 
-	virtual void gfx_container_added   (const GfxContainerPtr& parent, const GfxContainerPtr& cont);
-	virtual void gfx_container_busy    (const GfxContainerPtr& cont, int busy);
-	virtual void gfx_container_changed (const GfxContainerPtr& cont);
-	virtual void gfx_container_deleted (const GfxContainerPtr& cont);
-	virtual void gfx_container_resync  (const GfxContainerPtr& cont);
-
 	virtual void theme_changed (const ThemePtr& theme);
 
 protected:
@@ -69,22 +63,7 @@ protected:
 	ThemePtr theme;
 
 	template <class T>
-	int add_column (Gtk::TreeModel::ColumnRecord& col_rec, Gtk::TreeView::Column* col, float align, int size)
-	{
-		auto* tmc = new Gtk::TreeModelColumn<T>;
-		auto* cell = Gtk::manage (new Gtk::CellRendererText);
-		mod_cols.push_back (ModColPtr (tmc));
-		col_rec.add (*tmc);
-		col->pack_start (*cell, false);
-		col->add_attribute (cell->property_text(), *tmc);
-
-		cell->set_alignment (align, 0.5);
-		if (size > 0) {
-			cell->set_fixed_size (size, -1);
-		}
-
-		return (col_rec.size()-1);
-	}
+	int add_column (Gtk::TreeModel::ColumnRecord& col_rec, Gtk::TreeView::Column* col, float align, int size);
 
 	Glib::RefPtr<Gdk::Pixbuf> get_colour_as_pixbuf (int size, const std::string& colstr);
 
@@ -106,6 +85,25 @@ private:
 	bool menu_active = false;
 };
 
+
+template <class T>
+int
+TreeView::add_column (Gtk::TreeModel::ColumnRecord& col_rec, Gtk::TreeView::Column* col, float align, int size)
+{
+	auto* tmc = new Gtk::TreeModelColumn<T>;
+	auto* cell = Gtk::manage (new Gtk::CellRendererText);
+	mod_cols.push_back (ModColPtr (tmc));
+	col_rec.add (*tmc);
+	col->pack_start (*cell, false);
+	col->add_attribute (cell->property_text(), *tmc);
+
+	cell->set_alignment (align, 0.5);
+	if (size > 0) {
+		cell->set_fixed_size (size, -1);
+	}
+
+	return (col_rec.size()-1);
+}
 
 #endif // _TREE_VIEW_H_
 

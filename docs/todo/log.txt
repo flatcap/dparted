@@ -102,3 +102,5 @@ thread loggings
 	thread ends   @time
 	thread joined @time
 
+log_notimpl - empty functions
+

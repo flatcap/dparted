@@ -139,7 +139,7 @@ Whole::perform_action (Action action)
 void
 Whole::add_segment (ContainerPtr seg)
 {
-	segments.insert (seg);
+	_add_child (segments, seg);
 
 	// seg->whole = get_smart();	//XXX this belongs here, but whole can't be protected
 }

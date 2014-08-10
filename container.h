@@ -30,15 +30,20 @@
 
 #include <sys/types.h>
 
-#include "property.h"
-#include "mmap.h"
 #include "container_listener.h"
 #include "log.h"
+#include "mmap.h"
+#include "property.h"
 
 class Visitor;
 struct Action;
 
 typedef std::shared_ptr<class Container> ContainerPtr;
+typedef std::weak_ptr  <class Container> ContainerWeak;
+
+#include "transaction.h"
+
+extern std::mutex mutex_write_lock;
 
 /**
  * class Container - Base class for all containers
@@ -62,7 +67,7 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	virtual void add_child    (ContainerPtr& child, bool probe, const char* description = nullptr);
+	virtual void add_child    (ContainerPtr& child, bool probe);
 	virtual void delete_child (ContainerPtr& child);
 	virtual void move_child   (ContainerPtr& child, std::uint64_t offset, std::uint64_t size);
 
@@ -80,34 +85,14 @@ public:
 
 	virtual bool is_a (const std::string& type);
 
-	struct compare
-	{
-		bool operator() (const ContainerPtr& a, const ContainerPtr& b)
-		{
-			return_val_if_fail (a, false);
-			return_val_if_fail (b, false);
-
-			if (a->parent_offset != b->parent_offset)
-				return (a->parent_offset < b->parent_offset);
-
-			std::uint64_t da = (a->device_major << 10) + a->device_minor;
-			std::uint64_t db = (b->device_major << 10) + b->device_minor;
-			if (da != db)
-				return (da < db);
-
-			int x = a->name.compare (b->name);	//XXX default name?
-			if (x != 0)
-				return (x < 0);
-
-			return ((void*) a.get() < (void*) b.get());
-		}
-	};
-
-	virtual std::set<ContainerPtr, compare>& get_children (void);
+	virtual std::vector<ContainerPtr>& get_children (void);
 
 	ContainerPtr get_smart    (void);
 	ContainerPtr get_parent   (void);
 	ContainerPtr get_toplevel (void);
+
+	ContainerPtr backup (void);
+	void notify (NotifyType type, ContainerPtr first, ContainerPtr second);
 
 	void add_listener (const ContainerListenerPtr& m);
 
@@ -116,16 +101,21 @@ public:
 	std::vector<PPtr> get_all_props (bool inc_hidden = false);
 
 	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe, const char* description = nullptr)
-	{
-		ContainerPtr c (child);
-		add_child (c, probe, description);
-	}
+	void add_child (std::shared_ptr<T>& child, bool probe);
 
 	void sub_type (const char* name);
 	std::string dump (void);
 
 	PPtr add_string_prop (const std::string& owner, const std::string& name, const std::string& value);
+
+	static ContainerPtr start_transaction (ContainerPtr& parent, const std::string& desc = "");
+	static bool commit_transaction (const std::string& desc = "");
+	static void cancel_transaction (void);
+
+	void notify_add (ContainerPtr parent, ContainerPtr child);
+	// notify_delete
+	// notify_change
+	// ...
 
 public:
 	// Property helper functions
@@ -181,8 +171,8 @@ protected:
 
 	virtual Container* clone (void);
 
-	std::weak_ptr<Container> self;
-	std::weak_ptr<Container> parent;
+	ContainerWeak self;
+	ContainerWeak parent;
 
 	std::vector<std::string> type;
 
@@ -190,104 +180,23 @@ protected:
 
 	friend std::ostream& operator<< (std::ostream& stream, const ContainerPtr& c);
 	friend bool operator== (const ContainerPtr& lhs, const ContainerPtr& rhs);
-	friend bool exchange (ContainerPtr& existing, ContainerPtr& replacement);
+	friend bool exchange (ContainerPtr existing, ContainerPtr replacement);
 
 	std::map<std::string, PPtr> props;
 
-	std::set<ContainerPtr, compare> children;
+	std::vector<ContainerPtr> children;
 	std::mutex mutex_children;
+	ContainerPtr previous;	// used by backup/restore
 
 	std::vector<std::string> more_props;
 
 	template<typename T>
-	PPtr
-	declare_prop_var (const char* owner, const char* name, T& var1, const char* desc, int flags, PPtr var2 = nullptr)
-	{
-		return_val_if_fail (owner, nullptr);
-		return_val_if_fail (name,  nullptr);
-		return_val_if_fail (desc,  nullptr);
-
-		if (flags & BaseProperty::Flags::Size) {		// Create a fake property
-			std::string human = std::string (name) + "_human";
-			PPtr pvh (new PropVar<T> (owner, human.c_str(), var1, desc, flags & ~BaseProperty::Flags::Dot));
-			props[human] = pvh;
-			flags &= ~BaseProperty::Flags::Size;		// Turn off the size flag
-		}
-
-		PPtr pv (new PropVar<T> (owner, name, var1, desc, flags));
-		props[name] = pv;
-
-		if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
-			if (!var2) {
-				log_debug ("missing var2, can't create percentage");
-				return pv;
-			}
-
-			if (pv->type != var2->type) {
-				log_debug ("types differ, can't create percentage");
-				return pv;
-			}
-
-			std::string percentage = std::string (name) + "_percentage";
-			flags &= ~BaseProperty::Flags::Dot;
-			PPtr pvp (new PropPercent (owner, percentage.c_str(), pv, var2, desc, flags));
-			props[percentage] = pvp;
-		}
-
-		return pv;
-	}
-
+	PPtr declare_prop_var (const char* owner, const char* name, T& var1, const char* desc, int flags, PPtr var2 = nullptr);
 	template<typename T>
-	PPtr
-	declare_prop_fn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags, PPtr var2 = nullptr)
-	{
-		return_val_if_fail (owner, nullptr);
-		return_val_if_fail (name,  nullptr);
-		return_val_if_fail (desc,  nullptr);
+	PPtr declare_prop_fn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags, PPtr var2 = nullptr);
+	PPtr declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags);
 
-		if (flags & BaseProperty::Flags::Size) {		// Create a fake property
-			std::string human (name);
-			human += "_human";
-			PPtr pp (new PropFn<T> (owner, human.c_str(), fn, desc, flags & ~BaseProperty::Flags::Dot));
-			props[human] = pp;
-			flags &= ~BaseProperty::Flags::Size;		// Turn off the size flag
-		}
-
-		PPtr pf (new PropFn<T> (owner, name, fn, desc, flags));
-		props[name] = pf;
-
-		if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
-			if (!var2) {
-				log_debug ("missing var2, can't create percentage");
-				return pf;
-			}
-
-			if (pf->type != var2->type) {
-				log_debug ("types differ, can't create percentage");
-				return pf;
-			}
-
-			std::string percentage = std::string (name) + "_percentage";
-			flags &= ~BaseProperty::Flags::Dot;
-			PPtr pvp (new PropPercent (owner, percentage.c_str(), pf, var2, desc, flags));
-			props[percentage] = pvp;
-		}
-
-		return pf;
-	}
-
-	PPtr
-	declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags)
-	{
-		return_val_if_fail (owner, nullptr);
-		return_val_if_fail (name,  nullptr);
-		return_val_if_fail (desc,  nullptr);
-
-		PPtr pv (new PropArray (owner, name, v, index, desc, flags));
-		props[name] = pv;
-
-		return pv;
-	}
+	void _add_child (std::vector<ContainerPtr>& vec, ContainerPtr& child);
 
 private:
 	MmapPtr	device_mmap;
@@ -297,11 +206,91 @@ private:
 	std::vector<ContainerListenerWeak> container_listeners;
 };
 
-inline bool
-operator== (const ContainerPtr& lhs, const ContainerPtr& rhs)
+template<typename T>
+PPtr
+Container::declare_prop_var (const char* owner, const char* name, T& var1, const char* desc, int flags, PPtr var2)
 {
-	return (lhs->unique_id == rhs->unique_id);
+	return_val_if_fail (owner, nullptr);
+	return_val_if_fail (name,  nullptr);
+	return_val_if_fail (desc,  nullptr);
+
+	if (flags & BaseProperty::Flags::Size) {		// Create a fake property
+		std::string human = std::string (name) + "_human";
+		PPtr pvh (new PropVar<T> (owner, human.c_str(), var1, desc, flags & ~BaseProperty::Flags::Dot));
+		props[human] = pvh;
+		flags &= ~BaseProperty::Flags::Size;		// Turn off the size flag
+	}
+
+	PPtr pv (new PropVar<T> (owner, name, var1, desc, flags));
+	props[name] = pv;
+
+	if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
+		if (!var2) {
+			log_debug ("missing var2, can't create percentage");
+			return pv;
+		}
+
+		if (pv->type != var2->type) {
+			log_debug ("types differ, can't create percentage");
+			return pv;
+		}
+
+		std::string percentage = std::string (name) + "_percentage";
+		flags &= ~BaseProperty::Flags::Dot;
+		PPtr pvp (new PropPercent (owner, percentage.c_str(), pv, var2, desc, flags));
+		props[percentage] = pvp;
+	}
+
+	return pv;
 }
+
+template<typename T>
+PPtr
+Container::declare_prop_fn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags, PPtr var2)
+{
+	return_val_if_fail (owner, nullptr);
+	return_val_if_fail (name,  nullptr);
+	return_val_if_fail (desc,  nullptr);
+
+	if (flags & BaseProperty::Flags::Size) {		// Create a fake property
+		std::string human (name);
+		human += "_human";
+		PPtr pp (new PropFn<T> (owner, human.c_str(), fn, desc, flags & ~BaseProperty::Flags::Dot));
+		props[human] = pp;
+		flags &= ~BaseProperty::Flags::Size;		// Turn off the size flag
+	}
+
+	PPtr pf (new PropFn<T> (owner, name, fn, desc, flags));
+	props[name] = pf;
+
+	if (flags & BaseProperty::Flags::Percent) {		// Create a fake property
+		if (!var2) {
+			log_debug ("missing var2, can't create percentage");
+			return pf;
+		}
+
+		if (pf->type != var2->type) {
+			log_debug ("types differ, can't create percentage");
+			return pf;
+		}
+
+		std::string percentage = std::string (name) + "_percentage";
+		flags &= ~BaseProperty::Flags::Dot;
+		PPtr pvp (new PropPercent (owner, percentage.c_str(), pf, var2, desc, flags));
+		props[percentage] = pvp;
+	}
+
+	return pf;
+}
+
+template<class T>
+void
+Container::add_child (std::shared_ptr<T>& child, bool probe)
+{
+	ContainerPtr c (child);
+	add_child (c, probe);
+}
+
 
 #endif // _CONTAINER_H_
 

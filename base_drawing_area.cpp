@@ -517,6 +517,7 @@ BaseDrawingArea::set_colour (const Cairo::RefPtr<Cairo::Context>& cr, const Gdk:
 }
 
 
+#if 0
 void
 BaseDrawingArea::gfx_container_added (const GfxContainerPtr& parent, const GfxContainerPtr& cont)
 {
@@ -531,31 +532,7 @@ BaseDrawingArea::gfx_container_added (const GfxContainerPtr& parent, const GfxCo
 	get_window()->invalidate (false); // everything for now
 }
 
-void
-BaseDrawingArea::gfx_container_busy (const GfxContainerPtr& UNUSED(cont), int UNUSED(busy))
-{
-	LOG_TRACE;
-}
-
-void
-BaseDrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(cont))
-{
-	LOG_TRACE;
-}
-
-void
-BaseDrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(cont))
-{
-	LOG_TRACE;
-}
-
-void
-BaseDrawingArea::gfx_container_resync (const GfxContainerPtr& UNUSED(cont))
-{
-	LOG_TRACE;
-}
-
-
+#endif
 void
 BaseDrawingArea::theme_changed (const ThemePtr& new_theme)
 {

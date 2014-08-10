@@ -21,20 +21,22 @@
 
 #include <memory>
 
-typedef std::shared_ptr<class GfxContainer> GfxContainerPtr;
+typedef std::shared_ptr<class GfxContainer>          GfxContainerPtr;
 typedef std::shared_ptr<class IGfxContainerListener> GfxContainerListenerPtr;
-typedef std::weak_ptr<class IGfxContainerListener> GfxContainerListenerWeak;
+typedef std::weak_ptr  <class IGfxContainerListener> GfxContainerListenerWeak;
 
 class IGfxContainerListener
 {
 public:
 	virtual ~IGfxContainerListener() = default;
 
+#if 0
 	virtual void gfx_container_added   (const GfxContainerPtr& parent, const GfxContainerPtr& cont) = 0;
 	virtual void gfx_container_busy    (const GfxContainerPtr& cont, int busy) = 0;
 	virtual void gfx_container_changed (const GfxContainerPtr& cont) = 0;
 	virtual void gfx_container_deleted (const GfxContainerPtr& cont) = 0;
 	virtual void gfx_container_resync  (const GfxContainerPtr& cont) = 0;
+#endif
 };
 
 #endif // _GFX_CONTAINER_LISTENER_H_
