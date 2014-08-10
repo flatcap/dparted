@@ -430,19 +430,20 @@ Container::move_child (ContainerPtr& UNUSED(child), std::uint64_t UNUSED(offset)
 bool
 insert_here (const ContainerPtr& a, const ContainerPtr& b)
 {
+	//RAR CHECK ALL THIS
 	if (a->parent_offset != b->parent_offset)
-		return (a->parent_offset < b->parent_offset);
+		return (a->parent_offset > b->parent_offset);
 
 	std::uint64_t da = (a->device_major << 10) + a->device_minor;
 	std::uint64_t db = (b->device_major << 10) + b->device_minor;
 	if (da != db)
-		return (da < db);
+		return (da > db);
 
 	int x = a->name.compare (b->name);	//XXX default name?
 	if (x != 0)
-		return (x < 0);
+		return (x > 0);
 
-	return ((void*) a.get() < (void*) b.get());
+	return ((void*) a.get() > (void*) b.get());
 }
 
 void

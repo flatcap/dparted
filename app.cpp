@@ -146,7 +146,11 @@ void
 App::queue_add_probe (ContainerPtr& item)
 {
 	return_if_fail (item);
+#ifdef DP_THREADED
 	start_thread (std::bind (&App::process_queue_item, this, item), "App::process_queue_item");
+#else
+	work_queue.push_back (item);
+#endif
 }
 
 bool
@@ -234,6 +238,14 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 		}
 	}
 
+#ifndef DP_THREADED
+	while (!work_queue.empty()) {
+		ContainerPtr c = work_queue.front();
+		work_queue.pop_front();
+		process_queue_item (c);
+	}
+#endif
+
 #ifdef DP_THREADED
 	if (fn) {
 		// Start a thread to watch the existing threads.
@@ -292,11 +304,11 @@ App::process_queue_item (ContainerPtr item)
 }
 
 
+#ifdef DP_THREADED
 void
 App::start_thread (std::function<void(void)> fn, const char* desc)
 {
 	//XXX use of desc is clumsy, but will do for now
-#ifdef DP_THREADED
 	std::lock_guard<std::mutex> lock (thread_mutex);
 	thread_queue.push_back (
 		std::thread ([fn, desc]() {
@@ -305,11 +317,16 @@ App::start_thread (std::function<void(void)> fn, const char* desc)
 			log_thread_end   ("thread ended:   %s", desc);
 		})
 	);
-#else
-	fn();
-#endif
 }
 
+#else
+void
+App::start_thread (std::function<void(void)> fn, const char* UNUSED(desc))
+{
+	fn();
+}
+
+#endif
 
 bool
 App::open_uri (const std::string& uri)

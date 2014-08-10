@@ -72,6 +72,8 @@ private:
 #ifdef DP_THREADED
 	std::mutex thread_mutex;
 	std::deque<std::thread> thread_queue;
+#else
+	std::deque<ContainerPtr> work_queue;
 #endif
 };
 

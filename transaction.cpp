@@ -26,12 +26,16 @@ Transaction::Transaction (std::mutex& m) :
 	timestamp (std::chrono::steady_clock::now()),
 	write_lock(m)
 {
+#ifdef DP_THREADED
 	write_lock.lock();
+#endif
 }
 
 Transaction::~Transaction()
 {
+#ifdef DP_THREADED
 	write_lock.unlock();
+#endif
 }
 
 TransactionPtr
