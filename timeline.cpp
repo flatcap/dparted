@@ -19,6 +19,9 @@
 #include <chrono>
 
 #include "container.h"
+#ifdef DP_DOT
+#include "dot_visitor.h"
+#endif
 #include "log.h"
 #include "timeline.h"
 #include "transaction.h"
@@ -106,6 +109,12 @@ Timeline::commit (TransactionPtr txn)
 
 	auto n = txn->notifications[0];					// First notification is the top-level of all the changes
 	exchange (std::get<1>(n).lock(), std::get<2>(n).lock());	// Put the new containers into place
+
+#ifdef DP_DOT
+	ContainerPtr x1 = std::get<2>(n).lock();
+	ContainerPtr x2 = x1->get_toplevel();
+	run_dotty (x2);
+#endif
 
 	log_code ("Commit: %s", txn->description.c_str());
 	for (auto n : txn->notifications) {
