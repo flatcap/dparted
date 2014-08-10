@@ -939,3 +939,57 @@ yes, at least until I can find/kill all users, e.g.
 swap needs to be a real object
 needs to know about being mounted & getting swap usage
 
+multiple runs of dparted make the tree view have duplicate columns
+
+put a wrapper around thread locking
+	log_thread
+	timestamp
+	see where threads lock up
+
+replace all lock() with try_lock_for
+	get out clause if something goes wrong
+	log_code?
+	log_error?
+
+properties dialog
+	if object goes away, change the title to
+		X at [TIME]
+		X deleted at [TIME]
+	what if undo brings it back?
+	dialog option
+		[X] do not update (if being used for reference purposes)
+			turn off listener?
+			listen but don't change?
+	use weak pointers
+
+When user commits changes to disk
+	Each object should validate itself against the disk
+
+when fs is unmounted, we should remember our accurate "usage"
+
+How do I keep background task data in sync when I'm undo/redoing?
+	Mounted FS (20% full)
+	Action new label
+		FS shows 20% full
+	externally create big file
+	bg task updates free space
+		FS shows 80% full
+	undo label
+		FS shows 20% full	WRONG
+	this can be sidestepped if the "disk usage" were a child of the fs
+
+background tasks
+	checking for free space on mounted partitions/swap
+		is it ever worth checking UNmounted partitions?
+		just leave that to a manual refresh?
+	check for new sub-volumes (btrfs)
+	need non-user txn (like initial discovery)
+	usb un/mounted
+	add/del loop device
+
+where do i fit in the fscks between txns?
+	do they appear in the timeline?
+
+does everything need to be within a transaction?
+	either that, or I trap all setter methods
+

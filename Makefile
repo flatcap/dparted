@@ -261,7 +261,7 @@ clean:
 	$(Q)$(RM) $(OUT) $(OBJ) gmon.out *.gcov
 
 distclean: clean
-	$(Q)$(RM) $(DEPDIR) $(OBJDIR) tags html stats xxx.txt
+	$(Q)$(RM) $(DEPDIR) $(OBJDIR) $(LINKS) tags html stats xxx.txt
 
 force:
 
