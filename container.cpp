@@ -168,9 +168,10 @@ Container::Container (const Container& c) :
 	more_props          = c.more_props;
 	whole               = c.whole;
 	device_mmap         = c.device_mmap;
-	//RAR container_listeners = c.container_listeners;
+	seqnum              = c.seqnum;
+
+	container_listeners = c.container_listeners;	//RAR tmp
 	//RAR don't copy listeners, do it on the ::swap
-	//RAR where's seqnum?
 
 	// Of the remaining Container members:
 	// generated
@@ -272,6 +273,7 @@ Container::swap (Container& c)
 	std::swap (more_props,          c.more_props);
 	std::swap (whole,               c.whole);
 	std::swap (device_mmap,         c.device_mmap);
+	std::swap (seqnum,              c.seqnum);
 	std::swap (container_listeners, c.container_listeners);
 
 	// Of the remaining Container members:
@@ -1168,7 +1170,7 @@ Container::add_listener (const ContainerListenerPtr& cl)
 {
 	return_if_fail (cl);
 
-	log_listener ("Container %p add listener: %p", this, cl.get());
+	log_listener ("Container %s(%p) add listener: %p", get_name_default().c_str(), this, cl.get());
 	container_listeners.push_back (cl);
 }
 
@@ -1243,8 +1245,6 @@ Container::backup (void)
 	if (!c)
 		return {};
 
-	c->previous = prev;
-
 	if (txn) {
 		//XXX get_txn() function that checks we have a lock
 		txn->notifications.push_back (std::make_tuple (NotifyType::t_change, prev, c));
@@ -1256,16 +1256,25 @@ Container::backup (void)
 void
 Container::notify_add (ContainerPtr parent, ContainerPtr child)
 {
-	for (auto c = get_smart(); c; c = c->get_parent()) {			// Ascend the container tree
-		// log_code ("%s : %s", __FUNCTION__, c->name.c_str());
+	for (auto& i : container_listeners) {
+		ContainerListenerPtr cl = i.lock();
+		if (cl) {
+			cl->container_added (parent, child);
+		} else {
+			log_code ("remove listener from the collection");	//XXX remove it from the collection
+		}
+	}
+}
 
-		for (auto& i : c->container_listeners) {
-			ContainerListenerPtr cl = i.lock();
-			if (cl) {
-				cl->container_added (parent, child);
-			} else {
-				log_code ("remove listener from the collection");	//XXX remove it from the collection
-			}
+void
+Container::notify_change (ContainerPtr before, ContainerPtr after)
+{
+	for (auto& i : container_listeners) {
+		ContainerListenerPtr cl = i.lock();
+		if (cl) {
+			cl->container_changed (before, after);
+		} else {
+			log_code ("remove listener from the collection");	//XXX remove it from the collection
 		}
 	}
 }
@@ -1277,12 +1286,43 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 
 	switch (type) {
 		case NotifyType::t_add:
+			log_trace ("Notify add:");
+			log_trace ("\t%s(%d) %d listeners",
+				first->get_name_default().c_str(),
+				first->unique_id,
+				first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners",
+				second->get_name_default().c_str(),
+				second->unique_id,
+				second->container_listeners.size());
 			notify_add (first, second);
 			break;
 		case NotifyType::t_delete:
+			log_trace ("Notify delete:");
+			log_trace ("\t%s(%d) %d listeners",
+				first->get_name_default().c_str(),
+				first->unique_id,
+				first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners",
+				second->get_name_default().c_str(),
+				second->unique_id,
+				second->container_listeners.size());
+			break;
 		case NotifyType::t_change:
+			notify_change (first, second);
+			log_trace ("Notify change:");
+			log_trace ("\t%s(%d) %d listeners",
+				first->get_name_default().c_str(),
+				first->unique_id,
+				first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners",
+				second->get_name_default().c_str(),
+				second->unique_id,
+				second->container_listeners.size());
+			break;
 			// void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after) = 0;
 		default:
+			log_trace ("Unknown notification type: %d", type);
 			break;
 	}
 }

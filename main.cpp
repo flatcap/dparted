@@ -32,35 +32,62 @@
 int
 main (int argc, char *argv[])
 {
+	srandom (time (nullptr));
+
 	LogHandlerPtr log_out = LogHandler::create (stdout);
 	if (log_out) {
-		log_out->start (Severity::AllMessages & ~(
-			Severity::Debug|
-			Severity::Command|
-			Severity::CommandIn|
-			Severity::CommandOut|
-			Severity::Ctor|
-			Severity::Dtor|
-			Severity::File|
-			Severity::Utils|
-			Severity::ConfigRead|
-			Severity::ThreadStart|
-			Severity::ThreadEnd|
-			Severity::Enter|
-			Severity::Leave|
-			Severity::Listener|
-			Severity::Code
-		));
+		log_out->start (
+			Severity::SystemAlert		|
+			Severity::Critical		|
+			Severity::Error			|
+			Severity::Perror		|
+			Severity::Warning		|
+			Severity::Verbose		|
+			Severity::User			|
+			Severity::Info			|
+			Severity::Progress		|
+			Severity::Quiet			|
+			// Severity::Command		|
+			Severity::Debug			|
+			// Severity::Trace			|
+			// Severity::CommandIn		|
+			// Severity::CommandOut		|
+			// Severity::IoIn			|
+			// Severity::IoOut			|
+			// Severity::Dot			|
+			// Severity::Hex			|
+			// Severity::ConfigRead		|
+			// Severity::ConfigWrite		|
+			// Severity::Enter			|
+			// Severity::Leave			|
+			// Severity::File			|
+			Severity::Ctor			|
+			Severity::Dtor			|
+			// Severity::ThreadStart		|
+			// Severity::ThreadEnd		|
+			// Severity::Utils			|
+			// Severity::Listener		|
+			Severity::SystemEmergency
+		);
 	}
 
 	LogHandlerPtr log_red = LogHandler::create (stdout);
 	if (log_red) {
-		// log_red->background =  16;
-		// log_red->foreground = 196;
+		log_red->foreground = 209;
 		log_red->start (Severity::Code);
 	}
 
-	srandom (time (nullptr));
+	LogHandlerPtr log_green = LogHandler::create (stdout);
+	if (log_green) {
+		log_green->foreground = 118;
+		log_green->start (Severity::Trace);
+	}
+
+	LogHandlerPtr log_yellow = LogHandler::create (stdout);
+	if (log_yellow) {
+		log_yellow->foreground = 226;
+		log_yellow->start (Severity::Listener);
+	}
 
 	int status = 0;
 
@@ -77,6 +104,14 @@ main (int argc, char *argv[])
 	text_app = nullptr;
 #endif
 	main_app = nullptr;
+
+	if (log_yellow) {
+		log_yellow->stop();
+	}
+
+	if (log_green) {
+		log_green->stop();
+	}
 
 	if (log_red) {
 		log_red->stop();

@@ -52,7 +52,8 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 
 	g->theme = gui_app->get_theme();
 
-	gui_app->add_listener(g);
+	c->add_listener(g);		// Container listener
+	gui_app->add_listener(g);	// Theme listener
 
 	g->sync();
 	c->add_string_prop (std::string("gfx"), std::string("colour"), g->colour2);
@@ -533,7 +534,7 @@ GfxContainer::find (const ContainerPtr& cont)
 		}
 	}
 
-	return nullptr;
+	return {};
 }
 
 void
@@ -547,7 +548,7 @@ GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& c
 		return;
 	}
 
-	GfxContainerPtr gparent = find (parent);
+	GfxContainerPtr gparent = get_smart();	//RAR find (parent);
 	if (!gparent)
 		return;
 
@@ -574,9 +575,11 @@ GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& c
 }
 
 void
-GfxContainer::container_changed (const ContainerPtr& UNUSED(parent), const ContainerPtr& UNUSED(before), const ContainerPtr& UNUSED(after))
+GfxContainer::container_changed (const ContainerPtr& before, const ContainerPtr& after)
 {
-	LOG_TRACE;
+	log_trace ("container_changed %s, %s",
+		before->get_name_default().c_str(),
+		after->get_name_default().c_str());
 }
 
 bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)

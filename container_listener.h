@@ -31,7 +31,7 @@ public:
 	virtual ~IContainerListener() = default;
 
 	virtual void container_added   (const ContainerPtr& parent, const ContainerPtr& child) = 0;
-	virtual void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after) = 0;
+	virtual void container_changed (const ContainerPtr& before, const ContainerPtr& after) = 0;
 #if 0
 	virtual void container_added   (const ContainerPtr& parent, const ContainerPtr& cont, const char* description) = 0;
 	virtual void container_busy    (const ContainerPtr& cont, int busy) = 0;

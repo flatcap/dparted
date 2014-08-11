@@ -112,7 +112,8 @@ public:
 	static bool commit_transaction (const std::string& desc = "");
 	static void cancel_transaction (void);
 
-	void notify_add (ContainerPtr parent, ContainerPtr child);
+	void notify_add    (ContainerPtr parent, ContainerPtr child);
+	void notify_change (ContainerPtr before, ContainerPtr after);
 	// notify_delete
 	// notify_change
 	// ...
@@ -186,7 +187,6 @@ protected:
 
 	std::vector<ContainerPtr> children;
 	std::mutex mutex_children;
-	ContainerPtr previous;	// used by backup/restore
 
 	std::vector<std::string> more_props;
 
