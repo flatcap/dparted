@@ -634,9 +634,6 @@ Window::set_data (ContainerPtr c)
 
 	GfxContainerPtr g = GfxContainer::create (nullptr, c);
 
-	ContainerListenerPtr cl = g->get_listener();	// Only link the tops of the two trees
-	c->add_listener (cl);	//XXX this should happen in the GfxContainer code
-
 #ifdef DP_TREE
 	try {
 		treeview.init_treeview(g);

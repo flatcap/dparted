@@ -53,6 +53,7 @@ public:
 
 	bool sync (void);
 	void dump2 (void);
+	void dump3 (void);
 
 	bool set_focus (bool focus);
 	bool get_focus (void);

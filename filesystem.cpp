@@ -190,7 +190,7 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 
 		ContainerPtr new_parent = Container::start_transaction (parent, "Filesystem: probe");
 		if (!new_parent) {
-			log_error ("misc probe failed");
+			log_error ("Filesystem probe failed");
 			return false;
 		}
 

@@ -384,7 +384,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 		_add_child (children, child);
 	}
 
-	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
+	log_debug ("add child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
 	if (probe) {
 		main_app->queue_add_probe (child);
@@ -1172,6 +1172,11 @@ Container::add_listener (const ContainerListenerPtr& cl)
 
 	log_listener ("Container %s(%p) add listener: %p", get_name_default().c_str(), this, cl.get());
 	container_listeners.push_back (cl);
+
+	log_info ("listeners:");
+	for (auto& l : container_listeners) {
+		log_info ("\t%p", l.lock().get());
+	}
 }
 
 

@@ -95,6 +95,7 @@ public:
 	void notify (NotifyType type, ContainerPtr first, ContainerPtr second);
 
 	void add_listener (const ContainerListenerPtr& m);
+	int count_listeners (void) { return container_listeners.size(); }
 
 	std::vector<std::string> get_prop_names (void);
 	PPtr get_prop (const std::string& name);

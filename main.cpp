@@ -37,14 +37,14 @@ main (int argc, char *argv[])
 	LogHandlerPtr log_out = LogHandler::create (stdout);
 	if (log_out) {
 		log_out->start (
-			Severity::SystemAlert		|
-			Severity::Critical		|
-			Severity::Error			|
-			Severity::Perror		|
+			// Severity::SystemAlert		|
+			// Severity::Critical		|
+			// Severity::Error			|
+			// Severity::Perror		|
 			Severity::Warning		|
 			Severity::Verbose		|
 			Severity::User			|
-			Severity::Info			|
+			// Severity::Info			|
 			Severity::Progress		|
 			Severity::Quiet			|
 			// Severity::Command		|
@@ -61,8 +61,8 @@ main (int argc, char *argv[])
 			// Severity::Enter			|
 			// Severity::Leave			|
 			// Severity::File			|
-			Severity::Ctor			|
-			Severity::Dtor			|
+			// Severity::Ctor			|
+			// Severity::Dtor			|
 			// Severity::ThreadStart		|
 			// Severity::ThreadEnd		|
 			// Severity::Utils			|
@@ -89,6 +89,24 @@ main (int argc, char *argv[])
 		log_yellow->start (Severity::Listener);
 	}
 
+	LogHandlerPtr log_cyan = LogHandler::create (stdout);
+	if (log_cyan) {
+		log_cyan->foreground = 45;
+		log_cyan->start (Severity::Info);
+	}
+
+	LogHandlerPtr log_crit = LogHandler::create (stdout);
+	if (log_crit) {
+		log_crit->background = 196;
+		log_crit->foreground = 15;
+		log_crit->start (
+			Severity::SystemAlert		|
+			Severity::Critical		|
+			Severity::Error			|
+			Severity::Perror
+		);
+	}
+
 	int status = 0;
 
 #ifdef DP_GUI
@@ -104,6 +122,14 @@ main (int argc, char *argv[])
 	text_app = nullptr;
 #endif
 	main_app = nullptr;
+
+	if (log_crit) {
+		log_crit->stop();
+	}
+
+	if (log_cyan) {
+		log_cyan->stop();
+	}
 
 	if (log_yellow) {
 		log_yellow->stop();

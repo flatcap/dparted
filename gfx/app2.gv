@@ -22,6 +22,8 @@ digraph app {
 	cont_a [ shape=none style=none label=<<table port="t" border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">A</td><td bgcolor="cyan">A</td></tr></table>> ];
 	cont_b [ shape=none style=none label=<<table port="t" border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">B</td><td bgcolor="cyan">B</td></tr></table>> ];
 	cont_c [ shape=none style=none label=<<table port="t" border="0" cellborder="1" cellspacing="0" cellpadding="10"><tr><td bgcolor="pink">C</td><td bgcolor="cyan">C</td></tr></table>> ];
+	cont_c2 [ label="C'" fillcolor=cyan ];
+	cont_d [ label="D" fillcolor=cyan ];
 
 	cont_t:t -> cont_a:t;
 	cont_t:t -> cont_b:t;
@@ -33,9 +35,10 @@ digraph app {
 	timeline -> cont_t:t;
 	timeline -> txn;
 	txn->cont_c:t;
+	txn->cont_c2:t;
+	cont_c2->cont_d;
 
 	cfg1 -> app:t [ dir=back ];
-	app:t -> cont_t:t [ style=dotted ];
 
 	app:t -> theme;
 	cfg2 -> theme [ dir=back ];
@@ -49,6 +52,6 @@ digraph app {
 	tree_view -> cont_t:t;
 
 	{ rank=same cfg1 app timeline }
-	{ rank=same window txn }
+	{ rank=same cont_t txn }
 	{ rank=same theme cfg2 window }
 }
