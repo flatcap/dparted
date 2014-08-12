@@ -28,7 +28,7 @@ D	?= 1
 T	?= 1
 
 GUI	?= 1
-TREE	?= 1
+TREE	?= 0
 AREA	?= 1
 
 DISK	?= 0
@@ -199,12 +199,53 @@ endif
 all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT) tags
 
 # ----------------------------------------------------------------------------
+# Show the Makefile config options -- clumsy, but useful
+
+vars:
+	@echo "A       = $(A)"
+	@echo "V       = $(V)"
+	@echo "P       = $(P)"
+	@echo "L       = $(L)"
+	@echo "D       = $(D)"
+	@echo "T       = $(T)"
+	@echo ""
+	@echo "GUI     = $(GUI)"
+	@echo "TREE    = $(TREE)"
+	@echo "AREA    = $(AREA)"
+	@echo ""
+	@echo "DISK    = $(DISK)"
+	@echo "FILE    = $(FILE)"
+	@echo "LOOP    = $(LOOP)"
+	@echo "LVM     = $(LVM)"
+	@echo ""
+	@echo "GPT     = $(GPT)"
+	@echo "MSDOS   = $(MSDOS)"
+	@echo "MD      = $(MD)"
+	@echo "LUKS    = $(LUKS)"
+	@echo ""
+	@echo "BTRFS   = $(BTRFS)"
+	@echo "EXTFS   = $(EXTFS)"
+	@echo "FS_MISC = $(FS_MISC)"
+	@echo "NTFS    = $(NTFS)"
+	@echo ""
+	@echo "LIST    = $(LIST)"
+	@echo "PROP    = $(PROP)"
+	@echo "DOT     = $(DOT)"
+	@echo "HEX     = $(HEX)"
+	@echo ""
+	@echo "UNUSED  = $(UNUSED)"
+	@echo ""
+
+# @sed -n -e '/^# Conf/,/^# ---/{s/.*0$$/[1;30m\0[0m/;s/.*1$$/[1;32m\0[0m/;s/.*$$(A)$$/[1;33m\0[0m/;p}' $(firstword $(MAKEFILE_LIST))
+
+# ----------------------------------------------------------------------------
 
 #
 # Pretty print
 #
-V	      = @
-Q	      = $(V:1=)
+ifneq ($(V),1)
+Q	:= @
+endif
 QUIET_CC      = $(Q:@=@echo 'CC      '$<;)
 QUIET_LINK    = $(Q:@=@echo 'LD      '$@;)
 QUIET_TAGS    = $(Q:@=@echo 'TAGS    '$@;)
