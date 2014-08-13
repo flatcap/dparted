@@ -764,7 +764,14 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 		ContainerPtr p = c->get_parent();
 		if (p) {
 			log_error ("DELETE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
+			std::string desc = "Test: delete " + c->get_name_default();
+			ContainerPtr new_parent = Container::start_transaction (p, desc);
+			if (!new_parent)
+				return true;
+
 			p->delete_child(c);
+
+			Container::commit_transaction();
 		}
 	}
 

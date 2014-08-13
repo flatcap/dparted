@@ -418,6 +418,11 @@ Container::delete_child (ContainerPtr child)
 	for (auto it = children.begin(); it != children.end(); ++it) {
 		if (*it == child) {
 			children.erase (it);
+
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, get_smart(), child));
+			}
+
 			break;
 		}
 	}
@@ -700,7 +705,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	return stream;
 }
 
-inline bool
+bool
 operator== (const ContainerPtr& lhs, const ContainerPtr& rhs)
 {
 	return (lhs->unique_id == rhs->unique_id);

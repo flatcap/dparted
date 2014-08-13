@@ -304,7 +304,6 @@ Loop::discover (ContainerPtr& parent)
 		loops.push_back(l);
 	}
 
-	// The transaction manages the write lock
 	ContainerPtr new_parent = Container::start_transaction (parent, "Loop: discover devices");
 	if (!new_parent)
 		return;
