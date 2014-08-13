@@ -9,9 +9,7 @@
 /xxx.txt
 
 # work dirs
-/backup
-/gtk
 /misc
+/plugin
 /test
-/watcher*
 

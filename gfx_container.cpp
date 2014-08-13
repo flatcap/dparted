@@ -92,20 +92,28 @@ bool
 GfxContainer::sync (void)
 {
 	ContainerPtr c = get_container();
-	if (!c)
+
+	if (!c) {
+		log_error ("NO CONTAINER");
+		//XXX need to delete myself from parent
+		//XXX notify delete to OUR listeners
 		return false;
+	}
 
-	if (seqnum == c->seqnum)
-		return true;
+	if (seqnum != c->seqnum) {
+		init(c);	//XXX rename this
+	}
 
-	init(c);
 	for (auto& child : c->get_children()) {
-		GfxContainerPtr g = GfxContainer::create (get_smart(), child);
-		if (name == "dummy") {
-			log_code ("MARKER1");
+		GfxContainerPtr gfx = find_child (child);
+		if (gfx) {
+			log_code ("EXISTING CHILD");
+			gfx->sync();
+		} else {
+			GfxContainerPtr g = GfxContainer::create (get_smart(), child);
+			std::lock_guard<std::mutex> lock (mutex_children);
+			insert_child(g);
 		}
-		std::lock_guard<std::mutex> lock (mutex_children);
-		insert_child(g);
 	}
 
 	return true;
@@ -227,7 +235,7 @@ GfxContainer::update_info (void)
 		return false;
 
 	if (seqnum != c->seqnum) {
-		sync();
+		// sync();
 		return true;
 	}
 
@@ -565,21 +573,38 @@ GfxContainer::find (const ContainerPtr& cont)
 	return {};
 }
 
+GfxContainerPtr
+GfxContainer::find_child (ContainerPtr search)
+{
+	if (!search)
+		return {};
+
+	for (auto& gfx : children) {
+		ContainerPtr child = gfx->container.lock();
+		if (child == search) {
+			return gfx;
+		}
+	}
+
+	return {};
+}
+
 void
 GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& cont)
 {
 	// LOG_TRACE;
 	log_code ("GFX container_added: %s(%p) to %s(%p)", cont->name.c_str(), cont.get(), parent->name.c_str(), parent.get());
 
-	// GfxContainerPtr existing = find (cont);
-	// if (existing) {
-	// 	log_error ("Container shouldn't exist : %s(%p) : %s(%p)",
-	// 		existing->name.c_str(),
-	// 		existing.get(),
-	// 		cont->get_name_default().c_str(),
-	// 		cont.get());
-	// 	return;
-	// }
+	GfxContainerPtr existing = find (cont);
+	if (existing) {
+		log_error ("Container shouldn't exist : %s(%p) : %s(%p)",
+			existing->name.c_str(),
+			existing.get(),
+			cont->get_name_default().c_str(),
+			cont.get());
+		return;
+		//XXX do we need to sync?
+	}
 
 	GfxContainerPtr gparent = get_smart();	//RAR find (parent);
 	if (!gparent)
@@ -605,7 +630,7 @@ GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& c
 	}
 
 	auto top = get_toplevel();
-	top->dump3();
+	//RAR top->dump3();
 }
 
 void
