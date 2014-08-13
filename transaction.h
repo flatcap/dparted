@@ -39,7 +39,7 @@ typedef std::tuple<NotifyType,ContainerWeak,ContainerWeak> Notification;
 class Transaction
 {
 public:
-	static TransactionPtr create (std::mutex& write_lock);
+	static TransactionPtr create (void);
 	virtual ~Transaction();
 
 	std::chrono::steady_clock::time_point timestamp;
@@ -47,9 +47,8 @@ public:
 	std::vector<Notification> notifications;
 
 protected:
-	Transaction (std::mutex& write_lock);
+	Transaction (void);
 
-	std::mutex& write_lock;
 	TransactionWeak self;
 };
 

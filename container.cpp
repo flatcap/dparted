@@ -1185,11 +1185,15 @@ Container::start_transaction (ContainerPtr& parent, const std::string& desc)
 {
 	LOG_TRACE;
 
-	txn = Transaction::create (mutex_write_lock);
+	txn = Transaction::create();
 	if (!txn) {
 		return {};
 	}
 	txn->description = desc;
+
+#ifdef DP_THREADED
+	mutex_write_lock.lock();
+#endif
 
 	ContainerPtr copy = parent->backup();
 	if (!copy) {
@@ -1215,8 +1219,11 @@ Container::commit_transaction (const std::string& desc)
 	}
 
 	main_app->get_timeline()->commit (txn);
-	txn = nullptr;
 
+#ifdef DP_THREADED
+	mutex_write_lock.unlock();
+#endif
+	txn = nullptr;
 	return false;
 }
 
@@ -1230,6 +1237,9 @@ Container::cancel_transaction (void)
 		return;
 	}
 
+#ifdef DP_THREADED
+	mutex_write_lock.unlock();
+#endif
 	txn = nullptr;
 }
 

@@ -140,7 +140,7 @@ Timeline::commit (TransactionPtr txn)
 		c1->notify (type, c1, c2);				// Let everyone know about the changes
 	}
 
-	// txn_list.push_back (txn);
+	txn_list.push_back (txn);
 	txn_cursor = std::end (txn_list);
 
 	return true;
