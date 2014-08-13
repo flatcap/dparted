@@ -35,7 +35,7 @@ find_plugins (const std::string& directory)
 			continue;
 		}
 
-		names.push_back (file);
+		names.push_back (directory + "/" + file);
 	}
 	closedir (dir);
 

@@ -4,14 +4,13 @@ MKDIR	= mkdir -p
 
 DEPDIR	= .dep
 OBJDIR	= .obj
+PLUGDIR	= plugins
 
-OUT	= main
+OUT_MAIN	= main
+OUT_PLUG_THEME	= $(PLUGDIR)/theme.so
 
-SRC	+= app.cpp dir.cpp main.cpp
-HDR	+= app.h dir.h
-#HDR	+= $(SRC:%.cpp=%.h)
-
-PLUGIN	+= plugin.h theme.cpp
+SRC	+= app.cpp dir.cpp main.cpp theme.cpp
+HDR	+= app.h dir.h plugin.h
 
 OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
@@ -25,8 +24,9 @@ CFLAGS	+= -ggdb
 
 LDFLAGS	+= -pthread
 LDFLAGS	+= -rdynamic
+LDFLAGS += -ldl
 
-all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT) tags
+all:	$(OBJDIR) $(DEPDIR) $(PLUGDIR) $(OBJ) $(OUT_MAIN) $(OUT_PLUG_THEME) tags
 
 # ----------------------------------------------------------------------------
 
@@ -57,11 +57,14 @@ $(OBJDIR)/%.o: %.cpp
 
 # ----------------------------------------------------------------------------
 
-$(OUT):	$(OBJ)
+$(OUT_MAIN):	$(OBJ)
 	$(QUIET_LINK)$(CXX) -o $@ $(OBJ) $(LDFLAGS)
 
-$(DEPDIR) $(OBJDIR):
+$(DEPDIR) $(OBJDIR) $(PLUGDIR):
 	$(Q)$(MKDIR) $@
+
+$(OUT_PLUG_THEME):	$(OBJ)
+	$(QUIET_LINK)$(CXX) $(LDFLAGS) -shared -o $@ $(OBJ)
 
 # ----------------------------------------------------------------------------
 
@@ -69,10 +72,10 @@ tags:	$(SRC) $(HDR)
 	$(QUIET_TAGS)ctags -I UNUSED -f - $(SRC) $(HDR) | grep -v -e "^_[A-Z0-9_]\+_H_	" -e "^[A-Za-z]\+Ptr	" > tags
 
 clean:
-	$(Q)$(RM) $(OUT) $(OBJ)
+	$(Q)$(RM) $(OUT) $(OBJ) $(OUT_MAIN) $(PLUGDIR)/*
 
 distclean: clean
-	$(Q)$(RM) $(DEPDIR) $(OBJDIR) $(LINKS) tags
+	$(Q)$(RM) $(DEPDIR) $(PLUGDIR) $(OBJDIR) $(LINKS) tags
 
 -include $(SRC:%.cpp=$(DEPDIR)/%.d)
 

@@ -1,6 +1,15 @@
 #include <iostream>
 #include <memory>
 
+extern "C" {
+int
+initialise (void)
+{
+	return 42;
+}
+}
+
+#if 0
 #include "plugin.h"
 
 dparted_plugin header = { DP_PLUGIN_MAGIC, DP_PLUGIN_VERSION, &initialise, &uninitialise };
@@ -37,4 +46,5 @@ get_icon (const std::string& name)
 {
 	return nullptr;
 }
+#endif
 
