@@ -1,50 +1,53 @@
 #include <iostream>
 #include <memory>
 
-extern "C" {
-int
-initialise (void)
-{
-	return 42;
-}
-}
-
-#if 0
 #include "plugin.h"
 
-dparted_plugin header = { DP_PLUGIN_MAGIC, DP_PLUGIN_VERSION, &initialise, &uninitialise };
+ThemePluginPtr my_theme;
 
-theme_plugin plug = { &get_colour, &get_icon };
+void initialise (register_plugin* reg);
+void uninitialise (void);
 
-dparted_plugin
-get_dparted_plugin_info (void)
+plugin header = { PLUGIN_MAGIC, PLUGIN_VERSION, &initialise, &uninitialise };
+
+std::string
+get_colour (const std::string&)
 {
-	return header;
+	return "pink";
+}
+
+std::string
+get_icon (const std::string&)
+{
+	return "/path/to/icon.ico";
 }
 
 void
 initialise (register_plugin* reg)
 {
 	std::cout << "Theme plugin initialised" << std::endl;
-	reg->register_theme (tp);
+
+	ThemePluginPtr t (new ThemePlugin {get_colour, get_icon});
+	my_theme = t;
+
+	reg->register_theme ("Psychedelic", my_theme);
 }
 
 void
 uninitialise (void)
 {
 	std::cout << "Theme plugin uninitialised" << std::endl;
-};
-
-Gdk::RGBA
-get_colour (const std::string& name)
-{
-	return 0;
+	my_theme = nullptr;
 }
 
-Glib::RefPtr<Gdk::Pixbuf>
-get_icon (const std::string& name)
+
+extern "C" {
+
+plugin*
+get_plugin_info (void)
 {
-	return nullptr;
+	return &header;
 }
-#endif
+
+}
 

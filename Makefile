@@ -19,7 +19,6 @@ CFLAGS	+= -Wall
 CFLAGS	+= -Wextra
 CFLAGS	+= -Wpedantic
 CFLAGS	+= -fpic
-CFLAGS	+= -DDEBUG
 CFLAGS	+= -ggdb
 
 LDFLAGS	+= -pthread

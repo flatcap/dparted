@@ -1,12 +1,11 @@
 #include <iostream>
-#include <functional>
 
 #include <dlfcn.h>
 
 #include "app.h"
 #include "dir.h"
-
-typedef std::function<int(void)> init_t;
+#include "plugin.h"
+#include "main.h"
 
 App::App (void)
 {
@@ -47,8 +46,8 @@ App::start_plugin (const std::string& filename)
 		return false;
 	}
 
-	int (*fn_initialise)(void);
-	*(void **) (&fn_initialise) = dlsym(handle, "initialise");
+	plugin* (*fn_get_info)(void);
+	*(void **) (&fn_get_info) = dlsym (handle, "get_plugin_info");
 
 	error = dlerror();
 	if (error) {
@@ -57,7 +56,9 @@ App::start_plugin (const std::string& filename)
 		return false;
 	}
 
-	std::cout << filename << " returns " << fn_initialise() << std::endl;
+	plugin *header = fn_get_info();
+	header->initialise (&reg);
+	std::cout << filename << " returns " << header << std::endl;
 
 	dlclose (handle);
 	return true;

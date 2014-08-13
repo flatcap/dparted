@@ -1,31 +1,50 @@
 #ifndef _PLUGIN_H_
 #define _PLUGIN_H_
 
-#define DP_PLUGIN_MAGIC		0xD93C38D3
-#define DP_PLUGIN_VERSION	0x00000001
+#include <string>
+#include <memory>
+#include <functional>
+
+#define PLUGIN_MAGIC		0xD93C38D3
+#define PLUGIN_VERSION	0x00000001
+
+struct ThemePlugin
+{
+	std::function<std::string(std::string)> get_colour;
+	std::function<std::string(std::string)> get_icon;
+};
+
+struct LoggerPlugin
+{
+	std::function<std::string(std::string)> get_colour;
+	std::function<std::string(std::string)> get_icon;
+};
+
+struct FilesystemPlugin
+{
+	std::function<std::string(std::uint8_t* buffer, std::uint64_t size)> identify;
+};
+
+typedef std::shared_ptr<struct LoggerPlugin>     LoggerPluginPtr;
+typedef std::shared_ptr<struct ThemePlugin>      ThemePluginPtr;
+typedef std::shared_ptr<struct FilesystemPlugin> FilesystemPluginPtr;
+
+// plugin get_plugin_info (void);
+
+typedef struct
+{
+	std::function<bool(const std::string&, LoggerPluginPtr)>     register_logger;
+	std::function<bool(const std::string&, ThemePluginPtr)>      register_theme;
+	std::function<bool(const std::string&, FilesystemPluginPtr)> register_filesystem;
+} register_plugin;
 
 typedef struct
 {
 	std::uint32_t magic;
 	std::uint32_t version;
-	void initialise   (register_plugin* reg);
-	void uninitialise (void);
-} dparted_plugin;
-
-typedef struct
-{
-	bool register_logger     (name, LoggerPluginPtr     lp);
-	bool register_theme      (name, ThemePluginPtr      tp);
-	bool register_filesystem (name, FilesystemPluginPtr fp);
-} register_plugin;
-
-dparted_plugin get_dparted_plugin_info (void);
-
-typedef struct
-{
-	Gdk::RGBA get_colour (const std::string& name);
-	Glib::RefPtr<Gdk::Pixbuf> get_icon (const std::string& name);
-} theme_plugin;
+	std::function<void(register_plugin* reg)> initialise;
+	std::function<void(void)>                 uninitialise;
+} plugin;
 
 #endif // _PLUGIN_H_
 

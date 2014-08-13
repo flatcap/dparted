@@ -1,11 +1,11 @@
 Notes
 
-dparted looks for *.so in ./plugin
+main looks for *.so in ./plugin
 	finds my_theme.so
 
-dparted loads my_theme.so
-	find symbol get_dparted_plugin_info
-	info = call get_dparted_plugin_info
+main loads my_theme.so
+	find symbol get_plugin_info
+	info = call get_plugin_info
 
 validate
 	magic
