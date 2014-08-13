@@ -64,7 +64,7 @@ OBJDIR	= .obj
 
 OUT	= dparted
 
-LINKS	= misc test
+LINKS	= misc test plugin
 
 # Core Objects
 SRC	+= block.cpp container.cpp filesystem.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
@@ -201,42 +201,9 @@ all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT) tags
 # ----------------------------------------------------------------------------
 # Show the Makefile config options -- clumsy, but useful
 
+VAR_LIST	= A V P L D T GUI TREE AREA DISK FILE LOOP LVM GPT MSDOS MD LUKS BTRFS EXTFS FS_MISC NTFS LIST PROP DOT HEX UNUSED
 vars:
-	@echo "A       = $(A)"
-	@echo "V       = $(V)"
-	@echo "P       = $(P)"
-	@echo "L       = $(L)"
-	@echo "D       = $(D)"
-	@echo "T       = $(T)"
-	@echo ""
-	@echo "GUI     = $(GUI)"
-	@echo "TREE    = $(TREE)"
-	@echo "AREA    = $(AREA)"
-	@echo ""
-	@echo "DISK    = $(DISK)"
-	@echo "FILE    = $(FILE)"
-	@echo "LOOP    = $(LOOP)"
-	@echo "LVM     = $(LVM)"
-	@echo ""
-	@echo "GPT     = $(GPT)"
-	@echo "MSDOS   = $(MSDOS)"
-	@echo "MD      = $(MD)"
-	@echo "LUKS    = $(LUKS)"
-	@echo ""
-	@echo "BTRFS   = $(BTRFS)"
-	@echo "EXTFS   = $(EXTFS)"
-	@echo "FS_MISC = $(FS_MISC)"
-	@echo "NTFS    = $(NTFS)"
-	@echo ""
-	@echo "LIST    = $(LIST)"
-	@echo "PROP    = $(PROP)"
-	@echo "DOT     = $(DOT)"
-	@echo "HEX     = $(HEX)"
-	@echo ""
-	@echo "UNUSED  = $(UNUSED)"
-	@echo ""
-
-# @sed -n -e '/^# Conf/,/^# ---/{s/.*0$$/[1;30m\0[0m/;s/.*1$$/[1;32m\0[0m/;s/.*$$(A)$$/[1;33m\0[0m/;p}' $(firstword $(MAKEFILE_LIST))
+	@echo -e $(foreach var, $(VAR_LIST), "$(var) = $($(var))\n") | column -t
 
 # ----------------------------------------------------------------------------
 
