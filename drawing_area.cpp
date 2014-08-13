@@ -563,9 +563,9 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	ContainerPtr tlc = top_level->get_container();
 
-	log_info ("DRAW:");
-	log_info ("top_level = %p, tlc = %p", (void*) top_level.get(), (void*) tlc.get());
-	log_info ("children = %ld", top_level->children.size());
+	log_debug ("DRAW:");
+	log_debug ("top_level = %p, tlc = %p", (void*) top_level.get(), (void*) tlc.get());
+	log_debug ("children = %ld", top_level->children.size());
 
 	vRange.clear();
 
@@ -726,6 +726,8 @@ bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
 	log_debug ("mouse click: (%.0f,%.0f)", event->x, event->y);
+	top_level->dump3();
+	return false;
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 

@@ -312,7 +312,7 @@ BaseDrawingArea::draw_icon (const Cairo::RefPtr<Cairo::Context>& cr, const Rect&
 	Gdk::Cairo::set_source_pixbuf (cr, icon, work.x, work.y);
 	work.w = icon->get_width();
 	work.h = icon->get_height();
-	log_info ("icon %d,%d", work.w, work.h);
+	log_debug ("icon %d,%d", work.w, work.h);
 
 	cr->rectangle (work.x, work.y, work.w, work.h);
 	cr->fill();

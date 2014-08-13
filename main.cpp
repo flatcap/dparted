@@ -48,7 +48,7 @@ main (int argc, char *argv[])
 			Severity::Progress		|
 			Severity::Quiet			|
 			// Severity::Command		|
-			Severity::Debug			|
+			// Severity::Debug			|
 			// Severity::Trace			|
 			// Severity::CommandIn		|
 			// Severity::CommandOut		|
