@@ -14,9 +14,9 @@ typedef struct
 
 typedef struct
 {
-	bool register_logger     (LoggerPluginPtr     lp);
-	bool register_theme      (ThemePluginPtr      tp);
-	bool register_filesystem (FilesystemPluginPtr fp);
+	bool register_logger     (name, LoggerPluginPtr     lp);
+	bool register_theme      (name, ThemePluginPtr      tp);
+	bool register_filesystem (name, FilesystemPluginPtr fp);
 } register_plugin;
 
 dparted_plugin get_dparted_plugin_info (void);
