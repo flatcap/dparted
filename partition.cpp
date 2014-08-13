@@ -141,7 +141,7 @@ Partition::perform_action (Action action)
 
 
 void
-Partition::add_child (ContainerPtr& child, bool probe)
+Partition::add_child (ContainerPtr child, bool probe)
 {
 	return_if_fail (child);
 

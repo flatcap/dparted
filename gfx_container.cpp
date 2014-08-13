@@ -597,7 +597,7 @@ GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& c
 
 	GfxContainerPtr existing = find (cont);
 	if (existing) {
-		log_error ("Container shouldn't exist : %s(%p) : %s(%p)",
+		log_code ("Container already exists : %s(%p) : %s(%p)",
 			existing->name.c_str(),
 			existing.get(),
 			cont->get_name_default().c_str(),
@@ -655,6 +655,13 @@ GfxContainer::container_changed (const ContainerPtr& before, const ContainerPtr&
 
 	container = after;
 	// Now notify all of OUR listeners
+}
+
+void
+GfxContainer::container_deleted (const ContainerPtr& parent, const ContainerPtr& cont)
+{
+	// LOG_TRACE;
+	log_code ("GFX container_deleted: %s(%p) to %s(%p)", cont->name.c_str(), cont.get(), parent->name.c_str(), parent.get());
 }
 
 bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)

@@ -726,8 +726,6 @@ bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
 	log_debug ("mouse click: (%.0f,%.0f)", event->x, event->y);
-	top_level->dump3();
-	return false;
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 
@@ -759,6 +757,15 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 	if ((event->button == 3) && (selection)) {		// Right-click
 		popup_menu (selection, event->x_root, event->y_root);
+	}
+
+	ContainerPtr c = selection->get_container();
+	if (c) {
+		ContainerPtr p = c->get_parent();
+		if (p) {
+			log_error ("DELETE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
+			p->delete_child(c);
+		}
 	}
 
 	return true;		// We've handled the event

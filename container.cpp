@@ -367,7 +367,7 @@ Container::perform_action (Action action)
 
 
 void
-Container::add_child (ContainerPtr& child, bool probe)
+Container::add_child (ContainerPtr child, bool probe)
 {
 	return_if_fail (child);
 	LOG_TRACE;
@@ -412,7 +412,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 }
 
 void
-Container::delete_child (ContainerPtr& child)
+Container::delete_child (ContainerPtr child)
 {
 	std::lock_guard<std::mutex> lock (mutex_children);
 	for (auto it = children.begin(); it != children.end(); ++it) {
@@ -424,7 +424,7 @@ Container::delete_child (ContainerPtr& child)
 }
 
 void
-Container::move_child (ContainerPtr& UNUSED(child), std::uint64_t UNUSED(offset), std::uint64_t UNUSED(size))
+Container::move_child (ContainerPtr UNUSED(child), std::uint64_t UNUSED(offset), std::uint64_t UNUSED(size))
 {
 }
 
@@ -449,7 +449,7 @@ insert_here (const ContainerPtr& a, const ContainerPtr& b)
 }
 
 void
-Container::_add_child (std::vector<ContainerPtr>& vec, ContainerPtr& child)
+Container::_add_child (std::vector<ContainerPtr>& vec, ContainerPtr child)
 {
 	auto end = std::end (vec);
 	for (auto it = std::begin (vec); it != end; ++it) {
@@ -1341,3 +1341,4 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 			break;
 	}
 }
+
