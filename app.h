@@ -66,7 +66,7 @@ protected:
 	ConfigFilePtr config_file;
 	TimelinePtr timeline;
 
-	void start_thread (std::function<void(void)> fn, const char* desc);
+	void start_thread (std::function<void(void)> fn, std::string desc);
 
 private:
 #ifdef DP_THREADED

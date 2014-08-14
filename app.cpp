@@ -147,7 +147,8 @@ App::queue_add_probe (ContainerPtr& item)
 {
 	return_if_fail (item);
 #ifdef DP_THREADED
-	start_thread (std::bind (&App::process_queue_item, this, item), "App::process_queue_item");
+	std::string desc = "probe: " + item->get_name_default();
+	start_thread (std::bind (&App::process_queue_item, this, item), desc);
 #else
 	work_queue.push_back (item);
 #endif
@@ -306,22 +307,22 @@ App::process_queue_item (ContainerPtr item)
 
 #ifdef DP_THREADED
 void
-App::start_thread (std::function<void(void)> fn, const char* desc)
+App::start_thread (std::function<void(void)> fn, std::string desc)
 {
 	//XXX use of desc is clumsy, but will do for now
 	std::lock_guard<std::mutex> lock (thread_mutex);
 	thread_queue.push_back (
 		std::thread ([fn, desc]() {
-			log_thread_start ("thread started: %s", desc);
+			log_thread_start ("thread started: %s", desc.c_str());
 			fn();
-			log_thread_end   ("thread ended:   %s", desc);
+			log_thread_end   ("thread ended:   %s", desc.c_str());
 		})
 	);
 }
 
 #else
 void
-App::start_thread (std::function<void(void)> fn, const char* UNUSED(desc))
+App::start_thread (std::function<void(void)> fn, std::string UNUSED(desc))
 {
 	fn();
 }

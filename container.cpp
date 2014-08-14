@@ -1343,7 +1343,6 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 			notify_delete (first, second);
 			break;
 		case NotifyType::t_change:
-			notify_change (first, second);
 			log_trace ("Notify change:");
 			log_trace ("\t%s(%d) %d listeners",
 				first->get_name_default().c_str(),
@@ -1355,7 +1354,6 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 				second->container_listeners.size());
 			notify_change (first, second);
 			break;
-			// void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after) = 0;
 		default:
 			log_trace ("Unknown notification type: %d", type);
 			break;
