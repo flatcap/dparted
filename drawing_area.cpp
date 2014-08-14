@@ -1422,18 +1422,21 @@ DrawingArea::theme_changed (const ThemePtr& new_theme)
 void
 DrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
 {
-	LOG_TRACE;
+	log_error ("gfx_container_added");
+	get_window()->invalidate (false);
 }
 
 void
 DrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(before), const GfxContainerPtr& UNUSED(after))
 {
-	LOG_TRACE;
+	log_error ("gfx_container_changed");
+	get_window()->invalidate (false);
 }
 
 void
 DrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
 {
-	LOG_TRACE;
+	log_error ("gfx_container_deleted");
+	get_window()->invalidate (false);
 }
 

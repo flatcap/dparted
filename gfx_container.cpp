@@ -629,7 +629,7 @@ GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& c
 		}
 	}
 
-	auto top = get_toplevel();
+	//RAR auto top = get_toplevel();
 	//RAR top->dump3();
 }
 
@@ -658,10 +658,34 @@ GfxContainer::container_changed (const ContainerPtr& before, const ContainerPtr&
 }
 
 void
-GfxContainer::container_deleted (const ContainerPtr& parent, const ContainerPtr& cont)
+GfxContainer::container_deleted (const ContainerPtr& parent, const ContainerPtr& child)
 {
 	// LOG_TRACE;
-	log_code ("GFX container_deleted: %s(%p) to %s(%p)", cont->name.c_str(), cont.get(), parent->name.c_str(), parent.get());
+	log_code ("GFX container_deleted: %s(%p) to %s(%p)", child->name.c_str(), child.get(), parent->name.c_str(), parent.get());
+
+	GfxContainerPtr toplevel = get_toplevel();
+	GfxContainerPtr gparent  = get_parent();
+	GfxContainerPtr gchild   = get_smart();
+
+	for (auto& i : toplevel->gfx_container_listeners) {
+		GfxContainerListenerPtr p = i.lock();
+		if (p) {
+			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
+			p->gfx_container_added (gparent, gchild);
+		} else {
+			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
+		}
+	}
+
+	std::lock_guard<std::mutex> lock (gparent->mutex_children);
+	auto end = std::end (gparent->children);
+	for (auto it = gparent->children.begin(); it != end; ++it) {
+		if (*it == gchild) {
+			gparent->children.erase (it);
+			log_error ("FOUND GFX MATCH");
+			break;
+		}
+	}
 }
 
 bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)

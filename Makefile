@@ -265,7 +265,7 @@ links:	$(LINKS)
 $(LINKS):
 	ln -s ../dparted-$@ $@
 
-clean:
+clean c:
 	$(Q)$(RM) $(OUT) $(OBJ) gmon.out *.gcov
 
 distclean: clean

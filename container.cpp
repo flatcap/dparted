@@ -1340,6 +1340,7 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 				second->get_name_default().c_str(),
 				second->unique_id,
 				second->container_listeners.size());
+			notify_delete (first, second);
 			break;
 		case NotifyType::t_change:
 			notify_change (first, second);
@@ -1352,7 +1353,7 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 				second->get_name_default().c_str(),
 				second->unique_id,
 				second->container_listeners.size());
-			notify_delete (first, second);
+			notify_change (first, second);
 			break;
 			// void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after) = 0;
 		default:
