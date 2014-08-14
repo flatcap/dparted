@@ -1418,3 +1418,22 @@ DrawingArea::theme_changed (const ThemePtr& new_theme)
 	BaseDrawingArea::theme_changed (new_theme);
 }
 
+
+void
+DrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+{
+	LOG_TRACE;
+}
+
+void
+DrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(before), const GfxContainerPtr& UNUSED(after))
+{
+	LOG_TRACE;
+}
+
+void
+DrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+{
+	LOG_TRACE;
+}
+

@@ -115,9 +115,7 @@ public:
 
 	void notify_add    (ContainerPtr parent, ContainerPtr child);
 	void notify_change (ContainerPtr before, ContainerPtr after);
-	// notify_delete
-	// notify_change
-	// ...
+	void notify_delete (ContainerPtr parent, ContainerPtr child);
 
 public:
 	// Property helper functions

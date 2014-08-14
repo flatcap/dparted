@@ -1300,6 +1300,19 @@ Container::notify_change (ContainerPtr before, ContainerPtr after)
 }
 
 void
+Container::notify_delete (ContainerPtr parent, ContainerPtr child)
+{
+	for (auto& i : container_listeners) {
+		ContainerListenerPtr cl = i.lock();
+		if (cl) {
+			cl->container_deleted (parent, child);
+		} else {
+			log_code ("remove listener from the collection");	//XXX remove it from the collection
+		}
+	}
+}
+
+void
 Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 {
 	LOG_TRACE;
@@ -1339,6 +1352,7 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 				second->get_name_default().c_str(),
 				second->unique_id,
 				second->container_listeners.size());
+			notify_delete (first, second);
 			break;
 			// void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after) = 0;
 		default:
