@@ -304,7 +304,6 @@ Loop::discover (ContainerPtr& parent)
 		loops.push_back(l);
 	}
 
-	// The transaction manages the write lock
 	ContainerPtr new_parent = Container::start_transaction (parent, "Loop: discover devices");
 	if (!new_parent)
 		return;
@@ -352,7 +351,6 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
-	//RAR std::string desc = "Identified loopback device: " + l->get_device_short();
 	parent->add_child (l, true);
 	return true;
 }

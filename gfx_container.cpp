@@ -52,7 +52,8 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 
 	g->theme = gui_app->get_theme();
 
-	gui_app->add_listener(g);
+	c->add_listener(g);		// Container listener
+	gui_app->add_listener(g);	// Theme listener
 
 	g->sync();
 	c->add_string_prop (std::string("gfx"), std::string("colour"), g->colour2);
@@ -91,20 +92,28 @@ bool
 GfxContainer::sync (void)
 {
 	ContainerPtr c = get_container();
-	if (!c)
+
+	if (!c) {
+		log_error ("NO CONTAINER");
+		//XXX need to delete myself from parent
+		//XXX notify delete to OUR listeners
 		return false;
+	}
 
-	if (seqnum == c->seqnum)
-		return true;
+	if (seqnum != c->seqnum) {
+		init(c);	//XXX rename this
+	}
 
-	init(c);
 	for (auto& child : c->get_children()) {
-		GfxContainerPtr g = GfxContainer::create (get_smart(), child);
-		if (name == "dummy") {
-			log_code ("MARKER1");
+		GfxContainerPtr gfx = find_child (child);
+		if (gfx) {
+			log_code ("EXISTING CHILD");
+			gfx->sync();
+		} else {
+			GfxContainerPtr g = GfxContainer::create (get_smart(), child);
+			std::lock_guard<std::mutex> lock (mutex_children);
+			insert_child(g);
 		}
-		std::lock_guard<std::mutex> lock (mutex_children);
-		insert_child(g);
 	}
 
 	return true;
@@ -226,7 +235,7 @@ GfxContainer::update_info (void)
 		return false;
 
 	if (seqnum != c->seqnum) {
-		sync();
+		// sync();
 		return true;
 	}
 
@@ -250,18 +259,46 @@ GfxContainer::dump2 (void)
 		tabs.resize (indent, '\t');
 	}
 
-	log_debug ("%s----------------------", tabs.c_str());
-	log_debug ("%sdisplay        = %s", tabs.c_str(), display.c_str());
-	log_debug ("%slabel          = %s", tabs.c_str(), label.c_str());
-	log_debug ("%slabel_template = %s", tabs.c_str(), label_template.c_str());
-	log_debug ("%sbytes_size     = %ld", tabs.c_str(), bytes_size);
-	log_debug ("%sbytes_used     = %ld", tabs.c_str(), bytes_used);
-	log_debug ("%susage          = %d", tabs.c_str(), usage);
-	log_debug ("%sseqnum         = %d", tabs.c_str(), seqnum);
+	log_info ("%s----------------------", tabs.c_str());
+	log_info ("%sdisplay        = %s",    tabs.c_str(), display.c_str());
+	log_info ("%slabel          = %s",    tabs.c_str(), label.c_str());
+	log_info ("%slabel_template = %s",    tabs.c_str(), label_template.c_str());
+	log_info ("%sbytes_size     = %ld",   tabs.c_str(), bytes_size);
+	log_info ("%sbytes_used     = %ld",   tabs.c_str(), bytes_used);
+	log_info ("%susage          = %d",    tabs.c_str(), usage);
+	log_info ("%sseqnum         = %d",    tabs.c_str(), seqnum);
 
 	++indent;
 	for (auto& c : children) {
-		c->dump();
+		c->dump2();
+	}
+	--indent;
+}
+
+void
+GfxContainer::dump3 (void)
+{
+	static int indent = 0;
+	std::string tabs;
+
+	if (indent > 0) {
+		tabs.resize (indent, '\t');
+	}
+
+	ContainerPtr c = container.lock();
+	GfxContainerPtr g = get_smart();
+	log_info ("%s----------------------", tabs.c_str());
+	log_info ("%sgfx            = %p",    tabs.c_str(), g.get());
+	log_info ("%sname           = %s",    tabs.c_str(), name.c_str());
+	log_info ("%scontainer      = %p",    tabs.c_str(), c.get());
+	if (c) {
+		log_info ("%scont name      = %s",    tabs.c_str(), c->get_name_default().c_str());
+		log_info ("%slisteners      = %d",    tabs.c_str(), c->count_listeners());
+	}
+
+	++indent;
+	for (auto& c : children) {
+		c->dump3();
 	}
 	--indent;
 }
@@ -533,50 +570,122 @@ GfxContainer::find (const ContainerPtr& cont)
 		}
 	}
 
-	return nullptr;
+	return {};
+}
+
+GfxContainerPtr
+GfxContainer::find_child (ContainerPtr search)
+{
+	if (!search)
+		return {};
+
+	for (auto& gfx : children) {
+		ContainerPtr child = gfx->container.lock();
+		if (child == search) {
+			return gfx;
+		}
+	}
+
+	return {};
 }
 
 void
 GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& cont)
 {
 	// LOG_TRACE;
-	log_debug ("GFX container_added: %s to %s", cont->name.c_str(), parent->name.c_str());
+	log_code ("GFX container_added: %s(%p) to %s(%p)", cont->name.c_str(), cont.get(), parent->name.c_str(), parent.get());
 
-	if (find (cont)) {
-		log_error ("Container shouldn't exist");
+	GfxContainerPtr existing = find (cont);
+	if (existing) {
+		log_code ("Container already exists : %s(%p) : %s(%p)",
+			existing->name.c_str(),
+			existing.get(),
+			cont->get_name_default().c_str(),
+			cont.get());
 		return;
+		//XXX do we need to sync?
 	}
 
-	GfxContainerPtr gparent = find (parent);
+	GfxContainerPtr gparent = get_smart();	//RAR find (parent);
 	if (!gparent)
 		return;
 
 	GfxContainerPtr gchild = GfxContainer::create (get_smart(), cont);
-	if (gparent->name == "dummy") {
-		log_debug ("MARKER2");
-	}
+
 	{
 	std::lock_guard<std::mutex> lock (mutex_children);
 	gparent->insert_child (gchild);
-	gchild->sync();
+	// gchild->sync();
 	}
 
 	GfxContainerPtr toplevel = get_toplevel();
 	for (auto& i : toplevel->gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
-			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
+			//RAR log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
 			//RAR p->gfx_container_added (gparent, gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
 		}
 	}
+
+	//RAR auto top = get_toplevel();
+	//RAR top->dump3();
 }
 
 void
-GfxContainer::container_changed (const ContainerPtr& UNUSED(parent), const ContainerPtr& UNUSED(before), const ContainerPtr& UNUSED(after))
+GfxContainer::container_changed (const ContainerPtr& before, const ContainerPtr& after)
 {
-	LOG_TRACE;
+	std::string name;
+	ContainerPtr c = container.lock();
+	if (c)
+		name = c->get_name_default();
+
+	if (c != before) {
+		log_error ("Notification doesn't match");
+	}
+
+	log_trace ("container_changed %s(%p) : %s(%p) -> %s(%p)",
+		name.c_str(),
+		c.get(),
+		before->get_name_default().c_str(),
+		before.get(),
+		after->get_name_default().c_str(),
+		after.get());
+
+	container = after;
+	// Now notify all of OUR listeners
+}
+
+void
+GfxContainer::container_deleted (const ContainerPtr& parent, const ContainerPtr& child)
+{
+	// LOG_TRACE;
+	log_code ("GFX container_deleted: %s(%p) to %s(%p)", child->name.c_str(), child.get(), parent->name.c_str(), parent.get());
+
+	GfxContainerPtr toplevel = get_toplevel();
+	GfxContainerPtr gparent  = get_parent();
+	GfxContainerPtr gchild   = get_smart();
+
+	for (auto& i : toplevel->gfx_container_listeners) {
+		GfxContainerListenerPtr p = i.lock();
+		if (p) {
+			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
+			p->gfx_container_added (gparent, gchild);
+		} else {
+			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
+		}
+	}
+
+	std::lock_guard<std::mutex> lock (gparent->mutex_children);
+	auto end = std::end (gparent->children);
+	for (auto it = gparent->children.begin(); it != end; ++it) {
+		if (*it == gchild) {
+			gparent->children.erase (it);
+			log_error ("FOUND GFX MATCH");
+			break;
+		}
+	}
 }
 
 bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)
@@ -598,7 +707,7 @@ void
 GfxContainer::insert_child (GfxContainerPtr& child)
 {
 	auto end = std::end (children);
-	for (auto it = std::begin (children); it < end; ++it) {
+	for (auto it = std::begin (children); it != end; ++it) {
 		if (compare (child, *it)) {
 			children.insert (it, child);
 			return;

@@ -993,3 +993,7 @@ where do i fit in the fscks between txns?
 does everything need to be within a transaction?
 	either that, or I trap all setter methods
 
+declare "volatile" properties
+	always keep newest value (even if undoing an action)
+	listeners too
+

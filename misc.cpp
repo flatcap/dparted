@@ -186,7 +186,7 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 	MiscPtr m;
 	if (is_empty (buffer, bufsize)) {
-		//RAR log_error ("probe empty");
+		log_error ("probe empty");
 		m = Misc::create();
 		m->sub_type ("Zero");
 	} else { // if (is_random (buffer, bufsize)) {

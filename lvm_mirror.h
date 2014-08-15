@@ -42,8 +42,8 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	virtual void add_child    (ContainerPtr& child, bool probe);
-	virtual void delete_child (ContainerPtr& child);
+	virtual void add_child    (ContainerPtr child, bool probe);
+	virtual void delete_child (ContainerPtr child);
 
 public:
 	// properties

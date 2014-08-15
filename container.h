@@ -67,9 +67,9 @@ public:
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 
-	virtual void add_child    (ContainerPtr& child, bool probe);
-	virtual void delete_child (ContainerPtr& child);
-	virtual void move_child   (ContainerPtr& child, std::uint64_t offset, std::uint64_t size);
+	virtual void add_child    (ContainerPtr child, bool probe);
+	virtual void delete_child (ContainerPtr child);
+	virtual void move_child   (ContainerPtr child, std::uint64_t offset, std::uint64_t size);
 
 	virtual int      get_fd (void);
 	virtual std::uint64_t get_block_size (void);
@@ -95,13 +95,14 @@ public:
 	void notify (NotifyType type, ContainerPtr first, ContainerPtr second);
 
 	void add_listener (const ContainerListenerPtr& m);
+	int count_listeners (void) { return container_listeners.size(); }
 
 	std::vector<std::string> get_prop_names (void);
 	PPtr get_prop (const std::string& name);
 	std::vector<PPtr> get_all_props (bool inc_hidden = false);
 
 	template<class T>
-	void add_child (std::shared_ptr<T>& child, bool probe);
+	void add_child (std::shared_ptr<T> child, bool probe);
 
 	void sub_type (const char* name);
 	std::string dump (void);
@@ -112,10 +113,9 @@ public:
 	static bool commit_transaction (const std::string& desc = "");
 	static void cancel_transaction (void);
 
-	void notify_add (ContainerPtr parent, ContainerPtr child);
-	// notify_delete
-	// notify_change
-	// ...
+	void notify_add    (ContainerPtr parent, ContainerPtr child);
+	void notify_change (ContainerPtr before, ContainerPtr after);
+	void notify_delete (ContainerPtr parent, ContainerPtr child);
 
 public:
 	// Property helper functions
@@ -186,7 +186,6 @@ protected:
 
 	std::vector<ContainerPtr> children;
 	std::mutex mutex_children;
-	ContainerPtr previous;	// used by backup/restore
 
 	std::vector<std::string> more_props;
 
@@ -196,7 +195,7 @@ protected:
 	PPtr declare_prop_fn (const char* owner, const char* name, std::function<T(void)> fn, const char* desc, int flags, PPtr var2 = nullptr);
 	PPtr declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags);
 
-	void _add_child (std::vector<ContainerPtr>& vec, ContainerPtr& child);
+	void _add_child (std::vector<ContainerPtr>& vec, ContainerPtr child);
 
 private:
 	MmapPtr	device_mmap;
@@ -285,7 +284,7 @@ Container::declare_prop_fn (const char* owner, const char* name, std::function<T
 
 template<class T>
 void
-Container::add_child (std::shared_ptr<T>& child, bool probe)
+Container::add_child (std::shared_ptr<T> child, bool probe)
 {
 	ContainerPtr c (child);
 	add_child (c, probe);

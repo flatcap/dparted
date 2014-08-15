@@ -192,7 +192,7 @@ LvmMirror::add_child (ContainerPtr& child, bool probe)
 }
 
 void
-LvmMirror::delete_child (ContainerPtr& UNUSED(child))
+LvmMirror::delete_child (ContainerPtr UNUSED(child))
 {
 }
 

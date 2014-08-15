@@ -32,35 +32,66 @@
 int
 main (int argc, char *argv[])
 {
+	srandom (time (nullptr));
+
 	LogHandlerPtr log_out = LogHandler::create (stdout);
-	if (log_out) {
-		log_out->start (Severity::AllMessages & ~(
-			Severity::Debug|
-			Severity::Command|
-			Severity::CommandIn|
-			Severity::CommandOut|
-			Severity::Ctor|
-			Severity::Dtor|
-			Severity::File|
-			Severity::Utils|
-			Severity::ConfigRead|
-			Severity::ThreadStart|
-			Severity::ThreadEnd|
-			Severity::Enter|
-			Severity::Leave|
-			Severity::Listener|
-			Severity::Code
-		));
-	}
+	log_out->start (
+		Severity::Warning		|
+		Severity::Verbose		|
+		Severity::User			|
+		Severity::Progress		|
+		Severity::Quiet			|
+		// Severity::Command		|
+		// Severity::Debug			|
+		// Severity::CommandIn		|
+		// Severity::CommandOut		|
+		// Severity::IoIn			|
+		// Severity::IoOut			|
+		// Severity::Dot			|
+		// Severity::Hex			|
+		// Severity::ConfigRead		|
+		// Severity::ConfigWrite		|
+		// Severity::Enter			|
+		// Severity::Leave			|
+		// Severity::File			|
+		// Severity::Ctor			|
+		// Severity::Dtor			|
+		// Severity::Utils			|
+		Severity::SystemEmergency
+	);
 
 	LogHandlerPtr log_red = LogHandler::create (stdout);
-	if (log_red) {
-		// log_red->background =  16;
-		// log_red->foreground = 196;
-		log_red->start (Severity::Code);
-	}
+	log_red->foreground = 209;
+	log_red->start (Severity::Code);
 
-	srandom (time (nullptr));
+	LogHandlerPtr log_green = LogHandler::create (stdout);
+	log_green->foreground = 118;
+	log_green->start (Severity::Trace);
+
+	LogHandlerPtr log_yellow = LogHandler::create (stdout);
+	log_yellow->foreground = 226;
+	log_yellow->start (Severity::Listener);
+
+	LogHandlerPtr log_cyan = LogHandler::create (stdout);
+	log_cyan->foreground = 45;
+	log_cyan->start (Severity::Info);
+
+	LogHandlerPtr log_crit = LogHandler::create (stdout);
+	log_crit->background = 196;
+	log_crit->foreground = 15;
+	log_crit->start (
+		Severity::SystemAlert		|
+		Severity::Critical		|
+		Severity::Error			|
+		Severity::Perror
+	);
+
+	LogHandlerPtr log_thread = LogHandler::create (stdout);
+	log_thread->foreground = 141;
+	log_thread->start (
+		Severity::ThreadStart	|
+		Severity::ThreadEnd
+	);
 
 	int status = 0;
 
@@ -78,13 +109,13 @@ main (int argc, char *argv[])
 #endif
 	main_app = nullptr;
 
-	if (log_red) {
-		log_red->stop();
-	}
-
-	if (log_out) {
-		log_out->stop();
-	}
+	log_thread->stop();
+	log_crit->stop();
+	log_cyan->stop();
+	log_yellow->stop();
+	log_green->stop();
+	log_red->stop();
+	log_out->stop();
 
 	return status;
 }

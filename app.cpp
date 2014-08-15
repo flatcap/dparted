@@ -147,7 +147,8 @@ App::queue_add_probe (ContainerPtr& item)
 {
 	return_if_fail (item);
 #ifdef DP_THREADED
-	start_thread (std::bind (&App::process_queue_item, this, item), "App::process_queue_item");
+	std::string desc = "probe: " + item->get_name_default();
+	start_thread (std::bind (&App::process_queue_item, this, item), desc);
 #else
 	work_queue.push_back (item);
 #endif
@@ -251,12 +252,8 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 		// Start a thread to watch the existing threads.
 		// When the existing threads have finished notify the user with fn().
 		std::thread ([=](){
-			log_thread_start ("Waiting for threads to finish");
-			while (!thread_queue.empty()) {
-				thread_queue.front().join();
-				std::lock_guard<std::mutex> lock (thread_mutex);
-				thread_queue.pop_front();
-			}
+			log_thread_start ("Waiting for %ld threads to finish", thread_queue.size());
+			wait_for_threads();
 			fn (top_level);
 			log_thread_end ("Threads have finished");
 		}).detach();
@@ -306,22 +303,22 @@ App::process_queue_item (ContainerPtr item)
 
 #ifdef DP_THREADED
 void
-App::start_thread (std::function<void(void)> fn, const char* desc)
+App::start_thread (std::function<void(void)> fn, std::string desc)
 {
 	//XXX use of desc is clumsy, but will do for now
 	std::lock_guard<std::mutex> lock (thread_mutex);
 	thread_queue.push_back (
 		std::thread ([fn, desc]() {
-			log_thread_start ("thread started: %s", desc);
+			log_thread_start ("thread started: %s", desc.c_str());
 			fn();
-			log_thread_end   ("thread ended:   %s", desc);
+			log_thread_end ("thread ended: %s", desc.c_str());
 		})
 	);
 }
 
 #else
 void
-App::start_thread (std::function<void(void)> fn, const char* UNUSED(desc))
+App::start_thread (std::function<void(void)> fn, std::string UNUSED(desc))
 {
 	fn();
 }
@@ -512,7 +509,7 @@ void
 App::wait_for_threads (void)
 {
 #ifdef DP_THREADED
-	// printf ("Waiting for threads to finish\n");
+	// log_info ("Waiting for threads to finish: %ld", thread_queue.size());	//XXX probably not safe to call size without lock
 	while (!thread_queue.empty()) {
 		thread_queue.front().join();
 		std::lock_guard<std::mutex> lock (thread_mutex);

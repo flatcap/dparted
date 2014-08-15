@@ -168,9 +168,10 @@ Container::Container (const Container& c) :
 	more_props          = c.more_props;
 	whole               = c.whole;
 	device_mmap         = c.device_mmap;
-	//RAR container_listeners = c.container_listeners;
+	seqnum              = c.seqnum;
+
+	container_listeners = c.container_listeners;	//RAR tmp
 	//RAR don't copy listeners, do it on the ::swap
-	//RAR where's seqnum?
 
 	// Of the remaining Container members:
 	// generated
@@ -272,6 +273,7 @@ Container::swap (Container& c)
 	std::swap (more_props,          c.more_props);
 	std::swap (whole,               c.whole);
 	std::swap (device_mmap,         c.device_mmap);
+	std::swap (seqnum,              c.seqnum);
 	std::swap (container_listeners, c.container_listeners);
 
 	// Of the remaining Container members:
@@ -365,7 +367,7 @@ Container::perform_action (Action action)
 
 
 void
-Container::add_child (ContainerPtr& child, bool probe)
+Container::add_child (ContainerPtr child, bool probe)
 {
 	return_if_fail (child);
 	LOG_TRACE;
@@ -382,7 +384,7 @@ Container::add_child (ContainerPtr& child, bool probe)
 		_add_child (children, child);
 	}
 
-	log_debug ("child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
+	log_debug ("add child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
 
 	if (probe) {
 		main_app->queue_add_probe (child);
@@ -410,19 +412,24 @@ Container::add_child (ContainerPtr& child, bool probe)
 }
 
 void
-Container::delete_child (ContainerPtr& child)
+Container::delete_child (ContainerPtr child)
 {
 	std::lock_guard<std::mutex> lock (mutex_children);
 	for (auto it = children.begin(); it != children.end(); ++it) {
 		if (*it == child) {
 			children.erase (it);
+
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, get_smart(), child));
+			}
+
 			break;
 		}
 	}
 }
 
 void
-Container::move_child (ContainerPtr& UNUSED(child), std::uint64_t UNUSED(offset), std::uint64_t UNUSED(size))
+Container::move_child (ContainerPtr UNUSED(child), std::uint64_t UNUSED(offset), std::uint64_t UNUSED(size))
 {
 }
 
@@ -447,7 +454,7 @@ insert_here (const ContainerPtr& a, const ContainerPtr& b)
 }
 
 void
-Container::_add_child (std::vector<ContainerPtr>& vec, ContainerPtr& child)
+Container::_add_child (std::vector<ContainerPtr>& vec, ContainerPtr child)
 {
 	auto end = std::end (vec);
 	for (auto it = std::begin (vec); it != end; ++it) {
@@ -698,7 +705,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	return stream;
 }
 
-inline bool
+bool
 operator== (const ContainerPtr& lhs, const ContainerPtr& rhs)
 {
 	return (lhs->unique_id == rhs->unique_id);
@@ -1168,8 +1175,13 @@ Container::add_listener (const ContainerListenerPtr& cl)
 {
 	return_if_fail (cl);
 
-	log_listener ("Container %p add listener: %p", this, cl.get());
+	log_listener ("Container %s(%p) add listener: %p", get_name_default().c_str(), this, cl.get());
 	container_listeners.push_back (cl);
+
+	log_info ("listeners:");
+	for (auto& l : container_listeners) {
+		log_info ("\t%p", l.lock().get());
+	}
 }
 
 
@@ -1178,8 +1190,13 @@ Container::start_transaction (ContainerPtr& parent, const std::string& desc)
 {
 	LOG_TRACE;
 
-	txn = Transaction::create (mutex_write_lock);
+#ifdef DP_THREADED
+	mutex_write_lock.lock();
+#endif
+
+	txn = Transaction::create();
 	if (!txn) {
+		mutex_write_lock.unlock();
 		return {};
 	}
 	txn->description = desc;
@@ -1187,9 +1204,11 @@ Container::start_transaction (ContainerPtr& parent, const std::string& desc)
 	ContainerPtr copy = parent->backup();
 	if (!copy) {
 		log_error ("backup failed");
+		mutex_write_lock.unlock();
 		return {};
 	}
 
+	log_thread_start ("start transaction: %s (txn:%p)", desc.c_str(), txn.get());
 	return copy;
 }
 
@@ -1208,8 +1227,13 @@ Container::commit_transaction (const std::string& desc)
 	}
 
 	main_app->get_timeline()->commit (txn);
+
+	log_thread_end ("commit transaction: %s", txn->description.c_str());
 	txn = nullptr;
 
+#ifdef DP_THREADED
+	mutex_write_lock.unlock();
+#endif
 	return false;
 }
 
@@ -1219,11 +1243,15 @@ Container::cancel_transaction (void)
 	LOG_TRACE;
 
 	if (!txn) {
-		log_code ("No txn to commit");
+		log_code ("No txn to cancel");
 		return;
 	}
 
+	log_thread_end ("cancel transaction: %s", txn->description.c_str());
 	txn = nullptr;
+#ifdef DP_THREADED
+	mutex_write_lock.unlock();
+#endif
 }
 
 
@@ -1243,8 +1271,6 @@ Container::backup (void)
 	if (!c)
 		return {};
 
-	c->previous = prev;
-
 	if (txn) {
 		//XXX get_txn() function that checks we have a lock
 		txn->notifications.push_back (std::make_tuple (NotifyType::t_change, prev, c));
@@ -1256,16 +1282,38 @@ Container::backup (void)
 void
 Container::notify_add (ContainerPtr parent, ContainerPtr child)
 {
-	for (auto c = get_smart(); c; c = c->get_parent()) {			// Ascend the container tree
-		// log_code ("%s : %s", __FUNCTION__, c->name.c_str());
+	for (auto& i : container_listeners) {
+		ContainerListenerPtr cl = i.lock();
+		if (cl) {
+			cl->container_added (parent, child);
+		} else {
+			log_code ("remove listener from the collection");	//XXX remove it from the collection
+		}
+	}
+}
 
-		for (auto& i : c->container_listeners) {
-			ContainerListenerPtr cl = i.lock();
-			if (cl) {
-				cl->container_added (parent, child);
-			} else {
-				log_code ("remove listener from the collection");	//XXX remove it from the collection
-			}
+void
+Container::notify_change (ContainerPtr before, ContainerPtr after)
+{
+	for (auto& i : container_listeners) {
+		ContainerListenerPtr cl = i.lock();
+		if (cl) {
+			cl->container_changed (before, after);
+		} else {
+			log_code ("remove listener from the collection");	//XXX remove it from the collection
+		}
+	}
+}
+
+void
+Container::notify_delete (ContainerPtr parent, ContainerPtr child)
+{
+	for (auto& i : container_listeners) {
+		ContainerListenerPtr cl = i.lock();
+		if (cl) {
+			cl->container_deleted (parent, child);
+		} else {
+			log_code ("remove listener from the collection");	//XXX remove it from the collection
 		}
 	}
 }
@@ -1277,12 +1325,44 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 
 	switch (type) {
 		case NotifyType::t_add:
+			log_trace ("Notify add:");
+			log_trace ("\t%s(%d) %d listeners",
+				first->get_name_default().c_str(),
+				first->unique_id,
+				first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners",
+				second->get_name_default().c_str(),
+				second->unique_id,
+				second->container_listeners.size());
 			notify_add (first, second);
 			break;
 		case NotifyType::t_delete:
+			log_trace ("Notify delete:");
+			log_trace ("\t%s(%d) %d listeners",
+				first->get_name_default().c_str(),
+				first->unique_id,
+				first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners",
+				second->get_name_default().c_str(),
+				second->unique_id,
+				second->container_listeners.size());
+			notify_delete (first, second);
+			break;
 		case NotifyType::t_change:
-			// void container_changed (const ContainerPtr& parent, const ContainerPtr& before, const ContainerPtr& after) = 0;
+			log_trace ("Notify change:");
+			log_trace ("\t%s(%d) %d listeners",
+				first->get_name_default().c_str(),
+				first->unique_id,
+				first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners",
+				second->get_name_default().c_str(),
+				second->unique_id,
+				second->container_listeners.size());
+			notify_change (first, second);
+			break;
 		default:
+			log_trace ("Unknown notification type: %d", type);
 			break;
 	}
 }
+

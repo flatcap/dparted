@@ -19,6 +19,7 @@
 #include "prop_drawing_area.h"
 #include "gui_app.h"
 #include "log.h"
+#include "utils.h"
 
 PropDrawingArea::PropDrawingArea (void)
 {
@@ -205,5 +206,24 @@ PropDrawingArea::theme_changed (const ThemePtr& new_theme)
 {
 	LOG_TRACE;
 	BaseDrawingArea::theme_changed (new_theme);
+}
+
+
+void
+PropDrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+{
+	LOG_TRACE;
+}
+
+void
+PropDrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(before), const GfxContainerPtr& UNUSED(after))
+{
+	LOG_TRACE;
+}
+
+void
+PropDrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+{
+	LOG_TRACE;
 }
 

@@ -563,9 +563,9 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 
 	ContainerPtr tlc = top_level->get_container();
 
-	log_info ("DRAW:");
-	log_info ("top_level = %p, tlc = %p", (void*) top_level.get(), (void*) tlc.get());
-	log_info ("children = %ld", top_level->children.size());
+	log_debug ("DRAW:");
+	log_debug ("top_level = %p, tlc = %p", (void*) top_level.get(), (void*) tlc.get());
+	log_debug ("children = %ld", top_level->children.size());
 
 	vRange.clear();
 
@@ -757,6 +757,22 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 	if ((event->button == 3) && (selection)) {		// Right-click
 		popup_menu (selection, event->x_root, event->y_root);
+	}
+
+	ContainerPtr c = selection->get_container();
+	if (c) {
+		ContainerPtr p = c->get_parent();
+		if (p) {
+			log_error ("DELETE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
+			std::string desc = "Test: delete " + c->get_name_default();
+			ContainerPtr new_parent = Container::start_transaction (p, desc);
+			if (!new_parent)
+				return true;
+
+			p->delete_child(c);
+
+			Container::commit_transaction();
+		}
 	}
 
 	return true;		// We've handled the event
@@ -1400,5 +1416,27 @@ DrawingArea::theme_changed (const ThemePtr& new_theme)
 {
 	LOG_TRACE;
 	BaseDrawingArea::theme_changed (new_theme);
+}
+
+
+void
+DrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+{
+	log_error ("gfx_container_added");
+	get_window()->invalidate (false);
+}
+
+void
+DrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(before), const GfxContainerPtr& UNUSED(after))
+{
+	log_error ("gfx_container_changed");
+	get_window()->invalidate (false);
+}
+
+void
+DrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+{
+	log_error ("gfx_container_deleted");
+	get_window()->invalidate (false);
 }
 

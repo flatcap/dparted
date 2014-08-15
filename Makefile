@@ -28,7 +28,7 @@ D	?= 1
 T	?= 1
 
 GUI	?= 1
-TREE	?= 1
+TREE	?= 0
 AREA	?= 1
 
 DISK	?= 0
@@ -64,7 +64,7 @@ OBJDIR	= .obj
 
 OUT	= dparted
 
-LINKS	= misc test
+LINKS	= misc test plugin
 
 # Core Objects
 SRC	+= block.cpp container.cpp filesystem.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
@@ -199,12 +199,20 @@ endif
 all:	$(OBJDIR) $(DEPDIR) $(OBJ) $(OUT) tags
 
 # ----------------------------------------------------------------------------
+# Show the Makefile config options -- clumsy, but useful
+
+VAR_LIST	= A V P L D T GUI TREE AREA DISK FILE LOOP LVM GPT MSDOS MD LUKS BTRFS EXTFS FS_MISC NTFS LIST PROP DOT HEX UNUSED
+vars:
+	@echo -e $(foreach var, $(VAR_LIST), "$(var) = $($(var))\n") | column -t
+
+# ----------------------------------------------------------------------------
 
 #
 # Pretty print
 #
-V	      = @
-Q	      = $(V:1=)
+ifneq ($(V),1)
+Q	:= @
+endif
 QUIET_CC      = $(Q:@=@echo 'CC      '$<;)
 QUIET_LINK    = $(Q:@=@echo 'LD      '$@;)
 QUIET_TAGS    = $(Q:@=@echo 'TAGS    '$@;)
@@ -257,7 +265,7 @@ links:	$(LINKS)
 $(LINKS):
 	ln -s ../dparted-$@ $@
 
-clean:
+clean c:
 	$(Q)$(RM) $(OUT) $(OBJ) gmon.out *.gcov
 
 distclean: clean

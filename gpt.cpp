@@ -251,7 +251,6 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res1->bytes_size    = 512 * 34;		// align (512 * 34, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	//RAR desc = "Marked GPT reserved space (beginning)";
 	g->add_child (res1, false);		// change to add_reserved?
 
 	PartitionPtr res2 = Partition::create();
@@ -260,7 +259,6 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res2->bytes_size    = 512 * 33;		// align (512 * 33, 1024*1024);
 	res2->bytes_used    = res2->bytes_size;
 	res2->parent_offset = g->bytes_size - res2->bytes_size;		// End of the partition
-	//RAR desc = "Marked GPT reserved space (end)";
 	g->add_child (res2, false);
 
 	delete_region (empty, 0, 34);
@@ -314,7 +312,6 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		log_debug ("\t\t\tfinish = %ld", le64_to_cpup (buffer+40) * 512);
 		log_debug ("\t\t\tsize   = %ld (%s)", p->bytes_size, s.c_str());
 
-		//RAR desc = "Discovered GPT partition: " + p->get_device_short();
 		g->add_child (p, true);
 	}
 
@@ -331,12 +328,10 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			p->sub_type ("Unallocated");
 			p->bytes_used = p->bytes_size;
 		}
-		//RAR desc = "Marked GPT empty space";
 		g->add_child (p, false);
 	}
 
 	Container::commit_transaction();
-
 	return true;
 }
 

@@ -49,10 +49,10 @@ protected:
 	TimelineWeak self;
 	ContainerPtr top_level;
 
-	std::deque<Transaction> txn_list;
+	std::deque<TransactionPtr> txn_list;
 	// txn_cursor points to the end of the txn_list unless we're
 	// re-wound time.  In that case it points to the first redo item.
-	std::deque<Transaction>::iterator txn_cursor;
+	std::deque<TransactionPtr>::iterator txn_cursor;
 };
 
 #endif // _TIMELINE_H_

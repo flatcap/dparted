@@ -261,7 +261,6 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	t->data_offset		= data_offset;
 	t->data_size		= data_size;
 
-	//RAR std::string desc = "Identified MD header";
 	parent->add_child (t, false);
 
 	return true;
