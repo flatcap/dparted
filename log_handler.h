@@ -46,10 +46,10 @@ public:
 	void reset (void);
 
 	bool show_depth        = false;
-	bool show_thread_id    = false;
+	bool show_thread_id    = true;
 	bool show_uniq_index   = false;
 	bool show_timestamp    = false;
-	bool show_microseconds = false;
+	bool show_microseconds = true;
 	bool show_level        = false;
 	bool show_file_line    = false;
 	bool show_function     = false;
@@ -58,7 +58,7 @@ public:
 	int  background = -1;
 	bool bold       = false;
 	bool underline  = false;
-	bool flush_line = false;
+	bool flush_line = true;
 
 protected:
 	LogHandler (void);

@@ -1190,22 +1190,25 @@ Container::start_transaction (ContainerPtr& parent, const std::string& desc)
 {
 	LOG_TRACE;
 
-	txn = Transaction::create();
-	if (!txn) {
-		return {};
-	}
-	txn->description = desc;
-
 #ifdef DP_THREADED
 	mutex_write_lock.lock();
 #endif
 
+	txn = Transaction::create();
+	if (!txn) {
+		mutex_write_lock.unlock();
+		return {};
+	}
+	txn->description = desc;
+
 	ContainerPtr copy = parent->backup();
 	if (!copy) {
 		log_error ("backup failed");
+		mutex_write_lock.unlock();
 		return {};
 	}
 
+	log_thread_start ("start transaction: %s (txn:%p)", desc.c_str(), txn.get());
 	return copy;
 }
 
@@ -1225,10 +1228,12 @@ Container::commit_transaction (const std::string& desc)
 
 	main_app->get_timeline()->commit (txn);
 
+	log_thread_end ("commit transaction: %s", txn->description.c_str());
+	txn = nullptr;
+
 #ifdef DP_THREADED
 	mutex_write_lock.unlock();
 #endif
-	txn = nullptr;
 	return false;
 }
 
@@ -1238,14 +1243,15 @@ Container::cancel_transaction (void)
 	LOG_TRACE;
 
 	if (!txn) {
-		log_code ("No txn to commit");
+		log_code ("No txn to cancel");
 		return;
 	}
 
+	log_thread_end ("cancel transaction: %s", txn->description.c_str());
+	txn = nullptr;
 #ifdef DP_THREADED
 	mutex_write_lock.unlock();
 #endif
-	txn = nullptr;
 }
 
 

@@ -36,19 +36,13 @@ main (int argc, char *argv[])
 
 	LogHandlerPtr log_out = LogHandler::create (stdout);
 	log_out->start (
-		// Severity::SystemAlert		|
-		// Severity::Critical		|
-		// Severity::Error			|
-		// Severity::Perror		|
 		Severity::Warning		|
 		Severity::Verbose		|
 		Severity::User			|
-		// Severity::Info			|
 		Severity::Progress		|
 		Severity::Quiet			|
 		// Severity::Command		|
 		// Severity::Debug			|
-		// Severity::Trace			|
 		// Severity::CommandIn		|
 		// Severity::CommandOut		|
 		// Severity::IoIn			|
@@ -62,10 +56,7 @@ main (int argc, char *argv[])
 		// Severity::File			|
 		// Severity::Ctor			|
 		// Severity::Dtor			|
-		// Severity::ThreadStart		|
-		// Severity::ThreadEnd		|
 		// Severity::Utils			|
-		// Severity::Listener		|
 		Severity::SystemEmergency
 	);
 
@@ -96,8 +87,7 @@ main (int argc, char *argv[])
 	);
 
 	LogHandlerPtr log_thread = LogHandler::create (stdout);
-	log_thread->background = 220;
-	log_thread->foreground = 0;
+	log_thread->foreground = 141;
 	log_thread->start (
 		Severity::ThreadStart	|
 		Severity::ThreadEnd

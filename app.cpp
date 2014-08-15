@@ -252,12 +252,8 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 		// Start a thread to watch the existing threads.
 		// When the existing threads have finished notify the user with fn().
 		std::thread ([=](){
-			log_thread_start ("Waiting for threads to finish");
-			while (!thread_queue.empty()) {
-				thread_queue.front().join();
-				std::lock_guard<std::mutex> lock (thread_mutex);
-				thread_queue.pop_front();
-			}
+			log_thread_start ("Waiting for %ld threads to finish", thread_queue.size());
+			wait_for_threads();
 			fn (top_level);
 			log_thread_end ("Threads have finished");
 		}).detach();
@@ -315,7 +311,7 @@ App::start_thread (std::function<void(void)> fn, std::string desc)
 		std::thread ([fn, desc]() {
 			log_thread_start ("thread started: %s", desc.c_str());
 			fn();
-			log_thread_end   ("thread ended:   %s", desc.c_str());
+			log_thread_end ("thread ended: %s", desc.c_str());
 		})
 	);
 }
@@ -513,7 +509,7 @@ void
 App::wait_for_threads (void)
 {
 #ifdef DP_THREADED
-	// printf ("Waiting for threads to finish\n");
+	// log_info ("Waiting for threads to finish: %ld", thread_queue.size());	//XXX probably not safe to call size without lock
 	while (!thread_queue.empty()) {
 		thread_queue.front().join();
 		std::lock_guard<std::mutex> lock (thread_mutex);

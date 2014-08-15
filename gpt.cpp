@@ -332,7 +332,6 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	}
 
 	Container::commit_transaction();
-
 	return true;
 }
 
