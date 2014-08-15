@@ -415,16 +415,47 @@ void
 Container::delete_child (ContainerPtr child)
 {
 	std::lock_guard<std::mutex> lock (mutex_children);
-	for (auto it = children.begin(); it != children.end(); ++it) {
-		if (*it == child) {
-			children.erase (it);
 
-			if (txn) {
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, get_smart(), child));
-			}
+	auto first = std::begin (children);
+	auto end   = std::end   (children);
+	auto last  = std::prev  (end);
 
-			break;
+	log_info ("%ld children", children.size());
+	auto it    = std::find (first, end, child);
+
+	if (it == end) {
+		log_error ("delete: child doesn't exist");
+		return;
+	}
+
+	bool space_before = false;
+	bool space_after  = false;
+
+	if (it == first) {
+		space_before = false;
+	}
+
+	if (it != first) {
+		auto prev = *(std::prev (it));
+		if (prev->is_a ("Unallocated")) {
+			space_before = true;
 		}
+	}
+
+	if (it != last) {
+		auto next = *(std::next (it));
+		if (next->is_a ("Unallocated")) {
+			space_after = true;
+		}
+	}
+
+	log_info ("space before = %s", space_before ? "true" : "false");
+	log_info ("space after  = %s", space_after  ? "true" : "false");
+
+	children.erase (it);	// Do this last -- after this the iterators will be invalid
+
+	if (txn) {
+		txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, get_smart(), child));
 	}
 }
 

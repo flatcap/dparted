@@ -661,11 +661,24 @@ void
 GfxContainer::container_deleted (const ContainerPtr& parent, const ContainerPtr& child)
 {
 	// LOG_TRACE;
-	log_code ("GFX container_deleted: %s(%p) to %s(%p)", child->name.c_str(), child.get(), parent->name.c_str(), parent.get());
+	log_code ("GFX container_deleted: %s(%p) from %s(%p)", child->name.c_str(), child.get(), parent->name.c_str(), parent.get());
 
 	GfxContainerPtr toplevel = get_toplevel();
-	GfxContainerPtr gparent  = get_parent();
-	GfxContainerPtr gchild   = get_smart();
+	GfxContainerPtr gparent  = get_smart();
+	GfxContainerPtr gchild   = find_child (child);
+
+	if (!toplevel) {
+		log_error ("delete: no top-level");
+		return;
+	}
+	if (!gparent) {
+		log_error ("delete: no parent");
+		return;
+	}
+	if (!gchild) {
+		log_error ("delete: no child");
+		return;
+	}
 
 	for (auto& i : toplevel->gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
