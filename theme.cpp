@@ -3,35 +3,24 @@
 
 #include "plugin.h"
 
-ThemePluginPtr my_theme;
+WibblePtr initialise (HatstandPtr);
+void something (void);
 
-DummyPtr initialise (register_plugin* reg);
-void uninitialise (void);
+HatstandPtr my_h;
 
-plugin header = { PLUGIN_MAGIC, PLUGIN_VERSION, &initialise, &uninitialise };
+plugin header = { 0x1234, initialise, something };
 
-std::string
-get_colour (const std::string&)
+WibblePtr
+initialise (HatstandPtr h)
 {
-	return "pink";
-}
+	std::cout << "Theme::initialise" << std::endl;
+	std::cout << "\t" << h->a << std::endl;
+	std::cout << "\t" << h->b << std::endl;
+	std::cout << "\t" << h->c << std::endl;
 
-std::string
-get_icon (const std::string&)
-{
-	return "/path/to/icon.ico";
-}
+	my_h = h;
 
-DummyPtr
-initialise (register_plugin* /*reg*/)
-{
-	std::cout << "Theme plugin initialised" << std::endl;
-
-	ThemePluginPtr t (new ThemePlugin {get_colour, get_icon});
-	my_theme = t;
-
-	// reg->register_theme ("Psychedelic", my_theme);
-	DummyPtr d (new struct dummy);
+	WibblePtr d (new struct wibble);
 	d->x = 67;
 	d->y = 3.141;
 	d->z = 123456;
@@ -39,15 +28,17 @@ initialise (register_plugin* /*reg*/)
 }
 
 void
-uninitialise (void)
+something (void)
 {
-	std::cout << "Theme plugin uninitialised" << std::endl;
-	my_theme = nullptr;
+	std::cout << "Theme::something" << std::endl;
+	std::cout << "\t" << my_h->a << std::endl;
+	std::cout << "\t" << my_h->b << std::endl;
+	std::cout << "\t" << my_h->c << std::endl;
+
+	my_h = nullptr;
 }
 
-
 extern "C" {
-
 plugin*
 get_plugin_info (void)
 {

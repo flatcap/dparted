@@ -27,7 +27,6 @@ App::initialise (void)
 	for (auto p : list) {
 		std::cout << "\t" << p << std::endl;
 	}
-	std::cout << std::endl;
 
 	for (auto p : list) {
 		start_plugin(p);
@@ -46,8 +45,8 @@ App::start_plugin (const std::string& filename)
 		return false;
 	}
 
-	plugin* (*fn_get_info)(void);
-	*(void **) (&fn_get_info) = dlsym (handle, "get_plugin_info");
+	plugin* (*fn_get_plugin_info)(void);
+	*(void **) (&fn_get_plugin_info) = dlsym (handle, "get_plugin_info");
 
 	error = dlerror();
 	if (error) {
@@ -56,16 +55,24 @@ App::start_plugin (const std::string& filename)
 		return false;
 	}
 
-	plugin *header = fn_get_info();
+	plugin *header = fn_get_plugin_info();
 	if (header) {
-		DummyPtr d = header->initialise (&reg);
-		std::cout << "init returns " << d->x << std::endl;
-		std::cout << "init returns " << d->y << std::endl;
-		std::cout << "init returns " << d->z << std::endl;
+		HatstandPtr h (new struct hatstand);
+		h->a = 1.414;
+		h->b = 0x12345678;
+		h->c = 'R';
 
-		d = nullptr;
+		WibblePtr w = header->initialise (h);
+		std::cout << "init returns" << std::endl;
+		std::cout << "\t" << w->x << std::endl;
+		std::cout << "\t" << w->y << std::endl;
+		std::cout << "\t" << w->z << std::endl;
+		w = nullptr;
+
+		h = nullptr;
+
+		header->something();
 	}
-	std::cout << filename << " returns " << header << std::endl;
 
 	dlclose (handle);
 	return true;
