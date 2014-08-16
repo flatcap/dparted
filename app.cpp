@@ -57,7 +57,10 @@ App::start_plugin (const std::string& filename)
 	}
 
 	plugin *header = fn_get_info();
-	header->initialise (&reg);
+	if (header) {
+		int val = header->initialise (&reg);
+		std::cout << "init returns " << val << std::endl;
+	}
 	std::cout << filename << " returns " << header << std::endl;
 
 	dlclose (handle);

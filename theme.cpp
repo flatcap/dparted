@@ -5,7 +5,7 @@
 
 ThemePluginPtr my_theme;
 
-void initialise (register_plugin* reg);
+int initialise (register_plugin* reg);
 void uninitialise (void);
 
 plugin header = { PLUGIN_MAGIC, PLUGIN_VERSION, &initialise, &uninitialise };
@@ -22,7 +22,7 @@ get_icon (const std::string&)
 	return "/path/to/icon.ico";
 }
 
-void
+int
 initialise (register_plugin* reg)
 {
 	std::cout << "Theme plugin initialised" << std::endl;
@@ -30,7 +30,8 @@ initialise (register_plugin* reg)
 	ThemePluginPtr t (new ThemePlugin {get_colour, get_icon});
 	my_theme = t;
 
-	reg->register_theme ("Psychedelic", my_theme);
+	// reg->register_theme ("Psychedelic", my_theme);
+	return 42;
 }
 
 void

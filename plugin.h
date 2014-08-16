@@ -42,8 +42,8 @@ typedef struct
 {
 	std::uint32_t magic;
 	std::uint32_t version;
-	std::function<void(register_plugin* reg)> initialise;
-	std::function<void(void)>                 uninitialise;
+	std::function<int(register_plugin* reg)> initialise;
+	std::function<void(void)>                uninitialise;
 } plugin;
 
 #endif // _PLUGIN_H_
