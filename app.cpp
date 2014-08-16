@@ -58,8 +58,12 @@ App::start_plugin (const std::string& filename)
 
 	plugin *header = fn_get_info();
 	if (header) {
-		int val = header->initialise (&reg);
-		std::cout << "init returns " << val << std::endl;
+		struct dummy *d = header->initialise (&reg);
+		std::cout << "init returns " << d->x << std::endl;
+		std::cout << "init returns " << d->y << std::endl;
+		std::cout << "init returns " << d->z << std::endl;
+
+		delete d;
 	}
 	std::cout << filename << " returns " << header << std::endl;
 

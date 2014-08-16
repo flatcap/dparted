@@ -38,11 +38,17 @@ typedef struct
 	std::function<bool(const std::string&, FilesystemPluginPtr)> register_filesystem;
 } register_plugin;
 
+struct dummy {
+	int x;
+	double y;
+	long z;
+};
+
 typedef struct
 {
 	std::uint32_t magic;
 	std::uint32_t version;
-	std::function<int(register_plugin* reg)> initialise;
+	std::function<struct dummy*(register_plugin* reg)> initialise;
 	std::function<void(void)>                uninitialise;
 } plugin;
 

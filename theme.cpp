@@ -5,7 +5,7 @@
 
 ThemePluginPtr my_theme;
 
-int initialise (register_plugin* reg);
+struct dummy* initialise (register_plugin* reg);
 void uninitialise (void);
 
 plugin header = { PLUGIN_MAGIC, PLUGIN_VERSION, &initialise, &uninitialise };
@@ -22,8 +22,8 @@ get_icon (const std::string&)
 	return "/path/to/icon.ico";
 }
 
-int
-initialise (register_plugin* reg)
+struct dummy*
+initialise (register_plugin* /*reg*/)
 {
 	std::cout << "Theme plugin initialised" << std::endl;
 
@@ -31,7 +31,11 @@ initialise (register_plugin* reg)
 	my_theme = t;
 
 	// reg->register_theme ("Psychedelic", my_theme);
-	return 42;
+	struct dummy *d = new struct dummy;
+	d->x = 67;
+	d->y = 3.141;
+	d->z = 123456;
+	return d;
 }
 
 void
