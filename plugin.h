@@ -44,11 +44,13 @@ struct dummy {
 	long z;
 };
 
+typedef std::shared_ptr<struct dummy> DummyPtr;
+
 typedef struct
 {
 	std::uint32_t magic;
 	std::uint32_t version;
-	std::function<struct dummy*(register_plugin* reg)> initialise;
+	std::function<DummyPtr(register_plugin* reg)> initialise;
 	std::function<void(void)>                uninitialise;
 } plugin;
 
