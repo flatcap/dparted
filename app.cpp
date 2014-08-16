@@ -67,11 +67,15 @@ App::start_plugin (const std::string& filename)
 		std::cout << "\t" << w->x << std::endl;
 		std::cout << "\t" << w->y << std::endl;
 		std::cout << "\t" << w->z << std::endl;
-		w = nullptr;
 
+		w = nullptr;
 		h = nullptr;
 
 		header->something();
+
+		ContainerPtr c = header->get_object();
+
+		std::cout << c->get_name() << std::endl;
 	}
 
 	dlclose (handle);

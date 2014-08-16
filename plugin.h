@@ -5,6 +5,8 @@
 #include <memory>
 #include <functional>
 
+#include "container.h"
+
 struct wibble {
 	int x;
 	double y;
@@ -25,6 +27,7 @@ typedef struct
 	std::uint32_t magic;
 	std::function<WibblePtr(HatstandPtr)> initialise;
 	std::function<void(void)> something;
+	std::function<ContainerPtr(void)> get_object;
 } plugin;
 
 #endif // _PLUGIN_H_

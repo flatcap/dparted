@@ -2,13 +2,15 @@
 #include <memory>
 
 #include "plugin.h"
+#include "disk.h"
 
 WibblePtr initialise (HatstandPtr);
 void something (void);
+ContainerPtr get_object (void);
 
 HatstandPtr my_h;
 
-plugin header = { 0x1234, initialise, something };
+plugin header = { 0x1234, initialise, something, get_object };
 
 WibblePtr
 initialise (HatstandPtr h)
@@ -36,6 +38,14 @@ something (void)
 	std::cout << "\t" << my_h->c << std::endl;
 
 	my_h = nullptr;
+}
+
+ContainerPtr
+get_object (void)
+{
+	DiskPtr d (new Disk);
+	ContainerPtr c(d);
+	return c;
 }
 
 extern "C" {

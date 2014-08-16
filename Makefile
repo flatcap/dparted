@@ -9,8 +9,8 @@ PLUGDIR	= plugins
 OUT_MAIN	= main
 OUT_PLUG_THEME	= $(PLUGDIR)/theme.so
 
-SRC	+= app.cpp dir.cpp main.cpp theme.cpp
-HDR	+= app.h dir.h plugin.h
+SRC	+= app.cpp container.cpp dir.cpp disk.cpp main.cpp theme.cpp
+HDR	+= app.h container.h dir.h disk.h plugin.h
 
 OBJ	= $(SRC:%.cpp=$(OBJDIR)/%.o)
 
@@ -25,7 +25,7 @@ LDFLAGS	+= -pthread
 LDFLAGS	+= -rdynamic
 LDFLAGS += -ldl
 
-all:	$(OBJDIR) $(DEPDIR) $(PLUGDIR) $(OBJ) $(OUT_MAIN) $(OUT_PLUG_THEME) tags
+all:	$(SRC) $(HDR) $(OBJDIR) $(DEPDIR) $(PLUGDIR) $(OBJ) $(OUT_MAIN) $(OUT_PLUG_THEME) tags
 
 # ----------------------------------------------------------------------------
 
