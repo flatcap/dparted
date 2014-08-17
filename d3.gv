@@ -1,4 +1,4 @@
-digraph delete_new {
+digraph d {
 	graph [
 		rankdir="TB"
 		bgcolor="white"
@@ -10,8 +10,8 @@ digraph delete_new {
 	node [
 		fontsize="12"
 		style="solid"
-		width="0.4"
-		height="0.4"
+		width="0.3"
+		height="0.3"
 		fixedsize="true"
 		penwidth="1.0"
 		color="#DDDDDD"
@@ -24,7 +24,7 @@ digraph delete_new {
 	];
 
 
-	j  [ label=<j>             style="filled" fillcolor="#ffff80" ];
+	j  [ label=<j>             style="filled" fillcolor="#80ff80" ];
 	a1 [ label=<A<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
 	x  [ label=<x>             style="filled" fillcolor="#ffff80" ];
 	b1 [ label=<B<SUB>1</SUB>> style="filled" fillcolor="#ffff80" ];
@@ -34,27 +34,26 @@ digraph delete_new {
 	r  [ label=<r>             style="filled" fillcolor="#80ff80" ];
 	a2 [ label=<A<SUB>2</SUB>> style="filled" fillcolor="#80ff80" ];
 
-	j  -> a1  [ style=invis  ];
-	j  -> a2;
-	a1 -> j   [ style=dashed color="#ff0000" ];
+	j  -> a1;
+	a1 -> j   [ color="#ff8080" ];
 	a1 -> x;
-	x  -> a2  [ style=dashed color="#ff0000" constraint=false ];
+	x  -> a2  [ color="#ff8080" constraint=false ];
 	a1 -> b1;
-	b1 -> a2  [ style=dashed color="#ff0000" constraint=false ];
+	b1 -> a2  [ color="#ff8080" constraint=false ];
 	a1 -> y;
-	y  -> a2  [ style=dashed color="#ff0000" constraint=false ];
+	y  -> a2  [ color="#ff8080" constraint=false ];
 	b1 -> p;
-	p  -> b1  [ style=dashed color="#ff0000" ];
+	p  -> b1  [ color="#ff8080" ];
 	b1 -> q;
-	q  -> b1  [ style=dashed color="#ff0000" ];
+	q  -> b1  [ color="#ff8080" ];
 	b1 -> r;
-	r  -> b1  [ style=dashed color="#ff0000" ];
+	r  -> b1  [ color="#ff8080" ];
 
-	j  -> a2 [ style=invis ];
+	j -> a2 [ style=invis ];
 
-	a2 -> j  [ color="#ff0000" style=dashed     ];
-	a2 -> x  [ color="#999999" constraint=false ];
-	a2 -> b1 [ color="#999999" constraint=false ];
-	a2 -> y  [ color="#999999" constraint=false ];
+	a2 -> j  [ color="#ff8080"     ];
+	a2 -> x  [ color="#4040ff" constraint=false ];
+	a2 -> b1 [ color="#4040ff" constraint=false ];
+	a2 -> y  [ color="#4040ff" constraint=false ];
 }
 

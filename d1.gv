@@ -1,4 +1,4 @@
-digraph delete_new {
+digraph d {
 	graph [
 		rankdir="TB"
 		bgcolor="white"
@@ -10,8 +10,8 @@ digraph delete_new {
 	node [
 		fontsize="12"
 		style="solid"
-		width="0.4"
-		height="0.4"
+		width="0.3"
+		height="0.3"
 		fixedsize="true"
 		penwidth="1.0"
 		color="#DDDDDD"
@@ -35,25 +35,25 @@ digraph delete_new {
 	a2 [ label=<A<SUB>2</SUB>> style="filled" fillcolor="#80ff80" ];
 
 	j  -> a1;
-	a1 -> j   [ color="#ff0000" style=dashed ];
+	a1 -> j   [ color="#ff8080" ];
 	a1 -> x;
-	x  -> a1  [ color="#ff0000" style=dashed ];
+	x  -> a1  [ color="#ff8080" ];
 	a1 -> b1;
-	b1 -> a1  [ color="#ff0000" style=dashed ];
+	b1 -> a1  [ color="#ff8080" ];
 	a1 -> y;
-	y  -> a1  [ color="#ff0000" style=dashed ];
+	y  -> a1  [ color="#ff8080" ];
 	b1 -> p;
-	p  -> b1  [ color="#ff0000" style=dashed ];
+	p  -> b1  [ color="#ff8080" ];
 	b1 -> q;
-	q  -> b1  [ color="#ff0000" style=dashed ];
+	q  -> b1  [ color="#ff8080" ];
 	b1 -> r;
-	r  -> b1  [ color="#ff0000" style=dashed ];
+	r  -> b1  [ color="#ff8080" ];
 
 	j -> a2 [ style=invis ];
 
-	a2 -> j  [ color="#ff0000" style=dashed     ];
-	a2 -> x  [ color="#999999" constraint=false ];
-	a2 -> b1 [ color="#999999" constraint=false ];
-	a2 -> y  [ color="#999999" constraint=false ];
+	a2 -> j  [ color="#ff8080"     ];
+	a2 -> x  [ color="#4040ff" constraint=false ];
+	a2 -> b1 [ color="#4040ff" constraint=false ];
+	a2 -> y  [ color="#4040ff" constraint=false ];
 }
 
