@@ -1,0 +1,59 @@
+digraph delete_new {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.4"
+		ranksep="0.8"
+	];
+
+	node [
+		fontsize="12"
+		style="solid"
+		width="0.4"
+		height="0.4"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+	];
+
+	edge [
+		penwidth="0.7"
+		color="#000000"
+		arrowsize="0.5"
+	];
+
+
+	j  [ label=<j>             style="filled" fillcolor="#80ff80" ];
+	a1 [ label=<A<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+	x  [ label=<x>             style="filled" fillcolor="#ffff80" ];
+	b1 [ label=<B<SUB>1</SUB>> style="filled" fillcolor="#ffff80" ];
+	y  [ label=<y>             style="filled" fillcolor="#ffff80" ];
+	p  [ label=<p>             style="filled" fillcolor="#80ff80" ];
+	q  [ label=<q>             style="filled" fillcolor="#80ff80" ];
+	r  [ label=<r>             style="filled" fillcolor="#80ff80" ];
+	a2 [ label=<A<SUB>2</SUB>> style="filled" fillcolor="#80ff80" ];
+
+	j  -> a1;
+	a1 -> j   [ color="#ff0000" style=dashed ];
+	a1 -> x;
+	x  -> a2  [ color="#ff0000" style=dashed constraint=false ];
+	a1 -> b1;
+	b1 -> a2  [ color="#ff0000" style=dashed constraint=false ];
+	a1 -> y;
+	y  -> a2  [ color="#ff0000" style=dashed constraint=false ];
+	b1 -> p;
+	p  -> b1  [ color="#ff0000" style=dashed ];
+	b1 -> q;
+	q  -> b1  [ color="#ff0000" style=dashed ];
+	b1 -> r;
+	r  -> b1  [ color="#ff0000" style=dashed ];
+
+	j -> a2 [ style=invis ];
+
+	a2 -> j  [ color="#ff0000" style=dashed     ];
+	a2 -> x  [ color="#999999" constraint=false ];
+	a2 -> b1 [ color="#999999" constraint=false ];
+	a2 -> y  [ color="#999999" constraint=false ];
+}
+
