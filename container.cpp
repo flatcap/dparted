@@ -507,7 +507,7 @@ Container::get_fd (void)
 
 	std::string device = get_device_name();
 	if (device.empty()) {
-		ContainerPtr p = parent.lock();
+		ContainerPtr p = get_parent();
 		if (p)
 			return p->get_fd();
 
@@ -534,7 +534,7 @@ Container::get_block_size (void)
 	if (block_size > 0)
 		return block_size;
 
-	ContainerPtr p = parent.lock();
+	ContainerPtr p = get_parent();
 	if (p)
 		return p->get_block_size();
 
@@ -548,7 +548,7 @@ Container::get_device_name (void)
 	if (!device.empty())
 		return device;
 
-	ContainerPtr p = parent.lock();
+	ContainerPtr p = get_parent();
 	if (p) {
 		return p->get_device_name();
 	} else {
@@ -642,7 +642,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	// No device -- delegate
 	if (device.empty()) {
-		ContainerPtr p = parent.lock();
+		ContainerPtr p = get_parent();
 		if (p) {
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
@@ -748,7 +748,7 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 	return_val_if_fail (existing, false);
 	return_val_if_fail (replacement, false);
 
-	ContainerPtr p = existing->parent.lock();
+	ContainerPtr p = existing->get_parent();
 	if (!p) {
 		// log_error ("no parent");
 		return false;
@@ -905,7 +905,7 @@ Container::get_absolute_offset (void)
 	if (!p)
 		return ao;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		ao += p->parent_offset;
 	}
 
@@ -928,7 +928,7 @@ Container::get_device_inherit (void)
 	if (!p)
 		return "";
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (!p->device.empty()) {
 			return p->device;
 		}
@@ -947,7 +947,7 @@ Container::get_device_major_inherit (void)
 	if (!p)
 		return 0;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (p->device_major > 0) {
 			return p->device_major;
 		}
@@ -975,7 +975,7 @@ Container::get_device_major_minor_inherit (void)
 	if (!p)
 		return "";
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (p->device_major > 0) {
 			return std::to_string (p->device_major) + ":" + std::to_string (p->device_minor);
 		}
@@ -994,7 +994,7 @@ Container::get_device_minor_inherit (void)
 	if (!p)
 		return 0;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (device_major > 0) {		// This is not a typo
 			return device_minor;
 		}
@@ -1019,7 +1019,7 @@ Container::get_device_short_inherit (void)
 	if (!p)
 		return "";
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (!p->device.empty()) {
 			return shorten_device (p->device);
 		}
@@ -1038,7 +1038,7 @@ Container::get_file_desc_inherit (void)
 	if (!p)
 		return -1;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (p->fd >= 0) {
 			return p->fd;
 		}
@@ -1095,7 +1095,7 @@ Container::get_object_addr (void)
 std::uint64_t
 Container::get_parent_size (void)
 {
-	ContainerPtr p = parent.lock();
+	ContainerPtr p = get_parent();
 	if (!p)
 		return 0;
 
@@ -1111,7 +1111,7 @@ Container::get_path_name (void)
 	if (!p)
 		return path;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		path = "/" + p->get_name_default() + path;
 	}
 
@@ -1127,7 +1127,7 @@ Container::get_path_type (void)
 	if (!p)
 		return path;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		path = "/" + p->type.back() + path;
 	}
 
@@ -1149,7 +1149,7 @@ Container::get_top_level_size (void)
 	if (!p)
 		return tls;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (p->bytes_size > tls) {
 			tls = p->bytes_size;
 		}
