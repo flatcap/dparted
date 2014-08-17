@@ -32,7 +32,7 @@ digraph d {
 	p  [ label=<p>             style="filled" fillcolor="#80ff80" ];
 	q  [ label=<q>             style="filled" fillcolor="#80ff80" ];
 	r  [ label=<r>             style="filled" fillcolor="#80ff80" ];
-	a2 [ label=<A<SUB>2</SUB>> style="filled" fillcolor="#80ff80" ];
+	a2 [ label=<A<SUB>2</SUB>> style="filled" fillcolor="#ffff80" ];
 
 	j  -> a1;
 	a1 -> j   [ color="#ff8080" ];
