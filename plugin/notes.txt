@@ -1,0 +1,17 @@
+Notes
+
+main looks for *.so in ./plugin
+	finds my_theme.so
+
+main loads my_theme.so
+	find symbol get_plugin_info
+	info = call get_plugin_info
+
+validate
+	magic
+	version
+	function pointers
+
+call my_theme::initialise (register info)
+	my_theme calls register_theme ("My Theme", self)
+
