@@ -1,0 +1,227 @@
+digraph delete {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.4"
+		ranksep="0.8"
+		// labelloc="t"
+		// label=<<B>Delete</B>>
+	];
+
+	node [
+		fontsize="12"
+		style="solid"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+	];
+
+	edge [
+		penwidth="0.7"
+		color="#000000"
+		arrowsize="0.5"
+	];
+
+
+	subgraph clusterA {
+		color="#cccccc";
+		labelloc="t"
+		label="Initial"
+
+		A_j  [ label=<j>             style="filled" fillcolor="#80ff80" ];
+		A_a1 [ label=<A<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		A_x  [ label=<x>             style="filled" fillcolor="#80ff80" ];
+		A_b1 [ label=<B<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		A_y  [ label=<y>             style="filled" fillcolor="#80ff80" ];
+		A_p  [ label=<p>             style="filled" fillcolor="#80ff80" ];
+		A_q  [ label=<q>             style="filled" fillcolor="#80ff80" ];
+		A_r  [ label=<r>             style="filled" fillcolor="#80ff80" ];
+
+		A_j  -> A_a1;
+		A_a1 -> A_j   [ color="#ff8080" style=dashed ];
+		A_a1 -> A_x;
+		A_x  -> A_a1  [ color="#ff8080" style=dashed ];
+		A_a1 -> A_b1;
+		A_b1 -> A_a1  [ color="#ff8080" style=dashed ];
+		A_a1 -> A_y;
+		A_y  -> A_a1  [ color="#ff8080" style=dashed ];
+		A_b1 -> A_p;
+		A_p  -> A_b1  [ color="#ff8080" style=dashed ];
+		A_b1 -> A_q;
+		A_q  -> A_b1  [ color="#ff8080" style=dashed ];
+		A_b1 -> A_r;
+		A_r  -> A_b1  [ color="#ff8080" style=dashed ];
+	}
+
+	subgraph clusterB {
+		color="#cccccc";
+		labelloc="t"
+		label="Copy"
+
+		B_j  [ label=<j>             style="filled" fillcolor="#80ff80" ];
+		B_a1 [ label=<A<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		B_x  [ label=<x>             style="filled" fillcolor="#80ff80" ];
+		B_b1 [ label=<B<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		B_y  [ label=<y>             style="filled" fillcolor="#80ff80" ];
+		B_p  [ label=<p>             style="filled" fillcolor="#80ff80" ];
+		B_q  [ label=<q>             style="filled" fillcolor="#80ff80" ];
+		B_r  [ label=<r>             style="filled" fillcolor="#80ff80" ];
+		B_a2 [ label=<A<SUB>2</SUB>> style="filled" fillcolor="#ffff80" ];
+
+		B_j  -> B_a1;
+		B_a1 -> B_j   [ color="#ff8080" style=dashed ];
+		B_a1 -> B_x;
+		B_x  -> B_a1  [ color="#ff8080" style=dashed ];
+		B_a1 -> B_b1;
+		B_b1 -> B_a1  [ color="#ff8080" style=dashed ];
+		B_a1 -> B_y;
+		B_y  -> B_a1  [ color="#ff8080" style=dashed ];
+		B_b1 -> B_p;
+		B_p  -> B_b1  [ color="#ff8080" style=dashed ];
+		B_b1 -> B_q;
+		B_q  -> B_b1  [ color="#ff8080" style=dashed ];
+		B_b1 -> B_r;
+		B_r  -> B_b1  [ color="#ff8080" style=dashed ];
+
+		B_j -> B_a2 [ style=invis ];
+
+		B_a2 -> B_j  [ color="#ff8080" style=dashed    ];
+		B_a2 -> B_x  [ color="#4040ff" constraint=false ];
+		B_a2 -> B_b1 [ color="#4040ff" constraint=false ];
+		B_a2 -> B_y  [ color="#4040ff" constraint=false ];
+	}
+
+	subgraph clusterC {
+		color="#cccccc";
+		labelloc="t"
+		label="Delete"
+
+		C_j  [ label=<j>             style="filled" fillcolor="#80ff80" ];
+		C_a1 [ label=<A<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		C_x  [ label=<x>             style="filled" fillcolor="#80ff80" ];
+		C_b1 [ label=<B<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		C_s  [ label=<S>             style="filled" fillcolor="#ffff80" ];
+		C_y  [ label=<y>             style="filled" fillcolor="#80ff80" ];
+		C_p  [ label=<p>             style="filled" fillcolor="#80ff80" ];
+		C_q  [ label=<q>             style="filled" fillcolor="#80ff80" ];
+		C_r  [ label=<r>             style="filled" fillcolor="#80ff80" ];
+		C_a2 [ label=<A<SUB>2</SUB>> style="filled" fillcolor="#ffff80" ];
+
+		C_j  -> C_a1;
+		C_a1 -> C_j   [ color="#ff8080" style=dashed ];
+		C_a1 -> C_x;
+		C_x  -> C_a1  [ color="#ff8080" style=dashed ];
+		C_a1 -> C_b1;
+		C_b1 -> C_a1  [ color="#ff8080" style=dashed ];
+		C_a1 -> C_y;
+		C_y  -> C_a1  [ color="#ff8080" style=dashed ];
+		C_b1 -> C_p;
+		C_p  -> C_b1  [ color="#ff8080" style=dashed ];
+		C_b1 -> C_q;
+		C_q  -> C_b1  [ color="#ff8080" style=dashed ];
+		C_b1 -> C_r;
+		C_r  -> C_b1  [ color="#ff8080" style=dashed ];
+
+		C_j -> C_a2 [ style=invis ];
+
+		C_a2 -> C_j  [ color="#ff8080" style=dashed     ];
+		C_a2 -> C_x  [ color="#4040ff" constraint=false ];
+		C_a2 -> C_y  [ color="#4040ff" constraint=false ];
+		C_a2 -> C_s  [ color="#4040ff" constraint=false ];
+		C_s  -> C_a2 [ color="#ff8080" style=dashed constraint=false ];
+
+		C_x -> C_b1 -> C_s -> C_y [ style=invis ];
+		{ rank=same C_x C_b1 C_s C_y }
+	}
+
+	subgraph clusterD {
+		color="#cccccc";
+		labelloc="t"
+		label="Reparent"
+
+		D_j  [ label=<j>             style="filled" fillcolor="#80ff80" ];
+		D_a1 [ label=<A<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		D_x  [ label=<x'>            style="filled" fillcolor="#ffff80" ];
+		D_b1 [ label=<B<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		D_s  [ label=<S>             style="filled" fillcolor="#ffff80" ];
+		D_y  [ label=<y'>            style="filled" fillcolor="#ffff80" ];
+		D_p  [ label=<p>             style="filled" fillcolor="#80ff80" ];
+		D_q  [ label=<q>             style="filled" fillcolor="#80ff80" ];
+		D_r  [ label=<r>             style="filled" fillcolor="#80ff80" ];
+		D_a2 [ label=<A<SUB>2</SUB>> style="filled" fillcolor="#ffff80" ];
+
+		D_j  -> D_a1;
+		D_a1 -> D_j   [ color="#ff8080" style=dashed ];
+		D_a1 -> D_x;
+		D_x  -> D_a2  [ color="#ff8080" style=dashed constraint=false ];
+		D_a1 -> D_b1;
+		D_b1 -> D_a1  [ color="#ff8080" style=dashed ];
+		D_a1 -> D_y;
+		D_y  -> D_a2  [ color="#ff8080" style=dashed constraint=false ];
+		D_b1 -> D_p;
+		D_p  -> D_b1  [ color="#ff8080" style=dashed ];
+		D_b1 -> D_q;
+		D_q  -> D_b1  [ color="#ff8080" style=dashed ];
+		D_b1 -> D_r;
+		D_r  -> D_b1  [ color="#ff8080" style=dashed ];
+
+		D_j -> D_a2 [ style=invis ];
+
+		D_a2 -> D_j  [ color="#ff8080" style=dashed     ];
+		D_a2 -> D_x  [ color="#4040ff" constraint=false ];
+		D_a2 -> D_s  [ color="#4040ff" constraint=false ];
+		D_a2 -> D_y  [ color="#4040ff" constraint=false ];
+		D_s  -> D_a2 [ color="#ff8080" style=dashed constraint=false ];
+
+		D_x -> D_b1 -> D_s -> D_y [ style=invis ];
+		{ rank=same D_x D_b1 D_s D_y }
+	}
+
+	subgraph clusterE {
+		color="#cccccc";
+		labelloc="t"
+		label="Swap"
+
+		E_j  [ label=<j'>            style="filled" fillcolor="#ffff80" ];
+		E_a1 [ label=<A<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		E_x  [ label=<x'>            style="filled" fillcolor="#ffff80" ];
+		E_b1 [ label=<B<SUB>1</SUB>> style="filled" fillcolor="#80ff80" ];
+		E_s  [ label=<S>             style="filled" fillcolor="#ffff80" ];
+		E_y  [ label=<y'>            style="filled" fillcolor="#ffff80" ];
+		E_p  [ label=<p>             style="filled" fillcolor="#80ff80" ];
+		E_q  [ label=<q>             style="filled" fillcolor="#80ff80" ];
+		E_r  [ label=<r>             style="filled" fillcolor="#80ff80" ];
+		E_a2 [ label=<A<SUB>2</SUB>> style="filled" fillcolor="#ffff80" ];
+
+		E_j  -> E_a1  [ style=invis  ];
+		E_j  -> E_a2;
+		E_a1 -> E_j   [ color="#ff8080" style=dashed ];
+		E_a1 -> E_x;
+		E_x  -> E_a2  [ color="#ff8080" style=dashed constraint=false ];
+		E_a1 -> E_b1;
+		E_b1 -> E_a1  [ color="#ff8080" style=dashed ];
+		E_a1 -> E_y;
+		E_y  -> E_a2  [ color="#ff8080" style=dashed constraint=false ];
+		E_b1 -> E_p;
+		E_p  -> E_b1  [ color="#ff8080" style=dashed ];
+		E_b1 -> E_q;
+		E_q  -> E_b1  [ color="#ff8080" style=dashed ];
+		E_b1 -> E_r;
+		E_r  -> E_b1  [ color="#ff8080" style=dashed ];
+
+		E_j  -> E_a2 [ style=invis ];
+
+		E_a2 -> E_j  [ color="#ff8080" style=dashed     ];
+		E_a2 -> E_x  [ color="#4040ff" constraint=false ];
+		E_a2 -> E_s  [ color="#4040ff" constraint=false ];
+		E_a2 -> E_y  [ color="#4040ff" constraint=false ];
+		E_s  -> E_a2 [ color="#ff8080" style=dashed constraint=false ];
+
+		E_x -> E_b1 -> E_s -> E_y [ style=invis ];
+		{ rank=same E_x E_b1 E_s E_y }
+	}
+}
+
