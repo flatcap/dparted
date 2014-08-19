@@ -185,7 +185,7 @@ protected:
 	std::map<std::string, PPtr> props;
 
 	std::vector<ContainerPtr> children;
-	std::mutex mutex_children;
+	std::recursive_mutex mutex_children;
 
 	std::vector<std::string> more_props;
 

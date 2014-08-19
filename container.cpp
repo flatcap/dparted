@@ -40,7 +40,7 @@
 #include "property.h"
 #include "utils.h"
 #include "visitor.h"
-#include "whole.h"
+#include "partition.h"
 
 std::atomic_ulong container_id = ATOMIC_VAR_INIT(1);
 
@@ -366,6 +366,32 @@ Container::perform_action (Action action)
 }
 
 
+ContainerPtr
+space_join (ContainerPtr first, ContainerPtr last = {})
+{
+	return_val_if_fail (first, {});
+
+	ContainerPtr space = Partition::create();
+	if (!space) {
+		log_error ("failed to create space");
+		return {};
+	}
+
+	space->sub_type ("Space");
+	space->sub_type ("Unallocated");
+
+	if (last) {
+		space->bytes_size = (last->parent_offset - first->parent_offset) + last->bytes_size;
+	} else {
+		space->bytes_size = first->bytes_size;
+	}
+
+	space->parent_offset = first->parent_offset;
+	space->bytes_used    = space->bytes_size;
+
+	return space;
+}
+
 void
 Container::add_child (ContainerPtr child, bool probe)
 {
@@ -374,12 +400,12 @@ Container::add_child (ContainerPtr child, bool probe)
 
 	if (bytes_size == 0) {
 		// log_code ("DUMMY container %s", get_device_name().c_str());
-		std::lock_guard<std::mutex> lock (mutex_children);
+		std::lock_guard<std::recursive_mutex> lock (mutex_children);
 		++seqnum;
 		_add_child (children, child);
 	} else {
 		// log_code ("REAL container %s", get_device_name().c_str());
-		std::lock_guard<std::mutex> lock (mutex_children);
+		std::lock_guard<std::recursive_mutex> lock (mutex_children);
 		++seqnum;
 		_add_child (children, child);
 	}
@@ -414,11 +440,24 @@ Container::add_child (ContainerPtr child, bool probe)
 void
 Container::delete_child (ContainerPtr child)
 {
-	std::lock_guard<std::mutex> lock (mutex_children);
+	std::lock_guard<std::recursive_mutex> lock (mutex_children);
 
 	auto first = std::begin (children);
 	auto end   = std::end   (children);
 	auto last  = std::prev  (end);
+
+	log_info ("children:");
+	for (auto& c : children) {
+		log_info ("\t%s", c->name.c_str());
+	}
+
+	if (first != end) {
+		log_info ("first = %s", (*first)->name.c_str());
+	}
+
+	if (last != end) {
+		log_info ("last  = %s", (*last)->name.c_str());
+	}
 
 	log_info ("%ld children", children.size());
 	auto it    = std::find (first, end, child);
@@ -431,32 +470,63 @@ Container::delete_child (ContainerPtr child)
 	bool space_before = false;
 	bool space_after  = false;
 
-	if (it == first) {
-		space_before = false;
-	}
+	ContainerPtr prev;
+	ContainerPtr next;
 
 	if (it != first) {
-		auto prev = *(std::prev (it));
-		if (prev->is_a ("Unallocated")) {
-			space_before = true;
-		}
+		prev = *(std::prev (it));
+		space_before = prev->is_a ("Unallocated");
 	}
 
 	if (it != last) {
-		auto next = *(std::next (it));
-		if (next->is_a ("Unallocated")) {
-			space_after = true;
-		}
+		next = *(std::next (it));
+		space_after = next->is_a ("Unallocated");
 	}
 
 	log_info ("space before = %s", space_before ? "true" : "false");
 	log_info ("space after  = %s", space_after  ? "true" : "false");
 
-	children.erase (it);	// Do this last -- after this the iterators will be invalid
-
-	if (txn) {
-		txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, get_smart(), child));
+	ContainerPtr s;
+	ContainerPtr parent = get_smart();
+	if (space_before) {
+		if (space_after) {
+			s = space_join (prev, next);	// join into one big space
+			children.erase (std::prev(it), std::next(it));
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, prev));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, next));
+			}
+		} else {
+			s = space_join (prev, child);	// extend prev
+			children.erase (std::prev(it), it);
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, prev));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
+			}
+		}
+	} else {
+		if (space_after) {
+			s = space_join (child, next);	// extend next backwards
+			children.erase (it, std::next(it));
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, next));
+			}
+		} else {
+			s = space_join (child);		// replace child with space
+			children.erase (it);
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
+			}
+		}
 	}
+
+	add_child (s, false);
+	if (txn) {
+		txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
+	}
+
 }
 
 void
@@ -758,7 +828,7 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 
 	// log_code ("exchange %ld, %ld", existing->unique_id, replacement->unique_id);
 
-	std::lock_guard<std::mutex> lock (p->mutex_children);
+	std::lock_guard<std::recursive_mutex> lock (p->mutex_children);
 
 	auto it = std::find_if (std::begin (p->children),
 			std::end (p->children),

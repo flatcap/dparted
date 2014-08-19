@@ -49,7 +49,7 @@ main (int argc, char *argv[])
 		// Severity::IoOut			|
 		// Severity::Dot			|
 		// Severity::Hex			|
-		Severity::ConfigRead		|
+		// Severity::ConfigRead		|
 		// Severity::ConfigWrite		|
 		// Severity::Enter			|
 		// Severity::Leave			|
@@ -61,19 +61,21 @@ main (int argc, char *argv[])
 	);
 
 	LogHandlerPtr log_red = LogHandler::create (stdout);
-	log_red->foreground = 209;
+	// log_red->foreground = 209;
 	log_red->start (Severity::Code);
 
 	LogHandlerPtr log_green = LogHandler::create (stdout);
-	log_green->foreground = 118;
+	// log_green->foreground = 118;
 	log_green->start (Severity::Trace);
 
+#if 0
 	LogHandlerPtr log_yellow = LogHandler::create (stdout);
 	log_yellow->foreground = 226;
 	log_yellow->start (Severity::Listener);
+#endif
 
 	LogHandlerPtr log_cyan = LogHandler::create (stdout);
-	log_cyan->foreground = 45;
+	// log_cyan->foreground = 45;
 	log_cyan->start (Severity::Info);
 
 	LogHandlerPtr log_crit = LogHandler::create (stdout);
@@ -86,12 +88,14 @@ main (int argc, char *argv[])
 		Severity::Perror
 	);
 
+#if 0
 	LogHandlerPtr log_thread = LogHandler::create (stdout);
 	log_thread->foreground = 141;
 	log_thread->start (
 		Severity::ThreadStart	|
 		Severity::ThreadEnd
 	);
+#endif
 
 	int status = 0;
 
@@ -109,10 +113,10 @@ main (int argc, char *argv[])
 #endif
 	main_app = nullptr;
 
-	log_thread->stop();
+	// log_thread->stop();
 	log_crit->stop();
 	log_cyan->stop();
-	log_yellow->stop();
+	// log_yellow->stop();
 	log_green->stop();
 	log_red->stop();
 	log_out->stop();
