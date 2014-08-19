@@ -711,7 +711,7 @@ bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)
 
 	int x = a->name.compare (b->name);
 	if (x != 0)
-		return (x > 0);
+		return (x < 0);
 
 	return ((void*) a.get() > (void*) b.get());
 }
