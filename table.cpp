@@ -18,6 +18,8 @@
 
 #include <sstream>
 #include <string>
+#include <functional>
+#include <algorithm>
 
 #include "table.h"
 #include "action.h"
@@ -123,6 +125,124 @@ Table::accept (Visitor& v)
 		return false;
 
 	return visit_children(v);
+}
+
+
+ContainerPtr
+space_join (ContainerPtr first, ContainerPtr last = {})
+{
+	return_val_if_fail (first, {});
+
+	ContainerPtr space = Partition::create();
+	if (!space) {
+		log_error ("failed to create space");
+		return {};
+	}
+
+	space->sub_type ("Space");
+	space->sub_type ("Unallocated");
+
+	if (last) {
+		space->bytes_size = (last->parent_offset - first->parent_offset) + last->bytes_size;
+	} else {
+		space->bytes_size = first->bytes_size;
+	}
+
+	space->parent_offset = first->parent_offset;
+	space->bytes_used    = space->bytes_size;
+
+	return space;
+}
+
+void
+Table::delete_child (ContainerPtr child)
+{
+	std::lock_guard<std::recursive_mutex> lock (mutex_children);
+
+	auto first = std::begin (children);
+	auto end   = std::end   (children);
+	auto last  = std::prev  (end);
+
+	log_info ("children:");
+	for (auto& c : children) {
+		log_info ("\t%s", c->name.c_str());
+	}
+
+	if (first != end) {
+		log_info ("first = %s", (*first)->name.c_str());
+	}
+
+	if (last != end) {
+		log_info ("last  = %s", (*last)->name.c_str());
+	}
+
+	log_info ("%ld children", children.size());
+	auto it = std::find (first, end, child);
+
+	if (it == end) {
+		log_error ("delete: child doesn't exist");
+		return;
+	}
+
+	bool space_before = false;
+	bool space_after  = false;
+
+	ContainerPtr prev;
+	ContainerPtr next;
+
+	if (it != first) {
+		prev = *(std::prev (it));
+		space_before = prev->is_a ("Unallocated");
+	}
+
+	if (it != last) {
+		next = *(std::next (it));
+		space_after = next->is_a ("Unallocated");
+	}
+
+	log_info ("space before = %s", space_before ? "true" : "false");
+	log_info ("space after  = %s", space_after  ? "true" : "false");
+
+	ContainerPtr s;
+	ContainerPtr parent = get_smart();
+	if (space_before) {
+		if (space_after) {
+			s = space_join (prev, next);	// join into one big space
+			children.erase (std::prev(it), std::next(it));
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, prev));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, next));
+			}
+		} else {
+			s = space_join (prev, child);	// extend prev
+			children.erase (std::prev(it), it);
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, prev));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
+			}
+		}
+	} else {
+		if (space_after) {
+			s = space_join (child, next);	// extend next backwards
+			children.erase (it, std::next(it));
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, next));
+			}
+		} else {
+			s = space_join (child);		// replace child with space
+			children.erase (it);
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
+			}
+		}
+	}
+
+	add_child (s, false);
+	if (txn) {
+		txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
+	}
 }
 
 

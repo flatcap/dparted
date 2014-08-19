@@ -697,7 +697,6 @@ GfxContainer::container_deleted (const ContainerPtr& parent, const ContainerPtr&
 	for (auto it = gparent->children.begin(); it != end; ++it) {
 		if (*it == gchild) {
 			gparent->children.erase (it);
-			log_error ("FOUND GFX MATCH");
 			break;
 		}
 	}

@@ -44,6 +44,7 @@ typedef std::weak_ptr  <class Container> ContainerWeak;
 #include "transaction.h"
 
 extern std::mutex mutex_write_lock;
+extern TransactionPtr txn;
 
 /**
  * class Container - Base class for all containers
