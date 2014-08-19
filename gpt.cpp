@@ -312,7 +312,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		log_debug ("\t\t\tfinish = %ld", le64_to_cpup (buffer+40) * 512);
 		log_debug ("\t\t\tsize   = %ld (%s)", p->bytes_size, s.c_str());
 
-		g->add_child (p, true);
+		g->add_child (p, false);	//RAR probe=true
 	}
 
 	for (auto& r : empty) {

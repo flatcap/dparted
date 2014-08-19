@@ -49,7 +49,7 @@ main (int argc, char *argv[])
 		// Severity::IoOut			|
 		// Severity::Dot			|
 		// Severity::Hex			|
-		// Severity::ConfigRead		|
+		Severity::ConfigRead		|
 		// Severity::ConfigWrite		|
 		// Severity::Enter			|
 		// Severity::Leave			|

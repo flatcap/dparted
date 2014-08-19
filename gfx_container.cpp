@@ -128,6 +128,8 @@ GfxContainer::init (ContainerPtr c)
 	name = c->name;
 	type = c->get_type();
 	device = c->get_device_name();
+	if (name != "dummy")
+		name = c->get_device_short_inherit();	//RAR
 
 	try {
 		display        = theme->get_config (path, name, "display");

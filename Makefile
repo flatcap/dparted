@@ -64,7 +64,7 @@ OBJDIR	= .obj
 
 OUT	= dparted
 
-LINKS	= misc test plugin
+LINKS	= misc test
 
 # Core Objects
 SRC	+= block.cpp container.cpp filesystem.cpp misc.cpp partition.cpp table.cpp volume.cpp whole.cpp
