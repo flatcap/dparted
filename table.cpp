@@ -154,6 +154,107 @@ space_join (ContainerPtr first, ContainerPtr last = {})
 	return space;
 }
 
+ContainerPtr
+space_create (std::uint64_t parent_offset, std::uint64_t bytes_size)
+{
+	ContainerPtr space = Partition::create();
+	if (!space) {
+		log_error ("failed to create space");
+		return {};
+	}
+
+	space->sub_type ("Space");
+	space->sub_type ("Unallocated");
+	space->parent_offset = parent_offset;
+	space->bytes_size    = bytes_size;
+	space->bytes_used    = bytes_size;
+
+	return space;
+}
+
+void
+Table::add_child (ContainerPtr child, bool probe)
+{
+	ContainerPtr space;
+	log_info ("NEW add_child: %ld, %ld", child->parent_offset, child->parent_offset + child->bytes_size - 1);
+
+	for (auto& c : children) {
+		// log_info ("\tspace: %10ld - %10ld", c->parent_offset, c->parent_offset + c->bytes_size - 1);
+		if ((child->parent_offset >= c->parent_offset) &&
+		    (child->parent_offset + child->bytes_size) <= (c->parent_offset + c->bytes_size)) {
+			// log_error ("it fits");
+			space = c;
+			break;
+		}
+	}
+
+	if (!space) {
+		Container::add_child (child, probe);
+		return;
+	}
+
+	log_info ("space has %ld listeners", space->count_listeners());
+
+	std::uint64_t c_begin = child->parent_offset;
+	std::uint64_t c_end   = child->parent_offset + child->bytes_size;
+	std::uint64_t s_begin = space->parent_offset;
+	std::uint64_t s_end   = space->parent_offset + space->bytes_size;
+
+	auto first = std::begin (children);
+	auto end   = std::end   (children);
+	auto it    = std::find  (first, end, space);
+
+	ContainerPtr parent = get_smart();
+	if (txn) {
+		txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, space));
+	}
+	children.erase (it);
+
+	if (c_begin == s_begin) {
+		if (c_end == s_end) {
+			log_error ("WHOLE");
+			_add_child (children, child);
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
+			}
+		} else {
+			log_error ("START");
+			ContainerPtr s = space_create (c_end, space->bytes_size - child->bytes_size);
+			_add_child (children, child);
+			_add_child (children, s);
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
+			}
+		}
+	} else {
+		if (c_end == s_end) {
+			log_error ("END");
+			ContainerPtr s = space_create (s_begin, space->bytes_size - child->bytes_size);
+			_add_child (children, s);
+			_add_child (children, child);
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
+			}
+		} else {
+			log_error ("MIDDLE");
+			ContainerPtr s1 = space_create (s_begin, child->parent_offset - space->parent_offset);
+			ContainerPtr s2 = space_create (c_end, space->bytes_size - (child->parent_offset - space->parent_offset));
+			log_info (s1);
+			log_info (s2);
+			_add_child (children, s1);
+			_add_child (children, child);
+			_add_child (children, s2);
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s1));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s2));
+			}
+		}
+	}
+}
+
 void
 Table::delete_child (ContainerPtr child)
 {

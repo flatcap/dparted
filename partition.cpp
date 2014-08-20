@@ -145,6 +145,12 @@ Partition::add_child (ContainerPtr child, bool probe)
 {
 	return_if_fail (child);
 
+	if (is_a ("Unallocated")) {
+		//RAR redirect to our parent
+		get_parent()->add_child (child, probe);
+		return;
+	}
+
 	Container::add_child (child, probe);
 
 	if ((children.size() == 1) && (get_bytes_free() != 0)) {
