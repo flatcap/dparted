@@ -1,0 +1,62 @@
+digraph add {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.3"
+		ranksep="0.8"
+		labelloc="t"
+		label="Reparent"
+	];
+
+	node [
+		fontsize="12"
+		style="filled"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+		fillcolor="#80ff80"
+	];
+
+	edge [
+		penwidth="0.5"
+		color="#000000"
+		arrowsize="0.5"
+	];
+
+
+	E_j  [ label=<j>                                 ];
+	E_a1 [ label=<A<SUB>1</SUB>>                     ];
+	E_x  [ label=<x'>            fillcolor="#ffff80" ];
+	E_s1 [ label=<S<SUB>1</SUB>>                     ];
+	E_s2 [ label=<S<SUB>2</SUB>> fillcolor="#ffff80" ];
+	E_p1 [ label=<P<SUB>1</SUB>> fillcolor="#ffff80" ];
+	E_y  [ label=<y'>            fillcolor="#ffff80" ];
+	E_a2 [ label=<A<SUB>2</SUB>> fillcolor="#ffff80" ];
+
+	E_j  -> E_a1 [ penwidth=1.2 ];
+	E_a1 -> E_x  [ penwidth=1.2 ];
+	E_a1 -> E_s1 [ penwidth=1.2 ];
+	E_a1 -> E_y  [ penwidth=1.2 ];
+	E_j  -> E_a2 [ style=invis ];
+
+	E_j  -> E_a1 [ dir=back color="#ff8080" style=dashed ];
+	E_j  -> E_a2 [ dir=back color="#ff8080" style=dashed ];
+	E_a2 -> E_x  [ dir=back color="#ff8080" style=dashed ];
+	E_a1 -> E_s1 [ dir=back color="#ff8080" style=dashed ];
+	E_a2 -> E_s2 [ dir=back color="#ff8080" style=dashed ];
+	E_a2 -> E_p1 [ dir=back color="#ff8080" style=dashed ];
+	E_a2 -> E_y  [ dir=back color="#ff8080" style=dashed ];
+
+	E_a2 -> E_x  [ color="#4040ff" ];
+	E_a2 -> E_s1 [ color="#4040ff" ];
+	E_a2 -> E_s2 [ color="#4040ff" ];
+	E_a2 -> E_p1 [ color="#4040ff" ];
+	E_a2 -> E_y  [ color="#4040ff" ];
+
+	E_x -> E_s1 -> E_s2 -> E_p1 -> E_y [ style=invis ];
+	{ rank=same E_x E_s1 E_s2 E_p1 E_y };
+}
+

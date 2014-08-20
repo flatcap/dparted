@@ -1,0 +1,66 @@
+digraph delete {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.3"
+		ranksep="0.8"
+		labelloc="t"
+		label="Reparent"
+	];
+
+	node [
+		fontsize="12"
+		style="filled"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+		fillcolor="#80ff80"
+	];
+
+	edge [
+		penwidth="0.5"
+		color="#000000"
+		arrowsize="0.5"
+	];
+
+
+	D_j  [ label=<j>                                 ];
+	D_a1 [ label=<A<SUB>1</SUB>>                     ];
+	D_x  [ label=<x'>            fillcolor="#ffff80" ];
+	D_b1 [ label=<B<SUB>1</SUB>>                     ];
+	D_s  [ label=<S>             fillcolor="#ffff80" ];
+	D_y  [ label=<y'>            fillcolor="#ffff80" ];
+	D_p  [ label=<p>                                 ];
+	D_q  [ label=<q>                                 ];
+	D_r  [ label=<r>                                 ];
+	D_a2 [ label=<A<SUB>2</SUB>> fillcolor="#ffff80" ];
+
+	D_j  -> D_a1 [ penwidth=1.2 ];
+	D_a1 -> D_x  [ penwidth=1.2 ];
+	D_a1 -> D_b1 [ penwidth=1.2 ];
+	D_a1 -> D_y  [ penwidth=1.2 ];
+	D_b1 -> D_p  [ penwidth=1.2 ];
+	D_b1 -> D_q  [ penwidth=1.2 ];
+	D_b1 -> D_r  [ penwidth=1.2 ];
+
+	D_j  -> D_a1 [ dir=back color="#ff8080" style=dashed ];
+	D_j  -> D_a2 [ dir=back color="#ff8080" style=dashed ];
+	D_a2 -> D_x  [ dir=back color="#ff8080" style=dashed ];
+	D_a1 -> D_b1 [ dir=back color="#ff8080" style=dashed ];
+	D_a2 -> D_y  [ dir=back color="#ff8080" style=dashed ];
+	D_b1 -> D_p  [ dir=back color="#ff8080" style=dashed ];
+	D_b1 -> D_q  [ dir=back color="#ff8080" style=dashed ];
+	D_b1 -> D_r  [ dir=back color="#ff8080" style=dashed ];
+	D_a2 -> D_s  [ dir=back color="#ff8080" style=dashed ];
+
+	D_a2 -> D_x  [ color="#4040ff" ];
+	D_a2 -> D_s  [ color="#4040ff" ];
+	D_a2 -> D_y  [ color="#4040ff" ];
+
+	D_x -> D_b1 -> D_s -> D_y [ style=invis ];
+	{ rank=same D_x D_b1 D_s D_y }
+}
+
