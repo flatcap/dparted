@@ -17,7 +17,6 @@ digraph add {
 		fixedsize="true"
 		penwidth="1.0"
 		color="#DDDDDD"
-		fillcolor="#80ff80"
 	];
 
 	edge [
@@ -27,34 +26,62 @@ digraph add {
 	];
 
 
-	C_j  [ label=<j>                                 ];
-	C_a1 [ label=<A<SUB>1</SUB>>                     ];
-	C_x  [ label=<x>                                 ];
-	C_s1 [ label=<S<SUB>1</SUB>>                     ];
-	C_s2 [ label=<S<SUB>2</SUB>> fillcolor="#ffff80" ];
-	C_y  [ label=<y>                                 ];
-	C_a2 [ label=<A<SUB>2</SUB>> fillcolor="#ffff80" ];
+	node [	// original
+		fillcolor="#80ff80"
+	];
 
-	C_j  -> C_a1 [ penwidth=1.2 ];
-	C_a1 -> C_x  [ penwidth=1.2 ];
-	C_a1 -> C_s1 [ penwidth=1.2 ];
-	C_a1 -> C_y  [ penwidth=1.2 ];
-	C_j  -> C_a2 [ style=invis ];
+	C_j  [ label=<j>             ];
+	C_a1 [ label=<A<SUB>1</SUB>> ];
+	C_x  [ label=<x>             ];
+	C_s1 [ label=<S<SUB>1</SUB>> ];
+	C_y  [ label=<y>             ];
 
-	C_j  -> C_a1 [ dir=back color="#ff8080" style=dashed ];
-	C_a1 -> C_x  [ dir=back color="#ff8080" style=dashed ];
-	C_a1 -> C_s1 [ dir=back color="#ff8080" style=dashed ];
-	C_a2 -> C_s2 [ dir=back color="#ff8080" style=dashed ];
-	C_a1 -> C_y  [ dir=back color="#ff8080" style=dashed ];
+	node [	// changed
+		fillcolor="#ffff80"
+	];
 
-	C_a2 -> C_j  [ color="#ff8080" style=dashed ];
+	C_s2 [ label=<S<SUB>2</SUB>> ];
+	C_a2 [ label=<A<SUB>2</SUB>> ];
 
-	C_a2 -> C_x  [ color="#4040ff" ];
-	C_a2 -> C_s1 [ color="#4040ff" ];
-	C_a2 -> C_s2 [ color="#4040ff" ];
-	C_a2 -> C_y  [ color="#4040ff" ];
+	edge [	// main line
+		penwidth=1.2;
+	];
 
-	C_x -> C_s1 -> C_s2 -> C_y [ style=invis ];
+	C_j  -> C_a1;
+	C_a1 -> C_x;
+	C_a1 -> C_s1;
+	C_a1 -> C_y;
+
+	edge [	// copy
+		penwidth=0.5;
+		color="#4040ff";
+	];
+
+	C_a2 -> C_x;
+	C_a2 -> C_s1;
+	C_a2 -> C_s2;
+	C_a2 -> C_y;
+
+	edge [	// parent
+		dir=back;
+		penwidth=0.5;
+		color="#ff8080";
+		style=dashed;
+	];
+
+	C_j  -> C_a1;
+	C_j  -> C_a2;
+	C_a1 -> C_x;
+	C_a1 -> C_s1;
+	C_a2 -> C_s2;
+	C_a1 -> C_y;
+
+	edge [	// invisible
+		style=invis;
+	];
+
+	C_j -> C_a2;
+	C_x -> C_s1 -> C_s2 -> C_y;
 	{ rank=same C_x C_s1 C_s2 C_y };
 }
 

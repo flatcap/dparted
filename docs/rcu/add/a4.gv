@@ -17,7 +17,6 @@ digraph add {
 		fixedsize="true"
 		penwidth="1.0"
 		color="#DDDDDD"
-		fillcolor="#80ff80"
 	];
 
 	edge [
@@ -27,36 +26,65 @@ digraph add {
 	];
 
 
-	D_j  [ label=<j>                                 ];
-	D_a1 [ label=<A<SUB>1</SUB>>                     ];
-	D_x  [ label=<x>                                 ];
-	D_s1 [ label=<S<SUB>1</SUB>>                     ];
-	D_s2 [ label=<S<SUB>2</SUB>> fillcolor="#ffff80" ];
-	D_p1 [ label=<P<SUB>1</SUB>> fillcolor="#ffff80" ];
-	D_y  [ label=<y>                                 ];
-	D_a2 [ label=<A<SUB>2</SUB>> fillcolor="#ffff80" ];
+	node [	// original
+		fillcolor="#80ff80"
+	];
 
-	D_j  -> D_a1 [ penwidth=1.2 ];
-	D_a1 -> D_x  [ penwidth=1.2 ];
-	D_a1 -> D_s1 [ penwidth=1.2 ];
-	D_a1 -> D_y  [ penwidth=1.2 ];
-	D_j  -> D_a2 [ style=invis ];
+	D_j  [ label=<j>             ];
+	D_a1 [ label=<A<SUB>1</SUB>> ];
+	D_x  [ label=<x>             ];
+	D_s1 [ label=<S<SUB>1</SUB>> ];
+	D_y  [ label=<y>             ];
 
-	D_j  -> D_a1 [ dir=back color="#ff8080" style=dashed ];
-	D_j  -> D_a2 [ dir=back color="#ff8080" style=dashed ];
-	D_a1 -> D_x  [ dir=back color="#ff8080" style=dashed ];
-	D_a1 -> D_s1 [ dir=back color="#ff8080" style=dashed ];
-	D_a2 -> D_s2 [ dir=back color="#ff8080" style=dashed ];
-	D_a2 -> D_p1 [ dir=back color="#ff8080" style=dashed ];
-	D_a1 -> D_y  [ dir=back color="#ff8080" style=dashed ];
+	node [	// changed
+		fillcolor="#ffff80"
+	];
 
-	D_a2 -> D_x  [ color="#4040ff" ];
-	D_a2 -> D_s1 [ color="#4040ff" ];
-	D_a2 -> D_s2 [ color="#4040ff" ];
-	D_a2 -> D_p1 [ color="#4040ff" ];
-	D_a2 -> D_y  [ color="#4040ff" ];
+	D_s2 [ label=<S<SUB>2</SUB>> ];
+	D_p1 [ label=<P<SUB>1</SUB>> ];
+	D_a2 [ label=<A<SUB>2</SUB>> ];
 
-	D_x -> D_s1 -> D_s2 -> D_p1 -> D_y [ style=invis ];
+	edge [	// main line
+		penwidth=1.2;
+	];
+
+	D_j  -> D_a1;
+	D_a1 -> D_x;
+	D_a1 -> D_s1;
+	D_a1 -> D_y;
+
+	edge [	// copy
+		penwidth=0.5;
+		color="#4040ff";
+	];
+
+	D_a2 -> D_x;
+	D_a2 -> D_s1;
+	D_a2 -> D_s2;
+	D_a2 -> D_p1;
+	D_a2 -> D_y;
+
+	edge [	// parent
+		dir=back;
+		penwidth=0.5;
+		color="#ff8080";
+		style=dashed;
+	];
+
+	D_j  -> D_a1;
+	D_j  -> D_a2;
+	D_a1 -> D_x;
+	D_a1 -> D_s1;
+	D_a2 -> D_s2;
+	D_a2 -> D_p1;
+	D_a1 -> D_y;
+
+	edge [	// invisible
+		style=invis;
+	];
+
+	D_j -> D_a2;
+	D_x -> D_s1 -> D_s2 -> D_p1 -> D_y;
 	{ rank=same D_x D_s1 D_s2 D_p1 D_y };
 }
 

@@ -17,7 +17,6 @@ digraph add {
 		fixedsize="true"
 		penwidth="1.0"
 		color="#DDDDDD"
-		fillcolor="#80ff80"
 	];
 
 	edge [
@@ -27,26 +26,51 @@ digraph add {
 	];
 
 
-	B_j  [ label=<j>                                 ];
-	B_a1 [ label=<A<SUB>1</SUB>>                     ];
-	B_x  [ label=<x>                                 ];
-	B_s1 [ label=<S<SUB>1</SUB>>                     ];
-	B_y  [ label=<y>                                 ];
-	B_a2 [ label=<A<SUB>2</SUB>> fillcolor="#ffff80" ];
+	node [	// original
+		fillcolor="#80ff80"
+	];
 
-	B_j  -> B_a1 [ penwidth=1.2 ];
-	B_a1 -> B_x  [ penwidth=1.2 ];
-	B_a1 -> B_s1 [ penwidth=1.2 ];
-	B_a1 -> B_y  [ penwidth=1.2 ];
+	B_j  [ label=<j>             ];
+	B_a1 [ label=<A<SUB>1</SUB>> ];
+	B_x  [ label=<x>             ];
+	B_s1 [ label=<S<SUB>1</SUB>> ];
+	B_y  [ label=<y>             ];
 
-	B_j  -> B_a1 [ dir=back color="#ff8080" style=dashed ];
-	B_a1 -> B_x  [ dir=back color="#ff8080" style=dashed ];
-	B_a1 -> B_s1 [ dir=back color="#ff8080" style=dashed ];
-	B_a1 -> B_y  [ dir=back color="#ff8080" style=dashed ];
-	B_j  -> B_a2 [ dir=back color="#ff8080" style=dashed ];
+	node [	// changed
+		fillcolor="#ffff80"
+	];
 
-	B_a2 -> B_x  [ color="#4040ff" ];
-	B_a2 -> B_s1 [ color="#4040ff" ];
-	B_a2 -> B_y  [ color="#4040ff" ];
+	B_a2 [ label=<A<SUB>2</SUB>> ];
+
+	edge [	// main line
+		penwidth=1.2;
+	];
+
+	B_j  -> B_a1;
+	B_a1 -> B_x;
+	B_a1 -> B_s1;
+	B_a1 -> B_y;
+
+	edge [	// copy
+		penwidth=0.5;
+		color="#4040ff";
+	];
+
+	B_a2 -> B_x;
+	B_a2 -> B_s1;
+	B_a2 -> B_y;
+
+	edge [	// parent
+		dir=back;
+		penwidth=0.5;
+		color="#ff8080";
+		style=dashed;
+	];
+
+	B_j  -> B_a1;
+	B_a1 -> B_x;
+	B_a1 -> B_s1;
+	B_a1 -> B_y;
+	B_j  -> B_a2;
 }
 

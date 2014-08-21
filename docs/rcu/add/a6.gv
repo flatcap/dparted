@@ -17,7 +17,6 @@ digraph add {
 		fixedsize="true"
 		penwidth="1.0"
 		color="#DDDDDD"
-		fillcolor="#80ff80"
 	];
 
 	edge [
@@ -27,35 +26,64 @@ digraph add {
 	];
 
 
-	F_j  [ label=<j'>            fillcolor="#ffff80" ];
-	F_a1 [ label=<A<SUB>1</SUB>>                     ];
-	F_x  [ label=<x'>            fillcolor="#ffff80" ];
-	F_s1 [ label=<S<SUB>1</SUB>>                     ];
-	F_s2 [ label=<S<SUB>2</SUB>> fillcolor="#ffff80" ];
-	F_p1 [ label=<P<SUB>1</SUB>> fillcolor="#ffff80" ];
-	F_y  [ label=<y'>            fillcolor="#ffff80" ];
-	F_a2 [ label=<A<SUB>2</SUB>> fillcolor="#ffff80" ];
+	node [	// original
+		fillcolor="#80ff80"
+	];
 
-	F_j  -> F_a2 [ penwidth=1.2 ];
-	F_a2 -> F_x  [ penwidth=1.2 ];
-	F_a2 -> F_s1 [ penwidth=1.2 ];
-	F_a2 -> F_s2 [ penwidth=1.2 ];
-	F_a2 -> F_p1 [ penwidth=1.2 ];
-	F_a2 -> F_y  [ penwidth=1.2 ];
+	F_a1 [ label=<A<SUB>1</SUB>> ];
+	F_s1 [ label=<S<SUB>1</SUB>> ];
 
-	F_a1 -> F_x  [ color="#4040ff" ];
-	F_a1 -> F_s1 [ color="#4040ff" ];
-	F_a1 -> F_y  [ color="#4040ff" ];
+	node [	// changed
+		fillcolor="#ffff80"
+	];
 
-	F_j  -> F_a1 [ dir=back color="#ff8080" style=dashed ];
-	F_j  -> F_a2 [ dir=back color="#ff8080" style=dashed ];
-	F_a2 -> F_x  [ dir=back color="#ff8080" style=dashed ];
-	F_a1 -> F_s1 [ dir=back color="#ff8080" style=dashed ];
-	F_a2 -> F_s2 [ dir=back color="#ff8080" style=dashed ];
-	F_a2 -> F_p1 [ dir=back color="#ff8080" style=dashed ];
-	F_a2 -> F_y  [ dir=back color="#ff8080" style=dashed ];
+	F_j  [ label=<j'>            ];
+	F_x  [ label=<x'>            ];
+	F_s2 [ label=<S<SUB>2</SUB>> ];
+	F_p1 [ label=<P<SUB>1</SUB>> ];
+	F_y  [ label=<y'>            ];
+	F_a2 [ label=<A<SUB>2</SUB>> ];
 
-	F_x -> F_s1 -> F_s2 -> F_p1 -> F_y [ style=invis ];
+	edge [	// main line
+		penwidth=1.2;
+	];
+
+	F_j  -> F_a2;
+	F_a2 -> F_x;
+	F_a2 -> F_s1;
+	F_a2 -> F_s2;
+	F_a2 -> F_p1;
+	F_a2 -> F_y;
+
+	edge [	// copy
+		penwidth=0.5;
+		color="#4040ff";
+	];
+
+	F_a1 -> F_x;
+	F_a1 -> F_s1;
+	F_a1 -> F_y;
+
+	edge [	// parent
+		dir=back;
+		penwidth=0.5;
+		color="#ff8080";
+		style=dashed;
+	];
+
+	F_j  -> F_a1;
+	F_j  -> F_a2;
+	F_a2 -> F_x;
+	F_a1 -> F_s1;
+	F_a2 -> F_s2;
+	F_a2 -> F_p1;
+	F_a2 -> F_y;
+
+	edge [	// invisible
+		style=invis;
+	];
+
+	F_x -> F_s1 -> F_s2 -> F_p1 -> F_y;
 	{ rank=same F_x F_s1 F_s2 F_p1 F_y };
 }
 

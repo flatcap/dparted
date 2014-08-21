@@ -17,7 +17,6 @@ digraph delete {
 		fixedsize="true"
 		penwidth="1.0"
 		color="#DDDDDD"
-		fillcolor="#80ff80"
 	];
 
 	edge [
@@ -26,6 +25,10 @@ digraph delete {
 		arrowsize="0.5"
 	];
 
+
+	node [	// original
+		fillcolor="#80ff80"
+	];
 
 	A_j  [ label=<j>             ];
 	A_a1 [ label=<A<SUB>1</SUB>> ];
@@ -36,20 +39,31 @@ digraph delete {
 	A_q  [ label=<q>             ];
 	A_r  [ label=<r>             ];
 
-	A_j  -> A_a1 [ penwidth=1.2 ];
-	A_a1 -> A_x  [ penwidth=1.2 ];
-	A_a1 -> A_b1 [ penwidth=1.2 ];
-	A_a1 -> A_y  [ penwidth=1.2 ];
-	A_b1 -> A_p  [ penwidth=1.2 ];
-	A_b1 -> A_q  [ penwidth=1.2 ];
-	A_b1 -> A_r  [ penwidth=1.2 ];
+	edge [	// main line
+		penwidth=1.2;
+	];
 
-	A_j  -> A_a1 [ dir=back color="#ff8080" style=dashed ];
-	A_a1 -> A_x  [ dir=back color="#ff8080" style=dashed ];
-	A_a1 -> A_b1 [ dir=back color="#ff8080" style=dashed ];
-	A_a1 -> A_y  [ dir=back color="#ff8080" style=dashed ];
-	A_b1 -> A_p  [ dir=back color="#ff8080" style=dashed ];
-	A_b1 -> A_q  [ dir=back color="#ff8080" style=dashed ];
-	A_b1 -> A_r  [ dir=back color="#ff8080" style=dashed ];
+	A_j  -> A_a1;
+	A_a1 -> A_x;
+	A_a1 -> A_b1;
+	A_a1 -> A_y;
+	A_b1 -> A_p;
+	A_b1 -> A_q;
+	A_b1 -> A_r;
+
+	edge [	// parent
+		dir=back;
+		penwidth=0.5;
+		color="#ff8080";
+		style=dashed;
+	];
+
+	A_j  -> A_a1;
+	A_a1 -> A_x;
+	A_a1 -> A_b1;
+	A_a1 -> A_y;
+	A_b1 -> A_p;
+	A_b1 -> A_q;
+	A_b1 -> A_r;
 }
 

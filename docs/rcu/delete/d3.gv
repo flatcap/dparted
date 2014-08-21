@@ -17,7 +17,6 @@ digraph delete {
 		fixedsize="true"
 		penwidth="1.0"
 		color="#DDDDDD"
-		fillcolor="#80ff80"
 	];
 
 	edge [
@@ -27,40 +26,69 @@ digraph delete {
 	];
 
 
-	C_j  [ label=<j>                                 ];
-	C_a1 [ label=<A<SUB>1</SUB>>                     ];
-	C_x  [ label=<x>                                 ];
-	C_b1 [ label=<B<SUB>1</SUB>>                     ];
-	C_s  [ label=<S>             fillcolor="#ffff80" ];
-	C_y  [ label=<y>                                 ];
-	C_p  [ label=<p>                                 ];
-	C_q  [ label=<q>                                 ];
-	C_r  [ label=<r>                                 ];
-	C_a2 [ label=<A<SUB>2</SUB>> fillcolor="#ffff80" ];
+	node [	// original
+		fillcolor="#80ff80"
+	];
 
-	C_j  -> C_a1 [ penwidth=1.2 ];
-	C_a1 -> C_x  [ penwidth=1.2 ];
-	C_a1 -> C_b1 [ penwidth=1.2 ];
-	C_a1 -> C_y  [ penwidth=1.2 ];
-	C_b1 -> C_p  [ penwidth=1.2 ];
-	C_b1 -> C_q  [ penwidth=1.2 ];
-	C_b1 -> C_r  [ penwidth=1.2 ];
+	C_j  [ label=<j>             ];
+	C_a1 [ label=<A<SUB>1</SUB>> ];
+	C_x  [ label=<x>             ];
+	C_b1 [ label=<B<SUB>1</SUB>> ];
+	C_y  [ label=<y>             ];
+	C_p  [ label=<p>             ];
+	C_q  [ label=<q>             ];
+	C_r  [ label=<r>             ];
 
-	C_j  -> C_a1 [ dir=back color="#ff8080" style=dashed ];
-	C_j  -> C_a2 [ dir=back color="#ff8080" style=dashed ];
-	C_a1 -> C_x  [ dir=back color="#ff8080" style=dashed ];
-	C_a1 -> C_b1 [ dir=back color="#ff8080" style=dashed ];
-	C_a1 -> C_y  [ dir=back color="#ff8080" style=dashed ];
-	C_b1 -> C_p  [ dir=back color="#ff8080" style=dashed ];
-	C_b1 -> C_q  [ dir=back color="#ff8080" style=dashed ];
-	C_b1 -> C_r  [ dir=back color="#ff8080" style=dashed ];
-	C_a2 -> C_s  [ dir=back color="#ff8080" style=dashed ];
+	node [	// changed
+		fillcolor="#ffff80"
+	];
 
-	C_a2 -> C_x  [ color="#4040ff" ];
-	C_a2 -> C_y  [ color="#4040ff" ];
-	C_a2 -> C_s  [ color="#4040ff" ];
+	C_s  [ label=<S>             ];
+	C_a2 [ label=<A<SUB>2</SUB>> ];
 
-	C_x -> C_b1 -> C_s -> C_y [ style=invis ];
+	edge [	// main line
+		penwidth=1.2;
+	];
+
+	C_j  -> C_a1;
+	C_a1 -> C_x;
+	C_a1 -> C_b1;
+	C_a1 -> C_y;
+	C_b1 -> C_p;
+	C_b1 -> C_q;
+	C_b1 -> C_r;
+
+	edge [	// copy
+		penwidth=0.5;
+		color="#4040ff";
+	];
+
+	C_a2 -> C_x;
+	C_a2 -> C_y;
+	C_a2 -> C_s;
+
+	edge [	// parent
+		dir=back;
+		penwidth=0.5;
+		color="#ff8080";
+		style=dashed;
+	];
+
+	C_j  -> C_a1;
+	C_j  -> C_a2;
+	C_a1 -> C_x;
+	C_a1 -> C_b1;
+	C_a1 -> C_y;
+	C_b1 -> C_p;
+	C_b1 -> C_q;
+	C_b1 -> C_r;
+	C_a2 -> C_s;
+
+	edge [	// invisible
+		style=invis;
+	];
+
+	C_x -> C_b1 -> C_s -> C_y;
 	{ rank=same C_x C_b1 C_s C_y }
 }
 
