@@ -997,3 +997,30 @@ declare "volatile" properties
 	always keep newest value (even if undoing an action)
 	listeners too
 
+recursive properties
+	get_name_default may cause children to change!
+
+keep existing listeners on old objects?
+	or move listeners
+		how do I back out of this?
+
+use log_ctor for create and default state info?
+
+log_handler -- split date and time
+
+log seq num -- don't increment it if nothing is sent to loggers
+
+name threads in logs @start (@end?)
+
+log_thread ids could be reused -- need a distinct id in log
+
+any advantage to having "used space" and "free space" children of fs objects?
+
+What use is LogObject?
+
+log count/suppress duplicate lines
+
+property dialog plugin
+
+drawing plugin would need to be below base_drawing_area in hierarchy
+
