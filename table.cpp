@@ -346,6 +346,150 @@ Table::delete_child (ContainerPtr child)
 	}
 }
 
+void
+Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
+{
+	ContainerPtr space;
+	log_info("");
+	log_info ("move_child");
+	log_info ("\told: start: %10ld  end: %10ld  size: %10ld", child->parent_offset, child->parent_offset+child->bytes_size, child->bytes_size);
+	log_info ("\tnew: start: %10ld  end: %10ld  size: %10ld", offset, offset+size, size);
+
+	bool backwards = (offset < child->parent_offset);
+	bool forwards  = ((offset + size) > (child->parent_offset + child->bytes_size));
+
+	log_info ("extend backwards = %s", backwards ? "true" : "false");
+	log_info ("extend forwards  = %s", forwards  ? "true" : "false");
+
+	auto first = std::begin (children);
+	auto end   = std::end   (children);
+	auto last  = std::prev  (end);
+	auto it    = std::find  (first, end, child);
+
+	auto it_start = it;
+	auto it_end   = it;
+
+	ContainerPtr space_before;
+	ContainerPtr space_after;
+
+	if (it != first) {
+		auto it_prev = std::prev (it);
+		ContainerPtr prev = *it_prev;
+		if (prev->is_a ("Unallocated")) {
+			space_before = prev;
+			it_start = it_prev;
+		}
+	}
+
+	if (it != last) {
+		auto it_next = std::next (it);
+		ContainerPtr next = *it_next;
+		if (next->is_a ("Unallocated")) {
+			space_after = next;
+			it_end = it_next;
+		}
+	}
+
+	log_info ("space before = %s", space_before ? "true" : "false");
+	log_info ("space after  = %s", space_after  ? "true" : "false");
+
+	if (backwards) {
+		if (!space_before) {
+			log_error ("No space to extend backwards");
+			return;
+		}
+
+		if (offset < space_before->parent_offset) {
+			log_error ("space before isn't big enough (%ld)", space_before->parent_offset - offset);
+			return;
+		}
+	}
+
+	if (forwards) {
+		if (!space_after) {
+			log_error ("No space to extend forwards");
+			return;
+		}
+
+		if ((offset + size) > (space_after->parent_offset + space_after->bytes_size)) {
+			log_error ("space after isn't big enough (%ld)", (offset + size) - (space_after->parent_offset + space_after->bytes_size));
+			return;
+		}
+	}
+
+	ContainerPtr parent = get_smart();
+	if (txn) {
+		if (backwards) {
+			txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, space_before));
+		}
+		txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
+		if (forwards) {
+			txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, space_after));
+		}
+	}
+	children.erase (it_start, it_end);
+
+	ContainerPtr new_child = child->backup();
+	if (!new_child) {
+		log_error ("child backup failed");
+		return;
+	}
+
+	if (backwards) {
+		if (offset == space_before->parent_offset) {
+			log_error ("WHOLE before");
+			new_child->parent_offset = offset;
+			new_child->bytes_size    = size;
+			_add_child (children, new_child);
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, new_child));
+			}
+		} else {
+			log_error ("PARTIAL before");
+			new_child->parent_offset = offset;
+			new_child->bytes_size    = size;
+			_add_child (children, new_child);
+
+			std::uint64_t start = space_before->parent_offset;
+			std::uint64_t end   = new_child->parent_offset;
+			ContainerPtr s = space_create (start, end - start);
+			_add_child (children, s);
+
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, new_child));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
+			}
+		}
+	}
+
+	if (forwards) {
+		if ((offset + size) == (space_after->parent_offset + space_after->bytes_size)) {
+			log_error ("WHOLE after");
+			new_child->parent_offset = offset;
+			new_child->bytes_size    = size;
+			_add_child (children, new_child);
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, new_child));
+			}
+		} else {
+			log_error ("PARTIAL after");
+			new_child->parent_offset = offset;
+			new_child->bytes_size    = size;
+			_add_child (children, new_child);
+
+			std::uint64_t start = new_child->parent_offset + new_child->bytes_size;
+			std::uint64_t end   = space_after->parent_offset + space_after->bytes_size;
+			ContainerPtr s = space_create (start, end - start);
+			_add_child (children, s);
+
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, new_child));
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
+			}
+		}
+	}
+}
+
 
 std::vector<Action>
 Table::get_actions (void)

@@ -413,13 +413,13 @@ Container::add_child (ContainerPtr child, bool probe)
 void
 Container::delete_child (ContainerPtr UNUSED(child))
 {
-	log_code ("NOTIMPL");
+	log_code ("delete_child NOTIMPL");
 }
 
 void
 Container::move_child (ContainerPtr UNUSED(child), std::uint64_t UNUSED(offset), std::uint64_t UNUSED(size))
 {
-	log_code ("NOTIMPL");
+	log_code ("move_child NOTIMPL");
 }
 
 
@@ -1312,6 +1312,9 @@ Container::notify_delete (ContainerPtr parent, ContainerPtr child)
 void
 Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 {
+	return_if_fail (first);
+	return_if_fail (second);
+
 	LOG_TRACE;
 
 	switch (type) {

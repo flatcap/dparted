@@ -710,6 +710,16 @@ bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)
 	if (a->parent_offset != b->parent_offset)
 		return (a->parent_offset > b->parent_offset);
 
+	ContainerPtr ca = a->get_container();
+	ContainerPtr cb = b->get_container();
+	if (ca && cb) {
+		std::uint64_t da = (ca->device_major << 10) + ca->device_minor;
+		std::uint64_t db = (cb->device_major << 10) + cb->device_minor;
+		if (da != db) {
+			return (da < db);
+		}
+	}
+
 	int x = a->name.compare (b->name);
 	if (x != 0)
 		return (x < 0);

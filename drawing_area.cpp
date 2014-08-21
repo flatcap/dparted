@@ -758,13 +758,51 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 	if ((event->button == 3) && (selection)) {		// Right-click
 		popup_menu (selection, event->x_root, event->y_root);
+		return true;
 	}
 
 	ContainerPtr c = selection->get_container();
 	if (c) {
 		ContainerPtr p = c->get_parent();
 		if (p) {
+#if 1 // RESIZE_TEST
+			if (!c->is_a ("GptPartition"))
+				return true;
+
+			// log_info ("RESIZE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
+			std::string desc = "Test: resize " + c->get_name_default();
+			std::string dev = p->get_device_inherit();
+			std::uint64_t off  = 0;
+			std::uint64_t size = 0;
+
+			if (dev == "/dev/loop1")  { off =   1048576; size =  805288960; }
+			if (dev == "/dev/loop2")  { off =   1048576; size = 1072676352; }
+			if (dev == "/dev/loop3")  { off = 358400000; size =  446906368; }
+			if (dev == "/dev/loop4")  { off = 358400000; size =  715324928; }
+			if (dev == "/dev/loop5")  { off = 268435456; size =  536870912; }
+			if (dev == "/dev/loop6")  { off =     17408; size =  805288960; }
+			if (dev == "/dev/loop7")  { off = 268435456; size =  805289472; }
+			if (dev == "/dev/loop8")  { off =     17408; size = 1073707520; }
+			if (dev == "/dev/loop9")  { off = 268435456; size =  448790528; }
+			if (dev == "/dev/loop10") { off =     17408; size =  717208576; }
+			if (dev == "/dev/loop11") { off = 268435456; size =  805289472; }
+			if (dev == "/dev/loop12") { off =     17408; size = 1073707520; }
+
+			ContainerPtr new_parent = Container::start_transaction (p, desc);
+			if (!new_parent) {
+				return true;
+			}
+
+			new_parent->move_child(c, off, size);
+			Container::commit_transaction();
+#endif
 #if 0 // DELETE_TEST
+			if (!c->is_a ("GptPartition"))
+				return true;
+			std::string name = c->get_device_short();
+			if ((name != "loop1p2") && (name != "loop2p2") && (name != "loop3p2") && (name != "loop4p2") && (name != "loop5p2") && (name != "loop6p2") && (name != "loop7p1") && (name != "loop8p1") && (name != "loop9p1"))
+				return true;
+
 			log_info ("DELETE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
 			std::string desc = "Test: delete " + c->get_name_default();
 			ContainerPtr new_parent = Container::start_transaction (p, desc);
@@ -774,7 +812,9 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 			new_parent->delete_child(c);
 			Container::commit_transaction();
 #endif
-#if 1 // ADD_TEST
+#if 0 // ADD_TEST
+			if (!c->is_a ("Unallocated"))
+				return true;
 			log_info ("ADD parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
 			log_info ("po   = %ld", c->parent_offset);
 			log_info ("size = %ld", c->bytes_size);
