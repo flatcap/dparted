@@ -355,11 +355,11 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 	log_info ("\told: start: %10ld  end: %10ld  size: %10ld", child->parent_offset, child->parent_offset+child->bytes_size, child->bytes_size);
 	log_info ("\tnew: start: %10ld  end: %10ld  size: %10ld", offset, offset+size, size);
 
-	bool backwards = (offset < child->parent_offset);
-	bool forwards  = ((offset + size) > (child->parent_offset + child->bytes_size));
+	std::int64_t move_start = (offset - child->parent_offset);
+	std::int64_t move_end   = ((offset + size) - (child->parent_offset + child->bytes_size));
 
-	log_info ("extend backwards = %s", backwards ? "true" : "false");
-	log_info ("extend forwards  = %s", forwards  ? "true" : "false");
+	log_info ("move start of partition = %s (%+ld)", move_start ? "true" : "false", move_start);
+	log_info ("move end   of partition = %s (%+ld)", move_end   ? "true" : "false", move_end);
 
 	auto first = std::begin (children);
 	auto end   = std::end   (children);
@@ -371,61 +371,106 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 
 	ContainerPtr space_before;
 	ContainerPtr space_after;
+	ContainerPtr parent = get_smart();
 
-	if (it != first) {
-		auto it_prev = std::prev (it);
-		ContainerPtr prev = *it_prev;
-		if (prev->is_a ("Unallocated")) {
-			space_before = prev;
-			it_start = it_prev;
+	if (move_start) {				// Whichever direction we move, we need space
+		if (it != first) {
+			auto it_prev = std::prev (it);
+			ContainerPtr prev = *it_prev;
+			if (prev->is_a ("Unallocated")) {
+				it_start = it_prev;
+				space_before = prev;
+
+				if (offset < space_before->parent_offset) {
+					log_error ("space before isn't big enough (%ld)", space_before->parent_offset - offset);
+					return;
+				}
+
+				if (txn) {
+					txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, space_before));
+				}
+
+				if (offset > space->parent_offset) {
+					space_before = space_before->backup();
+					if (!space_before) {
+						log_error ("backup failed");
+						return;
+					}
+
+					space_before->bytes_size += (offset - child->parent_offset);	// Adjust the size
+				}
+			}
+		}
+
+		if (!space_before) {
+			if (move_start < 0) {
+				log_error ("No space to move backwards");
+				return;
+			}
+			space_before = space_create (child->parent_offset, (offset - child->parent_offset));
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, space_before));
+			}
 		}
 	}
 
-	if (it != last) {
-		auto it_next = std::next (it);
-		ContainerPtr next = *it_next;
-		if (next->is_a ("Unallocated")) {
-			space_after = next;
-			it_end = it_next;
+	if (move_end) {				// Whichever direction we move, we need space
+		if (it != last) {
+			auto it_next = std::next (it);
+			ContainerPtr next = *it_next;
+			if (next->is_a ("Unallocated")) {
+				it_end = it_next;
+				space_after = next;
+
+				if (txn) {
+					txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, space_after));
+				}
+
+				space_after = space_after->backup();
+				if (!space_after) {
+					log_error ("backup failed");
+					return;
+				}
+
+				if ((offset + size) > (space_after->parent_offset + space_after->bytes_size)) {
+					log_error ("space after isn't big enough (%ld)", (offset + size) - (space_after->parent_offset + space_after->bytes_size));
+					return;
+				}
+
+				space_after->parent_offset = offset + size;
+				space_after->bytes_size -= (child->parent_offset + child->bytes_size) - (offset + size);	// Adjust the size
+			}
+		}
+
+		if (!space_after) {
+			if (move_end > 0) {
+				log_error ("No space to move forwards");
+				return;
+			}
+			space_after = space_create (offset + size, (child->parent_offset + child->bytes_size) - (offset + size));
+			if (txn) {
+				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, space_after));
+			}
 		}
 	}
 
 	log_info ("space before = %s", space_before ? "true" : "false");
 	log_info ("space after  = %s", space_after  ? "true" : "false");
 
-	if (backwards) {
-		if (!space_before) {
-			log_error ("No space to extend backwards");
-			return;
-		}
-
-		if (offset < space_before->parent_offset) {
-			log_error ("space before isn't big enough (%ld)", space_before->parent_offset - offset);
-			return;
-		}
+	if (move_start > 0) {
+		/* code */
+	} else if (move_start < 0) {
+		/* code */
 	}
 
-	if (forwards) {
-		if (!space_after) {
-			log_error ("No space to extend forwards");
-			return;
-		}
-
-		if ((offset + size) > (space_after->parent_offset + space_after->bytes_size)) {
-			log_error ("space after isn't big enough (%ld)", (offset + size) - (space_after->parent_offset + space_after->bytes_size));
-			return;
-		}
+	if (move_end > 0) {
+		/* code */
+	} else if (move_end < 0) {
+		/* code */
 	}
 
-	ContainerPtr parent = get_smart();
 	if (txn) {
-		if (backwards) {
-			txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, space_before));
-		}
 		txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
-		if (forwards) {
-			txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, space_after));
-		}
 	}
 	children.erase (it_start, it_end);
 
@@ -435,6 +480,7 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 		return;
 	}
 
+#if 0
 	if (backwards) {
 		if (offset == space_before->parent_offset) {
 			log_error ("WHOLE before");
@@ -450,14 +496,8 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 			new_child->bytes_size    = size;
 			_add_child (children, new_child);
 
-			std::uint64_t start = space_before->parent_offset;
-			std::uint64_t end   = new_child->parent_offset;
-			ContainerPtr s = space_create (start, end - start);
-			_add_child (children, s);
-
 			if (txn) {
 				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, new_child));
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
 			}
 		}
 	}
@@ -477,17 +517,12 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 			new_child->bytes_size    = size;
 			_add_child (children, new_child);
 
-			std::uint64_t start = new_child->parent_offset + new_child->bytes_size;
-			std::uint64_t end   = space_after->parent_offset + space_after->bytes_size;
-			ContainerPtr s = space_create (start, end - start);
-			_add_child (children, s);
-
 			if (txn) {
 				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, new_child));
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
 			}
 		}
 	}
+#endif
 }
 
 

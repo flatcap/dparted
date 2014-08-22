@@ -59,7 +59,7 @@ DrawingArea::DrawingArea (void)
 
 	// set_tooltip_text ("tooltip number 1");
 
-	set_has_tooltip();	// We'll be handling the tooltips ourself
+	//RAR set_has_tooltip();	// We'll be handling the tooltips ourself
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &DrawingArea::on_textview_query_tooltip));
 
 	menu_popup.signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
@@ -765,7 +765,36 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	if (c) {
 		ContainerPtr p = c->get_parent();
 		if (p) {
-#if 1 // RESIZE_TEST
+#if 1 // MOVE_TEST
+			// log_info ("%10ld  %10ld  %10ld", c->parent_offset, c->parent_offset + c->bytes_size, c->bytes_size);
+			if (!c->is_a ("GptPartition"))
+				return true;
+
+			// log_info ("MOVE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
+			std::string desc = "Test: move " + c->get_name_default();
+			std::string dev = p->get_device_inherit();
+			std::uint64_t off  = 0;
+
+			if (dev == "/dev/loop1")  { off = 536870912; }
+			if (dev == "/dev/loop2")  { off = 811580928; }
+			if (dev == "/dev/loop3")  { off =     17408; }
+			if (dev == "/dev/loop4")  { off = 644243456; }
+			if (dev == "/dev/loop5")  { off = 811580928; }
+			if (dev == "/dev/loop6")  { off =     17408; }
+			if (dev == "/dev/loop7")  { off = 536870912; }
+			if (dev == "/dev/loop8")  { off = 209715200; }
+			if (dev == "/dev/loop9")  { off = 104857600; }
+
+			// ContainerPtr new_parent = Container::start_transaction (p, desc);
+			// if (!new_parent) {
+			// 	return true;
+			// }
+
+			// new_parent
+			p->move_child(c, off, c->bytes_size);
+			// Container::commit_transaction();
+#endif
+#if 0 // RESIZE_TEST
 			if (!c->is_a ("GptPartition"))
 				return true;
 
