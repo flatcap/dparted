@@ -173,6 +173,14 @@ space_create (std::uint64_t parent_offset, std::uint64_t bytes_size)
 }
 
 void
+txn_add (NotifyType nt, ContainerPtr first, ContainerPtr second)
+{
+	if (txn) {
+		txn->notifications.push_back (std::make_tuple (nt, first, second));
+	}
+}
+
+void
 Table::add_child (ContainerPtr child, bool probe)
 {
 	ContainerPtr space;
@@ -205,27 +213,21 @@ Table::add_child (ContainerPtr child, bool probe)
 	auto it    = std::find  (first, end, space);
 
 	ContainerPtr parent = get_smart();
-	if (txn) {
-		txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, space));
-	}
+	txn_add (NotifyType::t_delete, parent, space);
 	children.erase (it);
 
 	if (c_begin == s_begin) {
 		if (c_end == s_end) {
 			log_error ("WHOLE");
 			_add_child (children, child);
-			if (txn) {
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
-			}
+			txn_add (NotifyType::t_add, parent, child);
 		} else {
 			log_error ("START");
 			ContainerPtr s = space_create (c_end, space->bytes_size - child->bytes_size);
 			_add_child (children, child);
 			_add_child (children, s);
-			if (txn) {
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
-			}
+			txn_add (NotifyType::t_add, parent, child);
+			txn_add (NotifyType::t_add, parent, s);
 		}
 	} else {
 		if (c_end == s_end) {
@@ -233,10 +235,8 @@ Table::add_child (ContainerPtr child, bool probe)
 			ContainerPtr s = space_create (s_begin, space->bytes_size - child->bytes_size);
 			_add_child (children, s);
 			_add_child (children, child);
-			if (txn) {
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
-			}
+			txn_add (NotifyType::t_add, parent, s);
+			txn_add (NotifyType::t_add, parent, child);
 		} else {
 			log_error ("MIDDLE");
 			ContainerPtr s1 = space_create (s_begin, child->parent_offset - space->parent_offset);
@@ -246,11 +246,9 @@ Table::add_child (ContainerPtr child, bool probe)
 			_add_child (children, s1);
 			_add_child (children, child);
 			_add_child (children, s2);
-			if (txn) {
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s1));
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s2));
-			}
+			txn_add (NotifyType::t_add, parent, s1);
+			txn_add (NotifyType::t_add, parent, child);
+			txn_add (NotifyType::t_add, parent, s2);
 		}
 	}
 }
@@ -310,40 +308,30 @@ Table::delete_child (ContainerPtr child)
 		if (space_after) {
 			s = space_join (prev, next);	// join into one big space
 			children.erase (std::prev(it), std::next(it));
-			if (txn) {
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, prev));
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, next));
-			}
+			txn_add (NotifyType::t_delete, parent, prev);
+			txn_add (NotifyType::t_delete, parent, child);
+			txn_add (NotifyType::t_delete, parent, next);
 		} else {
 			s = space_join (prev, child);	// extend prev
 			children.erase (std::prev(it), it);
-			if (txn) {
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, prev));
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
-			}
+			txn_add (NotifyType::t_delete, parent, prev);
+			txn_add (NotifyType::t_delete, parent, child);
 		}
 	} else {
 		if (space_after) {
 			s = space_join (child, next);	// extend next backwards
 			children.erase (it, std::next(it));
-			if (txn) {
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, next));
-			}
+			txn_add (NotifyType::t_delete, parent, child);
+			txn_add (NotifyType::t_delete, parent, next);
 		} else {
 			s = space_join (child);		// replace child with space
 			children.erase (it);
-			if (txn) {
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, parent, child));
-			}
+			txn_add (NotifyType::t_delete, parent, child);
 		}
 	}
 
 	add_child (s, false);
-	if (txn) {
-		txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, s));
-	}
+	txn_add (NotifyType::t_add, parent, s);
 }
 
 void
