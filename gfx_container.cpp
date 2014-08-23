@@ -624,8 +624,8 @@ GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& c
 	for (auto& i : toplevel->gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
-			//RAR log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
-			//RAR p->gfx_container_added (gparent, gchild);
+			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
+			p->gfx_container_added (gparent, gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
 		}
@@ -685,8 +685,8 @@ GfxContainer::container_deleted (const ContainerPtr& parent, const ContainerPtr&
 	for (auto& i : toplevel->gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
-			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
-			p->gfx_container_added (gparent, gchild);
+			log_listener ("Deleted child %p from GfxContainer %p", gchild.get(), gparent.get());
+			p->gfx_container_deleted (gparent, gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
 		}

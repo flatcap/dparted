@@ -785,14 +785,13 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 			if (dev == "/dev/loop8")  { off = 209715200; }
 			if (dev == "/dev/loop9")  { off = 104857600; }
 
-			// ContainerPtr new_parent = Container::start_transaction (p, desc);
-			// if (!new_parent) {
-			// 	return true;
-			// }
+			ContainerPtr new_parent = Container::start_transaction (p, desc);
+			if (!new_parent) {
+				return true;
+			}
 
-			// new_parent
-			p->move_child(c, off, c->bytes_size);
-			// Container::commit_transaction();
+			new_parent->move_child(c, off, c->bytes_size);
+			Container::commit_transaction();
 #endif
 #if 0 // RESIZE_TEST
 			if (!c->is_a ("GptPartition"))
@@ -1527,6 +1526,10 @@ void
 DrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
 {
 	log_error ("gfx_container_added");
+	// log_info ("gfx children");
+	// for (auto& c : parent->children) {
+	// 	c->dump();
+	// }
 	get_window()->invalidate (false);
 }
 
@@ -1534,6 +1537,10 @@ void
 DrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(before), const GfxContainerPtr& UNUSED(after))
 {
 	log_error ("gfx_container_changed");
+	// log_info ("gfx children");
+	// for (auto& c : after->children) {
+	// 	c->dump();
+	// }
 	get_window()->invalidate (false);
 }
 
@@ -1541,6 +1548,10 @@ void
 DrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
 {
 	log_error ("gfx_container_deleted");
+	// log_info ("gfx children");
+	// for (auto& c : parent->children) {
+	// 	c->dump();
+	// }
 	get_window()->invalidate (false);
 }
 
