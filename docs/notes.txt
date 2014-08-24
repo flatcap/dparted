@@ -1024,3 +1024,17 @@ property dialog plugin
 
 drawing plugin would need to be below base_drawing_area in hierarchy
 
+add_child, move_child, del_child -> bool
+
+inline txn_create helper
+
+move_child
+	check child has changed
+	check for zero side
+	do we need to test against size of parent?
+
+prop dialog plugin - can defer to built-in dialog
+
+drop test images -- fake it in code
+	test-data plugin!
+
