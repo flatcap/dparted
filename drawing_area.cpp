@@ -726,6 +726,10 @@ DrawingArea::on_keypress (GdkEventKey* event)
 bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
+#if 1
+	top_level->dump3();
+	return true;
+#endif
 	log_debug ("mouse click: (%.0f,%.0f)", event->x, event->y);
 
 	grab_focus();				// Place the windows focus on the DrawingArea
@@ -765,7 +769,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	if (c) {
 		ContainerPtr p = c->get_parent();
 		if (p) {
-#if 1 // MOVE_TEST
+#if 0 // MOVE_TEST
 			// log_info ("%10ld  %10ld  %10ld", c->parent_offset, c->parent_offset + c->bytes_size, c->bytes_size);
 			if (!c->is_a ("GptPartition"))
 				return true;

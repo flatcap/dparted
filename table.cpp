@@ -173,14 +173,6 @@ space_create (std::uint64_t parent_offset, std::uint64_t bytes_size)
 }
 
 void
-txn_add (NotifyType nt, ContainerPtr first, ContainerPtr second)
-{
-	if (txn) {
-		txn->notifications.push_back (std::make_tuple (nt, first, second));
-	}
-}
-
-void
 Table::add_child (ContainerPtr child, bool probe)
 {
 	ContainerPtr space;
@@ -337,17 +329,25 @@ Table::delete_child (ContainerPtr child)
 void
 Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 {
+	if (children.size() > 3) {
+		children.erase (std::remove_if (std::begin (children), std::end (children), [this](ContainerPtr& c) {
+			bool b = c->is_a ("Unallocated"); if (b) txn_add (NotifyType::t_delete, get_smart(), c); return b;
+		} ), std::end (children));
+		// std::for_each (std::begin (children), std::end (children), [](ContainerPtr& c) { log_info(c); });
+	}
+	return;
+
 	ContainerPtr space;
-	log_info("");
-	log_info ("move_child");
-	log_info ("\told: start: %10ld  end: %10ld  size: %10ld", child->parent_offset, child->parent_offset+child->bytes_size, child->bytes_size);
-	log_info ("\tnew: start: %10ld  end: %10ld  size: %10ld", offset, offset+size, size);
+	// log_info("");
+	// log_info ("move_child");
+	// log_info ("\told: start: %10ld  end: %10ld  size: %10ld", child->parent_offset, child->parent_offset+child->bytes_size, child->bytes_size);
+	// log_info ("\tnew: start: %10ld  end: %10ld  size: %10ld", offset, offset+size, size);
 
-	std::int64_t move_start = (offset - child->parent_offset);
-	std::int64_t move_end   = ((offset + size) - (child->parent_offset + child->bytes_size));
+	// std::int64_t move_start = (offset - child->parent_offset);
+	// std::int64_t move_end   = ((offset + size) - (child->parent_offset + child->bytes_size));
 
-	log_info ("move start of partition = %s (%+ld)", move_start ? "true" : "false", move_start);
-	log_info ("move end   of partition = %s (%+ld)", move_end   ? "true" : "false", move_end);
+	// log_info ("move start of partition = %s (%+ld)", move_start ? "true" : "false", move_start);
+	// log_info ("move end   of partition = %s (%+ld)", move_end   ? "true" : "false", move_end);
 
 	auto first = std::begin (children);
 	auto end   = std::end   (children);
@@ -356,12 +356,15 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 
 	ContainerPtr new_child = child->backup();
 	children.erase (it);
+	txn_add (NotifyType::t_delete, get_smart(), child);
 
-	new_child->parent_offset = offset;
+	new_child->parent_offset = 0;
 	new_child->bytes_size    = size;
 	_add_child (children, new_child);
-	txn_add (NotifyType::t_change, child, new_child);
+	txn_add (NotifyType::t_add, get_smart(), new_child);
+	// txn_add (NotifyType::t_change, child, new_child);
 
+	return;
 	child = new_child;
 
 	first = std::begin (children);

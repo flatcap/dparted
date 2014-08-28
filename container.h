@@ -95,7 +95,8 @@ public:
 	ContainerPtr backup (void);
 	void notify (NotifyType type, ContainerPtr first, ContainerPtr second);
 
-	void add_listener (const ContainerListenerPtr& m);
+	void add_listener    (const ContainerListenerPtr& m);
+	void remove_listener (const ContainerListenerPtr& m);
 	int count_listeners (void) { return container_listeners.size(); }
 
 	std::vector<std::string> get_prop_names (void);
@@ -197,6 +198,7 @@ protected:
 	PPtr declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags);
 
 	void _add_child (std::vector<ContainerPtr>& vec, ContainerPtr child);
+	void txn_add (NotifyType nt, ContainerPtr first, ContainerPtr second);
 
 private:
 	MmapPtr	device_mmap;

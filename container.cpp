@@ -1175,6 +1175,20 @@ Container::add_listener (const ContainerListenerPtr& cl)
 	}
 }
 
+void
+Container::remove_listener (const ContainerListenerPtr& cl)
+{
+	return_if_fail (cl);
+
+	//XXX mutex on listeners
+	container_listeners.erase (
+		std::remove_if (
+			std::begin (container_listeners),
+			std::end   (container_listeners),
+			[cl] (ContainerListenerWeak& w) { return (cl == w.lock()); }),
+		std::end (container_listeners));
+}
+
 
 ContainerPtr
 Container::start_transaction (ContainerPtr& parent, const std::string& desc)
@@ -1245,6 +1259,17 @@ Container::cancel_transaction (void)
 #endif
 }
 
+void
+Container::txn_add (NotifyType nt, ContainerPtr first, ContainerPtr second)
+{
+	return_if_fail (first);
+	return_if_fail (second);
+
+	if (txn) {
+		txn->notifications.push_back (std::make_tuple (nt, first, second));
+	}
+}
+
 
 ContainerPtr
 Container::backup (void)
@@ -1266,6 +1291,8 @@ Container::backup (void)
 		//XXX get_txn() function that checks we have a lock
 		txn->notifications.push_back (std::make_tuple (NotifyType::t_change, prev, c));
 	}
+
+	log_info ("backup: %s %ld(%p) -> %ld(%p)", name.c_str(), unique_id, prev.get(), c->unique_id, c.get());
 
 	return c;
 }
@@ -1320,38 +1347,20 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 	switch (type) {
 		case NotifyType::t_add:
 			log_trace ("Notify add:");
-			log_trace ("\t%s(%d) %d listeners",
-				first->get_name_default().c_str(),
-				first->unique_id,
-				first->container_listeners.size());
-			log_trace ("\t%s(%d) %d listeners",
-				second->get_name_default().c_str(),
-				second->unique_id,
-				second->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
 			notify_add (first, second);
 			break;
 		case NotifyType::t_delete:
 			log_trace ("Notify delete:");
-			log_trace ("\t%s(%d) %d listeners",
-				first->get_name_default().c_str(),
-				first->unique_id,
-				first->container_listeners.size());
-			log_trace ("\t%s(%d) %d listeners",
-				second->get_name_default().c_str(),
-				second->unique_id,
-				second->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
 			notify_delete (first, second);
 			break;
 		case NotifyType::t_change:
 			log_trace ("Notify change:");
-			log_trace ("\t%s(%d) %d listeners",
-				first->get_name_default().c_str(),
-				first->unique_id,
-				first->container_listeners.size());
-			log_trace ("\t%s(%d) %d listeners",
-				second->get_name_default().c_str(),
-				second->unique_id,
-				second->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
 			notify_change (first, second);
 			break;
 		default:

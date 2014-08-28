@@ -52,6 +52,9 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 
 	g->theme = gui_app->get_theme();
 
+	// if (p) {			// Don't link the top-level (dummy) objects
+	// 	c->add_listener(g);	// Container listener
+	// }
 	c->add_listener(g);		// Container listener
 	gui_app->add_listener(g);	// Theme listener
 
@@ -594,34 +597,38 @@ GfxContainer::find_child (ContainerPtr search)
 void
 GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& cont)
 {
+	return_if_fail (parent);
+	return_if_fail (cont);
+
+	get_toplevel()->dump3();
 	// LOG_TRACE;
 	log_code ("GFX container_added: %s(%p) to %s(%p)", cont->name.c_str(), cont.get(), parent->name.c_str(), parent.get());
 
-	GfxContainerPtr existing = find (cont);
+	GfxContainerPtr existing = find_child (cont);
 	if (existing) {
-		log_code ("Container already exists : %s(%p) : %s(%p)",
-			existing->name.c_str(),
-			existing.get(),
-			cont->get_name_default().c_str(),
-			cont.get());
+		log_code ("Gfx: child already exists : %s(%p) : %s(%p)", existing->name.c_str(), existing.get(), cont->get_name_default().c_str(), cont.get());
+		//XXX do we need to sync?  might be a duplicate notification (recursive?)
 		return;
-		//XXX do we need to sync?
 	}
 
-	GfxContainerPtr gparent = get_smart();	//RAR find (parent);
-	if (!gparent)
+	GfxContainerPtr gparent = get_smart();
+	if (!gparent) {
+		log_error ("add: no parent");
 		return;
+	}
 
 	GfxContainerPtr gchild = GfxContainer::create (get_smart(), cont);
+	if (!gchild) {
+		log_error ("couldn't create child");
+		return;
+	}
 
 	{
 	std::lock_guard<std::mutex> lock (mutex_children);
 	gparent->insert_child (gchild);
-	// gchild->sync();
 	}
 
-	GfxContainerPtr toplevel = get_toplevel();
-	for (auto& i : toplevel->gfx_container_listeners) {
+	for (auto& i : gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
 			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
@@ -630,59 +637,71 @@ GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& c
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
 		}
 	}
-
-	//RAR auto top = get_toplevel();
-	//RAR top->dump3();
 }
 
 void
 GfxContainer::container_changed (const ContainerPtr& before, const ContainerPtr& after)
 {
+	return_if_fail (before);
+	return_if_fail (after);
+
+	get_toplevel()->dump3();
 	std::string name;
 	ContainerPtr c = container.lock();
-	if (c)
-		name = c->get_name_default();
-
-	if (c != before) {
-		log_error ("Notification doesn't match");
+	if (!c) {
+		log_error ("Container went away");
+		return;
 	}
 
-	log_trace ("container_changed %s(%p) : %s(%p) -> %s(%p)",
-		name.c_str(),
-		c.get(),
-		before->get_name_default().c_str(),
-		before.get(),
-		after->get_name_default().c_str(),
-		after.get());
+	GfxContainerPtr gchild  = get_smart();
+
+	c->remove_listener (gchild);	// Transfer our listener to the new container
+	after->add_listener (gchild);
+
+	name = c->get_name_default();
+
+	log_info ("container_changed %s(%p) : %s(%p) -> %s(%p)", name.c_str(), c.get(), before->get_name_default().c_str(), before.get(), after->get_name_default().c_str(), after.get());
 
 	container = after;
+
 	// Now notify all of OUR listeners
+	for (auto& i : gfx_container_listeners) {
+		GfxContainerListenerPtr p = i.lock();
+		if (p) {
+			log_listener ("Change child %p to %p", before.get(), after.get());
+			p->gfx_container_changed (gchild, gchild);
+		} else {
+			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
+		}
+	}
+
 }
 
 void
 GfxContainer::container_deleted (const ContainerPtr& parent, const ContainerPtr& child)
 {
+	return_if_fail (parent);
+	return_if_fail (child);
+
+	get_toplevel()->dump3();
 	// LOG_TRACE;
 	log_code ("GFX container_deleted: %s(%p) from %s(%p)", child->name.c_str(), child.get(), parent->name.c_str(), parent.get());
 
-	GfxContainerPtr toplevel = get_toplevel();
-	GfxContainerPtr gparent  = get_smart();
-	GfxContainerPtr gchild   = find_child (child);
-
-	if (!toplevel) {
-		log_error ("delete: no top-level");
-		return;
-	}
-	if (!gparent) {
-		log_error ("delete: no parent");
-		return;
-	}
+	GfxContainerPtr gchild = find_child (child);
 	if (!gchild) {
 		log_error ("delete: no child");
 		return;
 	}
 
-	for (auto& i : toplevel->gfx_container_listeners) {
+	GfxContainerPtr gparent = get_smart();
+	if (!gparent) {
+		log_error ("delete: no parent");
+		return;
+	}
+
+	child->remove_listener (gparent);
+
+	for (auto& i : gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
 			log_listener ("Deleted child %p from GfxContainer %p", gchild.get(), gparent.get());
@@ -693,13 +712,12 @@ GfxContainer::container_deleted (const ContainerPtr& parent, const ContainerPtr&
 	}
 
 	std::lock_guard<std::mutex> lock (gparent->mutex_children);
-	auto end = std::end (gparent->children);
-	for (auto it = gparent->children.begin(); it != end; ++it) {
-		if (*it == gchild) {
-			gparent->children.erase (it);
-			break;
-		}
-	}
+	children.erase (
+		std::remove (
+			std::begin (children),
+			std::end   (children),
+			gchild),
+		std::end (children));
 }
 
 bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)
