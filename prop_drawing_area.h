@@ -37,9 +37,9 @@ protected:
 	virtual bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr);
 	void draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxContainerPtr& cont, Rect shape);
 
-	virtual void gfx_container_added   (const GfxContainerPtr& parent, const GfxContainerPtr& child);
-	virtual void gfx_container_changed (const GfxContainerPtr& before, const GfxContainerPtr& after);
-	virtual void gfx_container_deleted (const GfxContainerPtr& parent, const GfxContainerPtr& child);
+	virtual void gfx_container_added   (const GfxContainerPtr& child);
+	virtual void gfx_container_changed (const GfxContainerPtr& after);
+	virtual void gfx_container_deleted (const GfxContainerPtr& child);
 };
 
 #endif // _PROP_DRAWING_AREA_H_

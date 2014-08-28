@@ -726,10 +726,6 @@ DrawingArea::on_keypress (GdkEventKey* event)
 bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
-#if 1
-	top_level->dump3();
-	return true;
-#endif
 	log_debug ("mouse click: (%.0f,%.0f)", event->x, event->y);
 
 	grab_focus();				// Place the windows focus on the DrawingArea
@@ -1527,35 +1523,23 @@ DrawingArea::theme_changed (const ThemePtr& new_theme)
 
 
 void
-DrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+DrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(child))
 {
 	log_error ("gfx_container_added");
-	// log_info ("gfx children");
-	// for (auto& c : parent->children) {
-	// 	c->dump();
-	// }
 	get_window()->invalidate (false);
 }
 
 void
-DrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(before), const GfxContainerPtr& UNUSED(after))
+DrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(after))
 {
 	log_error ("gfx_container_changed");
-	// log_info ("gfx children");
-	// for (auto& c : after->children) {
-	// 	c->dump();
-	// }
 	get_window()->invalidate (false);
 }
 
 void
-DrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+DrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(child))
 {
 	log_error ("gfx_container_deleted");
-	// log_info ("gfx children");
-	// for (auto& c : parent->children) {
-	// 	c->dump();
-	// }
 	get_window()->invalidate (false);
 }
 

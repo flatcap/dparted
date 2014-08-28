@@ -328,7 +328,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			p->sub_type ("Unallocated");
 			p->bytes_used = p->bytes_size;
 		}
-		//RAR g->add_child (p, false);
+		g->add_child (p, false);
 	}
 
 	Container::commit_transaction();

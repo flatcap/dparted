@@ -84,9 +84,9 @@ private:
 	GfxContainerPtr up    (const GfxContainerPtr& g);
 	GfxContainerPtr down  (const GfxContainerPtr& g);
 
-	virtual void gfx_container_added   (const GfxContainerPtr& parent, const GfxContainerPtr& child);
-	virtual void gfx_container_changed (const GfxContainerPtr& before, const GfxContainerPtr& after);
-	virtual void gfx_container_deleted (const GfxContainerPtr& parent, const GfxContainerPtr& child);
+	virtual void gfx_container_added   (const GfxContainerPtr& child);
+	virtual void gfx_container_changed (const GfxContainerPtr& after);
+	virtual void gfx_container_deleted (const GfxContainerPtr& child);
 
 	std::deque<Range> vRange;
 

@@ -632,7 +632,7 @@ GfxContainer::container_added (const ContainerPtr& cont)
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
 			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
-			p->gfx_container_added (gparent, gchild);
+			p->gfx_container_added (gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
 		}
@@ -668,7 +668,7 @@ GfxContainer::container_changed (const ContainerPtr& after)
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
 			log_listener ("Change child %p to %p", gchild.get(), after.get());
-			p->gfx_container_changed (gchild, gchild);
+			p->gfx_container_changed (gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
 		}
@@ -704,7 +704,7 @@ GfxContainer::container_deleted (const ContainerPtr& child)
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
 			log_listener ("Deleted child %p from GfxContainer %p", gchild.get(), gparent.get());
-			p->gfx_container_deleted (gparent, gchild);
+			p->gfx_container_deleted (gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
 		}
