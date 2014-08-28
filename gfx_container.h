@@ -130,9 +130,9 @@ private:
 	GfxContainerWeak self;
 	std::vector<GfxContainerListenerWeak> gfx_container_listeners;
 
-	virtual void container_added   (const ContainerPtr& parent, const ContainerPtr& child);
-	virtual void container_changed (const ContainerPtr& before, const ContainerPtr& after);
-	virtual void container_deleted (const ContainerPtr& parent, const ContainerPtr& child);
+	virtual void container_added   (const ContainerPtr& child);
+	virtual void container_changed (const ContainerPtr& after);
+	virtual void container_deleted (const ContainerPtr& child);
 };
 
 

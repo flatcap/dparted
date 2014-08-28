@@ -595,25 +595,25 @@ GfxContainer::find_child (ContainerPtr search)
 }
 
 void
-GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& cont)
+GfxContainer::container_added (const ContainerPtr& cont)
 {
-	return_if_fail (parent);
 	return_if_fail (cont);
 
 	get_toplevel()->dump3();
 	// LOG_TRACE;
-	log_code ("GFX container_added: %s(%p) to %s(%p)", cont->name.c_str(), cont.get(), parent->name.c_str(), parent.get());
+
+	GfxContainerPtr gparent = get_smart();
+	if (!gparent) {
+		log_error ("add: no parent");
+		return;
+	}
+
+	log_code ("GFX container_added: %s(%p) to %s(%p)", cont->name.c_str(), cont.get(), name.c_str(), gparent.get());
 
 	GfxContainerPtr existing = find_child (cont);
 	if (existing) {
 		log_code ("Gfx: child already exists : %s(%p) : %s(%p)", existing->name.c_str(), existing.get(), cont->get_name_default().c_str(), cont.get());
 		//XXX do we need to sync?  might be a duplicate notification (recursive?)
-		return;
-	}
-
-	GfxContainerPtr gparent = get_smart();
-	if (!gparent) {
-		log_error ("add: no parent");
 		return;
 	}
 
@@ -640,9 +640,8 @@ GfxContainer::container_added (const ContainerPtr& parent, const ContainerPtr& c
 }
 
 void
-GfxContainer::container_changed (const ContainerPtr& before, const ContainerPtr& after)
+GfxContainer::container_changed (const ContainerPtr& after)
 {
-	return_if_fail (before);
 	return_if_fail (after);
 
 	get_toplevel()->dump3();
@@ -660,7 +659,7 @@ GfxContainer::container_changed (const ContainerPtr& before, const ContainerPtr&
 
 	name = c->get_name_default();
 
-	log_info ("container_changed %s(%p) : %s(%p) -> %s(%p)", name.c_str(), c.get(), before->get_name_default().c_str(), before.get(), after->get_name_default().c_str(), after.get());
+	log_info ("container_changed %s(%p) : %s(%p) -> %s(%p)", name.c_str(), c.get(), c->get_name_default().c_str(), gchild.get(), after->get_name_default().c_str(), after.get());
 
 	container = after;
 
@@ -668,7 +667,7 @@ GfxContainer::container_changed (const ContainerPtr& before, const ContainerPtr&
 	for (auto& i : gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
-			log_listener ("Change child %p to %p", before.get(), after.get());
+			log_listener ("Change child %p to %p", gchild.get(), after.get());
 			p->gfx_container_changed (gchild, gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
@@ -678,24 +677,24 @@ GfxContainer::container_changed (const ContainerPtr& before, const ContainerPtr&
 }
 
 void
-GfxContainer::container_deleted (const ContainerPtr& parent, const ContainerPtr& child)
+GfxContainer::container_deleted (const ContainerPtr& child)
 {
-	return_if_fail (parent);
 	return_if_fail (child);
 
 	get_toplevel()->dump3();
 	// LOG_TRACE;
-	log_code ("GFX container_deleted: %s(%p) from %s(%p)", child->name.c_str(), child.get(), parent->name.c_str(), parent.get());
-
-	GfxContainerPtr gchild = find_child (child);
-	if (!gchild) {
-		log_error ("delete: no child");
-		return;
-	}
 
 	GfxContainerPtr gparent = get_smart();
 	if (!gparent) {
 		log_error ("delete: no parent");
+		return;
+	}
+
+	log_code ("GFX container_deleted: %s(%p) from %s(%p)", child->name.c_str(), child.get(), name.c_str(), gparent.get());
+
+	GfxContainerPtr gchild = find_child (child);
+	if (!gchild) {
+		log_error ("delete: no child");
 		return;
 	}
 

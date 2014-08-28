@@ -1298,12 +1298,12 @@ Container::backup (void)
 }
 
 void
-Container::notify_add (ContainerPtr parent, ContainerPtr child)
+Container::notify_add (ContainerPtr child)
 {
 	for (auto& i : container_listeners) {
 		ContainerListenerPtr cl = i.lock();
 		if (cl) {
-			cl->container_added (parent, child);
+			cl->container_added (child);
 		} else {
 			log_code ("remove listener from the collection");	//XXX remove it from the collection
 		}
@@ -1311,12 +1311,12 @@ Container::notify_add (ContainerPtr parent, ContainerPtr child)
 }
 
 void
-Container::notify_change (ContainerPtr before, ContainerPtr after)
+Container::notify_change (ContainerPtr after)
 {
 	for (auto& i : container_listeners) {
 		ContainerListenerPtr cl = i.lock();
 		if (cl) {
-			cl->container_changed (before, after);
+			cl->container_changed (after);
 		} else {
 			log_code ("remove listener from the collection");	//XXX remove it from the collection
 		}
@@ -1324,12 +1324,12 @@ Container::notify_change (ContainerPtr before, ContainerPtr after)
 }
 
 void
-Container::notify_delete (ContainerPtr parent, ContainerPtr child)
+Container::notify_delete (ContainerPtr child)
 {
 	for (auto& i : container_listeners) {
 		ContainerListenerPtr cl = i.lock();
 		if (cl) {
-			cl->container_deleted (parent, child);
+			cl->container_deleted (child);
 		} else {
 			log_code ("remove listener from the collection");	//XXX remove it from the collection
 		}
@@ -1349,19 +1349,19 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 			log_trace ("Notify add:");
 			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
 			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
-			notify_add (first, second);
+			first->notify_add (second);
 			break;
 		case NotifyType::t_delete:
 			log_trace ("Notify delete:");
 			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
 			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
-			notify_delete (first, second);
+			first->notify_delete (second);
 			break;
 		case NotifyType::t_change:
 			log_trace ("Notify change:");
 			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
 			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
-			notify_change (first, second);
+			first->notify_change (second);
 			break;
 		default:
 			log_trace ("Unknown notification type: %d", type);

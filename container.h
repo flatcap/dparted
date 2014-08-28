@@ -115,9 +115,9 @@ public:
 	static bool commit_transaction (const std::string& desc = "");
 	static void cancel_transaction (void);
 
-	void notify_add    (ContainerPtr parent, ContainerPtr child);
-	void notify_change (ContainerPtr before, ContainerPtr after);
-	void notify_delete (ContainerPtr parent, ContainerPtr child);
+	void notify_add    (ContainerPtr child);
+	void notify_change (ContainerPtr after);
+	void notify_delete (ContainerPtr child);
 
 public:
 	// Property helper functions
