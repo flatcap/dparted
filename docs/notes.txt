@@ -1038,3 +1038,14 @@ prop dialog plugin - can defer to built-in dialog
 drop test images -- fake it in code
 	test-data plugin!
 
+how do things go into the past?
+once they're in the past how do we stop them being modified?
+future (redo) things can't be altered either
+who'd want listeners outside of the "now" state?
+when we delete, or "undo add", something do we kill the listeners?
+automatically manipulate listeners?
+	del -> delete
+	add -> inherit
+	change -> move
+	NO -- inherit doesn't make sense
+
