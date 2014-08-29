@@ -438,7 +438,7 @@ GfxContainer::get_parent (void)
 }
 
 GfxContainerPtr
-GfxContainer::get_toplevel (void)
+GfxContainer::get_top_level (void)
 {
 	GfxContainerPtr parent = get_smart();
 	GfxContainerPtr p = get_parent();
@@ -596,7 +596,7 @@ GfxContainer::container_added (const ContainerPtr& cont)
 {
 	return_if_fail (cont);
 
-	// get_toplevel()->dump3();
+	// get_top_level()->dump3();
 	// LOG_TRACE;
 
 	GfxContainerPtr gparent = get_smart();
@@ -641,7 +641,7 @@ GfxContainer::container_changed (const ContainerPtr& after)
 {
 	return_if_fail (after);
 
-	// get_toplevel()->dump3();
+	// get_top_level()->dump3();
 	std::string name;
 	ContainerPtr c = container.lock();
 	if (!c) {
@@ -681,7 +681,7 @@ GfxContainer::container_deleted (const ContainerPtr& child)
 {
 	return_if_fail (child);
 
-	// get_toplevel()->dump3();
+	// get_top_level()->dump3();
 	// LOG_TRACE;
 
 	GfxContainerPtr gparent = get_smart();

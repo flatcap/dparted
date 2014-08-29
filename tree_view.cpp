@@ -593,7 +593,7 @@ TreeView::on_selection_changed()
 	GfxContainerPtr c = row[col_gfx_container];
 	log_debug ("sel: %s", c->dump());
 
-	Window *dp = reinterpret_cast<Window*> (get_toplevel());
+	Window *dp = reinterpret_cast<Window*> (get_top_level());
 	dp->set_focus(c);
 #endif
 }
@@ -645,7 +645,7 @@ TreeView::on_menu_select (int UNUSED(option))
 bool
 TreeView::get_coords (int& x, int& y)
 {
-	Window *dp = reinterpret_cast<Window*> (get_toplevel());
+	Window *dp = reinterpret_cast<Window*> (get_top_level());
 	if (!dp) {
 		log_debug ("No Window");
 		return false;
@@ -666,7 +666,7 @@ TreeView::get_coords (int& x, int& y)
 	int oy = 0;
 	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
-	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
+	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_top_level());
 	if (!window) {
 		return false;
 	}

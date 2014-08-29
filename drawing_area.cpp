@@ -602,7 +602,7 @@ bool
 DrawingArea::on_timeout (int timer_number)
 {
 	log_debug ("timer");
-	get_window()->invalidate (false); // everything for now
+	redraw_area();
 	// return (c->device == "/dev/sdc");
 	return true;
 }
@@ -633,12 +633,12 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 {
 	LOG_TRACE;
 
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = get_window();
 	if (!win) {
 		log_debug ("No Window");
 		return false;
 	}
+	log_debug ("top_level: %s", win->get_name().c_str());
 	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
 		log_debug ("No focus");
@@ -670,12 +670,12 @@ DrawingArea::on_keypress (GdkEventKey* event)
 
 	// Extra keys: Delete, Insert, Space/Enter (select)?
 
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = get_window();
 	if (!win) {
 		log_debug ("No Window");
 		return false;
 	}
+	log_debug ("top_level: %s", win->get_name().c_str());
 
 	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
@@ -717,7 +717,7 @@ DrawingArea::on_keypress (GdkEventKey* event)
 	}
 
 	if (redraw) {
-		get_window()->invalidate (false);
+		redraw_area();
 	}
 
 	return handled;
@@ -731,8 +731,12 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = get_window();
+	if (!win) {
+		return false;
+	}
+
+	log_debug ("top_level: %s", win->get_name().c_str());
 
 	GfxContainerPtr selection;
 
@@ -742,7 +746,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 		if ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
 		    (event->y >= r.y) && (event->y < (r.y + r.h))) {
 			if (win->set_focus (rg.p)) {
-				get_window()->invalidate (false);
+				redraw_area();
 			}
 			selection = rg.p;
 			break;
@@ -889,7 +893,7 @@ DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
 #if 0
 	if (mouse_close) {
 		mouse_close = false;
-		get_window()->invalidate (false); // everything for now
+		redraw_area();
 	}
 #endif
 	return true;
@@ -906,7 +910,7 @@ DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
 	mouse_close = ((event->y > 25) and (event->x < 90));
 
 	if (mouse_close != old) {
-		get_window()->invalidate (false); // everything for now
+		redraw_area();
 	}
 #endif
 
@@ -1139,7 +1143,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 		// return;
 	}
 
-	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = get_window();
 	if (!win) {
 		log_debug ("No Window");
 		return;
@@ -1161,7 +1165,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	}
 #endif
 
-	get_window()->invalidate (false);
+	redraw_area();
 }
 
 bool
@@ -1423,20 +1427,20 @@ DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 bool
 DrawingArea::get_coords (int& x, int& y)
 {
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = get_window();
 	if (!win) {
 		log_debug ("No Window");
 		return false;
 	}
 
+	log_debug ("top_level: %s", win->get_name().c_str());
 	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
 		log_debug ("No focus");
 		return false;
 	}
 
-	Glib::RefPtr<Gdk::Window> w = get_window();
+	Glib::RefPtr<Gdk::Window> w = Gtk::Widget::get_window();
 	if (!w) {
 		return false;
 	}
@@ -1445,15 +1449,11 @@ DrawingArea::get_coords (int& x, int& y)
 	int oy = 0;
 	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
-	if (!window) {
-		return false;
-	}
+	log_debug ("top_level: %s", win->get_name().c_str());
 
 	int tx = 0;
 	int ty = 0;
-	if (!translate_coordinates (*window, 0, 0, tx, ty)) {
+	if (!translate_coordinates (*win, 0, 0, tx, ty)) {
 		return false;		// Coords of DrawingArea within Window's window
 	}
 
@@ -1528,20 +1528,35 @@ void
 DrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(child))
 {
 	log_error ("gfx_container_added");
-	get_window()->invalidate (false);
+	redraw_area();
 }
 
 void
 DrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(after))
 {
 	log_error ("gfx_container_changed");
-	get_window()->invalidate (false);
+	redraw_area();
 }
 
 void
 DrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(child))
 {
 	log_error ("gfx_container_deleted");
-	get_window()->invalidate (false);
+	redraw_area();
+}
+
+
+Window*
+DrawingArea::get_window (void)
+{
+	return dynamic_cast<Window*> (get_toplevel());
+}
+
+void
+DrawingArea::redraw_area (void)
+{
+	auto win = Gtk::Widget::get_window();
+	if (win)
+		win->invalidate (false);
 }
 

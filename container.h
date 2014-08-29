@@ -90,7 +90,7 @@ public:
 
 	ContainerPtr get_smart    (void);
 	ContainerPtr get_parent   (void);
-	ContainerPtr get_toplevel (void);
+	ContainerPtr get_top_level (void);
 
 	ContainerPtr backup (void);
 	void notify (NotifyType type, ContainerPtr first, ContainerPtr second);

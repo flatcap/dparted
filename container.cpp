@@ -842,7 +842,7 @@ Container::get_parent (void)
 }
 
 ContainerPtr
-Container::get_toplevel (void)
+Container::get_top_level (void)
 {
 	ContainerPtr parent = get_smart();
 	ContainerPtr p = get_parent();

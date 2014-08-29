@@ -31,6 +31,8 @@
 #include "base_drawing_area.h"
 #include "gfx_container_listener.h"
 
+class Window;
+
 typedef struct { Rect r; GfxContainerPtr p; } Range;
 
 class DrawingArea : public BaseDrawingArea
@@ -68,6 +70,9 @@ protected:
 #endif
 	GfxContainerPtr get_focus (int x, int y);
 	bool on_textview_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
+
+	Window* get_window (void);
+	void redraw_area (void);
 
 private:
 	void draw_block     (const Cairo::RefPtr<Cairo::Context>& cr, const Rect& shape, GfxContainerPtr& gfx, Rect& tab, Rect& right);

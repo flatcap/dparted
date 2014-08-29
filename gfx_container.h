@@ -95,7 +95,7 @@ public:
 
 	void add_listener (GfxContainerListenerPtr& gcl);
 	GfxContainerPtr get_parent (void);
-	GfxContainerPtr get_toplevel (void);
+	GfxContainerPtr get_top_level (void);
 
 	virtual void theme_changed (const ThemePtr& theme);
 
