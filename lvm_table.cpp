@@ -437,7 +437,7 @@ LvmTable::set_alignment (std::uint64_t bytes)
 	auto it = children.rbegin();
 	ContainerPtr last = *it;
 	if (last->is_a ("Alignment")) {
-		children.erase (std::next(it).base());		//RAR Damned reverse iterators
+		children.erase (std::next(it).base());		//XXX Damned reverse iterators
 	}
 
 	ContainerPtr reserved = *children.begin();

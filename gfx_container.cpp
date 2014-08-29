@@ -128,8 +128,6 @@ GfxContainer::init (ContainerPtr c)
 	name = c->name;
 	type = c->get_type();
 	device = c->get_device_name();
-	if (name != "TopLevel")
-		name = c->get_device_short_inherit();	//RAR
 
 	try {
 		display        = theme->get_config (path, name, "display");
@@ -662,7 +660,7 @@ GfxContainer::container_changed (const ContainerPtr& after)
 
 	container = after;
 
-	parent_offset = after->parent_offset;	//RAR need to re-sync the entire object
+	parent_offset = after->parent_offset;	//XXX need to re-sync the entire object
 	bytes_size    = after->bytes_size;
 
 	// Now notify all of OUR listeners

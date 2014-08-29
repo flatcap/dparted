@@ -462,7 +462,6 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 		auto it_next = std::next (it);
 		ContainerPtr next = *it_next;
 		if (next->is_a ("Unallocated")) {
-			//RAR it_end = it_next;
 			space_after = next;
 		}
 	}

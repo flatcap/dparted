@@ -169,9 +169,6 @@ Container::Container (const Container& c) :
 	device_mmap         = c.device_mmap;
 	seqnum              = c.seqnum;
 
-	//RAR container_listeners = c.container_listeners;	//RAR tmp
-	//RAR don't copy listeners, do it on the ::swap
-
 	// Of the remaining Container members:
 	// generated
 	//	self
@@ -179,6 +176,7 @@ Container::Container (const Container& c) :
 	//	unique_id
 	// non-copyable:
 	//	mutex_children
+	//	container_listeners
 }
 
 Container::Container (Container&& c)

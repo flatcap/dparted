@@ -59,7 +59,7 @@ DrawingArea::DrawingArea (void)
 
 	// set_tooltip_text ("tooltip number 1");
 
-	//RAR set_has_tooltip();	// We'll be handling the tooltips ourself
+	set_has_tooltip();	// We'll be handling the tooltips ourself
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &DrawingArea::on_textview_query_tooltip));
 
 	menu_popup.signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
