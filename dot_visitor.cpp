@@ -188,7 +188,7 @@ DotVisitor::parent_link (std::shared_ptr<T> t)
 	if (parents.size() > 0) {
 		ContainerPtr c(t);
 		ContainerPtr parent = parents.top();
-		if (parent->name == "dummy") {
+		if (parent->name == "TopLevel") {
 			return ""; // Ignore the top level container
 		}
 
@@ -353,7 +353,7 @@ DotVisitor::visit (ContainerPtr c)
 	return_val_if_fail (c, false);
 	LOG_TRACE;
 
-	if (c->name == "dummy")	// Ignore top-level containers
+	if (c->name == "TopLevel")	// Ignore top-level containers
 		return true;
 
 	dot_objects << dump_table (c, dot_container(c));

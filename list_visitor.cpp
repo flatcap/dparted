@@ -56,7 +56,7 @@ ListVisitor::visit (ContainerPtr c)
 {
 	return_val_if_fail (c, false);
 
-	if (c->name != "dummy") {
+	if (c->name != "TopLevel") {
 		std::string tabs;
 		if (indent > 0) {
 			tabs.resize (indent, '\t');

@@ -21,7 +21,7 @@
 #include "utils.h"
 
 PropertiesDialog::PropertiesDialog (GfxContainerPtr c, Gtk::Window* w) :
-	Gtk::Dialog ("dummy", false),
+	Gtk::Dialog ("PropertiesDialog", false),
 	close ("_Close", true),
 	container(c)
 {

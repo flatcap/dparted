@@ -214,7 +214,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 #endif
 
 	ContainerPtr top_level = Container::create();	// Dropping any old results
-	top_level->name = "dummy";
+	top_level->name = "TopLevel";
 	timeline = Timeline::create (top_level);
 
 	if (devices.empty()) {

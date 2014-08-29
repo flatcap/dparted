@@ -582,7 +582,7 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	fill_rect (cr, shape, "white");
 #endif
 	shape.h = cont_height;
-	if (top_level->name == "dummy") {
+	if (top_level->name == "TopLevel") {
 		for (auto& c : top_level->children) {
 			// if (c->type == "Loop") {
 				draw_container (cr, shape, c);

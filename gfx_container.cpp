@@ -52,9 +52,6 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 
 	g->theme = gui_app->get_theme();
 
-	// if (p) {			// Don't link the top-level (dummy) objects
-	// 	c->add_listener(g);	// Container listener
-	// }
 	c->add_listener(g);		// Container listener
 	gui_app->add_listener(g);	// Theme listener
 
@@ -131,7 +128,7 @@ GfxContainer::init (ContainerPtr c)
 	name = c->name;
 	type = c->get_type();
 	device = c->get_device_name();
-	if (name != "dummy")
+	if (name != "TopLevel")
 		name = c->get_device_short_inherit();	//RAR
 
 	try {
