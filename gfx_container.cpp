@@ -450,6 +450,13 @@ GfxContainer::get_top_level (void)
 	return parent;
 }
 
+bool
+GfxContainer::is_top_level (void)
+{
+	GfxContainerPtr p = parent.lock();
+	return (!p);
+}
+
 
 int
 GfxContainer::get_index (const GfxContainerPtr& me)

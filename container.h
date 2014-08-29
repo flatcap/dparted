@@ -88,9 +88,10 @@ public:
 
 	virtual std::vector<ContainerPtr>& get_children (void);
 
-	ContainerPtr get_smart    (void);
-	ContainerPtr get_parent   (void);
+	ContainerPtr get_smart     (void);
+	ContainerPtr get_parent    (void);
 	ContainerPtr get_top_level (void);
+	bool is_top_level (void);
 
 	ContainerPtr backup (void);
 	void notify (NotifyType type, ContainerPtr first, ContainerPtr second);

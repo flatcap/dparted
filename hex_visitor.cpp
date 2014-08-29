@@ -57,7 +57,7 @@ HexVisitor::visit (ContainerPtr c)
 {
 	return_val_if_fail (c, false);
 
-	if (c->name == "TopLevel")
+	if (c->is_top_level())
 		return true;
 
 	std::uint8_t* buf = nullptr;

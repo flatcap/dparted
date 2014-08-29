@@ -394,7 +394,7 @@ Container::add_child (ContainerPtr child, bool probe)
 		txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
 	}
 
-	if (bytes_size == 0) {	// We are a TopLevel device
+	if (is_top_level()) {
 		return;
 	}
 
@@ -854,6 +854,13 @@ Container::get_top_level (void)
 	return parent;
 }
 
+bool
+Container::is_top_level (void)
+{
+	ContainerPtr p = parent.lock();
+	return (!p);
+}
+
 
 std::uint64_t
 Container::get_absolute_offset (void)
@@ -1277,9 +1284,8 @@ Container::backup (void)
 
 	ContainerPtr prev = get_smart();
 
-	if (prev->parent.expired()) {
-		// We're a TopLevel device.  Don't make any changes
-		return prev;
+	if (prev->is_top_level()) {
+		return prev;	// Don't make any changes
 	}
 
 	ContainerPtr c = prev->copy();
