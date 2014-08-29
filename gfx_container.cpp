@@ -297,8 +297,10 @@ GfxContainer::dump3 (void)
 	log_info ("%sname           = %s",    tabs.c_str(), name.c_str());
 	log_info ("%scontainer      = %p",    tabs.c_str(), c.get());
 	if (c) {
-		log_info ("%scont name      = %s",    tabs.c_str(), c->get_name_default().c_str());
-		log_info ("%slisteners      = %d",    tabs.c_str(), c->count_listeners());
+		log_info ("%scont name      = %s",  tabs.c_str(), c->get_name_default().c_str());
+		log_info ("%soffset         = %ld", tabs.c_str(), c->parent_offset);
+		log_info ("%ssize           = %ld", tabs.c_str(), c->bytes_size);
+		log_info ("%slisteners      = %d",  tabs.c_str(), c->count_listeners());
 	}
 
 	++indent;
@@ -599,7 +601,7 @@ GfxContainer::container_added (const ContainerPtr& cont)
 {
 	return_if_fail (cont);
 
-	get_toplevel()->dump3();
+	// get_toplevel()->dump3();
 	// LOG_TRACE;
 
 	GfxContainerPtr gparent = get_smart();
@@ -644,7 +646,7 @@ GfxContainer::container_changed (const ContainerPtr& after)
 {
 	return_if_fail (after);
 
-	get_toplevel()->dump3();
+	// get_toplevel()->dump3();
 	std::string name;
 	ContainerPtr c = container.lock();
 	if (!c) {
@@ -662,6 +664,9 @@ GfxContainer::container_changed (const ContainerPtr& after)
 	log_info ("container_changed %s(%p) : %s(%p) -> %s(%p)", name.c_str(), c.get(), c->get_name_default().c_str(), gchild.get(), after->get_name_default().c_str(), after.get());
 
 	container = after;
+
+	parent_offset = after->parent_offset;	//RAR need to re-sync the entire object
+	bytes_size    = after->bytes_size;
 
 	// Now notify all of OUR listeners
 	for (auto& i : gfx_container_listeners) {
@@ -681,7 +686,7 @@ GfxContainer::container_deleted (const ContainerPtr& child)
 {
 	return_if_fail (child);
 
-	get_toplevel()->dump3();
+	// get_toplevel()->dump3();
 	// LOG_TRACE;
 
 	GfxContainerPtr gparent = get_smart();

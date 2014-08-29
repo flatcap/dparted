@@ -169,7 +169,7 @@ Container::Container (const Container& c) :
 	device_mmap         = c.device_mmap;
 	seqnum              = c.seqnum;
 
-	container_listeners = c.container_listeners;	//RAR tmp
+	//RAR container_listeners = c.container_listeners;	//RAR tmp
 	//RAR don't copy listeners, do it on the ::swap
 
 	// Of the remaining Container members:
@@ -672,6 +672,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	}
 
 	stream
+		<< '\t'
 #if 1
 		<< "[" << type << "]:"
 #endif
@@ -685,8 +686,8 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 		// 				<< "(" << get_size (c->bytes_used)    << "), "
 		// << " F:" // <<   bytes_free
 		// 				<< "(" << get_size (   bytes_free)    << "), "
-		// << " P:" // << c->parent_offset
-		// 				<< "(" << get_size (c->parent_offset) << "), "
+		<< " P:" // << c->parent_of	<fset
+						<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
 		<< " uniq: " << c->unique_id

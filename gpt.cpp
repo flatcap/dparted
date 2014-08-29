@@ -328,7 +328,11 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			p->sub_type ("Unallocated");
 			p->bytes_used = p->bytes_size;
 		}
-		g->add_child (p, false);
+		if ((p->parent_offset == 17408) && (p->bytes_size == 1031168)) {
+			log_error ("skipping alignment space");
+		} else {
+			g->add_child (p, false);
+		}
 	}
 
 	Container::commit_transaction();

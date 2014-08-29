@@ -329,25 +329,31 @@ Table::delete_child (ContainerPtr child)
 void
 Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 {
-	if (children.size() > 3) {
+	log_info ("children : initial");
+	for (auto& c : children) {
+		log_info (c);
+	}
+
+#if 0
+	if (children.size() > 2) {
 		children.erase (std::remove_if (std::begin (children), std::end (children), [this](ContainerPtr& c) {
 			bool b = c->is_a ("Unallocated"); if (b) txn_add (NotifyType::t_delete, get_smart(), c); return b;
 		} ), std::end (children));
 		// std::for_each (std::begin (children), std::end (children), [](ContainerPtr& c) { log_info(c); });
 	}
-	return;
+#endif
 
 	ContainerPtr space;
-	// log_info("");
-	// log_info ("move_child");
-	// log_info ("\told: start: %10ld  end: %10ld  size: %10ld", child->parent_offset, child->parent_offset+child->bytes_size, child->bytes_size);
-	// log_info ("\tnew: start: %10ld  end: %10ld  size: %10ld", offset, offset+size, size);
+	log_info("");
+	log_info ("move_child");
+	log_info ("\told: start: %10ld  end: %10ld  size: %10ld", child->parent_offset, child->parent_offset+child->bytes_size, child->bytes_size);
+	log_info ("\tnew: start: %10ld  end: %10ld  size: %10ld", offset, offset+size, size);
 
-	// std::int64_t move_start = (offset - child->parent_offset);
-	// std::int64_t move_end   = ((offset + size) - (child->parent_offset + child->bytes_size));
+	std::int64_t move_start = (offset - child->parent_offset);
+	std::int64_t move_end   = ((offset + size) - (child->parent_offset + child->bytes_size));
 
-	// log_info ("move start of partition = %s (%+ld)", move_start ? "true" : "false", move_start);
-	// log_info ("move end   of partition = %s (%+ld)", move_end   ? "true" : "false", move_end);
+	log_info ("move start of partition = %s (%+ld)", move_start ? "true" : "false", move_start);
+	log_info ("move end   of partition = %s (%+ld)", move_end   ? "true" : "false", move_end);
 
 	auto first = std::begin (children);
 	auto end   = std::end   (children);
@@ -356,15 +362,14 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 
 	ContainerPtr new_child = child->backup();
 	children.erase (it);
-	txn_add (NotifyType::t_delete, get_smart(), child);
-
-	new_child->parent_offset = 0;
-	new_child->bytes_size    = size;
 	_add_child (children, new_child);
-	txn_add (NotifyType::t_add, get_smart(), new_child);
-	// txn_add (NotifyType::t_change, child, new_child);
+	txn_add (NotifyType::t_change, child, new_child);
 
-	return;
+	log_info ("children : post delete/add");
+	for (auto& c : children) {
+		log_info (c);
+	}
+
 	child = new_child;
 
 	first = std::begin (children);
@@ -382,8 +387,10 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 		if (prev->is_a ("Unallocated")) {
 			space_before = prev;
 		}
-		log_info ("space before exists");
 	}
+
+	if (space_before) log_info ("space before");
+	else              log_info ("no space before");
 
 	std::uint64_t space_off;
 	std::uint64_t space_size;
@@ -420,7 +427,7 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 		adjust_space = true;
 	}
 
-	if (delete_space) {
+	if (delete_space && space_before) {
 		log_info ("delete space");
 		txn_add (NotifyType::t_delete, parent, space_before);
 		children.erase (std::prev (it));
@@ -458,8 +465,11 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 			//RAR it_end = it_next;
 			space_after = next;
 		}
-		log_info ("space after exists");
 	}
+
+	if (space_after) log_info ("space after");
+	else             log_info ("no space after");
+
 
 	if (space_after) {
 		space_off  = space_after->parent_offset;
@@ -468,6 +478,11 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 		space_off  = child->parent_offset + child->bytes_size;
 		space_size = 0;
 	}
+
+	// Now we've adjusted the space before,
+	// we can set the new offset/size
+	child->parent_offset = offset;
+	child->bytes_size    = size;
 
 	log_info ("space offset = %ld, size = %ld", space_off, space_size);
 
@@ -494,10 +509,10 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 		adjust_space = true;
 	}
 
-	if (delete_space) {
+	if (delete_space && space_after) {
 		log_info ("delete space");
 		txn_add (NotifyType::t_delete, parent, space_after);
-		children.erase (std::prev (it));
+		children.erase (std::next (it));
 	}
 
 	if (adjust_space) {
