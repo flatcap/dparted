@@ -1,0 +1,60 @@
+digraph add {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.3"
+		ranksep="0.8"
+		labelloc="t"
+		label="Initial"
+	];
+
+	node [
+		fontsize="12"
+		style="filled"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+	];
+
+	edge [
+		penwidth="0.5"
+		color="#000000"
+		arrowsize="0.5"
+	];
+
+
+	node [	// original
+		fillcolor="#80ff80"
+	];
+
+	A_j  [ label=<j>             ];
+	A_a1 [ label=<A<SUB>1</SUB>> ];
+	A_x  [ label=<x>             ];
+	A_s1 [ label=<S<SUB>1</SUB>> ];
+	A_y  [ label=<y>             ];
+
+	edge [	// main line
+		penwidth=1.2;
+	];
+
+	A_j  -> A_a1;
+	A_a1 -> A_x;
+	A_a1 -> A_s1;
+	A_a1 -> A_y;
+
+	edge [	// parent
+		dir=back;
+		penwidth=0.5;
+		color="#ff8080";
+		style=dashed;
+	];
+
+	A_j  -> A_a1;
+	A_a1 -> A_x;
+	A_a1 -> A_s1;
+	A_a1 -> A_y;
+}
+

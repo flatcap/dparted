@@ -1,0 +1,61 @@
+----------------------------------------
+Delete
+
+copy
+	A2 = A1.copy()
+
+delete_child
+	B->delete (p)
+	B->delete (q)
+	B->delete (r)
+	A2->delete (B)
+
+reset parent
+	x->set_parent (A2)	-> seq_num++
+	y->set_parent (A2)	-> seq_num++
+
+adjust
+	S = create space
+	a2->add_child (S)
+	adjust A2 values
+
+----------------------------------------
+Undo
+
+swap
+	swap (A2, A1)		-> seq_num++
+
+reset parent
+	x->set_parent (A1)	-> seq_num++
+	y->set_parent (A1)	-> seq_num++
+
+adjust
+	adjust A2 values
+
+----------------------------------------
+Changes
+
+p, q, r:
+	No changes, seq num unchanged
+
+j:
+	children changed	-> seq_num++
+
+A:
+	A1 -> A2	Copy, seq_num++
+	A2 -> A1	Swap back, seq_num = A2.seq_num+1
+
+x:
+	x  -> x'	Parent has changed, seq_num++
+	x' -> x"	Parent has changed, seq_num++
+
+y:
+	y  -> y'	Parent has changed, seq_num++
+	y' -> y"	Parent has changed, seq_num++
+
+B:
+	B1 -> S		B1 unchanged
+	S -> B1		Parent is still the same
+
+----------------------------------------
+

@@ -40,7 +40,6 @@
 #include "property.h"
 #include "utils.h"
 #include "visitor.h"
-#include "whole.h"
 
 std::atomic_ulong container_id = ATOMIC_VAR_INIT(1);
 
@@ -170,7 +169,7 @@ Container::Container (const Container& c) :
 	device_mmap         = c.device_mmap;
 	seqnum              = c.seqnum;
 
-	container_listeners = c.container_listeners;	//RAR tmp
+	//RAR container_listeners = c.container_listeners;	//RAR tmp
 	//RAR don't copy listeners, do it on the ::swap
 
 	// Of the remaining Container members:
@@ -374,12 +373,12 @@ Container::add_child (ContainerPtr child, bool probe)
 
 	if (bytes_size == 0) {
 		// log_code ("DUMMY container %s", get_device_name().c_str());
-		std::lock_guard<std::mutex> lock (mutex_children);
+		std::lock_guard<std::recursive_mutex> lock (mutex_children);
 		++seqnum;
 		_add_child (children, child);
 	} else {
 		// log_code ("REAL container %s", get_device_name().c_str());
-		std::lock_guard<std::mutex> lock (mutex_children);
+		std::lock_guard<std::recursive_mutex> lock (mutex_children);
 		++seqnum;
 		_add_child (children, child);
 	}
@@ -412,32 +411,24 @@ Container::add_child (ContainerPtr child, bool probe)
 }
 
 void
-Container::delete_child (ContainerPtr child)
+Container::delete_child (ContainerPtr UNUSED(child))
 {
-	std::lock_guard<std::mutex> lock (mutex_children);
-	for (auto it = children.begin(); it != children.end(); ++it) {
-		if (*it == child) {
-			children.erase (it);
-
-			if (txn) {
-				txn->notifications.push_back (std::make_tuple (NotifyType::t_delete, get_smart(), child));
-			}
-
-			break;
-		}
-	}
+	log_code ("delete_child NOTIMPL");
 }
 
 void
 Container::move_child (ContainerPtr UNUSED(child), std::uint64_t UNUSED(offset), std::uint64_t UNUSED(size))
 {
+	log_code ("move_child NOTIMPL");
 }
 
 
 bool
 insert_here (const ContainerPtr& a, const ContainerPtr& b)
 {
-	//RAR CHECK ALL THIS
+	return_val_if_fail (a, false);
+	return_val_if_fail (b, false);
+
 	if (a->parent_offset != b->parent_offset)
 		return (a->parent_offset > b->parent_offset);
 
@@ -448,7 +439,7 @@ insert_here (const ContainerPtr& a, const ContainerPtr& b)
 
 	int x = a->name.compare (b->name);	//XXX default name?
 	if (x != 0)
-		return (x > 0);
+		return (x < 0);
 
 	return ((void*) a.get() > (void*) b.get());
 }
@@ -476,7 +467,7 @@ Container::get_fd (void)
 
 	std::string device = get_device_name();
 	if (device.empty()) {
-		ContainerPtr p = parent.lock();
+		ContainerPtr p = get_parent();
 		if (p)
 			return p->get_fd();
 
@@ -503,7 +494,7 @@ Container::get_block_size (void)
 	if (block_size > 0)
 		return block_size;
 
-	ContainerPtr p = parent.lock();
+	ContainerPtr p = get_parent();
 	if (p)
 		return p->get_block_size();
 
@@ -517,7 +508,7 @@ Container::get_device_name (void)
 	if (!device.empty())
 		return device;
 
-	ContainerPtr p = parent.lock();
+	ContainerPtr p = get_parent();
 	if (p) {
 		return p->get_device_name();
 	} else {
@@ -611,7 +602,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 
 	// No device -- delegate
 	if (device.empty()) {
-		ContainerPtr p = parent.lock();
+		ContainerPtr p = get_parent();
 		if (p) {
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
@@ -681,6 +672,7 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 	}
 
 	stream
+		<< '\t'
 #if 1
 		<< "[" << type << "]:"
 #endif
@@ -694,8 +686,8 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 		// 				<< "(" << get_size (c->bytes_used)    << "), "
 		// << " F:" // <<   bytes_free
 		// 				<< "(" << get_size (   bytes_free)    << "), "
-		// << " P:" // << c->parent_offset
-		// 				<< "(" << get_size (c->parent_offset) << "), "
+		<< " P:" // << c->parent_of	<fset
+						<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
 		<< " uniq: " << c->unique_id
@@ -717,7 +709,7 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 	return_val_if_fail (existing, false);
 	return_val_if_fail (replacement, false);
 
-	ContainerPtr p = existing->parent.lock();
+	ContainerPtr p = existing->get_parent();
 	if (!p) {
 		// log_error ("no parent");
 		return false;
@@ -725,7 +717,7 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 
 	// log_code ("exchange %ld, %ld", existing->unique_id, replacement->unique_id);
 
-	std::lock_guard<std::mutex> lock (p->mutex_children);
+	std::lock_guard<std::recursive_mutex> lock (p->mutex_children);
 
 	auto it = std::find_if (std::begin (p->children),
 			std::end (p->children),
@@ -874,7 +866,7 @@ Container::get_absolute_offset (void)
 	if (!p)
 		return ao;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		ao += p->parent_offset;
 	}
 
@@ -897,7 +889,7 @@ Container::get_device_inherit (void)
 	if (!p)
 		return "";
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (!p->device.empty()) {
 			return p->device;
 		}
@@ -916,7 +908,7 @@ Container::get_device_major_inherit (void)
 	if (!p)
 		return 0;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (p->device_major > 0) {
 			return p->device_major;
 		}
@@ -944,7 +936,7 @@ Container::get_device_major_minor_inherit (void)
 	if (!p)
 		return "";
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (p->device_major > 0) {
 			return std::to_string (p->device_major) + ":" + std::to_string (p->device_minor);
 		}
@@ -963,7 +955,7 @@ Container::get_device_minor_inherit (void)
 	if (!p)
 		return 0;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (device_major > 0) {		// This is not a typo
 			return device_minor;
 		}
@@ -988,7 +980,7 @@ Container::get_device_short_inherit (void)
 	if (!p)
 		return "";
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (!p->device.empty()) {
 			return shorten_device (p->device);
 		}
@@ -1007,7 +999,7 @@ Container::get_file_desc_inherit (void)
 	if (!p)
 		return -1;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (p->fd >= 0) {
 			return p->fd;
 		}
@@ -1064,7 +1056,7 @@ Container::get_object_addr (void)
 std::uint64_t
 Container::get_parent_size (void)
 {
-	ContainerPtr p = parent.lock();
+	ContainerPtr p = get_parent();
 	if (!p)
 		return 0;
 
@@ -1080,7 +1072,7 @@ Container::get_path_name (void)
 	if (!p)
 		return path;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		path = "/" + p->get_name_default() + path;
 	}
 
@@ -1096,7 +1088,7 @@ Container::get_path_type (void)
 	if (!p)
 		return path;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		path = "/" + p->type.back() + path;
 	}
 
@@ -1118,7 +1110,7 @@ Container::get_top_level_size (void)
 	if (!p)
 		return tls;
 
-	while ((p = p->parent.lock())) {
+	while ((p = p->get_parent())) {
 		if (p->bytes_size > tls) {
 			tls = p->bytes_size;
 		}
@@ -1182,6 +1174,20 @@ Container::add_listener (const ContainerListenerPtr& cl)
 	for (auto& l : container_listeners) {
 		log_info ("\t%p", l.lock().get());
 	}
+}
+
+void
+Container::remove_listener (const ContainerListenerPtr& cl)
+{
+	return_if_fail (cl);
+
+	//XXX mutex on listeners
+	container_listeners.erase (
+		std::remove_if (
+			std::begin (container_listeners),
+			std::end   (container_listeners),
+			[cl] (ContainerListenerWeak& w) { return (cl == w.lock()); }),
+		std::end (container_listeners));
 }
 
 
@@ -1254,6 +1260,17 @@ Container::cancel_transaction (void)
 #endif
 }
 
+void
+Container::txn_add (NotifyType nt, ContainerPtr first, ContainerPtr second)
+{
+	return_if_fail (first);
+	return_if_fail (second);
+
+	if (txn) {
+		txn->notifications.push_back (std::make_tuple (nt, first, second));
+	}
+}
+
 
 ContainerPtr
 Container::backup (void)
@@ -1276,16 +1293,18 @@ Container::backup (void)
 		txn->notifications.push_back (std::make_tuple (NotifyType::t_change, prev, c));
 	}
 
+	log_info ("backup: %s %ld(%p) -> %ld(%p)", name.c_str(), unique_id, prev.get(), c->unique_id, c.get());
+
 	return c;
 }
 
 void
-Container::notify_add (ContainerPtr parent, ContainerPtr child)
+Container::notify_add (ContainerPtr child)
 {
 	for (auto& i : container_listeners) {
 		ContainerListenerPtr cl = i.lock();
 		if (cl) {
-			cl->container_added (parent, child);
+			cl->container_added (child);
 		} else {
 			log_code ("remove listener from the collection");	//XXX remove it from the collection
 		}
@@ -1293,12 +1312,12 @@ Container::notify_add (ContainerPtr parent, ContainerPtr child)
 }
 
 void
-Container::notify_change (ContainerPtr before, ContainerPtr after)
+Container::notify_change (ContainerPtr after)
 {
 	for (auto& i : container_listeners) {
 		ContainerListenerPtr cl = i.lock();
 		if (cl) {
-			cl->container_changed (before, after);
+			cl->container_changed (after);
 		} else {
 			log_code ("remove listener from the collection");	//XXX remove it from the collection
 		}
@@ -1306,12 +1325,12 @@ Container::notify_change (ContainerPtr before, ContainerPtr after)
 }
 
 void
-Container::notify_delete (ContainerPtr parent, ContainerPtr child)
+Container::notify_delete (ContainerPtr child)
 {
 	for (auto& i : container_listeners) {
 		ContainerListenerPtr cl = i.lock();
 		if (cl) {
-			cl->container_deleted (parent, child);
+			cl->container_deleted (child);
 		} else {
 			log_code ("remove listener from the collection");	//XXX remove it from the collection
 		}
@@ -1321,44 +1340,29 @@ Container::notify_delete (ContainerPtr parent, ContainerPtr child)
 void
 Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 {
+	return_if_fail (first);
+	return_if_fail (second);
+
 	LOG_TRACE;
 
 	switch (type) {
 		case NotifyType::t_add:
 			log_trace ("Notify add:");
-			log_trace ("\t%s(%d) %d listeners",
-				first->get_name_default().c_str(),
-				first->unique_id,
-				first->container_listeners.size());
-			log_trace ("\t%s(%d) %d listeners",
-				second->get_name_default().c_str(),
-				second->unique_id,
-				second->container_listeners.size());
-			notify_add (first, second);
+			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
+			first->notify_add (second);
 			break;
 		case NotifyType::t_delete:
 			log_trace ("Notify delete:");
-			log_trace ("\t%s(%d) %d listeners",
-				first->get_name_default().c_str(),
-				first->unique_id,
-				first->container_listeners.size());
-			log_trace ("\t%s(%d) %d listeners",
-				second->get_name_default().c_str(),
-				second->unique_id,
-				second->container_listeners.size());
-			notify_delete (first, second);
+			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
+			first->notify_delete (second);
 			break;
 		case NotifyType::t_change:
 			log_trace ("Notify change:");
-			log_trace ("\t%s(%d) %d listeners",
-				first->get_name_default().c_str(),
-				first->unique_id,
-				first->container_listeners.size());
-			log_trace ("\t%s(%d) %d listeners",
-				second->get_name_default().c_str(),
-				second->unique_id,
-				second->container_listeners.size());
-			notify_change (first, second);
+			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
+			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
+			first->notify_change (second);
 			break;
 		default:
 			log_trace ("Unknown notification type: %d", type);

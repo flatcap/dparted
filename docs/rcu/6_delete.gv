@@ -1,4 +1,4 @@
-digraph resize_partition {
+digraph delete {
 	graph [
 		rankdir="TB"
 		bgcolor="white"

@@ -59,7 +59,6 @@ public:
 	bool get_focus (void);
 	void add_to_selection (void);
 	void remove_from_selection (void);
-	bool init (ContainerPtr c);
 
 	bool update_info (void);
 	bool mouse_event (void);
@@ -108,6 +107,7 @@ protected:
 	GfxContainerPtr get_smart (void);
 	GfxContainerPtr find (const ContainerPtr& cont);
 	GfxContainerPtr find_child (ContainerPtr search);
+	bool init (ContainerPtr c);
 
 	ContainerWeak    container;
 	GfxContainerWeak parent;
@@ -130,9 +130,9 @@ private:
 	GfxContainerWeak self;
 	std::vector<GfxContainerListenerWeak> gfx_container_listeners;
 
-	virtual void container_added   (const ContainerPtr& parent, const ContainerPtr& child);
-	virtual void container_changed (const ContainerPtr& before, const ContainerPtr& after);
-	virtual void container_deleted (const ContainerPtr& parent, const ContainerPtr& child);
+	virtual void container_added   (const ContainerPtr& child);
+	virtual void container_changed (const ContainerPtr& after);
+	virtual void container_deleted (const ContainerPtr& child);
 };
 
 

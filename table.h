@@ -43,6 +43,10 @@ public:
 
 	virtual bool accept (Visitor& v);
 
+	virtual void add_child    (ContainerPtr child, bool probe);
+	virtual void delete_child (ContainerPtr child);
+	virtual void move_child   (ContainerPtr child, std::uint64_t offset, std::uint64_t size);
+
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
 

@@ -98,9 +98,9 @@ Window::Window (void)
 #ifdef DP_TREE
 					inner_box.pack_start (treeview,    true,  true);
 #endif
-		outer_box.add (time_box);
-			time_box.pack_start (time_back);
-			time_box.pack_start (time_forward);
+		// outer_box.add (time_box);
+		// 	time_box.pack_start (time_back);
+		// 	time_box.pack_start (time_forward);
 		outer_box.pack_end (statusbar, false, false);
 
 	// -------------------------------------
@@ -559,7 +559,7 @@ Window::init_menubar (Gtk::Box& box)
 	if (!gmenu)
 		g_warning ("GMenu not found");
 
-	gui_app->set_menubar (gmenu);
+	// gui_app->set_menubar (gmenu);
 
 	toolbar = Gtk::manage (new Gtk::Toolbar());
 	Gtk::ToolButton* button = Gtk::manage (new Gtk::ToolButton());

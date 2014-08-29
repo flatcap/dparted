@@ -44,6 +44,7 @@ typedef std::weak_ptr  <class Container> ContainerWeak;
 #include "transaction.h"
 
 extern std::mutex mutex_write_lock;
+extern TransactionPtr txn;
 
 /**
  * class Container - Base class for all containers
@@ -94,7 +95,8 @@ public:
 	ContainerPtr backup (void);
 	void notify (NotifyType type, ContainerPtr first, ContainerPtr second);
 
-	void add_listener (const ContainerListenerPtr& m);
+	void add_listener    (const ContainerListenerPtr& m);
+	void remove_listener (const ContainerListenerPtr& m);
 	int count_listeners (void) { return container_listeners.size(); }
 
 	std::vector<std::string> get_prop_names (void);
@@ -113,9 +115,9 @@ public:
 	static bool commit_transaction (const std::string& desc = "");
 	static void cancel_transaction (void);
 
-	void notify_add    (ContainerPtr parent, ContainerPtr child);
-	void notify_change (ContainerPtr before, ContainerPtr after);
-	void notify_delete (ContainerPtr parent, ContainerPtr child);
+	void notify_add    (ContainerPtr child);
+	void notify_change (ContainerPtr after);
+	void notify_delete (ContainerPtr child);
 
 public:
 	// Property helper functions
@@ -185,7 +187,7 @@ protected:
 	std::map<std::string, PPtr> props;
 
 	std::vector<ContainerPtr> children;
-	std::mutex mutex_children;
+	std::recursive_mutex mutex_children;
 
 	std::vector<std::string> more_props;
 
@@ -196,6 +198,7 @@ protected:
 	PPtr declare_prop_array (const char* owner, const char* name, std::vector<std::string>& v, unsigned int index, const char* desc, int flags);
 
 	void _add_child (std::vector<ContainerPtr>& vec, ContainerPtr child);
+	void txn_add (NotifyType nt, ContainerPtr first, ContainerPtr second);
 
 private:
 	MmapPtr	device_mmap;

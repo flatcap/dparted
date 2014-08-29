@@ -33,6 +33,7 @@
 #include "table.h"
 #include "utils.h"
 #include "window.h"
+#include "partition.h"
 
 DrawingArea::DrawingArea (void)
 	// Glib::ObjectBase ("MyDrawingArea")
@@ -58,7 +59,7 @@ DrawingArea::DrawingArea (void)
 
 	// set_tooltip_text ("tooltip number 1");
 
-	set_has_tooltip();	// We'll be handling the tooltips ourself
+	//RAR set_has_tooltip();	// We'll be handling the tooltips ourself
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &DrawingArea::on_textview_query_tooltip));
 
 	menu_popup.signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
@@ -725,6 +726,7 @@ DrawingArea::on_keypress (GdkEventKey* event)
 bool
 DrawingArea::on_mouse_click (GdkEventButton* event)
 {
+	// top_level->dump3();
 	log_debug ("mouse click: (%.0f,%.0f)", event->x, event->y);
 
 	grab_focus();				// Place the windows focus on the DrawingArea
@@ -757,21 +759,124 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 	if ((event->button == 3) && (selection)) {		// Right-click
 		popup_menu (selection, event->x_root, event->y_root);
+		return true;
 	}
 
 	ContainerPtr c = selection->get_container();
 	if (c) {
 		ContainerPtr p = c->get_parent();
 		if (p) {
-			log_error ("DELETE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
-			std::string desc = "Test: delete " + c->get_name_default();
-			ContainerPtr new_parent = Container::start_transaction (p, desc);
-			if (!new_parent)
+#if 1 // MOVE_TEST
+			// log_info ("%10ld  %10ld  %10ld", c->parent_offset, c->parent_offset + c->bytes_size, c->bytes_size);
+			if (!c->is_a ("GptPartition"))
 				return true;
 
-			p->delete_child(c);
+			// log_info ("MOVE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
+			std::string desc = "Test: move " + c->get_name_default();
+			std::string dev = p->get_device_inherit();
+			std::uint64_t off  = 0;
 
+			if (dev == "/dev/loop1")  { off = 536870912; }
+			if (dev == "/dev/loop2")  { off = 811580928; }
+			if (dev == "/dev/loop3")  { off =     17408; }
+			if (dev == "/dev/loop4")  { off = 644243456; }
+			if (dev == "/dev/loop5")  { off = 811580928; }
+			if (dev == "/dev/loop6")  { off =     17408; }
+			if (dev == "/dev/loop7")  { off = 536870912; }
+			if (dev == "/dev/loop8")  { off = 209715200; }
+			if (dev == "/dev/loop9")  { off = 104857600; }
+
+			ContainerPtr new_parent = Container::start_transaction (p, desc);
+			if (!new_parent) {
+				return true;
+			}
+
+			new_parent->move_child(c, off, c->bytes_size);
 			Container::commit_transaction();
+			top_level->dump3();
+#endif
+#if 0 // RESIZE_TEST
+			if (!c->is_a ("GptPartition"))
+				return true;
+
+			// log_info ("RESIZE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
+			std::string desc = "Test: resize " + c->get_name_default();
+			std::string dev = p->get_device_inherit();
+			std::uint64_t off  = 0;
+			std::uint64_t size = 0;
+
+			if (dev == "/dev/loop1")  { off =   1048576; size =  805288960; }
+			if (dev == "/dev/loop2")  { off =   1048576; size = 1072676352; }
+			if (dev == "/dev/loop3")  { off = 358400000; size =  446906368; }
+			if (dev == "/dev/loop4")  { off = 358400000; size =  715324928; }
+			if (dev == "/dev/loop5")  { off = 268435456; size =  536870912; }
+			if (dev == "/dev/loop6")  { off =     17408; size =  805288960; }
+			if (dev == "/dev/loop7")  { off = 268435456; size =  805289472; }
+			if (dev == "/dev/loop8")  { off =     17408; size = 1073707520; }
+			if (dev == "/dev/loop9")  { off = 268435456; size =  448790528; }
+			if (dev == "/dev/loop10") { off =     17408; size =  717208576; }
+			if (dev == "/dev/loop11") { off = 268435456; size =  805289472; }
+			if (dev == "/dev/loop12") { off =     17408; size = 1073707520; }
+
+			ContainerPtr new_parent = Container::start_transaction (p, desc);
+			if (!new_parent) {
+				return true;
+			}
+
+			new_parent->move_child(c, off, size);
+			Container::commit_transaction();
+#endif
+#if 0 // DELETE_TEST
+			if (!c->is_a ("GptPartition"))
+				return true;
+			std::string name = c->get_device_short();
+			if ((name != "loop1p2") && (name != "loop2p2") && (name != "loop3p2") && (name != "loop4p2") && (name != "loop5p2") && (name != "loop6p2") && (name != "loop7p1") && (name != "loop8p1") && (name != "loop9p1"))
+				return true;
+
+			log_info ("DELETE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
+			std::string desc = "Test: delete " + c->get_name_default();
+			ContainerPtr new_parent = Container::start_transaction (p, desc);
+			if (!new_parent) {
+				return true;
+			}
+			new_parent->delete_child(c);
+			Container::commit_transaction();
+#endif
+#if 0 // ADD_TEST
+			if (!c->is_a ("Unallocated"))
+				return true;
+			log_info ("ADD parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
+			log_info ("po   = %ld", c->parent_offset);
+			log_info ("size = %ld", c->bytes_size);
+			std::string desc = "Test: add " + c->get_name_default();
+			std::string dev = p->get_device_inherit();
+
+			std::uint64_t off  = 0;
+			std::uint64_t size = 0;
+			if (dev == "/dev/loop1") { off = 358612992; size =  357564416; }
+			if (dev == "/dev/loop2") { off = 358612992; size =  357564416; }
+			if (dev == "/dev/loop3") { off = 358612992; size =  715111936; }
+			if (dev == "/dev/loop4") { off = 358612992; size =  357564416; }
+			if (dev == "/dev/loop5") { off = 358612992; size =  357564416; }
+			if (dev == "/dev/loop6") { off = 358612992; size =  715111936; }
+			if (dev == "/dev/loop7") { off =     17408; size =  716160000; }
+			if (dev == "/dev/loop8") { off =     17408; size =  716160000; }
+			if (dev == "/dev/loop9") { off =     17408; size = 1073707520; }
+
+			ContainerPtr part = Partition::create();
+			part->sub_type ("TestAdd");
+			part->parent_offset = off;
+			part->bytes_size    = size;
+			part->bytes_used    = size;
+			part->name          = "wibble";
+
+			ContainerPtr new_parent = Container::start_transaction (p, desc);
+			if (!new_parent) {
+				return true;
+			}
+			new_parent->add_child(part, false);
+			Container::commit_transaction();
+#endif
 		}
 	}
 
@@ -1420,21 +1525,21 @@ DrawingArea::theme_changed (const ThemePtr& new_theme)
 
 
 void
-DrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+DrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(child))
 {
 	log_error ("gfx_container_added");
 	get_window()->invalidate (false);
 }
 
 void
-DrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(before), const GfxContainerPtr& UNUSED(after))
+DrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(after))
 {
 	log_error ("gfx_container_changed");
 	get_window()->invalidate (false);
 }
 
 void
-DrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+DrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(child))
 {
 	log_error ("gfx_container_deleted");
 	get_window()->invalidate (false);

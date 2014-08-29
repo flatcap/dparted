@@ -30,9 +30,9 @@ class IContainerListener
 public:
 	virtual ~IContainerListener() = default;
 
-	virtual void container_added   (const ContainerPtr& parent, const ContainerPtr& child) = 0;
-	virtual void container_changed (const ContainerPtr& before, const ContainerPtr& after) = 0;
-	virtual void container_deleted (const ContainerPtr& parent, const ContainerPtr& child) = 0;
+	virtual void container_added   (const ContainerPtr& child) = 0;
+	virtual void container_changed (const ContainerPtr& after) = 0;
+	virtual void container_deleted (const ContainerPtr& child) = 0;
 };
 
 #endif // _CONTAINER_LISTENER_H_

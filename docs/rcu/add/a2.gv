@@ -1,0 +1,76 @@
+digraph add {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.3"
+		ranksep="0.8"
+		labelloc="t"
+		label="Copy"
+	];
+
+	node [
+		fontsize="12"
+		style="filled"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+	];
+
+	edge [
+		penwidth="0.5"
+		color="#000000"
+		arrowsize="0.5"
+	];
+
+
+	node [	// original
+		fillcolor="#80ff80"
+	];
+
+	B_j  [ label=<j>             ];
+	B_a1 [ label=<A<SUB>1</SUB>> ];
+	B_x  [ label=<x>             ];
+	B_s1 [ label=<S<SUB>1</SUB>> ];
+	B_y  [ label=<y>             ];
+
+	node [	// changed
+		fillcolor="#ffff80"
+	];
+
+	B_a2 [ label=<A<SUB>2</SUB>> ];
+
+	edge [	// main line
+		penwidth=1.2;
+	];
+
+	B_j  -> B_a1;
+	B_a1 -> B_x;
+	B_a1 -> B_s1;
+	B_a1 -> B_y;
+
+	edge [	// copy
+		penwidth=0.5;
+		color="#4040ff";
+	];
+
+	B_a2 -> B_x;
+	B_a2 -> B_s1;
+	B_a2 -> B_y;
+
+	edge [	// parent
+		dir=back;
+		penwidth=0.5;
+		color="#ff8080";
+		style=dashed;
+	];
+
+	B_j  -> B_a1;
+	B_a1 -> B_x;
+	B_a1 -> B_s1;
+	B_a1 -> B_y;
+	B_j  -> B_a2;
+}
+

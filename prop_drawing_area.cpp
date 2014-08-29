@@ -210,19 +210,19 @@ PropDrawingArea::theme_changed (const ThemePtr& new_theme)
 
 
 void
-PropDrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+PropDrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(child))
 {
 	LOG_TRACE;
 }
 
 void
-PropDrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(before), const GfxContainerPtr& UNUSED(after))
+PropDrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(after))
 {
 	LOG_TRACE;
 }
 
 void
-PropDrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(parent), const GfxContainerPtr& UNUSED(child))
+PropDrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(child))
 {
 	LOG_TRACE;
 }

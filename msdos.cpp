@@ -293,7 +293,7 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			c->parent_offset = le64_to_cpu (vp[i].start);
 			c->device = part_name;
 
-			m->add_child (c, true);
+			m->add_child (c, false);	//RAR probe=true
 		}
 	}
 

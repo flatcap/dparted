@@ -1,0 +1,90 @@
+digraph add {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.3"
+		ranksep="0.8"
+		labelloc="t"
+		label="Add"
+	];
+
+	node [
+		fontsize="12"
+		style="filled"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+	];
+
+	edge [
+		penwidth="0.5"
+		color="#000000"
+		arrowsize="0.5"
+	];
+
+
+	node [	// original
+		fillcolor="#80ff80"
+	];
+
+	D_j  [ label=<j>             ];
+	D_a1 [ label=<A<SUB>1</SUB>> ];
+	D_x  [ label=<x>             ];
+	D_s1 [ label=<S<SUB>1</SUB>> ];
+	D_y  [ label=<y>             ];
+
+	node [	// changed
+		fillcolor="#ffff80"
+	];
+
+	D_s2 [ label=<S<SUB>2</SUB>> ];
+	D_p1 [ label=<P<SUB>1</SUB>> ];
+	D_a2 [ label=<A<SUB>2</SUB>> ];
+
+	edge [	// main line
+		penwidth=1.2;
+	];
+
+	D_j  -> D_a1;
+	D_a1 -> D_x;
+	D_a1 -> D_s1;
+	D_a1 -> D_y;
+
+	edge [	// copy
+		penwidth=0.5;
+		color="#4040ff";
+	];
+
+	D_a2 -> D_x;
+	D_a2 -> D_s1;
+	D_a2 -> D_s2;
+	D_a2 -> D_p1;
+	D_a2 -> D_y;
+
+	edge [	// parent
+		dir=back;
+		penwidth=0.5;
+		color="#ff8080";
+		style=dashed;
+	];
+
+	D_j  -> D_a1;
+	D_j  -> D_a2;
+	D_a1 -> D_x;
+	D_a1 -> D_s1;
+	D_a2 -> D_s2;
+	D_a2 -> D_p1;
+	D_a1 -> D_y;
+
+	edge [	// invisible
+		style=invis;
+	];
+
+	D_j -> D_a2;
+	D_x -> D_s1 -> D_s2 -> D_p1 -> D_y;
+	{ rank=same D_x D_s1 D_s2 D_p1 D_y };
+}
+
