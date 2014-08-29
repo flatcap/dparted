@@ -203,6 +203,11 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	return_val_if_fail (buffer, false);
 	LOG_TRACE;
 
+	if (parent->get_top_level()->name == "TopLevel") {
+		insert_test_device (parent);
+		return false;
+	}
+
 	if (bufsize < 36864)		// Min size for gpt is 36KiB
 		return false;
 
@@ -339,4 +344,64 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	return true;
 }
 
+void
+Gpt::insert_test_device (ContainerPtr& parent)
+{
+	return_if_fail (parent);
+	LOG_TRACE;
+
+	ContainerPtr new_parent = Container::start_transaction (parent, "Gpt: fake devices");
+	if (!new_parent)
+		return;
+
+	GptPtr g = create();
+
+	g->bytes_size = parent->bytes_size;
+	g->name = "Gpt";
+
+	new_parent->add_child (g, false);
+
+	std::vector<std::pair<std::uint64_t, std::uint64_t>> empty = { { 0, (parent->bytes_size/512)-1 } };
+
+	int index = std::stoi (parent->name.erase (0, 4));
+
+	std::vector<std::pair<std::uint64_t,std::uint64_t>> v {
+		{   1048576, 262144000 },
+		{   1048576, 262144000 },
+		{ 268435456, 262144000 },
+		{ 268435456, 262144000 },
+		{ 268435456, 262144000 },
+		{ 805306368, 268435456 },
+		{ 805306368, 268435456 },
+		{ 104857600, 734003200 },
+		{ 209715200, 734003200 }
+	};
+
+	// log_error ("%d: %ld, %ld", index, v[index-1].first, v[index-1].second);
+
+	std::uint64_t start = v[index-1].first;
+	std::uint64_t size  = v[index-1].second;
+
+	GptPartitionPtr p = GptPartition::create();
+	p->parent_offset = start;
+	p->bytes_size    = size;
+	p->name          = "part" + index;
+
+	g->add_child (p, false);
+
+	delete_region (empty, start/512, size/512);
+
+	for (auto& r : empty) {
+		PartitionPtr p = Partition::create();
+		p->bytes_size = (r.second-r.first+1);	p->bytes_size    *= 512;	//XXX two parts to avoid overflow
+		p->parent_offset = r.first;		p->parent_offset *= 512;
+		p->sub_type ("Space");
+		p->sub_type ("Unallocated");
+		p->bytes_used = p->bytes_size;
+
+		g->add_child (p, false);
+	}
+
+	Container::commit_transaction();
+}
 

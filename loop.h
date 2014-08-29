@@ -71,6 +71,8 @@ protected:
 	std::string get_file_major_minor (void);
 	std::string get_file_name_short (void);
 	std::string get_flags (void);
+
+	static void insert_test_device (ContainerPtr& parent);
 };
 
 #endif // _LOOP_H_
