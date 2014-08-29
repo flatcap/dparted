@@ -732,7 +732,7 @@ bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)
 	return_val_if_fail (b, true);
 
 	if (a->parent_offset != b->parent_offset)
-		return (a->parent_offset > b->parent_offset);
+		return (a->parent_offset < b->parent_offset);
 
 	ContainerPtr ca = a->get_container();
 	ContainerPtr cb = b->get_container();

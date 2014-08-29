@@ -775,20 +775,20 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 			if (!c->is_a ("GptPartition"))
 				return true;
 
-			// log_info ("MOVE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
+			log_info ("MOVE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
 			std::string desc = "Test: move " + c->get_name_default();
-			std::string dev = p->get_device_inherit();
+			std::string name = c->name;
 			std::uint64_t off  = 0;
 
-			if (dev == "/dev/loop1")  { off = 536870912; }
-			if (dev == "/dev/loop2")  { off = 811580928; }
-			if (dev == "/dev/loop3")  { off =     17408; }
-			if (dev == "/dev/loop4")  { off = 644243456; }
-			if (dev == "/dev/loop5")  { off = 811580928; }
-			if (dev == "/dev/loop6")  { off =     17408; }
-			if (dev == "/dev/loop7")  { off = 536870912; }
-			if (dev == "/dev/loop8")  { off = 209715200; }
-			if (dev == "/dev/loop9")  { off = 104857600; }
+			if (name == "part1") { off = 536870912; }
+			if (name == "part2") { off = 811597824; }
+			if (name == "part3") { off =         0; }
+			if (name == "part4") { off = 644243456; }
+			if (name == "part5") { off = 811597824; }
+			if (name == "part6") { off =         0; }
+			if (name == "part7") { off = 536870912; }
+			if (name == "part8") { off = 209715200; }
+			if (name == "part9") { off = 104857600; }
 
 			ContainerPtr new_parent = Container::start_transaction (p, desc);
 			if (!new_parent) {
