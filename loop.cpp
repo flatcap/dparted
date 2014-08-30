@@ -140,6 +140,15 @@ Loop::create (const std::string& losetup)
 	return l;
 }
 
+LoopPtr
+Loop::create (void)
+{
+	LoopPtr l (new Loop());
+	l->self = l;
+
+	return l;
+}
+
 
 Loop&
 Loop::operator= (const Loop& c)
@@ -286,11 +295,6 @@ Loop::discover (ContainerPtr& parent)
 	return_if_fail (parent);
 	LOG_TRACE;
 
-	if ((parent->is_top_level()) && (parent->name == "TopLevel")) {
-		insert_test_device (parent);
-		return;
-	}
-
 	std::vector <std::string> output;
 
 	if (!losetup (output))
@@ -402,31 +406,3 @@ Loop::get_flags (void)
 }
 
 
-void
-Loop::insert_test_device (ContainerPtr& parent)
-{
-	return_if_fail (parent);
-	LOG_TRACE;
-
-	ContainerPtr new_parent = Container::start_transaction (parent, "Loop: fake devices");
-	if (!new_parent)
-		return;
-
-	for (int i = 1; i <= 9; ++i) {
-		LoopPtr loop (new Loop());
-		loop->self = loop;
-
-		if (!loop) {
-			log_error ("loop create failed");
-			break;
-		}
-
-		loop->bytes_size = 1073741824;	// 1GiB
-		loop->name = "loop" + std::to_string(i);
-		loop->device = "/dev/zero";
-
-		new_parent->add_child (loop, true);
-	}
-
-	Container::commit_transaction();
-}

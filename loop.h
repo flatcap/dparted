@@ -32,6 +32,7 @@ class Loop : public Block
 {
 public:
 	static LoopPtr create (const std::string& losetup);
+	static LoopPtr create (void);
 	virtual ~Loop();
 	Loop& operator= (const Loop& c);
 	Loop& operator= (Loop&& c);
@@ -71,8 +72,6 @@ protected:
 	std::string get_file_major_minor (void);
 	std::string get_file_name_short (void);
 	std::string get_flags (void);
-
-	static void insert_test_device (ContainerPtr& parent);
 };
 
 #endif // _LOOP_H_

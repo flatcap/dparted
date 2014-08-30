@@ -54,8 +54,6 @@ protected:
 	Gpt (Gpt&& c);
 
 	virtual Gpt* clone (void);
-
-	static void insert_test_device (ContainerPtr& parent);
 };
 
 #endif // _GPT_H_

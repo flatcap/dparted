@@ -258,8 +258,8 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 		}
 	}
 
-	gui_app->set_config ("config/dparted.conf");	//XXX temporaray defaults
-	gui_app->set_theme  ("config/theme.conf");	//XXX temporaray defaults
+	gui_app->set_config ("config/dparted.conf");	//XXX temporary defaults
+	gui_app->set_theme  ("config/theme.conf");	//XXX temporary defaults
 
 	if (group.theme.size()) {
 		log_debug ("theme:");
@@ -276,7 +276,16 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	show_window();
 	activate();
 
-	ContainerPtr top_level = scan (disks, std::bind(&GuiApp::scan_callback, this, std::placeholders::_1));
+	ContainerPtr top_level;
+#ifdef DP_TEST
+	if (group.test.empty()) {
+#endif
+		top_level = scan (disks, std::bind (&GuiApp::scan_callback, this, std::placeholders::_1));
+#ifdef DP_TEST
+	} else {
+		top_level = scan_test (group.test, std::bind (&GuiApp::scan_callback, this, std::placeholders::_1));
+	}
+#endif
 	window->set_data (top_level);
 
 	return EXIT_SUCCESS;
