@@ -773,42 +773,9 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	if (c) {
 		ContainerPtr p = c->get_parent();
 		if (p) {
-#if 1 // MOVE_TEST
 #ifdef DP_TEST
 			test_execute (c, top_level->name);
 			top_level->dump3();
-#endif
-#endif
-#if 0 // RESIZE_TEST
-			if (!c->is_a ("GptPartition"))
-				return true;
-
-			// log_info ("RESIZE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
-			std::string desc = "Test: resize " + c->get_name_default();
-			std::string dev = p->get_device_inherit();
-			std::uint64_t off  = 0;
-			std::uint64_t size = 0;
-
-			if (dev == "/dev/loop1")  { off =   1048576; size =  805288960; }
-			if (dev == "/dev/loop2")  { off =   1048576; size = 1072676352; }
-			if (dev == "/dev/loop3")  { off = 358400000; size =  446906368; }
-			if (dev == "/dev/loop4")  { off = 358400000; size =  715324928; }
-			if (dev == "/dev/loop5")  { off = 268435456; size =  536870912; }
-			if (dev == "/dev/loop6")  { off =     17408; size =  805288960; }
-			if (dev == "/dev/loop7")  { off = 268435456; size =  805289472; }
-			if (dev == "/dev/loop8")  { off =     17408; size = 1073707520; }
-			if (dev == "/dev/loop9")  { off = 268435456; size =  448790528; }
-			if (dev == "/dev/loop10") { off =     17408; size =  717208576; }
-			if (dev == "/dev/loop11") { off = 268435456; size =  805289472; }
-			if (dev == "/dev/loop12") { off =     17408; size = 1073707520; }
-
-			ContainerPtr new_parent = Container::start_transaction (p, desc);
-			if (!new_parent) {
-				return true;
-			}
-
-			new_parent->move_child(c, off, size);
-			Container::commit_transaction();
 #endif
 #if 0 // DELETE_TEST
 			if (!c->is_a ("GptPartition"))
