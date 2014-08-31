@@ -33,6 +33,9 @@
 #include "table.h"
 #include "utils.h"
 #include "window.h"
+#ifdef DP_TEST
+#include "test.h"
+#endif
 #include "partition.h"
 
 DrawingArea::DrawingArea (void)
@@ -771,33 +774,10 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 		ContainerPtr p = c->get_parent();
 		if (p) {
 #if 1 // MOVE_TEST
-			// log_info ("%10ld  %10ld  %10ld", c->parent_offset, c->parent_offset + c->bytes_size, c->bytes_size);
-			if (!c->is_a ("GptPartition"))
-				return true;
-
-			log_info ("MOVE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
-			std::string desc = "Test: move " + c->get_name_default();
-			std::string name = c->name;
-			std::uint64_t off  = 0;
-
-			if (name == "part1") { off = 536870912; }
-			if (name == "part2") { off = 811597824; }
-			if (name == "part3") { off =         0; }
-			if (name == "part4") { off = 644243456; }
-			if (name == "part5") { off = 811597824; }
-			if (name == "part6") { off =         0; }
-			if (name == "part7") { off = 536870912; }
-			if (name == "part8") { off = 209715200; }
-			if (name == "part9") { off = 104857600; }
-
-			ContainerPtr new_parent = Container::start_transaction (p, desc);
-			if (!new_parent) {
-				return true;
-			}
-
-			new_parent->move_child(c, off, c->bytes_size);
-			Container::commit_transaction();
+#ifdef DP_TEST
+			test_execute (c, top_level->name);
 			top_level->dump3();
+#endif
 #endif
 #if 0 // RESIZE_TEST
 			if (!c->is_a ("GptPartition"))

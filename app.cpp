@@ -284,10 +284,10 @@ App::scan_test (std::string name, scan_async_cb_t fn)
 	LOG_TRACE;
 
 	ContainerPtr top_level = Container::create();	// Dropping any old results
-	top_level->name = "TopLevel";
+	top_level->name = name;
 	timeline = Timeline::create (top_level);
 
-	generate_test (top_level, name);
+	test_generate (top_level, name);
 
 	if (fn) {
 		fn (top_level);

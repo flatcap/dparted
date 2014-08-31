@@ -23,7 +23,11 @@
 
 #include "container.h"
 
-bool generate_test (ContainerPtr& parent, std::string name);
+void test_generate      (ContainerPtr& parent, const std::string& name);
+void test_generate_move (ContainerPtr& parent);
+
+void test_execute       (ContainerPtr& child,  const std::string& name);
+void test_execute_move  (ContainerPtr& child);
 
 #endif // _TEST_H_
 
