@@ -443,7 +443,6 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 			return;
 		}
 
-		_add_child (children, space_before);
 		log_info ("new space offset = %ld, size = %ld", space_before->parent_offset, space_before->bytes_size);
 	}
 
@@ -477,11 +476,6 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 		space_off  = child->parent_offset + child->bytes_size;
 		space_size = 0;
 	}
-
-	// Now we've adjusted the space before,
-	// we can set the new offset/size
-	child->parent_offset = offset;
-	child->bytes_size    = size;
 
 	log_info ("space offset = %ld, size = %ld", space_off, space_size);
 
@@ -524,8 +518,20 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 			return;
 		}
 
-		_add_child (children, space_after);
 		log_info ("new space offset = %ld, size = %ld", space_after->parent_offset, space_after->bytes_size);
+	}
+
+	// Now we've adjusted the space before,
+	// we can set the new offset/size
+	child->parent_offset = offset;
+	child->bytes_size    = size;
+
+	if (space_before) {
+		_add_child (children, space_before);
+	}
+
+	if (space_after) {
+		_add_child (children, space_after);
 	}
 
 	log_info ("children");

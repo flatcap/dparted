@@ -16,6 +16,9 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <string>
+#include <vector>
+
 #include "gpt.h"
 #include "gpt_partition.h"
 #include "log.h"
