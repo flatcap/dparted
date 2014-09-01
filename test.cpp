@@ -28,51 +28,15 @@
 #include "utils.h"
 
 const int one_gig = 1073741824;
+typedef std::vector<std::tuple<int,bool,std::uint64_t,std::uint64_t>> disk_def;
 
 void
-test_generate (ContainerPtr& parent, const std::string& name)
+create_disks (ContainerPtr parent, const disk_def& dd, std::string name)
 {
 	return_if_fail (parent);
 
-	if (name == "add")
-		test_generate_add (parent);
-	else if (name == "delete")
-		test_generate_delete (parent);
-	else if (name == "move")
-		test_generate_move (parent);
-	else if (name == "resize")
-		test_generate_resize (parent);
-	else
-		log_error ("Unknown test case: %s", name.c_str());
-}
-
-void
-test_generate_add (ContainerPtr& parent)
-{
-	return_if_fail (parent);
-
-	const std::vector<std::tuple<int,bool,std::uint64_t,std::uint64_t>> v {
-		// Loop, Part, Offset, Size
-		std::make_tuple (1, true,          0,  357564416),
-		std::make_tuple (1, false, 357564416,  358612992),
-		std::make_tuple (1, true,  716177408,  357564416),
-		std::make_tuple (2, true,          0,  357564416),
-		std::make_tuple (2, false, 357564416,  716177408),
-		std::make_tuple (3, true,          0,  357564416),
-		std::make_tuple (3, false, 357564416,  716177408),
-		std::make_tuple (4, false,         0,  716177408),
-		std::make_tuple (4, true,  716177408,  357564416),
-		std::make_tuple (5, false,         0, 1073741824),
-		std::make_tuple (6, false,         0, 1073741824),
-		std::make_tuple (7, false,         0,  716177408),
-		std::make_tuple (7, true,  716177408,  357564416),
-		std::make_tuple (8, false,         0, 1073741824),
-		std::make_tuple (9, false,         0, 1073741824)
-	};
-
-	log_info ("Test case: add");
-
-	ContainerPtr new_parent = Container::start_transaction (parent, "Test case: add");
+	name = "Test case: " + name;
+	ContainerPtr new_parent = Container::start_transaction (parent, name);
 	if (!new_parent)
 		return;
 
@@ -85,7 +49,7 @@ test_generate_add (ContainerPtr& parent)
 	LoopPtr loop;
 	GptPtr gpt;
 
-	for (auto i : v) {
+	for (auto i : dd) {
 		std::tie (loop_num, part, off, size) = i;
 		log_info ("%d, %d, %ld, %ld", loop_num, part, off, size);
 
@@ -142,12 +106,36 @@ test_generate_add (ContainerPtr& parent)
 	Container::commit_transaction();
 }
 
+
+void
+test_generate_add (ContainerPtr& parent)
+{
+	const disk_def dd {
+		// Loop, Part, Offset, Size
+		std::make_tuple (1, true,          0,  357564416),
+		std::make_tuple (1, false, 357564416,  358612992),
+		std::make_tuple (1, true,  716177408,  357564416),
+		std::make_tuple (2, true,          0,  357564416),
+		std::make_tuple (2, false, 357564416,  716177408),
+		std::make_tuple (3, true,          0,  357564416),
+		std::make_tuple (3, false, 357564416,  716177408),
+		std::make_tuple (4, false,         0,  716177408),
+		std::make_tuple (4, true,  716177408,  357564416),
+		std::make_tuple (5, false,         0, 1073741824),
+		std::make_tuple (6, false,         0, 1073741824),
+		std::make_tuple (7, false,         0,  716177408),
+		std::make_tuple (7, true,  716177408,  357564416),
+		std::make_tuple (8, false,         0, 1073741824),
+		std::make_tuple (9, false,         0, 1073741824)
+	};
+
+	create_disks (parent, dd, "add");
+}
+
 void
 test_generate_delete (ContainerPtr& parent)
 {
-	return_if_fail (parent);
-
-	const std::vector<std::tuple<int,bool,std::uint64_t,std::uint64_t>> v {
+	const disk_def dd {
 		// Loop, Part, Offset, Size
 		std::make_tuple (1, true,          0,  357564416),
 		std::make_tuple (1, true,  357564416,  358612992),
@@ -172,280 +160,99 @@ test_generate_delete (ContainerPtr& parent)
 		std::make_tuple (9, true,          0, 1073741824)
 	};
 
-	log_info ("Test case: delete");
-
-	ContainerPtr new_parent = Container::start_transaction (parent, "Test case: add");
-	if (!new_parent)
-		return;
-
-	int loop_num_old = 0;
-	int loop_num = 0;
-	int part_num = 0;
-	bool part = false;
-	std::uint64_t off = 0;
-	std::uint64_t size = 0;
-	LoopPtr loop;
-	GptPtr gpt;
-
-	for (auto i : v) {
-		std::tie (loop_num, part, off, size) = i;
-		log_info ("%d, %d, %ld, %ld", loop_num, part, off, size);
-
-		if (loop_num != loop_num_old) {
-			loop_num_old = loop_num;
-			part_num = 0;
-
-			loop = Loop::create();
-			if (!loop)
-				break;
-
-			loop->bytes_size = one_gig;
-			loop->name = "loop" + std::to_string (loop_num);
-			loop->device = "/dev/zero";
-			loop->device_major = 7;
-			loop->device_minor = loop_num;
-
-			new_parent->add_child (loop, false);
-
-			// ----------------------------------------
-
-			gpt = Gpt::create();
-			if (!gpt)
-				break;
-
-			gpt->bytes_size = loop->bytes_size;
-			gpt->name = "Gpt";
-
-			loop->add_child (gpt, false);
-		}
-
-		if (part) {
-			++part_num;
-
-			GptPartitionPtr part = GptPartition::create();
-			part->parent_offset = off;
-			part->bytes_size    = size;
-			part->name          = "loop" + std::to_string (loop_num) + "p" + std::to_string (part_num);
-
-			gpt->add_child (part, false);
-		} else {
-			PartitionPtr space = Partition::create();
-			space->bytes_size    = size;
-			space->bytes_used    = size;
-			space->parent_offset = off;
-			space->sub_type ("Space");
-			space->sub_type ("Unallocated");
-			space->name = "Unallocated";
-
-			gpt->add_child (space, false);
-		}
-	}
-
-	Container::commit_transaction();
+	create_disks (parent, dd, "delete");
 }
 
 void
 test_generate_move (ContainerPtr& parent)
 {
-	return_if_fail (parent);
-
-	const std::vector<std::pair<std::uint64_t,std::uint64_t>> v {
-		//   Offset,      Size
-		{         0, 262144000 },
-		{         0, 262144000 },
-		{ 268435456, 262144000 },
-		{ 268435456, 262144000 },
-		{ 268435456, 262144000 },
-		{ 805306368, 268435456 },
-		{ 805306368, 268435456 },
-		{ 104857600, 734003200 },
-		{ 209715200, 734003200 }
+	const disk_def dd {
+		// Loop, Part, Offset, Size
+		std::make_tuple (1, true,          0,  357564416),
+		std::make_tuple (1, false, 357564416,  716177408),
+		std::make_tuple (2, true,          0,  357564416),
+		std::make_tuple (2, false, 357564416,  716177408),
+		std::make_tuple (3, false,         0,  268435456),
+		std::make_tuple (3, true,  268435456,  262144000),
+		std::make_tuple (3, false, 530579456,  543162368),
+		std::make_tuple (4, false,         0,  268435456),
+		std::make_tuple (4, true,  268435456,  262144000),
+		std::make_tuple (4, false, 530579456,  543162368),
+		std::make_tuple (5, false,         0,  268435456),
+		std::make_tuple (5, true,  268435456,  262144000),
+		std::make_tuple (5, false, 530579456,  543162368),
+		std::make_tuple (6, false,         0,  805306368),
+		std::make_tuple (6, true,  805306368,  268435456),
+		std::make_tuple (7, false,         0,  805306368),
+		std::make_tuple (7, true,  805306368,  268435456),
+		std::make_tuple (8, false,         0,  104857600),
+		std::make_tuple (8, true,  104857600,  734003200),
+		std::make_tuple (8, false, 838860800,  234881024),
+		std::make_tuple (9, false,         0,  209715200),
+		std::make_tuple (9, true,  209715200,  734003200),
+		std::make_tuple (9, false, 943718400,  130023424),
 	};
 
-	log_info ("Test case: move");
-
-	ContainerPtr new_parent = Container::start_transaction (parent, "Test case: move");
-	if (!new_parent)
-		return;
-
-	for (std::size_t i = 1; i <= v.size(); ++i) {
-		LoopPtr loop = Loop::create();
-
-		if (!loop)
-			break;
-
-		loop->bytes_size = one_gig;
-		loop->name = "loop" + std::to_string(i);
-		loop->device = "/dev/zero";
-		loop->device_major = 7;
-		loop->device_minor = i;
-
-		new_parent->add_child (loop, false);
-
-		// ----------------------------------------
-
-		GptPtr gpt = Gpt::create();
-		if (!gpt)
-			break;
-
-		gpt->bytes_size = loop->bytes_size;
-		gpt->name = "Gpt";
-
-		loop->add_child (gpt, false);
-
-		// ----------------------------------------
-
-		std::uint64_t start = v[i-1].first;
-		std::uint64_t size  = v[i-1].second;
-
-		GptPartitionPtr part = GptPartition::create();
-		part->parent_offset = start;
-		part->bytes_size    = size;
-		part->name          = "part" + std::to_string (i);
-
-		gpt->add_child (part, false);
-
-		// ----------------------------------------
-
-		if (start > 0) {
-			PartitionPtr space = Partition::create();
-			space->bytes_size    = start;
-			space->bytes_used    = space->bytes_size;
-			space->parent_offset = 0;
-			space->sub_type ("Space");
-			space->sub_type ("Unallocated");
-			space->name = "Unallocated";
-
-			gpt->add_child (space, false);
-		}
-
-		if ((start + size) < one_gig) {
-			PartitionPtr space = Partition::create();
-			space->bytes_size    = one_gig - (start+size);
-			space->bytes_used    = space->bytes_size;
-			space->parent_offset = (start+size);
-			space->sub_type ("Space");
-			space->sub_type ("Unallocated");
-			space->name = "Unallocated";
-
-			gpt->add_child (space, false);
-		}
-	}
-
-	Container::commit_transaction();
+	create_disks (parent, dd, "move");
 }
 
 void
 test_generate_resize (ContainerPtr& parent)
 {
-	return_if_fail (parent);
-
-	const std::vector<std::pair<std::uint64_t,std::uint64_t>> v {
-		//   Offset,      Size
-		{         0, 536870912 },
-		{         0, 536870912 },
-		{ 357564416, 357564416 },
-		{ 357564416, 357564416 },
-		{ 357564416, 357564416 },
-		{ 357564416, 357564416 },
-		{ 357564416, 357564416 },
-		{ 357564416, 357564416 },
-		{ 357564416, 357564416 },
-		{ 357564416, 357564416 },
-		{ 536870912, 536870912 },
-		{ 536870912, 536870912 }
+	const disk_def dd {
+		// Loop, Part, Offset, Size
+		std::make_tuple (1,  true,          0,  536870912),
+		std::make_tuple (1,  false, 536870912,  536870912),
+		std::make_tuple (2,  true,          0,  536870912),
+		std::make_tuple (2,  false, 536870912,  536870912),
+		std::make_tuple (3,  false,         0,  357564416),
+		std::make_tuple (3,  true,  357564416,  358612992),
+		std::make_tuple (3,  false, 716177408,  357564416),
+		std::make_tuple (4,  false,         0,  357564416),
+		std::make_tuple (4,  true,  357564416,  358612992),
+		std::make_tuple (4,  false, 716177408,  357564416),
+		std::make_tuple (5,  false,         0,  357564416),
+		std::make_tuple (5,  true,  357564416,  358612992),
+		std::make_tuple (5,  false, 716177408,  357564416),
+		std::make_tuple (6,  false,         0,  357564416),
+		std::make_tuple (6,  true,  357564416,  358612992),
+		std::make_tuple (6,  false, 716177408,  357564416),
+		std::make_tuple (7,  false,         0,  357564416),
+		std::make_tuple (7,  true,  357564416,  358612992),
+		std::make_tuple (7,  false, 716177408,  357564416),
+		std::make_tuple (8,  false,         0,  357564416),
+		std::make_tuple (8,  true,  357564416,  358612992),
+		std::make_tuple (8,  false, 716177408,  357564416),
+		std::make_tuple (9,  false,         0,  357564416),
+		std::make_tuple (9,  true,  357564416,  358612992),
+		std::make_tuple (9,  false, 716177408,  357564416),
+		std::make_tuple (10, false,         0,  357564416),
+		std::make_tuple (10, true,  357564416,  358612992),
+		std::make_tuple (10, false, 716177408,  357564416),
+		std::make_tuple (11, false,         0,  536870912),
+		std::make_tuple (11, true,  536870912,  536870912),
+		std::make_tuple (12, false,         0,  536870912),
+		std::make_tuple (12, true,  536870912,  536870912),
 	};
 
-	log_info ("Test case: resize");
-
-	ContainerPtr new_parent = Container::start_transaction (parent, "Test case: resize");
-	if (!new_parent)
-		return;
-
-	for (std::size_t i = 1; i <= v.size(); ++i) {
-		LoopPtr loop = Loop::create();
-
-		if (!loop)
-			break;
-
-		loop->bytes_size = one_gig;
-		loop->name = "loop" + std::to_string(i);
-		loop->device = "/dev/zero";
-		loop->device_major = 7;
-		loop->device_minor = i;
-
-		new_parent->add_child (loop, false);
-
-		// ----------------------------------------
-
-		GptPtr gpt = Gpt::create();
-		if (!gpt)
-			break;
-
-		gpt->bytes_size = loop->bytes_size;
-		gpt->name = "Gpt";
-
-		loop->add_child (gpt, false);
-
-		// ----------------------------------------
-
-		std::uint64_t start = v[i-1].first;
-		std::uint64_t size  = v[i-1].second;
-
-		GptPartitionPtr part = GptPartition::create();
-		part->parent_offset = start;
-		part->bytes_size    = size;
-		part->name          = "part" + std::to_string (i);
-
-		gpt->add_child (part, false);
-
-		// ----------------------------------------
-
-		if (start > 0) {
-			PartitionPtr space = Partition::create();
-			space->bytes_size    = start;
-			space->bytes_used    = space->bytes_size;
-			space->parent_offset = 0;
-			space->sub_type ("Space");
-			space->sub_type ("Unallocated");
-			space->name = "Unallocated";
-
-			gpt->add_child (space, false);
-		}
-
-		if ((start + size) < one_gig) {
-			PartitionPtr space = Partition::create();
-			space->bytes_size    = one_gig - (start+size);
-			space->bytes_used    = space->bytes_size;
-			space->parent_offset = (start+size);
-			space->sub_type ("Space");
-			space->sub_type ("Unallocated");
-			space->name = "Unallocated";
-
-			gpt->add_child (space, false);
-		}
-	}
-
-	Container::commit_transaction();
+	create_disks (parent, dd, "resize");
 }
 
-
 void
-test_execute (ContainerPtr& child, const std::string& name)
+test_generate (ContainerPtr& parent, const std::string& name)
 {
-	return_if_fail (child);
-
 	if (name == "add")
-		test_execute_add (child);
+		test_generate_add (parent);
 	else if (name == "delete")
-		test_execute_delete (child);
+		test_generate_delete (parent);
 	else if (name == "move")
-		test_execute_move (child);
+		test_generate_move (parent);
 	else if (name == "resize")
-		test_execute_resize (child);
+		test_generate_resize (parent);
 	else
 		log_error ("Unknown test case: %s", name.c_str());
 }
+
 
 void
 test_execute_add (ContainerPtr& child)
@@ -538,15 +345,15 @@ test_execute_move (ContainerPtr& child)
 	std::string name = child->name;
 	std::uint64_t off  = 0;
 
-	if (name == "part1") { off = 536870912; }
-	if (name == "part2") { off = 811597824; }
-	if (name == "part3") { off =         0; }
-	if (name == "part4") { off = 644243456; }
-	if (name == "part5") { off = 811597824; }
-	if (name == "part6") { off =         0; }
-	if (name == "part7") { off = 536870912; }
-	if (name == "part8") { off = 209715200; }
-	if (name == "part9") { off = 104857600; }
+	if (name == "loop1p1") { off = 536870912; }
+	if (name == "loop2p1") { off = 716177408; }
+	if (name == "loop3p1") { off =         0; }
+	if (name == "loop4p1") { off = 644243456; }
+	if (name == "loop5p1") { off = 811597824; }
+	if (name == "loop6p1") { off =         0; }
+	if (name == "loop7p1") { off = 536870912; }
+	if (name == "loop8p1") { off = 209715200; }
+	if (name == "loop9p1") { off = 104857600; }
 
 	ContainerPtr new_parent = Container::start_transaction (parent, desc);
 	if (!new_parent)
@@ -574,18 +381,18 @@ test_execute_resize (ContainerPtr& child)
 	std::uint64_t off  = 0;
 	std::uint64_t size = 0;
 
-	if (name == "part1")  { off =         0; size =   859832320; }
-	if (name == "part2")  { off =         0; size =  1073741824; }
-	if (name == "part3")  { off = 357564416; size =   502267904; }
-	if (name == "part4")  { off = 357564416; size =   716177408; }
-	if (name == "part5")  { off = 214958080; size =   644874240; }
-	if (name == "part6")  { off =         0; size =   859832320; }
-	if (name == "part7")  { off = 214958080; size =   858783744; }
-	if (name == "part8")  { off =         0; size =  1073741824; }
-	if (name == "part9")  { off = 214958080; size =   500170752; }
-	if (name == "part10") { off =         0; size =   715128832; }
-	if (name == "part11") { off = 214958080; size =   858783744; }
-	if (name == "part12") { off =         0; size =  1073741824; }
+	if (name == "loop1p1")  { off =         0; size =   859832320; }
+	if (name == "loop2p1")  { off =         0; size =  1073741824; }
+	if (name == "loop3p1")  { off = 357564416; size =   502267904; }
+	if (name == "loop4p1")  { off = 357564416; size =   716177408; }
+	if (name == "loop5p1")  { off = 214958080; size =   644874240; }
+	if (name == "loop6p1")  { off =         0; size =   859832320; }
+	if (name == "loop7p1")  { off = 214958080; size =   858783744; }
+	if (name == "loop8p1")  { off =         0; size =  1073741824; }
+	if (name == "loop9p1")  { off = 214958080; size =   500170752; }
+	if (name == "loop10p1") { off =         0; size =   715128832; }
+	if (name == "loop11p1") { off = 214958080; size =   858783744; }
+	if (name == "loop12p1") { off =         0; size =  1073741824; }
 
 	ContainerPtr new_parent = Container::start_transaction (parent, desc);
 	if (!new_parent)
@@ -593,5 +400,22 @@ test_execute_resize (ContainerPtr& child)
 
 	new_parent->move_child (child, off, size);
 	Container::commit_transaction();
+}
+
+void
+test_execute (ContainerPtr& child, const std::string& name)
+{
+	return_if_fail (child);
+
+	if (name == "add")
+		test_execute_add (child);
+	else if (name == "delete")
+		test_execute_delete (child);
+	else if (name == "move")
+		test_execute_move (child);
+	else if (name == "resize")
+		test_execute_resize (child);
+	else
+		log_error ("Unknown test case: %s", name.c_str());
 }
 
