@@ -769,32 +769,11 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 		return true;
 	}
 
-	ContainerPtr c = selection->get_container();
-	if (c) {
-		ContainerPtr p = c->get_parent();
-		if (p) {
 #ifdef DP_TEST
-			test_execute (c, top_level->name);
-			top_level->dump3();
+	ContainerPtr c = selection->get_container();
+	test_execute (c, top_level->name);
+	top_level->dump3();
 #endif
-#if 0 // DELETE_TEST
-			if (!c->is_a ("GptPartition"))
-				return true;
-			std::string name = c->get_device_short();
-			if ((name != "loop1p2") && (name != "loop2p2") && (name != "loop3p2") && (name != "loop4p2") && (name != "loop5p2") && (name != "loop6p2") && (name != "loop7p1") && (name != "loop8p1") && (name != "loop9p1"))
-				return true;
-
-			log_info ("DELETE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
-			std::string desc = "Test: delete " + c->get_name_default();
-			ContainerPtr new_parent = Container::start_transaction (p, desc);
-			if (!new_parent) {
-				return true;
-			}
-			new_parent->delete_child(c);
-			Container::commit_transaction();
-#endif
-		}
-	}
 
 	return true;		// We've handled the event
 }
