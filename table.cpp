@@ -232,7 +232,7 @@ Table::add_child (ContainerPtr child, bool probe)
 		} else {
 			log_error ("MIDDLE");
 			ContainerPtr s1 = space_create (s_begin, child->parent_offset - space->parent_offset);
-			ContainerPtr s2 = space_create (c_end, space->bytes_size - (child->parent_offset - space->parent_offset));
+			ContainerPtr s2 = space_create (c_end, s_end - c_end);
 			log_info (s1);
 			log_info (s2);
 			_add_child (children, s1);

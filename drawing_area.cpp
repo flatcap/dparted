@@ -793,41 +793,6 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 			new_parent->delete_child(c);
 			Container::commit_transaction();
 #endif
-#if 0 // ADD_TEST
-			if (!c->is_a ("Unallocated"))
-				return true;
-			log_info ("ADD parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
-			log_info ("po   = %ld", c->parent_offset);
-			log_info ("size = %ld", c->bytes_size);
-			std::string desc = "Test: add " + c->get_name_default();
-			std::string dev = p->get_device_inherit();
-
-			std::uint64_t off  = 0;
-			std::uint64_t size = 0;
-			if (dev == "/dev/loop1") { off = 358612992; size =  357564416; }
-			if (dev == "/dev/loop2") { off = 358612992; size =  357564416; }
-			if (dev == "/dev/loop3") { off = 358612992; size =  715111936; }
-			if (dev == "/dev/loop4") { off = 358612992; size =  357564416; }
-			if (dev == "/dev/loop5") { off = 358612992; size =  357564416; }
-			if (dev == "/dev/loop6") { off = 358612992; size =  715111936; }
-			if (dev == "/dev/loop7") { off =     17408; size =  716160000; }
-			if (dev == "/dev/loop8") { off =     17408; size =  716160000; }
-			if (dev == "/dev/loop9") { off =     17408; size = 1073707520; }
-
-			ContainerPtr part = Partition::create();
-			part->sub_type ("TestAdd");
-			part->parent_offset = off;
-			part->bytes_size    = size;
-			part->bytes_used    = size;
-			part->name          = "wibble";
-
-			ContainerPtr new_parent = Container::start_transaction (p, desc);
-			if (!new_parent) {
-				return true;
-			}
-			new_parent->add_child(part, false);
-			Container::commit_transaction();
-#endif
 		}
 	}
 

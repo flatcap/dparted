@@ -34,7 +34,9 @@ test_generate (ContainerPtr& parent, const std::string& name)
 {
 	return_if_fail (parent);
 
-	if (name == "move")
+	if (name == "add")
+		test_generate_add (parent);
+	else if (name == "move")
 		test_generate_move (parent);
 	else if (name == "resize")
 		test_generate_resize (parent);
@@ -43,11 +45,102 @@ test_generate (ContainerPtr& parent, const std::string& name)
 }
 
 void
+test_generate_add (ContainerPtr& parent)
+{
+	return_if_fail (parent);
+
+	const std::vector<std::tuple<int,bool,std::uint64_t,std::uint64_t>> v {
+		// Loop, Part, Offset, Size
+		std::make_tuple (1, true,          0,  357564416),
+		std::make_tuple (1, false, 357564416,  358612992),
+		std::make_tuple (1, true,  716177408,  357564416),
+		std::make_tuple (2, true,          0,  357564416),
+		std::make_tuple (2, false, 357564416,  716177408),
+		std::make_tuple (3, true,          0,  357564416),
+		std::make_tuple (3, false, 357564416,  716177408),
+		std::make_tuple (4, false,         0,  716177408),
+		std::make_tuple (4, true,  716177408,  357564416),
+		std::make_tuple (5, false,         0, 1073741824),
+		std::make_tuple (6, false,         0, 1073741824),
+		std::make_tuple (7, false,         0,  716177408),
+		std::make_tuple (7, true,  716177408,  357564416),
+		std::make_tuple (8, false,         0, 1073741824),
+		std::make_tuple (9, false,         0, 1073741824)
+	};
+
+	log_info ("Test case: add");
+
+	ContainerPtr new_parent = Container::start_transaction (parent, "Test case: add");
+	if (!new_parent)
+		return;
+
+	int index_old = 0;
+	int index = 0;
+	bool part = false;
+	std::uint64_t off = 0;
+	std::uint64_t size = 0;
+	LoopPtr loop;
+	GptPtr gpt;
+
+	for (auto i : v) {
+		std::tie (index, part, off, size) = i;
+		log_info ("%d, %d, %ld, %ld", index, part, off, size);
+
+		if (index != index_old) {
+			index_old = index;
+			loop = Loop::create();
+			if (!loop)
+				break;
+
+			loop->bytes_size = one_gig;
+			loop->name = "loop" + std::to_string (index);
+			loop->device = "/dev/zero";
+			loop->device_major = 7;
+			loop->device_minor = index;
+
+			new_parent->add_child (loop, false);
+
+			// ----------------------------------------
+
+			gpt = Gpt::create();
+			if (!gpt)
+				break;
+
+			gpt->bytes_size = loop->bytes_size;
+			gpt->name = "Gpt";
+
+			loop->add_child (gpt, false);
+		}
+
+		if (part) {
+			GptPartitionPtr part = GptPartition::create();
+			part->parent_offset = off;
+			part->bytes_size    = size;
+			part->name          = "part" + std::to_string (index);
+
+			gpt->add_child (part, false);
+		} else {
+			PartitionPtr space = Partition::create();
+			space->bytes_size    = size;
+			space->bytes_used    = size;
+			space->parent_offset = off;
+			space->sub_type ("Space");
+			space->sub_type ("Unallocated");
+			space->name = "Unallocated";
+
+			gpt->add_child (space, false);
+		}
+	}
+
+	Container::commit_transaction();
+}
+
+void
 test_generate_move (ContainerPtr& parent)
 {
 	return_if_fail (parent);
 
-	static std::vector<std::pair<std::uint64_t,std::uint64_t>> v {
+	const std::vector<std::pair<std::uint64_t,std::uint64_t>> v {
 		//   Offset,      Size
 		{         0, 262144000 },
 		{         0, 262144000 },
@@ -138,7 +231,7 @@ test_generate_resize (ContainerPtr& parent)
 {
 	return_if_fail (parent);
 
-	static std::vector<std::pair<std::uint64_t,std::uint64_t>> v {
+	const std::vector<std::pair<std::uint64_t,std::uint64_t>> v {
 		//   Offset,      Size
 		{         0, 536870912 },
 		{         0, 536870912 },
@@ -233,12 +326,60 @@ test_execute (ContainerPtr& child, const std::string& name)
 {
 	return_if_fail (child);
 
-	if (name == "move")
+	if (name == "add")
+		test_execute_add (child);
+	else if (name == "move")
 		test_execute_move (child);
 	else if (name == "resize")
 		test_execute_resize (child);
 	else
 		log_error ("Unknown test case: %s", name.c_str());
+}
+
+void
+test_execute_add (ContainerPtr& child)
+{
+	return_if_fail (child);
+
+	ContainerPtr parent = child->get_parent();
+	if (!parent)
+		return;
+
+	ContainerPtr gp = parent->get_parent();
+	if (!gp)
+		return;
+
+	log_info ("ADD parent %s(%p), child %s(%p)", parent->get_name_default().c_str(), parent.get(), child->get_name_default().c_str(), child.get());
+	log_info ("po   = %ld", child->parent_offset);
+	log_info ("size = %ld", child->bytes_size);
+	std::string desc = "Test: add " + child->get_name_default();
+	std::string name = gp->name;
+
+	std::uint64_t off  = 0;
+	std::uint64_t size = 0;
+	if (name == "loop1") { off = 357564416; size =  358612992; }
+	if (name == "loop2") { off = 357564416; size =  358612992; }
+	if (name == "loop3") { off = 357564416; size =  716177408; }
+	if (name == "loop4") { off = 357564416; size =  358612992; }
+	if (name == "loop5") { off = 357564416; size =  358612992; }
+	if (name == "loop6") { off = 357564416; size =  716177408; }
+	if (name == "loop7") { off =         0; size =  716177408; }
+	if (name == "loop8") { off =         0; size =  716177408; }
+	if (name == "loop9") { off =         0; size = 1073741824; }
+
+	ContainerPtr part = Partition::create();
+	part->sub_type ("TestAdd");
+	part->parent_offset = off;
+	part->bytes_size    = size;
+	part->bytes_used    = size;
+	part->name          = "wibble";
+
+	ContainerPtr new_parent = Container::start_transaction (parent, desc);
+	if (!new_parent)
+		return;
+
+	new_parent->add_child (part, false);
+	Container::commit_transaction();
 }
 
 void
@@ -269,11 +410,10 @@ test_execute_move (ContainerPtr& child)
 	if (name == "part9") { off = 104857600; }
 
 	ContainerPtr new_parent = Container::start_transaction (parent, desc);
-	if (!new_parent) {
+	if (!new_parent)
 		return;
-	}
 
-	new_parent->move_child(child, off, child->bytes_size);
+	new_parent->move_child (child, off, child->bytes_size);
 	Container::commit_transaction();
 }
 
@@ -309,9 +449,8 @@ test_execute_resize (ContainerPtr& child)
 	if (name == "part12") { off =         0; size =  1073741824; }
 
 	ContainerPtr new_parent = Container::start_transaction (parent, desc);
-	if (!new_parent) {
+	if (!new_parent)
 		return;
-	}
 
 	new_parent->move_child (child, off, size);
 	Container::commit_transaction();

@@ -24,10 +24,12 @@
 #include "container.h"
 
 void test_generate        (ContainerPtr& parent, const std::string& name);
+void test_generate_add    (ContainerPtr& parent);
 void test_generate_move   (ContainerPtr& parent);
 void test_generate_resize (ContainerPtr& parent);
 
 void test_execute         (ContainerPtr& child,  const std::string& name);
+void test_execute_add     (ContainerPtr& child);
 void test_execute_move    (ContainerPtr& child);
 void test_execute_resize  (ContainerPtr& child);
 
