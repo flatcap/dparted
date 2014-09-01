@@ -232,7 +232,7 @@ Table::add_child (ContainerPtr child, bool probe)
 		} else {
 			log_error ("MIDDLE");
 			ContainerPtr s1 = space_create (s_begin, child->parent_offset - space->parent_offset);
-			ContainerPtr s2 = space_create (c_end, space->bytes_size - (child->parent_offset - space->parent_offset));
+			ContainerPtr s2 = space_create (c_end, s_end - c_end);
 			log_info (s1);
 			log_info (s2);
 			_add_child (children, s1);
@@ -408,21 +408,16 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 	bool adjust_space = false;
 
 	if (offset < space_off) {				// 1) Fail
-		log_info ("CASE1");
-		// log_error ("space before isn't big enough (%ld)", space_before->parent_offset - offset);
+		log_error ("space before isn't big enough (%ld)", space_off - offset);
 		return;
 	} else if (offset == space_off) {			// 2) Delete
-		log_info ("CASE2");
 		delete_space = true;
 	} else if ((offset - space_off) < space_size) {		// 3) Smaller
-		log_info ("CASE3");
 		delete_space = true;
 		adjust_space = true;
 	} else if ((offset - space_off) == 0) {			// 4) Same
-		log_info ("CASE4");
 		// NOP
 	} else if ((offset - space_off) > space_size) {		// 5) Bigger
-		log_info ("CASE5");
 		delete_space = true;
 		adjust_space = true;
 	}
@@ -443,7 +438,6 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 			return;
 		}
 
-		_add_child (children, space_before);
 		log_info ("new space offset = %ld, size = %ld", space_before->parent_offset, space_before->bytes_size);
 	}
 
@@ -462,14 +456,12 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 		auto it_next = std::next (it);
 		ContainerPtr next = *it_next;
 		if (next->is_a ("Unallocated")) {
-			//RAR it_end = it_next;
 			space_after = next;
 		}
 	}
 
 	if (space_after) log_info ("space after");
 	else             log_info ("no space after");
-
 
 	if (space_after) {
 		space_off  = space_after->parent_offset;
@@ -479,32 +471,22 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 		space_size = 0;
 	}
 
-	// Now we've adjusted the space before,
-	// we can set the new offset/size
-	child->parent_offset = offset;
-	child->bytes_size    = size;
-
 	log_info ("space offset = %ld, size = %ld", space_off, space_size);
 
 	delete_space = false;
 	adjust_space = false;
 
 	if ((offset + size) > (space_off + space_size)) {		// 1) Fail
-		log_info ("CASE1");
-		// log_error ("space after isn't big enough (%ld)", (offset + size) - (space_off + space_size));
+		log_error ("space after isn't big enough (%ld)", (offset + size) - (space_off + space_size));
 		return;
 	} else if ((offset + size) == (space_off + space_size)) {	// 2) Delete
-		log_info ("CASE2");
 		delete_space = true;
 	} else if ((offset + size) > space_off) {			// 3) Smaller
-		log_info ("CASE3");
 		delete_space = true;
 		adjust_space = true;
 	} else if ((offset + size) == space_off) {			// 4) Same
-		log_info ("CASE4");
 		// NOP
 	} else if ((offset + size) < space_off) {			// 5) Bigger
-		log_info ("CASE5");
 		delete_space = true;
 		adjust_space = true;
 	}
@@ -525,8 +507,20 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 			return;
 		}
 
-		_add_child (children, space_after);
 		log_info ("new space offset = %ld, size = %ld", space_after->parent_offset, space_after->bytes_size);
+	}
+
+	// Now we've adjusted the space
+	// we can set the new offset/size
+	child->parent_offset = offset;
+	child->bytes_size    = size;
+
+	if (space_before) {
+		_add_child (children, space_before);
+	}
+
+	if (space_after) {
+		_add_child (children, space_after);
 	}
 
 	log_info ("children");

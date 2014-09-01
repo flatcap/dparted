@@ -33,6 +33,9 @@
 #include "table.h"
 #include "utils.h"
 #include "window.h"
+#ifdef DP_TEST
+#include "test.h"
+#endif
 #include "partition.h"
 
 DrawingArea::DrawingArea (void)
@@ -59,7 +62,7 @@ DrawingArea::DrawingArea (void)
 
 	// set_tooltip_text ("tooltip number 1");
 
-	//RAR set_has_tooltip();	// We'll be handling the tooltips ourself
+	set_has_tooltip();	// We'll be handling the tooltips ourself
 	signal_query_tooltip().connect (sigc::mem_fun (*this, &DrawingArea::on_textview_query_tooltip));
 
 	menu_popup.signal_key_press_event().connect (sigc::mem_fun (*this, &DrawingArea::popup_on_keypress));
@@ -582,7 +585,7 @@ DrawingArea::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 	fill_rect (cr, shape, "white");
 #endif
 	shape.h = cont_height;
-	if (top_level->name == "dummy") {
+	if (top_level->is_top_level()) {
 		for (auto& c : top_level->children) {
 			// if (c->type == "Loop") {
 				draw_container (cr, shape, c);
@@ -602,7 +605,7 @@ bool
 DrawingArea::on_timeout (int timer_number)
 {
 	log_debug ("timer");
-	get_window()->invalidate (false); // everything for now
+	redraw_area();
 	// return (c->device == "/dev/sdc");
 	return true;
 }
@@ -633,12 +636,12 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 {
 	LOG_TRACE;
 
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = get_window();
 	if (!win) {
 		log_debug ("No Window");
 		return false;
 	}
+	log_debug ("top_level: %s", win->get_name().c_str());
 	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
 		log_debug ("No focus");
@@ -670,12 +673,12 @@ DrawingArea::on_keypress (GdkEventKey* event)
 
 	// Extra keys: Delete, Insert, Space/Enter (select)?
 
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = get_window();
 	if (!win) {
 		log_debug ("No Window");
 		return false;
 	}
+	log_debug ("top_level: %s", win->get_name().c_str());
 
 	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
@@ -717,7 +720,7 @@ DrawingArea::on_keypress (GdkEventKey* event)
 	}
 
 	if (redraw) {
-		get_window()->invalidate (false);
+		redraw_area();
 	}
 
 	return handled;
@@ -731,8 +734,12 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 
 	grab_focus();				// Place the windows focus on the DrawingArea
 
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = get_window();
+	if (!win) {
+		return false;
+	}
+
+	log_debug ("top_level: %s", win->get_name().c_str());
 
 	GfxContainerPtr selection;
 
@@ -742,7 +749,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 		if ((event->x >= r.x) && (event->x < (r.x + r.w)) &&
 		    (event->y >= r.y) && (event->y < (r.y + r.h))) {
 			if (win->set_focus (rg.p)) {
-				get_window()->invalidate (false);
+				redraw_area();
 			}
 			selection = rg.p;
 			break;
@@ -762,123 +769,11 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 		return true;
 	}
 
+#ifdef DP_TEST
 	ContainerPtr c = selection->get_container();
-	if (c) {
-		ContainerPtr p = c->get_parent();
-		if (p) {
-#if 1 // MOVE_TEST
-			// log_info ("%10ld  %10ld  %10ld", c->parent_offset, c->parent_offset + c->bytes_size, c->bytes_size);
-			if (!c->is_a ("GptPartition"))
-				return true;
-
-			// log_info ("MOVE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
-			std::string desc = "Test: move " + c->get_name_default();
-			std::string dev = p->get_device_inherit();
-			std::uint64_t off  = 0;
-
-			if (dev == "/dev/loop1")  { off = 536870912; }
-			if (dev == "/dev/loop2")  { off = 811580928; }
-			if (dev == "/dev/loop3")  { off =     17408; }
-			if (dev == "/dev/loop4")  { off = 644243456; }
-			if (dev == "/dev/loop5")  { off = 811580928; }
-			if (dev == "/dev/loop6")  { off =     17408; }
-			if (dev == "/dev/loop7")  { off = 536870912; }
-			if (dev == "/dev/loop8")  { off = 209715200; }
-			if (dev == "/dev/loop9")  { off = 104857600; }
-
-			ContainerPtr new_parent = Container::start_transaction (p, desc);
-			if (!new_parent) {
-				return true;
-			}
-
-			new_parent->move_child(c, off, c->bytes_size);
-			Container::commit_transaction();
-			top_level->dump3();
+	test_execute (c, top_level->name);
+	top_level->dump3();
 #endif
-#if 0 // RESIZE_TEST
-			if (!c->is_a ("GptPartition"))
-				return true;
-
-			// log_info ("RESIZE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
-			std::string desc = "Test: resize " + c->get_name_default();
-			std::string dev = p->get_device_inherit();
-			std::uint64_t off  = 0;
-			std::uint64_t size = 0;
-
-			if (dev == "/dev/loop1")  { off =   1048576; size =  805288960; }
-			if (dev == "/dev/loop2")  { off =   1048576; size = 1072676352; }
-			if (dev == "/dev/loop3")  { off = 358400000; size =  446906368; }
-			if (dev == "/dev/loop4")  { off = 358400000; size =  715324928; }
-			if (dev == "/dev/loop5")  { off = 268435456; size =  536870912; }
-			if (dev == "/dev/loop6")  { off =     17408; size =  805288960; }
-			if (dev == "/dev/loop7")  { off = 268435456; size =  805289472; }
-			if (dev == "/dev/loop8")  { off =     17408; size = 1073707520; }
-			if (dev == "/dev/loop9")  { off = 268435456; size =  448790528; }
-			if (dev == "/dev/loop10") { off =     17408; size =  717208576; }
-			if (dev == "/dev/loop11") { off = 268435456; size =  805289472; }
-			if (dev == "/dev/loop12") { off =     17408; size = 1073707520; }
-
-			ContainerPtr new_parent = Container::start_transaction (p, desc);
-			if (!new_parent) {
-				return true;
-			}
-
-			new_parent->move_child(c, off, size);
-			Container::commit_transaction();
-#endif
-#if 0 // DELETE_TEST
-			if (!c->is_a ("GptPartition"))
-				return true;
-			std::string name = c->get_device_short();
-			if ((name != "loop1p2") && (name != "loop2p2") && (name != "loop3p2") && (name != "loop4p2") && (name != "loop5p2") && (name != "loop6p2") && (name != "loop7p1") && (name != "loop8p1") && (name != "loop9p1"))
-				return true;
-
-			log_info ("DELETE parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
-			std::string desc = "Test: delete " + c->get_name_default();
-			ContainerPtr new_parent = Container::start_transaction (p, desc);
-			if (!new_parent) {
-				return true;
-			}
-			new_parent->delete_child(c);
-			Container::commit_transaction();
-#endif
-#if 0 // ADD_TEST
-			if (!c->is_a ("Unallocated"))
-				return true;
-			log_info ("ADD parent %s(%p), child %s(%p)", p->get_name_default().c_str(), p.get(), c->get_name_default().c_str(), c.get());
-			log_info ("po   = %ld", c->parent_offset);
-			log_info ("size = %ld", c->bytes_size);
-			std::string desc = "Test: add " + c->get_name_default();
-			std::string dev = p->get_device_inherit();
-
-			std::uint64_t off  = 0;
-			std::uint64_t size = 0;
-			if (dev == "/dev/loop1") { off = 358612992; size =  357564416; }
-			if (dev == "/dev/loop2") { off = 358612992; size =  357564416; }
-			if (dev == "/dev/loop3") { off = 358612992; size =  715111936; }
-			if (dev == "/dev/loop4") { off = 358612992; size =  357564416; }
-			if (dev == "/dev/loop5") { off = 358612992; size =  357564416; }
-			if (dev == "/dev/loop6") { off = 358612992; size =  715111936; }
-			if (dev == "/dev/loop7") { off =     17408; size =  716160000; }
-			if (dev == "/dev/loop8") { off =     17408; size =  716160000; }
-			if (dev == "/dev/loop9") { off =     17408; size = 1073707520; }
-
-			ContainerPtr part = Partition::create();
-			part->sub_type ("TestAdd");
-			part->parent_offset = off;
-			part->bytes_size    = size;
-			part->bytes_used    = size;
-			part->name          = "wibble";
-
-			ContainerPtr new_parent = Container::start_transaction (p, desc);
-			if (!new_parent) {
-				return true;
-			}
-			new_parent->add_child(part, false);
-			Container::commit_transaction();
-#endif
-		}
-	}
 
 	return true;		// We've handled the event
 }
@@ -889,7 +784,7 @@ DrawingArea::on_mouse_leave (GdkEventCrossing* UNUSED(event))
 #if 0
 	if (mouse_close) {
 		mouse_close = false;
-		get_window()->invalidate (false); // everything for now
+		redraw_area();
 	}
 #endif
 	return true;
@@ -906,7 +801,7 @@ DrawingArea::on_mouse_motion (GdkEventMotion* UNUSED(event))
 	mouse_close = ((event->y > 25) and (event->x < 90));
 
 	if (mouse_close != old) {
-		get_window()->invalidate (false); // everything for now
+		redraw_area();
 	}
 #endif
 
@@ -1139,7 +1034,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 		// return;
 	}
 
-	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = get_window();
 	if (!win) {
 		log_debug ("No Window");
 		return;
@@ -1161,7 +1056,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 	}
 #endif
 
-	get_window()->invalidate (false);
+	redraw_area();
 }
 
 bool
@@ -1423,20 +1318,20 @@ DrawingArea::on_menu_select (GfxContainerPtr gfx, Action action)
 bool
 DrawingArea::get_coords (int& x, int& y)
 {
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Window *win = reinterpret_cast<Window*> (get_toplevel());
+	Window *win = get_window();
 	if (!win) {
 		log_debug ("No Window");
 		return false;
 	}
 
+	log_debug ("top_level: %s", win->get_name().c_str());
 	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
 		log_debug ("No focus");
 		return false;
 	}
 
-	Glib::RefPtr<Gdk::Window> w = get_window();
+	Glib::RefPtr<Gdk::Window> w = Gtk::Widget::get_window();
 	if (!w) {
 		return false;
 	}
@@ -1445,15 +1340,11 @@ DrawingArea::get_coords (int& x, int& y)
 	int oy = 0;
 	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
-	log_debug ("top_level: %s", get_toplevel()->get_name().c_str());
-	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
-	if (!window) {
-		return false;
-	}
+	log_debug ("top_level: %s", win->get_name().c_str());
 
 	int tx = 0;
 	int ty = 0;
-	if (!translate_coordinates (*window, 0, 0, tx, ty)) {
+	if (!translate_coordinates (*win, 0, 0, tx, ty)) {
 		return false;		// Coords of DrawingArea within Window's window
 	}
 
@@ -1528,20 +1419,35 @@ void
 DrawingArea::gfx_container_added (const GfxContainerPtr& UNUSED(child))
 {
 	log_error ("gfx_container_added");
-	get_window()->invalidate (false);
+	redraw_area();
 }
 
 void
 DrawingArea::gfx_container_changed (const GfxContainerPtr& UNUSED(after))
 {
 	log_error ("gfx_container_changed");
-	get_window()->invalidate (false);
+	redraw_area();
 }
 
 void
 DrawingArea::gfx_container_deleted (const GfxContainerPtr& UNUSED(child))
 {
 	log_error ("gfx_container_deleted");
-	get_window()->invalidate (false);
+	redraw_area();
+}
+
+
+Window*
+DrawingArea::get_window (void)
+{
+	return dynamic_cast<Window*> (get_toplevel());
+}
+
+void
+DrawingArea::redraw_area (void)
+{
+	auto win = Gtk::Widget::get_window();
+	if (win)
+		win->invalidate (false);
 }
 

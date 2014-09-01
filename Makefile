@@ -51,6 +51,7 @@ PROP	?= $(A)
 DOT	?= $(A)
 HEX	?= $(A)
 
+TEST	?= 1
 UNUSED	?= $(A)
 
 # ----------------------------------------------------------------------------
@@ -99,6 +100,7 @@ CFLAGS-$(MD)		+= -DDP_MD
 CFLAGS-$(MSDOS)		+= -DDP_MSDOS
 CFLAGS-$(NTFS)		+= -DDP_NTFS
 CFLAGS-$(PROP)		+= -DDP_PROP
+CFLAGS-$(TEST)		+= -DDP_TEST
 CFLAGS-$(UNUSED)	+= -DDP_UNUSED
 
 SRC-$(BTRFS)		+= btrfs.cpp
@@ -118,6 +120,7 @@ SRC-$(MD)		+= md_linear.cpp md_mirror.cpp md_partition.cpp md_raid.cpp md_stripe
 SRC-$(MSDOS)		+= extended.cpp msdos.cpp msdos_partition.cpp
 SRC-$(NTFS)		+= ntfs.cpp
 SRC-$(PROP)		+= prop_visitor.cpp
+SRC-$(TEST)		+= test.cpp
 
 ifeq ($(GUI),1)
 	SRC-$(TREE)	+= tree_view.cpp

@@ -251,7 +251,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res1->bytes_size    = 512 * 34;		// align (512 * 34, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	//RAR g->add_child (res1, false);		// change to add_reserved?
+	g->add_child (res1, false);		// change to add_reserved?
 
 	PartitionPtr res2 = Partition::create();
 	res2->sub_type ("Space");
@@ -259,7 +259,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res2->bytes_size    = 512 * 33;		// align (512 * 33, 1024*1024);
 	res2->bytes_used    = res2->bytes_size;
 	res2->parent_offset = g->bytes_size - res2->bytes_size;		// End of the partition
-	//RAR g->add_child (res2, false);
+	g->add_child (res2, false);
 
 	delete_region (empty, 0, 34);
 
@@ -312,7 +312,7 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		log_debug ("\t\t\tfinish = %ld", le64_to_cpup (buffer+40) * 512);
 		log_debug ("\t\t\tsize   = %ld (%s)", p->bytes_size, s.c_str());
 
-		g->add_child (p, false);	//RAR probe=true
+		g->add_child (p, true);
 	}
 
 	for (auto& r : empty) {
@@ -338,5 +338,4 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	Container::commit_transaction();
 	return true;
 }
-
 

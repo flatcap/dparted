@@ -48,6 +48,9 @@
 #ifdef DP_LVM
 #include "lvm_group.h"
 #endif
+#ifdef DP_TEST
+#include "test.h"
+#endif
 #include "utils.h"
 #include "list_visitor.h"
 #include "timeline.h"
@@ -214,7 +217,7 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 #endif
 
 	ContainerPtr top_level = Container::create();	// Dropping any old results
-	top_level->name = "dummy";
+	top_level->name = "TopLevel";
 	timeline = Timeline::create (top_level);
 
 	if (devices.empty()) {
@@ -274,6 +277,26 @@ App::scan (std::vector<std::string>& devices, scan_async_cb_t fn)
 	return top_level;
 }
 
+#ifdef DP_TEST
+ContainerPtr
+App::scan_test (std::string name, scan_async_cb_t fn)
+{
+	LOG_TRACE;
+
+	ContainerPtr top_level = Container::create();	// Dropping any old results
+	top_level->name = name;
+	timeline = Timeline::create (top_level);
+
+	test_generate (top_level, name);
+
+	if (fn) {
+		fn (top_level);
+	}
+
+	return top_level;
+}
+
+#endif
 bool
 App::process_queue_item (ContainerPtr item)
 {

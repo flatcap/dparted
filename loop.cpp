@@ -140,6 +140,15 @@ Loop::create (const std::string& losetup)
 	return l;
 }
 
+LoopPtr
+Loop::create (void)
+{
+	LoopPtr l (new Loop());
+	l->self = l;
+
+	return l;
+}
+
 
 Loop&
 Loop::operator= (const Loop& c)

@@ -32,6 +32,7 @@ class Loop : public Block
 {
 public:
 	static LoopPtr create (const std::string& losetup);
+	static LoopPtr create (void);
 	virtual ~Loop();
 	Loop& operator= (const Loop& c);
 	Loop& operator= (Loop&& c);

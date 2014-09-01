@@ -169,9 +169,6 @@ Container::Container (const Container& c) :
 	device_mmap         = c.device_mmap;
 	seqnum              = c.seqnum;
 
-	//RAR container_listeners = c.container_listeners;	//RAR tmp
-	//RAR don't copy listeners, do it on the ::swap
-
 	// Of the remaining Container members:
 	// generated
 	//	self
@@ -179,6 +176,7 @@ Container::Container (const Container& c) :
 	//	unique_id
 	// non-copyable:
 	//	mutex_children
+	//	container_listeners
 }
 
 Container::Container (Container&& c)
@@ -396,7 +394,7 @@ Container::add_child (ContainerPtr child, bool probe)
 		txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
 	}
 
-	if (bytes_size == 0) {	// We are a dummy device
+	if (is_top_level()) {
 		return;
 	}
 
@@ -844,7 +842,7 @@ Container::get_parent (void)
 }
 
 ContainerPtr
-Container::get_toplevel (void)
+Container::get_top_level (void)
 {
 	ContainerPtr parent = get_smart();
 	ContainerPtr p = get_parent();
@@ -854,6 +852,13 @@ Container::get_toplevel (void)
 	}
 
 	return parent;
+}
+
+bool
+Container::is_top_level (void)
+{
+	ContainerPtr p = parent.lock();
+	return (!p);
 }
 
 
@@ -1279,9 +1284,8 @@ Container::backup (void)
 
 	ContainerPtr prev = get_smart();
 
-	if (prev->parent.expired()) {
-		// We're a dummy device.  Don't make any changes
-		return prev;
+	if (prev->is_top_level()) {
+		return prev;	// Don't make any changes
 	}
 
 	ContainerPtr c = prev->copy();

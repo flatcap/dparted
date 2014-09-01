@@ -52,9 +52,6 @@ GfxContainer::create (GfxContainerPtr p, ContainerPtr c)
 
 	g->theme = gui_app->get_theme();
 
-	// if (p) {			// Don't link the top-level (dummy) objects
-	// 	c->add_listener(g);	// Container listener
-	// }
 	c->add_listener(g);		// Container listener
 	gui_app->add_listener(g);	// Theme listener
 
@@ -131,8 +128,6 @@ GfxContainer::init (ContainerPtr c)
 	name = c->name;
 	type = c->get_type();
 	device = c->get_device_name();
-	if (name != "dummy")
-		name = c->get_device_short_inherit();	//RAR
 
 	try {
 		display        = theme->get_config (path, name, "display");
@@ -443,7 +438,7 @@ GfxContainer::get_parent (void)
 }
 
 GfxContainerPtr
-GfxContainer::get_toplevel (void)
+GfxContainer::get_top_level (void)
 {
 	GfxContainerPtr parent = get_smart();
 	GfxContainerPtr p = get_parent();
@@ -453,6 +448,13 @@ GfxContainer::get_toplevel (void)
 	}
 
 	return parent;
+}
+
+bool
+GfxContainer::is_top_level (void)
+{
+	GfxContainerPtr p = parent.lock();
+	return (!p);
 }
 
 
@@ -601,7 +603,7 @@ GfxContainer::container_added (const ContainerPtr& cont)
 {
 	return_if_fail (cont);
 
-	// get_toplevel()->dump3();
+	// get_top_level()->dump3();
 	// LOG_TRACE;
 
 	GfxContainerPtr gparent = get_smart();
@@ -646,7 +648,7 @@ GfxContainer::container_changed (const ContainerPtr& after)
 {
 	return_if_fail (after);
 
-	// get_toplevel()->dump3();
+	// get_top_level()->dump3();
 	std::string name;
 	ContainerPtr c = container.lock();
 	if (!c) {
@@ -665,7 +667,7 @@ GfxContainer::container_changed (const ContainerPtr& after)
 
 	container = after;
 
-	parent_offset = after->parent_offset;	//RAR need to re-sync the entire object
+	parent_offset = after->parent_offset;	//XXX need to re-sync the entire object
 	bytes_size    = after->bytes_size;
 
 	// Now notify all of OUR listeners
@@ -686,7 +688,7 @@ GfxContainer::container_deleted (const ContainerPtr& child)
 {
 	return_if_fail (child);
 
-	// get_toplevel()->dump3();
+	// get_top_level()->dump3();
 	// LOG_TRACE;
 
 	GfxContainerPtr gparent = get_smart();
@@ -730,7 +732,7 @@ bool compare (const GfxContainerPtr& a, const GfxContainerPtr& b)
 	return_val_if_fail (b, true);
 
 	if (a->parent_offset != b->parent_offset)
-		return (a->parent_offset > b->parent_offset);
+		return (a->parent_offset < b->parent_offset);
 
 	ContainerPtr ca = a->get_container();
 	ContainerPtr cb = b->get_container();

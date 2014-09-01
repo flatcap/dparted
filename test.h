@@ -16,33 +16,15 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _OPTIONGROUP_H_
-#define _OPTIONGROUP_H_
+#ifndef _TEST_H_
+#define _TEST_H_
 
-#include <vector>
 #include <string>
 
-#include <glibmm/optiongroup.h>
+#include "container.h"
 
-class OptionGroup : public Glib::OptionGroup
-{
-public:
-	OptionGroup();
+void test_generate (ContainerPtr& parent, const std::string& name);
+void test_execute  (ContainerPtr& child,  const std::string& name);
 
-	bool quit = false;
-	int x = -1;	// Window coordinates
-	int y = -1;
-	int w = -1;	// Window size
-	int h = -1;
-
-	std::vector<std::string> config;
-	std::vector<std::string> theme;
-
-#ifdef DP_TEST
-	Glib::ustring test;
-#endif
-};
-
-
-#endif // _OPTIONGROUP_H_
+#endif // _TEST_H_
 
