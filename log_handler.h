@@ -48,7 +48,8 @@ public:
 	bool show_depth        = false;
 	bool show_thread_id    = false;
 	bool show_uniq_index   = false;
-	bool show_timestamp    = false;
+	bool show_date         = false;
+	bool show_time         = false;
 	bool show_microseconds = true;
 	bool show_level        = false;
 	bool show_file_line    = false;

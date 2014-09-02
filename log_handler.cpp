@@ -142,10 +142,19 @@ LogHandler::log_line (std::uint64_t index, std::uint64_t thread_id, std::uint64_
 		str += ss.str() + " ";
 	}
 
-	if (show_timestamp) {
-		std::vector<char> tstr (20, 0);
+	if (show_date) {
+		std::vector<char> tstr (12, 0);
 		std::time_t now = std::time (nullptr);
-		if (std::strftime(tstr.data(), tstr.size(), "%F %T", std::localtime (&now)) != 0) {
+		if (std::strftime(tstr.data(), tstr.size(), "%F", std::localtime (&now)) != 0) {
+			str += tstr.data();
+			str += " ";
+		}
+	}
+
+	if (show_time) {
+		std::vector<char> tstr (10, 0);
+		std::time_t now = std::time (nullptr);
+		if (std::strftime(tstr.data(), tstr.size(), "%T", std::localtime (&now)) != 0) {
 			str += tstr.data();
 
 			if (show_microseconds) {
