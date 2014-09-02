@@ -27,7 +27,7 @@ L	?= 0
 D	?= 1
 T	?= 1
 
-GUI	?= 1
+GUI	?= 0
 TREE	?= 0
 AREA	?= 1
 

@@ -177,7 +177,6 @@ test_generate_move (ContainerPtr& parent)
 		// Loop, Part, Offset, Size
 		std::make_tuple (1, true,          0,  357564416),
 		std::make_tuple (1, false, 357564416,  716177408),
-#if 0
 		std::make_tuple (2, true,          0,  357564416),
 		std::make_tuple (2, false, 357564416,  716177408),
 		std::make_tuple (3, false,         0,  268435456),
@@ -199,10 +198,53 @@ test_generate_move (ContainerPtr& parent)
 		std::make_tuple (9, false,         0,  209715200),
 		std::make_tuple (9, true,  209715200,  734003200),
 		std::make_tuple (9, false, 943718400,  130023424),
-#endif
 	};
 
 	create_disks (parent, dd, "move");
+}
+
+void
+test_generate_myriad (ContainerPtr& parent)
+{
+	return_if_fail (parent);
+#if 0
+	ContainerPtr c = Container::create();
+	c->name = "top";
+	all_children.push_back(c);
+
+	for (int i = 0; i < 99; i++) {
+#if 1
+		start_thread (std::bind (add_child, i), "new");
+#else
+		add_child(i);
+#endif
+	}
+
+	wait_for_threads();
+	// log_info ("START: %d", count_containers(c));
+
+#if 0
+	for (int i = 0; i < 100; i++) {
+		start_thread (std::bind (alter_child), "alter");
+	}
+#endif
+
+#if 0
+	for (int i = 0; i < 3; i++) {
+		// start_thread (std::bind (delete_child), "delete");
+		delete_child();
+	}
+#endif
+
+	// wait_for_threads();
+
+	// log_info ("Threads have finished");
+	// run_list(c);
+#if 1
+	// tidy_children();
+	log_info ("%dC/%ldV children", count_containers(c), all_children.size());
+#endif
+#endif
 }
 
 void
@@ -250,14 +292,11 @@ test_generate_resize (ContainerPtr& parent)
 void
 test_generate (ContainerPtr& parent, const std::string& name)
 {
-	if (name == "add")
-		test_generate_add (parent);
-	else if (name == "delete")
-		test_generate_delete (parent);
-	else if (name == "move")
-		test_generate_move (parent);
-	else if (name == "resize")
-		test_generate_resize (parent);
+	     if (name == "add")    test_generate_add    (parent);
+	else if (name == "delete") test_generate_delete (parent);
+	else if (name == "move")   test_generate_move   (parent);
+	else if (name == "myriad") test_generate_myriad (parent);
+	else if (name == "resize") test_generate_resize (parent);
 	else
 		log_error ("Unknown test case: %s", name.c_str());
 }
@@ -316,6 +355,7 @@ void
 test_execute_delete (ContainerPtr& child)
 {
 	return_if_fail (child);
+	main_app->get_timeline()->dump();
 
 	ContainerPtr parent = child->get_parent();
 	if (!parent)
@@ -332,11 +372,14 @@ test_execute_delete (ContainerPtr& child)
 	if (!new_parent)
 		return;
 
-	if (new_parent->delete_child(child)) {
+	if (true) {
+	// if (new_parent->delete_child(child)) {
 		Container::commit_transaction();
 	} else {
 		Container::cancel_transaction();
 	}
+
+	parent = nullptr;
 	main_app->get_timeline()->dump();
 }
 
@@ -433,9 +476,6 @@ test_execute (ContainerPtr& child, const std::string& name)
 		test_execute_move (child);
 	else if (name == "resize")
 		test_execute_resize (child);
-	else
-		log_error ("Unknown test case: %s", name.c_str());
-
-	main_app->get_timeline()->dump();
+	// else nothing to do
 }
 

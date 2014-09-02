@@ -110,7 +110,6 @@ main (int argc, char *argv[])
 	text_app = std::make_shared<TextApp>();
 	main_app = text_app;
 	status = text_app->run (argc, argv);
-	// text_app->test();
 	text_app = nullptr;
 #endif
 	main_app = nullptr;

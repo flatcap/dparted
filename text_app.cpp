@@ -35,6 +35,9 @@
 #ifdef DP_HEX
 #include "hex_visitor.h"
 #endif
+#ifdef DP_TEST
+#include "test.h"
+#endif
 #include "log.h"
 #include "stringnum.h"
 
@@ -72,6 +75,9 @@ void usage (void)
 #ifdef DP_PROP
 	log_info ("\t-p  properties");
 #endif
+#ifdef DP_TEST
+	log_info ("\t-T NAME  Test case NAME");
+#endif
 }
 
 int
@@ -93,6 +99,9 @@ TextApp::run (int argc, char **argv)
 #endif
 #ifdef DP_PROP
 	bool prop = false;
+#endif
+#ifdef DP_TEST
+	std::string test;
 #endif
 	bool error = false;
 
@@ -159,6 +168,9 @@ TextApp::run (int argc, char **argv)
 #ifdef DP_PROP
 					case 'p': prop  = true; break;
 #endif
+#ifdef DP_TEST
+					case 'T': test  = argv[2]; ++argv; --argc; break;
+#endif
 					default:
 						log_error ("Unknown option: -%c", argv[1][i]);
 						error = true;
@@ -174,7 +186,16 @@ TextApp::run (int argc, char **argv)
 		return 1;
 	}
 
-	ContainerPtr top_level = main_app->scan (disks, nullptr);
+	ContainerPtr top_level;
+#ifdef DP_TEST
+	if (	test.empty()) {
+#endif
+		top_level = scan (disks, nullptr);
+#ifdef DP_TEST
+	} else {
+		top_level = scan_test (test, nullptr);
+	}
+#endif
 
 #ifdef DP_DOT
 	if (dot) {
@@ -212,26 +233,26 @@ TextApp::run (int argc, char **argv)
 #ifdef DP_PROP
 	if (prop) run_prop (top_level);
 #endif
-#if 0
-	auto it1 = std::begin (top_level->get_children());
-	ContainerPtr c1 = *it1;
-	// log_code (c1);
+#ifdef DP_TEST
+	if (!test.empty()) {
+		auto it1 = std::begin (top_level->get_children());	// loop1
+		ContainerPtr c1 = *it1;
+		log_code (c1);
 
-	auto it2 = std::begin (c1->get_children());
-	ContainerPtr c2 = *it2;
-	// log_code (c2);
+		auto it2 = std::begin (c1->get_children());		// gpt
+		ContainerPtr c2 = *it2;
+		log_code (c2);
 
-	auto it3 = std::begin (c2->get_children());
-	advance (it3, 8);
-	ContainerPtr c3 = *it3;
-	// log_code (c3);
+		auto it3 = std::begin (c2->get_children());		// part2
+		advance (it3, 1);
+		ContainerPtr c3 = *it3;
+		log_code (c3);
 
-	auto it4 = std::begin (c3->get_children());
-	ContainerPtr c4 = *it4;
-	log_code (c4);
-
-	ContainerPtr dupe = c4->copy();
-	log_code (dupe);
+		top_level = nullptr;
+		c1 = nullptr;
+		c2 = nullptr;
+		test_execute (c3, test);
+	}
 #endif
 
 	return 0;
