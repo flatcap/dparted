@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 
+#include "app.h"
 #include "gpt.h"
 #include "gpt_partition.h"
 #include "log.h"
@@ -144,6 +145,7 @@ test_generate_delete (ContainerPtr& parent)
 		std::make_tuple (1, true,          0,  357564416),
 		std::make_tuple (1, true,  357564416,  358612992),
 		std::make_tuple (1, true,  716177408,  357564416),
+#if 0
 		std::make_tuple (2, true,          0,  357564416),
 		std::make_tuple (2, true,  357564416,  358612992),
 		std::make_tuple (2, false, 716177408,  357564416),
@@ -162,6 +164,7 @@ test_generate_delete (ContainerPtr& parent)
 		std::make_tuple (8, true,          0,  716177408),
 		std::make_tuple (8, false, 716177408,  357564416),
 		std::make_tuple (9, true,          0, 1073741824)
+#endif
 	};
 
 	create_disks (parent, dd, "delete");
@@ -334,6 +337,7 @@ test_execute_delete (ContainerPtr& child)
 	} else {
 		Container::cancel_transaction();
 	}
+	main_app->get_timeline()->dump();
 }
 
 void
@@ -431,5 +435,7 @@ test_execute (ContainerPtr& child, const std::string& name)
 		test_execute_resize (child);
 	else
 		log_error ("Unknown test case: %s", name.c_str());
+
+	main_app->get_timeline()->dump();
 }
 

@@ -122,8 +122,7 @@ Timeline::commit (TransactionPtr txn)
 	txn_list.push_back (txn);
 	txn_cursor = std::end (txn_list);
 
-	dump();
-
+	// dump();
 	return true;
 }
 
@@ -132,6 +131,7 @@ Timeline::dump (void)
 {
 	const char *names[] = { "add", "delete", "change" };
 
+	log_info ("---------------------------------------------------------------------------------------------------------------");
 	log_info ("Timeline: %ld events", txn_list.size());
 	for (auto& t : txn_list) {
 		std::chrono::steady_clock::time_point now  = std::chrono::steady_clock::now();
@@ -141,10 +141,36 @@ Timeline::dump (void)
 		log_code ("\tCommit: %s (%dms ago)", t->description.c_str(), ms);
 		for (auto n : t->notifications) {
 			NotifyType type = std::get<0>(n);
-			std::string n1; ContainerPtr c1 = std::get<1>(n).lock(); if (c1) n1 = c1->get_name_default();
-			std::string n2; ContainerPtr c2 = std::get<2>(n).lock(); if (c2) n2 = c2->get_name_default();
 
-			log_code ("\t\t%-7s: %s(%p) %s(%p)", names[(int) type], n1.c_str(), c1.get(), n2.c_str(), c2.get());
+			std::string name1;
+			std::uint64_t uniq1 = 0;
+			ContainerPtr cont1 = std::get<1>(n).lock();
+			long use1 = cont1.use_count();
+			if (cont1) {
+				name1 = cont1->get_name_default();
+				uniq1 = cont1->unique_id;
+			}
+
+			std::string name2;
+			std::uint64_t uniq2 = 0;
+			ContainerPtr cont2 = std::get<2>(n).lock();
+			long use2 = cont2.use_count();
+			if (cont2) {
+				name2 = cont2->get_name_default();
+				uniq2 = cont2->unique_id;
+			}
+
+			log_code ("\t\t%-7s: %-12s{U%03d}(%p:%ld) : %-12s{U%03d}(%p:%ld)",
+					names[(int) type],
+					name1.c_str(),
+					uniq1,
+					cont1.get(),
+					use1,
+					name2.c_str(),
+					uniq2,
+					cont2.get(),
+					use2);
 		}
 	}
+	log_info ("---------------------------------------------------------------------------------------------------------------");
 }

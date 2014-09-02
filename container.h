@@ -203,8 +203,10 @@ protected:
 private:
 	MmapPtr	device_mmap;
 
+public://RAR
 	std::uint64_t unique_id = 0;
 
+private://RAR
 	std::vector<ContainerListenerWeak> container_listeners;
 };
 
