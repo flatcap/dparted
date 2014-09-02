@@ -1363,3 +1363,22 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 	}
 }
 
+
+#ifdef DP_TEST
+ContainerPtr
+Container::get_nth_child (std::initializer_list<unsigned int> route)
+{
+	ContainerPtr c = get_smart();
+
+	for (auto i : route) {
+		if (i >= c->children.size()) {
+			return {};
+		}
+
+		c = c->children[i];
+	}
+
+	return c;
+}
+
+#endif

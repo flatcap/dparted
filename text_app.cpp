@@ -235,23 +235,8 @@ TextApp::run (int argc, char **argv)
 #endif
 #ifdef DP_TEST
 	if (!test.empty()) {
-		auto it1 = std::begin (top_level->get_children());	// loop1
-		ContainerPtr c1 = *it1;
-		log_code (c1);
-
-		auto it2 = std::begin (c1->get_children());		// gpt
-		ContainerPtr c2 = *it2;
-		log_code (c2);
-
-		auto it3 = std::begin (c2->get_children());		// part2
-		advance (it3, 1);
-		ContainerPtr c3 = *it3;
-		log_code (c3);
-
-		top_level = nullptr;
-		c1 = nullptr;
-		c2 = nullptr;
-		test_execute (c3, test);
+		top_level = top_level->get_nth_child ({0,0,1});
+		test_execute (top_level, test);
 	}
 #endif
 

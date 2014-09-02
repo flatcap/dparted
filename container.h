@@ -19,7 +19,9 @@
 #ifndef _CONTAINER_H_
 #define _CONTAINER_H_
 
+#include <algorithm>
 #include <cstdint>
+#include <initializer_list>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -118,6 +120,10 @@ public:
 	void notify_add    (ContainerPtr child);
 	void notify_change (ContainerPtr after);
 	void notify_delete (ContainerPtr child);
+
+#ifdef DP_TEST
+	ContainerPtr get_nth_child (std::initializer_list<unsigned int> route);
+#endif
 
 public:
 	// Property helper functions
