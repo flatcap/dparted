@@ -194,11 +194,14 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 			return false;
 		}
 
-		new_parent->add_child (f, false);	//XXX assumption fs is a leaf
-							//XXX move this into get_*?
-		Container::commit_transaction();
+		if (new_parent->add_child (f, false)) {	//XXX assumption fs is a leaf, move this into get_*?
+			Container::commit_transaction();
+			return true;
+		} else {
+			Container::cancel_transaction();
+			return false;
+		}
 
-		return true;
 	}
 
 	return false;

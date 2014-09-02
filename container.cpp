@@ -363,10 +363,10 @@ Container::perform_action (Action action)
 }
 
 
-void
+bool
 Container::add_child (ContainerPtr child, bool probe)
 {
-	return_if_fail (child);
+	return_val_if_fail (child, false);
 	LOG_TRACE;
 
 	if (bytes_size == 0) {
@@ -395,7 +395,7 @@ Container::add_child (ContainerPtr child, bool probe)
 	}
 
 	if (is_top_level()) {
-		return;
+		return true;
 	}
 
 	/* Check:
@@ -406,18 +406,21 @@ Container::add_child (ContainerPtr child, bool probe)
 	 */
 
 	bytes_used += child->bytes_size;
+	return true;
 }
 
-void
+bool
 Container::delete_child (ContainerPtr UNUSED(child))
 {
 	log_code ("delete_child NOTIMPL");
+	return false;
 }
 
-void
+bool
 Container::move_child (ContainerPtr UNUSED(child), std::uint64_t UNUSED(offset), std::uint64_t UNUSED(size))
 {
 	log_code ("move_child NOTIMPL");
+	return false;
 }
 
 

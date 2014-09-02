@@ -140,17 +140,17 @@ Partition::perform_action (Action action)
 }
 
 
-void
+bool
 Partition::add_child (ContainerPtr child, bool probe)
 {
-	return_if_fail (child);
+	return_val_if_fail (child, false);
 
 	if (is_a ("Unallocated")) {
-		get_parent()->add_child (child, probe);		//XXX redirect to our parent
-		return;
+		return get_parent()->add_child (child, probe);		//XXX redirect to our parent
 	}
 
-	Container::add_child (child, probe);
+	if (!Container::add_child (child, probe))
+		return false;
 
 	if ((children.size() == 1) && (get_bytes_free() != 0)) {
 		PartitionPtr p = Partition::create();
@@ -159,8 +159,10 @@ Partition::add_child (ContainerPtr child, bool probe)
 		p->bytes_size = get_bytes_free();
 		p->bytes_used = p->bytes_size;
 		p->parent_offset = this->bytes_size - p->bytes_size;	// End of the device
-		Container::add_child (p, false);
+		return Container::add_child (p, false);
 	}
+
+	return false;
 }
 
 

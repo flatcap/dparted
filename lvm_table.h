@@ -47,9 +47,9 @@ public:
 	static bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 
 	template<class T>
-	void add_child (std::shared_ptr<T> child, bool probe);
+	bool __attribute__((warn_unused_result)) add_child (std::shared_ptr<T> child, bool probe);
 
-	virtual void add_child (ContainerPtr child, bool probe);
+	virtual bool __attribute__((warn_unused_result)) add_child (ContainerPtr child, bool probe);
 	virtual bool set_alignment (std::uint64_t bytes);
 
 public:
@@ -69,7 +69,7 @@ protected:
 };
 
 template<class T>
-void
+bool
 LvmTable::add_child (std::shared_ptr<T> child, bool probe)
 {
 	ContainerPtr c (child);

@@ -202,15 +202,18 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			return false;
 		}
 
-		new_parent->add_child (m, false);
+		if (new_parent->add_child (m, false)) {
+			m->bytes_size = new_parent->bytes_size;
+			m->bytes_used = 0;
+			m->parent_offset = 0;
 
-		m->bytes_size = new_parent->bytes_size;
-		m->bytes_used = 0;
-		m->parent_offset = 0;
+			Container::commit_transaction();
+			return true;
+		} else {
+			Container::cancel_transaction();
+			return false;
+		}
 
-		Container::commit_transaction();
-
-		return true;
 	}
 
 	return false;

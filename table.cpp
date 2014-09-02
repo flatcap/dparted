@@ -172,7 +172,7 @@ space_create (std::uint64_t parent_offset, std::uint64_t bytes_size)
 	return space;
 }
 
-void
+bool
 Table::add_child (ContainerPtr child, bool probe)
 {
 	ContainerPtr space;
@@ -189,8 +189,7 @@ Table::add_child (ContainerPtr child, bool probe)
 	}
 
 	if (!space) {
-		Container::add_child (child, probe);
-		return;
+		return Container::add_child (child, probe);
 	}
 
 	log_info ("space has %ld listeners", space->count_listeners());
@@ -243,9 +242,11 @@ Table::add_child (ContainerPtr child, bool probe)
 			txn_add (NotifyType::t_add, parent, s2);
 		}
 	}
+
+	return true;
 }
 
-void
+bool
 Table::delete_child (ContainerPtr child)
 {
 	std::lock_guard<std::recursive_mutex> lock (mutex_children);
@@ -272,7 +273,7 @@ Table::delete_child (ContainerPtr child)
 
 	if (it == end) {
 		log_error ("delete: child doesn't exist");
-		return;
+		return false;
 	}
 
 	bool space_before = false;
@@ -322,11 +323,14 @@ Table::delete_child (ContainerPtr child)
 		}
 	}
 
-	add_child (s, false);
+	if (!add_child (s, false))
+		return false;
+
 	txn_add (NotifyType::t_add, parent, s);
+	return true;
 }
 
-void
+bool
 Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 {
 	log_info ("children : initial");
@@ -409,7 +413,7 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 
 	if (offset < space_off) {				// 1) Fail
 		log_error ("space before isn't big enough (%ld)", space_off - offset);
-		return;
+		return false;
 	} else if (offset == space_off) {			// 2) Delete
 		delete_space = true;
 	} else if ((offset - space_off) < space_size) {		// 3) Smaller
@@ -435,7 +439,7 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 			txn_add (NotifyType::t_add, parent, space_before);
 		} else {
 			log_error ("failed to create space");
-			return;
+			return false;
 		}
 
 		log_info ("new space offset = %ld, size = %ld", space_before->parent_offset, space_before->bytes_size);
@@ -478,7 +482,7 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 
 	if ((offset + size) > (space_off + space_size)) {		// 1) Fail
 		log_error ("space after isn't big enough (%ld)", (offset + size) - (space_off + space_size));
-		return;
+		return false;
 	} else if ((offset + size) == (space_off + space_size)) {	// 2) Delete
 		delete_space = true;
 	} else if ((offset + size) > space_off) {			// 3) Smaller
@@ -504,7 +508,7 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 			txn_add (NotifyType::t_add, parent, space_after);
 		} else {
 			log_error ("failed to create space");
-			return;
+			return false;
 		}
 
 		log_info ("new space offset = %ld, size = %ld", space_after->parent_offset, space_after->bytes_size);
@@ -527,6 +531,8 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 	for (auto& c : children) {
 		log_info (c);
 	}
+
+	return true;
 }
 
 
@@ -646,7 +652,9 @@ Table::fill_space (void)
 	}
 
 	for (auto& i : vm) {
-		add_child (i, false);	// add_free()
+		if (!add_child (i, false)) {
+			log_error ("add space failed");
+		}
 	}
 
 #if 0

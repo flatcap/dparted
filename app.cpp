@@ -449,20 +449,20 @@ tidy_children (void)
 
 }
 
-void
+bool
 add_child (int i)
 {
 	int size = all_children.size();
 	if (size == 0) {
 		log_code ("no children left");
-		return;
+		return false;
 	}
 
 	int pick = rand() % size;
 	ContainerPtr parent = all_children[pick].lock();
 	if (!parent) {
 		log_code ("child %d is dead", pick);
-		return;
+		return false;
 	}
 
 	ContainerPtr c = Container::create();
@@ -472,7 +472,7 @@ add_child (int i)
 	}
 	std::string s = "name" + std::to_string (i) + " ";
 	c->name = s;
-	parent->add_child(c, false);
+	return parent->add_child(c, false);
 }
 
 void
@@ -494,13 +494,13 @@ alter_child (void)
 	child->name += 'M';
 }
 
-void
+bool
 delete_child (void)
 {
 	int size = all_children.size();
 	if (size == 0) {
 		log_code ("no children left");
-		return;
+		return false;
 	}
 
 	int pick = (rand() % (size-1)) + 1;	// Skip 0
@@ -508,24 +508,28 @@ delete_child (void)
 	ContainerPtr child = all_children[pick].lock();
 	if (!child) {
 		log_code ("child %d is dead", pick);
-		return;
+		return false;
 	}
 
 	ContainerPtr parent = child->get_parent();
 	if (!parent) {
 		log_code ("can't delete top-level");
-		return;
+		return false;
 	}
 
 	{
 	std::lock_guard<std::mutex> lock (mutex_children);
 	printf ("\tdeleting: %d children\n", count_containers(child));
 	printf ("%dC/%ldV children\n", count_containers(all_children[0].lock()), all_children.size());
-	parent->delete_child (child);
+	if (!parent->delete_child (child)) {
+		return false;
+	}
 	all_children.erase (std::begin(all_children)+pick);
 	tidy_children();
 	printf ("%dC/%ldV children\n", count_containers(all_children[0].lock()), all_children.size());
 	}
+
+	return true;
 }
 
 void

@@ -26,6 +26,7 @@
 #include "stringnum.h"
 
 #define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
+#define WARN_UNUSED __attribute__((warn_unused_result))
 
 std::uint64_t            align (std::uint64_t num, std::uint64_t round);
 void                     delete_region (std::vector<std::pair<std::uint64_t, std::uint64_t>>& region, std::uint64_t start, std::uint64_t size);

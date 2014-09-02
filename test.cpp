@@ -67,7 +67,8 @@ create_disks (ContainerPtr parent, const disk_def& dd, std::string name)
 			loop->device_major = 7;
 			loop->device_minor = loop_num;
 
-			new_parent->add_child (loop, false);
+			if (!new_parent->add_child (loop, false))
+				break;
 
 			// ----------------------------------------
 
@@ -78,7 +79,8 @@ create_disks (ContainerPtr parent, const disk_def& dd, std::string name)
 			gpt->bytes_size = loop->bytes_size;
 			gpt->name = "Gpt";
 
-			loop->add_child (gpt, false);
+			if (!loop->add_child (gpt, false))
+				break;
 		}
 
 		if (part) {
@@ -89,7 +91,8 @@ create_disks (ContainerPtr parent, const disk_def& dd, std::string name)
 			part->bytes_size    = size;
 			part->name          = "loop" + std::to_string (loop_num) + "p" + std::to_string (part_num);
 
-			gpt->add_child (part, false);
+			if (!gpt->add_child (part, false))
+				break;
 		} else {
 			PartitionPtr space = Partition::create();
 			space->bytes_size    = size;
@@ -99,7 +102,8 @@ create_disks (ContainerPtr parent, const disk_def& dd, std::string name)
 			space->sub_type ("Unallocated");
 			space->name = "Unallocated";
 
-			gpt->add_child (space, false);
+			if (!gpt->add_child (space, false))
+				break;
 		}
 	}
 
@@ -296,8 +300,11 @@ test_execute_add (ContainerPtr& child)
 	if (!new_parent)
 		return;
 
-	new_parent->add_child (part, false);
-	Container::commit_transaction();
+	if (new_parent->add_child (part, false)) {
+		Container::commit_transaction();
+	} else {
+		Container::cancel_transaction();
+	}
 }
 
 void
@@ -324,8 +331,11 @@ test_execute_delete (ContainerPtr& child)
 	if (!new_parent)
 		return;
 
-	new_parent->delete_child(child);
-	Container::commit_transaction();
+	if (new_parent->delete_child(child)) {
+		Container::commit_transaction();
+	} else {
+		Container::cancel_transaction();
+	}
 }
 
 void
@@ -359,8 +369,11 @@ test_execute_move (ContainerPtr& child)
 	if (!new_parent)
 		return;
 
-	new_parent->move_child (child, off, child->bytes_size);
-	Container::commit_transaction();
+	if (new_parent->move_child (child, off, child->bytes_size)) {
+		Container::commit_transaction();
+	} else {
+		Container::cancel_transaction();
+	}
 }
 
 void
@@ -398,8 +411,11 @@ test_execute_resize (ContainerPtr& child)
 	if (!new_parent)
 		return;
 
-	new_parent->move_child (child, off, size);
-	Container::commit_transaction();
+	if (new_parent->move_child (child, off, size)) {
+		Container::commit_transaction();
+	} else {
+		Container::cancel_transaction();
+	}
 }
 
 void

@@ -318,7 +318,10 @@ Loop::discover (ContainerPtr& parent)
 		return;
 
 	for (auto l : loops) {
-		new_parent->add_child (l, true);
+		if (!new_parent->add_child (l, true)) {
+			Container::cancel_transaction();
+			return;
+		}
 	}
 
 	Container::commit_transaction();
@@ -360,8 +363,7 @@ Loop::identify (ContainerPtr& parent, const std::string& name, int fd, struct st
 	ss << "[" << l->device_major << ":" << l->device_minor << "]";
 	l->uuid = ss.str();
 
-	parent->add_child (l, true);
-	return true;
+	return parent->add_child (l, true);
 }
 
 

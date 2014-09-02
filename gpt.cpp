@@ -237,7 +237,8 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		return false;
 	}
 
-	new_parent->add_child (g, false);
+	if (!new_parent->add_child (g, false))
+		return false;
 
 	// Assumption: 1MiB alignment (for now)
 	// Should reserved bits be allocated after actual partitions?
@@ -251,7 +252,9 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res1->bytes_size    = 512 * 34;		// align (512 * 34, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	g->add_child (res1, false);		// change to add_reserved?
+	if (!g->add_child (res1, false)) {		// change to add_reserved?
+		return false;
+	}
 
 	PartitionPtr res2 = Partition::create();
 	res2->sub_type ("Space");
@@ -259,7 +262,9 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res2->bytes_size    = 512 * 33;		// align (512 * 33, 1024*1024);
 	res2->bytes_used    = res2->bytes_size;
 	res2->parent_offset = g->bytes_size - res2->bytes_size;		// End of the partition
-	g->add_child (res2, false);
+	if (!g->add_child (res2, false)) {
+		return false;
+	}
 
 	delete_region (empty, 0, 34);
 
@@ -312,7 +317,9 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		log_debug ("\t\t\tfinish = %ld", le64_to_cpup (buffer+40) * 512);
 		log_debug ("\t\t\tsize   = %ld (%s)", p->bytes_size, s.c_str());
 
-		g->add_child (p, true);
+		if (!g->add_child (p, true)) {
+			return false;
+		}
 	}
 
 	for (auto& r : empty) {
@@ -331,7 +338,9 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		if ((p->parent_offset == 17408) && (p->bytes_size == 1031168)) {
 			log_error ("skipping alignment space");
 		} else {
-			g->add_child (p, false);
+			if (!g->add_child (p, false)) {
+				return false;
+			}
 		}
 	}
 
