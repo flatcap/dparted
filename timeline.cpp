@@ -31,28 +31,6 @@ Timeline::Timeline (void)
 
 Timeline::~Timeline()
 {
-#if 0
-	const char *names[] = { "add", "delete", "change" };
-
-	log_error ("%d transactions", txn_list.size());
-	for (auto& t : txn_list) {
-		std::chrono::steady_clock::time_point now  = std::chrono::steady_clock::now();
-		std::chrono::steady_clock::time_point then = t->timestamp;
-		int ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
-
-		log_code ("Commit: %s (%dms ago)", t->description.c_str(), ms);
-		for (auto n : t->notifications) {
-			NotifyType type = std::get<0>(n);
-			std::string n1; ContainerPtr c1 = std::get<1>(n).lock(); if (c1) n1 = c1->get_name_default();
-			std::string n2; ContainerPtr c2 = std::get<2>(n).lock(); if (c2) n2 = c2->get_name_default();
-
-			log_code ("\t%s:", names[(int) type]);
-			log_code ("\t\t%s(%p)", n1.c_str(), c1.get());
-			log_code ("\t\t%s(%p)", n2.c_str(), c2.get());
-		}
-	}
-#endif
-
 	LOG_DTOR;
 }
 
@@ -73,6 +51,7 @@ Timeline::adjust (int amount)
 	return_val_if_fail (amount, false);
 	log_code ("adjust timeline %+d", amount);
 
+	// return false;
 	if (amount < 0) {
 		if (txn_cursor == std::begin (txn_list)) {
 			log_code ("already at the beginning (%d)", txn_list.size());
@@ -143,6 +122,29 @@ Timeline::commit (TransactionPtr txn)
 	txn_list.push_back (txn);
 	txn_cursor = std::end (txn_list);
 
+	dump();
+
 	return true;
 }
 
+void
+Timeline::dump (void)
+{
+	const char *names[] = { "add", "delete", "change" };
+
+	log_info ("Timeline: %ld events", txn_list.size());
+	for (auto& t : txn_list) {
+		std::chrono::steady_clock::time_point now  = std::chrono::steady_clock::now();
+		std::chrono::steady_clock::time_point then = t->timestamp;
+		int ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
+
+		log_code ("\tCommit: %s (%dms ago)", t->description.c_str(), ms);
+		for (auto n : t->notifications) {
+			NotifyType type = std::get<0>(n);
+			std::string n1; ContainerPtr c1 = std::get<1>(n).lock(); if (c1) n1 = c1->get_name_default();
+			std::string n2; ContainerPtr c2 = std::get<2>(n).lock(); if (c2) n2 = c2->get_name_default();
+
+			log_code ("\t\t%-7s: %s(%p) %s(%p)", names[(int) type], n1.c_str(), c1.get(), n2.c_str(), c2.get());
+		}
+	}
+}

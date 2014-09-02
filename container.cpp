@@ -390,9 +390,7 @@ Container::add_child (ContainerPtr child, bool probe)
 	ContainerPtr parent = get_smart();		// Smart pointer to myself
 	child->parent = parent;
 
-	if (txn) {
-		txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
-	}
+	txn_add (NotifyType::t_add, parent, child);
 
 	if (is_top_level()) {
 		return true;
@@ -1169,9 +1167,9 @@ Container::add_listener (const ContainerListenerPtr& cl)
 	log_listener ("Container %s(%p) add listener: %p", get_name_default().c_str(), this, cl.get());
 	container_listeners.push_back (cl);
 
-	log_info ("listeners:");
+	log_listener ("listeners:");
 	for (auto& l : container_listeners) {
-		log_info ("\t%p", l.lock().get());
+		log_listener ("\t%p", l.lock().get());
 	}
 }
 
@@ -1286,10 +1284,7 @@ Container::backup (void)
 	if (!c)
 		return {};
 
-	if (txn) {
-		//XXX get_txn() function that checks we have a lock
-		txn->notifications.push_back (std::make_tuple (NotifyType::t_change, prev, c));
-	}
+	txn_add (NotifyType::t_change, prev, c);
 
 	log_info ("backup: %s %ld(%p) -> %ld(%p)", name.c_str(), unique_id, prev.get(), c->unique_id, c.get());
 

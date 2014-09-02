@@ -310,7 +310,6 @@ bool
 GfxContainer::set_focus (bool focus)
 {
 	ContainerPtr c = get_container();
-	log_debug ("Focus: %s = %d", c->dump().c_str(), focus);
 	focussed = focus;
 	return true;
 }

@@ -53,6 +53,8 @@ protected:
 	// txn_cursor points to the end of the txn_list unless we're
 	// re-wound time.  In that case it points to the first redo item.
 	std::deque<TransactionPtr>::iterator txn_cursor;
+
+	void dump (void);
 };
 
 #endif // _TIMELINE_H_

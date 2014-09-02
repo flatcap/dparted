@@ -323,9 +323,7 @@ Table::delete_child (ContainerPtr child)
 		}
 	}
 
-	if (!add_child (s, false))
-		return false;
-
+	_add_child (children, s);
 	txn_add (NotifyType::t_add, parent, s);
 	return true;
 }

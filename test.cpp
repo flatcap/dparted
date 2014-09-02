@@ -51,7 +51,7 @@ create_disks (ContainerPtr parent, const disk_def& dd, std::string name)
 
 	for (auto i : dd) {
 		std::tie (loop_num, part, off, size) = i;
-		log_info ("%d, %d, %ld, %ld", loop_num, part, off, size);
+		log_debug ("%d, %d, %ld, %ld", loop_num, part, off, size);
 
 		if (loop_num != loop_num_old) {
 			loop_num_old = loop_num;
@@ -174,6 +174,7 @@ test_generate_move (ContainerPtr& parent)
 		// Loop, Part, Offset, Size
 		std::make_tuple (1, true,          0,  357564416),
 		std::make_tuple (1, false, 357564416,  716177408),
+#if 0
 		std::make_tuple (2, true,          0,  357564416),
 		std::make_tuple (2, false, 357564416,  716177408),
 		std::make_tuple (3, false,         0,  268435456),
@@ -195,6 +196,7 @@ test_generate_move (ContainerPtr& parent)
 		std::make_tuple (9, false,         0,  209715200),
 		std::make_tuple (9, true,  209715200,  734003200),
 		std::make_tuple (9, false, 943718400,  130023424),
+#endif
 	};
 
 	create_disks (parent, dd, "move");
@@ -272,8 +274,8 @@ test_execute_add (ContainerPtr& child)
 		return;
 
 	log_info ("ADD parent %s(%p), child %s(%p)", parent->get_name_default().c_str(), parent.get(), child->get_name_default().c_str(), child.get());
-	log_info ("po   = %ld", child->parent_offset);
-	log_info ("size = %ld", child->bytes_size);
+	log_debug ("po   = %ld", child->parent_offset);
+	log_debug ("size = %ld", child->bytes_size);
 	std::string desc = "Test: add " + child->get_name_default();
 	std::string name = gp->name;
 
@@ -314,10 +316,6 @@ test_execute_delete (ContainerPtr& child)
 
 	ContainerPtr parent = child->get_parent();
 	if (!parent)
-		return;
-
-	ContainerPtr gp = parent->get_parent();
-	if (!gp)
 		return;
 
 	std::string name = child->name;
