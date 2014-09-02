@@ -108,7 +108,6 @@ public:
 	bool __attribute__((warn_unused_result)) add_child (std::shared_ptr<T> child, bool probe);
 
 	void sub_type (const char* name);
-	std::string dump (void);
 
 	PPtr add_string_prop (const std::string& owner, const std::string& name, const std::string& value);
 

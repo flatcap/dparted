@@ -607,7 +607,6 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		if (p) {
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
-			log_debug (this->dump());
 			log_error ("no device and no parent");
 			return nullptr;
 		}
@@ -1159,14 +1158,6 @@ Container::get_uuid_short (void)
 	}
 
 	return u;
-}
-
-std::string
-Container::dump (void)
-{
-	std::stringstream s;
-	s << this;
-	return s.str();
 }
 
 
