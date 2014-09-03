@@ -24,6 +24,8 @@
 #include "transaction.h"
 #include "utils.h"
 
+const char *notify_types[] = { "add", "delete", "change" };
+
 Timeline::Timeline (void)
 {
 	LOG_CTOR;
@@ -51,7 +53,6 @@ Timeline::adjust (int amount)
 	return_val_if_fail (amount, false);
 	log_code ("adjust timeline %+d", amount);
 
-	// return false;
 	if (amount < 0) {
 		if (txn_cursor == std::begin (txn_list)) {
 			log_code ("already at the beginning (%d)", txn_list.size());
@@ -62,13 +63,15 @@ Timeline::adjust (int amount)
 
 		std::string desc = (*txn_cursor)->description;
 		auto& n = (*txn_cursor)->notifications[0];
-		int type = (int) std::get<0>(n);
 
 		ContainerPtr cold = std::get<1>(n);
 		ContainerPtr cnew = std::get<2>(n);
 
-		log_info ("Undo event: %d: %s", type, desc.c_str());
-		exchange (cold, cnew);
+		log_info ("Undo event: '%s'", desc.c_str());
+		log_info (cnew);
+		log_info (cold);
+		log_info ("---------------------------------------------------------------------------------------------------------------");
+		exchange (cnew, cold);
 	} else {
 		if (txn_cursor == std::end (txn_list)) {
 			log_info ("already at the end (%d)", txn_list.size());
@@ -77,12 +80,14 @@ Timeline::adjust (int amount)
 
 		std::string desc = (*txn_cursor)->description;
 		auto& n = (*txn_cursor)->notifications[0];
-		int type = (int) std::get<0>(n);
 
 		ContainerPtr cold = std::get<1>(n);
 		ContainerPtr cnew = std::get<2>(n);
 
-		log_info ("Redo event: %d: %s", type, desc.c_str());
+		log_info ("Redo event: '%s'", desc.c_str());
+		log_info (cold);
+		log_info (cnew);
+		log_info ("---------------------------------------------------------------------------------------------------------------");
 		exchange (cold, cnew);
 
 		txn_cursor++;
@@ -95,8 +100,6 @@ bool
 Timeline::commit (TransactionPtr txn)
 {
 	return_val_if_fail (txn, false);
-
-	const char *names[] = { "add", "delete", "change" };
 
 	if (txn->notifications.empty()) {
 		log_code ("empty transaction");
@@ -112,7 +115,7 @@ Timeline::commit (TransactionPtr txn)
 		std::stringstream n1; ContainerPtr c1 = std::get<1>(n); if (c1) n1 << c1;
 		std::stringstream n2; ContainerPtr c2 = std::get<2>(n); if (c2) n2 << c2;
 
-		log_code ("\t%s:", names[(int) type]);
+		log_code ("\t%s:", notify_types[(int) type]);
 		log_code ("\t\t%s", n1.str().c_str());
 		log_code ("\t\t%s", n2.str().c_str());
 
@@ -129,8 +132,6 @@ Timeline::commit (TransactionPtr txn)
 void
 Timeline::dump (void)
 {
-	const char *names[] = { "add", "delete", "change" };
-
 	log_info ("---------------------------------------------------------------------------------------------------------------");
 	log_info ("Timeline: %ld events", txn_list.size());
 	for (auto& t : txn_list) {
@@ -161,7 +162,7 @@ Timeline::dump (void)
 			}
 
 			log_code ("\t\t%-7s: %-12s{U%03d}(%p:%ld) : %-12s{U%03d}(%p:%ld)",
-					names[(int) type],
+					notify_types[(int) type],
 					name1.c_str(),
 					uniq1,
 					cont1.get(),

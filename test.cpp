@@ -368,8 +368,8 @@ test_execute_delete (ContainerPtr& child)
 	if (!top_level)
 		return;
 
-	log_info ("top_level = %s", top_level->name.c_str());
-	run_list (top_level);
+	// log_info ("top_level = %s", top_level->name.c_str());
+	// run_list (top_level);
 
 	std::string name = child->name;
 	if ((name != "loop1p2") && (name != "loop2p2") && (name != "loop3p2") && (name != "loop4p1") && (name != "loop5p1") && (name != "loop6p1") && (name != "loop7p1") && (name != "loop8p1") && (name != "loop9p1"))
@@ -390,7 +390,7 @@ test_execute_delete (ContainerPtr& child)
 
 	parent = nullptr;
 	main_app->get_timeline()->dump();
-	run_list (top_level);
+	// run_list (top_level);
 }
 
 void

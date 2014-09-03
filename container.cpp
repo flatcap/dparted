@@ -713,7 +713,7 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 		return false;
 	}
 
-	// log_code ("exchange %ld, %ld", existing->unique_id, replacement->unique_id);
+	log_code ("exchange %ld, %ld", existing->unique_id, replacement->unique_id);
 
 	std::lock_guard<std::recursive_mutex> lock (p->mutex_children);
 
@@ -727,6 +727,8 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 	}
 
 	*it = replacement;
+
+	existing->notify (NotifyType::t_change, existing, replacement);
 
 	return true;
 }

@@ -129,32 +129,6 @@ Table::accept (Visitor& v)
 
 
 ContainerPtr
-space_join (ContainerPtr first, ContainerPtr last = {})
-{
-	return_val_if_fail (first, {});
-
-	ContainerPtr space = Partition::create();
-	if (!space) {
-		log_error ("failed to create space");
-		return {};
-	}
-
-	space->sub_type ("Space");
-	space->sub_type ("Unallocated");
-
-	if (last) {
-		space->bytes_size = (last->parent_offset - first->parent_offset) + last->bytes_size;
-	} else {
-		space->bytes_size = first->bytes_size;
-	}
-
-	space->parent_offset = first->parent_offset;
-	space->bytes_used    = space->bytes_size;
-
-	return space;
-}
-
-ContainerPtr
 space_create (std::uint64_t parent_offset, std::uint64_t bytes_size)
 {
 	ContainerPtr space = Partition::create();
@@ -170,6 +144,21 @@ space_create (std::uint64_t parent_offset, std::uint64_t bytes_size)
 	space->bytes_used    = bytes_size;
 
 	return space;
+}
+
+ContainerPtr
+space_join (ContainerPtr first, ContainerPtr last = {})
+{
+	return_val_if_fail (first, {});
+
+	std::uint64_t size;
+	if (last) {
+		size = (last->parent_offset - first->parent_offset) + last->bytes_size;
+	} else {
+		size = first->bytes_size;
+	}
+
+	return space_create (first->parent_offset, size);
 }
 
 bool
@@ -298,20 +287,20 @@ Table::delete_child (ContainerPtr child)
 	if (space_before) {
 		if (space_after) {
 			s = space_join (prev, next);	// join into one big space
-			children.erase (std::prev(it), std::next(it));
+			children.erase (std::prev (it), std::next (it));
 			txn_add (NotifyType::t_delete, parent, prev);
 			txn_add (NotifyType::t_delete, parent, child);
 			txn_add (NotifyType::t_delete, parent, next);
 		} else {
 			s = space_join (prev, child);	// extend prev
-			children.erase (std::prev(it), it);
+			children.erase (std::prev (it), it);
 			txn_add (NotifyType::t_delete, parent, prev);
 			txn_add (NotifyType::t_delete, parent, child);
 		}
 	} else {
 		if (space_after) {
 			s = space_join (child, next);	// extend next backwards
-			children.erase (it, std::next(it));
+			children.erase (it, std::next (it));
 			txn_add (NotifyType::t_delete, parent, child);
 			txn_add (NotifyType::t_delete, parent, next);
 		} else {
@@ -322,7 +311,9 @@ Table::delete_child (ContainerPtr child)
 	}
 
 	log_info ("new space: %p(U%03ld)", s.get(), s->unique_id);
-	_add_child (children, s);
+	if (!add_child (s, false))
+		return false;
+
 	txn_add (NotifyType::t_add, parent, s);
 	return true;
 }
