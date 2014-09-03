@@ -321,6 +321,7 @@ Table::delete_child (ContainerPtr child)
 		}
 	}
 
+	log_info ("new space: %p(U%03ld)", s.get(), s->unique_id);
 	_add_child (children, s);
 	txn_add (NotifyType::t_add, parent, s);
 	return true;

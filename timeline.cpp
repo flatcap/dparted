@@ -64,8 +64,8 @@ Timeline::adjust (int amount)
 		auto& n = (*txn_cursor)->notifications[0];
 		int type = (int) std::get<0>(n);
 
-		ContainerPtr cold = std::get<1>(n).lock();
-		ContainerPtr cnew = std::get<2>(n).lock();
+		ContainerPtr cold = std::get<1>(n);
+		ContainerPtr cnew = std::get<2>(n);
 
 		log_info ("Undo event: %d: %s", type, desc.c_str());
 		exchange (cold, cnew);
@@ -79,8 +79,8 @@ Timeline::adjust (int amount)
 		auto& n = (*txn_cursor)->notifications[0];
 		int type = (int) std::get<0>(n);
 
-		ContainerPtr cold = std::get<1>(n).lock();
-		ContainerPtr cnew = std::get<2>(n).lock();
+		ContainerPtr cold = std::get<1>(n);
+		ContainerPtr cnew = std::get<2>(n);
 
 		log_info ("Redo event: %d: %s", type, desc.c_str());
 		exchange (cold, cnew);
@@ -104,13 +104,13 @@ Timeline::commit (TransactionPtr txn)
 	}
 
 	auto n = txn->notifications[0];					// First notification is the top-level of all the changes
-	exchange (std::get<1>(n).lock(), std::get<2>(n).lock());	// Put the new containers into place
+	exchange (std::get<1>(n), std::get<2>(n));			// Put the new containers into place
 
 	log_code ("Commit: %s", txn->description.c_str());
 	for (auto n : txn->notifications) {
 		NotifyType type = std::get<0>(n);
-		std::stringstream n1; ContainerPtr c1 = std::get<1>(n).lock(); if (c1) n1 << c1;
-		std::stringstream n2; ContainerPtr c2 = std::get<2>(n).lock(); if (c2) n2 << c2;
+		std::stringstream n1; ContainerPtr c1 = std::get<1>(n); if (c1) n1 << c1;
+		std::stringstream n2; ContainerPtr c2 = std::get<2>(n); if (c2) n2 << c2;
 
 		log_code ("\t%s:", names[(int) type]);
 		log_code ("\t\t%s", n1.str().c_str());
@@ -144,7 +144,7 @@ Timeline::dump (void)
 
 			std::string name1;
 			std::uint64_t uniq1 = 0;
-			ContainerPtr cont1 = std::get<1>(n).lock();
+			ContainerPtr cont1 = std::get<1>(n);
 			long use1 = cont1.use_count();
 			if (cont1) {
 				name1 = cont1->get_name_default();
@@ -153,7 +153,7 @@ Timeline::dump (void)
 
 			std::string name2;
 			std::uint64_t uniq2 = 0;
-			ContainerPtr cont2 = std::get<2>(n).lock();
+			ContainerPtr cont2 = std::get<2>(n);
 			long use2 = cont2.use_count();
 			if (cont2) {
 				name2 = cont2->get_name_default();

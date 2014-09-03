@@ -34,7 +34,7 @@ enum class NotifyType {
 
 #include "container.h"
 
-typedef std::tuple<NotifyType,ContainerWeak,ContainerWeak> Notification;
+typedef std::tuple<NotifyType,ContainerPtr,ContainerPtr> Notification;
 
 class Transaction
 {
