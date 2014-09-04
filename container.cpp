@@ -676,19 +676,20 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 #endif
 		<< c->name
 #if 1
-		<< "(" << uuid << "), "
-		<< '"' << c->device << '"' << "(" << c->fd << "),"
-		<< " S:" // << c->bytes_size
-						<< "(" << get_size (c->bytes_size)    << "), "
+		// << "(" << uuid << "), "
+		// << '"' << c->device << '"' << "(" << c->fd << "),"
+		// << " S:" // << c->bytes_size
+		// 				<< "(" << get_size (c->bytes_size)    << "), "
 		// << " U:" // << c->bytes_used
 		// 				<< "(" << get_size (c->bytes_used)    << "), "
 		// << " F:" // <<   bytes_free
 		// 				<< "(" << get_size (   bytes_free)    << "), "
-		<< " P:" // << c->parent_of	<fset
-						<< "(" << get_size (c->parent_offset) << "), "
+		// << " P:" // << c->parent_of	<fset
+		// 				<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
 		<< " uniq: " << c->unique_id
+		<< " listen: " << c->container_listeners.size()
 #endif
 		;
 
@@ -713,7 +714,7 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 		return false;
 	}
 
-	log_code ("exchange %ld, %ld", existing->unique_id, replacement->unique_id);
+	// log_code ("exchange %ld, %ld", existing->unique_id, replacement->unique_id);
 
 	std::lock_guard<std::recursive_mutex> lock (p->mutex_children);
 
@@ -727,7 +728,6 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 	}
 
 	*it = replacement;
-
 	existing->notify (NotifyType::t_change, existing, replacement);
 
 	return true;

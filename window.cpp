@@ -33,6 +33,9 @@
 #endif
 #include "gui_app.h"
 #include "log.h"
+#ifdef DP_TEST
+#include "test.h"
+#endif
 #include "utils.h"
 
 Window::Window (void)
@@ -644,6 +647,8 @@ Window::set_data (ContainerPtr c)
 #ifdef DP_AREA
 	drawingarea.set_data(g);
 #endif
+	ContainerPtr d = c->get_nth_child ({0,0,1});
+	test_execute (d, "delete");
 }
 
 

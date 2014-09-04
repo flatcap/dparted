@@ -770,6 +770,9 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	}
 
 #ifdef DP_TEST
+	GfxContainerPtr top = selection->get_top_level();
+	// top->dump3();
+
 	ContainerPtr c = selection->get_container();
 	test_execute (c, top_level->name);
 	// top_level->dump3();

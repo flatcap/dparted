@@ -358,7 +358,7 @@ void
 test_execute_delete (ContainerPtr& child)
 {
 	return_if_fail (child);
-	main_app->get_timeline()->dump();
+	// main_app->get_timeline()->dump();
 
 	ContainerPtr parent = child->get_parent();
 	if (!parent)
@@ -389,7 +389,7 @@ test_execute_delete (ContainerPtr& child)
 	}
 
 	parent = nullptr;
-	main_app->get_timeline()->dump();
+	// main_app->get_timeline()->dump();
 	// run_list (top_level);
 }
 

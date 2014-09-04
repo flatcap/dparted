@@ -314,7 +314,7 @@ Table::delete_child (ContainerPtr child)
 	if (!add_child (s, false))
 		return false;
 
-	txn_add (NotifyType::t_add, parent, s);
+	// txn_add (NotifyType::t_add, parent, s);	// not nec if I use add_child (not _add_child)
 	return true;
 }
 

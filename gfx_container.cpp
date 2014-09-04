@@ -680,6 +680,8 @@ GfxContainer::container_changed (const ContainerPtr& after)
 		}
 	}
 
+	// GfxContainerPtr top = get_top_level();
+	// top->dump3();
 }
 
 void

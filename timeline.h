@@ -48,6 +48,9 @@ public:
 protected:
 	Timeline (void);
 
+	bool undo (int count);
+	bool redo (int count);
+
 	TimelineWeak self;
 	ContainerPtr top_level;
 
