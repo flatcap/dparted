@@ -46,6 +46,12 @@ public:
 	std::string description;
 	std::vector<Notification> notifications;
 
+	void dump (int indent = 0);
+
+	static const char* get_notify_name (NotifyType type);
+	static void dump_notification (NotifyType type, ContainerPtr cold, ContainerPtr cnew, int indent /*=0*/);
+	static void dump_notification (Notification& n, int indent = 0);
+
 protected:
 	Transaction (void);
 
