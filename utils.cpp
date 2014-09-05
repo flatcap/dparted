@@ -279,7 +279,7 @@ execute_command_in (const std::string& command, const std::string& input, bool l
 	int count = fprintf (file, "%s\n", input.c_str());
 	if (log_input) {
 		log_command_in ("wrote %d bytes to command", count);
-		log_command_in ("%s", SP(input));
+		log_command_in (input);
 	}
 
 	int retcode = pclose (file);

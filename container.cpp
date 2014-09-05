@@ -503,7 +503,7 @@ Container::get_block_size (void)
 std::string
 Container::get_device_name (void)
 {
-	log_debug ("i am %s", demangle (typeid (*this).name()).c_str());
+	log_debug ("i am %s", SP(demangle (typeid (*this).name())));
 	if (!device.empty())
 		return device;
 

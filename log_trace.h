@@ -23,6 +23,7 @@
 #include <thread>
 
 #include "log_macro.h"
+#include "utils.h"
 
 //XXX keep a global depth counter?
 //XXX indent results?
@@ -47,14 +48,14 @@ public:
 	{
 		std::thread::id thread_id = std::this_thread::get_id();
 		std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
-		log_enter ("Entering %s (%ld) -- %s:%d", function.c_str(), tid, file_name.c_str(), line_num);
+		log_enter ("Entering %s (%ld) -- %s:%d", SP(function), tid, SP(file_name), line_num);
 	}
 
 	virtual ~LogTrace()
 	{
 		std::thread::id thread_id = std::this_thread::get_id();
 		std::uint64_t tid = (std::uint64_t) *(reinterpret_cast<std::uint64_t*> (&thread_id));
-		log_leave ("Leaving  %s (%ld) -- %s", function.c_str(), tid, file_name.c_str());
+		log_leave ("Leaving  %s (%ld) -- %s", SP(function), tid, SP(file_name));
 	}
 
 protected:

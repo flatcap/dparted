@@ -46,7 +46,7 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 {
 	std::stringstream ss;
 	ss << p;
-	log_redirect (level, function, file, line, ss.str().c_str());
+	log_redirect (level, function, file, line, ss);
 }
 
 template <typename ...A>
