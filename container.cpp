@@ -354,10 +354,10 @@ bool
 Container::perform_action (Action action)
 {
 	if (action.name == "dummy.container") {
-		log_debug ("Container perform: %s", action.name.c_str());
+		log_debug ("Container perform: %s", SP(action.name));
 		return true;
 	} else {
-		log_debug ("Unknown action: %s", action.name.c_str());
+		log_debug ("Unknown action: %s", SP(action.name));
 		return false;
 	}
 }
@@ -381,7 +381,7 @@ Container::add_child (ContainerPtr child, bool probe)
 		_add_child (children, child);
 	}
 
-	log_debug ("add child: %s (%s) -- %s", this->name.c_str(), child->name.c_str(), child->uuid.c_str());
+	log_debug ("add child: %s (%s) -- %s", SP(this->name), SP(child->name), SP(child->uuid));
 
 	if (probe) {
 		main_app->queue_add_probe (child);
@@ -476,10 +476,10 @@ Container::get_fd (void)
 
 	int newfd = open (device.c_str(), O_RDONLY | O_CLOEXEC); // read only, close on exec
 	if (newfd < 0) {
-		log_error ("failed to open device %s", device.c_str());
+		log_error ("failed to open device %s", SP(device));
 		return -1;
 	}
-	log_file ("file open: %d, '%s'", newfd, device.c_str());
+	log_file ("file open: %d, '%s'", newfd, SP(device));
 
 	fd = newfd;
 
@@ -591,7 +591,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		return nullptr;
 	}
 
-	log_debug ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s", name.c_str(), uuid.c_str(), device.c_str(), fd, offset, get_size (size).c_str());
+	log_debug ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s", SP(name), SP(uuid), SP(device), fd, offset, get_size (size).c_str());
 
 	if (device_mmap) {
 		void* buf = (*device_mmap).second;
@@ -631,7 +631,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		// close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
-	log_file ("mmap created: %p, device %s, size %s", buf, device.c_str(), get_size (size).c_str());
+	log_file ("mmap created: %p, device %s, size %s", buf, SP(device), get_size (size).c_str());
 
 	device_mmap = (MmapPtr (new Mmap (size, buf), deleter));
 
@@ -737,7 +737,7 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 bool
 Container::is_a (const std::string& t)
 {
-	log_debug ("my type = %s, compare to %s", type.back().c_str(), t.c_str());
+	log_debug ("my type = %s, compare to %s", type.back().c_str(), SP(t));
 
 	// Start with the most derived type
 	for (auto it = type.rbegin(); it != type.rend(); ++it) {
@@ -1166,12 +1166,12 @@ Container::add_listener (const ContainerListenerPtr& cl)
 {
 	return_if_fail (cl);
 
-	log_listener ("Container %s(%p) add listener: %p", get_name_default().c_str(), this, cl.get());
+	log_listener ("Container %s(%p) add listener: %p", get_name_default().c_str(), (void*) this, VP(cl));
 	container_listeners.push_back (cl);
 
 	log_listener ("listeners:");
 	for (auto& l : container_listeners) {
-		log_listener ("\t%p", l.lock().get());
+		log_listener ("\t%p", VP(l));
 	}
 }
 
@@ -1213,7 +1213,7 @@ Container::start_transaction (ContainerPtr& parent, const std::string& desc)
 		return {};
 	}
 
-	log_thread_start ("start transaction: %s (txn:%p)", desc.c_str(), txn.get());
+	log_thread_start ("start transaction: %s (txn:%p)", SP(desc), VP(txn));
 	return copy;
 }
 
@@ -1233,7 +1233,7 @@ Container::commit_transaction (const std::string& desc)
 
 	main_app->get_timeline()->commit (txn);
 
-	log_thread_end ("commit transaction: %s", txn->description.c_str());
+	log_thread_end ("commit transaction: %s", SP(txn->description));
 	txn = nullptr;
 
 #ifdef DP_THREADED
@@ -1252,7 +1252,7 @@ Container::cancel_transaction (void)
 		return;
 	}
 
-	log_thread_end ("cancel transaction: %s", txn->description.c_str());
+	log_thread_end ("cancel transaction: %s", SP(txn->description));
 	txn = nullptr;
 #ifdef DP_THREADED
 	mutex_write_lock.unlock();
@@ -1291,7 +1291,7 @@ Container::backup (void)
 
 	txn_add (NotifyType::t_change, prev, c);
 
-	log_info ("backup: %s %ld(%p) -> %ld(%p)", name.c_str(), unique_id, prev.get(), c->unique_id, c.get());
+	log_info ("backup: %s %ld(%p) -> %ld(%p)", SP(name), unique_id, VP(prev), c->unique_id, VP(c));
 
 	return c;
 }

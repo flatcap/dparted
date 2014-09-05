@@ -132,7 +132,7 @@ bool
 Btrfs::perform_action (Action action)
 {
 	if (action.name == "dummy.btrfs") {
-		log_debug ("Btrfs perform: %s", action.name.c_str());
+		log_debug ("Btrfs perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -253,11 +253,11 @@ btrfs_show_super (const std::string& dev)
 		} else if (line.empty()) {
 			continue;
 		} else if (!parse_line (line, key, value)) {
-			log_debug ("btrfs failed: %s", line.c_str());
+			log_debug ("btrfs failed: %s", SP(line));
 			continue;
 		}
 
-		log_debug ("\t%s", key.c_str());
+		log_debug ("\t%s", SP(key));
 		results[key] = value;
 	}
 
@@ -288,7 +288,7 @@ Btrfs::get_btrfs_sb (ContainerPtr parent)
 		std::string key   = "btrfs." + i.first;
 		std::string desc  = make_desc (i.first);
 		std::string value = i.second;
-		log_debug ("\t%-32s %-24s %s", key.c_str(), desc.c_str(), value.c_str());
+		log_debug ("\t%-32s %-24s %s", SP(key), SP(desc), SP(value));
 
 		more_props.push_back (value);
 		declare_prop_array (me, key.c_str(), more_props, more_props.size()-1, desc.c_str(), 0);

@@ -211,7 +211,7 @@ execute_command_out (const std::string& command, std::vector<std::string>& outpu
 	int count = 0;
 
 	if (log_cmd) {
-		log_command ("running command: '%s'", command.c_str());
+		log_command ("running command: '%s'", SP(command));
 	}
 
 	// Execute command and save its output to stdout
@@ -266,7 +266,7 @@ execute_command_in (const std::string& command, const std::string& input, bool l
 	FILE* file = nullptr;
 
 	if (log_cmd) {
-		log_command ("running command: '%s'", command.c_str());
+		log_command ("running command: '%s'", SP(command));
 	}
 
 	// Execute command and write our stdout to its input
@@ -279,7 +279,7 @@ execute_command_in (const std::string& command, const std::string& input, bool l
 	int count = fprintf (file, "%s\n", input.c_str());
 	if (log_input) {
 		log_command_in ("wrote %d bytes to command", count);
-		log_command_in ("%s", input.c_str());
+		log_command_in ("%s", SP(input));
 	}
 
 	int retcode = pclose (file);
@@ -307,7 +307,7 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 
 	parts.clear();
 
-	log_utils ("input      = '%s'", input.c_str());
+	log_utils ("input      = '%s'", SP(input));
 	log_utils ("separators = '%s'", separators);
 
 	start = input.find_first_not_of (" \t", start);		// trim leading whitespace
@@ -334,7 +334,7 @@ explode (const char* separators, const std::string& input, std::vector<std::stri
 
 	log_utils ("vector:");
 	for (auto& value : parts) {
-		log_utils ("\t%s", value.c_str());
+		log_utils ("\t%s", SP(value));
 	}
 
 	return parts.size();
@@ -464,7 +464,7 @@ parse_tagged_line (const std::string& line, const char* separators, std::map<std
 		std::string name  = it2.first;
 		std::string value = it2.second;
 
-		log_utils ("\t%s -> %s", name.c_str(), value.c_str());
+		log_utils ("\t%s -> %s", SP(name), SP(value));
 	}
 
 	return tags.size();
@@ -545,4 +545,16 @@ shorten_device (const std::string& device)
 	return device.substr(5);
 }
 
+
+const char*
+SP (const std::string& str)
+{
+	return str.c_str();
+}
+
+const char*
+SP (const std::stringstream& str)
+{
+	return str.str().c_str();
+}
 

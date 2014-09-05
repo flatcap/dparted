@@ -32,7 +32,7 @@ LogObject::~LogObject()
 	if (file) {
 		fclose (file);
 		file = nullptr;
-		// log_file ("closed: %s", filename.c_str());	//XXX reinstate when we can handle early/late logging
+		// log_file ("closed: %s", SP(filename));	//XXX reinstate when we can handle early/late logging
 	}
 }
 
@@ -49,14 +49,14 @@ LogObject::open_file (const std::string& name, bool truncate /*=false*/)
 	file = fopen (name.c_str(), flags);
 	if (file) {
 		filename = name;
-		// log_file ("file open: %d, '%s'", fd, name.c_str());	//XXX reinstate when we can handle early/late logging
+		// log_file ("file open: %d, '%s'", fd, SP(name));	//XXX reinstate when we can handle early/late logging
 
 		if (reset_tty && (strncmp (filename.c_str(), "/dev/pts/", 9) == 0)) {
 			fprintf (file, "\033c");
 		}
 	} else {
 		filename.clear();
-		log_error ("Failed to open '%s': %s", name.c_str(), strerror (errno));
+		log_error ("Failed to open '%s': %s", SP(name), strerror (errno));
 	}
 
 	return (file != nullptr);

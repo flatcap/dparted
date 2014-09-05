@@ -528,7 +528,7 @@ BaseDrawingArea::gfx_container_added (const GfxContainerPtr& parent, const GfxCo
 	if (cont)   c = cont->name;
 	if (parent) p = parent->name;
 
-	log_debug ("AREA gfx_container_added: %s to %s", c.c_str(), p.c_str());
+	log_debug ("AREA gfx_container_added: %s to %s", SP(c), SP(p));
 	get_window()->invalidate (false); // everything for now
 }
 

@@ -213,7 +213,7 @@ dot_container (std::shared_ptr<T> t)
 
 	for (auto& prop : p->get_all_props()) {
 		if (!(prop->flags & BaseProperty::Flags::Dot)) {
-			log_debug ("Dot ignore : %s", prop->name.c_str());
+			SP(log_debug ("Dot ignore : %s", prop->name));
 			continue;
 		}
 

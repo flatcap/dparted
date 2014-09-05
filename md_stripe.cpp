@@ -124,7 +124,7 @@ bool
 MdStripe::perform_action (Action action)
 {
 	if (action.name == "dummy.md_stripe") {
-		log_debug ("MdStripe perform: %s", action.name.c_str());
+		log_debug ("MdStripe perform: %s", SP(action.name));
 		return true;
 	} else {
 		return MdVolume::perform_action (action);

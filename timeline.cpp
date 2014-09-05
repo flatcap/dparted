@@ -67,7 +67,7 @@ Timeline::undo (int count)
 
 		auto txn = (*txn_cursor);
 
-		log_info ("Undo event: '%s'", txn->description.c_str());
+		log_info ("Undo event: '%s'", SP(txn->description));
 
 		NotifyType   type;
 		ContainerPtr top_old;
@@ -136,7 +136,7 @@ Timeline::redo (int count)
 	for (; count--; ) {
 		auto txn = (*txn_cursor);
 
-		log_info ("Redo event: '%s'", txn->description.c_str());
+		log_info ("Redo event: '%s'", SP(txn->description));
 
 		NotifyType   type;
 		ContainerPtr top_old;
@@ -218,7 +218,7 @@ Timeline::commit (TransactionPtr txn)
 	auto n = txn->notifications[0];					// First notification is the top-level of all the changes
 	exchange (std::get<1>(n), std::get<2>(n));			// Put the new containers into place
 
-	log_code ("Commit: '%s'", txn->description.c_str());
+	log_code ("Commit: '%s'", SP(txn->description));
 	for (auto n : txn->notifications) {
 		//XXX std::tie
 		NotifyType type = std::get<0>(n);

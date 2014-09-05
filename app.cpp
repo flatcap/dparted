@@ -168,15 +168,15 @@ App::identify_device (ContainerPtr parent, std::string& device)
 
 	fd = open (device.c_str(), O_RDONLY | O_CLOEXEC);
 	if (fd < 0) {
-		log_error ("can't open file %s", device.c_str());	//XXX perror
+		log_error ("can't open file %s", SP(device));	//XXX perror
 		return false;
 	}
-	log_file ("file open: %d, '%s'", fd, device.c_str());
+	log_file ("file open: %d, '%s'", fd, SP(device));
 
 	struct stat st;
 	int res = fstat (fd, &st);
 	if (res < 0) {
-		log_error ("stat on %s failed", device.c_str());	//XXX perror
+		log_error ("stat on %s failed", SP(device));	//XXX perror
 		close (fd);
 		log_file ("file close: %d", fd);
 		return false;
@@ -193,7 +193,7 @@ App::identify_device (ContainerPtr parent, std::string& device)
 	else if (Disk::identify (parent, device, fd, st)) {}
 #endif
 	else {
-		log_error ("can't identify device: %s", device.c_str());
+		log_error ("can't identify device: %s", SP(device));
 		close (fd);
 		log_file ("file close: %d", fd);
 		return false;
@@ -332,9 +332,9 @@ App::start_thread (std::function<void(void)> fn, std::string desc)
 	std::lock_guard<std::mutex> lock (thread_mutex);
 	thread_queue.push_back (
 		std::thread ([fn, desc]() {
-			log_thread_start ("thread started: %s", desc.c_str());
+			log_thread_start ("thread started: %s", SP(desc));
 			fn();
-			log_thread_end ("thread ended: %s", desc.c_str());
+			log_thread_end ("thread ended: %s", SP(desc));
 		})
 	);
 }
@@ -351,7 +351,7 @@ App::start_thread (std::function<void(void)> fn, std::string UNUSED(desc))
 bool
 App::open_uri (const std::string& uri)
 {
-	log_error ("Can't open uri: %s", uri.c_str());
+	log_error ("Can't open uri: %s", SP(uri));
 	return false;
 }
 

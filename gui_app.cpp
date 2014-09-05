@@ -194,7 +194,7 @@ GuiApp::on_open (const type_vec_files& files, const Glib::ustring& hint)
 		log_debug (f->get_uri());
 	}
 
-	log_debug ("hint = %s", hint.c_str());
+	log_debug ("hint = %s", SP(hint));
 	Gtk::Application::on_open (files, hint);
 }
 
@@ -253,7 +253,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	if (group.config.size()) {
 		log_debug ("config:");
 		for (auto& c : group.config) {
-			log_debug ("\t%s", c.c_str());
+			log_debug ("\t%s", SP(c));
 			window->load_config(c);
 		}
 	}
@@ -264,7 +264,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	if (group.theme.size()) {
 		log_debug ("theme:");
 		for (auto& t : group.theme) {
-			log_debug ("\t%s", t.c_str());
+			log_debug ("\t%s", SP(t));
 			window->load_theme(t);
 		}
 	}
@@ -426,12 +426,12 @@ GuiApp::set_theme (const std::string& filename)
 		// if modified ask user if they're sure
 	}
 
-	log_listener ("Old Theme %p, New Theme %p", theme.get(), tp.get());
+	log_listener ("Old Theme %p, New Theme %p", VP(theme), VP(tp));
 	theme = tp;
 	for (auto& i : theme_listeners) {
 		ThemeListenerPtr tl = i.lock();
 		if (tl) {
-			log_listener ("New Theme %p, notify %p", theme.get(), tl.get());
+			log_listener ("New Theme %p, notify %p", VP(theme), VP(tl));
 			tl->theme_changed (theme);
 		} else {
 			log_code ("remove listener from the collection");	//XXX remove it from the collection
@@ -544,7 +544,7 @@ GuiApp::add_listener (const ThemeListenerPtr& tl)
 {
 	return_if_fail (tl);
 
-	log_listener ("Theme %p add listener: %p", this, tl.get());
+	log_listener ("Theme %p add listener: %p", this, VP(tl));
 	theme_listeners.push_back (tl);
 }
 

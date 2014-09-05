@@ -95,7 +95,7 @@ Loop::create (const std::string& losetup)
 #if 0
 	log_info ("parts: (%ld)", parts.size());
 	for (auto& i : parts) {
-		log_debug ("\t%s", i.c_str());
+		log_debug ("\t%s", SP(i));
 	}
 #endif
 
@@ -128,7 +128,7 @@ Loop::create (const std::string& losetup)
 	if ((len > 10) && (l->file_name.substr (len-10) == " (deleted)")) {
 		l->file_name.erase (len-10);
 		l->deleted = true;
-		log_info ("%s is deleted", l->device.c_str());
+		log_info ("%s is deleted", SP(l->device));
 	}
 
 	l->block_size   = 512;	//XXX kernel lower limit, but fs block size is likely to be bigger
@@ -235,7 +235,7 @@ bool
 Loop::perform_action (Action action)
 {
 	if (action.name == "dummy.loop") {
-		log_debug ("Loop perform: %s", action.name.c_str());
+		log_debug ("Loop perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Block::perform_action (action);

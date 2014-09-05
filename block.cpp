@@ -146,7 +146,7 @@ bool
 Block::perform_action (Action action)
 {
 	if (action.name == "dummy.block") {
-		log_debug ("Block perform: %s", action.name.c_str());
+		log_debug ("Block perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);

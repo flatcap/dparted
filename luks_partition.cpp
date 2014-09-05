@@ -127,7 +127,7 @@ bool
 LuksPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.luks_partition") {
-		log_debug ("LuksPartition perform: %s", action.name.c_str());
+		log_debug ("LuksPartition perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Partition::perform_action (action);

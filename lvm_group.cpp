@@ -182,7 +182,7 @@ bool
 LvmGroup::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_group") {
-		log_debug ("LvmGroup perform: %s", action.name.c_str());
+		log_debug ("LvmGroup perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Whole::perform_action (action);
@@ -249,7 +249,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		parse_tagged_line (line, "\t", tags);
 
 		LvmPartitionPtr p = LvmPartition::create();
-		log_debug ("new LvmPartition (%p)", (void*) p.get());
+		log_debug ("new LvmPartition (%p)", VP(p));
 
 		// Find our relations
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
@@ -266,7 +266,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		std::string pv_uuid = tags["LVM2_PV_UUID"];
 		LvmTablePtr t = std::dynamic_pointer_cast<LvmTable> (find_first_uuid (pieces, pv_uuid));
 		if (!t) {
-			log_info ("new table %s [SHOULDN'T HAPPEN]", pv_uuid.c_str());
+			log_info ("new table %s [SHOULDN'T HAPPEN]", SP(pv_uuid));
 			t = LvmTable::create();
 			t->uuid    = pv_uuid;
 			// t->missing = true;
@@ -289,7 +289,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			std::string segtype = tags["LVM2_SEGTYPE"];
 			std::string lv_attr = tags["LVM2_LV_ATTR"];
 			if ((lv_attr[0] == 'e') || (lv_attr[0] == 'l')) {
-				log_info ("not a real volume %s", lv_uuid.c_str());
+				log_info ("not a real volume %s", SP(lv_uuid));
 				v = LvmLinear::create();
 				v->sub_type ("LvmMetadata");
 			} else if (segtype == "linear") {
@@ -308,12 +308,12 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 				t->add_child (p, false);
 				continue;
 			} else {
-				log_error ("UNKNOWN type %s", segtype.c_str());
+				log_error ("UNKNOWN type %s", SP(segtype));
 				continue;
 			}
 			v->bytes_size = size;
 
-			log_debug ("lv uuid = %s", lv_uuid.c_str());
+			log_debug ("lv uuid = %s", SP(lv_uuid));
 			v->uuid    = lv_uuid;
 			// v->missing = true;
 			pieces->add_child (v, false);
@@ -342,7 +342,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		p->bytes_size	  = size;
 		p->bytes_used     = size;		//XXX for now
 
-		log_info ("add piece: %s (%s)", p->uuid.c_str(), p->name.c_str());
+		log_info ("add piece: %s (%s)", SP(p->uuid), p->SP(name));
 
 		t->add_child (p, false);
 	}
@@ -411,7 +411,7 @@ LvmGroup::lvm_vgs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup>(find_first_uuid (pieces, vg_uuid));
 		if (!g) {
-			log_info ("new group %s [SHOULDN'T HAPPEN]", vg_uuid.c_str());
+			log_info ("new group %s [SHOULDN'T HAPPEN]", SP(vg_uuid));
 			g = LvmGroup::create();
 			g->uuid    = vg_uuid;
 			// g->missing = true;
@@ -495,7 +495,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		std::string vg_uuid = tags["LVM2_VG_UUID"];
 		LvmGroupPtr g = std::dynamic_pointer_cast<LvmGroup> (find_first_uuid (pieces, vg_uuid));
 		if (!g) {
-			log_info ("new group %s [SHOULDN'T HAPPEN]", vg_uuid.c_str());
+			log_info ("new group %s [SHOULDN'T HAPPEN]", SP(vg_uuid));
 			g = LvmGroup::create();
 			g->uuid    = vg_uuid;
 			// g->missing = true;
@@ -506,7 +506,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		LvmVolumePtr v = std::dynamic_pointer_cast<LvmVolume> (find_first_uuid (pieces, lv_uuid));
 		if (!v) {
 			std::string segtype = tags["LVM2_SEGTYPE"];
-			log_info ("Type = %s", segtype.c_str());
+			log_info ("Type = %s", SP(segtype));
 			if (segtype == "linear") {
 				v = LvmLinear::create();
 			} else if (segtype == "striped") {
@@ -524,7 +524,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			} else if (segtype == "raid10") {
 				v = LvmRaid::create();
 			} else {
-				log_error ("UNKNOWN type %s", segtype.c_str());
+				log_error ("UNKNOWN type %s", SP(segtype));
 				continue;
 			}
 			v->uuid    = lv_uuid;
@@ -552,7 +552,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		v->seg_start_pe		= tags["LVM2_SEG_START_PE"];
 		v->mirror_log		= tags["LVM2_MIRROR_LOG"];
 
-		log_info ("name = %s, attr = %s", v->name.c_str(), v->lv_attr.c_str());
+		log_info ("name = %s, attr = %s", SP(v->name), SP(v->lv_attr));
 		if ((v->lv_attr[0] == 'i') ||
 		    (v->lv_attr[0] == 'I') ||
 		    (v->lv_attr[0] == 'l') ||
@@ -560,7 +560,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			v->name = v->name.substr (1, v->name.length() - 2);	// Strip the []'s
 
 			v->device = make_device (g->name, v->name);
-			log_debug ("DEVNAME = %s", v->device.c_str());
+			log_debug ("DEVNAME = %s", SP(v->device));
 
 			// INTERNAL object => full
 			v->bytes_used = v->bytes_size;
@@ -570,16 +570,16 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		std::vector<std::string> device_list;
 		explode (",", devices, device_list);
 
-		log_debug ("%s (%s)", v->name.c_str(), v->get_type().c_str());
+		log_debug ("%s (%s)", SP(v->name), v->get_type().c_str());
 		for (auto& d : device_list) {
-			log_info ("Device: %s", d.c_str());
+			log_info ("Device: %s", SP(d));
 		}
 
 		for (auto& d : device_list) {
-			log_info ("DEP %s -> %s", v->uuid.c_str(), d.c_str());
+			log_info ("DEP %s -> %s", SP(v->uuid), SP(d));
 			deps.insert (std::make_pair (v->uuid, d));
 
-			log_info ("attr = %s", v->lv_attr.c_str());
+			log_info ("attr = %s", SP(v->lv_attr));
 			// Add a metadata dependency
 			if (v->lv_attr[0] == 'r') {
 				log_info ("raid metadata");
@@ -588,11 +588,11 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 				std::size_t pos = dep_name.find ("_rimage_");
 				if (pos != std::string::npos) {
 					dep_name.replace (pos, 8, "_rmeta_");
-					log_debug ("ADD: %s -> %s", v->uuid.c_str(), dep_name.c_str());
+					log_debug ("ADD: %s -> %s", SP(v->uuid), SP(dep_name));
 					deps.insert (std::make_pair (v->uuid, dep_name));
 
 					// add a sibling dependency (image <-> metadata)
-					log_info ("SIBLING: %s <-> %s", dep_name.c_str(), d.c_str());
+					log_info ("SIBLING: %s <-> %s", SP(dep_name), SP(d));
 					deps.insert (std::make_pair (dep_name, d));
 				}
 			}
@@ -601,7 +601,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		if (v->lv_attr[0] == 'm') {
 			// Add an extra dependency for mirrors
 			std::string dep_name = v->mirror_log + "(0)";
-			log_debug ("ADD DEP: %s -> %s", v->uuid.c_str(), dep_name.c_str());
+			log_debug ("ADD DEP: %s -> %s", SP(v->uuid), SP(dep_name));
 			deps.insert (std::make_pair (v->uuid, dep_name));
 		}
 	}
@@ -611,26 +611,26 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		std::string parent_id = d.first;
 		std::string child_id  = d.second;
 
-		log_info ("DEPS: %s -> %s", parent_id.c_str(), child_id.c_str());
+		log_info ("DEPS: %s -> %s", SP(parent_id), SP(child_id));
 
 		ContainerPtr parent = pieces->find (parent_id);
 		if (!parent) {
-			log_error ("\tcan't find parent: %s", parent_id.c_str());
+			log_error ("\tcan't find parent: %s", SP(parent_id));
 			continue;
 		}
 
 		ContainerPtr child  = pieces->find (child_id);
 		if (!child) {
-			log_error ("\tcan't find child: %s", child_id.c_str());
+			log_error ("\tcan't find child: %s", SP(child_id));
 			continue;
 		}
 
-		log_info ("add_child %s -> %s", parent->uuid.c_str(), child->uuid.c_str());
+		log_info ("add_child %s -> %s", SP(parent->uuid), SP(child->uuid));
 		parent->add_child (child, false);
 
-		log_info ("\t%p -> %p", (void*) parent.get(), (void*) child.get());
-		log_info ("\t%s -> %s", parent->name.c_str(), child->name.c_str());
-		log_info ("\t%s -> %s", parent->uuid.c_str(), child->uuid.c_str());
+		log_info ("\t%p -> %p", VP(parent), VP(child));
+		log_info ("\t%s -> %s", SP(parent->name), SP(child->name));
+		log_info ("\t%s -> %s", SP(parent->uuid), SP(child->uuid));
 
 		pieces->delete_child (child);
 	}
@@ -661,7 +661,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	log_debug ("Pieces (%ld)", pieces->get_children().size());
 	for (auto& i : pieces->get_children()) {
-		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
+		log_debug ("\t%s\t%s", SP(i->uuid), i->dump().c_str());
 	}
 
 	// probe leaves
@@ -675,7 +675,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 		if (i->whole)				// we're part of something bigger
 			continue;
 
-		log_info ("Q: [%s] %s: %s", i->get_type().c_str(), i->name.c_str(), i->uuid.c_str());
+		log_info ("Q: [%s] %s: %s", i->get_type().c_str(), SP(i->name), SP(i->uuid));
 		main_app->queue_add_probe(i);
 	}
 
@@ -683,7 +683,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	log_debug ("%ld groups", g.size());
 
 	for (auto& i : g) {
-		log_debug ("\t%s\t%s", i->uuid.c_str(), i->dump().c_str());
+		log_debug ("\t%s\t%s", SP(i->uuid), i->dump().c_str());
 		top_level->add_child (i, false);
 	}
 }

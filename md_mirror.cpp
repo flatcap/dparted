@@ -124,7 +124,7 @@ bool
 MdMirror::perform_action (Action action)
 {
 	if (action.name == "dummy.md_mirror") {
-		log_debug ("MdMirror perform: %s", action.name.c_str());
+		log_debug ("MdMirror perform: %s", SP(action.name));
 		return true;
 	} else {
 		return MdVolume::perform_action (action);

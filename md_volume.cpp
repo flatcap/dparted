@@ -124,7 +124,7 @@ bool
 MdVolume::perform_action (Action action)
 {
 	if (action.name == "dummy.md_volume") {
-		log_debug ("MdVolume perform: %s", action.name.c_str());
+		log_debug ("MdVolume perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Volume::perform_action (action);

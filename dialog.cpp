@@ -17,6 +17,7 @@
  */
 
 #include "dialog.h"
+#include "utils.h"
 
 Dialog::Dialog (QuestionPtr q) :
 	MessageDialog ("", true, Gtk::MessageType::MESSAGE_OTHER, Gtk::ButtonsType::BUTTONS_NONE, false),
@@ -44,7 +45,7 @@ Dialog::on_help (void)
 		log_debug ("Can't open uri: %s", error->message);
 		g_error_free (error);
 	} else {
-		log_debug ("HELP: %s", help_url.c_str());
+		log_debug ("HELP: %s", SP(help_url));
 	}
 }
 

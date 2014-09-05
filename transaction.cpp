@@ -56,7 +56,7 @@ Transaction::dump (int indent /*=0*/)
 	std::chrono::steady_clock::time_point then = timestamp;
 	int ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
 
-	log_code ("%sCommit: '%s' (%dms ago)", tabs.c_str(), description.c_str(), ms);
+	log_code ("%sCommit: '%s' (%dms ago)", SP(tabs), SP(description), ms);
 	for (auto n : notifications) {
 		dump_notification (n, indent+1);
 	}

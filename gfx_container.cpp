@@ -145,7 +145,7 @@ GfxContainer::init (ContainerPtr c)
 		icon       = process_icon   (i);
 		usage      = process_bool   (u);
 	} catch (const std::string& e) {
-		log_error ("Exception: %s", e.c_str());
+		log_error ("Exception: %s", SP(e));
 	}
 
 	label = process_label (label_template);
@@ -205,7 +205,7 @@ GfxContainer::process_label (const std::string& label_template)
 {
 	std::string l = label_template;
 
-	log_debug ("Label: %s", l.c_str());
+	log_debug ("Label: %s", SP(l));
 	ContainerPtr c = get_container();
 	if (!c)
 		return l;
@@ -222,7 +222,7 @@ GfxContainer::process_label (const std::string& label_template)
 		l.replace (start, stop-start+1, value);
 	}
 
-	log_debug ("label = %s", l.c_str());
+	log_debug ("label = %s", SP(l));
 
 	return l;
 }
@@ -259,14 +259,14 @@ GfxContainer::dump2 (void)
 		tabs.resize (indent, '\t');
 	}
 
-	log_info ("%s----------------------", tabs.c_str());
-	log_info ("%sdisplay        = %s",    tabs.c_str(), display.c_str());
-	log_info ("%slabel          = %s",    tabs.c_str(), label.c_str());
-	log_info ("%slabel_template = %s",    tabs.c_str(), label_template.c_str());
-	log_info ("%sbytes_size     = %ld",   tabs.c_str(), bytes_size);
-	log_info ("%sbytes_used     = %ld",   tabs.c_str(), bytes_used);
-	log_info ("%susage          = %d",    tabs.c_str(), usage);
-	log_info ("%sseqnum         = %d",    tabs.c_str(), seqnum);
+	log_info ("%s----------------------", SP(tabs));
+	log_info ("%sdisplay        = %s",    SP(tabs), SP(display));
+	log_info ("%slabel          = %s",    SP(tabs), SP(label));
+	log_info ("%slabel_template = %s",    SP(tabs), SP(label_template));
+	log_info ("%sbytes_size     = %ld",   SP(tabs), bytes_size);
+	log_info ("%sbytes_used     = %ld",   SP(tabs), bytes_used);
+	log_info ("%susage          = %d",    SP(tabs), usage);
+	log_info ("%sseqnum         = %d",    SP(tabs), seqnum);
 
 	++indent;
 	for (auto& c : children) {
@@ -287,15 +287,15 @@ GfxContainer::dump3 (void)
 
 	ContainerPtr c = container.lock();
 	GfxContainerPtr g = get_smart();
-	log_info ("%s----------------------", tabs.c_str());
-	log_info ("%sgfx            = %p",    tabs.c_str(), g.get());
-	log_info ("%sname           = %s",    tabs.c_str(), name.c_str());
-	log_info ("%scontainer      = %p",    tabs.c_str(), c.get());
+	log_info ("%s----------------------", SP(tabs));
+	log_info ("%sgfx            = %p",    SP(tabs), VP(g));
+	log_info ("%sname           = %s",    SP(tabs), SP(name));
+	log_info ("%scontainer      = %p",    SP(tabs), VP(c));
 	if (c) {
-		log_info ("%scont name      = %s",  tabs.c_str(), c->get_name_default().c_str());
-		log_info ("%soffset         = %ld", tabs.c_str(), c->parent_offset);
-		log_info ("%ssize           = %ld", tabs.c_str(), c->bytes_size);
-		log_info ("%slisteners      = %d",  tabs.c_str(), c->count_listeners());
+		log_info ("%scont name      = %s",  SP(tabs), c->get_name_default().c_str());
+		log_info ("%soffset         = %ld", SP(tabs), c->parent_offset);
+		log_info ("%ssize           = %ld", SP(tabs), c->bytes_size);
+		log_info ("%slisteners      = %d",  SP(tabs), c->count_listeners());
 	}
 
 	++indent;
@@ -357,7 +357,7 @@ GfxContainer::process_icon (const std::string& str)
 		return pb;
 
 	pb = theme->get_icon (str);
-	log_debug ("icon: %s %p", str.c_str(), (void*) pb.operator->());
+	log_debug ("icon: %s %p", SP(str), (void*) pb.operator->());
 	// pb = Gdk::Pixbuf::create_from_file (str);
 
 	return pb;
@@ -557,7 +557,7 @@ GfxContainer::add_listener (GfxContainerListenerPtr& gcl)
 {
 	return_if_fail (gcl);
 
-	log_listener ("GfxContainer %p add listener: %p", this, gcl.get());
+	log_listener ("GfxContainer %p add listener: %p", this, VP(gcl));
 	gfx_container_listeners.push_back(gcl);
 }
 
@@ -611,11 +611,11 @@ GfxContainer::container_added (const ContainerPtr& cont)
 		return;
 	}
 
-	log_code ("GFX container_added: %s(%p) to %s(%p)", cont->name.c_str(), cont.get(), name.c_str(), gparent.get());
+	log_code ("GFX container_added: %s(%p) to %s(%p)", SP(cont->name), VP(cont), SP(name), VP(gparent));
 
 	GfxContainerPtr existing = find_child (cont);
 	if (existing) {
-		log_code ("Gfx: child already exists : %s(%p) : %s(%p)", existing->name.c_str(), existing.get(), cont->get_name_default().c_str(), cont.get());
+		log_code ("Gfx: child already exists : %s(%p) : %s(%p)", SP(existing->name), VP(existing), cont->get_name_default().c_str(), VP(cont));
 		//XXX do we need to sync?  might be a duplicate notification (recursive?)
 		return;
 	}
@@ -634,7 +634,7 @@ GfxContainer::container_added (const ContainerPtr& cont)
 	for (auto& i : gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
-			log_listener ("Added child %p to GfxContainer %p", gchild.get(), gparent.get());
+			log_listener ("Added child %p to GfxContainer %p", VP(gchild), VP(gparent));
 			p->gfx_container_added (gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
@@ -662,7 +662,7 @@ GfxContainer::container_changed (const ContainerPtr& after)
 
 	name = c->get_name_default();
 
-	log_info ("container_changed %s(%p) : %s(%p) -> %s(%p)", name.c_str(), c.get(), c->get_name_default().c_str(), gchild.get(), after->get_name_default().c_str(), after.get());
+	log_info ("container_changed %s(%p) : %s(%p) -> %s(%p)", SP(name), VP(c), c->get_name_default().c_str(), VP(gchild), after->get_name_default().c_str(), VP(after));
 
 	container = after;
 
@@ -673,7 +673,7 @@ GfxContainer::container_changed (const ContainerPtr& after)
 	for (auto& i : gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
-			log_listener ("Change child %p to %p", gchild.get(), after.get());
+			log_listener ("Change child %p to %p", VP(gchild), VP(after));
 			p->gfx_container_changed (gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection
@@ -698,7 +698,7 @@ GfxContainer::container_deleted (const ContainerPtr& child)
 		return;
 	}
 
-	log_code ("GFX container_deleted: %s(%p) from %s(%p)", child->name.c_str(), child.get(), name.c_str(), gparent.get());
+	log_code ("GFX container_deleted: %s(%p) from %s(%p)", SP(child->name), VP(child), SP(name), VP(gparent));
 
 	GfxContainerPtr gchild = find_child (child);
 	if (!gchild) {
@@ -711,7 +711,7 @@ GfxContainer::container_deleted (const ContainerPtr& child)
 	for (auto& i : gfx_container_listeners) {
 		GfxContainerListenerPtr p = i.lock();
 		if (p) {
-			log_listener ("Deleted child %p from GfxContainer %p", gchild.get(), gparent.get());
+			log_listener ("Deleted child %p from GfxContainer %p", VP(gchild), VP(gparent));
 			p->gfx_container_deleted (gchild);
 		} else {
 			log_code ("remove gfx listener from the collection");	//XXX remove it from the collection

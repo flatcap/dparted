@@ -166,7 +166,7 @@ bool
 MdTable::perform_action (Action action)
 {
 	if (action.name == "dummy.md_table") {
-		log_debug ("MdTable perform: %s", action.name.c_str());
+		log_debug ("MdTable perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Table::perform_action (action);
@@ -220,10 +220,10 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 		return false;
 
 	std::string vol_uuid = read_uuid_string (buffer+16);
-	log_info ("vol uuid = %s", vol_uuid.c_str());
+	log_info ("vol uuid = %s", SP(vol_uuid));
 
 	std::string vol_name = get_fixed_str (buffer+32, 32);
-	log_info ("vol name = %s", vol_name.c_str());
+	log_info ("vol name = %s", SP(vol_name));
 
 	std::int32_t raid_type   = sle32_to_cpup (buffer+72);
 	std::int32_t raid_layout = sle32_to_cpup (buffer+76);
@@ -239,7 +239,7 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	log_info ("chunks used = %ld (%s)", chunks_used, get_size (chunk_size * chunks_used).c_str());
 
 	std::string dev_uuid = read_uuid_string (buffer+168);
-	log_info ("dev uuid = %s", dev_uuid.c_str());
+	log_info ("dev uuid = %s", SP(dev_uuid));
 
 	std::uint64_t data_offset = le64_to_cpup (buffer+128) * 512;
 	std::uint64_t data_size   = le64_to_cpup (buffer+136) * 512;

@@ -124,7 +124,7 @@ bool
 MsdosPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.msdos_partition") {
-		log_debug ("MsdosPartition perform: %s", action.name.c_str());
+		log_debug ("MsdosPartition perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Partition::perform_action (action);

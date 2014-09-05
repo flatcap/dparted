@@ -135,7 +135,7 @@ bool
 File::perform_action (Action action)
 {
 	if (action.name == "dummy.file") {
-		log_debug ("File perform: %s", action.name.c_str());
+		log_debug ("File perform: %s", SP(action));
 		return true;
 	} else {
 		return Block::perform_action (action);

@@ -94,7 +94,7 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 	// Rect tab;
 	Rect inside;
 
-	log_debug ("object = %s -- %d,%d", cont->name.c_str(), shape.w, TAB_WIDTH);
+	log_debug ("object = %s -- %d,%d", SP(cont->name), shape.w, TAB_WIDTH);
 	if (shape.w < TAB_WIDTH) {
 #if 0
 		log_debug ("draw_container: too narrow");
@@ -195,7 +195,7 @@ PropDrawingArea::draw_container (const Cairo::RefPtr<Cairo::Context>& cr, GfxCon
 		log_debug ("EMPTY");
 		inside = shape;
 	} else {
-		log_debug ("unknown display type: %s", display.c_str());
+		log_debug ("unknown display type: %s", SP(display));
 		return;
 	}
 }

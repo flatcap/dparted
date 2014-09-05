@@ -128,7 +128,7 @@ bool
 Whole::perform_action (Action action)
 {
 	if (action.name == "dummy.whole") {
-		log_debug ("Whole perform: %s", action.name.c_str());
+		log_debug ("Whole perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);

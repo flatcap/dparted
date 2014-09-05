@@ -165,7 +165,7 @@ bool
 Gpt::perform_action (Action action)
 {
 	if (action.name == "dummy.gpt") {
-		log_debug ("Gpt perform: %s", action.name.c_str());
+		log_debug ("Gpt perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Table::perform_action (action);
@@ -312,10 +312,10 @@ Gpt::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 #endif
 
 		std::string s = get_size (p->bytes_size);
-		log_debug ("\t\tlabel  = %s",   p->name.c_str());
+		log_debug ("\t\tlabel  = %s",   SP(p->name));
 		log_debug ("\t\t\tstart  = %ld", le64_to_cpup (buffer+32) * 512);
 		log_debug ("\t\t\tfinish = %ld", le64_to_cpup (buffer+40) * 512);
-		log_debug ("\t\t\tsize   = %ld (%s)", p->bytes_size, s.c_str());
+		log_debug ("\t\t\tsize   = %ld (%s)", p->bytes_size, SP(s));
 
 		if (!g->add_child (p, true)) {
 			return false;
