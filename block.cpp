@@ -139,6 +139,10 @@ Block::get_actions (void)
 
 	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
 
+	if ((children.size() == 1) && (!children[0]->is_a ("Table"))) {
+		actions.push_back ({"CREATE TABLE", true});
+	}
+
 	return actions;
 }
 

@@ -449,7 +449,7 @@ config -- ignore_gaps < 50MiB options (per container setting?)
 
 use btrfs-debug-tree to find subvols of fs without mounting
 
-don't store passwords, store tokes (store in pw manager)
+don't store passwords, store tokens (store in pw manager)
 
 menu: show last dialog
 	how?

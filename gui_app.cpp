@@ -519,7 +519,7 @@ GuiApp::on_dispatch_ask (void)
 void
 GuiApp::on_dispatch_scan (void)
 {
-	log_info ("scan has finished: ignoring callback");
+	// log_info ("scan has finished: ignoring callback");
 	// window->set_data (scan_result);
 }
 

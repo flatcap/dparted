@@ -1384,9 +1384,9 @@ DrawingArea::popup_menu (GfxContainerPtr gfx, int x, int y)
 	}
 
 #if 0
-	log_debug ("Actions:");
+	log_info ("Actions:");
 	for (auto& a : actions) {
-		log_debug ("\t%s", SP(a->name));
+		log_info ("\t%s", SP(a.name));
 	}
 #endif
 
