@@ -1006,13 +1006,9 @@ keep existing listeners on old objects?
 
 use log_ctor for create and default state info?
 
-log_handler -- split date and time
-
 log seq num -- don't increment it if nothing is sent to loggers
 
 name threads in logs @start (@end?)
-
-log_thread ids could be reused -- need a distinct id in log
 
 any advantage to having "used space" and "free space" children of fs objects?
 
@@ -1024,19 +1020,12 @@ property dialog plugin
 
 drawing plugin would need to be below base_drawing_area in hierarchy
 
-add_child, move_child, del_child -> bool
-
-inline txn_create helper
-
 move_child
 	check child has changed
 	check for zero side
 	do we need to test against size of parent?
 
 prop dialog plugin - can defer to built-in dialog
-
-drop test images -- fake it in code
-	test-data plugin!
 
 how do things go into the past?
 once they're in the past how do we stop them being modified?
@@ -1053,11 +1042,6 @@ focus needs to listen to changes
 	weak ptr?
 
 read test cases from file
-
-check retval is used on add/del/move_child (gcc check)
-
-Container::get_nth_child (initializer_list)
-	ContainerPtr c = get_nth_child ({0,0,1});
 
 should unique_id be unique for every instance of Container
 or copied => this is a different version of the same physical object
