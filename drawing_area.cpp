@@ -641,7 +641,7 @@ DrawingArea::on_focus_in (GdkEventFocus* UNUSED(event))
 		log_debug ("No Window");
 		return false;
 	}
-	log_debug ("top_level: %s", win->get_name().c_str());
+	log_debug ("top_level: %s", SP(win->get_name()));
 	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
 		log_debug ("No focus");
@@ -678,7 +678,7 @@ DrawingArea::on_keypress (GdkEventKey* event)
 		log_debug ("No Window");
 		return false;
 	}
-	log_debug ("top_level: %s", win->get_name().c_str());
+	log_debug ("top_level: %s", SP(win->get_name()));
 
 	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
@@ -739,7 +739,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 		return false;
 	}
 
-	log_debug ("top_level: %s", win->get_name().c_str());
+	log_debug ("top_level: %s", SP(win->get_name()));
 
 	GfxContainerPtr selection;
 
@@ -1327,7 +1327,7 @@ DrawingArea::get_coords (int& x, int& y)
 		return false;
 	}
 
-	log_debug ("top_level: %s", win->get_name().c_str());
+	log_debug ("top_level: %s", SP(win->get_name()));
 	GfxContainerPtr gfx = win->get_focus();
 	if (!gfx) {
 		log_debug ("No focus");
@@ -1343,7 +1343,7 @@ DrawingArea::get_coords (int& x, int& y)
 	int oy = 0;
 	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
-	log_debug ("top_level: %s", win->get_name().c_str());
+	log_debug ("top_level: %s", SP(win->get_name()));
 
 	int tx = 0;
 	int ty = 0;

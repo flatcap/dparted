@@ -186,7 +186,7 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 #endif
 
 	if (f) {
-		log_debug ("volume: %s (%s), child: %s", SP(parent->name), parent->get_type().c_str(), SP(f->name));
+		log_debug ("volume: %s (%s), child: %s", SP(parent->name), SP(parent->get_type()), SP(f->name));
 
 		ContainerPtr new_parent = Container::start_transaction (parent, "Filesystem: probe");
 		if (!new_parent) {

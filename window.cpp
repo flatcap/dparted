@@ -206,7 +206,7 @@ Window::set_focus (GfxContainerPtr cont)
 	drawingarea.set_focus (focus);
 #endif
 
-	log_debug ("Focus: %s", cont->dump().c_str());
+	log_debug ("Focus: %s", SP(cont->dump()));
 	return true;
 }
 
@@ -554,7 +554,7 @@ Window::init_menubar (Gtk::Box& box)
 	try {
 		builder->add_from_string (ui_info);
 	} catch (const Glib::Error& ex) {
-		log_debug ("building menus failed: %s", ex.what().c_str());
+		log_debug ("building menus failed: %s", SP(ex.what()));
 	}
 
 	Glib::RefPtr<Glib::Object> object = builder->get_object ("dparted-menu");

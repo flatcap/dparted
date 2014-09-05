@@ -226,7 +226,7 @@ GuiApp::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& comman
 	try {
 		context.parse (argc, argv);
 	} catch (const Glib::Error& ex) {
-		log_debug ("Exception parsing command-line: %s", ex.what().c_str());
+		log_debug ("Exception parsing command-line: %s", SP(ex.what()));
 		log_debug (context.get_help());
 		//XXX if running, don't kill the app
 		return EXIT_FAILURE;
@@ -544,7 +544,7 @@ GuiApp::add_listener (const ThemeListenerPtr& tl)
 {
 	return_if_fail (tl);
 
-	log_listener ("Theme %p add listener: %p", this, VP(tl));
+	log_listener ("Theme %p add listener: %p", (void*) this, VP(tl));
 	theme_listeners.push_back (tl);
 }
 

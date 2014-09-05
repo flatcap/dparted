@@ -270,8 +270,8 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 		if ((vp[i].type == 0x05) || (vp[i].type == 0x0F)) {
 			//XXX validate start&size against parent buffer
 #if 0
-			log_debug ("vp[i].start = %ld (%s)", le64_to_cpu (vp[i].start), get_size (le64_to_cpu (vp[i].start)).c_str());
-			log_debug ("vp[i].size  = %ld (%s)", le64_to_cpu (vp[i].size),  get_size (le64_to_cpu (vp[i].size)).c_str());
+			log_debug ("vp[i].start = %ld (%s)", le64_to_cpu (vp[i].start), SP(get_size (le64_to_cpu (vp[i].start))));
+			log_debug ("vp[i].size  = %ld (%s)", le64_to_cpu (vp[i].size),  SP(get_size (le64_to_cpu (vp[i].size))));
 			std::uint64_t xstart = le64_to_cpu (vp[i].start);
 			std::uint64_t xsize  = le64_to_cpu (vp[i].size);
 			dump_hex2 (buffer, xstart-2000, 4096);

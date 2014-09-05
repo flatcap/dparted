@@ -193,14 +193,14 @@ LvmVolume::add_child (ContainerPtr& child, bool probe)
 	return_if_fail (child);
 
 	if ((is_a ("LvmMetadata") && (child->is_a ("LvmVolume")))) {	//XXX tmp
-		log_debug ("LvmMetadata: %s", child->get_type().c_str());
+		log_debug ("LvmMetadata: %s", SP(child->get_type()));
 		sibling = child;
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume> (child);
 		vol->sibling = get_smart();
 		return;
 	}
 
-	log_debug ("volume: %s (%s), child: %s (%s)", SP(name), get_type().c_str(), SP(child->name), child->get_type().c_str());
+	log_debug ("volume: %s (%s), child: %s (%s)", SP(name), SP(get_type()), SP(child->name), SP(child->get_type()));
 	if (child->is_a ("LvmMetadata")) {
 		_add_child (metadata, child);
 		log_debug ("metadata: %s (%s) -- %s", SP(this->name), SP(child->name), SP(child->uuid));

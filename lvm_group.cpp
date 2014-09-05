@@ -228,7 +228,7 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 
 	for (auto& i : pieces->get_children()) {
 		if (i->is_a ("LvmTable")) {
-			log_info ("command: %s", i->get_device_name().c_str());
+			log_info ("command: %s", SP(i->get_device_name()));
 			command += " " + i->get_device_name();
 		}
 	}
@@ -570,7 +570,7 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		std::vector<std::string> device_list;
 		explode (",", devices, device_list);
 
-		log_debug ("%s (%s)", SP(v->name), v->get_type().c_str());
+		log_debug ("%s (%s)", SP(v->name), SP(v->get_type()));
 		for (auto& d : device_list) {
 			log_info ("Device: %s", SP(d));
 		}
@@ -661,7 +661,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	log_debug ("Pieces (%ld)", pieces->get_children().size());
 	for (auto& i : pieces->get_children()) {
-		log_debug ("\t%s\t%s", SP(i->uuid), i->dump().c_str());
+		log_debug ("\t%s\t%s", SP(i->uuid), SP(i->dump()));
 	}
 
 	// probe leaves
@@ -675,7 +675,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 		if (i->whole)				// we're part of something bigger
 			continue;
 
-		log_info ("Q: [%s] %s: %s", i->get_type().c_str(), SP(i->name), SP(i->uuid));
+		log_info ("Q: [%s] %s: %s", SP(i->get_type()), SP(i->name), SP(i->uuid));
 		main_app->queue_add_probe(i);
 	}
 
@@ -683,7 +683,7 @@ LvmGroup::discover (ContainerPtr& top_level)
 	log_debug ("%ld groups", g.size());
 
 	for (auto& i : g) {
-		log_debug ("\t%s\t%s", SP(i->uuid), i->dump().c_str());
+		log_debug ("\t%s\t%s", SP(i->uuid), SP(i->dump()));
 		top_level->add_child (i, false);
 	}
 }

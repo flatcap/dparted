@@ -313,7 +313,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	std::string pv_uuid = read_uuid_string ((char*) ph->pv_uuid);
 
-	log_info ("%s, %lu (%s)", SP(pv_uuid), le64_to_cpu (ph->device_size), get_size (le64_to_cpu (ph->device_size)).c_str());
+	log_info ("%s, %lu (%s)", SP(pv_uuid), le64_to_cpu (ph->device_size), SP(get_size (le64_to_cpu (ph->device_size))));
 
 	log_info ("Disk locations:");
 	int i;
@@ -418,7 +418,7 @@ LvmTable::add_child (ContainerPtr& child, bool probe)
 	// child->open_device();	// get a buffer
 
 #if 0
-	log_debug ("%p, name %s, type %s, uuid: %s", child->mmap_buffer, SP(child->name), child->type.back().c_str(), SP(child->uuid));
+	log_debug ("%p, name %s, type %s, uuid: %s", child->mmap_buffer, SP(child->name), SP(child->type.back()), SP(child->uuid));
 	dump_hex2 (child->mmap_buffer, 0, 4096);
 #endif
 }

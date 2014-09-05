@@ -292,7 +292,7 @@ GfxContainer::dump3 (void)
 	log_info ("%sname           = %s",    SP(tabs), SP(name));
 	log_info ("%scontainer      = %p",    SP(tabs), VP(c));
 	if (c) {
-		log_info ("%scont name      = %s",  SP(tabs), c->get_name_default().c_str());
+		log_info ("%scont name      = %s",  SP(tabs), SP(c->get_name_default()));
 		log_info ("%soffset         = %ld", SP(tabs), c->parent_offset);
 		log_info ("%ssize           = %ld", SP(tabs), c->bytes_size);
 		log_info ("%slisteners      = %d",  SP(tabs), c->count_listeners());
@@ -557,7 +557,7 @@ GfxContainer::add_listener (GfxContainerListenerPtr& gcl)
 {
 	return_if_fail (gcl);
 
-	log_listener ("GfxContainer %p add listener: %p", this, VP(gcl));
+	log_listener ("GfxContainer %p add listener: %p", (void*) this, VP(gcl));
 	gfx_container_listeners.push_back(gcl);
 }
 
@@ -615,7 +615,7 @@ GfxContainer::container_added (const ContainerPtr& cont)
 
 	GfxContainerPtr existing = find_child (cont);
 	if (existing) {
-		log_code ("Gfx: child already exists : %s(%p) : %s(%p)", SP(existing->name), VP(existing), cont->get_name_default().c_str(), VP(cont));
+		log_code ("Gfx: child already exists : %s(%p) : %s(%p)", SP(existing->name), VP(existing), SP(cont->get_name_default()), VP(cont));
 		//XXX do we need to sync?  might be a duplicate notification (recursive?)
 		return;
 	}
@@ -662,7 +662,7 @@ GfxContainer::container_changed (const ContainerPtr& after)
 
 	name = c->get_name_default();
 
-	log_info ("container_changed %s(%p) : %s(%p) -> %s(%p)", SP(name), VP(c), c->get_name_default().c_str(), VP(gchild), after->get_name_default().c_str(), VP(after));
+	log_info ("container_changed %s(%p) : %s(%p) -> %s(%p)", SP(name), VP(c), SP(c->get_name_default()), VP(gchild), SP(after->get_name_default()), VP(after));
 
 	container = after;
 

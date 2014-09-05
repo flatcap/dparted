@@ -85,7 +85,7 @@ HexVisitor::visit (ExtendedPtr c)
 
 	parent = c->get_parent();
 	if (!parent) {
-		log_hex ("\033[01;31m%s\033[0m", c->dump().c_str());
+		log_hex ("\033[01;31m%s\033[0m", SP(c->dump()));
 		return false;
 	}
 

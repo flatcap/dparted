@@ -236,7 +236,7 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	log_info ("chunk size = %d", chunk_size);
 
 	std::uint64_t chunks_used = le64_to_cpup (buffer+80);
-	log_info ("chunks used = %ld (%s)", chunks_used, get_size (chunk_size * chunks_used).c_str());
+	log_info ("chunks used = %ld (%s)", chunks_used, SP(get_size (chunk_size * chunks_used)));
 
 	std::string dev_uuid = read_uuid_string (buffer+168);
 	log_info ("dev uuid = %s", SP(dev_uuid));
@@ -244,7 +244,7 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	std::uint64_t data_offset = le64_to_cpup (buffer+128) * 512;
 	std::uint64_t data_size   = le64_to_cpup (buffer+136) * 512;
 
-	log_info ("data offset/size = %ld (%s), %ld (%s)", data_offset, get_size (data_offset).c_str(), data_size, get_size (data_size).c_str());
+	log_info ("data offset/size = %ld (%s), %ld (%s)", data_offset, SP(get_size (data_offset)), data_size, SP(get_size (data_size)));
 
 	log_info ("mdtable");
 	MdTablePtr t = MdTable::create();

@@ -164,7 +164,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 					continue;
 				}
 
-				log_debug ("\tType: %s", prop->get_type_name().c_str());
+				log_debug ("\tType: %s", SP(prop->get_type_name()));
 
 				switch (type) {
 					case ct_colour:

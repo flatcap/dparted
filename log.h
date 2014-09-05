@@ -34,7 +34,7 @@ void log_redirect (const char* format __attribute__((unused)), ...) __attribute_
 void log_redirect (const std::string& message);
 void log_redirect (const std::stringstream& message);
 template<class T>
-void log_redirect (Severity level, const char* function, const char* file, int line, std::shared_ptr<T>& j);
+void log_redirect (std::shared_ptr<T>&) {}
 #else
 void log_redirect (Severity level, const char* function, const char* file, int line, const char* message);
 void log_redirect (Severity level, const char* function, const char* file, int line, const std::string& message);
@@ -42,10 +42,10 @@ void log_redirect (Severity level, const char* function, const char* file, int l
 
 template<class T>
 void
-log_redirect (Severity level, const char* function, const char* file, int line, std::shared_ptr<T>& j)
+log_redirect (Severity level, const char* function, const char* file, int line, std::shared_ptr<T>& p)
 {
 	std::stringstream ss;
-	ss << j;
+	ss << p;
 	log_redirect (level, function, file, line, ss.str().c_str());
 }
 

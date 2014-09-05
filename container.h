@@ -121,6 +121,8 @@ public:
 	void notify_change (ContainerPtr after);
 	void notify_delete (ContainerPtr child);
 
+	std::uint64_t get_unique (void) { return unique_id; }
+
 #ifdef DP_TEST
 	ContainerPtr get_nth_child (std::initializer_list<unsigned int> route);
 #endif
@@ -208,11 +210,7 @@ protected:
 
 private:
 	MmapPtr	device_mmap;
-
-public://RAR
 	std::uint64_t unique_id = 0;
-
-private://RAR
 	std::vector<ContainerListenerWeak> container_listeners;
 };
 

@@ -275,7 +275,7 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	// l->device      = "/dev/mapper/luks-" + l->uuid;
 
-	log_debug ("Parent: %s", parent->get_device_name().c_str());
+	log_debug ("Parent: %s", SP(parent->get_device_name()));
 
 	log_debug ("LUKS:");
 	log_debug ("\tversion:       %u", l->version);

@@ -370,12 +370,12 @@ Container::add_child (ContainerPtr child, bool probe)
 	LOG_TRACE;
 
 	if (bytes_size == 0) {
-		// log_code ("DUMMY container %s", get_device_name().c_str());
+		// log_code ("DUMMY container %s", SP(get_device_name()));
 		std::lock_guard<std::recursive_mutex> lock (mutex_children);
 		++seqnum;
 		_add_child (children, child);
 	} else {
-		// log_code ("REAL container %s", get_device_name().c_str());
+		// log_code ("REAL container %s", SP(get_device_name()));
 		std::lock_guard<std::recursive_mutex> lock (mutex_children);
 		++seqnum;
 		_add_child (children, child);
@@ -591,7 +591,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		return nullptr;
 	}
 
-	log_debug ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s", SP(name), SP(uuid), SP(device), fd, offset, get_size (size).c_str());
+	log_debug ("object: %s (%s), device: %s, fd: %d, GET: offset: %ld, size: %s", SP(name), SP(uuid), SP(device), fd, offset, SP(get_size (size)));
 
 	if (device_mmap) {
 		void* buf = (*device_mmap).second;
@@ -631,7 +631,7 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		// close (newfd);				//XXX may not be ours to close
 		return nullptr;
 	}
-	log_file ("mmap created: %p, device %s, size %s", buf, SP(device), get_size (size).c_str());
+	log_file ("mmap created: %p, device %s, size %s", buf, SP(device), SP(get_size (size)));
 
 	device_mmap = (MmapPtr (new Mmap (size, buf), deleter));
 
@@ -737,7 +737,7 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 bool
 Container::is_a (const std::string& t)
 {
-	log_debug ("my type = %s, compare to %s", type.back().c_str(), SP(t));
+	log_debug ("my type = %s, compare to %s", SP(type.back()), SP(t));
 
 	// Start with the most derived type
 	for (auto it = type.rbegin(); it != type.rend(); ++it) {
@@ -1166,7 +1166,7 @@ Container::add_listener (const ContainerListenerPtr& cl)
 {
 	return_if_fail (cl);
 
-	log_listener ("Container %s(%p) add listener: %p", get_name_default().c_str(), (void*) this, VP(cl));
+	log_listener ("Container %s(%p) add listener: %p", SP(get_name_default()), (void*) this, VP(cl));
 	container_listeners.push_back (cl);
 
 	log_listener ("listeners:");
@@ -1346,20 +1346,20 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 	switch (type) {
 		case NotifyType::t_add:
 			log_trace ("Notify add:");
-			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
-			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
+			log_trace ("\t%s(%ld) %ld listeners", SP(first->get_name_default()),  first->unique_id,  first->container_listeners.size());
+			log_trace ("\t%s(%ld) %ld listeners", SP(second->get_name_default()), second->unique_id, second->container_listeners.size());
 			first->notify_add (second);
 			break;
 		case NotifyType::t_delete:
 			log_trace ("Notify delete:");
-			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
-			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
+			log_trace ("\t%s(%ld) %ld listeners", SP(first->get_name_default()),  first->unique_id,  first->container_listeners.size());
+			log_trace ("\t%s(%ld) %ld listeners", SP(second->get_name_default()), second->unique_id, second->container_listeners.size());
 			first->notify_delete (second);
 			break;
 		case NotifyType::t_change:
 			log_trace ("Notify change:");
-			log_trace ("\t%s(%d) %d listeners", first->get_name_default().c_str(),  first->unique_id,  first->container_listeners.size());
-			log_trace ("\t%s(%d) %d listeners", second->get_name_default().c_str(), second->unique_id, second->container_listeners.size());
+			log_trace ("\t%s(%ld) %ld listeners", SP(first->get_name_default()),  first->unique_id,  first->container_listeners.size());
+			log_trace ("\t%s(%ld) %ld listeners", SP(second->get_name_default()), second->unique_id, second->container_listeners.size());
 			first->notify_change (second);
 			break;
 		default:

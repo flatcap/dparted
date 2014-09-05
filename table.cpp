@@ -310,7 +310,7 @@ Table::delete_child (ContainerPtr child)
 		}
 	}
 
-	log_info ("new space: %p(U%03ld)", VP(s), s->unique_id);
+	log_info ("new space: %p(U%03ld)", VP(s), s->get_unique());
 	if (!add_child (s, false))
 		return false;
 
@@ -327,7 +327,6 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 	}
 
 	ContainerPtr space;
-	log_debug ("");
 	log_debug ("move_child");
 	log_debug ("\told: start: %10ld  end: %10ld  size: %10ld", child->parent_offset, child->parent_offset+child->bytes_size, child->bytes_size);
 	log_debug ("\tnew: start: %10ld  end: %10ld  size: %10ld", offset, offset+size, size);

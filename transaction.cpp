@@ -73,8 +73,8 @@ Transaction::dump_notification (NotifyType type, ContainerPtr c1, ContainerPtr c
 		tabs.resize (indent, '\t');
 	}
 
-	std::string name1 = c1->get_type() + "(" + std::to_string(c1->unique_id) + ")";
-	std::string name2 = c2->get_type() + "(" + std::to_string(c2->unique_id) + ")";
+	std::string name1 = c1->get_type() + "(" + std::to_string (c1->get_unique()) + ")";
+	std::string name2 = c2->get_type() + "(" + std::to_string (c2->get_unique()) + ")";
 
 #if 0
 	log_code ("%s%-7s: %-16s(%p:%ld) : %-16s(%p:%ld)",
