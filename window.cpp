@@ -33,6 +33,9 @@
 #endif
 #include "gui_app.h"
 #include "log.h"
+#ifdef DP_TEST
+#include "test.h"
+#endif
 #include "utils.h"
 
 Window::Window (void)
@@ -98,9 +101,9 @@ Window::Window (void)
 #ifdef DP_TREE
 					inner_box.pack_start (treeview,    true,  true);
 #endif
-		// outer_box.add (time_box);
-		// 	time_box.pack_start (time_back);
-		// 	time_box.pack_start (time_forward);
+		outer_box.add (time_box);
+			time_box.pack_start (time_back);
+			time_box.pack_start (time_forward);
 		outer_box.pack_end (statusbar, false, false);
 
 	// -------------------------------------
@@ -644,6 +647,8 @@ Window::set_data (ContainerPtr c)
 #ifdef DP_AREA
 	drawingarea.set_data(g);
 #endif
+	// ContainerPtr d = c->get_nth_child ({0,0,1});
+	// test_execute (d, "delete");
 }
 
 

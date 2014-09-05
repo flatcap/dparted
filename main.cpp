@@ -64,9 +64,11 @@ main (int argc, char *argv[])
 	// log_red->foreground = 209;
 	log_red->start (Severity::Code);
 
+#if 0
 	LogHandlerPtr log_green = LogHandler::create (stdout);
 	// log_green->foreground = 118;
 	log_green->start (Severity::Trace);
+#endif
 
 #if 0
 	LogHandlerPtr log_yellow = LogHandler::create (stdout);
@@ -108,7 +110,6 @@ main (int argc, char *argv[])
 	text_app = std::make_shared<TextApp>();
 	main_app = text_app;
 	status = text_app->run (argc, argv);
-	// text_app->test();
 	text_app = nullptr;
 #endif
 	main_app = nullptr;
@@ -117,7 +118,7 @@ main (int argc, char *argv[])
 	log_crit->stop();
 	log_cyan->stop();
 	// log_yellow->stop();
-	log_green->stop();
+	// log_green->stop();
 	log_red->stop();
 	log_out->stop();
 

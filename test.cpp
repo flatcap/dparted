@@ -19,8 +19,12 @@
 #include <string>
 #include <vector>
 
+#include "app.h"
 #include "gpt.h"
 #include "gpt_partition.h"
+#ifdef DP_LIST
+#include "list_visitor.h"
+#endif
 #include "log.h"
 #include "loop.h"
 #include "partition.h"
@@ -51,7 +55,7 @@ create_disks (ContainerPtr parent, const disk_def& dd, std::string name)
 
 	for (auto i : dd) {
 		std::tie (loop_num, part, off, size) = i;
-		log_info ("%d, %d, %ld, %ld", loop_num, part, off, size);
+		log_debug ("%d, %d, %ld, %ld", loop_num, part, off, size);
 
 		if (loop_num != loop_num_old) {
 			loop_num_old = loop_num;
@@ -201,6 +205,50 @@ test_generate_move (ContainerPtr& parent)
 }
 
 void
+test_generate_myriad (ContainerPtr& parent)
+{
+	return_if_fail (parent);
+#if 0
+	ContainerPtr c = Container::create();
+	c->name = "top";
+	all_children.push_back(c);
+
+	for (int i = 0; i < 99; i++) {
+#if 1
+		start_thread (std::bind (add_child, i), "new");
+#else
+		add_child(i);
+#endif
+	}
+
+	wait_for_threads();
+	// log_info ("START: %d", count_containers(c));
+
+#if 0
+	for (int i = 0; i < 100; i++) {
+		start_thread (std::bind (alter_child), "alter");
+	}
+#endif
+
+#if 0
+	for (int i = 0; i < 3; i++) {
+		// start_thread (std::bind (delete_child), "delete");
+		delete_child();
+	}
+#endif
+
+	// wait_for_threads();
+
+	// log_info ("Threads have finished");
+	// run_list(c);
+#if 1
+	// tidy_children();
+	log_info ("%dC/%ldV children", count_containers(c), all_children.size());
+#endif
+#endif
+}
+
+void
 test_generate_resize (ContainerPtr& parent)
 {
 	const disk_def dd {
@@ -245,14 +293,11 @@ test_generate_resize (ContainerPtr& parent)
 void
 test_generate (ContainerPtr& parent, const std::string& name)
 {
-	if (name == "add")
-		test_generate_add (parent);
-	else if (name == "delete")
-		test_generate_delete (parent);
-	else if (name == "move")
-		test_generate_move (parent);
-	else if (name == "resize")
-		test_generate_resize (parent);
+	     if (name == "add")    test_generate_add    (parent);
+	else if (name == "delete") test_generate_delete (parent);
+	else if (name == "move")   test_generate_move   (parent);
+	else if (name == "myriad") test_generate_myriad (parent);
+	else if (name == "resize") test_generate_resize (parent);
 	else
 		log_error ("Unknown test case: %s", name.c_str());
 }
@@ -272,8 +317,8 @@ test_execute_add (ContainerPtr& child)
 		return;
 
 	log_info ("ADD parent %s(%p), child %s(%p)", parent->get_name_default().c_str(), parent.get(), child->get_name_default().c_str(), child.get());
-	log_info ("po   = %ld", child->parent_offset);
-	log_info ("size = %ld", child->bytes_size);
+	log_debug ("po   = %ld", child->parent_offset);
+	log_debug ("size = %ld", child->bytes_size);
 	std::string desc = "Test: add " + child->get_name_default();
 	std::string name = gp->name;
 
@@ -311,14 +356,18 @@ void
 test_execute_delete (ContainerPtr& child)
 {
 	return_if_fail (child);
+	// main_app->get_timeline()->dump();
 
 	ContainerPtr parent = child->get_parent();
 	if (!parent)
 		return;
 
-	ContainerPtr gp = parent->get_parent();
-	if (!gp)
+	ContainerPtr top_level = child->get_top_level();
+	if (!top_level)
 		return;
+
+	// log_info ("top_level = %s", top_level->name.c_str());
+	// run_list (top_level);
 
 	std::string name = child->name;
 	if ((name != "loop1p2") && (name != "loop2p2") && (name != "loop3p2") && (name != "loop4p1") && (name != "loop5p1") && (name != "loop6p1") && (name != "loop7p1") && (name != "loop8p1") && (name != "loop9p1"))
@@ -336,6 +385,10 @@ test_execute_delete (ContainerPtr& child)
 	} else {
 		Container::cancel_transaction();
 	}
+
+	parent = nullptr;
+	// main_app->get_timeline()->dump();
+	// run_list (top_level);
 }
 
 void
@@ -431,7 +484,6 @@ test_execute (ContainerPtr& child, const std::string& name)
 		test_execute_move (child);
 	else if (name == "resize")
 		test_execute_resize (child);
-	else
-		log_error ("Unknown test case: %s", name.c_str());
+	// else nothing to do
 }
 

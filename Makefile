@@ -100,7 +100,9 @@ CFLAGS-$(MD)		+= -DDP_MD
 CFLAGS-$(MSDOS)		+= -DDP_MSDOS
 CFLAGS-$(NTFS)		+= -DDP_NTFS
 CFLAGS-$(PROP)		+= -DDP_PROP
-CFLAGS-$(TEST)		+= -DDP_TEST
+ifeq ($(D),1)
+	CFLAGS-$(TEST)	+= -DDP_TEST
+endif
 CFLAGS-$(UNUSED)	+= -DDP_UNUSED
 
 SRC-$(BTRFS)		+= btrfs.cpp

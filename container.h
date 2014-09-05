@@ -19,7 +19,9 @@
 #ifndef _CONTAINER_H_
 #define _CONTAINER_H_
 
+#include <algorithm>
 #include <cstdint>
+#include <initializer_list>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -108,7 +110,6 @@ public:
 	bool __attribute__((warn_unused_result)) add_child (std::shared_ptr<T> child, bool probe);
 
 	void sub_type (const char* name);
-	std::string dump (void);
 
 	PPtr add_string_prop (const std::string& owner, const std::string& name, const std::string& value);
 
@@ -119,6 +120,10 @@ public:
 	void notify_add    (ContainerPtr child);
 	void notify_change (ContainerPtr after);
 	void notify_delete (ContainerPtr child);
+
+#ifdef DP_TEST
+	ContainerPtr get_nth_child (std::initializer_list<unsigned int> route);
+#endif
 
 public:
 	// Property helper functions
@@ -204,8 +209,10 @@ protected:
 private:
 	MmapPtr	device_mmap;
 
+public://RAR
 	std::uint64_t unique_id = 0;
 
+private://RAR
 	std::vector<ContainerListenerWeak> container_listeners;
 };
 

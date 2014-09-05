@@ -390,9 +390,7 @@ Container::add_child (ContainerPtr child, bool probe)
 	ContainerPtr parent = get_smart();		// Smart pointer to myself
 	child->parent = parent;
 
-	if (txn) {
-		txn->notifications.push_back (std::make_tuple (NotifyType::t_add, parent, child));
-	}
+	txn_add (NotifyType::t_add, parent, child);
 
 	if (is_top_level()) {
 		return true;
@@ -607,7 +605,6 @@ Container::get_buffer (std::uint64_t offset, std::uint64_t size)
 		if (p) {
 			return p->get_buffer (offset + parent_offset, size);
 		} else {
-			log_debug (this->dump());
 			log_error ("no device and no parent");
 			return nullptr;
 		}
@@ -679,19 +676,20 @@ operator<< (std::ostream& stream, const ContainerPtr& c)
 #endif
 		<< c->name
 #if 1
-		<< "(" << uuid << "), "
-		<< '"' << c->device << '"' << "(" << c->fd << "),"
-		<< " S:" // << c->bytes_size
-						<< "(" << get_size (c->bytes_size)    << "), "
+		// << "(" << uuid << "), "
+		// << '"' << c->device << '"' << "(" << c->fd << "),"
+		// << " S:" // << c->bytes_size
+		// 				<< "(" << get_size (c->bytes_size)    << "), "
 		// << " U:" // << c->bytes_used
 		// 				<< "(" << get_size (c->bytes_used)    << "), "
 		// << " F:" // <<   bytes_free
 		// 				<< "(" << get_size (   bytes_free)    << "), "
-		<< " P:" // << c->parent_of	<fset
-						<< "(" << get_size (c->parent_offset) << "), "
+		// << " P:" // << c->parent_of	<fset
+		// 				<< "(" << get_size (c->parent_offset) << "), "
 		<< " rc: " << c.use_count()
 		<< " seq: " << c->seqnum
 		<< " uniq: " << c->unique_id
+		<< " listen: " << c->container_listeners.size()
 #endif
 		;
 
@@ -730,6 +728,7 @@ exchange (ContainerPtr existing, ContainerPtr replacement)
 	}
 
 	*it = replacement;
+	existing->notify (NotifyType::t_change, existing, replacement);
 
 	return true;
 }
@@ -1161,14 +1160,6 @@ Container::get_uuid_short (void)
 	return u;
 }
 
-std::string
-Container::dump (void)
-{
-	std::stringstream s;
-	s << this;
-	return s.str();
-}
-
 
 void
 Container::add_listener (const ContainerListenerPtr& cl)
@@ -1178,9 +1169,9 @@ Container::add_listener (const ContainerListenerPtr& cl)
 	log_listener ("Container %s(%p) add listener: %p", get_name_default().c_str(), this, cl.get());
 	container_listeners.push_back (cl);
 
-	log_info ("listeners:");
+	log_listener ("listeners:");
 	for (auto& l : container_listeners) {
-		log_info ("\t%p", l.lock().get());
+		log_listener ("\t%p", l.lock().get());
 	}
 }
 
@@ -1287,18 +1278,18 @@ Container::backup (void)
 
 	ContainerPtr prev = get_smart();
 
+	ContainerPtr c;
+
 	if (prev->is_top_level()) {
-		return prev;	// Don't make any changes
+		c = prev;	// Keep the same object
+	} else {
+		c = prev->copy();
 	}
 
-	ContainerPtr c = prev->copy();
 	if (!c)
 		return {};
 
-	if (txn) {
-		//XXX get_txn() function that checks we have a lock
-		txn->notifications.push_back (std::make_tuple (NotifyType::t_change, prev, c));
-	}
+	txn_add (NotifyType::t_change, prev, c);
 
 	log_info ("backup: %s %ld(%p) -> %ld(%p)", name.c_str(), unique_id, prev.get(), c->unique_id, c.get());
 
@@ -1377,3 +1368,22 @@ Container::notify (NotifyType type, ContainerPtr first, ContainerPtr second)
 	}
 }
 
+
+#ifdef DP_TEST
+ContainerPtr
+Container::get_nth_child (std::initializer_list<unsigned int> route)
+{
+	ContainerPtr c = get_smart();
+
+	for (auto i : route) {
+		if (i >= c->children.size()) {
+			return {};
+		}
+
+		c = c->children[i];
+	}
+
+	return c;
+}
+
+#endif

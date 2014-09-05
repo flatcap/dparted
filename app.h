@@ -59,7 +59,6 @@ public:
 
 	virtual bool open_uri (const std::string& uri);
 
-	void test (void);
 	void wait_for_threads (void);
 
 	bool adjust_timeline (int amount);

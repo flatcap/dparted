@@ -545,47 +545,6 @@ App::wait_for_threads (void)
 #endif
 }
 
-void
-App::test (void)
-{
-	ContainerPtr c = Container::create();
-	c->name = "top";
-	all_children.push_back(c);
-
-	for (int i = 0; i < 99; i++) {
-#if 1
-		start_thread (std::bind (add_child, i), "new");
-#else
-		add_child(i);
-#endif
-	}
-
-	wait_for_threads();
-	// printf ("START: %d\n", count_containers(c));
-
-#if 0
-	for (int i = 0; i < 100; i++) {
-		start_thread (std::bind (alter_child), "alter");
-	}
-#endif
-
-#if 0
-	for (int i = 0; i < 3; i++) {
-		// start_thread (std::bind (delete_child), "delete");
-		delete_child();
-	}
-#endif
-
-	// wait_for_threads();
-
-	// printf ("Threads have finished\n");
-	// run_list(c);
-#if 1
-	// tidy_children();
-	printf ("%dC/%ldV children\n", count_containers(c), all_children.size());
-#endif
-}
-
 
 bool
 App::adjust_timeline (int amount)

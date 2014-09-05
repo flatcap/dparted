@@ -1049,3 +1049,13 @@ automatically manipulate listeners?
 	change -> move
 	NO -- inherit doesn't make sense
 
+focus needs to listen to changes
+	weak ptr?
+
+read test cases from file
+
+check retval is used on add/del/move_child (gcc check)
+
+Container::get_nth_child (initializer_list)
+	ContainerPtr c = get_nth_child ({0,0,1});
+
