@@ -20,6 +20,8 @@
 #define _UTILS_H_
 
 #include <map>
+#include <sstream>
+#include <string>
 #include <string>
 #include <vector>
 
@@ -27,6 +29,24 @@
 
 #define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
 #define WARN_UNUSED __attribute__((warn_unused_result))
+
+template<class T>
+void*
+VP (const std::shared_ptr<T>& p)
+{
+	return (void*) p.get();
+}
+
+template<class T>
+void*
+VP (const std::weak_ptr<T>& w)
+{
+	std::shared_ptr<T> p = w.lock();
+	return (void*) p.get();
+}
+
+const char* SP (const std::string&       str);
+const char* SP (const std::stringstream& str);
 
 std::uint64_t            align (std::uint64_t num, std::uint64_t round);
 void                     delete_region (std::vector<std::pair<std::uint64_t, std::uint64_t>>& region, std::uint64_t start, std::uint64_t size);

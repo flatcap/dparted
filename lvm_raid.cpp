@@ -147,7 +147,7 @@ bool
 LvmRaid::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_raid") {
-		log_debug ("LvmRaid perform: %s", action.name.c_str());
+		log_debug ("LvmRaid perform: %s", SP(action.name));
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

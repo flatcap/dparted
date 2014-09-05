@@ -127,7 +127,7 @@ bool
 MdPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.md_partition") {
-		log_debug ("MdPartition perform: %s", action.name.c_str());
+		log_debug ("MdPartition perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Partition::perform_action (action);

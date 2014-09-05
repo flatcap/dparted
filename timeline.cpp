@@ -67,7 +67,7 @@ Timeline::undo (int count)
 
 		auto txn = (*txn_cursor);
 
-		log_info ("Undo event: '%s'", txn->description.c_str());
+		log_info ("Undo event: '%s'", SP(txn->description));
 
 		NotifyType   type;
 		ContainerPtr top_old;
@@ -136,7 +136,7 @@ Timeline::redo (int count)
 	for (; count--; ) {
 		auto txn = (*txn_cursor);
 
-		log_info ("Redo event: '%s'", txn->description.c_str());
+		log_info ("Redo event: '%s'", SP(txn->description));
 
 		NotifyType   type;
 		ContainerPtr top_old;
@@ -218,16 +218,20 @@ Timeline::commit (TransactionPtr txn)
 	auto n = txn->notifications[0];					// First notification is the top-level of all the changes
 	exchange (std::get<1>(n), std::get<2>(n));			// Put the new containers into place
 
-	log_code ("Commit: '%s'", txn->description.c_str());
+	log_code ("Commit: '%s'", SP(txn->description));
 	for (auto n : txn->notifications) {
-		//XXX std::tie
-		NotifyType type = std::get<0>(n);
-		std::stringstream n1; ContainerPtr c1 = std::get<1>(n); if (c1) n1 << c1;
-		std::stringstream n2; ContainerPtr c2 = std::get<2>(n); if (c2) n2 << c2;
+		NotifyType type;
+		ContainerPtr c1;
+		ContainerPtr c2;
+
+		std::tie (type, c1, c2) = n;
+
+		// std::stringstream n1; if (c1) n1 << c1;
+		// std::stringstream n2; if (c2) n2 << c2;
 
 		// log_code ("\t%s:", (int) type);
-		// log_code ("\t\t%s", n1.str().c_str());
-		// log_code ("\t\t%s", n2.str().c_str());
+		// log_code ("\t\t%s", SP(n1));
+		// log_code ("\t\t%s", SP(n2));
 
 		c1->notify (type, c1, c2);				// Let everyone know about the changes
 	}

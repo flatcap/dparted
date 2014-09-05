@@ -205,7 +205,7 @@ bool
 Disk::perform_action (Action action)
 {
 	if (action.name == "dummy.disk") {
-		log_debug ("Disk perform: %s", action.name.c_str());
+		log_debug ("Disk perform: %s", action.SP(name));
 		return true;
 	} else {
 		return Block::perform_action (action);
@@ -247,7 +247,7 @@ Disk::find_devices_old (const std::string& name, int fd, struct stat& st, Contai
 	d->bytes_used    = 0;
 
 	log_debug ("disk");
-	log_debug ("\tname = %s", name.c_str());
+	log_debug ("\tname = %s", SP(name));
 	log_debug ("\tsize = %ld", file_size_in_bytes);
 
 	list.add_child (d, true);

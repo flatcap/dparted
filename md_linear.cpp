@@ -124,7 +124,7 @@ bool
 MdLinear::perform_action (Action action)
 {
 	if (action.name == "dummy.md_linear") {
-		log_debug ("MdLinear perform: %s", action.name.c_str());
+		log_debug ("MdLinear perform: %s", SP(action.name));
 		return true;
 	} else {
 		return MdVolume::perform_action (action);

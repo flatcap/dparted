@@ -299,7 +299,7 @@ test_generate (ContainerPtr& parent, const std::string& name)
 	else if (name == "myriad") test_generate_myriad (parent);
 	else if (name == "resize") test_generate_resize (parent);
 	else
-		log_error ("Unknown test case: %s", name.c_str());
+		log_error ("Unknown test case: %s", SP(name));
 }
 
 
@@ -316,7 +316,7 @@ test_execute_add (ContainerPtr& child)
 	if (!gp)
 		return;
 
-	log_info ("ADD parent %s(%p), child %s(%p)", parent->get_name_default().c_str(), parent.get(), child->get_name_default().c_str(), child.get());
+	log_info ("ADD parent %s(%p), child %s(%p)", SP(parent->get_name_default()), VP(parent), SP(child->get_name_default()), VP(child));
 	log_debug ("po   = %ld", child->parent_offset);
 	log_debug ("size = %ld", child->bytes_size);
 	std::string desc = "Test: add " + child->get_name_default();
@@ -366,14 +366,14 @@ test_execute_delete (ContainerPtr& child)
 	if (!top_level)
 		return;
 
-	// log_info ("top_level = %s", top_level->name.c_str());
+	// log_info ("top_level = %s", SP(top_level->name));
 	// run_list (top_level);
 
 	std::string name = child->name;
 	if ((name != "loop1p2") && (name != "loop2p2") && (name != "loop3p2") && (name != "loop4p1") && (name != "loop5p1") && (name != "loop6p1") && (name != "loop7p1") && (name != "loop8p1") && (name != "loop9p1"))
 		return;
 
-	log_info ("DELETE parent %s(%p), child %s(%p)", parent->get_name_default().c_str(), parent.get(), child->get_name_default().c_str(), child.get());
+	log_info ("DELETE parent %s(%p), child %s(%p)", SP(parent->get_name_default()), VP(parent), SP(child->get_name_default()), VP(child));
 	std::string desc = "Test: delete " + child->get_name_default();
 
 	ContainerPtr new_parent = Container::start_transaction (parent, desc);
@@ -403,7 +403,7 @@ test_execute_move (ContainerPtr& child)
 	if (!child->is_a ("GptPartition"))
 		return;
 
-	log_info ("MOVE parent %s(%p), child %s(%p)", parent->get_name_default().c_str(), parent.get(), child->get_name_default().c_str(), child.get());
+	log_info ("MOVE parent %s(%p), child %s(%p)", SP(parent->get_name_default()), VP(parent), SP(child->get_name_default()), VP(child));
 	std::string desc = "Test: move " + child->get_name_default();
 	std::string name = child->name;
 	std::uint64_t off  = 0;
@@ -441,7 +441,7 @@ test_execute_resize (ContainerPtr& child)
 	if (!child->is_a ("GptPartition"))
 		return;
 
-	log_info ("RESIZE parent %s(%p), child %s(%p)", parent->get_name_default().c_str(), parent.get(), child->get_name_default().c_str(), child.get());
+	log_info ("RESIZE parent %s(%p), child %s(%p)", SP(parent->get_name_default()), VP(parent), SP(child->get_name_default()), VP(child));
 	std::string desc = "Test: resize " + child->get_name_default();
 	std::string name = child->name;
 	std::uint64_t off  = 0;

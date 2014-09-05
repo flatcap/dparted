@@ -132,7 +132,7 @@ bool
 Extfs::perform_action (Action action)
 {
 	if (action.name == "dummy.extfs") {
-		log_debug ("Extfs perform: %s", action.name.c_str());
+		log_debug ("Extfs perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -219,11 +219,11 @@ tune2fs (const std::string& dev)
 			continue;
 
 		if (!parse_line (line, key, value)) {
-			log_debug ("Failed: %s", line.c_str());
+			log_debug ("Failed: %s", SP(line));
 			continue;
 		}
 
-		log_debug ("\t%s", key.c_str());
+		log_debug ("\t%s", SP(key));
 		results[key] = value;
 	}
 
@@ -298,7 +298,7 @@ Extfs::get_ext_sb (ContainerPtr parent)
 		std::string desc  = i.first;
 		std::string key   = make_key (desc);
 		std::string value = i.second;
-		log_debug ("\t%-32s %-24s %s", key.c_str(), desc.c_str(), value.c_str());
+		log_debug ("\t%-32s %-24s %s", SP(key), SP(desc), SP(value));
 
 		if (desc == "Filesystem features") {
 			explode (" ", value, features);

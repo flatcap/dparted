@@ -107,7 +107,7 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 void
 log_redirect (Severity level, const char* function, const char* file, int line, const std::string& message)
 {
-	log_redirect (level, function, file, line, message.c_str());
+	log_redirect (level, function, file, line, SP(message));
 }
 
 /**
@@ -116,7 +116,7 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 void
 log_redirect (Severity level, const char* function, const char* file, int line, const std::stringstream& message)
 {
-	log_redirect (level, function, file, line, message.str().c_str());
+	log_redirect (level, function, file, line, SP(message));
 }
 
 
@@ -159,7 +159,7 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 		ss << "\t" << i << "\n";
 	}
 
-	log_code ("%s", ss.str().c_str());
+	log_code (ss);
 }
 
 static std::vector<std::pair<Severity, std::string>> LogLevelNames = {

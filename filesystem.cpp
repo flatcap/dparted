@@ -147,7 +147,7 @@ bool
 Filesystem::perform_action (Action action)
 {
 	if (action.name == "dummy.filesystem") {
-		log_debug ("Filesystem perform: %s", action.name.c_str());
+		log_debug ("Filesystem perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -186,7 +186,7 @@ Filesystem::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t buf
 #endif
 
 	if (f) {
-		log_debug ("volume: %s (%s), child: %s", parent->name.c_str(), parent->get_type().c_str(), f->name.c_str());
+		log_debug ("volume: %s (%s), child: %s", SP(parent->name), SP(parent->get_type()), SP(f->name));
 
 		ContainerPtr new_parent = Container::start_transaction (parent, "Filesystem: probe");
 		if (!new_parent) {

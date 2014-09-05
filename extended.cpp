@@ -136,7 +136,7 @@ bool
 Extended::perform_action (Action action)
 {
 	if (action.name == "dummy.extended") {
-		log_debug ("Extended perform: %s", action.name.c_str());
+		log_debug ("Extended perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Msdos::perform_action (action);
@@ -179,7 +179,7 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	for (int loop = 0; loop < 50; ++loop) {		// what's the upper limit? prob 255 in the kernel
 		if (le16_to_cpup (table_offset+buffer+510) != 0xAA55) {
 			log_error ("not an extended partition");
-			log_debug ("%s (%s), %ld", parent->name.c_str(), parent->device.c_str(), parent->parent_offset);
+			log_debug ("%s (%s), %ld", SP(parent->name), SP(parent->device), parent->parent_offset);
 			return nullptr;
 		}
 
@@ -203,8 +203,8 @@ Extended::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 				std::string s2 = get_size (le64_to_cpu (part.size));
 
 				log_debug ("\tpartition (0x%02x)", part.type);
-				log_debug ("\t\tstart = %ld (%s)", le64_to_cpu (part.start), s1.c_str());
-				log_debug ("\t\tsize  = %ld (%s)", le64_to_cpu (part.size),  s2.c_str());
+				log_debug ("\t\tstart = %ld (%s)", le64_to_cpu (part.start), SP(s1));
+				log_debug ("\t\tsize  = %ld (%s)", le64_to_cpu (part.size),  SP(s2));
 			}
 #endif
 			if ((part.type == 0x05) || (part.type == 0x0F)) {

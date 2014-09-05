@@ -128,7 +128,7 @@ bool
 LvmMirror::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_mirror") {
-		log_debug ("LvmMirror perform: %s", action.name.c_str());
+		log_debug ("LvmMirror perform: %s", SP(action.name));
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);
@@ -183,7 +183,7 @@ LvmMirror::add_child (ContainerPtr& child, bool probe)
 		children.push_back (child);
 	}
 
-	log_debug ("insert: %s (%s)", this->name.c_str(), child->name.c_str());
+	log_debug ("insert: %s (%s)", SP(this->name), SP(child->name));
 
 	child->parent = this;
 #endif

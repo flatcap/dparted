@@ -127,7 +127,7 @@ bool
 LvmPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_partition") {
-		log_debug ("LvmPartition perform: %s", action.name.c_str());
+		log_debug ("LvmPartition perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Partition::perform_action (action);

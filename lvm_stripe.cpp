@@ -127,7 +127,7 @@ bool
 LvmStripe::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_stripe") {
-		log_debug ("LvmStripe perform: %s", action.name.c_str());
+		log_debug ("LvmStripe perform: %s", SP(action.name));
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

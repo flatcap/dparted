@@ -52,11 +52,11 @@ LogHandler::create (const std::string& filename, bool truncate /*=false*/)
 
 	FILE* f = fopen (filename.c_str(), flags);
 	if (!f) {
-		log_error ("Failed to open '%s': %s", filename.c_str(), strerror (errno));
+		log_error ("Failed to open '%s': %s", SP(filename), strerror (errno));
 		return nullptr;
 	}
 
-	// log_file ("file open: '%s'", name.c_str());	//XXX reinstate when we can handle early/late logging
+	// log_file ("file open: '%s'", SP(name));	//XXX reinstate when we can handle early/late logging
 
 	LogHandlerPtr lh (new LogHandler());
 	lh->file       = f;
@@ -98,7 +98,7 @@ LogHandler::stop (void)
 
 	if (close_file) {
 		fclose (file);
-		log_file ("file close: '%s'", filename.c_str());
+		log_file ("file close: '%s'", SP(filename));
 		file = nullptr;
 		close_file = false;
 	}

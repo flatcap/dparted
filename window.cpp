@@ -206,7 +206,7 @@ Window::set_focus (GfxContainerPtr cont)
 	drawingarea.set_focus (focus);
 #endif
 
-	log_debug ("Focus: %s", cont->dump().c_str());
+	log_debug ("Focus: %s", SP(cont->dump()));
 	return true;
 }
 
@@ -554,7 +554,7 @@ Window::init_menubar (Gtk::Box& box)
 	try {
 		builder->add_from_string (ui_info);
 	} catch (const Glib::Error& ex) {
-		log_debug ("building menus failed: %s", ex.what().c_str());
+		log_debug ("building menus failed: %s", SP(ex.what()));
 	}
 
 	Glib::RefPtr<Glib::Object> object = builder->get_object ("dparted-menu");
@@ -589,10 +589,10 @@ Window::set_actions (std::vector<Action>& list)
 	for (auto& a : list) {				// Then selectively enable the ones we want
 		auto it = action_map.find (a.name);
 		if (it != std::end (action_map)) {
-			log_debug ("Enable: %s", a.name.c_str());
+			log_debug ("Enable: %s", SP(a.name));
 			it->second->set_enabled (true);
 		} else {
-			log_debug ("Can't find %s", a.name.c_str());
+			log_debug ("Can't find %s", SP(a.name));
 		}
 	}
 }
@@ -612,7 +612,7 @@ Window::on_keypress (int modifier, int key)
 void
 Window::on_action_general (std::string section, std::string name)
 {
-	log_debug ("%s.%s", section.c_str(), name.c_str());
+	log_debug ("%s.%s", SP(section), SP(name));
 
 	if (!focus) {
 		log_debug ("no focus");

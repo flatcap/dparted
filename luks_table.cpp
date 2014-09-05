@@ -200,7 +200,7 @@ LuksTable::perform_action (Action action)
 		} else {
 			luks_open();
 		}
-		log_debug ("LuksTable perform: %s", action.name.c_str());
+		log_debug ("LuksTable perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -275,23 +275,23 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	// l->device      = "/dev/mapper/luks-" + l->uuid;
 
-	log_debug ("Parent: %s", parent->get_device_name().c_str());
+	log_debug ("Parent: %s", SP(parent->get_device_name()));
 
 	log_debug ("LUKS:");
 	log_debug ("\tversion:       %u", l->version);
-	log_debug ("\tcipher name:   %s", l->cipher_name.c_str());
-	log_debug ("\tcipher mode:   %s", l->cipher_mode.c_str());
-	log_debug ("\thash spec:     %s", l->hash_spec.c_str());
-	log_debug ("\tuuid:          %s", l->uuid.c_str());
+	log_debug ("\tcipher name:   %s", SP(l->cipher_name));
+	log_debug ("\tcipher mode:   %s", SP(l->cipher_mode));
+	log_debug ("\thash spec:     %s", SP(l->hash_spec));
+	log_debug ("\tuuid:          %s", SP(l->uuid));
 	log_debug ("\toffset:        %u", l->payload_offset);
 	log_debug ("\tkey bits:      %u", l->key_bits);
-	log_debug ("\tMK digest:     %s", l->mk_digest.c_str());
-	log_debug ("\tMK salt:       %s", l->mk_digest_salt.c_str());
+	log_debug ("\tMK digest:     %s", SP(l->mk_digest));
+	log_debug ("\tMK salt:       %s", SP(l->mk_digest_salt));
 	log_debug ("\tMK iterations: %u", l->mk_digest_iterations);
 
 	log_debug ("\tactive:        %08X", l->pass1_active);
 	log_debug ("\titerations:    %u",   l->pass1_iterations);
-	log_debug ("\tsalt:          %s",   l->pass1_salt.c_str());
+	log_debug ("\tsalt:          %s",   SP(l->pass1_salt));
 	log_debug ("\tkey offset:    %u",   l->pass1_key_offset);
 	log_debug ("\tstripes:       %u",   l->pass1_stripes);
 
@@ -376,7 +376,7 @@ LuksTable::luks_open_actual (const std::string& device, const std::string& passw
 	 *	4 luks device doesn't exist
 	 */
 	if (retval == 2) {
-		log_info ("invalid password for luks device %s", uuid.c_str());
+		log_info ("invalid password for luks device %s", SP(uuid));
 		return false;
 	} else if (retval != 0) {
 		return false;

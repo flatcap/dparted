@@ -33,6 +33,8 @@ typedef std::function<void(std::uint64_t index, std::uint64_t thread_id, std::ui
 void log_redirect (const char* format __attribute__((unused)), ...) __attribute__((format (printf, 1, 2)));
 void log_redirect (const std::string& message);
 void log_redirect (const std::stringstream& message);
+template<class T>
+void log_redirect (std::shared_ptr<T>&) {}
 #else
 void log_redirect (Severity level, const char* function, const char* file, int line, const char* message);
 void log_redirect (Severity level, const char* function, const char* file, int line, const std::string& message);
@@ -40,11 +42,11 @@ void log_redirect (Severity level, const char* function, const char* file, int l
 
 template<class T>
 void
-log_redirect (Severity level, const char* function, const char* file, int line, std::shared_ptr<T>& j)
+log_redirect (Severity level, const char* function, const char* file, int line, std::shared_ptr<T>& p)
 {
 	std::stringstream ss;
-	ss << j;
-	log_redirect (level, function, file, line, ss.str().c_str());
+	ss << p;
+	log_redirect (level, function, file, line, ss);
 }
 
 template <typename ...A>

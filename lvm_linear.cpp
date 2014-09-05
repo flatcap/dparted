@@ -127,7 +127,7 @@ bool
 LvmLinear::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_linear") {
-		log_debug ("LvmLinear perform: %s", action.name.c_str());
+		log_debug ("LvmLinear perform: %s", SP(action.name));
 		return true;
 	} else {
 		return LvmVolume::perform_action (action);

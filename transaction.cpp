@@ -56,7 +56,7 @@ Transaction::dump (int indent /*=0*/)
 	std::chrono::steady_clock::time_point then = timestamp;
 	int ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
 
-	log_code ("%sCommit: '%s' (%dms ago)", tabs.c_str(), description.c_str(), ms);
+	log_code ("%sCommit: '%s' (%dms ago)", SP(tabs), SP(description), ms);
 	for (auto n : notifications) {
 		dump_notification (n, indent+1);
 	}
@@ -73,8 +73,8 @@ Transaction::dump_notification (NotifyType type, ContainerPtr c1, ContainerPtr c
 		tabs.resize (indent, '\t');
 	}
 
-	std::string name1 = c1->get_type() + "(" + std::to_string(c1->unique_id) + ")";
-	std::string name2 = c2->get_type() + "(" + std::to_string(c2->unique_id) + ")";
+	std::string name1 = c1->get_type() + "(" + std::to_string (c1->get_unique()) + ")";
+	std::string name2 = c2->get_type() + "(" + std::to_string (c2->get_unique()) + ")";
 
 #if 0
 	log_code ("%s%-7s: %-16s(%p:%ld) : %-16s(%p:%ld)",

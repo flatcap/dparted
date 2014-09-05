@@ -127,7 +127,7 @@ bool
 Volume::perform_action (Action action)
 {
 	if (action.name == "dummy.volume") {
-		log_debug ("Volume perform: %s", action.name.c_str());
+		log_debug ("Volume perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Whole::perform_action (action);

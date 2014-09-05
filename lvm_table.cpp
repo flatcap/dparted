@@ -148,7 +148,7 @@ bool
 LvmTable::perform_action (Action action)
 {
 	if (action.name == "dummy.lvm_table") {
-		log_debug ("LvmTable perform: %s", action.name.c_str());
+		log_debug ("LvmTable perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Table::perform_action (action);
@@ -231,7 +231,7 @@ get_seq_num (const std::string& config)
 	log_info ("index = %ld, end = %ld, count = %ld", index, end, end-index-8);
 
 	StringNum sn (config.substr (index+8, end-index-7));
-	log_info ("num = %.5s", sn.c_str());
+	log_info ("num = %.5s", SP(sn));
 
 	return sn;
 }
@@ -313,7 +313,7 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	std::string pv_uuid = read_uuid_string ((char*) ph->pv_uuid);
 
-	log_info ("%s, %lu (%s)", pv_uuid.c_str(), le64_to_cpu (ph->device_size), get_size (le64_to_cpu (ph->device_size)).c_str());
+	log_info ("%s, %lu (%s)", SP(pv_uuid), le64_to_cpu (ph->device_size), SP(get_size (le64_to_cpu (ph->device_size))));
 
 	log_info ("Disk locations:");
 	int i;
@@ -368,13 +368,13 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 #if 0
 			log_info ("Config (0x%0x):", 4096+offset);
 			format_config (config);
-			log_debug ("%s", config.c_str());
+			log_debug (config);
 #endif
 		}
 	}
 
 	t = LvmTable::create();
-	log_debug ("new LvmTable %s (%p)", pv_uuid.c_str(), (void*) t.get());
+	log_debug ("new LvmTable %s (%p)", SP(pv_uuid), VP(t));
 
 	//XXX If the lvmpv is resized ph->device_size might not be updated
 	// We should use this value, then "fix" it when we read the lvm vg
@@ -418,7 +418,7 @@ LvmTable::add_child (ContainerPtr& child, bool probe)
 	// child->open_device();	// get a buffer
 
 #if 0
-	log_debug ("%p, name %s, type %s, uuid: %s", child->mmap_buffer, child->name.c_str(), child->type.back().c_str(), child->uuid.c_str());
+	log_debug ("%p, name %s, type %s, uuid: %s", child->mmap_buffer, SP(child->name), SP(child->type.back()), SP(child->uuid));
 	dump_hex2 (child->mmap_buffer, 0, 4096);
 #endif
 }

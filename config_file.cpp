@@ -25,6 +25,7 @@
 #include "config_file.h"
 #include "stringnum.h"
 #include "log.h"
+#include "utils.h"
 
 ConfigFile::ConfigFile (void)
 {
@@ -133,7 +134,7 @@ ConfigFile::dump_config (void)
 {
 	log_debug ("Config:");
 	for (auto& c : config) {
-		log_debug ("\t%s = %s", c.first.c_str(), c.second.c_str());
+		log_debug ("\t%s = %s", SP(c.first), SP(c.second));
 	}
 }
 

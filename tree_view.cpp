@@ -164,7 +164,7 @@ TreeView::tree_add_row (GfxContainerPtr& gfx, Gtk::TreeModel::Row* parent /*=nul
 					continue;
 				}
 
-				log_debug ("\tType: %s", prop->get_type_name().c_str());
+				log_debug ("\tType: %s", SP(prop->get_type_name()));
 
 				switch (type) {
 					case ct_colour:
@@ -281,7 +281,7 @@ parse_type (const std::string& type)
 	if (type == "string")
 		return ct_string;
 
-	log_error ("Unknown type %s, defaulting to string", type.c_str());
+	log_error ("Unknown type %s, defaulting to string", SP(type));
 	return ct_string;
 }
 
@@ -300,7 +300,7 @@ parse_alignment (const std::string& align, float def)
 	if ((align == "right") || (align == "end"))
 		return 1.0;
 
-	log_error ("Unknown alignment: %s", align.c_str());
+	log_error ("Unknown alignment: %s", SP(align));
 	return def;
 }
 
@@ -312,14 +312,14 @@ parse_precision (const std::string& prec, int def)
 
 	size_t pos = prec.find_first_not_of ("0123456789");
 	if (pos != std::string::npos) {
-		log_error ("Invalid precision: %s", prec.c_str());
+		log_error ("Invalid precision: %s", SP(prec));
 		return def;
 	}
 
 	StringNum s (prec);
 	int val = (int) s;
 	if (val > 10) {
-		log_error ("Invalid precision: %s", prec.c_str());
+		log_error ("Invalid precision: %s", SP(prec));
 		return def;
 	}
 
@@ -334,14 +334,14 @@ parse_size (const std::string& size, int def)
 
 	size_t pos = size.find_first_not_of ("0123456789");
 	if (pos != std::string::npos) {
-		log_error ("Invalid size: %s", size.c_str());
+		log_error ("Invalid size: %s", SP(size));
 		return def;
 	}
 
 	StringNum s (size);
 	int val = (int) s;
 	if (val > 4096) {		// Arbitrary
-		log_error ("Invalid size: %s", size.c_str());
+		log_error ("Invalid size: %s", SP(size));
 		return def;
 	}
 
@@ -557,7 +557,7 @@ TreeView::on_query_tooltip (int x, int y, bool keyboard_tooltip, const Glib::Ref
 void
 TreeView::set_focus (GfxContainerPtr& c)
 {
-	log_debug ("focus: %s", c->treepath.c_str());
+	log_debug ("focus: %s", SP(c->treepath));
 	return_if_fail(c);
 
 	if (c->treepath.empty()) {
@@ -743,7 +743,7 @@ TreeView::gfx_container_added (const GfxContainerPtr& parent, const GfxContainer
 	if (cont)   c = cont->name;
 	if (parent) p = parent->name;
 
-	log_info ("TREEVIEW gfx_container_added: %p:%s to %p:%s", cont.get(), c.c_str(), parent.get(), p.c_str());
+	log_info ("TREEVIEW gfx_container_added: %p:%s to %p:%s", VP(cont), SP(c), VP(parent), SP(p));
 }
 
 #endif

@@ -179,7 +179,7 @@ Table::add_child (ContainerPtr child, bool probe)
 		return Container::add_child (child, probe);
 	}
 
-	log_debug ("space has %ld listeners", space->count_listeners());
+	log_debug ("space has %d listeners", space->count_listeners());
 
 	std::uint64_t c_begin = child->parent_offset;
 	std::uint64_t c_end   = child->parent_offset + child->bytes_size;
@@ -244,15 +244,15 @@ Table::delete_child (ContainerPtr child)
 
 	log_debug ("children:");
 	for (auto& c : children) {
-		log_debug ("\t%s", c->name.c_str());
+		log_debug ("\t%s", SP(c->name));
 	}
 
 	if (first != end) {
-		log_debug ("first = %s", (*first)->name.c_str());
+		log_debug ("first = %s", SP((*first)->name));
 	}
 
 	if (last != end) {
-		log_debug ("last  = %s", (*last)->name.c_str());
+		log_debug ("last  = %s", SP((*last)->name));
 	}
 
 	log_debug ("%ld children", children.size());
@@ -310,7 +310,7 @@ Table::delete_child (ContainerPtr child)
 		}
 	}
 
-	log_info ("new space: %p(U%03ld)", s.get(), s->unique_id);
+	log_info ("new space: %p(U%03ld)", VP(s), s->get_unique());
 	if (!add_child (s, false))
 		return false;
 
@@ -327,7 +327,6 @@ Table::move_child (ContainerPtr child, std::uint64_t offset, std::uint64_t size)
 	}
 
 	ContainerPtr space;
-	log_debug ("");
 	log_debug ("move_child");
 	log_debug ("\told: start: %10ld  end: %10ld  size: %10ld", child->parent_offset, child->parent_offset+child->bytes_size, child->bytes_size);
 	log_debug ("\tnew: start: %10ld  end: %10ld  size: %10ld", offset, offset+size, size);
@@ -534,7 +533,7 @@ bool
 Table::perform_action (Action action)
 {
 	if (action.name == "dummy.table") {
-		log_debug ("Table perform: %s", action.name.c_str());
+		log_debug ("Table perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -595,16 +594,16 @@ Table::fill_space (void)
 #if 0
 			std::string s1 = get_size (c->parent_offset);
 			std::string s2 = get_size (c->parent_offset + c->bytes_size);
-			log_debug ("\tpartition %12ld -> %12ld    %8s -> %8s", c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str(), s2.c_str());
+			log_debug ("\tpartition %12ld -> %12ld    %8s -> %8s", c->parent_offset, c->parent_offset + c->bytes_size, SP(s1), SP(s2));
 #endif
 		} else {
 #if 0
 			std::string s1 = get_size (upto);
 			std::string s2 = get_size (c->parent_offset);
-			log_debug ("\tspace     %12ld -> %12ld    %8s -> %8s", upto, c->parent_offset, s1.c_str(), s2.c_str());
+			log_debug ("\tspace     %12ld -> %12ld    %8s -> %8s", upto, c->parent_offset, SP(s1), SP(s2));
 			s1 = get_size (c->parent_offset);
 			s2 = get_size (c->parent_offset + c->bytes_size);
-			log_debug ("\tpartition %12ld -> %12ld    %8s -> %8s", c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str(), s2.c_str());
+			log_debug ("\tpartition %12ld -> %12ld    %8s -> %8s", c->parent_offset, c->parent_offset + c->bytes_size, SP(s1), SP(s2));
 #endif
 			PartitionPtr p = Partition::create();
 			p->sub_type ("Space");
@@ -640,7 +639,7 @@ Table::fill_space (void)
 	log_debug ("recap");
 	for (auto& c : children) {
 		std::string s1 = get_size (c->bytes_size);
-		log_debug ("\t%-12s %12ld -> %12ld  %9s", c->name.c_str(), c->parent_offset, c->parent_offset + c->bytes_size, s1.c_str());
+		log_debug ("\t%-12s %12ld -> %12ld  %9s", SP(c->name), c->parent_offset, c->parent_offset + c->bytes_size, SP(s1));
 	}
 #endif
 

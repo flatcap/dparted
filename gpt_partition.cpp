@@ -124,7 +124,7 @@ bool
 GptPartition::perform_action (Action action)
 {
 	if (action.name == "dummy.gpt_partition") {
-		log_debug ("GptPartition perform: %s", action.name.c_str());
+		log_debug ("GptPartition perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Partition::perform_action (action);

@@ -132,7 +132,7 @@ bool
 Ntfs::perform_action (Action action)
 {
 	if (action.name == "dummy.ntfs") {
-		log_debug ("Ntfs perform: %s", action.name.c_str());
+		log_debug ("Ntfs perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Filesystem::perform_action (action);
@@ -256,7 +256,7 @@ Ntfs::get_ntfs_sb (ContainerPtr parent)
 		}
 
 		if (!parse_line (line, desc, value)) {
-			log_debug ("ntfs failed: %s", line.c_str());
+			log_debug ("ntfs failed: %s", SP(line));
 			continue;
 		}
 

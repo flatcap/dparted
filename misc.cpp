@@ -131,7 +131,7 @@ bool
 Misc::perform_action (Action action)
 {
 	if (action.name == "dummy.misc") {
-		log_debug ("Misc perform: %s", action.name.c_str());
+		log_debug ("Misc perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);
