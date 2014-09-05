@@ -51,12 +51,6 @@ Timeline::create (ContainerPtr& cont)
 bool
 Timeline::undo (int count)
 {
-	static bool b = false;
-	if (!b) {
-		dump();
-		b = true;
-	}
-
 	if (count < 1) {
 		log_code ("Can't undo %d transactions", count);
 		return false;
@@ -68,13 +62,12 @@ Timeline::undo (int count)
 		return false;
 	}
 
-	for (; count; --count) {	// or: for (;count--;)
+	for (; count--; ) {
 		--txn_cursor;
 
 		auto txn = (*txn_cursor);
 
-		std::string desc = txn->description;
-		log_info ("Undo event: '%s'", desc.c_str());
+		log_info ("Undo event: '%s'", txn->description.c_str());
 
 		NotifyType   type;
 		ContainerPtr top_old;
@@ -82,87 +75,113 @@ Timeline::undo (int count)
 
 		std::tie (type, top_old, top_new) = txn->notifications[0];
 
-		// log_info ("Txn: %s", Transaction::get_notify_name (type));
-		// log_info (top_new);
-		// log_info (top_old);
-
-		//RAR exchange (top_new, top_old);
-		//RAR top_old->notify (NotifyType::t_change, top_new, top_old);
+		exchange (top_new, top_old);
+		top_old->notify (NotifyType::t_change, top_new, top_old);
 		Transaction::dump_notification (type, top_new, top_old, 1);
-
-		auto start = std::begin (txn->notifications);
-		auto end   = std::end   (txn->notifications);
-		std::advance (start, 1);
 
 		ContainerPtr cold;
 		ContainerPtr cnew;
 
-#if 0
-		log_info ("Notifications:");
-		for (auto it = start; it != end; ++it) {
-			std::tie (type, cold, cnew) = (*it);
-			log_info ("\t%-7s: {U%03d}(%p:%ld) : {U%03d}(%p:%ld)", Transaction::get_notify_name (type), cold->unique_id, cold.get(), cold.use_count(), cnew->unique_id, cnew.get(), cnew.use_count());
-		}
-#endif
-
-		start = std::end   (txn->notifications);
-		end   = std::begin (txn->notifications);
+		auto start = std::end   (txn->notifications);
+		auto end   = std::begin (txn->notifications);
 		std::advance (start, -1);
 
-		// log_info ("Undo:");
 		for (auto it = start; it != end; --it) {
 			std::tie (type, cold, cnew) = (*it);
 
+			// Any references to the top-level object, must use the right one
 			if (cold == top_new) { cold = top_old; }
 			if (cnew == top_new) { cnew = top_old; }
 
 			switch (type) {
 				case NotifyType::t_change:
 					Transaction::dump_notification (NotifyType::t_change, cold, cnew, 1);
-					// cnew->notify (NotifyType::t_change, cnew, cold);	// back-to-front
+					cnew->notify (NotifyType::t_change, cnew, cold);	// back-to-front
 					break;
-				case NotifyType::t_add:
+				case NotifyType::t_add:	// Undoing therefore we delete
 					Transaction::dump_notification (NotifyType::t_delete, cold, cnew, 1);
-					// cold->notify (NotifyType::t_delete, cold, cnew);
+					cold->notify (NotifyType::t_delete, cold, cnew);
 					break;
-				case NotifyType::t_delete:
+				case NotifyType::t_delete: // Undoing therefore we add
 					Transaction::dump_notification (NotifyType::t_add, cold, cnew, 1);
-					// cold->notify (NotifyType::t_add, cold, cnew);
+					cold->notify (NotifyType::t_add, cold, cnew);
 					break;
 			}
 		}
 	}
 
-	log_info ("---------------------------------------------------------------------------------------------------------------");
 	return true;
 }
 
 bool
-Timeline::redo (int UNUSED(count))
+Timeline::redo (int count)
 {
-	int dist = std::distance (std::end (txn_list), txn_cursor);
-	log_error ("distance = %d", dist);
+	static bool b = false;
+	if (!b) {
+		dump();
+		b = true;
+	}
 
-	if (txn_cursor == std::end (txn_list)) {
-		log_info ("already at the end (%d)", txn_list.size());
+	if (count < 1) {
+		log_code ("Can't redo %d transactions", count);
 		return false;
 	}
 
-	std::string desc = (*txn_cursor)->description;
-	auto& n = (*txn_cursor)->notifications[0];
+	int dist = std::distance (txn_cursor, std::end (txn_list));
+	if (count > dist) {
+		log_error ("Can't redo %d transactions, there are only %d", count, dist);
+		return false;
+	}
 
-	ContainerPtr cold = std::get<1>(n);
-	ContainerPtr cnew = std::get<2>(n);
+	for (; count--; ) {
+		auto txn = (*txn_cursor);
 
-	log_info ("Redo event: '%s'", desc.c_str());
-	log_info (cold);
-	log_info (cnew);
-	exchange (cold, cnew);
-	// top = cnew->get_top_level();
+		log_info ("Redo event: '%s'", txn->description.c_str());
 
-	++txn_cursor;
+		NotifyType   type;
+		ContainerPtr top_old;
+		ContainerPtr top_new;
 
-	return false;
+		std::tie (type, top_old, top_new) = txn->notifications[0];
+
+		exchange (top_new, top_old);
+		top_old->notify (NotifyType::t_change, top_new, top_old);
+		Transaction::dump_notification (type, top_new, top_old, 1);
+
+		ContainerPtr cold;
+		ContainerPtr cnew;
+
+		auto start = std::begin (txn->notifications);
+		auto end   = std::end   (txn->notifications);
+		std::advance (start, 1);
+
+		for (auto it = start; it != end; ++it) {
+			std::tie (type, cold, cnew) = (*it);
+
+			// Any references to the top-level object, must use the right one
+			if (cold == top_new) { cold = top_old; }
+			if (cnew == top_new) { cnew = top_old; }
+
+			switch (type) {
+				case NotifyType::t_change:
+					Transaction::dump_notification (NotifyType::t_change, cold, cnew, 1);
+					cnew->notify (NotifyType::t_change, cnew, cold);	// back-to-front
+					break;
+				case NotifyType::t_add:
+					Transaction::dump_notification (NotifyType::t_add, cold, cnew, 1);
+					cold->notify (NotifyType::t_add, cold, cnew);
+					break;
+				case NotifyType::t_delete:
+					Transaction::dump_notification (NotifyType::t_delete, cold, cnew, 1);
+					cold->notify (NotifyType::t_delete, cold, cnew);
+					break;
+			}
+		}
+
+		++txn_cursor;
+	}
+
+	return true;
 }
 
 bool

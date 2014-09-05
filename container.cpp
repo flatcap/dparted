@@ -1278,11 +1278,14 @@ Container::backup (void)
 
 	ContainerPtr prev = get_smart();
 
+	ContainerPtr c;
+
 	if (prev->is_top_level()) {
-		return prev;	// Don't make any changes
+		c = prev;	// Keep the same object
+	} else {
+		c = prev->copy();
 	}
 
-	ContainerPtr c = prev->copy();
 	if (!c)
 		return {};
 
