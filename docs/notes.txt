@@ -1059,3 +1059,14 @@ check retval is used on add/del/move_child (gcc check)
 Container::get_nth_child (initializer_list)
 	ContainerPtr c = get_nth_child ({0,0,1});
 
+should unique_id be unique for every instance of Container
+or copied => this is a different version of the same physical object
+primary key: (unique_id, seq_num)
+
+cgdb
+	F5  Run
+	F6  Continue
+	F7  Finish
+	F8  Next
+	F10 Step
+
