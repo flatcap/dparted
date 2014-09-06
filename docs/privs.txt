@@ -1,0 +1,46 @@
+Privilege Separation
+
+Three binaries
+	dparted		cli
+	dparted-gui	gui
+	dparted-worker	privileged worker
+
+Commands
+	pvs, lvs, vgs
+	mount, umount, swapon, swapoff
+
+Files/Proc
+	/dev
+		allow devices based on their kernel major/minor
+		(to allow for links and aliases we hadn't though of)
+	/proc	most of this should be off-limits
+	/etc	for privileged config
+
+	/usr/lib/dparted/	don't know what for, yet
+	/var/lib/dparted/
+
+Memory
+	mmap devices
+
+Need to limit access to:
+	files (for read/write/mmap)
+	memory areas (read/write)
+	commands run
+
+Plugin "X" would like permission to run "P, Q, R"
+	(X) Once
+	( ) Always
+	need a revoke menu too
+	need to store settings in a privileged place, /etc
+
+Plugins from
+	/usr/lib/dparted/	safe
+	/usr/libexec/dparted/
+	~/.dparted/		unsafe
+
+main.cpp
+	#include <unistd.h>
+	#include <sys/types.h>
+	std::cout << getuid() << std::endl;
+	std::cout << geteuid() << std::endl;
+
