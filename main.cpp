@@ -37,14 +37,6 @@ main (int argc, char *argv[])
 {
 	srandom (time (nullptr));
 
-#if 0
-	std::cout << getuid() << std::endl;
-	std::cout << geteuid() << std::endl;
-	const char* old_uid (getenv ("USERHELPER_UID"));
-	if (old_uid)
-		std::cout << old_uid << std::endl;
-#endif
-
 	LogHandlerPtr log_out = LogHandler::create (stdout);
 	log_out->start (
 		Severity::Warning		|
