@@ -777,67 +777,6 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	test_execute (c, top_level->name);
 	// top_level->dump3();
 #endif
-#if 1
-	QuestionPtr q = Question::create ([] (QuestionPtr q) {
-		log_info ("Question finished: %d", q->result);
-		for (auto& o : q->options) {
-			log_info ("\t[%c] %s", (o.value == "1") ? 'X' : ' ', SP(o.description));
-		}
-	});
-
-	q->type = Question::Type::Delete;
-
-	q->input = {
-		{ "title",     "delete title",     },
-		{ "primary",   "delete primary",   },
-		{ "secondary", "delete secondary", },
-		{ "image",     "gnome-run",        },
-		{ "help_url",  "delete help",      }
-	};
-
-	q->options = { {
-		Option::Type::checkbox,
-		"delete_fs",
-		"Delete Filesystem",
-		"ext4 : Home",
-		"1",
-		nullptr,
-		true,
-		false,
-		-1, -1, -1, -1
-	}, {
-		Option::Type::checkbox,
-		"delete_partition",
-		"Delete Partition",
-		"/dev/sda3",
-		"1",
-		nullptr,
-		false,
-		false,
-		-1, -1, -1, -1
-	}, {
-		Option::Type::checkbox,
-		"delete_gpt",
-		"Delete GPT",
-		"GUID Partition Table",
-		"0",
-		nullptr,
-		false,
-		false,
-		-1, -1, -1, -1
-	}, {
-		Option::Type::checkbox,
-		"delete_loop",
-		"Delete Loop",
-		"/dev/loop0 : /mnt/space/jim.img",
-		"0",
-		nullptr,
-		false,
-		false,
-		-1, -1, -1, -1
-	} };
-	main_app->ask(q);
-#endif
 
 	return true;		// We've handled the event
 }

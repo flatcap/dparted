@@ -172,7 +172,7 @@ Partition::add_child (ContainerPtr child, bool probe)
 		return Container::add_child (p, false);
 	}
 
-	return false;
+	return true;
 }
 
 

@@ -133,7 +133,8 @@ Filesystem::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.filesystem", true },
+		{ "dummy.filesystem",  false },
+		{ "delete.filesystem", true  },
 	};
 
 	std::vector<Action> parent_actions = Container::get_actions();
@@ -146,8 +147,9 @@ Filesystem::get_actions (void)
 bool
 Filesystem::perform_action (Action action)
 {
-	if (action.name == "dummy.filesystem") {
-		log_debug ("Filesystem perform: %s", SP(action.name));
+	if (action.name == "delete.filesystem") {
+		log_info ("Filesystem perform: %s", SP(action.name));
+		delete_filesystem();
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -214,18 +216,86 @@ Filesystem::get_mounted_usage (ContainerPtr UNUSED(parent))
 }
 
 
-#if 0
 void
 Filesystem::delete_filesystem (void)
 {
 	LOG_TRACE;
 
-	Question q { "Delete filesystem",
-		     "Are you sure?",
-		     { "Yes", "No" } };
+	QuestionPtr q = Question::create (std::bind (&Filesystem::question_cb, this, std::placeholders::_1));
 
+	q->type = Question::Type::Delete;
+
+	q->input = {
+		{ "title",     "Delete Filesystem",                           },
+		{ "primary",   "delete primary",                              },
+		{ "secondary", "delete secondary",                            },
+		{ "image",     "gtk-delete",                                  },
+		{ "help_url",  "http://en.wikipedia.org/wiki/Special:Random", }
+	};
+
+	FilesystemPtr fs   = std::dynamic_pointer_cast<Filesystem> (get_smart());
+	PartitionPtr  part = std::dynamic_pointer_cast<Partition>  (fs->get_parent());
+	TablePtr      gpt  = std::dynamic_pointer_cast<Table>      (part->get_parent());
+	LoopPtr       loop = std::dynamic_pointer_cast<Loop>       (gpt->get_parent());
+
+	q->options = { {
+		Option::Type::checkbox,
+		"delete_fs",
+		std::string ("Delete ") + fs->get_type(),
+		std::string ("\"") + fs->get_name_default() + std::string ("\""),
+		"1",
+		fs,
+		true,
+		false,
+		-1, -1, -1, -1
+	}, {
+		Option::Type::checkbox,
+		"delete_partition",
+		std::string ("Delete ") + part->get_type(),
+		part->get_device_name(),
+		"1",
+		part,
+		false,
+		false,
+		-1, -1, -1, -1
+	}, {
+		Option::Type::checkbox,
+		"delete_gpt",
+		std::string ("Delete ") + gpt->get_type(),
+		"GUID Partition Table",
+		"0",
+		gpt,
+		false,
+		false,
+		-1, -1, -1, -1
+	}, {
+		Option::Type::checkbox,
+		"delete_loop",
+		std::string ("Delete ") + loop->get_type(),
+		loop->get_device_name() + std::string (" : ") + loop->file_name,
+		"0",
+		loop,
+		false,
+		false,
+		-1, -1, -1, -1
+	} };
 	main_app->ask(q);
 }
 
-#endif
+
+void
+Filesystem::question_cb (QuestionPtr q)
+{
+	return_if_fail (q);
+
+	log_info ("Question finished: %d", q->result);
+	if (q->result != 99) {
+		log_info ("User cancelled delete");
+		return;
+	}
+
+	for (auto& o : q->options) {
+		log_info ("\t[%c] %s", (o.value == "1") ? 'X' : ' ', SP(o.description));
+	}
+}
 

@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "container.h"
+#include "question.h"
 
 typedef std::shared_ptr<class Filesystem> FilesystemPtr;
 
@@ -58,6 +59,8 @@ protected:
 	Filesystem (Filesystem&& c);
 
 	virtual Filesystem* clone (void);
+	void delete_filesystem (void);
+	void question_cb (QuestionPtr q);
 
 private:
 	std::uint64_t ext2_get_usage (void);
