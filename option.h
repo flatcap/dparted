@@ -16,30 +16,41 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _ERROR_DIALOG_H_
-#define _ERROR_DIALOG_H_
+#ifndef _OPTION_H_
+#define _OPTION_H_
 
-#include <gtkmm/entry.h>
-#include <gtkmm/image.h>
-#include <gtkmm/button.h>
+#include <string>
+#include <memory>
 
-#include "dialog.h"
+typedef std::shared_ptr<class Container> ContainerPtr;
 
-typedef std::shared_ptr<class ErrorDialog> ErrorDialogPtr;
-
-class ErrorDialog : public Dialog
+typedef struct _option
 {
-public:
-	virtual ~ErrorDialog();
+	enum class Type {
+		radio_button,
+		checkbox,
+		label,
+		text_1,
+		text_n,
+		password
+	} type;
 
-	static ErrorDialogPtr create (QuestionPtr q);
+	std::string name;
+	std::string description;
+	std::string notes;
+	std::string value;
 
-	virtual int run (void);		// Hide Dialog::run
+	ContainerPtr object;
 
-protected:
-	ErrorDialog (QuestionPtr q);
-	virtual void response (int button_id);
-};
+	bool read_only;
+	bool advanced;
 
-#endif // _ERROR_DIALOG_H_
+	int min_size;
+	int max_size;
+	int width;
+	int height;
+} Option;
+
+
+#endif // _OPTION_H_
 

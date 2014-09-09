@@ -31,7 +31,7 @@ OptionGroup::OptionGroup (void) :
 	Glib::OptionEntry entry06; entry06.set_short_name ('w'); entry06.set_long_name ("width");      entry06.set_description ("Width of the main window");                         add_entry          (entry06, w);
 	Glib::OptionEntry entry07; entry07.set_short_name ('h'); entry07.set_long_name ("height");     entry07.set_description ("Height of the main window");                        add_entry          (entry07, h);
 #ifdef DP_TEST
-	Glib::OptionEntry entry08; entry08.set_short_name ('T'); entry08.set_long_name ("test");       entry08.set_description ("Test number");                                      add_entry          (entry08, test);
+	Glib::OptionEntry entry08; entry08.set_short_name ('T'); entry08.set_long_name ("test");       entry08.set_description ("Test case");                                        add_entry          (entry08, test);
 #endif
 }
 

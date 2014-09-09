@@ -21,10 +21,11 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include <memory>
 #include <functional>
 
-#include "container.h"
+#include "option.h"
 
 typedef std::shared_ptr<class Question> QuestionPtr;
 typedef std::weak_ptr  <class Question> QuestionWeak;
@@ -39,6 +40,7 @@ public:
 
 	std::map<std::string, std::string> input;
 	std::map<std::string, std::string> output;
+	std::vector<Option> options;
 	std::vector<std::pair<std::string, int>> buttons;
 
 	int result = -1;
@@ -48,6 +50,7 @@ public:
 
 	enum class Type {
 		ChangePassword,
+		Delete,
 		Error,
 		Information,
 		Password,

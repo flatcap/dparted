@@ -769,13 +769,67 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 		return true;
 	}
 
-#ifdef DP_TEST
+#if 0
 	GfxContainerPtr top = selection->get_top_level();
 	// top->dump3();
 
 	ContainerPtr c = selection->get_container();
 	test_execute (c, top_level->name);
 	// top_level->dump3();
+#endif
+#if 1
+	QuestionPtr q = Question::create (nullptr);
+	q->type = Question::Type::Delete;
+	q->input = {
+		{ "title",     "delete title",     },
+		{ "primary",   "delete primary",   },
+		{ "secondary", "delete secondary", },
+		{ "image",     "gnome-run",        },
+		{ "help_url",  "delete help",      }
+	};
+
+	q->options = { {
+		Option::Type::checkbox,
+		"delete_fs",
+		"Delete Filesystem",
+		"ext4 : Home",
+		"1",
+		nullptr,
+		true,
+		false,
+		-1, -1, -1, -1
+	}, {
+		Option::Type::checkbox,
+		"delete_partition",
+		"Delete Partition",
+		"/dev/sda3",
+		"1",
+		nullptr,
+		false,
+		false,
+		-1, -1, -1, -1
+	}, {
+		Option::Type::checkbox,
+		"delete_gpt",
+		"Delete GPT",
+		"GUID Partition Table",
+		"0",
+		nullptr,
+		false,
+		false,
+		-1, -1, -1, -1
+	}, {
+		Option::Type::checkbox,
+		"delete_loop",
+		"Delete Loop",
+		"/dev/loop0 : /mnt/space/jim.img",
+		"0",
+		nullptr,
+		false,
+		false,
+		-1, -1, -1, -1
+	} };
+	main_app->ask(q);
 #endif
 
 	return true;		// We've handled the event

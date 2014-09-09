@@ -652,18 +652,19 @@ Window::set_data (ContainerPtr c)
 	drawingarea.set_data(g);
 #endif
 	ContainerPtr d = c->get_nth_child ({0,0});
+	if (d) {
+		std::vector<Action> actions = d->get_actions();
+		if (actions.empty()) {
+			log_debug ("No actions");
+			return;
+		}
 
-	std::vector<Action> actions = d->get_actions();
-	if (actions.empty()) {
-		log_debug ("No actions");
-		// return;
+		log_info ("Actions:");
+		for (auto& a : actions) {
+			log_info ("\t%s", SP(a.name));
+		}
+		// hide();
 	}
-
-	log_info ("Actions:");
-	for (auto& a : actions) {
-		log_info ("\t%s", SP(a.name));
-	}
-	hide();
 }
 
 

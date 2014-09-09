@@ -77,7 +77,7 @@ SRC	+= app.cpp config.cpp config_file.cpp log.cpp log_handler.cpp log_object.cpp
 SRC	+= main.cpp
 
 # Misc header files
-HDR	+= action.h config_manager.h container_listener.h endian.h gfx_container_listener.h log_macro.h log_severity.h log_trace.h lvm2.h mmap.h stringnum.h theme_listener.h visitor.h
+HDR	+= action.h config_manager.h container_listener.h endian.h gfx_container_listener.h log_macro.h log_severity.h log_trace.h lvm2.h mmap.h option.h stringnum.h theme_listener.h visitor.h
 
 CFLAGS-$(BTRFS)		+= -DDP_BTRFS
 CFLAGS-$(DISK)		+= -DDP_DISK
@@ -112,7 +112,7 @@ SRC-$(EXTFS)		+= extfs.cpp
 SRC-$(FILE)		+= file.cpp
 SRC-$(FS_MISC)		+= fs_get.cpp fs_identify.cpp fs_usage.cpp
 SRC-$(GPT)		+= gpt.cpp gpt_partition.cpp
-SRC-$(GUI)		+= change_password_dialog.cpp default_theme.cpp dialog.cpp error_dialog.cpp gfx_container.cpp gui_app.cpp info_dialog.cpp option_group.cpp password_dialog.cpp question_dialog.cpp theme.cpp warning_dialog.cpp window.cpp
+SRC-$(GUI)		+= change_password_dialog.cpp default_theme.cpp delete_dialog.cpp dialog.cpp error_dialog.cpp gfx_container.cpp gui_app.cpp info_dialog.cpp option_group.cpp password_dialog.cpp question_dialog.cpp theme.cpp warning_dialog.cpp window.cpp
 SRC-$(HEX)		+= hex_visitor.cpp
 SRC-$(LIST)		+= list_visitor.cpp
 SRC-$(LOOP)		+= loop.cpp

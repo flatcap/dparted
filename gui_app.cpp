@@ -46,6 +46,7 @@
 #include "utils.h"
 
 #include "change_password_dialog.h"
+#include "delete_dialog.h"
 #include "error_dialog.h"
 #include "info_dialog.h"
 #include "password_dialog.h"
@@ -457,6 +458,9 @@ GuiApp::on_dispatch_ask (void)
 	switch (q->type) {
 		case Question::Type::ChangePassword:
 			dlg = ChangePasswordDialog::create(q);
+			break;
+		case Question::Type::Delete:
+			dlg = DeleteDialog::create(q);
 			break;
 		case Question::Type::Error:
 			dlg = ErrorDialog::create(q);

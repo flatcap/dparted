@@ -16,30 +16,33 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _ERROR_DIALOG_H_
-#define _ERROR_DIALOG_H_
+#ifndef _DELETE_DIALOG_H_
+#define _DELETE_DIALOG_H_
 
-#include <gtkmm/entry.h>
-#include <gtkmm/image.h>
 #include <gtkmm/button.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/image.h>
 
 #include "dialog.h"
 
-typedef std::shared_ptr<class ErrorDialog> ErrorDialogPtr;
+typedef std::shared_ptr<class DeleteDialog> DeleteDialogPtr;
 
-class ErrorDialog : public Dialog
+class DeleteDialog : public Dialog
 {
 public:
-	virtual ~ErrorDialog();
+	virtual ~DeleteDialog();
 
-	static ErrorDialogPtr create (QuestionPtr q);
+	static DeleteDialogPtr create (QuestionPtr q);
 
 	virtual int run (void);		// Hide Dialog::run
 
 protected:
-	ErrorDialog (QuestionPtr q);
+	DeleteDialog (QuestionPtr q);
 	virtual void response (int button_id);
+
+	Gtk::Grid grid;
 };
 
-#endif // _ERROR_DIALOG_H_
+#endif // _DELETE_DIALOG_H_
 
