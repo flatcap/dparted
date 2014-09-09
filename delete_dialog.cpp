@@ -20,6 +20,7 @@
 #include <gtkmm/label.h>
 
 #include "delete_dialog.h"
+#include "utils.h"
 
 DeleteDialog::DeleteDialog (QuestionPtr q) :
 	Dialog(q)
@@ -99,6 +100,8 @@ DeleteDialog::run (void)
 			control->set_active (o.value == "1");
 			control->set_sensitive (!o.read_only);
 
+			control->signal_toggled().connect (std::bind (&DeleteDialog::control_toggled, this, control, std::ref(o)));
+
 			desc->set_text  (o.description);
 			desc->set_alignment (0, 0.5);
 
@@ -114,5 +117,13 @@ DeleteDialog::run (void)
 
 	show_all();
 	return Dialog::run();
+}
+
+void
+DeleteDialog::control_toggled (Gtk::CheckButton* check, Option& o)
+{
+	bool active = check->get_active();
+	log_info ("Control toggled: [%c] : %s", active ? 'X' : ' ', SP(o.description));
+	o.value = std::to_string ((int) active);
 }
 

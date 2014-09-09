@@ -778,8 +778,15 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	// top_level->dump3();
 #endif
 #if 1
-	QuestionPtr q = Question::create (nullptr);
+	QuestionPtr q = Question::create ([] (QuestionPtr q) {
+		log_info ("Question finished: %d", q->result);
+		for (auto& o : q->options) {
+			log_info ("\t[%c] %s", (o.value == "1") ? 'X' : ' ', SP(o.description));
+		}
+	});
+
 	q->type = Question::Type::Delete;
+
 	q->input = {
 		{ "title",     "delete title",     },
 		{ "primary",   "delete primary",   },

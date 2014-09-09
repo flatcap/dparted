@@ -19,7 +19,7 @@
 #ifndef _DELETE_DIALOG_H_
 #define _DELETE_DIALOG_H_
 
-#include <gtkmm/button.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/image.h>
@@ -42,6 +42,8 @@ protected:
 	virtual void response (int button_id);
 
 	Gtk::Grid grid;
+
+	void control_toggled (Gtk::CheckButton* check, Option& o);
 };
 
 #endif // _DELETE_DIALOG_H_
