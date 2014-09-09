@@ -654,3 +654,30 @@ Table::set_alignment (std::uint64_t bytes)
 	return true;
 }
 
+
+bool
+Table::can_delete (QuestionPtr q)
+{
+	return_val_if_fail (q, false);
+
+	if (get_count_real_children() > 1)
+		return false;
+
+	q->options.push_back ({
+		Option::Type::checkbox,
+		"delete_table",
+		std::string ("Delete ") + get_type(),
+		"Partition Table",
+		"0",
+		get_smart(),
+		false,
+		false,
+		-1, -1, -1, -1
+	});
+
+	ContainerPtr parent = get_parent();
+	if (parent)
+		return parent->can_delete(q);
+
+	return false;
+}

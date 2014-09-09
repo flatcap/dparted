@@ -49,6 +49,8 @@ public:
 	static void discover (ContainerPtr& parent);
 	static bool identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& st);
 
+	virtual bool can_delete (QuestionPtr q);
+
 public:
 	// properties
 	bool		autoclear  = false;

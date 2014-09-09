@@ -176,3 +176,29 @@ Partition::add_child (ContainerPtr child, bool probe)
 }
 
 
+bool
+Partition::can_delete (QuestionPtr q)
+{
+	return_val_if_fail (q, false);
+
+	if (get_count_real_children() > 1)
+		return false;
+
+	q->options.push_back ({
+		Option::Type::checkbox,
+		"delete_partition",
+		std::string ("Delete ") + get_type(),
+		get_device_name(),
+		"1",
+		get_smart(),
+		false,
+		false,
+		-1, -1, -1, -1
+	});
+
+	ContainerPtr parent = get_parent();
+	if (parent)
+		return parent->can_delete(q);
+
+	return false;
+}

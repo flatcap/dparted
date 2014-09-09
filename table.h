@@ -54,6 +54,8 @@ public:
 
 	virtual bool set_alignment (std::uint64_t bytes);
 
+	virtual bool can_delete (QuestionPtr q);
+
 public:
 	// properties
 

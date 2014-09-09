@@ -408,3 +408,29 @@ Loop::get_flags (void)
 }
 
 
+bool
+Loop::can_delete (QuestionPtr q)
+{
+	return_val_if_fail (q, false);
+
+	if (get_count_real_children() > 1)
+		return false;
+
+	q->options.push_back ({
+		Option::Type::checkbox,
+		"delete_loop",
+		std::string ("Delete ") + get_type(),
+		get_device_name() + std::string (" : ") + file_name,
+		"0",
+		get_smart(),
+		false,
+		false,
+		-1, -1, -1, -1
+	});
+
+	ContainerPtr parent = get_parent();
+	if (parent)
+		return parent->can_delete(q);
+
+	return false;
+}

@@ -46,6 +46,7 @@ public:
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+	virtual bool can_delete (QuestionPtr q);
 
 	static bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 	bool get_mounted_usage (ContainerPtr parent);

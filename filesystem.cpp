@@ -233,55 +233,36 @@ Filesystem::delete_filesystem (void)
 		{ "help_url",  "http://en.wikipedia.org/wiki/Special:Random", }
 	};
 
-	FilesystemPtr fs   = std::dynamic_pointer_cast<Filesystem> (get_smart());
-	PartitionPtr  part = std::dynamic_pointer_cast<Partition>  (fs->get_parent());
-	TablePtr      gpt  = std::dynamic_pointer_cast<Table>      (part->get_parent());
-	LoopPtr       loop = std::dynamic_pointer_cast<Loop>       (gpt->get_parent());
-
-	q->options = { {
-		Option::Type::checkbox,
-		"delete_fs",
-		std::string ("Delete ") + fs->get_type(),
-		std::string ("\"") + fs->get_name_default() + std::string ("\""),
-		"1",
-		fs,
-		true,
-		false,
-		-1, -1, -1, -1
-	}, {
-		Option::Type::checkbox,
-		"delete_partition",
-		std::string ("Delete ") + part->get_type(),
-		part->get_device_name(),
-		"1",
-		part,
-		false,
-		false,
-		-1, -1, -1, -1
-	}, {
-		Option::Type::checkbox,
-		"delete_gpt",
-		std::string ("Delete ") + gpt->get_type(),
-		"GUID Partition Table",
-		"0",
-		gpt,
-		false,
-		false,
-		-1, -1, -1, -1
-	}, {
-		Option::Type::checkbox,
-		"delete_loop",
-		std::string ("Delete ") + loop->get_type(),
-		loop->get_device_name() + std::string (" : ") + loop->file_name,
-		"0",
-		loop,
-		false,
-		false,
-		-1, -1, -1, -1
-	} };
+	can_delete(q);
 	main_app->ask(q);
 }
 
+bool
+Filesystem::can_delete (QuestionPtr q)
+{
+	return_val_if_fail (q, false);
+
+	if (get_count_real_children() > 1)
+		return false;
+
+	q->options.push_back ({
+		Option::Type::checkbox,
+		"delete_fs",
+		std::string ("Delete ") + get_type(),
+		std::string ("\"") + get_name_default() + std::string ("\""),
+		"1",
+		get_smart(),
+		true,
+		false,
+		-1, -1, -1, -1
+	});
+
+	ContainerPtr parent = get_parent();
+	if (parent)
+		return parent->can_delete(q);
+
+	return false;
+}
 
 void
 Filesystem::question_cb (QuestionPtr q)

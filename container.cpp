@@ -1387,3 +1387,12 @@ Container::get_nth_child (std::initializer_list<unsigned int> route)
 }
 
 #endif
+
+unsigned int
+Container::get_count_real_children (void)
+{
+	unsigned int n = count_if (std::begin (children), std::end (children), [] (ContainerPtr& c) { return !c->is_a ("Space"); });
+	log_info ("%s has %d real (%ld total) children", SP(get_type()), n, children.size());
+	return n;
+}
+
