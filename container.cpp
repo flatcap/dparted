@@ -1396,3 +1396,13 @@ Container::get_count_real_children (void)
 	return n;
 }
 
+bool
+Container::is_resizeable (void)
+{
+	ContainerPtr parent = get_parent();
+	if (parent)
+		return parent->is_resizeable();
+
+	return true;
+}
+

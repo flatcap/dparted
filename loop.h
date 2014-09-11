@@ -50,6 +50,7 @@ public:
 	static bool identify (ContainerPtr& parent, const std::string& name, int fd, struct stat& st);
 
 	virtual bool can_delete (QuestionPtr q);
+	virtual bool is_resizeable (void);
 
 public:
 	// properties

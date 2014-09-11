@@ -46,6 +46,7 @@ public:
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+	virtual bool is_resizeable (void);
 
 public:
 	// properties

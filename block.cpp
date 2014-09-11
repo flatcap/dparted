@@ -157,4 +157,9 @@ Block::perform_action (Action action)
 	}
 }
 
+bool
+Block::is_resizeable (void)
+{
+	return false;
+}
 

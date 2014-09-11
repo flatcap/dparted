@@ -91,6 +91,7 @@ public:
 	virtual void close_buffer (std::uint8_t* buffer, std::uint64_t size);
 
 	virtual bool is_a (const std::string& type);
+	virtual bool is_resizeable (void);
 
 	virtual std::vector<ContainerPtr>& get_children (void);
 

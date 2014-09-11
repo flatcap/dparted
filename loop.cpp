@@ -434,3 +434,10 @@ Loop::can_delete (QuestionPtr q)
 
 	return false;
 }
+
+bool
+Loop::is_resizeable (void)
+{
+	return true;
+}
+
