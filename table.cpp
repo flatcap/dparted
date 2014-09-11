@@ -532,12 +532,9 @@ Table::get_actions (void)
 bool
 Table::perform_action (Action action)
 {
-	if (action.name == "delete.table") {
-		log_error ("REALLY delete table");
-		return true;
-	} else {
-		return Container::perform_action (action);
-	}
+	// Currently no actions to check
+
+	return Container::perform_action (action);
 }
 
 

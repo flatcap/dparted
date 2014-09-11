@@ -139,9 +139,9 @@ Block::get_actions (void)
 
 	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
-	if ((children.size() == 1) && (!children[0]->is_a ("Table"))) {
-		actions.push_back ({"CREATE TABLE", true});
-	}
+	// if ((children.size() == 1) && (!children[0]->is_a ("Table"))) {
+	// 	actions.push_back ({"CREATE TABLE", true});
+	// }
 
 	return actions;
 }
@@ -149,8 +149,8 @@ Block::get_actions (void)
 bool
 Block::perform_action (Action action)
 {
-	if (action.name == "dummy.block") {
-		log_debug ("Block perform: %s", SP(action.name));
+	if (action.name == "block.readonly") {
+		log_error ("Block perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);

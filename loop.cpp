@@ -236,7 +236,10 @@ bool
 Loop::perform_action (Action action)
 {
 	if (action.name == "delete.loop") {
-		log_error ("REALLY delete loop");
+		log_error ("Loop perform: %s", SP(action.name));
+		return true;
+	} else if (action.name == "resize.loop") {
+		log_error ("Loop perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Block::perform_action (action);

@@ -143,7 +143,10 @@ bool
 Partition::perform_action (Action action)
 {
 	if (action.name == "delete.partition") {
-		log_error ("REALLY delete partition");
+		log_error ("Partition perform: %s", SP(action.name));
+		return true;
+	} else if (action.name == "resize.partition") {
+		log_error ("Partition perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);

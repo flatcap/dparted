@@ -131,8 +131,8 @@ Extfs::get_actions (void)
 bool
 Extfs::perform_action (Action action)
 {
-	if (action.name == "dummy.extfs") {
-		log_debug ("Extfs perform: %s", SP(action.name));
+	if (action.name == "extfs.tune") {
+		log_error ("Extfs perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Filesystem::perform_action (action);

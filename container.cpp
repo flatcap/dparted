@@ -360,13 +360,14 @@ Container::get_actions (void)
 bool
 Container::perform_action (Action action)
 {
-	if (action.name == "dummy.container") {
-		log_debug ("Container perform: %s", SP(action.name));
-		return true;
-	} else {
-		log_debug ("Unknown action: %s", SP(action.name));
-		return false;
+	// Currently no actions to check
+
+	ContainerPtr parent = get_parent();
+	if (parent) {
+		return parent->perform_action (action);
 	}
+
+	return false;
 }
 
 

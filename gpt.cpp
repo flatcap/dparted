@@ -166,8 +166,14 @@ Gpt::get_actions (void)
 bool
 Gpt::perform_action (Action action)
 {
-	if (action.name == "delete.gpt") {
-		log_debug ("Gpt perform: %s", SP(action.name));
+	if (action.name == "tidy.gpt") {
+		log_error ("Gpt perform: %s", SP(action.name));
+		return true;
+	} else if (action.name == "delete.gpt") {
+		log_error ("Gpt perform: %s", SP(action.name));
+		return true;
+	} else if (action.name == "resize.gpt") {
+		log_error ("Gpt perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Table::perform_action (action);

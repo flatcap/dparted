@@ -152,7 +152,10 @@ Filesystem::perform_action (Action action)
 		delete_filesystem_dialog();
 		return true;
 	} else if (action.name == "delete.filesystem") {
-		log_error ("REALLY delete filesystem");
+		log_error ("Filesystem perform: %s", SP(action.name));
+		return true;
+	} else if (action.name == "resize.filesystem.dialog") {
+		log_error ("Filesystem perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);
