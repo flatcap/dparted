@@ -135,9 +135,9 @@ Block::get_actions (void)
 		{ "dummy.block", true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> base_actions = Container::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	if ((children.size() == 1) && (!children[0]->is_a ("Table"))) {
 		actions.push_back ({"CREATE TABLE", true});

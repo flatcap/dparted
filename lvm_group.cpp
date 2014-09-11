@@ -171,9 +171,9 @@ LvmGroup::get_actions (void)
 		{ "dummy.lvm_group", true },
 	};
 
-	std::vector<Action> parent_actions = Whole::get_actions();
+	std::vector<Action> base_actions = Whole::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }

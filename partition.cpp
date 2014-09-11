@@ -129,9 +129,9 @@ Partition::get_actions (void)
 		// Delegate to out parent object
 		ContainerPtr parent = get_parent();
 		if (parent) {
-			std::vector<Action> parent_actions = parent->get_actions();
+			std::vector<Action> base_actions = parent->get_actions();
 
-			actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+			actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 		}
 	}
 

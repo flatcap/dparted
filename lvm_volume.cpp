@@ -168,9 +168,9 @@ LvmVolume::get_actions (void)
 		{ "dummy.lvm_volume", true },
 	};
 
-	std::vector<Action> parent_actions = Volume::get_actions();
+	std::vector<Action> base_actions = Volume::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
