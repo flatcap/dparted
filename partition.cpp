@@ -116,10 +116,12 @@ Partition::accept (Visitor& v)
 std::vector<Action>
 Partition::get_actions (void)
 {
+	ContainerPtr me = get_smart();
+
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "delete.partition", true },
-		{ "resize.partition", true },
+		{ "delete.partition", "Delete/Partition", me, true },
+		{ "resize.partition", "Resize/Partition", me, true },
 	};
 
 	std::vector<Action> base_actions = Container::get_actions();

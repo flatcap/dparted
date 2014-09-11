@@ -117,8 +117,10 @@ std::vector<Action>
 Btrfs::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.btrfs", true },
+		{ "dummy.btrfs", "Dummy/Btrfs", me, true },
 	};
 
 	std::vector<Action> base_actions = Filesystem::get_actions();

@@ -220,9 +220,11 @@ std::vector<Action>
 Loop::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "delete.loop", true },
-		{ "resize.loop", true },
+		{ "delete.loop", "Delete/Loop", me, true },
+		{ "resize.loop", "Resize/Loop", me, true }
 	};
 
 	std::vector<Action> base_actions = Block::get_actions();

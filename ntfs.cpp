@@ -117,8 +117,10 @@ std::vector<Action>
 Ntfs::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.ntfs", true },
+		{ "dummy.ntfs", "Dummy/Ntfs", me, true },
 	};
 
 	std::vector<Action> base_actions = Filesystem::get_actions();

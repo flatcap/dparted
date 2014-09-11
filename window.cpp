@@ -629,7 +629,7 @@ Window::on_action_general (std::string section, std::string name)
 		return;
 	}
 
-	Action a = { section + '.' + name, true };
+	Action a = { section + '.' + name, "on_action_general", nullptr, true };
 	c->perform_action(a);
 }
 

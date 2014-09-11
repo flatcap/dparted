@@ -112,8 +112,10 @@ std::vector<Action>
 Volume::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.volume", true },
+		{ "dummy.volume", "Dummy/Volume", me, true },
 	};
 
 	std::vector<Action> base_actions = Whole::get_actions();

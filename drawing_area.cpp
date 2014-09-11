@@ -692,7 +692,7 @@ DrawingArea::on_keypress (GdkEventKey* event)
 		case GDK_KEY_Return:	// 65293 (0xFF0D)
 			log_debug ("state = %d", event->state);
 			if (event->state & GDK_MOD1_MASK) {		// Alt-Enter
-				on_menu_select (gfx, Action {"Properties", true });	// properties
+				on_menu_select (gfx, Action { "Properties", "Properties", nullptr, true });	// properties
 				handled = true;
 			}
 			break;
@@ -757,7 +757,7 @@ DrawingArea::on_mouse_click (GdkEventButton* event)
 	}
 
 	if (event->type == GDK_2BUTTON_PRESS) {
-		on_menu_select (selection, Action {"Properties", true } );	// Properties
+		on_menu_select (selection, Action { "Properties", "Properties", nullptr, true } );	// Properties
 		return true;					// We handled the event
 	}
 
@@ -1213,8 +1213,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 {
 	return_if_fail (gfx);
 
-	std::vector<Widget*> items = menu_popup.get_children();
-	for (auto& i : items) {
+	for (auto& i : menu_popup.get_children()) {	// Clear the current menu
 		menu_popup.remove (*i);
 	}
 
@@ -1223,28 +1222,31 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 	Gtk::Menu*     index_menu = &menu_popup;
 	Gtk::MenuItem* index_item = nullptr;
 
-	actions.insert (actions.begin(), { "---",        true });
-	actions.insert (actions.begin(), { "Properties", true });
+	// This is a poor temporary solution
+	std::sort (std::begin (actions), std::end (actions), [] (const Action& a, const Action& b) { return a.description < b.description; });
+
+	actions.insert (actions.begin(), { "---",        "---",        nullptr, true });
+	actions.insert (actions.begin(), { "Properties", "Properties", nullptr, true });
 
 #if 0
-	actions.push_back ({ "---",           true });
-	actions.push_back ({ "Cut",           true });
-	actions.push_back ({ "Copy",          true });
-	actions.push_back ({ "Paste",         true });
-	actions.push_back ({ "Paste Special", true });
+	actions.push_back ({ "---",                "---",                nullptr, true });
+	actions.push_back ({ "edit.cut",           "Edit/Cut",           nullptr, true });
+	actions.push_back ({ "edit.copy",          "Edit/Copy",          nullptr, true });
+	actions.push_back ({ "edit.paste",         "Edit/Paste",         nullptr, true });
+	actions.push_back ({ "edit.paste_special", "Edit/Paste Special", nullptr, true });
 #endif
 
 	for (auto& a : actions) {
-		log_debug (a.name);
-		std::size_t pos = a.name.find_first_of ('/');
+		log_debug (a.description);
+		std::size_t pos = a.description.find_first_of ('/');
 		if (pos == std::string::npos) {
 			section.clear();
-			key = a.name;
+			key = a.description;
 			index_menu = &menu_popup;
 			index_item = nullptr;
 		} else {
-			std::string s = a.name.substr (0, pos);
-			key = a.name.substr (pos+1);
+			std::string s = a.description.substr (0, pos);
+			key = a.description.substr (pos+1);
 
 			if (section != s) {
 				section = s;
@@ -1263,7 +1265,7 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 
 		Gtk::MenuItem* item = nullptr;
 
-		if (a.name == "---") {
+		if (a.description == "---") {
 			item = Gtk::manage (new Gtk::SeparatorMenuItem());
 		} else {
 			item = Gtk::manage (new Gtk::MenuItem (key, true));

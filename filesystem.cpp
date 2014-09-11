@@ -132,9 +132,11 @@ std::vector<Action>
 Filesystem::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "delete.filesystem.dialog", true  },
-		{ "resize.filesystem.dialog", true  },
+		{ "delete.filesystem.dialog", "Delete/Filesystem", me, true  },
+		{ "resize.filesystem.dialog", "Resize/Filesystem", me, true  },
 	};
 
 	std::vector<Action> base_actions = Container::get_actions();
@@ -290,7 +292,7 @@ Filesystem::question_cb (QuestionPtr q)
 			break;
 		}
 
-		Action a { o.name, true };
+		Action a { o.name, o.description, o.object, true };	//XXX what?
 		if (!o.object->perform_action (a)) {
 			log_error ("action %s failed", SP(o.name));
 			break;

@@ -150,10 +150,12 @@ std::vector<Action>
 Gpt::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "tidy.gpt", true },
-		{ "delete.gpt", true },
-		{ "resize.gpt", true },	//XXX dependent on parent being resizeable (e.g. loop)
+		{ "tidy.gpt",   "Tidy Gpt",   me, true },
+		{ "delete.gpt", "Delete/Gpt", me, true },
+		{ "resize.gpt", "Resize/Gpt", me, true },	//XXX dependent on parent being resizeable (e.g. loop)
 	};
 
 	std::vector<Action> base_actions = Table::get_actions();

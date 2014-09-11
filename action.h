@@ -19,12 +19,17 @@
 #ifndef _ACTION_H_
 #define _ACTION_H_
 
+#include <memory>
 #include <string>
+
+typedef std::shared_ptr<class Container> ContainerPtr;
 
 struct Action
 {
-	std::string name;
-	bool enabled;
+	std::string  name;
+	std::string  description;
+	ContainerPtr object;
+	bool         enabled;
 };
 
 #endif // _ACTION_H_

@@ -113,8 +113,10 @@ std::vector<Action>
 Whole::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.whole", true },
+		{ "dummy.whole", "Dummy/Whole", me, true },
 	};
 
 	std::vector<Action> base_actions = Container::get_actions();

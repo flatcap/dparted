@@ -131,8 +131,10 @@ std::vector<Action>
 Block::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "block.readonly", true },
+		{ "block.readonly", "Make device read-only", me, true }
 	};
 
 	std::vector<Action> base_actions = Container::get_actions();

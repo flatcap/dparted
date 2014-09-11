@@ -117,8 +117,10 @@ std::vector<Action>
 Extfs::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "extfs.tune", true },
+		{ "extfs.tune", "Tune extfs", me, true },
 	};
 
 	std::vector<Action> base_actions = Filesystem::get_actions();

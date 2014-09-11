@@ -116,8 +116,10 @@ std::vector<Action>
 Misc::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.misc", true },
+		{ "dummy.misc", "Dummy/Misc", me, true },
 	};
 
 	std::vector<Action> base_actions = Container::get_actions();
