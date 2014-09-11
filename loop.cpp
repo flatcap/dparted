@@ -221,7 +221,8 @@ Loop::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.loop", true },
+		{ "delete.loop", true },
+		{ "resize.loop", true },
 	};
 
 	std::vector<Action> base_actions = Block::get_actions();
@@ -234,8 +235,8 @@ Loop::get_actions (void)
 bool
 Loop::perform_action (Action action)
 {
-	if (action.name == "dummy.loop") {
-		log_debug ("Loop perform: %s", SP(action.name));
+	if (action.name == "delete.loop") {
+		log_error ("REALLY delete loop");
 		return true;
 	} else {
 		return Block::perform_action (action);
@@ -418,7 +419,7 @@ Loop::can_delete (QuestionPtr q)
 
 	q->options.push_back ({
 		Option::Type::checkbox,
-		"delete_loop",
+		"delete.loop",
 		std::string ("Delete ") + get_type(),
 		get_device_name() + std::string (" : ") + file_name,
 		"0",

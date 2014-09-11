@@ -110,7 +110,7 @@ GptPartition::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.gpt_partition", true },
+		//{ "dummy.gpt_partition", true },
 	};
 
 	std::vector<Action> base_actions = Partition::get_actions();

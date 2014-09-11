@@ -60,7 +60,7 @@ protected:
 	Filesystem (Filesystem&& c);
 
 	virtual Filesystem* clone (void);
-	void delete_filesystem (void);
+	void delete_filesystem_dialog (void);
 	void question_cb (QuestionPtr q);
 
 private:

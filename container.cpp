@@ -344,8 +344,15 @@ Container::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.container", true },
+		// { "dummy.container", true },
 	};
+
+	ContainerPtr parent = get_parent();
+	if (parent) {
+		std::vector<Action> parent_actions = parent->get_actions();
+
+		actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	}
 
 	return actions;
 }

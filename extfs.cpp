@@ -118,7 +118,7 @@ Extfs::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.extfs", true },
+		{ "extfs.tune", true },
 	};
 
 	std::vector<Action> base_actions = Filesystem::get_actions();

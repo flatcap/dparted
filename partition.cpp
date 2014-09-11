@@ -118,7 +118,8 @@ Partition::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.partition", true },
+		{ "delete.partition", true },
+		{ "resize.partition", true },
 	};
 
 	std::vector<Action> base_actions = Container::get_actions();
@@ -141,8 +142,8 @@ Partition::get_actions (void)
 bool
 Partition::perform_action (Action action)
 {
-	if (action.name == "dummy.partition") {
-		log_debug ("Partition perform: %s", SP(action.name));
+	if (action.name == "delete.partition") {
+		log_error ("REALLY delete partition");
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -186,7 +187,7 @@ Partition::can_delete (QuestionPtr q)
 
 	q->options.push_back ({
 		Option::Type::checkbox,
-		"delete_partition",
+		"delete.partition",
 		std::string ("Delete ") + get_type(),
 		get_device_name(),
 		"1",

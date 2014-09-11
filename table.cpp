@@ -519,7 +519,7 @@ Table::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.table", true },
+		// { "dummy.table", true },
 	};
 
 	std::vector<Action> base_actions = Container::get_actions();
@@ -532,8 +532,8 @@ Table::get_actions (void)
 bool
 Table::perform_action (Action action)
 {
-	if (action.name == "dummy.table") {
-		log_debug ("Table perform: %s", SP(action.name));
+	if (action.name == "delete.table") {
+		log_error ("REALLY delete table");
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -665,7 +665,7 @@ Table::can_delete (QuestionPtr q)
 
 	q->options.push_back ({
 		Option::Type::checkbox,
-		"delete_table",
+		"delete.table",
 		std::string ("Delete ") + get_type(),
 		"Partition Table",
 		"0",

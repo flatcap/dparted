@@ -151,7 +151,9 @@ Gpt::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.gpt", true },
+		{ "tidy.gpt", true },
+		{ "delete.gpt", true },
+		{ "resize.gpt", true },	//XXX dependent on parent being resizeable (e.g. loop)
 	};
 
 	std::vector<Action> base_actions = Table::get_actions();
@@ -164,7 +166,7 @@ Gpt::get_actions (void)
 bool
 Gpt::perform_action (Action action)
 {
-	if (action.name == "dummy.gpt") {
+	if (action.name == "delete.gpt") {
 		log_debug ("Gpt perform: %s", SP(action.name));
 		return true;
 	} else {

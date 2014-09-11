@@ -133,8 +133,8 @@ Filesystem::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.filesystem",  false },
-		{ "delete.filesystem", true  },
+		{ "delete.filesystem.dialog", true  },
+		{ "resize.filesystem.dialog", true  },
 	};
 
 	std::vector<Action> base_actions = Container::get_actions();
@@ -147,9 +147,12 @@ Filesystem::get_actions (void)
 bool
 Filesystem::perform_action (Action action)
 {
-	if (action.name == "delete.filesystem") {
+	if (action.name == "delete.filesystem.dialog") {
 		log_info ("Filesystem perform: %s", SP(action.name));
-		delete_filesystem();
+		delete_filesystem_dialog();
+		return true;
+	} else if (action.name == "delete.filesystem") {
+		log_error ("REALLY delete filesystem");
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -217,7 +220,7 @@ Filesystem::get_mounted_usage (ContainerPtr UNUSED(parent))
 
 
 void
-Filesystem::delete_filesystem (void)
+Filesystem::delete_filesystem_dialog (void)
 {
 	LOG_TRACE;
 
@@ -247,7 +250,7 @@ Filesystem::can_delete (QuestionPtr q)
 
 	q->options.push_back ({
 		Option::Type::checkbox,
-		"delete_fs",
+		"delete.filesystem",
 		std::string ("Delete ") + get_type(),
 		std::string ("\"") + get_name_default() + std::string ("\""),
 		"1",
@@ -277,6 +280,18 @@ Filesystem::question_cb (QuestionPtr q)
 
 	for (auto& o : q->options) {
 		log_info ("\t[%c] %s", (o.value == "1") ? 'X' : ' ', SP(o.description));
+	}
+
+	for (auto& o : q->options) {
+		if (o.value != "1") {
+			break;
+		}
+
+		Action a { o.name, true };
+		if (!o.object->perform_action (a)) {
+			log_error ("action %s failed", SP(o.name));
+			break;
+		}
 	}
 }
 

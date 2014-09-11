@@ -132,7 +132,7 @@ Block::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.block", true },
+		{ "block.readonly", true },
 	};
 
 	std::vector<Action> base_actions = Container::get_actions();
