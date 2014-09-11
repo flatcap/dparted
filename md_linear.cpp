@@ -109,8 +109,10 @@ std::vector<Action>
 MdLinear::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.md_linear", true },
+		{ "dummy.md_linear", "Dummy/MD Linear", me, true },
 	};
 
 	std::vector<Action> base_actions = MdVolume::get_actions();

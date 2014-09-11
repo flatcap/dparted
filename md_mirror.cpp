@@ -109,8 +109,10 @@ std::vector<Action>
 MdMirror::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.md_mirror", true },
+		{ "dummy.md_mirror", "Dummy/MD Mirror", me, true },
 	};
 
 	std::vector<Action> base_actions = MdVolume::get_actions();

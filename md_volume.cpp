@@ -109,8 +109,10 @@ std::vector<Action>
 MdVolume::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.md_volume", true },
+		{ "dummy.md_volume", "Dummy/MD Volume", me, true },
 	};
 
 	std::vector<Action> base_actions = Volume::get_actions();

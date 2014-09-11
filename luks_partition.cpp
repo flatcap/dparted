@@ -112,8 +112,10 @@ std::vector<Action>
 LuksPartition::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.luks_partition", true },
+		{ "dummy.luks_partition", "Dummy/Luks Partition", me, true },
 	};
 
 	std::vector<Action> base_actions = Partition::get_actions();

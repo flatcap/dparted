@@ -112,8 +112,10 @@ std::vector<Action>
 LvmStripe::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.lvm_stripe", true },
+		{ "dummy.lvm_stripe", "Dummy/Lvm Stripe", me, true },
 	};
 
 	std::vector<Action> base_actions = LvmVolume::get_actions();

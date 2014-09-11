@@ -121,8 +121,10 @@ std::vector<Action>
 Extended::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.extended", true },
+		{ "dummy.extended", "Dummy/Extended", me, true },
 	};
 
 	std::vector<Action> base_actions = Msdos::get_actions();
@@ -251,7 +253,8 @@ Extended::get_buffer (std::uint64_t offset, std::uint64_t size)
 	if (p) {
 		return p->get_buffer (offset + parent_offset, size);
 	} else {
-		log_debug (this->dump());
+		ContainerPtr me = get_smart();
+		log_debug (me);
 		log_error ("no device and no parent");
 		return nullptr;
 	}

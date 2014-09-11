@@ -112,8 +112,10 @@ std::vector<Action>
 LvmLinear::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.lvm_linear", true },
+		{ "dummy.lvm_linear", "Dummy/Lvm Linear", me, true },
 	};
 
 	std::vector<Action> base_actions = LvmVolume::get_actions();

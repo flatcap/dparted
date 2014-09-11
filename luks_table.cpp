@@ -179,8 +179,10 @@ std::vector<Action>
 LuksTable::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.luks_table", true },
+		{ "dummy.luks_table", "Dummy/Luks Table", me, true },
 	};
 
 	std::vector<Action> base_actions = Container::get_actions();
@@ -301,11 +303,13 @@ LuksTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufs
 
 	p->bytes_size = l->header_size;
 	p->bytes_used = l->header_size;
-	l->add_child (p, false);
+	if (!l->add_child (p, false))
+		return false;
 
-	parent->add_child (l, false);
+	if (!parent->add_child (l, false))
+		return false;
+
 	l->luks_open();
-
 	return true;
 }
 
@@ -389,7 +393,8 @@ LuksTable::luks_open_actual (const std::string& device, const std::string& passw
 	p->parent_offset = header_size;
 	p->device = "/dev/mapper/luks-" + uuid;
 
-	add_child (p, probe);
+	if (!add_child (p, probe))
+		return false;
 
 	//XXX check mount really succeeded
 
@@ -413,7 +418,8 @@ LuksTable::luks_open (void)
 		p->parent_offset = header_size;
 		p->device = mapper;
 
-		add_child (p, true);
+		if (!add_child (p, true))
+			return false;
 	} else {
 		QuestionPtr q = Question::create (std::bind(&LuksTable::on_reply, this, std::placeholders::_1));
 		q->type = Question::Type::Password;

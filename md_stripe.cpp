@@ -109,8 +109,10 @@ std::vector<Action>
 MdStripe::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.md_stripe", true },
+		{ "dummy.md_stripe", "Dummy/MD Stripe", me, true },
 	};
 
 	std::vector<Action> base_actions = MdVolume::get_actions();

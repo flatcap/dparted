@@ -151,8 +151,10 @@ std::vector<Action>
 MdTable::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.md_table", true },
+		{ "dummy.md_table", "Dummy/MD Table", me, true },
 	};
 
 	std::vector<Action> base_actions = Table::get_actions();
@@ -261,9 +263,7 @@ MdTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsiz
 	t->data_offset		= data_offset;
 	t->data_size		= data_size;
 
-	parent->add_child (t, false);
-
-	return true;
+	return parent->add_child (t, false);
 }
 
 

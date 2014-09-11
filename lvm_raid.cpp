@@ -132,8 +132,10 @@ std::vector<Action>
 LvmRaid::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.lvm_raid", true },
+		{ "dummy.lvm_raid", "Dummy/Lvm RAID", me, true },
 	};
 
 	std::vector<Action> base_actions = LvmVolume::get_actions();

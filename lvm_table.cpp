@@ -133,8 +133,10 @@ std::vector<Action>
 LvmTable::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.lvm_table", true },
+		{ "dummy.lvm_table", "Dummy/Lvm Table", me, true },
 	};
 
 	std::vector<Action> base_actions = Table::get_actions();
@@ -387,7 +389,10 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 
 	t->metadata_size = 1048576;		//XXX read from header
 
-	parent->add_child (t, false);
+	if (!parent->add_child (t, false)) {
+		log_error ("add failed");
+		return false;
+	}
 
 	PartitionPtr p = Partition::create();
 	p->sub_type ("Space");
@@ -395,7 +400,10 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 	p->bytes_size = t->metadata_size;
 	p->bytes_used = t->metadata_size;
 	p->parent_offset = 0;
-	t->add_child (p, false);
+	if (!t->add_child (p, false)) {
+		log_error ("add failed");
+		return false;
+	}
 
 	//XXX add alignment -- can't do this without the group's block size
 
@@ -403,17 +411,17 @@ LvmTable::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsi
 }
 
 
-void
-LvmTable::add_child (ContainerPtr& child, bool probe)
+bool
+LvmTable::add_child (ContainerPtr child, bool probe)
 {
-	return_if_fail (child);
+	return_val_if_fail (child, false);
 
 	log_debug ("TABLE: parent offset = %ld", child->parent_offset);
 	if (!child->is_a ("Space")) {
 		child->parent_offset += metadata_size;
 	}
 
-	Table::add_child (child, probe);
+	return Table::add_child (child, probe);
 
 	// child->open_device();	// get a buffer
 
@@ -457,7 +465,6 @@ LvmTable::set_alignment (std::uint64_t bytes)
 	s->bytes_used = remainder;
 	s->parent_offset = bytes_size - remainder;
 	ContainerPtr c(s);
-	add_child (c, false);
 
-	return true;
+	return add_child (c, false);
 }

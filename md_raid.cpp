@@ -109,8 +109,10 @@ std::vector<Action>
 MdRaid::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.md_raid", true },
+		{ "dummy.md_raid", "Dummy/MD RAID", me, true },
 	};
 
 	std::vector<Action> base_actions = MdVolume::get_actions();

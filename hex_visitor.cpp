@@ -17,8 +17,9 @@
  */
 
 
-#include "hex_visitor.h"
+#include <sstream>
 
+#include "hex_visitor.h"
 #include "container.h"
 #include "utils.h"
 #include "log.h"
@@ -85,7 +86,9 @@ HexVisitor::visit (ExtendedPtr c)
 
 	parent = c->get_parent();
 	if (!parent) {
-		log_hex ("\033[01;31m%s\033[0m", SP(c->dump()));
+		std::stringstream s;
+		s << c;
+		log_hex ("\033[01;31m%s\033[0m", SP(s));
 		return false;
 	}
 
@@ -143,7 +146,9 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 			dump_hex2 (buf, size-abbr, abbr);
 		}
 	} else {
-		log_hex ("\033[01;31m%s\033[0m", SP(c->dump()));
+		std::stringstream s;
+		s << c;
+		log_hex ("\033[01;31m%s\033[0m", SP(s));
 	}
 }
 

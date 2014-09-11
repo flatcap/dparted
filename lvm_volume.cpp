@@ -164,8 +164,10 @@ std::vector<Action>
 LvmVolume::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.lvm_volume", true },
+		{ "dummy.lvm_volume", "Dummy/Lvm Volume", me, true },
 	};
 
 	std::vector<Action> base_actions = Volume::get_actions();
@@ -187,17 +189,17 @@ LvmVolume::perform_action (Action action)
 }
 
 
-void
-LvmVolume::add_child (ContainerPtr& child, bool probe)
+bool
+LvmVolume::add_child (ContainerPtr child, bool probe)
 {
-	return_if_fail (child);
+	return_val_if_fail (child, false);
 
 	if ((is_a ("LvmMetadata") && (child->is_a ("LvmVolume")))) {	//XXX tmp
 		log_debug ("LvmMetadata: %s", SP(child->get_type()));
 		sibling = child;
 		LvmVolumePtr vol = std::dynamic_pointer_cast<LvmVolume> (child);
 		vol->sibling = get_smart();
-		return;
+		return true;
 	}
 
 	log_debug ("volume: %s (%s), child: %s (%s)", SP(name), SP(get_type()), SP(child->name), SP(child->get_type()));
@@ -218,10 +220,10 @@ LvmVolume::add_child (ContainerPtr& child, bool probe)
 		child->whole = get_smart();
 	} else if (child->is_a ("Space")) {
 		log_info ("SPACE %s", SP(child->name));
-		Volume::add_child (child, false);
+		return Volume::add_child (child, false);
 	} else {
 		// filesystem
-		Volume::add_child (child, probe);
+		return Volume::add_child (child, probe);
 
 #if 0
 		for (auto& i : subvols) {
@@ -233,6 +235,8 @@ LvmVolume::add_child (ContainerPtr& child, bool probe)
 		}
 #endif
 	}
+
+	return true;
 }
 
 ContainerPtr
