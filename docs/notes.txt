@@ -1054,3 +1054,55 @@ cgdb
 	F8  Next
 	F10 Step
 
+log_X (Log::line) = -----------
+	length param?
+
+log_X (object, indent)
+
+separate macros from utils.cpp/h
+
+theme changes aren't global
+only affect object and its children
+
+smart: hddtemp - plugin
+
+kickstart plugin => commit plugin / pending outputter
+
+dparted-helper
+	create_partition
+	...
+	like git-*
+
+tooltips and/or statusbar
+	Container callback
+
+"show all" menu adds icon to set of volume parts
+	tick icon in area
+	tree?
+
+check help exists before displaying Help button?
+
+Text icon for simple data entry?
+
+Unallocated might need to be a real object => Wipe action
+
+can I assume option list => ordered dependencies?
+
+limit dialog sizes?
+	800x600
+	1024x768
+
+Container get_properties to customise Properties Dialog
+	vector<string> prop_names
+	include magic for a section heading
+
+deprecate Misc as an object
+	fold into partition?
+
+log change 1<<13 to 13
+
+test cases search for their own config, e.g. test/delete.conf
+
+area icons
+	config: left|right|ne|nw|se|sw
+
