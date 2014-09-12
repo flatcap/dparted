@@ -645,7 +645,7 @@ TreeView::on_menu_select (int UNUSED(option))
 bool
 TreeView::get_coords (int& x, int& y)
 {
-	Window *dp = reinterpret_cast<Window*> (get_top_level());
+	Window *dp = reinterpret_cast<Window*> (get_toplevel());
 	if (!dp) {
 		log_debug ("No Window");
 		return false;
@@ -666,7 +666,7 @@ TreeView::get_coords (int& x, int& y)
 	int oy = 0;
 	w->get_origin (ox, oy);		// Coords of Window's main window (inside chrome)
 
-	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_top_level());
+	Gtk::Widget* window = dynamic_cast<Gtk::Widget*> (get_toplevel());
 	if (!window) {
 		return false;
 	}
@@ -754,4 +754,24 @@ TreeView::theme_changed (const ThemePtr& new_theme)
 	LOG_TRACE;
 	theme = new_theme;	//XXX force dropping of cached values
 }
+
+
+void
+TreeView::gfx_container_added (const GfxContainerPtr& UNUSED(child))
+{
+	log_error ("gfx_container_added");
+}
+
+void
+TreeView::gfx_container_changed (const GfxContainerPtr& UNUSED(after))
+{
+	log_error ("gfx_container_changed");
+}
+
+void
+TreeView::gfx_container_deleted (const GfxContainerPtr& UNUSED(child))
+{
+	log_error ("gfx_container_deleted");
+}
+
 
