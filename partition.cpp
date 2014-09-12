@@ -168,15 +168,18 @@ Partition::add_child (ContainerPtr child, bool probe)
 	if (!Container::add_child (child, probe))
 		return false;
 
+#if 1
 	if ((children.size() == 1) && (get_bytes_free() != 0)) {
 		PartitionPtr p = Partition::create();
 		p->sub_type ("Space");
-		p->sub_type ("Unreachable");
+		//p->sub_type ("Unreachable");
+		p->sub_type ("Unallocated");
 		p->bytes_size = get_bytes_free();
 		p->bytes_used = p->bytes_size;
 		p->parent_offset = this->bytes_size - p->bytes_size;	// End of the device
 		return Container::add_child (p, false);
 	}
+#endif
 
 	return true;
 }
