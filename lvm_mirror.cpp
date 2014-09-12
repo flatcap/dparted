@@ -113,13 +113,15 @@ std::vector<Action>
 LvmMirror::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.lvm_mirror", true },
+		{ "dummy.lvm_mirror", "Dummy/Lvm Mirror", me, true },
 	};
 
-	std::vector<Action> parent_actions = LvmVolume::get_actions();
+	std::vector<Action> base_actions = LvmVolume::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
@@ -136,10 +138,10 @@ LvmMirror::perform_action (Action action)
 }
 
 
-void
-LvmMirror::add_child (ContainerPtr& child, bool probe)
+bool
+LvmMirror::add_child (ContainerPtr child, bool probe)
 {
-	return_if_fail (child);
+	return_val_if_fail (child, false);
 
 	/* Check:
 	 *	available space
@@ -188,12 +190,14 @@ LvmMirror::add_child (ContainerPtr& child, bool probe)
 	child->parent = this;
 #endif
 	//XXX for now
-	LvmVolume::add_child (child, probe);
+	return LvmVolume::add_child (child, probe);
 }
 
-void
+bool
 LvmMirror::delete_child (ContainerPtr UNUSED(child))
 {
+	log_code ("delete_child NOTIMPL");
+	return false;
 }
 
 

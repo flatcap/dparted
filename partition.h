@@ -48,6 +48,8 @@ public:
 	virtual bool perform_action (Action action);
 	virtual bool __attribute__((warn_unused_result)) add_child (ContainerPtr child, bool probe);
 
+	virtual bool can_delete (QuestionPtr q);
+
 public:
 	// properties
 	int ptype = 0;

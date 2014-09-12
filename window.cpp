@@ -76,10 +76,12 @@ Window::Window (void)
 	outer_box.set_orientation (Gtk::ORIENTATION_VERTICAL);
 	outer_box.set_homogeneous (false);
 
+#if 0
 	time_box.set_orientation (Gtk::ORIENTATION_HORIZONTAL);
 	time_box.set_layout (Gtk::ButtonBoxStyle::BUTTONBOX_START);
 	time_back.set_label ("Back");
 	time_forward.set_label ("Forward");
+#endif
 
 	time_back.signal_clicked().connect    (sigc::bind<int> (sigc::mem_fun (*this, &Window::button_clicked), 1));
 	time_forward.signal_clicked().connect (sigc::bind<int> (sigc::mem_fun (*this, &Window::button_clicked), 2));
@@ -101,9 +103,11 @@ Window::Window (void)
 #ifdef DP_TREE
 					inner_box.pack_start (treeview,    true,  true);
 #endif
+#if 0
 		outer_box.add (time_box);
 			time_box.pack_start (time_back);
 			time_box.pack_start (time_forward);
+#endif
 		outer_box.pack_end (statusbar, false, false);
 
 	// -------------------------------------
@@ -625,7 +629,7 @@ Window::on_action_general (std::string section, std::string name)
 		return;
 	}
 
-	Action a = { section + '.' + name, true };
+	Action a = { section + '.' + name, "on_action_general", nullptr, true };
 	c->perform_action(a);
 }
 
@@ -647,8 +651,20 @@ Window::set_data (ContainerPtr c)
 #ifdef DP_AREA
 	drawingarea.set_data(g);
 #endif
-	// ContainerPtr d = c->get_nth_child ({0,0,1});
-	// test_execute (d, "delete");
+	ContainerPtr d = c->get_nth_child ({0,0});
+	if (d) {
+		std::vector<Action> actions = d->get_actions();
+		if (actions.empty()) {
+			log_debug ("No actions");
+			return;
+		}
+
+		log_info ("Actions:");
+		for (auto& a : actions) {
+			log_info ("\t%s", SP(a.name));
+		}
+		// hide();
+	}
 }
 
 

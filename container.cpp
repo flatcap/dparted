@@ -46,49 +46,51 @@ std::atomic_ulong container_id = ATOMIC_VAR_INIT(1);
 std::mutex mutex_write_lock;
 TransactionPtr txn;
 
+#if 0
 std::vector<Action> cont_actions = {
-	{ "Create/Filesystem",         true },
-	{ "Create/Partition",          true },
-	{ "Create/Table",              true },
-	{ "Create/Lvm Volume",         true },
-	{ "Create/Subvolume",          true },
-	{ "Create/Snapshot",           true },
-	{ "Create/Luks",               true },
-	{ "Delete/Filesystem",         true },
-	{ "Delete/Partition",          true },
-	{ "Delete/Table",              true },
-	{ "Delete/Lvm Volume",         true },
-	{ "Delete/Subvolume",          true },
-	{ "Delete/Snapshot",           true },
-	{ "Delete/Luks",               true },
-	{ "Format as/Clear",           true },
-	{ "Format as/Wipe",            true },
-	{ "Format as/Scrub",           true },
-	{ "Format as/Ext2",            true },
-	{ "Format as/Ext3",            true },
-	{ "Convert to/Btrfs",          true },
-	{ "Convert to/Partition Type", true },
-	{ "Convert to/Table",          true },
-	{ "Edit/Label",                true },
-	{ "Edit/Uuid",                 true },
-	{ "Edit/Flags",                true },
-	{ "Edit/Parameters",           true },
-	{ "Filesystem/Check",          true },
-	{ "Filesystem/Defrag",         true },
-	{ "Filesystem/Rebalance",      true },
-	{ "Filesystem/Mount",          true },
-	{ "Filesystem/Umount",         true },
-	{ "Filesystem/Usage",          true },
-	{ "Volume Group/Extend",       true },
-	{ "Volume Group/Reduce",       true },
-	{ "Volume Group/Split",        true },
-	{ "Volume Group/Merge",        true },
+	{ "Create/Filesystem",            true },
+	{ "Create/Partition",             true },
+	{ "Create/Table",                 true },
+	{ "Create/Lvm Volume",            true },
+	{ "Create/Subvolume",             true },
+	{ "Create/Snapshot",              true },
+	{ "Create/Luks",                  true },
+	{ "Delete/Filesystem",            true },
+	{ "Delete/Partition",             true },
+	{ "Delete/Table",                 true },
+	{ "Delete/Lvm Volume",            true },
+	{ "Delete/Subvolume",             true },
+	{ "Delete/Snapshot",              true },
+	{ "Delete/Luks",                  true },
+	{ "Format as/Clear",              true },
+	{ "Format as/Wipe",               true },
+	{ "Format as/Scrub",              true },
+	{ "Format as/Ext2",               true },
+	{ "Format as/Ext3",               true },
+	{ "Convert to/Btrfs",             true },
+	{ "Convert to/Partition Type",    true },
+	{ "Convert to/Table",             true },
+	{ "Edit/Label",                   true },
+	{ "Edit/Uuid",                    true },
+	{ "Edit/Flags",                   true },
+	{ "Edit/Parameters",              true },
+	{ "Filesystem/Check",             true },
+	{ "Filesystem/Defrag",            true },
+	{ "Filesystem/Rebalance",         true },
+	{ "Filesystem/Mount",             true },
+	{ "Filesystem/Umount",            true },
+	{ "Filesystem/Usage",             true },
+	{ "Volume Group/Extend",          true },
+	{ "Volume Group/Reduce",          true },
+	{ "Volume Group/Split",           true },
+	{ "Volume Group/Merge",           true },
 	{ "Redundancy/Add Stripe...",     true },
 	{ "Redundancy/Remove Stripe...",  true },
 	{ "Redundancy/Add Mirror...",     true },
 	{ "Redundancy/Remove Mirror...",  true },
 	{ "Redundancy/Break Mirror...",   true }
 };
+#endif
 
 
 Container::Container (void)
@@ -344,8 +346,15 @@ Container::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.container", true },
+		// { "dummy.container", true },
 	};
+
+	ContainerPtr parent = get_parent();
+	if (parent) {
+		std::vector<Action> parent_actions = parent->get_actions();
+
+		actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	}
 
 	return actions;
 }
@@ -353,13 +362,14 @@ Container::get_actions (void)
 bool
 Container::perform_action (Action action)
 {
-	if (action.name == "dummy.container") {
-		log_debug ("Container perform: %s", SP(action.name));
-		return true;
-	} else {
-		log_debug ("Unknown action: %s", SP(action.name));
-		return false;
+	// Currently no actions to check
+
+	ContainerPtr parent = get_parent();
+	if (parent) {
+		return parent->perform_action (action);
 	}
+
+	return false;
 }
 
 
@@ -1387,3 +1397,22 @@ Container::get_nth_child (std::initializer_list<unsigned int> route)
 }
 
 #endif
+
+unsigned int
+Container::get_count_real_children (void)
+{
+	unsigned int n = count_if (std::begin (children), std::end (children), [] (ContainerPtr& c) { return !c->is_a ("Space"); });
+	log_info ("%s has %d real (%ld total) children", SP(get_type()), n, children.size());
+	return n;
+}
+
+bool
+Container::is_resizeable (void)
+{
+	ContainerPtr parent = get_parent();
+	if (parent)
+		return parent->is_resizeable();
+
+	return true;
+}
+

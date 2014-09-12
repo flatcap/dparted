@@ -172,6 +172,44 @@ test_generate_delete (ContainerPtr& parent)
 }
 
 void
+test_generate_loop (ContainerPtr& parent)
+{
+	return_if_fail (parent);
+
+	ContainerPtr new_parent = Container::start_transaction (parent, "Test case: loop");
+	if (!new_parent)
+		return;
+
+	ContainerPtr loop = Loop::create();
+	if (!loop)
+		return;
+
+	loop->bytes_size = one_gig;
+	loop->name = "loop1";
+	loop->device = "/dev/zero";
+	loop->device_major = 7;
+	loop->device_minor = 1;
+
+	if (!new_parent->add_child (loop, false)) {
+		Container::cancel_transaction();
+	}
+
+	PartitionPtr space = Partition::create();
+	space->bytes_size    = one_gig;
+	space->bytes_used    = one_gig;
+	space->parent_offset = 0;
+	space->sub_type ("Space");
+	space->sub_type ("Unallocated");
+	space->name = "Unallocated";
+
+	if (!loop->add_child (space, false)) {
+		Container::cancel_transaction();
+	}
+
+	Container::commit_transaction();
+}
+
+void
 test_generate_move (ContainerPtr& parent)
 {
 	const disk_def dd {
@@ -295,6 +333,7 @@ test_generate (ContainerPtr& parent, const std::string& name)
 {
 	     if (name == "add")    test_generate_add    (parent);
 	else if (name == "delete") test_generate_delete (parent);
+	else if (name == "loop")   test_generate_loop   (parent);
 	else if (name == "move")   test_generate_move   (parent);
 	else if (name == "myriad") test_generate_myriad (parent);
 	else if (name == "resize") test_generate_resize (parent);

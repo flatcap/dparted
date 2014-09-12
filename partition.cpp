@@ -116,14 +116,27 @@ Partition::accept (Visitor& v)
 std::vector<Action>
 Partition::get_actions (void)
 {
+	ContainerPtr me = get_smart();
+
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.partition", true },
+		{ "delete.partition", "Delete/Partition", me, true },
+		{ "resize.partition", "Resize/Partition", me, true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> base_actions = Container::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
+
+	if (is_a ("Unallocated")) {
+		// Delegate to out parent object
+		ContainerPtr parent = get_parent();
+		if (parent) {
+			std::vector<Action> base_actions = parent->get_actions();
+
+			actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
+		}
+	}
 
 	return actions;
 }
@@ -131,8 +144,11 @@ Partition::get_actions (void)
 bool
 Partition::perform_action (Action action)
 {
-	if (action.name == "dummy.partition") {
-		log_debug ("Partition perform: %s", SP(action.name));
+	if (action.name == "delete.partition") {
+		log_error ("Partition perform: %s", SP(action.name));
+		return true;
+	} else if (action.name == "resize.partition") {
+		log_error ("Partition perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -162,7 +178,33 @@ Partition::add_child (ContainerPtr child, bool probe)
 		return Container::add_child (p, false);
 	}
 
-	return false;
+	return true;
 }
 
 
+bool
+Partition::can_delete (QuestionPtr q)
+{
+	return_val_if_fail (q, false);
+
+	if (get_count_real_children() > 1)
+		return false;
+
+	q->options.push_back ({
+		Option::Type::checkbox,
+		"delete.partition",
+		std::string ("Delete ") + get_type(),
+		get_device_name(),
+		"1",
+		get_smart(),
+		false,
+		false,
+		-1, -1, -1, -1
+	});
+
+	ContainerPtr parent = get_parent();
+	if (parent)
+		return parent->can_delete(q);
+
+	return false;
+}

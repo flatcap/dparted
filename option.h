@@ -16,48 +16,41 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _BLOCK_H_
-#define _BLOCK_H_
+#ifndef _OPTION_H_
+#define _OPTION_H_
 
-#include <memory>
 #include <string>
-#include <vector>
+#include <memory>
 
-#include "container.h"
+typedef std::shared_ptr<class Container> ContainerPtr;
 
-typedef std::shared_ptr<class Block> BlockPtr;
-
-/**
- * class Block - Mass storage device
- */
-class Block : public Container
+typedef struct _option
 {
-public:
-	static BlockPtr create (void);
-	virtual ~Block();
+	enum class Type {
+		radio_button,
+		checkbox,
+		label,
+		text_1,
+		text_n,
+		password
+	} type;
 
-	Block& operator= (const Block& c);
-	Block& operator= (Block&& c);
+	std::string name;
+	std::string description;
+	std::string notes;
+	std::string value;
 
-	void swap (Block& c);
-	friend void swap (Block& lhs, Block& rhs);
+	ContainerPtr object;
 
-	virtual bool accept (Visitor& v);
+	bool read_only;
+	bool advanced;
 
-	virtual std::vector<Action> get_actions (void);
-	virtual bool perform_action (Action action);
-	virtual bool is_resizeable (void);
+	int min_size;
+	int max_size;
+	int width;
+	int height;
+} Option;
 
-public:
-	// properties
 
-protected:
-	Block (void);
-	Block (const Block& c);
-	Block (Block&& c);
-
-	virtual Block* clone (void);
-};
-
-#endif // _BLOCK_H_
+#endif // _OPTION_H_
 

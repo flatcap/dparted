@@ -109,13 +109,15 @@ std::vector<Action>
 MsdosPartition::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.msdos_partition", true },
+		{ "dummy.msdos_partition", "Dummy/Msdos Partition", me, true },
 	};
 
-	std::vector<Action> parent_actions = Partition::get_actions();
+	std::vector<Action> base_actions = Partition::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }

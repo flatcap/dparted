@@ -120,13 +120,15 @@ std::vector<Action>
 File::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.file", true },
+		{ "dummy.file", "Dummy/File", me, true },
 	};
 
-	std::vector<Action> parent_actions = Block::get_actions();
+	std::vector<Action> base_actions = Block::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
@@ -135,7 +137,7 @@ bool
 File::perform_action (Action action)
 {
 	if (action.name == "dummy.file") {
-		log_debug ("File perform: %s", SP(action));
+		log_debug ("File perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Block::perform_action (action);

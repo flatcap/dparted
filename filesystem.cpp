@@ -132,13 +132,16 @@ std::vector<Action>
 Filesystem::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.filesystem", true },
+		{ "delete.filesystem.dialog", "Delete/Filesystem", me, true  },
+		{ "resize.filesystem.dialog", "Resize/Filesystem", me, true  },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> base_actions = Container::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
@@ -146,8 +149,15 @@ Filesystem::get_actions (void)
 bool
 Filesystem::perform_action (Action action)
 {
-	if (action.name == "dummy.filesystem") {
-		log_debug ("Filesystem perform: %s", SP(action.name));
+	if (action.name == "delete.filesystem.dialog") {
+		log_info ("Filesystem perform: %s", SP(action.name));
+		delete_filesystem_dialog();
+		return true;
+	} else if (action.name == "delete.filesystem") {
+		log_error ("Filesystem perform: %s", SP(action.name));
+		return true;
+	} else if (action.name == "resize.filesystem.dialog") {
+		log_error ("Filesystem perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);
@@ -214,18 +224,79 @@ Filesystem::get_mounted_usage (ContainerPtr UNUSED(parent))
 }
 
 
-#if 0
 void
-Filesystem::delete_filesystem (void)
+Filesystem::delete_filesystem_dialog (void)
 {
 	LOG_TRACE;
 
-	Question q { "Delete filesystem",
-		     "Are you sure?",
-		     { "Yes", "No" } };
+	QuestionPtr q = Question::create (std::bind (&Filesystem::question_cb, this, std::placeholders::_1));
 
+	q->type = Question::Type::Delete;
+
+	q->input = {
+		{ "title",     "Delete Filesystem",                           },
+		{ "primary",   "delete primary",                              },
+		{ "secondary", "delete secondary",                            },
+		{ "image",     "gtk-delete",                                  },
+		{ "help_url",  "http://en.wikipedia.org/wiki/Special:Random", }
+	};
+
+	can_delete(q);
 	main_app->ask(q);
 }
 
-#endif
+bool
+Filesystem::can_delete (QuestionPtr q)
+{
+	return_val_if_fail (q, false);
+
+	if (get_count_real_children() > 1)
+		return false;
+
+	q->options.push_back ({
+		Option::Type::checkbox,
+		"delete.filesystem",
+		std::string ("Delete ") + get_type(),
+		std::string ("\"") + get_name_default() + std::string ("\""),
+		"1",
+		get_smart(),
+		true,
+		false,
+		-1, -1, -1, -1
+	});
+
+	ContainerPtr parent = get_parent();
+	if (parent)
+		return parent->can_delete(q);
+
+	return false;
+}
+
+void
+Filesystem::question_cb (QuestionPtr q)
+{
+	return_if_fail (q);
+
+	log_info ("Question finished: %d", q->result);
+	if (q->result != 99) {
+		log_info ("User cancelled delete");
+		return;
+	}
+
+	for (auto& o : q->options) {
+		log_info ("\t[%c] %s", (o.value == "1") ? 'X' : ' ', SP(o.description));
+	}
+
+	for (auto& o : q->options) {
+		if (o.value != "1") {
+			break;
+		}
+
+		Action a { o.name, o.description, o.object, true };	//XXX what?
+		if (!o.object->perform_action (a)) {
+			log_error ("action %s failed", SP(o.name));
+			break;
+		}
+	}
+}
 

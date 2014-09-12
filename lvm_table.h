@@ -73,7 +73,7 @@ bool
 LvmTable::add_child (std::shared_ptr<T> child, bool probe)
 {
 	ContainerPtr c (child);
-	add_child (c, probe);
+	return add_child (c, probe);
 }
 
 #endif // _LVM_TABLE_H_

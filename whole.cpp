@@ -113,13 +113,15 @@ std::vector<Action>
 Whole::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.whole", true },
+		{ "dummy.whole", "Dummy/Whole", me, true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> base_actions = Container::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }

@@ -150,13 +150,17 @@ std::vector<Action>
 Gpt::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.gpt", true },
+		{ "tidy.gpt",   "Tidy Gpt",   me, true },
+		{ "delete.gpt", "Delete/Gpt", me, true },
+		{ "resize.gpt", "Resize/Gpt", me, true },	//XXX dependent on parent being resizeable (e.g. loop)
 	};
 
-	std::vector<Action> parent_actions = Table::get_actions();
+	std::vector<Action> base_actions = Table::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
@@ -164,8 +168,14 @@ Gpt::get_actions (void)
 bool
 Gpt::perform_action (Action action)
 {
-	if (action.name == "dummy.gpt") {
-		log_debug ("Gpt perform: %s", SP(action.name));
+	if (action.name == "tidy.gpt") {
+		log_error ("Gpt perform: %s", SP(action.name));
+		return true;
+	} else if (action.name == "delete.gpt") {
+		log_error ("Gpt perform: %s", SP(action.name));
+		return true;
+	} else if (action.name == "resize.gpt") {
+		log_error ("Gpt perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Table::perform_action (action);

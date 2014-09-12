@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "container.h"
+#include "question.h"
 
 typedef std::shared_ptr<class Filesystem> FilesystemPtr;
 
@@ -45,6 +46,7 @@ public:
 
 	virtual std::vector<Action> get_actions (void);
 	virtual bool perform_action (Action action);
+	virtual bool can_delete (QuestionPtr q);
 
 	static bool probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize);
 	bool get_mounted_usage (ContainerPtr parent);
@@ -58,6 +60,8 @@ protected:
 	Filesystem (Filesystem&& c);
 
 	virtual Filesystem* clone (void);
+	void delete_filesystem_dialog (void);
+	void question_cb (QuestionPtr q);
 
 private:
 	std::uint64_t ext2_get_usage (void);

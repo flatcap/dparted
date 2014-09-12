@@ -38,7 +38,7 @@ public:
 
 protected:
 	ErrorDialog (QuestionPtr q);
-	void response (int button_id);
+	virtual void response (int button_id);
 };
 
 #endif // _ERROR_DIALOG_H_

@@ -46,6 +46,7 @@
 #include "utils.h"
 
 #include "change_password_dialog.h"
+#include "delete_dialog.h"
 #include "error_dialog.h"
 #include "info_dialog.h"
 #include "password_dialog.h"
@@ -458,6 +459,9 @@ GuiApp::on_dispatch_ask (void)
 		case Question::Type::ChangePassword:
 			dlg = ChangePasswordDialog::create(q);
 			break;
+		case Question::Type::Delete:
+			dlg = DeleteDialog::create(q);
+			break;
 		case Question::Type::Error:
 			dlg = ErrorDialog::create(q);
 			break;
@@ -519,7 +523,7 @@ GuiApp::on_dispatch_ask (void)
 void
 GuiApp::on_dispatch_scan (void)
 {
-	log_info ("scan has finished: ignoring callback");
+	// log_info ("scan has finished: ignoring callback");
 	// window->set_data (scan_result);
 }
 

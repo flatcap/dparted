@@ -131,13 +131,19 @@ std::vector<Action>
 Block::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.block", true },
+		{ "block.readonly", "Make device read-only", me, true }
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> base_actions = Container::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
+
+	// if ((children.size() == 1) && (!children[0]->is_a ("Table"))) {
+	// 	actions.push_back ({"CREATE TABLE", true});
+	// }
 
 	return actions;
 }
@@ -145,12 +151,17 @@ Block::get_actions (void)
 bool
 Block::perform_action (Action action)
 {
-	if (action.name == "dummy.block") {
-		log_debug ("Block perform: %s", SP(action.name));
+	if (action.name == "block.readonly") {
+		log_error ("Block perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Container::perform_action (action);
 	}
 }
 
+bool
+Block::is_resizeable (void)
+{
+	return false;
+}
 

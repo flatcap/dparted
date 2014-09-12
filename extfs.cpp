@@ -117,13 +117,15 @@ std::vector<Action>
 Extfs::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.extfs", true },
+		{ "extfs.tune", "Tune extfs", me, true },
 	};
 
-	std::vector<Action> parent_actions = Filesystem::get_actions();
+	std::vector<Action> base_actions = Filesystem::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
@@ -131,8 +133,8 @@ Extfs::get_actions (void)
 bool
 Extfs::perform_action (Action action)
 {
-	if (action.name == "dummy.extfs") {
-		log_debug ("Extfs perform: %s", SP(action.name));
+	if (action.name == "extfs.tune") {
+		log_error ("Extfs perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Filesystem::perform_action (action);

@@ -110,12 +110,12 @@ GptPartition::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.gpt_partition", true },
+		//{ "dummy.gpt_partition", true },
 	};
 
-	std::vector<Action> parent_actions = Partition::get_actions();
+	std::vector<Action> base_actions = Partition::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
@@ -123,12 +123,9 @@ GptPartition::get_actions (void)
 bool
 GptPartition::perform_action (Action action)
 {
-	if (action.name == "dummy.gpt_partition") {
-		log_debug ("GptPartition perform: %s", SP(action.name));
-		return true;
-	} else {
-		return Partition::perform_action (action);
-	}
+	// Currently no actions to check
+
+	return Partition::perform_action (action);
 }
 
 

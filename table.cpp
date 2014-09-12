@@ -519,12 +519,12 @@ Table::get_actions (void)
 {
 	LOG_TRACE;
 	std::vector<Action> actions = {
-		{ "dummy.table", true },
+		// { "dummy.table", true },
 	};
 
-	std::vector<Action> parent_actions = Container::get_actions();
+	std::vector<Action> base_actions = Container::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
@@ -532,12 +532,9 @@ Table::get_actions (void)
 bool
 Table::perform_action (Action action)
 {
-	if (action.name == "dummy.table") {
-		log_debug ("Table perform: %s", SP(action.name));
-		return true;
-	} else {
-		return Container::perform_action (action);
-	}
+	// Currently no actions to check
+
+	return Container::perform_action (action);
 }
 
 
@@ -654,3 +651,30 @@ Table::set_alignment (std::uint64_t bytes)
 	return true;
 }
 
+
+bool
+Table::can_delete (QuestionPtr q)
+{
+	return_val_if_fail (q, false);
+
+	if (get_count_real_children() > 1)
+		return false;
+
+	q->options.push_back ({
+		Option::Type::checkbox,
+		"delete.table",
+		std::string ("Delete ") + get_type(),
+		"Partition Table",
+		"0",
+		get_smart(),
+		false,
+		false,
+		-1, -1, -1, -1
+	});
+
+	ContainerPtr parent = get_parent();
+	if (parent)
+		return parent->can_delete(q);
+
+	return false;
+}

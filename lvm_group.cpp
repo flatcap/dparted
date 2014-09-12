@@ -167,13 +167,15 @@ std::vector<Action>
 LvmGroup::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.lvm_group", true },
+		{ "dummy.lvm_group", "Dummy/Lvm Group", me, true },
 	};
 
-	std::vector<Action> parent_actions = Whole::get_actions();
+	std::vector<Action> base_actions = Whole::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
@@ -259,7 +261,10 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			g->name    = tags["VG_NAME"];
 			g->uuid    = vg_uuid;
 			// g->missing = true;
-			pieces->add_child (g, false);
+			if (!pieces->add_child (g, false)) {
+				log_error ("add failed");
+				break;
+			}
 			++added;
 		}
 
@@ -270,7 +275,10 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			t = LvmTable::create();
 			t->uuid    = pv_uuid;
 			// t->missing = true;
-			pieces->add_child (t, false);
+			if (!pieces->add_child (t, false)) {
+				log_error ("add failed");
+				break;
+			}
 			++added;
 		}
 
@@ -305,7 +313,10 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 				p->bytes_size = size;
 				p->bytes_used = size;
 				p->parent_offset = offset;
-				t->add_child (p, false);
+				if (!t->add_child (p, false)) {
+					log_error ("add failed");
+					break;
+				}
 				continue;
 			} else {
 				log_error ("UNKNOWN type %s", SP(segtype));
@@ -316,7 +327,10 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			log_debug ("lv uuid = %s", SP(lv_uuid));
 			v->uuid    = lv_uuid;
 			// v->missing = true;
-			pieces->add_child (v, false);
+			if (!pieces->add_child (v, false)) {
+				log_error ("add failed");
+				break;
+			}
 			++added;
 
 			if (lv_attr[0] == '-') {
@@ -342,9 +356,12 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		p->bytes_size	  = size;
 		p->bytes_used     = size;		//XXX for now
 
-		log_info ("add piece: %s (%s)", SP(p->uuid), p->SP(name));
+		log_info ("add piece: %s (%s)", SP(p->uuid), SP(p->name));
 
-		t->add_child (p, false);
+		if (!t->add_child (p, false)) {
+			log_error ("add failed");
+			break;
+		}
 	}
 
 	//XXX tag all the lvm_tables as missing
@@ -499,7 +516,10 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			g = LvmGroup::create();
 			g->uuid    = vg_uuid;
 			// g->missing = true;
-			pieces->add_child (g, false);
+			if (!pieces->add_child (g, false)) {
+				log_error ("add failed");
+				break;
+			}
 		}
 
 		std::string lv_uuid = tags["LVM2_LV_UUID"];
@@ -529,7 +549,10 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 			}
 			v->uuid    = lv_uuid;
 			// v->missing = true;
-			pieces->add_child (v, false);
+			if (!pieces->add_child (v, false)) {
+				log_error ("add failed");
+				break;
+			}
 
 			// A volume discovered here doesn't have any physical parts.
 			// Therefore, it's a top-level entity.
@@ -626,13 +649,19 @@ LvmGroup::lvm_lvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 		}
 
 		log_info ("add_child %s -> %s", SP(parent->uuid), SP(child->uuid));
-		parent->add_child (child, false);
+		if (!parent->add_child (child, false)) {
+			log_error ("add failed");
+			break;
+		}
 
 		log_info ("\t%p -> %p", VP(parent), VP(child));
 		log_info ("\t%s -> %s", SP(parent->name), SP(child->name));
 		log_info ("\t%s -> %s", SP(parent->uuid), SP(child->uuid));
 
-		pieces->delete_child (child);
+		if (!pieces->delete_child (child)) {
+			log_error ("delete failed");
+			break;
+		}
 	}
 	deps.clear();
 }
@@ -651,7 +680,10 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	log_info ("top_level: %ld tables", t.size());
 	for (auto& i : t) {
-		pieces->add_child (i, false);
+		if (!pieces->add_child (i, false)) {
+			log_error ("add failed");
+			break;
+		}
 	}
 
 	if (lvm_pvs (pieces, deps) > 0) {
@@ -661,7 +693,9 @@ LvmGroup::discover (ContainerPtr& top_level)
 
 	log_debug ("Pieces (%ld)", pieces->get_children().size());
 	for (auto& i : pieces->get_children()) {
-		log_debug ("\t%s\t%s", SP(i->uuid), SP(i->dump()));
+		std::stringstream s;
+		s << i;
+		log_debug ("\t%s\t%s", SP(i->uuid), SP(s));
 	}
 
 	// probe leaves
@@ -683,8 +717,13 @@ LvmGroup::discover (ContainerPtr& top_level)
 	log_debug ("%ld groups", g.size());
 
 	for (auto& i : g) {
-		log_debug ("\t%s\t%s", SP(i->uuid), SP(i->dump()));
-		top_level->add_child (i, false);
+		std::stringstream s;
+		s << i;
+		log_debug ("\t%s\t%s", SP(i->uuid), SP(s));
+		if (!top_level->add_child (i, false)) {
+			log_error ("add failed");
+			break;
+		}
 	}
 }
 

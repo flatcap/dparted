@@ -126,13 +126,15 @@ std::vector<Action>
 Msdos::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.msdos", true },
+		{ "dummy.msdos", "Dummy/Msdos", me, true },
 	};
 
-	std::vector<Action> parent_actions = Table::get_actions();
+	std::vector<Action> base_actions = Table::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
@@ -236,13 +238,18 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	// m->device = new_parent->device;	//XXX only for partitions, main body should inherit
 	m->parent_offset = 0;
 
-	new_parent->add_child (m, false);
+	if (!new_parent->add_child (m, false)) {
+		log_error ("add failed");
+		Container::cancel_transaction();
+		return false;
+	}
 
 	std::vector<struct partition> vp;
 	count = m->read_table (buffer, bufsize, 0, vp);
 
 	if ((count < 0) || (vp.size() > 4)) {
 		log_debug ("partition table is corrupt");	// bugger
+		Container::cancel_transaction();
 		return false;
 	}
 
@@ -252,7 +259,11 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	res1->bytes_size    = 512;		// align (512, 1024*1024);
 	res1->bytes_used    = res1->bytes_size;
 	res1->parent_offset = 0;					// Start of the partition
-	m->add_child (res1, false);
+	if (!m->add_child (res1, false)) {
+		log_error ("add failed");
+		Container::cancel_transaction();
+		return false;
+	}
 
 	for (unsigned int i = 0; i < vp.size(); ++i) {
 		std::string s1 = get_size (le64_to_cpu (vp[i].start));
@@ -283,7 +294,11 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 
 			c->parent_offset = le64_to_cpu (vp[i].start);
 			c->device = part_name;
-			m->add_child (c, false);
+			if (!m->add_child (c, false)) {
+				log_error ("add failed");
+				Container::cancel_transaction();
+				return false;
+			}
 		} else {
 			PartitionPtr p = Partition::create();
 			p->ptype = vp[i].type;
@@ -293,7 +308,11 @@ Msdos::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 			c->parent_offset = le64_to_cpu (vp[i].start);
 			c->device = part_name;
 
-			m->add_child (c, true);
+			if (!m->add_child (c, true)) {
+				log_error ("add failed");
+				Container::cancel_transaction();
+				return false;
+			}
 		}
 	}
 

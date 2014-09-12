@@ -16,48 +16,35 @@
  * along with DParted.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _BLOCK_H_
-#define _BLOCK_H_
+#ifndef _DELETE_DIALOG_H_
+#define _DELETE_DIALOG_H_
 
-#include <memory>
-#include <string>
-#include <vector>
+#include <gtkmm/checkbutton.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/image.h>
 
-#include "container.h"
+#include "dialog.h"
 
-typedef std::shared_ptr<class Block> BlockPtr;
+typedef std::shared_ptr<class DeleteDialog> DeleteDialogPtr;
 
-/**
- * class Block - Mass storage device
- */
-class Block : public Container
+class DeleteDialog : public Dialog
 {
 public:
-	static BlockPtr create (void);
-	virtual ~Block();
+	virtual ~DeleteDialog();
 
-	Block& operator= (const Block& c);
-	Block& operator= (Block&& c);
+	static DeleteDialogPtr create (QuestionPtr q);
 
-	void swap (Block& c);
-	friend void swap (Block& lhs, Block& rhs);
-
-	virtual bool accept (Visitor& v);
-
-	virtual std::vector<Action> get_actions (void);
-	virtual bool perform_action (Action action);
-	virtual bool is_resizeable (void);
-
-public:
-	// properties
+	virtual int run (void);		// Hide Dialog::run
 
 protected:
-	Block (void);
-	Block (const Block& c);
-	Block (Block&& c);
+	DeleteDialog (QuestionPtr q);
+	virtual void response (int button_id);
 
-	virtual Block* clone (void);
+	Gtk::Grid grid;
+
+	void control_toggled (Gtk::CheckButton* check, Option& o);
 };
 
-#endif // _BLOCK_H_
+#endif // _DELETE_DIALOG_H_
 

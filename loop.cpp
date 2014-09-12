@@ -220,13 +220,16 @@ std::vector<Action>
 Loop::get_actions (void)
 {
 	LOG_TRACE;
+
+	ContainerPtr me = get_smart();
 	std::vector<Action> actions = {
-		{ "dummy.loop", true },
+		{ "delete.loop", "Delete/Loop", me, true },
+		{ "resize.loop", "Resize/Loop", me, true }
 	};
 
-	std::vector<Action> parent_actions = Block::get_actions();
+	std::vector<Action> base_actions = Block::get_actions();
 
-	actions.insert (std::end (actions), std::begin (parent_actions), std::end (parent_actions));
+	actions.insert (std::end (actions), std::begin (base_actions), std::end (base_actions));
 
 	return actions;
 }
@@ -234,8 +237,11 @@ Loop::get_actions (void)
 bool
 Loop::perform_action (Action action)
 {
-	if (action.name == "dummy.loop") {
-		log_debug ("Loop perform: %s", SP(action.name));
+	if (action.name == "delete.loop") {
+		log_error ("Loop perform: %s", SP(action.name));
+		return true;
+	} else if (action.name == "resize.loop") {
+		log_error ("Loop perform: %s", SP(action.name));
 		return true;
 	} else {
 		return Block::perform_action (action);
@@ -407,4 +413,37 @@ Loop::get_flags (void)
 	return flags;
 }
 
+
+bool
+Loop::can_delete (QuestionPtr q)
+{
+	return_val_if_fail (q, false);
+
+	if (get_count_real_children() > 1)
+		return false;
+
+	q->options.push_back ({
+		Option::Type::checkbox,
+		"delete.loop",
+		std::string ("Delete ") + get_type(),
+		get_device_name() + std::string (" : ") + file_name,
+		"0",
+		get_smart(),
+		false,
+		false,
+		-1, -1, -1, -1
+	});
+
+	ContainerPtr parent = get_parent();
+	if (parent)
+		return parent->can_delete(q);
+
+	return false;
+}
+
+bool
+Loop::is_resizeable (void)
+{
+	return true;
+}
 

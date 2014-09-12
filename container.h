@@ -36,6 +36,7 @@
 #include "log.h"
 #include "mmap.h"
 #include "property.h"
+#include "question.h"
 
 class Visitor;
 struct Action;
@@ -80,6 +81,9 @@ public:
 	virtual std::uint64_t get_parent_offset (void);
 	virtual std::uint64_t get_device_space (std::map<std::uint64_t, std::uint64_t>& spaces);
 
+	virtual bool can_delete (QuestionPtr) { return false; }
+	virtual unsigned int get_count_real_children (void);
+
 	virtual ContainerPtr find (const std::string& uuid);
 	//XXX virtual std::vector<ContainerPtr> find_incomplete (void);
 
@@ -87,6 +91,7 @@ public:
 	virtual void close_buffer (std::uint8_t* buffer, std::uint64_t size);
 
 	virtual bool is_a (const std::string& type);
+	virtual bool is_resizeable (void);
 
 	virtual std::vector<ContainerPtr>& get_children (void);
 
