@@ -651,6 +651,7 @@ Window::set_data (ContainerPtr c)
 #ifdef DP_AREA
 	drawingarea.set_data(g);
 #endif
+#ifdef DP_TEST
 	ContainerPtr d = c->get_nth_child ({0,0});
 	if (d) {
 		std::vector<Action> actions = d->get_actions();
@@ -665,6 +666,7 @@ Window::set_data (ContainerPtr c)
 		}
 		// hide();
 	}
+#endif
 }
 
 
