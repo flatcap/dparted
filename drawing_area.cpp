@@ -214,6 +214,10 @@ is_empty (const GfxContainerPtr& gfx)
 {
 	return_val_if_fail (gfx, true);
 
+#if 1
+	int children = gfx->get_container()->get_count_real_children();
+	return (children == 0);
+#else
 	int children = gfx->children.size();
 	if (children == 0)
 		return true;
@@ -226,6 +230,7 @@ is_empty (const GfxContainerPtr& gfx)
 		return true;
 
 	return false;
+#endif
 }
 
 /**

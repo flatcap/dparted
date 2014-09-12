@@ -70,6 +70,10 @@ protected:
 	// Map prop_name -> col_index, col type, align, precision, size
 	std::map<std::string, std::tuple<int, int, float, int, int>> col_list;
 
+	virtual void gfx_container_added   (const GfxContainerPtr& child);
+	virtual void gfx_container_changed (const GfxContainerPtr& after);
+	virtual void gfx_container_deleted (const GfxContainerPtr& child);
+
 private:
 	GfxContainerListenerPtr gfx_listener;
 	ThemeListenerPtr theme_listener;

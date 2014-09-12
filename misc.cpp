@@ -186,29 +186,33 @@ Misc::probe (ContainerPtr& parent, std::uint8_t* buffer, std::uint64_t bufsize)
 	// Let's not go crazy and examine the whole device:
 	bufsize = std::min (bufsize, (std::uint64_t) 102400);		// 100KiB
 
-	MiscPtr m;
+	PartitionPtr p;
 	if (is_empty (buffer, bufsize)) {
 		log_error ("probe empty");
-		m = Misc::create();
-		m->sub_type ("Zero");
+		p = Partition::create();
+		p->sub_type ("Space");
+		p->sub_type ("Unallocated");
+		// p->sub_type ("Zero");
 	} else { // if (is_random (buffer, bufsize)) {
 		log_error ("probe random");
-		m = Misc::create();
-		m->sub_type ("Random");
+		p = Partition::create();
+		p->sub_type ("Space");
+		p->sub_type ("Unallocated");
+		// p->sub_type ("Random");
 	}
 
-	if (m) {
+	if (p) {
 		ContainerPtr new_parent = Container::start_transaction (parent, "Misc: probe");
 		if (!new_parent) {
 			log_error ("misc probe failed");
 			return false;
 		}
 
-		if (new_parent->add_child (m, false)) {
-			m->bytes_size = new_parent->bytes_size;
-			m->bytes_used = 0;
-			m->parent_offset = 0;
+		p->bytes_size = new_parent->bytes_size;
+		p->bytes_used = p->bytes_size;
+		p->parent_offset = 0;
 
+		if (new_parent->add_child (p, false)) {
 			Container::commit_transaction();
 			return true;
 		} else {

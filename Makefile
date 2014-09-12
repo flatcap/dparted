@@ -20,7 +20,7 @@
 
 # Configurables
 # A=All, V=Verbose, P=Profiling, L=LogCheck, D=Debug, T=Thread
-A	?= 0
+A	?= 1
 V	?= 0
 P	?= 0
 L	?= 0
@@ -33,25 +33,25 @@ AREA	?= 1
 
 DISK	?= 0
 FILE	?= $(A)
-LOOP	?= 1
+LOOP	?= $(A)
 LVM	?= $(A)
 
-GPT	?= 1
+GPT	?= $(A)
 MSDOS	?= $(A)
 MD	?= $(A)
 LUKS	?= $(A)
 
-BTRFS	?= 1
-EXTFS	?= 1
-FS_MISC	?= 1
-NTFS	?= 1
+BTRFS	?= $(A)
+EXTFS	?= $(A)
+FS_MISC	?= $(A)
+NTFS	?= $(A)
 
 LIST	?= $(A)
 PROP	?= $(A)
 DOT	?= $(A)
 HEX	?= $(A)
 
-TEST	?= 1
+TEST	?= 0
 UNUSED	?= $(A)
 
 # ----------------------------------------------------------------------------
