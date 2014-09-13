@@ -1106,3 +1106,10 @@ test cases search for their own config, e.g. test/delete.conf
 area icons
 	config: left|right|ne|nw|se|sw
 
+App synchronise windows (menu option?, default?) => one focus
+	Window 1: click on a volume in Area
+	Window 2: select all the parts
+
+start_transaction => hourglass icon in area/tree
+	commit/cancel -> clears icon
+
