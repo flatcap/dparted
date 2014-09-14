@@ -420,7 +420,7 @@ Container::add_child (ContainerPtr child, bool probe)
 bool
 Container::delete_child (ContainerPtr UNUSED(child))
 {
-	log_code ("delete_child NOTIMPL");
+	LOG_NOTIMPL;
 	return false;
 }
 

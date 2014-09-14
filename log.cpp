@@ -116,7 +116,8 @@ log_redirect (Severity level, const char* function, const char* file, int line, 
 void
 log_redirect (Severity level, const char* function, const char* file, int line, const std::stringstream& message)
 {
-	log_redirect (level, function, file, line, SP(message));
+	std::string str = message.str();
+	log_redirect (level, function, file, line, SP(str));
 }
 
 
@@ -153,8 +154,8 @@ assertion_failure (const char* file, int line, const char* test, const char* fun
 	std::stringstream ss;
 	ss << "Backtrace:\n";
 	for (auto& i : bt) {
-		if (i.substr (0, 17) == "assertion_failure") {	// Skip me
-			continue;
+		if (i.substr (0, 17) == "assertion_failure") {		//XXX change to __FUNCTION__
+			continue;					// Skip me
 		}
 		ss << "\t" << i << "\n";
 	}

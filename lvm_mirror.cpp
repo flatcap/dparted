@@ -196,7 +196,7 @@ LvmMirror::add_child (ContainerPtr child, bool probe)
 bool
 LvmMirror::delete_child (ContainerPtr UNUSED(child))
 {
-	log_code ("delete_child NOTIMPL");
+	LOG_NOTIMPL;
 	return false;
 }
 
