@@ -1113,3 +1113,18 @@ App synchronise windows (menu option?, default?) => one focus
 start_transaction => hourglass icon in area/tree
 	commit/cancel -> clears icon
 
+logging drop escape sequences -- leave to handler
+
+return {}  vs  return nullptr
+
+hover over icon -- need simple description
+	jigsaw piece -> this is part of a volume
+
+localise menus on "delete/fs" => objects don't do English (leave to front-end)
+
+put BlockGroups in separate drawing areas? / windows?
+	complicate the gui too much?
+
+std::begin, std::end
+
+
