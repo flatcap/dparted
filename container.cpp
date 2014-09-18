@@ -1212,7 +1212,7 @@ Container::start_transaction (ContainerPtr& parent, const std::string& desc)
 	txn = Transaction::create();
 	if (!txn) {
 		mutex_write_lock.unlock();
-		return {};
+		return nullptr;
 	}
 	txn->description = desc;
 
@@ -1220,7 +1220,7 @@ Container::start_transaction (ContainerPtr& parent, const std::string& desc)
 	if (!copy) {
 		log_error ("backup failed");
 		mutex_write_lock.unlock();
-		return {};
+		return nullptr;
 	}
 
 	log_thread_start ("start transaction: %s (txn:%p)", SP(desc), VP(txn));
@@ -1297,7 +1297,7 @@ Container::backup (void)
 	}
 
 	if (!c)
-		return {};
+		return nullptr;
 
 	txn_add (NotifyType::t_change, prev, c);
 
@@ -1387,7 +1387,7 @@ Container::get_nth_child (std::initializer_list<unsigned int> route)
 
 	for (auto i : route) {
 		if (i >= c->children.size()) {
-			return {};
+			return nullptr
 		}
 
 		c = c->children[i];

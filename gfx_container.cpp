@@ -565,7 +565,7 @@ GfxContainerPtr
 GfxContainer::find (const ContainerPtr& cont)
 {
 	if (!cont)
-		return {};
+		return nullptr;
 
 	ContainerPtr c = container.lock();
 	if (c == cont)
@@ -578,14 +578,14 @@ GfxContainer::find (const ContainerPtr& cont)
 		}
 	}
 
-	return {};
+	return nullptr;
 }
 
 GfxContainerPtr
 GfxContainer::find_child (ContainerPtr search)
 {
 	if (!search)
-		return {};
+		return nullptr;
 
 	for (auto& gfx : children) {
 		ContainerPtr child = gfx->container.lock();
@@ -594,7 +594,7 @@ GfxContainer::find_child (ContainerPtr search)
 		}
 	}
 
-	return {};
+	return nullptr;
 }
 
 void

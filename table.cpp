@@ -134,7 +134,7 @@ space_create (std::uint64_t parent_offset, std::uint64_t bytes_size)
 	ContainerPtr space = Partition::create();
 	if (!space) {
 		log_error ("failed to create space");
-		return {};
+		return nullptr;
 	}
 
 	space->sub_type ("Space");
@@ -149,7 +149,7 @@ space_create (std::uint64_t parent_offset, std::uint64_t bytes_size)
 ContainerPtr
 space_join (ContainerPtr first, ContainerPtr last = {})
 {
-	return_val_if_fail (first, {});
+	return_val_if_fail (first, nullptr);
 
 	std::uint64_t size;
 	if (last) {

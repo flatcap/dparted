@@ -161,7 +161,7 @@ LvmTable::perform_action (Action action)
 std::string
 read_uuid_string (char* buffer)
 {
-	return_val_if_fail (buffer, {});
+	return_val_if_fail (buffer, nullptr);
 
 	std::string uuid ((char*) buffer, 32);
 

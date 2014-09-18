@@ -213,8 +213,8 @@ LuksTable::perform_action (Action action)
 static std::string
 read_hex (std::uint8_t* buffer, unsigned int length)
 {
-	return_val_if_fail (buffer, {});
-	return_val_if_fail (length, {});
+	return_val_if_fail (buffer, nullptr);
+	return_val_if_fail (length, nullptr);
 
 	std::stringstream ss;
 
