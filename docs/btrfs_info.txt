@@ -1,0 +1,25 @@
+
+btrfs filesystem show
+	Label: 'children'  uuid: d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+		Total devices 1 FS bytes used 52.00KiB
+		devid    1 size 1022.98MiB used 12.00MiB path /dev/loop3p1
+
+	Label: 'spanned'  uuid: e8c976b0-f35e-4935-873e-eafe58660384
+		Total devices 2 FS bytes used 32.00KiB
+		devid    1 size 1022.98MiB used 12.00MiB path /dev/loop1p1
+		devid    2 size 1022.98MiB used 0.00 path /dev/loop2p1
+
+	Label: 'simple'  uuid: 47450e0c-5518-4ea3-941b-79dbeb84204e
+		Total devices 1 FS bytes used 28.00KiB
+		devid    1 size 1022.98MiB used 12.00MiB path /dev/loop0p1
+
+	Btrfs v3.16
+
+btrfs subvolume list p
+	ID 256 gen 12 top level 5 path a_things
+	ID 257 gen 13 top level 5 path b_things
+	ID 258 gen 14 top level 5 path c_things
+
+btrfs subvolume get-default p
+	ID 5 (FS_TREE)
+
