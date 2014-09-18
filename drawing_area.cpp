@@ -1053,14 +1053,7 @@ DrawingArea::set_focus (GfxContainerPtr& gfx)
 #if 0
 	log_debug ("Actions:");
 	for (auto& a : actions) {
-		int colour;
-		if (a.enabled) {
-			colour = 32;
-		} else {
-			colour = 31;
-		}
-
-		log_debug ("\t\033[01;%dm%s\033[0m", colour, SP(a.name));
+		log_debug ("\t%s", SP(a.name));
 	}
 #endif
 

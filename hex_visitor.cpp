@@ -88,7 +88,7 @@ HexVisitor::visit (ExtendedPtr c)
 	if (!parent) {
 		std::stringstream s;
 		s << c;
-		log_hex ("\033[01;31m%s\033[0m", SP(s));
+		log_hex ("%s", SP(s));
 		return false;
 	}
 
@@ -148,7 +148,7 @@ HexVisitor::dump (ContainerPtr c, std::uint8_t* buf, std::uint64_t size)
 	} else {
 		std::stringstream s;
 		s << c;
-		log_hex ("\033[01;31m%s\033[0m", SP(s));
+		log_hex ("%s", SP(s));
 	}
 }
 
