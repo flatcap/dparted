@@ -59,7 +59,7 @@ Theme::get_colour (const std::string& name)
 	std::map<std::string, Gdk::RGBA>::iterator it;
 
 	it = colours.find (name);
-	if (it == colours.end()) {
+	if (it == std::end (colours)) {
 		c.set (name);
 	} else {
 		c = (*it).second;

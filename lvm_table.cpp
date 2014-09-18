@@ -448,7 +448,7 @@ LvmTable::set_alignment (std::uint64_t bytes)
 		children.erase (std::next(it).base());		//XXX Damned reverse iterators
 	}
 
-	ContainerPtr reserved = *children.begin();
+	ContainerPtr reserved = *std::begin (children);
 
 	//XXX validate numbers
 	std::uint64_t remainder = (bytes_size - reserved->bytes_size) % block_size;

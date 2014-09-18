@@ -370,9 +370,9 @@ LvmGroup::lvm_pvs (ContainerPtr& pieces, std::multimap<std::string, std::string>
 
 #if 0
 	// remove_if puts all the tables at the end of the vector
-	auto end = remove_if (pieces->children.begin(), pieces->children.end(), [] (ContainerPtr c) { return c->is_a ("LvmTable"); });
+	auto end = remove_if (std::begin (pieces->children), std::end (pieces->children), [] (ContainerPtr c) { return c->is_a ("LvmTable"); });
 	// then we delete them
-	pieces->children.erase (end, pieces->children.end());
+	pieces->children.erase (end, std::end (pieces->children));
 #endif
 
 	return added;

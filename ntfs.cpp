@@ -198,7 +198,7 @@ static std::string
 make_key (std::string desc)
 {
 	// Lower case
-	std::transform (desc.begin(), desc.end(), desc.begin(), ::tolower);
+	std::transform (std::begin (desc), std::end (desc), std::begin (desc), ::tolower);
 
 	// space -> underscore
 	std::size_t pos = -1;

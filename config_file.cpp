@@ -153,7 +153,7 @@ ConfigFile::get_bool (const std::string& name)
 		throw "config: " + name + "doesn't exist";
 
 	StringNum value = config[name];
-	std::transform (value.begin(), value.end(), value.begin(), ::tolower);
+	std::transform (std::begin (value), std::end (value), std::begin (value), ::tolower);
 
 	return (value == "true");
 }

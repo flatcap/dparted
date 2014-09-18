@@ -200,7 +200,7 @@ PropertiesDialog::my_show (void)
 
 	std::vector<PPtr> props (c->get_all_props());
 
-	std::sort (props.begin(), props.end(), prop_sort);
+	std::sort (std::begin (props), std::end (props), prop_sort);
 
 	int tab1 = 0;
 	int tab2 = 0;

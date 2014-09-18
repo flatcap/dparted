@@ -1230,8 +1230,8 @@ DrawingArea::setup_popup (GfxContainerPtr gfx, std::vector<Action>& actions)
 	// This is a poor temporary solution
 	std::sort (std::begin (actions), std::end (actions), [] (const Action& a, const Action& b) { return a.description < b.description; });
 
-	actions.insert (actions.begin(), { "---",        "---",        nullptr, true });
-	actions.insert (actions.begin(), { "Properties", "Properties", nullptr, true });
+	actions.insert (std::begin (actions), { "---",        "---",        nullptr, true });
+	actions.insert (std::begin (actions), { "Properties", "Properties", nullptr, true });
 
 #if 0
 	actions.push_back ({ "---",                "---",                nullptr, true });

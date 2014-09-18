@@ -173,7 +173,7 @@ LvmMirror::add_child (ContainerPtr child, bool probe)
 
 	bool inserted = false;
 
-	for (auto i = children.begin(); i != children.end(); ++i) {
+	for (auto i = std::begin (children); i != std::end (children); ++i) {
 		if ((*i)->parent_offset > child->parent_offset) {
 			children.insert (i, child);
 			inserted = true;
