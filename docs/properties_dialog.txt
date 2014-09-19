@@ -44,3 +44,15 @@ button event modifiers
 	AltGr	144
 	Win	67108944
 
+
+Configurable Properties Dialog
+	If config entry exists, display those properties, e.g.
+		"bytes_size,bytes_used,bytes_free"
+		magic entries to denote sections:
+		"Section: Size" or "[Size]"
+	else check the object for its list:
+		virtual std::vector<std::string> Container::get_property_list (void);
+		list of property names to display, with section markers
+	if there's no config and object returns {}
+		display every property
+
