@@ -1,0 +1,442 @@
+
+btrfs subvolume list -u .
+
+ID 256 gen 12 top level 5 uuid 47f5ff8c-57cd-5a4b-b8ac-8837cfb13437 path a_things
+ID 257 gen 13 top level 5 uuid 14130ec9-03f5-b746-8f21-7b91e46589f2 path b_things
+ID 258 gen 14 top level 5 uuid c28fbb49-da8e-2944-8054-7158afd60a77 path c_things
+
+btrfs-debug-tree /dev/loop3p1
+
+root tree
+node 4214784 level 1 items 2 free 119 generation 20 owner 1
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	key (EXTENT_TREE ROOT_ITEM 0) block 4222976 (1031) gen 20
+	key (ROOT_TREE_DIR DIR_ITEM 2378154706) block 4235264 (1034) gen 16
+leaf 4222976 items 9 free space 2186 generation 20 owner 1
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (EXTENT_TREE ROOT_ITEM 0) itemoff 3556 itemsize 439
+		root data bytenr 4218880 level 0 dirid 0 refs 1 gen 20
+		uuid 00000000-0000-0000-0000-000000000000
+	item 1 key (DEV_TREE ROOT_ITEM 0) itemoff 3117 itemsize 439
+		root data bytenr 4255744 level 0 dirid 0 refs 1 gen 19
+		uuid 00000000-0000-0000-0000-000000000000
+	item 2 key (FS_TREE INODE_REF 6) itemoff 3100 itemsize 17
+		inode ref index 0 namelen 7 name: default
+	item 3 key (FS_TREE ROOT_ITEM 0) itemoff 2661 itemsize 439
+		root data bytenr 4202496 level 0 dirid 256 refs 1 gen 19
+		uuid 00000000-0000-0000-0000-000000000000
+		ctransid 19 otransid 0 stransid 0 rtransid 0
+	item 4 key (FS_TREE ROOT_REF 256) itemoff 2635 itemsize 26
+		root ref key dirid 256 sequence 6 name a_things
+	item 5 key (FS_TREE ROOT_REF 257) itemoff 2609 itemsize 26
+		root ref key dirid 256 sequence 7 name b_things
+	item 6 key (FS_TREE ROOT_REF 258) itemoff 2583 itemsize 26
+		root ref key dirid 256 sequence 8 name c_things
+	item 7 key (ROOT_TREE_DIR INODE_ITEM 0) itemoff 2423 itemsize 160
+		inode generation 3 transid 0 size 0 block group 0 mode 40755 links 1
+	item 8 key (ROOT_TREE_DIR INODE_REF 6) itemoff 2411 itemsize 12
+		inode ref index 0 namelen 2 name: ..
+leaf 4235264 items 10 free space 996 generation 16 owner 1
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (ROOT_TREE_DIR DIR_ITEM 2378154706) itemoff 3958 itemsize 37
+		location key (FS_TREE ROOT_ITEM -1) type DIR
+		namelen 7 datalen 0 name: default
+	item 1 key (CSUM_TREE ROOT_ITEM 0) itemoff 3519 itemsize 439
+		root data bytenr 4227072 level 0 dirid 0 refs 1 gen 4
+		uuid 00000000-0000-0000-0000-000000000000
+	item 2 key (UUID_TREE ROOT_ITEM 0) itemoff 3080 itemsize 439
+		root data bytenr 4259840 level 0 dirid 0 refs 1 gen 10
+		uuid bba50949-d83d-4b4c-8661-b04eab8c8ca0
+	item 3 key (256 ROOT_ITEM 0) itemoff 2641 itemsize 439
+		root data bytenr 4194304 level 0 dirid 256 refs 1 gen 12
+		uuid 47f5ff8c-57cd-5a4b-b8ac-8837cfb13437
+		ctransid 12 otransid 8 stransid 0 rtransid 0
+	item 4 key (256 ROOT_BACKREF 5) itemoff 2615 itemsize 26
+		root backref key dirid 256 sequence 6 name a_things
+	item 5 key (257 ROOT_ITEM 0) itemoff 2176 itemsize 439
+		root data bytenr 4198400 level 0 dirid 256 refs 1 gen 13
+		uuid 14130ec9-03f5-b746-8f21-7b91e46589f2
+		ctransid 13 otransid 9 stransid 0 rtransid 0
+	item 6 key (257 ROOT_BACKREF 5) itemoff 2150 itemsize 26
+		root backref key dirid 256 sequence 7 name b_things
+	item 7 key (258 ROOT_ITEM 0) itemoff 1711 itemsize 439
+		root data bytenr 4247552 level 0 dirid 256 refs 1 gen 14
+		uuid c28fbb49-da8e-2944-8054-7158afd60a77
+		ctransid 14 otransid 10 stransid 0 rtransid 0
+	item 8 key (258 ROOT_BACKREF 5) itemoff 1685 itemsize 26
+		root backref key dirid 256 sequence 8 name c_things
+	item 9 key (DATA_RELOC_TREE ROOT_ITEM 0) itemoff 1246 itemsize 439
+		root data bytenr 4231168 level 0 dirid 256 refs 1 gen 4
+		uuid 00000000-0000-0000-0000-000000000000
+chunk tree
+leaf 131072 items 3 free space 3662 generation 4 owner 3
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (DEV_ITEMS DEV_ITEM 1) itemoff 3897 itemsize 98
+		dev item devid 1 total_bytes 1072672768 bytes used 12582912
+		dev uuid 8ba8a98d-bb3a-48e7-8fb3-93213b7b6347
+	item 1 key (FIRST_CHUNK_TREE CHUNK_ITEM 0) itemoff 3817 itemsize 80
+		chunk length 4194304 owner 2 type SYSTEM num_stripes 1
+			stripe 0 devid 1 offset 0
+	item 2 key (FIRST_CHUNK_TREE CHUNK_ITEM 4194304) itemoff 3737 itemsize 80
+		chunk length 8388608 owner 2 type DATA|METADATA num_stripes 1
+			stripe 0 devid 1 offset 4194304
+extent tree key (EXTENT_TREE ROOT_ITEM 0)
+leaf 4218880 items 15 free space 2909 generation 20 owner 2
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (0 BLOCK_GROUP_ITEM 4194304) itemoff 3971 itemsize 24
+		block group used 4096 chunk_objectid 256 flags SYSTEM
+	item 1 key (131072 EXTENT_ITEM 4096) itemoff 3920 itemsize 51
+		extent refs 1 gen 4 flags TREE_BLOCK
+		tree block key (DEV_ITEMS DEV_ITEM 1) level 0
+		tree block backref root 3
+	item 2 key (4194304 EXTENT_ITEM 4096) itemoff 3869 itemsize 51
+		extent refs 1 gen 12 flags TREE_BLOCK
+		tree block key (256 INODE_ITEM 0) level 0
+		tree block backref root 256
+	item 3 key (4194304 BLOCK_GROUP_ITEM 8388608) itemoff 3845 itemsize 24
+		block group used 49152 chunk_objectid 256 flags DATA|METADATA
+	item 4 key (4198400 EXTENT_ITEM 4096) itemoff 3794 itemsize 51
+		extent refs 1 gen 13 flags TREE_BLOCK
+		tree block key (256 INODE_ITEM 0) level 0
+		tree block backref root 257
+	item 5 key (4202496 EXTENT_ITEM 4096) itemoff 3743 itemsize 51
+		extent refs 1 gen 19 flags TREE_BLOCK
+		tree block key (256 INODE_ITEM 0) level 0
+		tree block backref root 5
+	item 6 key (4214784 EXTENT_ITEM 4096) itemoff 3692 itemsize 51
+		extent refs 1 gen 20 flags TREE_BLOCK
+		tree block key (EXTENT_TREE ROOT_ITEM 0) level 1
+		tree block backref root 1
+	item 7 key (4218880 EXTENT_ITEM 4096) itemoff 3641 itemsize 51
+		extent refs 1 gen 20 flags TREE_BLOCK
+		tree block key (0 BLOCK_GROUP_ITEM 4194304) level 0
+		tree block backref root 2
+	item 8 key (4222976 EXTENT_ITEM 4096) itemoff 3590 itemsize 51
+		extent refs 1 gen 20 flags TREE_BLOCK
+		tree block key (EXTENT_TREE ROOT_ITEM 0) level 0
+		tree block backref root 1
+	item 9 key (4227072 EXTENT_ITEM 4096) itemoff 3539 itemsize 51
+		extent refs 1 gen 4 flags TREE_BLOCK
+		tree block key (0 UNKNOWN.0 0) level 0
+		tree block backref root 7
+	item 10 key (4231168 EXTENT_ITEM 4096) itemoff 3488 itemsize 51
+		extent refs 1 gen 4 flags TREE_BLOCK
+		tree block key (256 INODE_ITEM 0) level 0
+		tree block backref root 18446744073709551607
+	item 11 key (4235264 EXTENT_ITEM 4096) itemoff 3437 itemsize 51
+		extent refs 1 gen 16 flags TREE_BLOCK
+		tree block key (ROOT_TREE_DIR DIR_ITEM 2378154706) level 0
+		tree block backref root 1
+	item 12 key (4247552 EXTENT_ITEM 4096) itemoff 3386 itemsize 51
+		extent refs 1 gen 14 flags TREE_BLOCK
+		tree block key (256 INODE_ITEM 0) level 0
+		tree block backref root 258
+	item 13 key (4255744 EXTENT_ITEM 4096) itemoff 3335 itemsize 51
+		extent refs 1 gen 19 flags TREE_BLOCK
+		tree block key (0 DEV_STATS_ITEM 1) level 0
+		tree block backref root 4
+	item 14 key (4259840 EXTENT_ITEM 4096) itemoff 3284 itemsize 51
+		extent refs 1 gen 10 flags TREE_BLOCK
+		tree block key (0x46b7f503c90e1314 BTRFS_UUID_KEY_SUBVOL 0xf28965e4917b218f) level 0
+		tree block backref root 9
+device tree key (DEV_TREE ROOT_ITEM 0)
+leaf 4255744 items 3 free space 3784 generation 19 owner 4
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (0 DEV_STATS_ITEM 1) itemoff 3955 itemsize 40
+		device stats
+	item 1 key (1 DEV_EXTENT 0) itemoff 3907 itemsize 48
+		dev extent chunk_tree 3
+		chunk objectid 256 chunk offset 0 length 4194304
+	item 2 key (1 DEV_EXTENT 4194304) itemoff 3859 itemsize 48
+		dev extent chunk_tree 3
+		chunk objectid 256 chunk offset 4194304 length 8388608
+fs tree key (FS_TREE ROOT_ITEM 0)
+leaf 4202496 items 14 free space 2899 generation 19 owner 5
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (256 INODE_ITEM 0) itemoff 3835 itemsize 160
+		inode generation 3 transid 19 size 56 block group 0 mode 40755 links 1
+	item 1 key (256 INODE_REF 256) itemoff 3823 itemsize 12
+		inode ref index 0 namelen 2 name: ..
+	item 2 key (256 DIR_ITEM 442118241) itemoff 3785 itemsize 38
+		location key (257 ROOT_ITEM 0) type DIR
+		namelen 8 datalen 0 name: b_things
+	item 3 key (256 DIR_ITEM 1399213382) itemoff 3747 itemsize 38
+		location key (258 ROOT_ITEM 0) type DIR
+		namelen 8 datalen 0 name: c_things
+	item 4 key (256 DIR_ITEM 3240015624) itemoff 3709 itemsize 38
+		location key (256 ROOT_ITEM 0) type DIR
+		namelen 8 datalen 0 name: a_things
+	item 5 key (256 DIR_ITEM 4214885080) itemoff 3675 itemsize 34
+		location key (257 INODE_ITEM 0) type FILE
+		namelen 4 datalen 0 name: root
+	item 6 key (256 DIR_INDEX 5) itemoff 3641 itemsize 34
+		location key (257 INODE_ITEM 0) type FILE
+		namelen 4 datalen 0 name: root
+	item 7 key (256 DIR_INDEX 6) itemoff 3603 itemsize 38
+		location key (256 ROOT_ITEM 0) type DIR
+		namelen 8 datalen 0 name: a_things
+	item 8 key (256 DIR_INDEX 7) itemoff 3565 itemsize 38
+		location key (257 ROOT_ITEM 0) type DIR
+		namelen 8 datalen 0 name: b_things
+	item 9 key (256 DIR_INDEX 8) itemoff 3527 itemsize 38
+		location key (258 ROOT_ITEM 0) type DIR
+		namelen 8 datalen 0 name: c_things
+	item 10 key (257 INODE_ITEM 0) itemoff 3367 itemsize 160
+		inode generation 14 transid 14 size 5 block group 0 mode 100644 links 1
+	item 11 key (257 INODE_REF 256) itemoff 3353 itemsize 14
+		inode ref index 5 namelen 4 name: root
+	item 12 key (257 XATTR_ITEM 3817753667) itemoff 3275 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 13 key (257 EXTENT_DATA 0) itemoff 3249 itemsize 26
+		inline extent data size 5 ram 5 compress 0
+checksum tree key (CSUM_TREE ROOT_ITEM 0)
+leaf 4227072 items 0 free space 3995 generation 4 owner 7
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+uuid tree key (UUID_TREE ROOT_ITEM 0)
+leaf 4259840 items 3 free space 3896 generation 10 owner 9
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (0x44298eda49bb8fc2 BTRFS_UUID_KEY_SUBVOL 0x770ad6af58715480) itemoff 3987 itemsize 8
+		subvol_id 258
+	item 1 key (0x46b7f503c90e1314 BTRFS_UUID_KEY_SUBVOL 0xf28965e4917b218f) itemoff 3979 itemsize 8
+		subvol_id 257
+	item 2 key (0x4b5acd578cfff547 BTRFS_UUID_KEY_SUBVOL 0x3734b1cf3788acb8) itemoff 3971 itemsize 8
+		subvol_id 256
+file tree key (256 ROOT_ITEM 0)
+leaf 4194304 items 26 free space 1741 generation 12 owner 256
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (256 INODE_ITEM 0) itemoff 3835 itemsize 160
+		inode generation 8 transid 11 size 56 block group 0 mode 40755 links 1
+	item 1 key (256 INODE_REF 256) itemoff 3823 itemsize 12
+		inode ref index 0 namelen 2 name: ..
+	item 2 key (256 DIR_ITEM 1153457908) itemoff 3786 itemsize 37
+		location key (260 INODE_ITEM 0) type FILE
+		namelen 7 datalen 0 name: archive
+	item 3 key (256 DIR_ITEM 1378200121) itemoff 3751 itemsize 35
+		location key (257 INODE_ITEM 0) type FILE
+		namelen 5 datalen 0 name: apple
+	item 4 key (256 DIR_ITEM 1700735264) itemoff 3713 itemsize 38
+		location key (259 INODE_ITEM 0) type FILE
+		namelen 8 datalen 0 name: antelope
+	item 5 key (256 DIR_ITEM 2774870691) itemoff 3675 itemsize 38
+		location key (258 INODE_ITEM 0) type FILE
+		namelen 8 datalen 0 name: aardvark
+	item 6 key (256 DIR_INDEX 2) itemoff 3640 itemsize 35
+		location key (257 INODE_ITEM 0) type FILE
+		namelen 5 datalen 0 name: apple
+	item 7 key (256 DIR_INDEX 3) itemoff 3602 itemsize 38
+		location key (258 INODE_ITEM 0) type FILE
+		namelen 8 datalen 0 name: aardvark
+	item 8 key (256 DIR_INDEX 4) itemoff 3564 itemsize 38
+		location key (259 INODE_ITEM 0) type FILE
+		namelen 8 datalen 0 name: antelope
+	item 9 key (256 DIR_INDEX 5) itemoff 3527 itemsize 37
+		location key (260 INODE_ITEM 0) type FILE
+		namelen 7 datalen 0 name: archive
+	item 10 key (257 INODE_ITEM 0) itemoff 3367 itemsize 160
+		inode generation 11 transid 12 size 6 block group 0 mode 100644 links 1
+	item 11 key (257 INODE_REF 256) itemoff 3352 itemsize 15
+		inode ref index 2 namelen 5 name: apple
+	item 12 key (257 XATTR_ITEM 3817753667) itemoff 3274 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 13 key (257 EXTENT_DATA 0) itemoff 3247 itemsize 27
+		inline extent data size 6 ram 6 compress 0
+	item 14 key (258 INODE_ITEM 0) itemoff 3087 itemsize 160
+		inode generation 11 transid 12 size 9 block group 0 mode 100644 links 1
+	item 15 key (258 INODE_REF 256) itemoff 3069 itemsize 18
+		inode ref index 3 namelen 8 name: aardvark
+	item 16 key (258 XATTR_ITEM 3817753667) itemoff 2991 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 17 key (258 EXTENT_DATA 0) itemoff 2961 itemsize 30
+		inline extent data size 9 ram 9 compress 0
+	item 18 key (259 INODE_ITEM 0) itemoff 2801 itemsize 160
+		inode generation 11 transid 12 size 9 block group 0 mode 100644 links 1
+	item 19 key (259 INODE_REF 256) itemoff 2783 itemsize 18
+		inode ref index 4 namelen 8 name: antelope
+	item 20 key (259 XATTR_ITEM 3817753667) itemoff 2705 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 21 key (259 EXTENT_DATA 0) itemoff 2675 itemsize 30
+		inline extent data size 9 ram 9 compress 0
+	item 22 key (260 INODE_ITEM 0) itemoff 2515 itemsize 160
+		inode generation 11 transid 12 size 8 block group 0 mode 100644 links 1
+	item 23 key (260 INODE_REF 256) itemoff 2498 itemsize 17
+		inode ref index 5 namelen 7 name: archive
+	item 24 key (260 XATTR_ITEM 3817753667) itemoff 2420 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 25 key (260 EXTENT_DATA 0) itemoff 2391 itemsize 29
+		inline extent data size 8 ram 8 compress 0
+file tree key (257 ROOT_ITEM 0)
+leaf 4198400 items 26 free space 1761 generation 13 owner 257
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (256 INODE_ITEM 0) itemoff 3835 itemsize 160
+		inode generation 9 transid 12 size 46 block group 0 mode 40755 links 1
+	item 1 key (256 INODE_REF 256) itemoff 3823 itemsize 12
+		inode ref index 0 namelen 2 name: ..
+	item 2 key (256 DIR_ITEM 695845178) itemoff 3787 itemsize 36
+		location key (257 INODE_ITEM 0) type FILE
+		namelen 6 datalen 0 name: banana
+	item 3 key (256 DIR_ITEM 1060712767) itemoff 3750 itemsize 37
+		location key (258 INODE_ITEM 0) type FILE
+		namelen 7 datalen 0 name: bulldog
+	item 4 key (256 DIR_ITEM 1296443176) itemoff 3713 itemsize 37
+		location key (259 INODE_ITEM 0) type FILE
+		namelen 7 datalen 0 name: bernard
+	item 5 key (256 DIR_ITEM 2435053606) itemoff 3680 itemsize 33
+		location key (260 INODE_ITEM 0) type FILE
+		namelen 3 datalen 0 name: bow
+	item 6 key (256 DIR_INDEX 2) itemoff 3644 itemsize 36
+		location key (257 INODE_ITEM 0) type FILE
+		namelen 6 datalen 0 name: banana
+	item 7 key (256 DIR_INDEX 3) itemoff 3607 itemsize 37
+		location key (258 INODE_ITEM 0) type FILE
+		namelen 7 datalen 0 name: bulldog
+	item 8 key (256 DIR_INDEX 4) itemoff 3570 itemsize 37
+		location key (259 INODE_ITEM 0) type FILE
+		namelen 7 datalen 0 name: bernard
+	item 9 key (256 DIR_INDEX 5) itemoff 3537 itemsize 33
+		location key (260 INODE_ITEM 0) type FILE
+		namelen 3 datalen 0 name: bow
+	item 10 key (257 INODE_ITEM 0) itemoff 3377 itemsize 160
+		inode generation 12 transid 13 size 7 block group 0 mode 100644 links 1
+	item 11 key (257 INODE_REF 256) itemoff 3361 itemsize 16
+		inode ref index 2 namelen 6 name: banana
+	item 12 key (257 XATTR_ITEM 3817753667) itemoff 3283 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 13 key (257 EXTENT_DATA 0) itemoff 3255 itemsize 28
+		inline extent data size 7 ram 7 compress 0
+	item 14 key (258 INODE_ITEM 0) itemoff 3095 itemsize 160
+		inode generation 12 transid 13 size 8 block group 0 mode 100644 links 1
+	item 15 key (258 INODE_REF 256) itemoff 3078 itemsize 17
+		inode ref index 3 namelen 7 name: bulldog
+	item 16 key (258 XATTR_ITEM 3817753667) itemoff 3000 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 17 key (258 EXTENT_DATA 0) itemoff 2971 itemsize 29
+		inline extent data size 8 ram 8 compress 0
+	item 18 key (259 INODE_ITEM 0) itemoff 2811 itemsize 160
+		inode generation 12 transid 13 size 8 block group 0 mode 100644 links 1
+	item 19 key (259 INODE_REF 256) itemoff 2794 itemsize 17
+		inode ref index 4 namelen 7 name: bernard
+	item 20 key (259 XATTR_ITEM 3817753667) itemoff 2716 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 21 key (259 EXTENT_DATA 0) itemoff 2687 itemsize 29
+		inline extent data size 8 ram 8 compress 0
+	item 22 key (260 INODE_ITEM 0) itemoff 2527 itemsize 160
+		inode generation 12 transid 13 size 4 block group 0 mode 100644 links 1
+	item 23 key (260 INODE_REF 256) itemoff 2514 itemsize 13
+		inode ref index 5 namelen 3 name: bow
+	item 24 key (260 XATTR_ITEM 3817753667) itemoff 2436 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 25 key (260 EXTENT_DATA 0) itemoff 2411 itemsize 25
+		inline extent data size 4 ram 4 compress 0
+file tree key (258 ROOT_ITEM 0)
+leaf 4247552 items 26 free space 1753 generation 14 owner 258
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (256 INODE_ITEM 0) itemoff 3835 itemsize 160
+		inode generation 10 transid 14 size 50 block group 0 mode 40755 links 1
+	item 1 key (256 INODE_REF 256) itemoff 3823 itemsize 12
+		inode ref index 0 namelen 2 name: ..
+	item 2 key (256 DIR_ITEM 1124685181) itemoff 3787 itemsize 36
+		location key (257 INODE_ITEM 0) type FILE
+		namelen 6 datalen 0 name: cherry
+	item 3 key (256 DIR_ITEM 1675260975) itemoff 3748 itemsize 39
+		location key (258 INODE_ITEM 0) type FILE
+		namelen 9 datalen 0 name: carnivore
+	item 4 key (256 DIR_ITEM 2374311447) itemoff 3713 itemsize 35
+		location key (259 INODE_ITEM 0) type FILE
+		namelen 5 datalen 0 name: chunk
+	item 5 key (256 DIR_ITEM 3084018923) itemoff 3678 itemsize 35
+		location key (260 INODE_ITEM 0) type FILE
+		namelen 5 datalen 0 name: cured
+	item 6 key (256 DIR_INDEX 2) itemoff 3642 itemsize 36
+		location key (257 INODE_ITEM 0) type FILE
+		namelen 6 datalen 0 name: cherry
+	item 7 key (256 DIR_INDEX 3) itemoff 3603 itemsize 39
+		location key (258 INODE_ITEM 0) type FILE
+		namelen 9 datalen 0 name: carnivore
+	item 8 key (256 DIR_INDEX 4) itemoff 3568 itemsize 35
+		location key (259 INODE_ITEM 0) type FILE
+		namelen 5 datalen 0 name: chunk
+	item 9 key (256 DIR_INDEX 5) itemoff 3533 itemsize 35
+		location key (260 INODE_ITEM 0) type FILE
+		namelen 5 datalen 0 name: cured
+	item 10 key (257 INODE_ITEM 0) itemoff 3373 itemsize 160
+		inode generation 14 transid 14 size 7 block group 0 mode 100644 links 1
+	item 11 key (257 INODE_REF 256) itemoff 3357 itemsize 16
+		inode ref index 2 namelen 6 name: cherry
+	item 12 key (257 XATTR_ITEM 3817753667) itemoff 3279 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 13 key (257 EXTENT_DATA 0) itemoff 3251 itemsize 28
+		inline extent data size 7 ram 7 compress 0
+	item 14 key (258 INODE_ITEM 0) itemoff 3091 itemsize 160
+		inode generation 14 transid 14 size 10 block group 0 mode 100644 links 1
+	item 15 key (258 INODE_REF 256) itemoff 3072 itemsize 19
+		inode ref index 3 namelen 9 name: carnivore
+	item 16 key (258 XATTR_ITEM 3817753667) itemoff 2994 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 17 key (258 EXTENT_DATA 0) itemoff 2963 itemsize 31
+		inline extent data size 10 ram 10 compress 0
+	item 18 key (259 INODE_ITEM 0) itemoff 2803 itemsize 160
+		inode generation 14 transid 14 size 6 block group 0 mode 100644 links 1
+	item 19 key (259 INODE_REF 256) itemoff 2788 itemsize 15
+		inode ref index 4 namelen 5 name: chunk
+	item 20 key (259 XATTR_ITEM 3817753667) itemoff 2710 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 21 key (259 EXTENT_DATA 0) itemoff 2683 itemsize 27
+		inline extent data size 6 ram 6 compress 0
+	item 22 key (260 INODE_ITEM 0) itemoff 2523 itemsize 160
+		inode generation 14 transid 14 size 6 block group 0 mode 100644 links 1
+	item 23 key (260 INODE_REF 256) itemoff 2508 itemsize 15
+		inode ref index 5 namelen 5 name: cured
+	item 24 key (260 XATTR_ITEM 3817753667) itemoff 2430 itemsize 78
+		location key (0 UNKNOWN.0 0) type XATTR
+		namelen 16 datalen 32 name: security.selinux
+		data unconfined_u:object_r:file_t:s0
+	item 25 key (260 EXTENT_DATA 0) itemoff 2403 itemsize 27
+		inline extent data size 6 ram 6 compress 0
+data reloc tree key (DATA_RELOC_TREE ROOT_ITEM 0)
+leaf 4231168 items 2 free space 3773 generation 4 owner 18446744073709551607
+fs uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+chunk uuid d965a9c4-20e2-4692-8c1c-ec6006f703e2
+	item 0 key (256 INODE_ITEM 0) itemoff 3835 itemsize 160
+		inode generation 3 transid 0 size 0 block group 0 mode 40755 links 1
+	item 1 key (256 INODE_REF 256) itemoff 3823 itemsize 12
+		inode ref index 0 namelen 2 name: ..
+total bytes 1072672768
+bytes used 53248
+uuid d2fdb320-ecf6-4b8b-8d92-7ce428318df4
+Btrfs v3.16
