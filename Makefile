@@ -57,6 +57,7 @@ UNUSED	?= $(A)
 # ----------------------------------------------------------------------------
 
 CXX	?= g++
+LN	= ln -s
 RM	= rm -fr
 MKDIR	= mkdir -p
 
@@ -220,6 +221,7 @@ Q	:= @
 endif
 QUIET_CC      = $(Q:@=@echo 'CC      '$<;)
 QUIET_LINK    = $(Q:@=@echo 'LD      '$@;)
+QUIET_LN      = $(Q:@=@echo 'LN      '$@;)
 QUIET_TAGS    = $(Q:@=@echo 'TAGS    '$@;)
 
 ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
@@ -268,7 +270,7 @@ xxx:
 links:	$(LINKS)
 
 $(LINKS):
-	ln -s ../dparted-$@ $@
+	$(QUIET_LN)$(LN) ../dparted-$@ $@
 
 clean c:
 	$(Q)$(RM) $(OUT) $(OBJ) gmon.out *.gcov
