@@ -1129,3 +1129,13 @@ std::begin, std::end
 
 make branches, make links, disable cd {branch}?
 
+kpartx to mount vmdk images, etc?
+qemu-nbd for qcow2
+libguestfs
+
+/usr/bin/on_ac_power
+
+LvmTable space:unclaimed?
+
+multi-VG test case, all mixed up
+
