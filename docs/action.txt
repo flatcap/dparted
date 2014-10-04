@@ -1,0 +1,13 @@
+Action:
+	Delete fs, part, gpt, loop (with objects)
+
+foreach
+	object -> perform action (action str)
+
+virtual perform_action
+
+=>	fs   -> perform_action (delete)		=>	extfs::wipe_signature()
+	part -> perform_action (delete)		=>	gpt_part -> gpt::del_child()
+	gpt  -> perform_action (delete)		=>	gpt::wipe_signature()
+	loop -> perform_action (delete)		=>	loop_detach(); rm file
+

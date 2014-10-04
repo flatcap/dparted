@@ -1139,3 +1139,28 @@ LvmTable space:unclaimed?
 
 multi-VG test case, all mixed up
 
+Action has weak ptr -- could go away -- unlikely
+Object could go into the past
+=> start_txn needs to ensure object is CURRENT
+i.e. get_top_level() matches timeline->get_top_level()
+
+right-click on area/fs
+area/gfx/cont -> get_actions (ext4)
+ext4 & base actions (ext4, fs, container)
+parent^ actions (part, table, block)
+
+Action
+	name, desc, enabled, uniq_id, obj?
+	what's used for menu? "Delete/Filesystem"
+
+Click on del/fs
+perform_action (del/fs)
+action is immediate => do it
+not immediate => spawn dialog
+
+Menu: Delete/Filesystem
+name: del.fs.start or del.fs.dlg
+
+perform_action (del.fs.dlg) => dlg
+perform_action (del.fs) => immediate txn
+
