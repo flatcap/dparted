@@ -1,0 +1,27 @@
+TITLE: Delete Dialog
+
+ICON	PRIMARY: Delete filesystem on /dev/sda3?
+ICON	SECONDARY: You will lose 56GB of data.
+ICON
+	OPTIONS normal:
+		[X] Delete filesystem	(ext4 : "Home")
+		[X] Delete partition	(/dev/sda3)
+	Options advanced:
+		[ ] Delete Gpt		(GUID Partition Table)
+		[ ] Delete Loop		(/dev/loop0 : /mnt/space/jim)
+
+	BUTTONS:
+		[Help] [Cancel] [Delete]
+
+
+Name			Default
+-----------------------------------------------
+Title			Delete
+Primary			Delete this object
+Secondary		-
+Icon			delete icon
+Help			-
+Buttons			{Help}, Cancel, Delete
+Options normal		-
+Options advanced	-
+

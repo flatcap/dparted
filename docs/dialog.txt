@@ -1,0 +1,23 @@
+Options
+	Radio
+	Tickbox
+	Entry
+	Password
+	Label
+	Text1
+	TextN (how many lines?)
+
+size min
+size max
+numeric
+read-only / read-write
+
+Option
+	Type
+	name (internal)
+	description (for user); notes?
+	value
+	object (container ptr)
+	read-only?
+	advanced?
+
