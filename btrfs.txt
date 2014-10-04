@@ -1,0 +1,17 @@
+btrfs test cases
+
+fs, volume, subvols
+
+subvols are children
+icon in area, children in tree
+need to be creative with sizes/used totals
+
+what's different between test cases 1 & 2?
+which tree does test2/fs appear in?
+	normal -> fs
+	volume -> fs*n
+
+subclass volume as BtrfsVolume AND Btrfs?
+subclass subvol as BtrfsPartition AND Btrfs?
+	BtrfsPartial?
+
