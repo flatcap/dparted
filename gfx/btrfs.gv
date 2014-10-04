@@ -1,0 +1,121 @@
+digraph btrfs {
+	graph [
+		rankdir="TB"
+		bgcolor="white"
+		color="white"
+		nodesep="0.1"
+		ranksep="0.5"
+		labelloc="t"
+		label=<Btrfs Test Cases>
+	];
+
+	node [
+		fontsize="12"
+		style="solid"
+		width="0.3"
+		height="0.3"
+		fixedsize="true"
+		penwidth="1.0"
+		color="#DDDDDD"
+	];
+
+	edge [
+		penwidth="0.3"
+		color="#666666"
+		arrowsize="0.5"
+	];
+
+
+	subgraph cluster1 {
+		color=transparent;
+		labelloc="t"
+		label=""
+
+		a_D1 [ label=<D<SUB>1</SUB>> ];
+		a_T1 [ label=<T<SUB>1</SUB>> ];
+		a_P1 [ label=<P<SUB>1</SUB>> ];
+		a_F1 [ label=<F<SUB>1</SUB>> ];
+
+		a_D1 -> a_T1;
+		a_T1 -> a_P1;
+		a_P1 -> a_F1;
+	}
+
+	subgraph cluster2 {
+		color=transparent;
+		labelloc="t"
+		label=""
+
+		b_D2 [ label=<D<SUB>2</SUB>> ];
+		b_T2 [ label=<T<SUB>2</SUB>> ];
+		b_P2 [ label=<P<SUB>2</SUB>> ];
+		b_F1 [ label=<F<SUB>1</SUB>> ];
+
+		b_D1 [ label=<D<SUB>1</SUB>> ];
+		b_T1 [ label=<T<SUB>1</SUB>> ];
+		b_P1 [ label=<P<SUB>1</SUB>> ];
+
+		b_D2 -> b_T2;
+		b_T2 -> b_P2;
+		b_P2 -> b_F1;
+
+		b_D1 -> b_T1;
+		b_T1 -> b_P1;
+		b_P1 -> b_F1;
+	}
+
+	subgraph cluster3 {
+		color=transparent;
+		labelloc="t"
+		label=""
+
+		c_D1 [ label=<D<SUB>1</SUB>> ];
+		c_T1 [ label=<T<SUB>1</SUB>> ];
+		c_P1 [ label=<P<SUB>1</SUB>> ];
+		c_F1 [ label=<F<SUB>1</SUB>> ];
+		c_S1 [ label=<S<SUB>1</SUB>> ];
+		c_S2 [ label=<S<SUB>2</SUB>> ];
+		c_S3 [ label=<S<SUB>3</SUB>> ];
+
+		c_D1 -> c_T1;
+		c_T1 -> c_P1;
+		c_P1 -> c_F1;
+
+		c_F1 -> c_S1;
+		c_F1 -> c_S2;
+		c_F1 -> c_S3;
+	}
+
+	subgraph cluster4 {
+		color=transparent;
+		labelloc="t"
+		label=""
+
+		d_D2 [ label=<D<SUB>2</SUB>> ];
+		d_T2 [ label=<T<SUB>2</SUB>> ];
+		d_P2 [ label=<P<SUB>2</SUB>> ];
+		d_F1 [ label=<F<SUB>1</SUB>> ];
+
+		d_D1 [ label=<D<SUB>1</SUB>> ];
+		d_T1 [ label=<T<SUB>1</SUB>> ];
+		d_P1 [ label=<P<SUB>1</SUB>> ];
+
+		d_S1 [ label=<S<SUB>1</SUB>> ];
+		d_S2 [ label=<S<SUB>2</SUB>> ];
+		d_S3 [ label=<S<SUB>3</SUB>> ];
+
+		d_D2 -> d_T2;
+		d_T2 -> d_P2;
+		d_P2 -> d_F1;
+
+		d_D1 -> d_T1;
+		d_T1 -> d_P1;
+		d_P1 -> d_F1;
+
+		d_F1 -> d_S1;
+		d_F1 -> d_S2;
+		d_F1 -> d_S3;
+	}
+
+}
+
