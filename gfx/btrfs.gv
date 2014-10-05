@@ -7,16 +7,18 @@ digraph btrfs {
 		ranksep="0.5"
 		labelloc="t"
 		label=<Btrfs Test Cases>
+		compound=true;
 	];
 
 	node [
 		fontsize="12"
-		style="solid"
+		style="filled"
 		width="0.3"
 		height="0.3"
 		fixedsize="true"
 		penwidth="1.0"
 		color="#DDDDDD"
+		fillcolor="#ffffc0"
 	];
 
 	edge [
@@ -31,10 +33,17 @@ digraph btrfs {
 		labelloc="t"
 		label=""
 
-		a_D1 [ label=<D<SUB>1</SUB>> ];
-		a_T1 [ label=<T<SUB>1</SUB>> ];
-		a_P1 [ label=<P<SUB>1</SUB>> ];
-		a_F1 [ label=<F<SUB>1</SUB>> ];
+		a_D1 [ label=<D<SUB>1</SUB>> fillcolor="#FFB6C1" ];
+		a_T1 [ label=<T<SUB>1</SUB>> fillcolor="#FFFFCC" ];
+		a_P1 [ label=<P<SUB>1</SUB>> fillcolor="#B0D0B0" ];
+
+		subgraph cluster11 {
+			color="#B4A0F3";
+			labelloc="t"
+			label=""
+
+			a_F1 [ label=<F<SUB>1</SUB>> fillcolor="#B4A0F3" ];
+		}
 
 		a_D1 -> a_T1;
 		a_T1 -> a_P1;
@@ -46,22 +55,30 @@ digraph btrfs {
 		labelloc="t"
 		label=""
 
-		b_D2 [ label=<D<SUB>2</SUB>> ];
-		b_T2 [ label=<T<SUB>2</SUB>> ];
-		b_P2 [ label=<P<SUB>2</SUB>> ];
-		b_F1 [ label=<F<SUB>1</SUB>> ];
+		b_D3 [ label=<D<SUB>3</SUB>> fillcolor="#FFB6C1" ];
+		b_T3 [ label=<T<SUB>3</SUB>> fillcolor="#FFFFCC" ];
+		b_P3 [ label=<P<SUB>3</SUB>> fillcolor="#B0D0B0" ];
 
-		b_D1 [ label=<D<SUB>1</SUB>> ];
-		b_T1 [ label=<T<SUB>1</SUB>> ];
-		b_P1 [ label=<P<SUB>1</SUB>> ];
+		b_D2 [ label=<D<SUB>2</SUB>> fillcolor="#FFB6C1" ];
+		b_T2 [ label=<T<SUB>2</SUB>> fillcolor="#FFFFCC" ];
+		b_P2 [ label=<P<SUB>2</SUB>> fillcolor="#B0D0B0" ];
+
+		subgraph cluster21 {
+			color="#B4A0F3";
+			labelloc="t"
+			label=""
+
+			b_F2 [ label=<F<SUB>2</SUB>> fillcolor="#B4A0F3" ];
+			b_F3 [ label=<F<SUB>3</SUB>> fillcolor="#B4A0F3" ];
+		}
+
+		b_D3 -> b_T3;
+		b_T3 -> b_P3;
+		b_P3 -> b_F3;
 
 		b_D2 -> b_T2;
 		b_T2 -> b_P2;
-		b_P2 -> b_F1;
-
-		b_D1 -> b_T1;
-		b_T1 -> b_P1;
-		b_P1 -> b_F1;
+		b_P2 -> b_F2;
 	}
 
 	subgraph cluster3 {
@@ -69,21 +86,29 @@ digraph btrfs {
 		labelloc="t"
 		label=""
 
-		c_D1 [ label=<D<SUB>1</SUB>> ];
-		c_T1 [ label=<T<SUB>1</SUB>> ];
-		c_P1 [ label=<P<SUB>1</SUB>> ];
-		c_F1 [ label=<F<SUB>1</SUB>> ];
-		c_S1 [ label=<S<SUB>1</SUB>> ];
-		c_S2 [ label=<S<SUB>2</SUB>> ];
-		c_S3 [ label=<S<SUB>3</SUB>> ];
+		c_D4 [ label=<D<SUB>4</SUB>> fillcolor="#FFB6C1" ];
+		c_P4 [ label=<P<SUB>4</SUB>> fillcolor="#B0D0B0" ];
+		c_S1 [ label=<S<SUB>1</SUB>> fillcolor="#2BDCFF" ];
+		c_S2 [ label=<S<SUB>2</SUB>> fillcolor="#2BDCFF" ];
+		c_S3 [ label=<S<SUB>3</SUB>> fillcolor="#2BDCFF" ];
+		c_T4 [ label=<T<SUB>4</SUB>> fillcolor="#FFFFCC" ];
 
-		c_D1 -> c_T1;
-		c_T1 -> c_P1;
-		c_P1 -> c_F1;
+		subgraph cluster31 {
+			color="#B4A0F3";
+			labelloc="t"
+			label=""
 
-		c_F1 -> c_S1;
-		c_F1 -> c_S2;
-		c_F1 -> c_S3;
+			c_F4 [ label=<F<SUB>4</SUB>> fillcolor="#B4A0F3" ];
+		}
+
+		c_D4 -> c_T4;
+		c_T4 -> c_P4;
+		c_P4 -> c_F4;
+
+		c_F4 -> c_S1 [ ltail=cluster31 ];
+		c_F4 -> c_S2 [ ltail=cluster31 ];
+		c_F4 -> c_S3 [ ltail=cluster31 ];
+
 	}
 
 	subgraph cluster4 {
@@ -91,31 +116,38 @@ digraph btrfs {
 		labelloc="t"
 		label=""
 
-		d_D2 [ label=<D<SUB>2</SUB>> ];
-		d_T2 [ label=<T<SUB>2</SUB>> ];
-		d_P2 [ label=<P<SUB>2</SUB>> ];
-		d_F1 [ label=<F<SUB>1</SUB>> ];
+		d_D6 [ label=<D<SUB>6</SUB>> fillcolor="#FFB6C1" ];
+		d_T6 [ label=<T<SUB>6</SUB>> fillcolor="#FFFFCC" ];
+		d_P6 [ label=<P<SUB>6</SUB>> fillcolor="#B0D0B0" ];
 
-		d_D1 [ label=<D<SUB>1</SUB>> ];
-		d_T1 [ label=<T<SUB>1</SUB>> ];
-		d_P1 [ label=<P<SUB>1</SUB>> ];
+		d_D5 [ label=<D<SUB>5</SUB>> fillcolor="#FFB6C1" ];
+		d_T5 [ label=<T<SUB>5</SUB>> fillcolor="#FFFFCC" ];
+		d_P5 [ label=<P<SUB>5</SUB>> fillcolor="#B0D0B0" ];
 
-		d_S1 [ label=<S<SUB>1</SUB>> ];
-		d_S2 [ label=<S<SUB>2</SUB>> ];
-		d_S3 [ label=<S<SUB>3</SUB>> ];
+		d_S4 [ label=<S<SUB>4</SUB>> fillcolor="#2BDCFF" ];
+		d_S5 [ label=<S<SUB>5</SUB>> fillcolor="#2BDCFF" ];
+		d_S6 [ label=<S<SUB>6</SUB>> fillcolor="#2BDCFF" ];
 
-		d_D2 -> d_T2;
-		d_T2 -> d_P2;
-		d_P2 -> d_F1;
+		subgraph cluster41 {
+			color="#B4A0F3";
+			labelloc="t"
+			label=""
 
-		d_D1 -> d_T1;
-		d_T1 -> d_P1;
-		d_P1 -> d_F1;
+			d_F5 [ label=<F<SUB>5</SUB>> fillcolor="#B4A0F3" ];
+			d_F6 [ label=<F<SUB>6</SUB>> fillcolor="#B4A0F3" ];
+		}
 
-		d_F1 -> d_S1;
-		d_F1 -> d_S2;
-		d_F1 -> d_S3;
+		d_D6 -> d_T6;
+		d_T6 -> d_P6;
+		d_P6 -> d_F6;
+
+		d_D5 -> d_T5;
+		d_T5 -> d_P5;
+		d_P5 -> d_F5;
+
+		d_F5 -> d_S4 [ ltail=cluster41 ];
+		d_F5 -> d_S5 [ ltail=cluster41 ];
+		d_F5 -> d_S6 [ ltail=cluster41 ];
 	}
-
 }
 
