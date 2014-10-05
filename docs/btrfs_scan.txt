@@ -1,0 +1,54 @@
+Btrfs Test Cases
+
+----------------------------------------------
+Test 1
+	Identify
+		F1: piece 1/1: Btrfs, BtrfsVol
+
+	Find all BtrfsPart
+		none
+
+	Find all BtrfsVol
+		F1: Subvols
+			none
+
+----------------------------------------------
+Test 2
+	Identify
+		F2: piece 1/2: Btrfs, BtrfsPart
+		F3: piece 2/2: Btrfs, BtrfsPart
+
+	Find all BtrfsPart
+		F2, F3: BtrfsVol
+
+----------------------------------------------
+Test 3
+	Identify
+		F4: piece 1/1: Btrfs, BtrfsVol
+
+	Find all BtrfsPart
+		none
+
+	Find all BtrfsVol
+		F4: Subvols
+			S1: Btrfs, BtrfsSubVol
+			S2: Btrfs, BtrfsSubVol
+			S3: Btrfs, BtrfsSubVol
+
+----------------------------------------------
+Test 4
+	Identify
+		F5: piece 1/2: Btrfs, BtrfsPart
+		F6: piece 2/2: Btrfs, BtrfsPart
+
+	Find all BtrfsPart
+		F5, F6: BtrfsVol
+
+	Find all BtrfsVol
+		F5, F6: Subvols
+			S4: Btrfs, BtrfsSubVol
+			S5: Btrfs, BtrfsSubVol
+			S6: Btrfs, BtrfsSubVol
+
+----------------------------------------------
+

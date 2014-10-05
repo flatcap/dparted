@@ -29,13 +29,14 @@ digraph btrfs {
 
 
 	subgraph cluster1 {
-		color=transparent;
+		color="#f0f0f0";
 		labelloc="t"
-		label=""
+		label="Test 1"
 
 		a_D1 [ label=<D<SUB>1</SUB>> fillcolor="#FFB6C1" ];
 		a_T1 [ label=<T<SUB>1</SUB>> fillcolor="#FFFFCC" ];
 		a_P1 [ label=<P<SUB>1</SUB>> fillcolor="#B0D0B0" ];
+		a_S1 [ style=invis ];
 
 		subgraph cluster11 {
 			color="#B4A0F3";
@@ -48,12 +49,13 @@ digraph btrfs {
 		a_D1 -> a_T1;
 		a_T1 -> a_P1;
 		a_P1 -> a_F1;
+		a_F1 -> a_S1 [ style=invis ];
 	}
 
 	subgraph cluster2 {
-		color=transparent;
+		color="#f0f0f0";
 		labelloc="t"
-		label=""
+		label="Test 2"
 
 		b_D3 [ label=<D<SUB>3</SUB>> fillcolor="#FFB6C1" ];
 		b_T3 [ label=<T<SUB>3</SUB>> fillcolor="#FFFFCC" ];
@@ -62,6 +64,7 @@ digraph btrfs {
 		b_D2 [ label=<D<SUB>2</SUB>> fillcolor="#FFB6C1" ];
 		b_T2 [ label=<T<SUB>2</SUB>> fillcolor="#FFFFCC" ];
 		b_P2 [ label=<P<SUB>2</SUB>> fillcolor="#B0D0B0" ];
+		b_S2 [ style=invis ];
 
 		subgraph cluster21 {
 			color="#B4A0F3";
@@ -79,12 +82,13 @@ digraph btrfs {
 		b_D2 -> b_T2;
 		b_T2 -> b_P2;
 		b_P2 -> b_F2;
+		b_F2 -> b_S2 [ style=invis ];
 	}
 
 	subgraph cluster3 {
-		color=transparent;
+		color="#f0f0f0";
 		labelloc="t"
-		label=""
+		label="Test 3"
 
 		c_D4 [ label=<D<SUB>4</SUB>> fillcolor="#FFB6C1" ];
 		c_P4 [ label=<P<SUB>4</SUB>> fillcolor="#B0D0B0" ];
@@ -112,9 +116,9 @@ digraph btrfs {
 	}
 
 	subgraph cluster4 {
-		color=transparent;
+		color="#f0f0f0";
 		labelloc="t"
-		label=""
+		label="Test 4"
 
 		d_D6 [ label=<D<SUB>6</SUB>> fillcolor="#FFB6C1" ];
 		d_T6 [ label=<T<SUB>6</SUB>> fillcolor="#FFFFCC" ];
