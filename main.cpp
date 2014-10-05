@@ -20,6 +20,9 @@
 #include <ctime>
 #include <functional>
 
+#include <unistd.h>
+#include <sys/types.h>
+
 #ifdef DP_GUI
 #include "gui_app.h"
 #else
