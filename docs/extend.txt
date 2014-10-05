@@ -1,0 +1,76 @@
+
+How do I extend:
+	Disk1:	Luks, Lvm, Fs
+	Disk2:	Space
+
+Click on space:
+	Create table
+	Extend Lvm, fs
+
+Click on fs
+	Delete fs ([X] part, [X] lvm?)
+	Resize fs
+		shrink  ([X] part, [X] lvm, [X] luks?)
+		enlarge ([X] part, [X] lvm, [X] luks?)
+
+Which object do I extend if there are multiple possibilities?
+
+Who decides what get expanded/shrunk by default?
+	Most likely luks will be full
+	If lvm isn't full, don't offer to resize it (unless explicitly clicked on)
+	if lvm is full, offer resize (check of parent is luks -- what else might need it?)
+		if parent is luks ([X] encrypt new disk as well)
+			enabled  => (Disk1 luks, lvm..., D2 luks, lvm...)
+			disabled => (Disk1 luks, lvm..., D2 lvm...)
+				strange, but allowed
+
+---------------------------------------------------------------------
+
+How do I extend:
+	[ Disk1: Loop, Gpt, Part, fs ] : space outside loop device
+
+if gpt is not full, don't offer to resize parents
+if gpt is full, offer to resize loop
+
+---------------------------------------------------------------------
+
+separate menus for enlarge, shrink, move?
+
+How do I get limits for:
+	Disk1: luks, lvm, fs
+	Disk2: space
+	Disk3: space
+
+lvm isn't full:
+	fs asks parent (lvm)	limits	(0, MAX-lvm)
+	fs adds own limits		(15G, MAX-lvm)
+
+lvm is full
+	fs asks parent (lvm), lvm looks for unused space, finds disk2,disk3
+				limits	(0, MAX-lvm-d2-d3)
+	lvm adds options to resize
+		[X] use disk2
+		[X] use disk3
+	fs adds own limits		(15G, MAX-lvm-d2-d3)
+
+---------------------------------------------------------------------
+
+what about:
+	Loop1, luks, lvm, fs
+	Loop2, space
+
+How do i extend fs?
+	make loop1 bigger?
+	extend into loop2?
+	both!?
+
+Extend needs to be two separate actions
+	1: Enlarge: "loop1, luks, lvm" using:
+		[X] make loop1 bigger (750GB)
+		[X] use spaec on loop2 (150GB)
+	2: resize lvm, fs as normal
+
+Step 1 still too ambiguous, which would have priority?
+enlarge loop can only be explicit
+leave complicated things for "Recipes" -- sets of simple questions
+
