@@ -1,0 +1,63 @@
+Scan
+
+Disk	}
+Loop	}- BlockGroup, Thread, *real* (divide space)
+File	}
+
+Lvm	}- Only when above is finished, thread, existing BG
+	   *fake* (generated) (combine space)
+
+Table		}- (divide space)
+Filesystem	}
+
+Test
+	Threaded / Not threaded
+	Scan all / Scan list
+
+make objects as busy whilst scanning?
+
+Scan => 1 BlockGroup (unless config'd otherwise)
+	=> multiple threads working on one object
+
+
+Not Threaded:
+	Disk, Loop, File	- once - Q lots of work
+	Table, Filesystem	- repeat until all work done
+	Lvm, Md, BtrfsVol	- once - Q lots of work
+	Table, Filesystem	- repeat until all work done
+
+---------------------------------------------------------------------
+
+Threaded:
+                                                          Threads
+1)         Disk             Loop           File               3
+         / | | \          / | | \        / | | \
+2)      T  T F F         T  F F F       T  F T T             12
+       /|  |            /|\             |    | |
+3)     FF  F            FFF             F    F F              9
+
+	END               END              END                0
+
+1) Disk/Loop/File::discover
+2) Table/Filesystem::identify
+3) Table/Filesystem::identify
+
+---------------------------------------------------------------------
+
+Threaded:
+                                                          Threads
+1)        DiskBG          LoopBG        FileBG                3
+          / | \           / | \         / | \
+2)       L  M B          L  M B        L  M B                 9
+        /|\                /|\\       /|\
+3)	TFF                TFFF      T TF	             10
+       /|                  |        /| |
+4)     FF                  F        FF F                      6
+
+	END               END           END                   0
+
+1) discovered block devices
+2) Lvm/Md/BtrfsVol::discover
+3) Table/Filesystem::identify
+4) Table/Filesystem::identify
+
