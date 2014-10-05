@@ -1,0 +1,76 @@
+         TL
+        /  \
+       A    D
+      / \  /|\
+      B C  EFG
+
+How many people have TL pointer?
+	all 3 Block::discovers
+	each Block::discover gets a BlockGroup!
+	BG name = harddisks, loop devices, files
+	=> TL isn't parent of changes, BG is
+
+Block::discover can cheat, it only ever adds new stuff
+Will ::discovers ever be called elsewhere?
+	"User: File/Open"?
+	Still add only, still no internal need for a txn
+Block::discover, then transfer its results into a *real* top-level (atomically) no txn
+
+Volume::discover search all, or each BlockGroup, for bits to join up
+BlockGroup name determines mount points, cryptsetup names, etc
+	either use sanitised "name" as a prefix, or "BG<uniqueid>"
+
+---------------------------------------------------------------------
+
+discover - automatic blockgroup
+identify - return object, insert into group of choice
+cmdline list of devices/files => ONE blockgroup
+cmdline optino --block-group dev1,dev2 --block-group dev3,dev3?
+open file
+	(X) add to default group
+	( ) create new group
+
+LvmGroup isa Whole : segments => LvmTable     * n
+Volume   isa Whole : segments => LvmPartition * n
+
+set is just a simple container
+actions:
+	add to set
+	del from set
+	close set
+it contains real block devices
+it contains fake volume devices
+
+---------------------------------------------------------------------
+
+Set
+	Disk1
+		LvmTable
+			Part1
+			Part2
+
+	Disk2
+		LvmTable
+			Part3
+
+	Disk3
+		LvmTable
+			Part4
+			Part5
+
+	VolGroup
+		Volume1
+			Filesystem
+		Volume2
+			Filesystem
+
+Want to combine (because there's exactly one child)
+	Disk1,LvmTable (display parent, child icon?)
+	ditto Disk2
+	ditto Disk3
+	Volume1,filesystem (display child) => this is just: display option "empty"
+	ditto Volume2
+
+display option !"singleton"
+	or "has_sublings"
+
