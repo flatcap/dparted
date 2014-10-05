@@ -1164,3 +1164,64 @@ name: del.fs.start or del.fs.dlg
 perform_action (del.fs.dlg) => dlg
 perform_action (del.fs) => immediate txn
 
+---------------------------------------------------------------------
+
+create table		msdos,gpt,...			msdos,gpt,... no options, empty table
+create partition	primary,logical,extended
+create filesystem	ext2/3/4, btrfs, ...
+
+Block : Table, Fs	}
+Table : Part		}- default
+Part  : fs		}
+
+fs can be put in defaults unless it asks otherwise (at init)
+
+who has list of tables?
+who has list of filesystems?
+
+app.register_type ("filesystem", "btrfs")
+app.get_types ("filesystem")
+
+how do i get from "btrfs" to Btrfs::create()?  factory?
+partition knows what's allowed inside?
+fs knows what it's contained in?
+	In: parttion, some tables? block?
+
+btrfs module init calls  partition::register_child ("btrfs", "filesystem", create_fn)
+
+---------------------------------------------------------------------
+
+Top: Block, Table, Partition, FS
+where does Whole fit in?  fake => top_level
+
+	Top
+	 |
+	Loop
+	 |
+	Gpt
+	 |  \
+	Part Space
+	 |
+	FS
+
+Block API }
+Table API }- all the static parts of the objects
+Part  API }  what is there except create()?
+FS    API }
+
+post init:
+	block contains
+		list of tables, fs that it can contain			FS has list of actions
+		list of object names? list of object?
+		how do i delegate menus?
+
+delete - easy, usually available (!disk), loop OK
+resize - easy, get_resize_bounds (upper, lower) - delegate
+	loop resize, off by default
+		what about lvm volumes, btrfs vols, etc (when there's free space?)
+	empty space
+		actions should be offered to ALL, e.g.
+		lvm expand, btrfs expand (these are *volumes*)
+
+---------------------------------------------------------------------
+
