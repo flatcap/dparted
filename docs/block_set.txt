@@ -1,0 +1,21 @@
+         TL
+        /  \
+       A    D
+      / \  /|\
+      B C  EFG
+
+How many people have TL pointer?
+	all 3 Block::discovers
+	each Block::discover gets a BlockSet!
+	BS name = harddisks, loop devices, files
+	=> TL isn't parent of changes, BS is
+
+Block::discover can cheat, it only ever adds new stuff
+Will ::discovers ever be called elsewhere?
+	"User: File/Open"?
+	Still add only, still no internal need for a txn
+Block::discover, then transfer its results into a *real* top-level (atomically) no txn
+
+Volume::discover search all, or each BlockSet, for bits to join up
+BlockSet name determines mount points, cryptsetup names, etc
+	either use sanitised "name" as a prefix, or "BS<uniqueid>"

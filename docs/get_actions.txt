@@ -1,0 +1,17 @@
+get actions
+
+ext4		->	gptpart		->	gpt		->	loop
+fs			part			table			block
+cont			cont			cont			cont
+
+ext.tune.dlg		gptpart nothing		gpt.tidy		loop.delete
+fs.delete		part.delete		gpt.delete		loop.resize
+fs.resize		part.resize		table nothing		block.readonly
+						gpt.resize*
+
+*resize gpt if parent block device (e.g. loop) is resized
+
+subclass => implements interface
+	so btrfs could be both fs and volume
+	subvol   could be both fs and subvolume
+
