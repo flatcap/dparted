@@ -1,0 +1,98 @@
+Delete
+
+	Loop
+	 |
+	Gpt
+	 |
+	Partition
+	 |
+	Filesystem
+
+wipe fs	(delete on fs => delete partition)
+delete partition
+delete gpt
+delete loop
+
+If each child is unique, five the option (advanced) to delete its parent
+
+Normal
+	[X] delete fs
+	[X] delete partition
+Advanced
+	[ ] delete gpt
+	[ ] delete loop
+
+Menu (Actions)
+	Delete/Fs
+	Delete/Partition
+	Delete/Gpt
+	Delete/Loop
+
+
+	Loop
+	 |
+	Gpt--+
+	 |    \
+	Part1 Part2
+	 |     |
+	FS1   FS2
+
+If child is not unique
+
+Normal
+	[X] delete fs
+	[X] delete partition
+Advanced
+	nothing
+
+Menu (Actions)
+	Delete/Fs
+	Delete/Partition
+
+
+Unique:
+	Fs action	Delete/FS	delegate to parent		Default on
+	Part (1 child)	Delete/Part	deletate to parent		Default on
+	Gpt (1 child)	Delete/Gpt	del gpt & delegate		Default off
+		(excluding reserved, etc)
+	Loop (1 child)	Delete/Loop					Default off
+
+Not Unique:
+	Fs action	Delete/FS	delegate to parent		Default on
+	Part (1 child)	Delete/Part	deletate to parent		Default on
+	Gpt (2 children) --		STOP
+
+Lvm
+	T1   T2
+	  \ /
+	   V1
+	  / \
+	P1  P2
+	 |   |
+	F1   F2
+
+After deleting P1/F1, delete P2/F2
+	[X] del fs (F2)
+	[X] del part (P2)
+	[ ] del VG (V1)
+
+	T1
+	 |
+	V1
+	 |
+	P1
+	 |
+	F1
+
+Delete P1/F1
+	[X] del fs (F1)
+	[X] del part (P1)
+	[ ] del VG (V1) vgs
+	[ ] del table (T1) pvs
+
+
+Fullness requirement for delete?
+	unique child & fills parent?  Probably not.
+Delete fs can be undone (backup superblock)
+Wipe fs cannot be undone
+
