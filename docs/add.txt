@@ -1,0 +1,37 @@
+Add
+
+right-click on area/unallocated (in partition)
+area/gfx/container -> get_actions()
+unallocated & base : get_actions() => none
+unallocated & parents : get_actions() => ?
+	wipe (from Container::)?
+	Loop, gpt, part, unalloc
+
+partition (msdos, gpt, etc) can contain filesystem
+app::can_contain (GptPartition)
+	GptPart : nothing specific
+	Part: ext2/3/4, btrfs, etc	menu Create/Filesystem
+	Container: nothing specific
+
+app::can_contain (Loop)
+	Loop : nothing specific
+	Block:	table			menu Create/Partition Table (msdos, gpt, lvm, luks)
+		fs			menu Create/Filesystem
+	Container: nothing specific
+
+How does Create/Filesystem become Create/Table, Partition, Filesystem?
+Luks ([X] encrypt) => extra level inserted
+	where can luks be inserted? -- which dialogs are affected
+
+if create/fs => table, part, fs then create/part should be listed too
+might need dedicated dialogs
+create dialog:
+	list gpt first
+	list ext4,btrfs | others
+
+block, part, luks, fs		can only encrypt fs, or lvm
+block, luks, lvm
+is block, luks, gpt allowed?
+how does ubuntu encrypt home?
+how do i integrate that?
+
