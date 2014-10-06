@@ -1225,3 +1225,16 @@ resize - easy, get_resize_bounds (upper, lower) - delegate
 
 ---------------------------------------------------------------------
 
+"search_blocks" first.  on completion call "search_volumes" to piece things together
+sb: lvm_table (pv), if btrfs size > part_size => btrfs table/part?
+lvm_group search only "found" devices, likewise btrfs (how?)
+
+what about groups of blocks, duplicated?  loop0,1 are VG test,  loop2,3 are copy of VG test
+give them their own top-level?  something transparent between top-level and block.
+This transparent object would limit "find_all (lvm_table)", etc
+object = BlockGroup
+auto "set" same dir = same set
+
+selecting a volume might mean multiple parts selected
+	=> focus needs to be a vector/set: is_focused() needed
+

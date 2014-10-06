@@ -44,3 +44,5 @@ main.cpp
 	std::cout << getuid() << std::endl;
 	std::cout << geteuid() << std::endl;
 
+need to check for ioctls too
+

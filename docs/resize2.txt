@@ -1,0 +1,35 @@
+Resize
+
+(L)oop
+(D)isk
+(T)able
+(P)artition
+(F)ilesystem
+Lu(K)s
+
+DT         PF
++-----------+------------+-----------+          Resizeable: P,F
+|           |XXXXXXXXXXXX|           |          Not:        D,T
++-----------+------------+-----------+
+
+LT         PF
++-----------+------------+-----------+          Resizeable: P,F,L
+|           |XXXXXXXXXXXX|           |          Not: T (table forced resize when loop resized)
++-----------+------------+-----------+
+
+DT         PKF
++-----------+------------+-----------+          Resizeable: P,K,F
+|           |XXXXXXXXXXXX|           |          Not: D,T
++-----------+------------+-----------+
+
+DT          P
++-----------+------------+-----------+          Resizeable: P
+|           |XXXXXXXXXXXX|           |          Not: D,T
++-----------+------------+-----------+
+
+resizing stops at partition, because it's parent is a multiple container
+
+bool get_resize_limits (&offset, &size)
+	possible that start *cannot* move
+	retval false => immoveable
+
