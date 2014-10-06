@@ -1238,3 +1238,18 @@ auto "set" same dir = same set
 selecting a volume might mean multiple parts selected
 	=> focus needs to be a vector/set: is_focused() needed
 
+is_top_level (BlockGroup) == true?
+
+Open/close device
+	CloseDevice - check for any volumes referencing dev
+	OpenDevice (existing BlockGroup) add dev to BG
+Open/close set of devices
+	CloseSet - simple
+	OpenSet => create BlockGroup, identify on all devs
+Scan all -- 1 BlockGroup
+	scan all:
+		create bg, inform gui
+		disk,loop,file = what do each of these discover -- just blocks?
+
+---------------------------------------------------------------------
+

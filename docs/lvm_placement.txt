@@ -1,0 +1,19 @@
+Lvm partition placement -- HOW?
+
+Create volume on VG
+	+------------------------------------+
+PV1	|                                    |
+	+------------------------------------+
+PV2	|                                    |
+	+------------------------------------+
+
+Default placement is irrelevant -- only size matters
+Advanced -- need magic resize dialog:
+
+	+------------------------------------+
+PV1 [X]	|         <XXXXXXXXXX>               |	offset, size
+	+------------------------------------+
+PV2 [X]	|<XXXXXXXXXXXXXXX>                   |	offset, size
+	+------------------------------------+
+enable device					total size
+
